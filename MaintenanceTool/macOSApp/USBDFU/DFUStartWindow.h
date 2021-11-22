@@ -8,13 +8,13 @@
 #define DFUStartWindow_h
 
 #import <Cocoa/Cocoa.h>
-#import "ToolDFUCommand.h"
+#import "ToolUSBDFUCommand.h"
 
 @interface DFUStartWindow : NSWindowController
 
     @property (nonatomic) NSWindow *parentWindow;
 
-    - (void)setWindowParameter:(ToolDFUCommand *)command
+    - (void)setWindowParameter:(ToolUSBDFUCommand *)command
                 currentVersion:(NSString *)current
                  updateVersion:(NSString *)update;
     - (void)commandDidChangeToBootloaderMode:(bool)success errorMessage:(NSString *)errorMessage

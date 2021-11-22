@@ -31,7 +31,7 @@
 		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
 		7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1178271E6A740095C29E /* usb_cdc_util.c */; };
-		7A4D1187271E6A750095C29E /* ToolDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D117B271E6A740095C29E /* ToolDFUCommand.m */; };
+		7A4D1187271E6A750095C29E /* ToolUSBDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D117B271E6A740095C29E /* ToolUSBDFUCommand.m */; };
 		7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4D117C271E6A740095C29E /* DFUProcessingWindow.xib */; };
 		7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4D117D271E6A740095C29E /* DFUStartWindow.xib */; };
 		7A4D118A271E6A750095C29E /* DFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D117E271E6A740095C29E /* DFUProcessingWindow.m */; };
@@ -130,12 +130,12 @@
 		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
 		7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEDFUCommand.m; sourceTree = "<group>"; };
-		7A4D1176271E6A740095C29E /* ToolDFUCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolDFUCommand.h; sourceTree = "<group>"; };
+		7A4D1176271E6A740095C29E /* ToolUSBDFUCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolUSBDFUCommand.h; sourceTree = "<group>"; };
 		7A4D1177271E6A740095C29E /* usb_cdc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_cdc_util.h; sourceTree = "<group>"; };
 		7A4D1178271E6A740095C29E /* usb_cdc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
 		7A4D1179271E6A740095C29E /* usb_dfu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_dfu_util.h; sourceTree = "<group>"; };
 		7A4D117A271E6A740095C29E /* DFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DFUProcessingWindow.h; sourceTree = "<group>"; };
-		7A4D117B271E6A740095C29E /* ToolDFUCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolDFUCommand.m; sourceTree = "<group>"; };
+		7A4D117B271E6A740095C29E /* ToolUSBDFUCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolUSBDFUCommand.m; sourceTree = "<group>"; };
 		7A4D117C271E6A740095C29E /* DFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7A4D117D271E6A740095C29E /* DFUStartWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DFUStartWindow.xib; sourceTree = "<group>"; };
 		7A4D117E271E6A740095C29E /* DFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DFUProcessingWindow.m; sourceTree = "<group>"; };
@@ -382,8 +382,8 @@
 				7A4D1181271E6A740095C29E /* nrf52_app_image.h */,
 				7A4D1183271E6A740095C29E /* ToolCDCHelper.h */,
 				7A4D1180271E6A740095C29E /* ToolCDCHelper.m */,
-				7A4D1176271E6A740095C29E /* ToolDFUCommand.h */,
-				7A4D117B271E6A740095C29E /* ToolDFUCommand.m */,
+				7A4D1176271E6A740095C29E /* ToolUSBDFUCommand.h */,
+				7A4D117B271E6A740095C29E /* ToolUSBDFUCommand.m */,
 				7A4D1178271E6A740095C29E /* usb_cdc_util.c */,
 				7A4D1177271E6A740095C29E /* usb_cdc_util.h */,
 				7A4D1184271E6A750095C29E /* usb_dfu_util.c */,
@@ -638,7 +638,7 @@
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A4D118E271E6A750095C29E /* usb_dfu_util.c in Sources */,
-				7A4D1187271E6A750095C29E /* ToolDFUCommand.m in Sources */,
+				7A4D1187271E6A750095C29E /* ToolUSBDFUCommand.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,

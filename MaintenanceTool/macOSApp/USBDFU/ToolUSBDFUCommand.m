@@ -1,5 +1,5 @@
 //
-//  ToolDFUCommand.m
+//  ToolUSBDFUCommand.m
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/12/31.
@@ -10,7 +10,7 @@
 #import "debug_log.h"
 #import "nrf52_app_image.h"
 #import "ToolCDCHelper.h"
-#import "ToolDFUCommand.h"
+#import "ToolUSBDFUCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
@@ -40,7 +40,7 @@
 // 更新対象アプリケーション＝version 0.3.0
 #define DFU_UPD_TARGET_APP_VERSION      300
 
-@interface ToolDFUCommand ()
+@interface ToolUSBDFUCommand ()
 
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
     @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
@@ -65,7 +65,7 @@
 
 @end
 
-@implementation ToolDFUCommand
+@implementation ToolUSBDFUCommand
 
     - (id)init {
         return [self initWithDelegate:nil];
@@ -369,7 +369,7 @@
 
     - (void)dfuStartWindowWillOpen {
         NSWindow *dialog = [[self dfuStartWindow] window];
-        ToolDFUCommand * __weak weakSelf = self;
+        ToolUSBDFUCommand * __weak weakSelf = self;
         [[[self dfuStartWindow] parentWindow] beginSheet:dialog
                                        completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
@@ -474,7 +474,7 @@
 
     - (void)dfuProcessingWindowWillOpen {
         NSWindow *dialog = [[self dfuProcessingWindow] window];
-        ToolDFUCommand * __weak weakSelf = self;
+        ToolUSBDFUCommand * __weak weakSelf = self;
         [[[self dfuProcessingWindow] parentWindow] beginSheet:dialog
                                             completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理

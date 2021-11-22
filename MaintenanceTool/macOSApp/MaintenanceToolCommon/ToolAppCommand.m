@@ -10,7 +10,7 @@
 #import "ToolBLEDFUCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolContext.h"
-#import "ToolDFUCommand.h"
+#import "ToolUSBDFUCommand.h"
 #import "ToolFIDOAttestationCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
@@ -24,7 +24,7 @@
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
-    @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
+    @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
@@ -53,7 +53,7 @@
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
-            [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
+            [self setToolUSBDFUCommand:[[ToolUSBDFUCommand alloc] initWithDelegate:self]];
             // FIDO鍵・証明書設定機能の初期設定
             [self setToolFIDOAttestationCommand:[[ToolFIDOAttestationCommand alloc] initWithDelegate:self]];
         }
@@ -209,14 +209,14 @@
         if ([self checkForHIDCommand]) {
             // ファームウェア更新処理を実行するため、DFU開始画面を表示
             [[self delegate] disableUserInterface];
-            [[self toolDFUCommand] dfuProcessWillStart:sender parentWindow:parentWindow toolHIDCommandRef:[self toolHIDCommand]];
+            [[self toolUSBDFUCommand] dfuProcessWillStart:sender parentWindow:parentWindow toolHIDCommandRef:[self toolHIDCommand]];
         }
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ファームウェア新規導入処理を実行するため、確認ダイアログを表示
         [[self delegate] disableUserInterface];
-        [[self toolDFUCommand] dfuNewProcessWillStart:sender parentWindow:parentWindow];
+        [[self toolUSBDFUCommand] dfuNewProcessWillStart:sender parentWindow:parentWindow];
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -404,8 +404,8 @@
         if ([ref isMemberOfClass:[ToolPreferenceCommand class]]) {
             [[self toolPreferenceCommand] hidCommandDidProcess:command CMD:cmd response:response];
         }
-        if ([ref isMemberOfClass:[ToolDFUCommand class]]) {
-            [[self toolDFUCommand] hidCommandDidProcess:command CMD:cmd response:response];
+        if ([ref isMemberOfClass:[ToolUSBDFUCommand class]]) {
+            [[self toolUSBDFUCommand] hidCommandDidProcess:command CMD:cmd response:response];
         }
         if ([ref isMemberOfClass:[ToolAppCommand class]]) {
             // 画面に制御を戻す
@@ -427,14 +427,14 @@
         [self notifyToolCommandMessage:MSG_HID_CONNECTED];
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // DFU処理にHID接続開始を通知
-        [[self toolDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
+        [[self toolUSBDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
     }
 
     - (void)hidCommandDidDetectRemoval {
         [self notifyToolCommandMessage:MSG_HID_REMOVED];
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
         // DFU処理にHID接続切断を通知
-        [[self toolDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
+        [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
     }
 
 @end

@@ -1,16 +1,16 @@
 //
-//  ToolDFUCommand.h
+//  ToolUSBDFUCommand.h
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/12/31.
 //
-#ifndef ToolDFU_h
-#define ToolDFU_h
+#ifndef ToolUSBDFUCommand_h
+#define ToolUSBDFUCommand_h
 
 #import "usb_dfu_util.h"
 #import "ToolCommon.h"
 
-@interface ToolDFUCommand : NSObject
+@interface ToolUSBDFUCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
     - (bool)checkUSBHIDConnection;
@@ -23,4 +23,4 @@
 
 @end
 
-#endif /* ToolDFU_h */
+#endif /* ToolUSBDFUCommand_h */
