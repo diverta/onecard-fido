@@ -414,32 +414,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Develop" id="3QH-K5-a4t">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Develop" autoenablesItems="NO" id="3MR-cq-TMg">
-                        <items>
-                            <menuItem title="ファームウェア更新（USB）" id="ZIq-GE-Ddb">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="ファームウェア更新（USB）" id="S6H-YM-Q7o">
-                                    <items>
-                                        <menuItem title="ブートローダーモード遷移" id="zLA-iW-mMM">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemBLModeDidSelect:" target="494" id="DRw-pM-EgK"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="ファームウェアを新規導入" id="Dci-ge-0Sb">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemDFUNewDidSelect:" target="494" id="ly7-Mw-341"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -645,7 +619,6 @@
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
-                <outlet property="menuItemUSBDFU" destination="ZIq-GE-Ddb" id="miI-3p-8c2"/>
                 <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>

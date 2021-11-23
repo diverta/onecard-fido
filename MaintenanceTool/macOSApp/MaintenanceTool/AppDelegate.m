@@ -27,7 +27,6 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
-    @property (assign) IBOutlet NSMenuItem  *menuItemUSBDFU;
 
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
 @end
@@ -76,7 +75,6 @@
         [[self menuItemTestBLE] setEnabled:enabled];
         [[self menuItemPreferences] setHidden:!(enabled)];
         [[self menuItemViewLog] setEnabled:enabled];
-        [[self menuItemUSBDFU] setEnabled:enabled];
     }
 
     - (IBAction)buttonPairingDidPress:(id)sender {
@@ -170,15 +168,6 @@
         [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
         NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
-    }
-
-    - (IBAction)menuItemDFUNewDidSelect:(id)sender {
-        [[self toolAppCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemBLModeDidSelect:(id)sender {
-        // ブートローダーモード遷移
-        [[self toolAppCommand] doCommandBLMode];
     }
 
 #pragma mark - Call back from ToolAppCommand
