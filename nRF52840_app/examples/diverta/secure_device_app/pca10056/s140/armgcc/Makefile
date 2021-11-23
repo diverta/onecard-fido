@@ -358,6 +358,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_piv_pin_update.c \
   $(CIDLIB_DIR)/ccid_ykpiv.c \
   $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
+  $(CT2LIB_DIR)/ctap2_cbor.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
