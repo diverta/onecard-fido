@@ -17,9 +17,19 @@ MDBT50Q Dongleをご使用の場合は、背面にあるボタン電池ケース
 
 ## 操作方法
 
-[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/README.md)を起動し、`Develop`メニューから「ファームウェア更新（BLE）」を選択します。
+[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/README.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
 
 <img src="assets06/0001.jpg" width="400">
+
+ファームウェア更新画面が表示されます。<br>
+画面下部のボックス「nRF5340用」の中にあるボタン「ファームウェアを更新（BLE）」をクリックします。
+
+<img src="assets06/0012.jpg" width="400">
+
+確認ダイアログが表示されます。<br>
+処理を続行したい場合は「Yes」をクリックします。
+
+<img src="assets06/0013.jpg" width="400">
 
 処理開始画面が表示されます。<br>
 MDBT50Q Dongleに導入されているファームウェアのバージョンと、更新するバージョンが表示されます。
