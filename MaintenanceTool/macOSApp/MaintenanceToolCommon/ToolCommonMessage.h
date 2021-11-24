@@ -24,12 +24,12 @@
 #define MSG_APP_TERMINATED          @"FIDO認証器管理ツールを終了しました。"
 #define MSG_PROMPT_SELECT_PKEY_PATH @"秘密鍵ファイル(PEM)のパスを選択してください"
 #define MSG_PROMPT_SELECT_CRT_PATH  @"証明書ファイル(CRT)のパスを選択してください"
-#define MSG_ERASE_SKEY_CERT         @"FIDO認証器から鍵・証明書・キーハンドルをすべて削除します。"
+#define MSG_ERASE_SKEY_CERT         @"FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。"
 #define MSG_PROMPT_ERASE_SKEY_CERT  @"削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？"
 #define MSG_INSTALL_SKEY_CERT       @"FIDO認証器に鍵・証明書をインストールします。"
 #define MSG_PROMPT_INSTL_SKEY_CERT  @"インストールを実行しますか？"
 #define MSG_OCCUR_BLECONN_ERROR     @"BLE接続エラーが発生しました。"
-#define MSG_OCCUR_KEYHANDLE_ERROR   @"キーハンドルが存在しません。再度ユーザー登録を実行してください。"
+#define MSG_OCCUR_KEYHANDLE_ERROR   @"ユーザー登録情報が存在しません。再度ユーザー登録を実行してください。"
 #define MSG_OCCUR_FDS_GC_ERROR      @"FIDO認証器のFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"
 #define MSG_OCCUR_UNKNOWN_BLE_ERROR @"BLEエラーが発生しました。処理を再試行してください。"
 #define MSG_OCCUR_SKEYNOEXIST_ERROR @"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
@@ -44,7 +44,7 @@
 #define MSG_PROMPT_BOOT_LOADER_MODE @"ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？"
 
 #pragma mark - コマンド種別に対応する処理名称
-#define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書・キーハンドル削除処理"
+#define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書の削除"
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HID_U2F_HEALTHCHECK            @"HID U2Fヘルスチェック"
 #define PROCESS_NAME_BLE_U2F_HEALTHCHECK            @"BLE U2Fヘルスチェック"
@@ -203,6 +203,8 @@
 #define MSG_DFU_SLOT_INFO_GET_FAILED            @"FIDO認証器のプログラム領域情報が取得できませんでした。"
 #define MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED @"FIDO認証器ファームウェアの反映要求に失敗しました。"
 #define MSG_DFU_RESET_APPLICATION_FAILED        @"FIDO認証器ファームウェアの再始動要求に失敗しました。"
+#define MSG_PROMPT_START_BLE_DFU_PROCESS        @"ファームウェア更新処理を開始しますか？"
+#define MSG_COMMENT_START_BLE_DFU_PROCESS       @"BLEペアリングの済んだFIDO認証器が\nBLEペリフェラルモードになっているのを\n確認した後、Yesボタンをクリックすると、\nBLE経由でファームウェア更新処理が\n開始されます。\n\nFIDO認証器は、バージョン0.4.0以降の\nファームウェアが導入済みのものをご利用\nください。"
 
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"

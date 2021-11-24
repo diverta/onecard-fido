@@ -21,7 +21,7 @@ macOS版と、Windows版を用意しました。
 ## [macOS版](macOSApp)
 
 #### 画面イメージ
-<img src="assets/0001.png" width="500">
+<img src="assets/0001.jpg" width="500">
 
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜

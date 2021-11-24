@@ -414,63 +414,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Develop" id="3QH-K5-a4t">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Develop" autoenablesItems="NO" id="3MR-cq-TMg">
-                        <items>
-                            <menuItem title="ペアリング情報削除" id="LIf-cp-Zj9">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemEraseBondDidSelect:" target="494" id="8tI-f8-yS1"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="ファームウェア更新（USB）" id="ZIq-GE-Ddb">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="ファームウェア更新（USB）" id="S6H-YM-Q7o">
-                                    <items>
-                                        <menuItem title="ブートローダーモード遷移" id="zLA-iW-mMM">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemBLModeDidSelect:" target="494" id="DRw-pM-EgK"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="ファームウェアを更新" id="eQd-2K-QLS">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemDFUTestDidSelect:" target="494" id="Bcj-Ub-fvZ"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="ファームウェアを新規導入" id="Dci-ge-0Sb">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemDFUNewDidSelect:" target="494" id="ly7-Mw-341"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="ファームウェア更新（BLE）" id="nEi-dB-ibl">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemBLEDFUDidSelect:" target="494" id="Toq-GT-30E"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Option" id="295">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Option" id="296">
-                        <items>
-                            <menuItem title="PIV機能設定" id="297">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemOptionPivSettingsDidSelect:" target="494" id="UWh-c5-CBZ"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -518,52 +461,18 @@
                 <rect key="frame" x="0.0" y="0.0" width="564" height="356"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq">
-                        <rect key="frame" x="14" y="290" width="233" height="32"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="21" id="lHS-3K-zvA"/>
-                        </constraints>
-                        <buttonCell key="cell" type="push" title="鍵・証明書・キーハンドル消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button2DidPress:" target="494" id="17E-xy-wWB"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U">
-                        <rect key="frame" x="430" y="320" width="120" height="32"/>
-                        <buttonCell key="cell" type="push" title="終了" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GV1-ni-AJH">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonQuitDidPress:" target="494" id="1js-lz-oHm"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="536">
-                        <rect key="frame" x="14" y="319" width="233" height="32"/>
-                        <buttonCell key="cell" type="push" title="ペアリング実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="537">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button1DidPress:" target="494" id="vnW-jf-j2y"/>
-                        </connections>
-                    </button>
-                    <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="540">
-                        <rect key="frame" x="-1" y="20" width="566" height="150"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="540">
+                        <rect key="frame" x="-1" y="20" width="566" height="210"/>
                         <clipView key="contentView" drawsBackground="NO" id="izZ-0Q-JSq">
-                            <rect key="frame" x="1" y="1" width="549" height="148"/>
+                            <rect key="frame" x="1" y="1" width="549" height="208"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="541">
-                                    <rect key="frame" x="0.0" y="0.0" width="549" height="148"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="549" height="208"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="549" height="148"/>
+                                    <size key="minSize" width="549" height="208"/>
                                     <size key="maxSize" width="566" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -574,145 +483,142 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="543">
-                            <rect key="frame" x="550" y="1" width="15" height="148"/>
+                            <rect key="frame" x="550" y="1" width="15" height="208"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
-                        <rect key="frame" x="18" y="271" width="125" height="14"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="鍵ファイルのパス" id="3zX-NM-1d4">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IXA-ys-cwj">
-                        <rect key="frame" x="153" y="267" width="330" height="22"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="xlq-YR-14K">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-Gc-dtE">
-                        <rect key="frame" x="153" y="239" width="330" height="22"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq" userLabel="buttonFIDOAttestation">
+                        <rect key="frame" x="395" y="243" width="155" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="330" id="XC7-2J-VFY"/>
+                            <constraint firstAttribute="height" constant="21" id="lHS-3K-zvA"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="iad-TY-nd8">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kCs-qC-oYa">
-                        <rect key="frame" x="485" y="261" width="65" height="31"/>
-                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9z5-dM-Usy">
+                        <buttonCell key="cell" type="push" title="FIDO鍵・証明書設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonPath1DidPress:" target="494" id="D5E-na-4EW"/>
+                            <action selector="buttonFIDOAttestationDidPress:" target="494" id="Dac-um-vGh"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IeA-Jn-tVn">
-                        <rect key="frame" x="485" y="232" width="65" height="33"/>
-                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9WC-Ex-0Jp">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U" userLabel="buttonQuit">
+                        <rect key="frame" x="395" y="309" width="155" height="32"/>
+                        <buttonCell key="cell" type="push" title="終了" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GV1-ni-AJH">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonPath2DidPress:" target="494" id="Cba-yX-w4G"/>
+                            <action selector="buttonQuitDidPress:" target="494" id="1js-lz-oHm"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qlP-Sb-BZf">
-                        <rect key="frame" x="14" y="203" width="233" height="32"/>
-                        <buttonCell key="cell" type="push" title="鍵・証明書ファイルのインストール" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="s8B-lQ-fxh">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button3DidPress:" target="494" id="hBn-ux-B4h"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb">
-                        <rect key="frame" x="14" y="174" width="233" height="32"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb" userLabel="buttonSetPinParam">
+                        <rect key="frame" x="223" y="309" width="149" height="32"/>
                         <buttonCell key="cell" type="push" title="PINコード設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="button4DidPress:" target="494" id="Xob-qI-0Wc"/>
+                            <action selector="buttonSetPinParamDidPress:" target="494" id="VpM-mb-yTS"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L9Q-dT-I7g">
-                        <rect key="frame" x="18" y="243" width="125" height="14"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="証明書ファイルのパス" id="rdn-8H-nvR">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4k9-eQ-arQ" userLabel="buttonSetPivParam">
+                        <rect key="frame" x="223" y="276" width="149" height="32"/>
+                        <buttonCell key="cell" type="push" title="PIV機能設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1Cn-gR-7Re">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonSetPivParamDidPress:" target="494" id="T9c-7f-6GF"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1rF-YJ-d6M" userLabel="buttonDFU">
+                        <rect key="frame" x="223" y="243" width="149" height="32"/>
+                        <buttonCell key="cell" type="push" title="ファームウェア更新" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tlh-pK-ssk">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonDFUDidPress:" target="494" id="tKz-1O-xVi"/>
+                        </connections>
+                    </button>
+                    <box title="BLEペアリング" translatesAutoresizingMaskIntoConstraints="NO" id="7vp-JY-k4p" userLabel="BoxBLE">
+                        <rect key="frame" x="17" y="240" width="180" height="103"/>
+                        <view key="contentView" id="wQZ-TO-zXS">
+                            <rect key="frame" x="3" y="3" width="174" height="83"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mg1-7s-419" userLabel="buttonPairing">
+                                    <rect key="frame" x="14" y="42" width="146" height="32"/>
+                                    <buttonCell key="cell" type="push" title="ペアリング実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="imt-1n-ra1">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonPairingDidPress:" target="494" id="9b2-bc-ICg"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-NW-EKe" userLabel="buttonUnpairing">
+                                    <rect key="frame" x="14" y="9" width="146" height="32"/>
+                                    <buttonCell key="cell" type="push" title="ペアリング解除" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rWR-gh-UAz">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonUnpairingDidPress:" target="494" id="2Dk-fW-8PC"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="N4p-NW-EKe" firstAttribute="trailing" secondItem="Mg1-7s-419" secondAttribute="trailing" id="4vf-xZ-Pih"/>
+                                <constraint firstItem="N4p-NW-EKe" firstAttribute="leading" secondItem="Mg1-7s-419" secondAttribute="leading" id="T2R-jr-fQY"/>
+                                <constraint firstItem="N4p-NW-EKe" firstAttribute="leading" secondItem="wQZ-TO-zXS" secondAttribute="leading" constant="20" symbolic="YES" id="YGh-SD-wY2"/>
+                                <constraint firstAttribute="trailing" secondItem="N4p-NW-EKe" secondAttribute="trailing" constant="20" symbolic="YES" id="jTK-Ys-w0U"/>
+                                <constraint firstAttribute="bottom" secondItem="N4p-NW-EKe" secondAttribute="bottom" constant="16" id="kjy-1u-vCx"/>
+                                <constraint firstItem="N4p-NW-EKe" firstAttribute="top" secondItem="Mg1-7s-419" secondAttribute="bottom" constant="12" symbolic="YES" id="zTv-dF-Izh"/>
+                            </constraints>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="M1A-69-z9C" firstAttribute="trailing" secondItem="L9Q-dT-I7g" secondAttribute="trailing" id="0kM-8g-YYs"/>
-                    <constraint firstItem="IXA-ys-cwj" firstAttribute="top" secondItem="IdI-T9-vnq" secondAttribute="bottom" constant="8" symbolic="YES" id="1O1-yv-91v"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IeA-Jn-tVn" secondAttribute="trailing" constant="20" symbolic="YES" id="3MR-sU-bEo"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="top" secondItem="IXA-ys-cwj" secondAttribute="bottom" constant="6" id="5Ej-Yz-gfU"/>
-                    <constraint firstItem="IXA-ys-cwj" firstAttribute="top" secondItem="hcA-hD-g4U" secondAttribute="bottom" constant="38" id="7LI-Va-IFG"/>
-                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="372" secondAttribute="top" constant="38" id="AyW-La-zZ3"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="IdI-T9-vnq" secondAttribute="leading" id="DMc-BH-DjW"/>
-                    <constraint firstItem="kCs-qC-oYa" firstAttribute="top" secondItem="372" secondAttribute="top" constant="68" id="E91-uh-xPg"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="centerY" secondItem="L9Q-dT-I7g" secondAttribute="centerY" id="Fcs-Vo-rnC"/>
-                    <constraint firstItem="hcA-hD-g4U" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="kCs-qC-oYa" secondAttribute="trailing" id="GC8-1t-Tzf"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="536" secondAttribute="leading" id="Ie9-gh-rFm"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="FlF-Id-KYb" secondAttribute="leading" id="Jlp-ht-TwU"/>
-                    <constraint firstItem="M1A-69-z9C" firstAttribute="baseline" secondItem="IXA-ys-cwj" secondAttribute="firstBaseline" id="Kut-KK-7gc"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="centerY" secondItem="IeA-Jn-tVn" secondAttribute="centerY" id="NcH-M7-atm"/>
-                    <constraint firstItem="kCs-qC-oYa" firstAttribute="centerY" secondItem="IXA-ys-cwj" secondAttribute="centerY" id="OnE-cw-d64"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="top" secondItem="372" secondAttribute="top" constant="125" id="Qwn-DQ-DU6"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="baseline" secondItem="IeA-Jn-tVn" secondAttribute="baseline" id="Sk7-O4-nfX"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="top" secondItem="M1A-69-z9C" secondAttribute="bottom" constant="10" id="TpA-bZ-0eK"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="FlF-Id-KYb" secondAttribute="trailing" id="VZS-LX-sNq"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="536" secondAttribute="trailing" id="ace-aL-pxG"/>
-                    <constraint firstItem="kCs-qC-oYa" firstAttribute="leading" secondItem="IeA-Jn-tVn" secondAttribute="leading" id="am0-gf-QLP"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="top" secondItem="fmr-Gc-dtE" secondAttribute="bottom" constant="8" symbolic="YES" id="bQz-a2-ZfJ"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="IdI-T9-vnq" secondAttribute="trailing" id="fs9-2C-mbi"/>
-                    <constraint firstItem="M1A-69-z9C" firstAttribute="centerY" secondItem="IXA-ys-cwj" secondAttribute="centerY" id="hNe-jw-psG"/>
-                    <constraint firstItem="hcA-hD-g4U" firstAttribute="leading" secondItem="536" secondAttribute="trailing" constant="195" id="iIp-hW-Khh"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="trailing" secondItem="IXA-ys-cwj" secondAttribute="trailing" id="pic-PP-gSu"/>
-                    <constraint firstItem="kCs-qC-oYa" firstAttribute="firstBaseline" secondItem="IXA-ys-cwj" secondAttribute="baseline" id="sj2-mU-0qD"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="L9Q-dT-I7g" secondAttribute="leading" id="t0h-X9-0Ro"/>
-                    <constraint firstItem="FlF-Id-KYb" firstAttribute="top" secondItem="qlP-Sb-BZf" secondAttribute="bottom" constant="8" id="u2L-UL-aFI"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="firstBaseline" secondItem="L9Q-dT-I7g" secondAttribute="baseline" id="uIi-95-eKu"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="udg-WC-nVd"/>
-                    <constraint firstItem="IeA-Jn-tVn" firstAttribute="leading" secondItem="fmr-Gc-dtE" secondAttribute="trailing" constant="8" symbolic="YES" id="uo7-ao-oKd"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="leading" secondItem="IXA-ys-cwj" secondAttribute="leading" id="wXN-6B-54W"/>
-                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="8" id="x0K-TD-qVl"/>
-                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="M1A-69-z9C" secondAttribute="leading" id="xln-CG-Idr"/>
-                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="153" id="zUw-un-uyv"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1rF-YJ-d6M" secondAttribute="trailing" constant="12" symbolic="YES" id="0Sb-Kr-Ruo"/>
+                    <constraint firstItem="1rF-YJ-d6M" firstAttribute="trailing" secondItem="4k9-eQ-arQ" secondAttribute="trailing" id="2zE-4W-r17"/>
+                    <constraint firstAttribute="bottom" secondItem="540" secondAttribute="bottom" constant="20" symbolic="YES" id="3Uv-do-To8"/>
+                    <constraint firstItem="7vp-JY-k4p" firstAttribute="centerY" secondItem="4k9-eQ-arQ" secondAttribute="centerY" id="3iq-uG-orl"/>
+                    <constraint firstItem="1rF-YJ-d6M" firstAttribute="leading" secondItem="4k9-eQ-arQ" secondAttribute="leading" id="6Q0-ig-Gmx"/>
+                    <constraint firstItem="1rF-YJ-d6M" firstAttribute="baseline" secondItem="IdI-T9-vnq" secondAttribute="baseline" id="7LX-uO-KzL"/>
+                    <constraint firstItem="540" firstAttribute="top" secondItem="7vp-JY-k4p" secondAttribute="bottom" constant="14" id="83m-qb-fwp"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="leading" secondItem="hcA-hD-g4U" secondAttribute="leading" id="AdT-IO-F7o"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="372" secondAttribute="top" constant="85" id="AyW-La-zZ3"/>
+                    <constraint firstItem="FlF-Id-KYb" firstAttribute="leading" secondItem="4k9-eQ-arQ" secondAttribute="leading" id="BBX-Zw-gII"/>
+                    <constraint firstItem="FlF-Id-KYb" firstAttribute="trailing" secondItem="4k9-eQ-arQ" secondAttribute="trailing" id="Chd-0p-jet"/>
+                    <constraint firstItem="540" firstAttribute="top" secondItem="IdI-T9-vnq" secondAttribute="bottom" constant="20" id="H9L-ib-3C9"/>
+                    <constraint firstAttribute="trailing" secondItem="7vp-JY-k4p" secondAttribute="trailing" constant="370" id="Hv4-cE-1ki"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="hcA-hD-g4U" secondAttribute="bottom" constant="45" id="LmW-JW-B3u"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="trailing" secondItem="hcA-hD-g4U" secondAttribute="trailing" id="Njc-vy-dae"/>
+                    <constraint firstAttribute="trailing" secondItem="IdI-T9-vnq" secondAttribute="trailing" constant="20" symbolic="YES" id="PVc-G0-a58"/>
+                    <constraint firstAttribute="trailing" secondItem="540" secondAttribute="trailing" constant="-1" id="Qc4-ca-lCB"/>
+                    <constraint firstItem="FlF-Id-KYb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7vp-JY-k4p" secondAttribute="trailing" constant="8" symbolic="YES" id="Zzp-92-IAN"/>
+                    <constraint firstItem="7vp-JY-k4p" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="eXw-VR-5vC"/>
+                    <constraint firstItem="FlF-Id-KYb" firstAttribute="baseline" secondItem="hcA-hD-g4U" secondAttribute="baseline" id="hUq-tp-eqc"/>
+                    <constraint firstItem="1rF-YJ-d6M" firstAttribute="leading" secondItem="7vp-JY-k4p" secondAttribute="trailing" constant="35" id="nb0-Rh-EhD"/>
+                    <constraint firstItem="7vp-JY-k4p" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="rOR-V1-Tc9"/>
+                    <constraint firstItem="540" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="-1" id="sBE-9Y-j1O"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="132" y="107"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
-                <outlet property="button1" destination="536" id="RkR-Me-ncU"/>
-                <outlet property="button2" destination="IdI-T9-vnq" id="eHo-AV-qxi"/>
-                <outlet property="button3" destination="qlP-Sb-BZf" id="2la-lX-12I"/>
-                <outlet property="button4" destination="FlF-Id-KYb" id="4mr-1t-iOo"/>
-                <outlet property="buttonPath1" destination="kCs-qC-oYa" id="iUs-xa-8ku"/>
-                <outlet property="buttonPath2" destination="IeA-Jn-tVn" id="XE6-hO-HQE"/>
+                <outlet property="buttonDFU" destination="1rF-YJ-d6M" id="jnA-lM-anu"/>
+                <outlet property="buttonFIDOAttestation" destination="IdI-T9-vnq" id="pVS-77-IMc"/>
+                <outlet property="buttonPairing" destination="Mg1-7s-419" id="hT7-R3-AGo"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
-                <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
-                <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
-                <outlet property="menuItemBLEDFU" destination="nEi-dB-ibl" id="iG3-rT-HSS"/>
-                <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
-                <outlet property="menuItemOption" destination="295" id="x73-fM-PHP"/>
+                <outlet property="buttonSetPinParam" destination="FlF-Id-KYb" id="xxD-HA-LNp"/>
+                <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
+                <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
-                <outlet property="menuItemUSBDFU" destination="ZIq-GE-Ddb" id="miI-3p-8c2"/>
                 <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>

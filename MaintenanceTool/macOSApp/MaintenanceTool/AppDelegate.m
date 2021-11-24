@@ -7,37 +7,28 @@
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
 #import "ToolContext.h"
-#import "ToolFilePanel.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
-@interface AppDelegate () <ToolAppCommandDelegate, ToolFilePanelDelegate>
+@interface AppDelegate () <ToolAppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
-    @property (assign) IBOutlet NSButton    *button1;
-    @property (assign) IBOutlet NSButton    *button2;
-    @property (assign) IBOutlet NSButton    *button3;
-    @property (assign) IBOutlet NSButton    *button4;
+    @property (assign) IBOutlet NSButton    *buttonPairing;
+    @property (assign) IBOutlet NSButton    *buttonUnpairing;
+    @property (assign) IBOutlet NSButton    *buttonFIDOAttestation;
+    @property (assign) IBOutlet NSButton    *buttonSetPinParam;
+    @property (assign) IBOutlet NSButton    *buttonSetPivParam;
+    @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
-    @property (assign) IBOutlet NSTextField *fieldPath1;
-    @property (assign) IBOutlet NSTextField *fieldPath2;
-    @property (assign) IBOutlet NSButton    *buttonPath1;
-    @property (assign) IBOutlet NSButton    *buttonPath2;
-
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemOption;
-    @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
-    @property (assign) IBOutlet NSMenuItem  *menuItemUSBDFU;
-    @property (assign) IBOutlet NSMenuItem  *menuItemBLEDFU;
 
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
-    @property (nonatomic) ToolFilePanel     *toolFilePanel;
 @end
 
 @implementation AppDelegate
@@ -51,7 +42,6 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
-        [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -74,62 +64,47 @@
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [[self button1] setEnabled:enabled];
-        [[self button2] setEnabled:enabled];
-        [[self button3] setEnabled:enabled];
-        [[self button4] setEnabled:enabled];
-        [[self fieldPath1] setEnabled:enabled];
-        [[self fieldPath2] setEnabled:enabled];
-        [[self buttonPath1] setEnabled:enabled];
-        [[self buttonPath2] setEnabled:enabled];
+        [[self buttonPairing] setEnabled:enabled];
+        [[self buttonUnpairing] setEnabled:enabled];
+        [[self buttonFIDOAttestation] setEnabled:enabled];
+        [[self buttonSetPinParam] setEnabled:enabled];
+        [[self buttonSetPivParam] setEnabled:enabled];
+        [[self buttonDFU] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
-        [[self menuItemOption] setEnabled:enabled];
         [[self menuItemPreferences] setHidden:!(enabled)];
         [[self menuItemViewLog] setEnabled:enabled];
-        [[self menuItemEraseBond] setEnabled:enabled];
-        [[self menuItemUSBDFU] setEnabled:enabled];
-        [[self menuItemBLEDFU] setEnabled:enabled];
     }
 
-    - (IBAction)button1DidPress:(id)sender {
+    - (IBAction)buttonPairingDidPress:(id)sender {
         // ペアリング実行
         [[self toolAppCommand] doCommandPairing];
     }
 
-    - (IBAction)button2DidPress:(id)sender {
-        // 鍵・証明書削除
-        [[self toolAppCommand] doCommandEraseSkeyCert];
+    - (IBAction)buttonUnpairingDidPress:(id)sender {
+        // ペアリング情報削除
+        [[self toolAppCommand] doCommandEraseBond];
     }
 
-    - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
-        // 入力項目が正しく指定されていない場合は終了
-        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
-            return false;
-        }
-        // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommon checkFileExist:field informativeText:message] == false) {
-            return false;
-        }
-        return true;
+    - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
+        // FIDO鍵・証明書設定画面を開く
+        [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
     }
 
-    - (IBAction)button3DidPress:(id)sender {
-        if ([self checkPathEntry:[self fieldPath1] messageIfError:MSG_PROMPT_SELECT_PKEY_PATH] == false) {
-            return;
-        }
-        if ([self checkPathEntry:[self fieldPath2] messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
-            return;
-        }
-        NSArray<NSString *> *paths = @[[[self fieldPath1] stringValue], [[self fieldPath2] stringValue]];
-        // 鍵・証明書インストール
-        [[self toolAppCommand] doCommandInstallSkeyCert:paths];
-    }
-
-    - (IBAction)button4DidPress:(id)sender {
+    - (IBAction)buttonSetPinParamDidPress:(id)sender {
         // PINコード設定画面を開く
         [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonSetPivParamDidPress:(id)sender {
+        // PIV機能設定画面を表示
+        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+    }
+
+    - (IBAction)buttonDFUDidPress:(id)sender {
+        // ファームウェア更新画面を表示
+        [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -140,18 +115,6 @@
     - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
         // ウィンドウをすべて閉じたらアプリケーションを終了
         return YES;
-    }
-
-    - (IBAction)buttonPath1DidPress:(id)sender {
-        [self enableButtons:false];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
-                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_PKEY_PATH withFileTypes:@[@"pem"]];
-    }
-
-    - (IBAction)buttonPath2DidPress:(id)sender {
-        [self enableButtons:false];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
-                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_CRT_PATH withFileTypes:@[@"crt"]];
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
@@ -194,11 +157,6 @@
         [[self toolAppCommand] doCommandTestBlePing];
     }
 
-    - (IBAction)menuItemOptionPivSettingsDidSelect:(id)sender {
-        // PIV機能設定画面を表示
-        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
-    }
-
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
@@ -210,48 +168,6 @@
         [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
         NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
-    }
-
-    - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [[self toolAppCommand] dfuProcessWillStart:self parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemDFUNewDidSelect:(id)sender {
-        [[self toolAppCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemEraseBondDidSelect:(id)sender {
-        // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond];
-    }
-
-    - (IBAction)menuItemBLModeDidSelect:(id)sender {
-        // ブートローダーモード遷移
-        [[self toolAppCommand] doCommandBLMode];
-    }
-
-    - (IBAction)menuItemBLEDFUDidSelect:(id)sender {
-        // ファームウェア更新をBLE経由で実行
-        [[self toolAppCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
-    }
-
-#pragma mark - Call back from ToolFilePanel
-
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
-                 modalResponse:(NSInteger)modalResponse {
-        // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示する
-        if (modalResponse == NSFileHandlingPanelOKButton) {
-            if ([self buttonPath1] == sender) {
-                [[self fieldPath1] setStringValue:filePath];
-                [[self fieldPath1] setToolTip:filePath];
-            }
-            if ([self buttonPath2] == sender) {
-                [[self fieldPath2] setStringValue:filePath];
-                [[self fieldPath2] setToolTip:filePath];
-            }
-        }
-        // メニューを活性化
-        [self enableButtons:true];
     }
 
 #pragma mark - Call back from ToolAppCommand
