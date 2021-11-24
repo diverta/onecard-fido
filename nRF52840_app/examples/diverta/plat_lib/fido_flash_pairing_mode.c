@@ -6,7 +6,7 @@
  */
 #include "sdk_common.h"
 
-#include "fido_flash.h"
+#include "fido_flash_plat.h"
 #include "fido_flash_common.h"
 
 // for logging informations

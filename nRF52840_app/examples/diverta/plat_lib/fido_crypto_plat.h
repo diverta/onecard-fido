@@ -1,11 +1,11 @@
 /* 
- * File:   fido_crypto.h
+ * File:   fido_crypto_plat.h
  * Author: makmorit
  *
  * Created on 2018/12/26, 12:19
  */
-#ifndef FIDO_CRYPTO_H
-#define FIDO_CRYPTO_H
+#ifndef FIDO_CRYPTO_PLAT_H
+#define FIDO_CRYPTO_PLAT_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,5 +29,5 @@ bool fido_crypto_tdes_enc(uint8_t *in, uint8_t *out, uint8_t *key);
 }
 #endif
 
-#endif /* FIDO_CRYPTO_H */
+#endif /* FIDO_CRYPTO_PLAT_H */
 

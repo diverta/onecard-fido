@@ -6,7 +6,7 @@
  */
 #include "fido_board.h"
 #include "ble_service_common.h"
-#include "fido_timer.h"
+#include "fido_timer_plat.h"
 
 //
 // LED点滅制御関連

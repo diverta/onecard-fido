@@ -12,7 +12,7 @@
 // for keysize informations
 #include "nrf_crypto_ecdsa.h"
 #include "app_error.h"
-#include "fido_crypto.h"
+#include "fido_crypto_plat.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_crypto_keypair
