@@ -175,7 +175,7 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
 #include "application_init.h"
 #include "ble_service_common.h"
 #include "fido_board.h"
-#include "fido_flash.h"
+#include "fido_flash_plat.h"
 #include "usbd_service.h"
 
 #endif 

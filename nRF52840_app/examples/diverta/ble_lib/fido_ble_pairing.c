@@ -13,7 +13,7 @@
 #include "fido_ble_send.h"
 
 #include "fido_flash_pairing_mode.h"
-#include "fido_timer.h"
+#include "fido_timer_plat.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_pairing

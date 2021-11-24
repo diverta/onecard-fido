@@ -56,9 +56,9 @@
 		7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E0E2623791A2D00B47026 /* ToolLogFile.m */; };
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
-		7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */; };
-		7A9829C425C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
+		7AA34AF8274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */; };
+		7AA34AFA274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AAC498E27448E4400AB3E67 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */; };
 		7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAC498C27448E4400AB3E67 /* FIDOAttestationWindow.xib */; };
@@ -181,10 +181,10 @@
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
 		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
-		7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.0.zip; sourceTree = "<group>"; };
-		7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.0.zip; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
+		7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.1.zip; sourceTree = "<group>"; };
+		7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.1.zip; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationWindow.m; sourceTree = "<group>"; };
 		7AAC498C27448E4400AB3E67 /* FIDOAttestationWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOAttestationWindow.xib; sourceTree = "<group>"; };
@@ -491,9 +491,9 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */,
+				7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */,
 				7A8A0FF72744881800BFC5C0 /* app_update.PCA10095.0.4.1.bin */,
-				7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */,
-				7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -589,6 +589,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
+				7AA34AFA274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A8A0FF92744881800BFC5C0 /* app_update.PCA10095.0.4.1.bin in Resources */,
@@ -598,11 +599,10 @@
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
+				7AA34AF8274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
-				7A9829C425C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip in Resources */,
-				7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,

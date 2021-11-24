@@ -1,11 +1,11 @@
 /* 
- * File:   fido_timer.h
+ * File:   fido_timer_plat.h
  * Author: makmorit
  *
  * Created on 2019/06/18, 11:00
  */
-#ifndef FIDO_TIMER_H
-#define FIDO_TIMER_H
+#ifndef FIDO_TIMER_PLAT_H
+#define FIDO_TIMER_PLAT_H
 
 #include <stdint.h>
 
@@ -27,4 +27,4 @@ void fido_button_long_push_timer_start(uint32_t timeout_msec, void *p_context);
 }
 #endif
 
-#endif /* FIDO_TIMER_H */
+#endif /* FIDO_TIMER_PLAT_H */

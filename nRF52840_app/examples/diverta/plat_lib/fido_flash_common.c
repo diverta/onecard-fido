@@ -17,7 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "fido_flash.h"
+#include "fido_flash_plat.h"
 #include "fido_flash_common.h"
 
 //

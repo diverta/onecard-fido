@@ -6,7 +6,7 @@
  */
 #include "sdk_common.h"
 
-#include "fido_flash.h"
+#include "fido_flash_plat.h"
 #include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
 
