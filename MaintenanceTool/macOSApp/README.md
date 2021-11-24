@@ -28,6 +28,9 @@ macOS Sierra (Version 10.12.6) 〜
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
+- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
+
 - <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
 
