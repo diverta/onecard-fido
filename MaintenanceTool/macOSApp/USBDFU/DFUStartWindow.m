@@ -12,7 +12,7 @@
 
 @interface DFUStartWindow ()
 
-    @property (nonatomic, weak) ToolDFUCommand  *toolDFUCommand;
+    @property (nonatomic, weak) ToolUSBDFUCommand *toolDFUCommand;
     @property (assign) IBOutlet NSButton        *buttonOK;
     @property (assign) IBOutlet NSButton        *buttonCancel;
     @property (assign) IBOutlet NSTextField     *labelUpdateVersion;
@@ -34,7 +34,7 @@
         [[self labelCurrentVersion] setStringValue:@""];
     }
 
-- (void)setWindowParameter:(ToolDFUCommand *)command
+- (void)setWindowParameter:(ToolUSBDFUCommand *)command
             currentVersion:(NSString *)current
              updateVersion:(NSString *)update{
         // DFU処理クラスの参照を設定

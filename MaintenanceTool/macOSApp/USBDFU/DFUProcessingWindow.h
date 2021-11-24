@@ -8,7 +8,6 @@
 #define DFUProcessingWindow_h
 
 #import <Cocoa/Cocoa.h>
-#import "ToolDFUCommand.h"
 
 @interface DFUProcessingWindow : NSWindowController
 

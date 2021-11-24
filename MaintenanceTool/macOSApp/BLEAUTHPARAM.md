@@ -34,8 +34,11 @@ BLE近接認証機能で必要となるパラメーターは、下記の４点�
 
 ### ツール設定画面の表示
 
-管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
-その後、メニューから「Preferences...」をクリックします。
+管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。
+
+<img src="assets/0028.jpg" width="400">
+
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面のメニューから「Preferences...」をクリックします。
 
 <img src="assets03/0001.jpg" width="400">
 
