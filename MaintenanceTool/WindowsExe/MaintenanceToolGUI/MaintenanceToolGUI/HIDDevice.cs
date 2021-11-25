@@ -330,7 +330,8 @@ namespace MaintenanceToolGUI
             productInfo.devicePath = devicePath;
             productInfo.manufacturer = manfString;
             productInfo.product = productName;
-            productInfo.serialNumber = Convert.ToInt32(SN);
+            if (StringIsInteger(SN))
+                productInfo.serialNumber = Convert.ToInt32(SN);
             productInfo.PID = (ushort)attributes.ProductID;
             productInfo.VID = (ushort)attributes.VendorID;
             productInfo.versionNumber = (ushort)attributes.VersionNumber;
