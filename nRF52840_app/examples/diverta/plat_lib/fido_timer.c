@@ -272,7 +272,7 @@ static bool hid_channel_lock_timer_created = false;
 
 static void hid_channel_lock_timeout_handler(void *p_context)
 {
-    fido_hid_channel_lock_timedout_handler(p_context);
+    fido_hid_channel_lock_timedout_handler();
 }
 
 static ret_code_t hid_channel_lock_timer_init(void)

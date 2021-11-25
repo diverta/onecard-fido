@@ -12,4 +12,23 @@ config MCUMGR_SMP_BT_CUSTOM
 	help
 	  Enables handling of SMP commands received over Bluetooth.
 
+#
+# Application settings
+#
+config APP_SETTINGS_BUFFER_SIZE
+	int "Read buffer size for app_settings"
+	default 128
+	depends on SETTINGS && SETTINGS_NVS
+	help
+	  Size of buffer for reading data from NVS
+
+#
+# Enable ATECC608A
+#
+config USE_ATECC608A
+	bool "Use ATECC608A"
+	default n
+	help
+	  Enables using of ATECC608A as EC crypto hardware
+
 source "Kconfig.zephyr"

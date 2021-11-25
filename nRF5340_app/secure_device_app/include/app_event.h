@@ -26,6 +26,8 @@ typedef enum {
     APEVT_USB_CONNECTED,
     APEVT_USB_CONFIGURED,
     APEVT_USB_DISCONNECTED,
+    APEVT_BLE_AVAILABLE,
+    APEVT_BLE_UNAVAILABLE,
     APEVT_BLE_ADVERTISE_STARTED,
     APEVT_BLE_ADVERTISE_STOPPED,
     APEVT_BLE_CONNECTED,
@@ -42,6 +44,8 @@ typedef enum {
     DATEVT_HID_REPORT_RECEIVED,
     DATEVT_HID_REPORT_SENT,
     DATEVT_CCID_DATA_RECEIVED,
+    DATEVT_BLE_REQUEST_RECEIVED,
+    DATEVT_BLE_RESPONSE_SENT,
 } DATA_EVENT_T;
 
 //
@@ -49,6 +53,8 @@ typedef enum {
 //
 bool        app_event_notify(APP_EVENT_T event);
 bool        app_event_notify_for_data(DATA_EVENT_T event, uint8_t *data, size_t data_size);
+void        app_event_main_enable(bool b);
+void        app_event_data_enable(bool b);
 
 #ifdef __cplusplus
 }

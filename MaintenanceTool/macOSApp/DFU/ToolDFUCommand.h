@@ -2,26 +2,17 @@
 //  ToolDFUCommand.h
 //  MaintenanceTool
 //
-//  Created by Makoto Morita on 2019/12/31.
+//  Created by Makoto Morita on 2021/11/22.
 //
-#ifndef ToolDFU_h
-#define ToolDFU_h
-
-#import "usb_dfu_util.h"
+#ifndef ToolDFUCommand_h
+#define ToolDFUCommand_h
 
 @interface ToolDFUCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (bool)checkUSBHIDConnection;
-    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolHIDCommandRef:(id)toolHIDCommandRef;
-    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
-    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev;
-    - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd;
-
-    - (void)commandWillChangeToBootloaderMode;
 
 @end
 
-#endif /* ToolDFU_h */
+#endif /* ToolDFUCommand_h */

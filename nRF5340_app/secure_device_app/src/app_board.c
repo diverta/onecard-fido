@@ -10,9 +10,7 @@
 #include <zephyr.h>
 #include <device.h>
 #include <sys/time_units.h>
-#include <power/reboot.h>
 
-#include "app_main.h"
 #include "app_board.h"
 #include "app_board_define.h"
 #include "app_event.h"
@@ -53,10 +51,16 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 //
 static const struct device *button_0,   *button_1;
 static struct gpio_callback button_cb_0, button_cb_1;
+static bool button_press_enabled = false;
+
+void app_board_button_press_enable(bool b)
+{
+    button_press_enabled = b;
+}
 
 static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status_pressed, uint32_t *time_pressed)
 {
-    if (app_main_initialized() == false) {
+    if (button_press_enabled == false) {
         return false;
     }
 
@@ -65,7 +69,7 @@ static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status
 
     // ボタン検知時刻を取得
     uint32_t time_now = app_board_kernel_uptime_ms_get();
- 
+
     // ２回連続検知の場合は無視
     if (status_now == *status_pressed) {
 #if LOG_BUTTON_PRESSED
@@ -228,9 +232,15 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 
 void app_board_prepare_for_deep_sleep(void)
 {
+    // ポート番号（Port 0=0x00, Port 1=0x20）をピン番号に付加
+    uint32_t sw0_pin_number = SW0_GPIO_PIN;
+    if (strcmp(SW0_GPIO_LABEL, "GPIO_1") == 0) {
+        sw0_pin_number |= (0x1 << 5);
+    }
+
     // Configure to generate PORT event (wakeup) on button-1 press.
-    nrf_gpio_cfg_input(SW0_GPIO_PIN, NRF_GPIO_PIN_PULLUP);
-    nrf_gpio_cfg_sense_set(SW0_GPIO_PIN, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_input(sw0_pin_number, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_sense_set(sw0_pin_number, NRF_GPIO_PIN_SENSE_LOW);
 
     printk("Entering system off; press BUTTON to restart... \n\n\r");
     pm_power_state_force((struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
@@ -243,7 +253,7 @@ void app_board_prepare_for_deep_sleep(void)
 //
 void app_board_prepare_for_system_reset(void)
 {
-    sys_reboot(SYS_REBOOT_WARM);
+    NVIC_SystemReset();
 }
 
 //

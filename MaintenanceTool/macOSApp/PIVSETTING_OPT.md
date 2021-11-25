@@ -15,7 +15,10 @@
 PIV機能の設定は「PIV機能設定画面」上で行います。
 
 まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
-その後、メニュー「Option --> PIV機能設定」を実行します。
+
+<img src="assets/0028.jpg" width="400">
+
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「PIV機能設定」ボタンをクリックします。
 
 <img src="assets05/0001.jpg" width="400">
 

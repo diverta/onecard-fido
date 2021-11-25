@@ -13,6 +13,7 @@
 #include "app_event.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
+#include "app_settings.h"
 #include "app_timer.h"
 
 // ログ出力制御
@@ -104,10 +105,50 @@ static void idling_timer_start(void)
     timer_started = true;
 }
 
+//
+// データチャネル関連処理
+//
+static void data_channel_initialized(void)
+{
+    // 業務処理の初期化
+    app_main_data_channel_initialized();
+
+    // データ処理イベント（DATEVT_XXXX）を
+    // 通知できるようにする
+    app_event_data_enable(true);
+
+    // ボタン押下検知ができるようにする
+    app_board_button_press_enable(true);
+}
+
+static void ble_available(void)
+{
+    // LED点滅管理用のタイマーを
+    // 500ms後に始動させるようにする
+    //   500ms wait --> 
+    //   APEVT_LED_BLINK_BEGINが通知される
+    app_timer_start_for_blinking(500, APEVT_LED_BLINK_BEGIN);
+
+    // 永続化機能を初期化
+    app_settings_initialize();
+    
+    // アドバタイジング開始
+    app_ble_start_advertising();
+}
+
+static void ble_unavailable(void)
+{
+    // 全色LEDを点灯
+    app_status_indicator_abort();
+}
+
 static void ble_advertise_started(void)
 {
     // BLE接続アイドルタイマーを開始
     idling_timer_start();
+
+    // BLEチャネル初期化完了
+    data_channel_initialized();
 }
 
 static void ble_connected(void)
@@ -141,10 +182,16 @@ static void usb_configured(void)
 
     // BLE接続アイドルタイマーを停止
     app_timer_stop_for_idling();
-    
+
     // USBが使用可能になったことを
     // LED点滅制御に通知
     app_status_indicator_notify_usb_available(true);
+
+    // USBチャネル初期化完了
+    data_channel_initialized();
+
+    // 各種業務処理を実行
+    app_main_hid_configured();
 }
 
 static void usb_disconnected(void)
@@ -177,7 +224,7 @@ static void led_blink_begin(void)
 
     // LED点滅管理用のタイマーを始動
     //   100msごとにAPEVT_LED_BLINKが通知される
-    app_timer_start_for_blinking();
+    app_timer_start_for_blinking(100, APEVT_LED_BLINK);
 }
 
 static void led_blink(void)
@@ -199,6 +246,12 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BUTTON_1_RELEASED:
             button_1_pressed();
+            break;
+        case APEVT_BLE_AVAILABLE:
+            ble_available();
+            break;
+        case APEVT_BLE_UNAVAILABLE:
+            ble_unavailable();
             break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();
@@ -248,19 +301,13 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
         case DATEVT_CCID_DATA_RECEIVED:
             app_main_ccid_data_received(data, size);
             break;
+        case DATEVT_BLE_REQUEST_RECEIVED:
+            app_main_ble_request_received(data, size);
+            break;
+        case DATEVT_BLE_RESPONSE_SENT:
+            app_main_ble_response_sent();
+            break;
         default:
             break;
     }
-}
-
-//
-// 業務処理初期化
-//
-void app_process_initialize(void)
-{
-    // LED点滅管理用のタイマーを
-    // 500ms後に始動させるようにする
-    //   500ms wait --> 
-    //   APEVT_LED_BLINK_BEGINが通知される
-    app_timer_start_for_blinking_begin(500);
 }

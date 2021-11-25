@@ -70,7 +70,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
     static uint8_t seq;
 
     // 送信パケット格納領域を初期化
-    memset(&hid_fido_send_buffer, 0x00, sizeof(hid_fido_send_buffer));
+    memset(hid_fido_send_buffer, 0x00, sizeof(hid_fido_send_buffer));
     hid_fido_send_buffer_length = USBD_HID_PACKET_SIZE;
 
     // パケット格納領域を取得

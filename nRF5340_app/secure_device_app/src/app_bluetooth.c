@@ -8,10 +8,12 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 #include <bluetooth/gatt.h>
+#include <settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_pairing.h"
 #include "app_event.h"
+#include "app_ble_fido.h"
 #include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -29,7 +31,6 @@ static struct k_work stop_advertise_work;
 static struct bt_data ad[3];
 static struct bt_data ad_nobredr = BT_DATA_BYTES(BT_DATA_FLAGS, BT_LE_AD_NO_BREDR);
 static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITED | BT_LE_AD_NO_BREDR));
-static struct bt_data ad_uuid_16 = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
 
 //
 // BLEアドバタイズ開始
@@ -45,8 +46,8 @@ static void advertise(struct k_work *work)
         ad[0] = ad_nobredr;
     }
 
-    // サービスUUIDを設定
-    ad[1] = ad_uuid_16;
+    // BLE FIDOサービスUUIDを設定
+    app_ble_fido_ad_uuid_set(&ad[1]);
 
     // BLE SMPサービスUUIDを追加設定
     size_t ad_len = 2;
@@ -130,21 +131,38 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
+static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    if (err == BT_SECURITY_ERR_SUCCESS) {
+        LOG_INF("Security changed: %s level %u", log_strdup(addr), level);
+    } else {
+        LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr), level, err);
+    }
+}
+
 static struct bt_conn_cb conn_callbacks = {
     .connected = connected,
     .disconnected = disconnected,
+    .security_changed = security_changed,
 };
 
 static void bt_ready(int err)
 {
     if (err) {
+        // BLE使用不能イベントを業務処理スレッドに引き渡す
+        app_event_notify(APEVT_BLE_UNAVAILABLE);
         LOG_ERR("Bluetooth init failed (err %d)", err);
         return;
     }
 
-    // アドバタイジング開始
+    // Bluetooth初期処理完了
     LOG_INF("Bluetooth initialized");
-    app_ble_start_advertising();
+
+    // BLE使用可能イベントを業務処理スレッドに引き渡す
+    app_event_notify(APEVT_BLE_AVAILABLE);
 }
 
 void app_bluetooth_start(void)
@@ -163,8 +181,11 @@ void app_bluetooth_start(void)
     k_work_init(&stop_advertise_work, advertise_stop);
 
     // Enable Bluetooth.
+    //   同時に、内部でNVSの初期化(nvs_init)が行われます。
     int rc = bt_enable(bt_ready);
     if (rc != 0) {
+        // BLE使用不能イベントを業務処理スレッドに引き渡す
+        app_event_notify(APEVT_BLE_UNAVAILABLE);
         LOG_ERR("Bluetooth init failed (err %d)", rc);
         return;
     }

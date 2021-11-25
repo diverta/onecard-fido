@@ -19,6 +19,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_ble_receive);
+#endif
+
 // for debug hex dump data
 #define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 
@@ -70,12 +74,13 @@ void fido_ble_receive_init(void)
 
 static bool is_valid_command(uint8_t command)
 {
-    if (command == U2F_COMMAND_PING) {
-        return true;
-    } else if (command == U2F_COMMAND_MSG) {
-        return true;
-    } else {
-        return false;
+    switch (command) {
+        case U2F_COMMAND_PING:
+        case U2F_COMMAND_MSG:
+        case MNT_COMMAND_GET_APP_VERSION:
+            return true;
+        default:
+            return false;
     }
 }
 

@@ -9,7 +9,7 @@
 #import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
 
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -43,7 +43,7 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate     *appDelegate;
+    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
     @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
 
 @end
@@ -58,7 +58,7 @@
         self = [super init];
         if (self) {
             // 画面の参照を保持
-            [self setAppDelegate:delegate];
+            [self setToolAppCommand:delegate];
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
@@ -145,13 +145,13 @@
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示（親画面＝メイン画面）
         if ([[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
-            [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
         }
     }
 
     - (void)commandDidClosePreferenceWindow {
         // メイン画面に制御を戻す
-        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods

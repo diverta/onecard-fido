@@ -4,9 +4,8 @@
 PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入などを行うツールです。
 
 ### 機能
-* ペアリング実行
-* 鍵・証明書削除
-* 鍵・証明書インストール
+* ペアリング実行／解除
+* FIDO鍵・証明書設定
 * PINコード設定
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
@@ -17,10 +16,9 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 * PIV機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
-* 開発時運用機能
 
 ### 画面イメージ
-<img src="../assets/0001.png" width="500">
+<img src="../assets/0001.jpg" width="500">
 
 ### 動作環境
 macOS Sierra (Version 10.12.6) 〜
@@ -29,6 +27,9 @@ macOS Sierra (Version 10.12.6) 〜
 
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
+
+- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
 - <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
@@ -45,8 +46,12 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
+- <b>[ファームウェア更新手順（USB）](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
+
+- <b>[ファームウェア更新手順（BLE）](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b><br>
+管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。<br>
+対象ファームウェアのバージョンは「0.4.0」以降となっています。
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="FIDOAttestationWindow">
+            <connections>
+                <outlet property="buttonCancel" destination="kik-fx-a3Y" id="XLt-ey-xTw"/>
+                <outlet property="buttonDelete" destination="JfA-Vb-BEZ" id="mgd-cL-Zi4"/>
+                <outlet property="buttonInstall" destination="Dez-m3-HUd" id="CzG-jz-gMc"/>
+                <outlet property="buttonSelectCertPath" destination="fCS-O1-mZX" id="2eT-O5-m5N"/>
+                <outlet property="buttonSelectKeyPath" destination="hZ2-cb-asY" id="iSy-WG-7OG"/>
+                <outlet property="textCertPath" destination="g75-lV-bMZ" id="dcb-cL-9kv"/>
+                <outlet property="textKeyPath" destination="OHa-WR-DHI" id="iBV-fK-uQP"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="560" height="145"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
+            <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="560" height="145"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aAi-OX-HpX" userLabel="Title">
+                        <rect key="frame" x="18" y="119" width="524" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="LKL-9P-GXy"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="FIDO鍵・証明書設定" id="163-rf-hqd">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JfA-Vb-BEZ" userLabel="ButtonDelete">
+                        <rect key="frame" x="250" y="13" width="137" height="32"/>
+                        <buttonCell key="cell" type="push" title="鍵・証明書の消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OdN-hU-lMY">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonDeleteDidPress:" target="-2" id="Pze-w4-1aq"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dez-m3-HUd" userLabel="ButtonInstall">
+                        <rect key="frame" x="14" y="13" width="233" height="32"/>
+                        <buttonCell key="cell" type="push" title="鍵・証明書ファイルのインストール" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Av8-BN-gBv">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonInstallDidPress:" target="-2" id="m2e-H2-7yu"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kik-fx-a3Y" userLabel="ButtonCancel">
+                        <rect key="frame" x="464" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DhK-fm-Dfy">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="KvA-Kw-HNR"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dkd-OI-xhe">
+                        <rect key="frame" x="18" y="61" width="125" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="証明書ファイルのパス" id="YPl-hc-Yd0">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hZ2-cb-asY" userLabel="ButtonSelectKeyPath">
+                        <rect key="frame" x="481" y="81" width="65" height="32"/>
+                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MtN-E5-E4Z">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonSelectKeyPathDidPress:" target="-2" id="uDG-IC-PGt"/>
+                        </connections>
+                    </button>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OHa-WR-DHI" userLabel="TextKeyPath">
+                        <rect key="frame" x="155" y="86" width="320" height="21"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="IXH-KM-5x6">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g75-lV-bMZ" userLabel="TextCertPath">
+                        <rect key="frame" x="155" y="57" width="320" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="320" id="Z1P-oP-sjZ"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="S5d-gk-B1l">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fCS-O1-mZX" userLabel="ButtonSelectCertPath">
+                        <rect key="frame" x="481" y="52" width="65" height="32"/>
+                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="xgD-ze-4O1">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonSelectCertPathDidPress:" target="-2" id="Qwd-OF-4fJ"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KZl-Fy-XWe">
+                        <rect key="frame" x="18" y="90" width="125" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="鍵ファイルのパス" id="k1C-41-kWF">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="9" id="2ot-My-TQh"/>
+                    <constraint firstAttribute="bottom" secondItem="JfA-Vb-BEZ" secondAttribute="bottom" constant="20" symbolic="YES" id="BpO-Gi-aSW"/>
+                    <constraint firstItem="KZl-Fy-XWe" firstAttribute="leading" secondItem="dkd-OI-xhe" secondAttribute="leading" id="CpL-ai-6h3"/>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="E50-0T-7tM"/>
+                    <constraint firstItem="KZl-Fy-XWe" firstAttribute="trailing" secondItem="dkd-OI-xhe" secondAttribute="trailing" id="EYw-8J-X19"/>
+                    <constraint firstItem="fCS-O1-mZX" firstAttribute="leading" secondItem="g75-lV-bMZ" secondAttribute="trailing" constant="12" id="GNK-DG-1l1"/>
+                    <constraint firstItem="hZ2-cb-asY" firstAttribute="baseline" secondItem="KZl-Fy-XWe" secondAttribute="baseline" constant="-1" id="KLz-hI-Vcq"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="baseline" secondItem="JfA-Vb-BEZ" secondAttribute="baseline" id="PUT-rl-8tm"/>
+                    <constraint firstItem="JfA-Vb-BEZ" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="256" id="Pbz-bx-rhm"/>
+                    <constraint firstAttribute="trailing" secondItem="aAi-OX-HpX" secondAttribute="trailing" constant="20" symbolic="YES" id="TPN-qA-ZE6"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="baseline" secondItem="dkd-OI-xhe" secondAttribute="baseline" constant="1" id="TvT-U2-0M5"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="trailing" secondItem="OHa-WR-DHI" secondAttribute="trailing" id="VSf-xa-wzD"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="top" secondItem="g75-lV-bMZ" secondAttribute="bottom" constant="16" id="WvK-M1-Ptk"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="leading" secondItem="dkd-OI-xhe" secondAttribute="trailing" constant="14" id="XZo-qn-jgv"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="baseline" secondItem="fCS-O1-mZX" secondAttribute="baseline" constant="2" id="Xfs-7z-tfU"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="baseline" secondItem="kik-fx-a3Y" secondAttribute="baseline" id="Z1o-dZ-qLm"/>
+                    <constraint firstItem="kik-fx-a3Y" firstAttribute="trailing" secondItem="hZ2-cb-asY" secondAttribute="trailing" id="Zu3-hp-Kji"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="leading" secondItem="OHa-WR-DHI" secondAttribute="leading" id="biv-gL-5sr"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="leading" secondItem="aAi-OX-HpX" secondAttribute="leading" id="fHB-om-xpE"/>
+                    <constraint firstItem="hZ2-cb-asY" firstAttribute="baseline" secondItem="OHa-WR-DHI" secondAttribute="baseline" constant="-2" id="fVr-p6-C7h"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="top" secondItem="OHa-WR-DHI" secondAttribute="bottom" constant="8" id="iH1-Yk-UZp"/>
+                    <constraint firstItem="g75-lV-bMZ" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="155" id="jwe-dD-LDI"/>
+                    <constraint firstItem="kik-fx-a3Y" firstAttribute="trailing" secondItem="fCS-O1-mZX" secondAttribute="trailing" id="ohF-gF-6rk"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="123" y="98.5"/>
+        </window>
+    </objects>
+</document>

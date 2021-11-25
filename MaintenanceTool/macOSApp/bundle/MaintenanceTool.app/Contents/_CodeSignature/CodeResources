@@ -10,7 +10,15 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		laqQJt1sYUrl1iI5IEVUaE1juMA=
+		JRJhVMuccQOt4XYyKNDmUVchnko=
+		</data>
+		<key>Resources/BLEDFUProcessingWindow.nib</key>
+		<data>
+		8CfajWOW4lmZRn/651tPUwie6pY=
+		</data>
+		<key>Resources/BLEDFUStartWindow.nib</key>
+		<data>
+		eqGG43tYRTW77o7OOxEzaQ8Y8gU=
 		</data>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<data>
@@ -24,6 +32,10 @@
 		<data>
 		yFypNR3sHIGjuUsxo3PSqtX1S5Y=
 		</data>
+		<key>Resources/FIDOAttestationWindow.nib</key>
+		<data>
+		3Wk+Uc3JPHNZim5IgwhIHY7R8cQ=
+		</data>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<data>
 		D54qFkT4AMWHtrGHIH+XSktlJTU=
@@ -36,6 +48,10 @@
 		<data>
 		zHYCfmUplxJLofoINisEc1Y9g+k=
 		</data>
+		<key>Resources/ToolDFUWindow.nib</key>
+		<data>
+		jiUNLTEzEh7E8omp3kbuHswVC4w=
+		</data>
 		<key>Resources/ToolInfoWindow.nib</key>
 		<data>
 		N64x8R+YqlNadipRaLi8xZ5MTgQ=
@@ -44,13 +60,17 @@
 		<data>
 		jnbnPO9bJ0IbIV7XK8caLFDhjPE=
 		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.0.zip</key>
+		<key>Resources/app_update.PCA10095.0.4.1.bin</key>
 		<data>
-		1SjbISavDqe5j98y5C/FChAWfvY=
+		5rw8vAW+dIBMkK91ov1lsZyhM5E=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.0.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.1.zip</key>
 		<data>
-		6OBp8qyuqBnG5KBBQbi2/WDtuAQ=
+		ZwpG/IkzUS2xosJR2d2dUXz9PYs=
+		</data>
+		<key>Resources/appkg.PCA10059_02.0.3.1.zip</key>
+		<data>
+		AtskTQ8VozUBKe2pDqj/NwHhlqI=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -65,7 +85,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3JQzdtwEpFq4YuHavO5s7LawfCM=
+			ki4xdkLnHgnTzN2FZBoFiSoShNM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -84,7 +104,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			D6odNSdhqxB6/zhmzgt5TOLg+7WZQsADnpLYTu3/Nr0=
+			6n9Qt/3EXw2IAu4Lak69pKiqsYzz8xOeyZ0chOC7XXw=
+			</data>
+		</dict>
+		<key>Resources/BLEDFUProcessingWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Q+7p0VV0ZK0k+RNj+o2PPrueQzZDDufvaWMVyuXATDY=
+			</data>
+		</dict>
+		<key>Resources/BLEDFUStartWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			y0fUDSYprfOYZ0E3DFqmIpu/NIL2BkeOJhdRuvVh8JM=
 			</data>
 		</dict>
 		<key>Resources/DFUProcessingWindow.nib</key>
@@ -108,6 +142,13 @@
 			FZcEg0mSwCWu8v6Naf0pDGzx9OkpZafJvaOqhPjVJvI=
 			</data>
 		</dict>
+		<key>Resources/FIDOAttestationWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			i0bswD7wZquE7xznuhx2EJy0b2VYoDJWCJN/tLrNak8=
+			</data>
+		</dict>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<dict>
 			<key>hash2</key>
@@ -129,6 +170,13 @@
 			wdw4QBYuhSdSR9aaI9Pb4gYPQ18a8uQi+3T7bj8Usb4=
 			</data>
 		</dict>
+		<key>Resources/ToolDFUWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			vijJ63mXk0a/Me1UatwapHa4xBlvRLyHhd9iqcRSuMA=
+			</data>
+		</dict>
 		<key>Resources/ToolInfoWindow.nib</key>
 		<dict>
 			<key>hash2</key>
@@ -143,18 +191,25 @@
 			bbcJ5Oy3A7czEyzg5Q0MbZ1yE0ALXkhUUmsw3OBWEco=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.0.zip</key>
+		<key>Resources/app_update.PCA10095.0.4.1.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			n8J3j+Pi2UmdViYzrCQn7iaQhFv1CSAooRx50FcGZ3s=
+			Q++qDAK+npnr68rqeY3J0pPSC0bUp8CoB8M8x3qYfpw=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.0.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.1.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JXDSD6WPwfbtdEtW6ghesGCvSF9yWrLwE2qP8uLdaZE=
+			zzTj7Gzd0974rwMKT/2oaWCftKnhmlUKW6WtxWbcKNc=
+			</data>
+		</dict>
+		<key>Resources/appkg.PCA10059_02.0.3.1.zip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ELWzH7htwxL6T6E8L/e5S9K2TcEfMAXM85rrT7A9ivs=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
@@ -170,7 +225,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6vqDe8zcXwJlhV6IRoOhkdOcjfyExZ6urBQHpIqTrzo=
+			EpIsn/ogS+DvX9vmkJdbX3rI2D/QJW9JQecL5BHSf98=
 			</data>
 			<key>optional</key>
 			<true/>

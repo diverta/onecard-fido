@@ -58,6 +58,12 @@ void usbd_service_start(void)
     NRF_LOG_DEBUG("usbd_service_start() done");
 }
 
+bool usbd_service_support_bootloader_mode(void)
+{
+    // ブートローダーモード遷移をサポート
+    return true;
+}
+
 void usbd_service_stop_for_bootloader(void)
 {
     // ブートローダーモードに遷移させるため、

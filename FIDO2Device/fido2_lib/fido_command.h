@@ -18,7 +18,6 @@ extern "C" {
 //
 // fido_command.c
 //
-bool fido_command_do_abort(void);
 void fido_command_abort_flag_set(bool flag);
 
 void fido_command_mainsw_event_handler(void);

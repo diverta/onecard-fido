@@ -30,6 +30,6 @@ FIDO認証器管理ツールをmacOS環境にインストールする手順を�
 
 <img src="assets/0005.png" width="400">
 
-U2F管理ツールの画面が起動すれば、インストールは完了です。
+FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="assets/0006.png" width="400">
+<img src="../assets/0001.jpg" width="400">

@@ -4,7 +4,7 @@
  *
  * Created on 2019/02/18, 11:05
  */
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
@@ -18,6 +18,10 @@
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ctap2_client_pin);
+#endif
 
 // for debug cbor data
 #define LOG_HEXDUMP_DEBUG_CBOR      false
@@ -136,7 +140,8 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     memset(&ctap2_request, 0x00, sizeof(ctap2_request));
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }
@@ -619,8 +624,31 @@ void ctap2_client_pin_send_response(void)
             break;
         case subcmd_GetPinToken:
             // レスポンスを戻す
-            fido_log_debug("getPinToken: retry counter store success");
+            fido_log_debug("getPINToken: retry counter store success");
             fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
+            break;
+        default:
+            break;
+    }
+}
+
+void ctap2_client_pin_response_sent(void)
+{
+    switch (ctap2_request.subCommand) {
+        case subcmd_GetRetries:
+            fido_log_info("authenticatorClientPIN(getRetries) end");
+            break;
+        case subcmd_GetKeyAgreement:
+            fido_log_info("authenticatorClientPIN(getKeyAgreement) end");
+            break;
+        case subcmd_SetPin:
+            fido_log_info("authenticatorClientPIN(setPIN) end");
+            break;
+        case subcmd_ChangePin:
+            fido_log_info("authenticatorClientPIN(changePIN) end");
+            break;
+        case subcmd_GetPinToken:
+            fido_log_info("authenticatorClientPIN(getPINToken) end");
             break;
         default:
             break;

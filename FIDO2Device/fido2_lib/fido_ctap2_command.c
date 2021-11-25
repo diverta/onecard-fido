@@ -697,6 +697,11 @@ void fido_ctap2_command_token_counter_record_updated(void)
     }
 }
 
+void fido_ctap2_command_init_response_sent(void)
+{
+    fido_log_debug("CTAPHID_INIT end");
+}
+
 void fido_ctap2_command_cbor_response_sent(void)
 {
     // LEDをアイドル状態に遷移
@@ -717,7 +722,7 @@ void fido_ctap2_command_cbor_response_sent(void)
             fido_log_info("authenticatorReset end");
             break;
         case CTAP2_CMD_CLIENT_PIN:
-            fido_log_info("authenticatorClientPIN end");
+            ctap2_client_pin_response_sent();
             break;
         default:
             break;

@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-void fido_maintenance_command(void);
+void fido_maintenance_command(TRANSPORT_TYPE transport_type);
 void fido_maintenance_command_report_sent(void);
 
 #ifdef __cplusplus

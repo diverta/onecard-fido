@@ -28,6 +28,7 @@ typedef enum : NSInteger {
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_PING,
     COMMAND_TEST_BLE_PING,
+    COMMAND_BLE_GET_VERSION_INFO,
     COMMAND_HID_GET_FLASH_STAT,
     COMMAND_HID_GET_VERSION_INFO,
     COMMAND_HID_GET_VERSION_FOR_DFU,
@@ -40,6 +41,11 @@ typedef enum : NSInteger {
     COMMAND_TOOL_PREF_PARAM,
     COMMAND_TOOL_PREF_PARAM_INQUIRY,
     COMMAND_USB_DFU,
+    COMMAND_BLE_DFU,
+    COMMAND_BLE_DFU_GET_SLOT_INFO,
+    COMMAND_BLE_DFU_UPLOAD_IMAGE,
+    COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE,
+    COMMAND_BLE_DFU_RESET_APPLICATION,
     COMMAND_ERASE_BONDS,
     COMMAND_CCID_PIV_CHANGE_PIN,
     COMMAND_CCID_PIV_CHANGE_PUK,
@@ -63,6 +69,11 @@ typedef enum : NSInteger {
     + (NSString *)getAppVersionString;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
+    + (NSData *)generateSHA256HashDataOf:(NSData *)data;
+    + (void)setLENumber16:(uint16_t)n toBEBytes:(uint8_t *)p;
+    + (void)setLENumber32:(uint32_t)n toBEBytes:(uint8_t *)p;
+    + (uint16_t)getLENumber16FromBEBytes:(uint8_t *)p;
+    + (uint32_t)getLENumber32FromBEBytes:(uint8_t *)p;
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
@@ -80,6 +91,11 @@ typedef enum : NSInteger {
                    informativeText:(NSString *)informativeText;
 
     + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
+
+    + (NSArray<NSString *> *)extractValuesFromVersionInfo:(NSString *)versionInfoCSV;
+    + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage;
+    + (NSString *)extractCSVItemFrom:(NSString *)val;
+    + (int)calculateDecimalVersion:(NSString *)versionStr;
 
 @end
 

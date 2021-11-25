@@ -24,7 +24,7 @@ NRF_LOG_MODULE_REGISTER();
 // ターゲットごとの実装となります。
 //
 #include "fido_ble_pairing.h"
-#include "fido_flash.h"
+#include "fido_flash_plat.h"
 #include "fido_flash_common.h"
 #include "ccid_flash_object.h"
 

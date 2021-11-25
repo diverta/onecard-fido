@@ -7,7 +7,7 @@
 //
 // プラットフォーム非依存コード
 //
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_common.h"
 #include "fido_command_common.h"
@@ -16,6 +16,10 @@
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_maintenance_cryption);
+#endif
 
 // for debug data
 #define LOG_DEBUG_CBOR_REQUEST      false
@@ -85,7 +89,8 @@ static uint8_t decode_request_cbor(uint8_t *cbor_data_buffer, size_t cbor_data_l
     memset(&ctap2_request, 0x00, sizeof(ctap2_request));
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }

@@ -14,6 +14,7 @@ extern "C" {
 uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length);
 void    ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t response_buffer_size);
 void    ctap2_client_pin_send_response(void);
+void    ctap2_client_pin_response_sent(void);
 void    ctap2_client_pin_init(void);
 
 #ifdef __cplusplus

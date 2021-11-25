@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ToolDFUWindow">
+            <connections>
+                <outlet property="buttonBLEDFU" destination="yW2-iH-hwH" id="YfY-7v-9QD"/>
+                <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="FwS-TS-49W"/>
+                <outlet property="buttonUSBDFU" destination="Ces-dO-XfH" id="rKv-kW-D8E"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="410"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
+            <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="358" height="410"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
+                        <rect key="frame" x="29" y="384" width="300" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ファームウェア更新" id="Wzj-Q9-FAI">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <box boxType="secondary" title="nRF52840用" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                        <rect key="frame" x="17" y="226" width="324" height="150"/>
+                        <view key="contentView" id="HzA-xp-MO5">
+                            <rect key="frame" x="3" y="3" width="318" height="135"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonUSBDFU">
+                                    <rect key="frame" x="5" y="94" width="308" height="32"/>
+                                    <buttonCell key="cell" type="push" title="ファームウェアを更新（USB）" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonUSBDFUDidPress:" target="-2" id="tMU-7i-KIv"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwQ-Ka-K4x" userLabel="Title">
+                                    <rect key="frame" x="9" y="20" width="300" height="73"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="296" id="3oZ-UJ-mAn"/>
+                                        <constraint firstAttribute="height" constant="73" id="eVg-Oy-FDo"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="aPz-nR-tho">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">USB経由でファームウェアを更新します。
+
+FIDO認証器は、バージョン0.3.0以降のファームウェアが導入済みのものをご利用ください。</string>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="xwQ-Ka-K4x" secondAttribute="bottom" constant="20" symbolic="YES" id="0K2-iq-L2k"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="HzA-xp-MO5" secondAttribute="leading" constant="11" id="WkM-53-xvh"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="Ces-dO-XfH" secondAttribute="leading" id="Yoz-gk-H75"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="top" secondItem="HzA-xp-MO5" secondAttribute="top" constant="42" id="kBT-uY-SQa"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="top" secondItem="Ces-dO-XfH" secondAttribute="bottom" constant="8" symbolic="YES" id="myC-Up-qGf"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="trailing" secondItem="Ces-dO-XfH" secondAttribute="trailing" id="pGn-w2-q8V"/>
+                            </constraints>
+                        </view>
+                        <font key="titleFont" size="11" name="HiraKakuPro-W3"/>
+                    </box>
+                    <box fixedFrame="YES" boxType="secondary" title="nRF5340用" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                        <rect key="frame" x="17" y="57" width="324" height="150"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="lLQ-Iq-3Cq">
+                            <rect key="frame" x="3" y="3" width="318" height="135"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonBLEDFU">
+                                    <rect key="frame" x="5" y="94" width="308" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="ファームウェアを更新（BLE）" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonBLEDFUDidPress:" target="-2" id="EtH-Aa-FbU"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FvJ-5d-Ckw" userLabel="Title">
+                                    <rect key="frame" x="9" y="20" width="300" height="73"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="cLw-cu-Zy2">
+                                        <font key="font" metaFont="system"/>
+                                        <string key="title">BLE経由でファームウェアを更新します。
+
+FIDO認証器は、バージョン0.4.0以降のファームウェアが導入済みのものをご利用ください。</string>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" size="11" name="HiraKakuPro-W3"/>
+                    </box>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
+                        <rect key="frame" x="138" y="13" width="82" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="rKE-Bt-Ui6"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="centerX" secondItem="kD7-1A-1Hy" secondAttribute="centerX" id="0Xc-EE-wNw"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ICe-ik-bNC"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="top" secondItem="kD7-1A-1Hy" secondAttribute="bottom" constant="8" id="Odt-ZK-UqB"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="9" id="Tpv-7k-n2x"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="31" id="VN2-f1-3cU"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="gLv-qF-EhC"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
+            </connections>
+            <point key="canvasLocation" x="122" y="232"/>
+        </window>
+    </objects>
+</document>

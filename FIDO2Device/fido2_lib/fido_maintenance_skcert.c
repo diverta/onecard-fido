@@ -15,10 +15,17 @@
 #include "fido_command_common.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_cryption.h"
+
+#ifdef CONFIG_USE_ATECC608A
 #include "atecc.h"
+#endif
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_maintenance_skcert);
+#endif
 
 // for debug apdu data
 #define LOG_DEBUG_PUBKEY_BUFF   false
@@ -58,6 +65,7 @@ static bool generate_random_password(void)
     // 32バイトのランダムベクターを生成
     fido_command_generate_random_vector(work_buf, 32);
 
+#ifdef CONFIG_USE_ATECC608A
     // ATECC608Aが利用可能であれば、
     // AESパスワードをFlash ROMに登録せず、
     // ATECC608Aの該当スロットに登録するようにする
@@ -70,6 +78,7 @@ static bool generate_random_password(void)
         memset(work_buf, 0xff, 32);
         fido_log_debug("Update AES password (ATECC608A) success ");
     }
+#endif
 
     // Flash ROMに書き出して保存
     if (fido_flash_password_set(work_buf) == false) {
@@ -80,6 +89,7 @@ static bool generate_random_password(void)
     return true;
 }
 
+#ifdef CONFIG_USE_ATECC608A
 static bool install_privkey_to_atecc(void)
 {
     // 秘密鍵をATECC608Aの１４番スロットに登録
@@ -122,6 +132,7 @@ static bool install_privkey_to_atecc(void)
     memset(fido_maintenance_cryption_data(), 0xff, RAW_PRIVATE_KEY_SIZE);
     return true;
 }
+#endif
 
 static void command_install_skey_cert(void)
 {
@@ -148,6 +159,7 @@ static void command_install_skey_cert(void)
         return;
     }
 
+#ifdef CONFIG_USE_ATECC608A
     // ATECC608Aが利用可能であれば、
     // 秘密鍵をFlash ROMに登録せず、
     // ATECC608Aの該当スロットに登録するようにする
@@ -157,7 +169,8 @@ static void command_install_skey_cert(void)
             return;
         }
     }
-    
+#endif
+
     // Flash ROMに登録する鍵・証明書データを準備
     if (fido_flash_skey_cert_data_prepare(
         fido_maintenance_cryption_data(), fido_maintenance_cryption_size()) == false) {

@@ -54,7 +54,7 @@ uint32_t fido_hid_channel_get_cid_from_bytes(uint8_t *cid);
 void     fido_hid_channel_set_cid_bytes(uint8_t *cid, uint32_t _CID);
 size_t   fido_hid_payload_length_get(USB_HID_MSG_T *recv_msg);
 
-void     fido_hid_channel_lock_timedout_handler(void *context);
+void     fido_hid_channel_lock_timedout_handler(void);
 void     fido_hid_channel_lock_start(uint32_t cid, uint8_t lock_param);
 void     fido_hid_channel_lock_cancel(void);
 uint32_t fido_hid_channel_lock_cid(void);

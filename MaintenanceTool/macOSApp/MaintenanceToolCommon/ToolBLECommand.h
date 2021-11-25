@@ -18,6 +18,7 @@
     - (id)initWithDelegate:(id<ToolBLECommandDelegate>)delegate;
     - (void)displayMessage:(NSString *)string;
     - (void)bleCommandWillProcess:(Command)command;
+    - (void)bleCommandWillProcess:(Command)command forCommand:(id)commandRef;
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd;
     - (void)commandDidProcess:(bool)result message:(NSString *)message;
 
@@ -30,6 +31,7 @@
 
     - (void)notifyToolCommandMessage:(NSString *)message;
     - (void)bleCommandStartedProcess:(Command)command;
+    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref result:(bool)result response:(NSData *)response;
     - (void)bleCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end

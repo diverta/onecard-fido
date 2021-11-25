@@ -16,15 +16,18 @@
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
 
-// for token counter
-#include "fido_flash_token_counter.h"
-
+#ifdef CONFIG_USE_ATECC608A
 // for ATECC608A
 #include "atecc.h"
 #include "atecc_aes.h"
+#endif
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_command_common);
+#endif
 
 //
 // CTAP2、U2Fで共用する各種処理
@@ -68,6 +71,7 @@ bool fido_command_check_aes_password_exist(void)
 
 size_t fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted)
 {
+#ifdef CONFIG_USE_ATECC608A
     // ATECC608Aが利用可能であれば、
     // ATECC608Aに登録されているAESパスワードを使用して復号化
     if (atecc_is_available()) {
@@ -77,12 +81,14 @@ size_t fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size,
             return encrypted_size;
         }
     }
+#endif
 
     return fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), p_encrypted, encrypted_size, decrypted);
 }
 
 size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted)
 {
+#ifdef CONFIG_USE_ATECC608A
     // ATECC608Aが利用可能であれば、
     // ATECC608Aに登録されているAESパスワードを使用して暗号化
     if (atecc_is_available()) {
@@ -92,6 +98,7 @@ size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size,
             return plaintext_size;
         }
     }
+#endif
 
     return fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), p_plaintext, plaintext_size, encrypted);
 }
@@ -209,6 +216,7 @@ void fido_command_sskey_calculate_hmac_sha256(
 //
 static uint8_t signature[ECDSA_SIGNATURE_SIZE];
 
+#ifdef CONFIG_USE_ATECC608A
 static bool do_sign_with_atecc_privkey(void)
 {
     // 署名ベースからハッシュデータを生成
@@ -229,6 +237,7 @@ static bool do_sign_with_atecc_privkey(void)
 
     return true;
 }
+#endif
 
 static bool do_sign_with_privkey(uint8_t *private_key_be)
 {
@@ -254,11 +263,13 @@ static bool do_sign_with_privkey(uint8_t *private_key_be)
 
 bool fido_command_do_sign_with_privkey(void)
 {
+#ifdef CONFIG_USE_ATECC608A
     // ATECC608Aが利用可能であれば、
     // ATECC608Aに登録されている秘密鍵で署名データ作成
     if (atecc_is_available()) {
         return do_sign_with_atecc_privkey();
     }
+#endif
 
     // 認証器固有の秘密鍵を取得
     uint8_t *private_key_be = fido_flash_skey_data();

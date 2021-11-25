@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="BLEDFUStartWindow">
+            <connections>
+                <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="NlF-yn-gO0"/>
+                <outlet property="buttonOK" destination="y4V-cK-FxX" id="cHH-8J-6VL"/>
+                <outlet property="labelCurrentVersion" destination="IzL-CG-LOW" id="FnX-gv-ksM"/>
+                <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="280"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
+            <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="358" height="280"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
+                        <rect key="frame" x="4" y="254" width="350" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ファームウェアを更新" id="Wzj-Q9-FAI">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <box boxType="secondary" title="バージョン情報" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                        <rect key="frame" x="17" y="165" width="324" height="83"/>
+                        <view key="contentView" id="HzA-xp-MO5">
+                            <rect key="frame" x="3" y="3" width="318" height="68"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwQ-Ka-K4x" userLabel="Title">
+                                    <rect key="frame" x="18" y="38" width="184" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="180" id="3oZ-UJ-mAn"/>
+                                        <constraint firstAttribute="height" constant="17" id="eVg-Oy-FDo"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="認証器に導入中のバージョン" id="aPz-nR-tho">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YSw-Da-Bdc" userLabel="LabelUpdateVersion">
+                                    <rect key="frame" x="216" y="13" width="84" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="17" id="9Pk-m2-Lvz"/>
+                                        <constraint firstAttribute="width" constant="80" id="UvC-B2-J5v"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0.0.0" id="W29-Gg-amY">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IzL-CG-LOW" userLabel="LabelCurrentVersion">
+                                    <rect key="frame" x="216" y="38" width="84" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="17" id="I62-nY-HyD"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0.0.0" id="avx-1h-tIm">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nza-Up-a4O" userLabel="Title">
+                                    <rect key="frame" x="18" y="13" width="184" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="更新するバージョン" id="XTs-hc-MTe">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="baseline" secondItem="IzL-CG-LOW" secondAttribute="baseline" id="4Uf-g2-qU2"/>
+                                <constraint firstItem="nza-Up-a4O" firstAttribute="baseline" secondItem="YSw-Da-Bdc" secondAttribute="baseline" id="7oa-jN-B95"/>
+                                <constraint firstAttribute="bottom" secondItem="YSw-Da-Bdc" secondAttribute="bottom" constant="13" id="GdG-20-k4X"/>
+                                <constraint firstItem="nza-Up-a4O" firstAttribute="trailing" secondItem="xwQ-Ka-K4x" secondAttribute="trailing" id="UNU-0d-kyg"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="HzA-xp-MO5" secondAttribute="leading" constant="20" id="WkM-53-xvh"/>
+                                <constraint firstItem="YSw-Da-Bdc" firstAttribute="trailing" secondItem="IzL-CG-LOW" secondAttribute="trailing" id="awB-Ko-O1b"/>
+                                <constraint firstItem="nza-Up-a4O" firstAttribute="firstBaseline" secondItem="YSw-Da-Bdc" secondAttribute="firstBaseline" id="axY-TE-42f"/>
+                                <constraint firstItem="nza-Up-a4O" firstAttribute="leading" secondItem="xwQ-Ka-K4x" secondAttribute="leading" id="gG1-wO-JFG"/>
+                                <constraint firstAttribute="trailing" secondItem="YSw-Da-Bdc" secondAttribute="trailing" constant="20" id="har-3j-1zQ"/>
+                                <constraint firstItem="YSw-Da-Bdc" firstAttribute="top" secondItem="IzL-CG-LOW" secondAttribute="bottom" constant="8" symbolic="YES" id="uGh-sa-50z"/>
+                                <constraint firstItem="YSw-Da-Bdc" firstAttribute="leading" secondItem="IzL-CG-LOW" secondAttribute="leading" id="yFY-2o-3Po"/>
+                            </constraints>
+                        </view>
+                        <font key="titleFont" size="11" name="HiraKakuPro-W3"/>
+                    </box>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="S5S-JP-fCE" userLabel="Title">
+                        <rect key="frame" x="57" y="49" width="244" height="101"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="101" id="iSM-mC-jwW"/>
+                        </constraints>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="zOw-l6-6Ye">
+                            <font key="font" metaFont="system"/>
+                            <string key="title">OKボタンをクリックすると、
+ファームウェア更新処理が開始されます。
+
+処理が完了するまでは、FIDO認証器の
+電源をOnにしたままにして下さい。</string>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y4V-cK-FxX" userLabel="ButtonOK">
+                        <rect key="frame" x="90" y="13" width="82" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="LIU-nl-dhi"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rYD-dY-Ntw">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonOKDidPress:" target="-2" id="Ykl-ZN-zM6"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
+                        <rect key="frame" x="186" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="0XR-bp-Xdl"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="S5S-JP-fCE" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="130" id="00W-Ae-5ib"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="centerX" secondItem="kD7-1A-1Hy" secondAttribute="centerX" id="0Xc-EE-wNw"/>
+                    <constraint firstItem="8IE-Qs-RbR" firstAttribute="leading" secondItem="y4V-cK-FxX" secondAttribute="trailing" constant="26" id="HeX-qp-5Z0"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ICe-ik-bNC"/>
+                    <constraint firstItem="S5S-JP-fCE" firstAttribute="top" secondItem="B1y-5G-Fg0" secondAttribute="bottom" constant="19" id="KW2-ZA-tcy"/>
+                    <constraint firstItem="y4V-cK-FxX" firstAttribute="top" secondItem="S5S-JP-fCE" secondAttribute="bottom" constant="8" id="ONx-E8-PVv"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="top" secondItem="kD7-1A-1Hy" secondAttribute="bottom" constant="6" id="Odt-ZK-UqB"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="9" id="Tpv-7k-n2x"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="6" id="VN2-f1-3cU"/>
+                    <constraint firstItem="y4V-cK-FxX" firstAttribute="top" secondItem="8IE-Qs-RbR" secondAttribute="top" id="fQ0-Qo-TPx"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="gLv-qF-EhC"/>
+                    <constraint firstItem="y4V-cK-FxX" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="96" id="gvo-2e-mVF"/>
+                    <constraint firstAttribute="trailing" secondItem="S5S-JP-fCE" secondAttribute="trailing" constant="59" id="j12-NL-NVc"/>
+                    <constraint firstItem="S5S-JP-fCE" firstAttribute="leading" secondItem="kD7-1A-1Hy" secondAttribute="leading" constant="53" id="nZH-Pn-E0k"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
+            </connections>
+            <point key="canvasLocation" x="122" y="167"/>
+        </window>
+    </objects>
+</document>

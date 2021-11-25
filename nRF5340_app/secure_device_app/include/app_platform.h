@@ -51,9 +51,44 @@ bool        ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *respon
 bool        ble_service_common_erase_bond_data(void (*_response_func)(bool));
 
 //
+// [Dummy] BLE自動認証関連
+//
+void        ble_peripheral_auth_param_init(void);
+bool        ble_peripheral_auth_scan_enable(void);
+bool        ble_peripheral_auth_start_scan(void *context);
+size_t      ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff);
+
+//
+// FIDOトランスポート用関数群
+//
+bool        fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy);
+bool        fido_ble_pairing_mode_get(void);
+bool        fido_ble_service_disconnected(void);
+
+//
+// タイマー関連
+//
+void        fido_user_presence_verify_timer_stop(void);
+void        fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
+void        fido_hid_channel_lock_timer_stop(void);
+void        fido_hid_channel_lock_timer_start(uint32_t lock_ms);
+void        fido_repeat_process_timer_stop(void);
+void        fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void));
+
+//
+// 永続化関連
+//
+bool        fido_flash_token_counter_delete(void);
+bool        fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
+bool        fido_flash_token_counter_read(uint8_t *p_appid_hash);
+uint32_t    fido_flash_token_counter_value(void);
+uint8_t    *fido_flash_token_counter_get_check_hash(void);
+
+//
 // 関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
+bool        usbd_service_support_bootloader_mode(void);
 void        usbd_service_stop_for_bootloader(void);
 
 #ifdef __cplusplus

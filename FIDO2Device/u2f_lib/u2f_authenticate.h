@@ -2,6 +2,8 @@
 #define U2F_AUTHENTICATE_H__
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -16,7 +16,7 @@ NRF_LOG_MODULE_REGISTER();
 // for FIDO
 #include "fido_ble_service.h"
 #include "fido_ble_pairing.h"
-#include "fido_timer.h"
+#include "fido_timer_plat.h"
 
 #include "fido_command.h"
 #include "fido_ble_receive.h"

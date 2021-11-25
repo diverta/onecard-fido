@@ -18,7 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ccid_piv_object.h"
 
 // for nrf_cc310
-#include "fido_crypto.h"
+#include "fido_crypto_plat.h"
 
 // for mbedtls_rsa_private
 #include "mbedtls/rsa.h"
