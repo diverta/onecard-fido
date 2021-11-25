@@ -103,6 +103,12 @@
     <Compile Include="DFUStartForm.Designer.cs">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FIDOAttestationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FIDOAttestationForm.Designer.cs">
+      <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
@@ -242,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DFUStartForm.resx">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FIDOAttestationForm.resx">
+      <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
