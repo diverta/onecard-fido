@@ -30,23 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.buttonQuit = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textPath1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textPath2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.buttonPath1 = new System.Windows.Forms.Button();
-            this.buttonPath2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.buttonSetPinParam = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewLogFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DFUToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DFUNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,10 +49,14 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.開発DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DoEraseBondsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DoBootLoaderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ButtonFIDOAttestation = new System.Windows.Forms.Button();
+            this.buttonSetPivParam = new System.Windows.Forms.Button();
+            this.buttonDFU = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonPairing = new System.Windows.Forms.Button();
+            this.buttonUnpairing = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonQuit
@@ -72,118 +64,35 @@
             this.buttonQuit.Location = new System.Drawing.Point(462, 27);
             this.buttonQuit.Name = "buttonQuit";
             this.buttonQuit.Size = new System.Drawing.Size(110, 25);
-            this.buttonQuit.TabIndex = 0;
+            this.buttonQuit.TabIndex = 6;
             this.buttonQuit.Text = "終了";
             this.buttonQuit.UseVisualStyleBackColor = true;
             this.buttonQuit.Click += new System.EventHandler(this.buttonQuit_Click);
             // 
-            // button1
+            // buttonSetPinParam
             // 
-            this.button1.Location = new System.Drawing.Point(13, 27);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(200, 25);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "ペアリング実行";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(13, 58);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(200, 25);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "鍵・証明書・キーハンドル消去";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // textPath1
-            // 
-            this.textPath1.Location = new System.Drawing.Point(121, 92);
-            this.textPath1.Name = "textPath1";
-            this.textPath1.Size = new System.Drawing.Size(395, 19);
-            this.textPath1.TabIndex = 3;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 95);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 12);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "鍵ファイルのパス";
-            // 
-            // textPath2
-            // 
-            this.textPath2.Location = new System.Drawing.Point(121, 123);
-            this.textPath2.Name = "textPath2";
-            this.textPath2.Size = new System.Drawing.Size(395, 19);
-            this.textPath2.TabIndex = 5;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 126);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 12);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "証明書ファイルのパス";
-            // 
-            // buttonPath1
-            // 
-            this.buttonPath1.Location = new System.Drawing.Point(522, 89);
-            this.buttonPath1.Name = "buttonPath1";
-            this.buttonPath1.Size = new System.Drawing.Size(50, 25);
-            this.buttonPath1.TabIndex = 7;
-            this.buttonPath1.Text = "参照";
-            this.buttonPath1.UseVisualStyleBackColor = true;
-            this.buttonPath1.Click += new System.EventHandler(this.buttonPath1_Click);
-            // 
-            // buttonPath2
-            // 
-            this.buttonPath2.Location = new System.Drawing.Point(522, 120);
-            this.buttonPath2.Name = "buttonPath2";
-            this.buttonPath2.Size = new System.Drawing.Size(50, 25);
-            this.buttonPath2.TabIndex = 8;
-            this.buttonPath2.Text = "参照";
-            this.buttonPath2.UseVisualStyleBackColor = true;
-            this.buttonPath2.Click += new System.EventHandler(this.buttonPath2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(12, 148);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(200, 25);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "鍵・証明書ファイルのインストール";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(12, 179);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(200, 25);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "PINコード設定";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonSetPinParam.Location = new System.Drawing.Point(238, 27);
+            this.buttonSetPinParam.Name = "buttonSetPinParam";
+            this.buttonSetPinParam.Size = new System.Drawing.Size(150, 25);
+            this.buttonSetPinParam.TabIndex = 3;
+            this.buttonSetPinParam.Text = "PINコード設定";
+            this.buttonSetPinParam.UseVisualStyleBackColor = true;
+            this.buttonSetPinParam.Click += new System.EventHandler(this.buttonSetPinParam_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 210);
+            this.textBox1.Location = new System.Drawing.Point(12, 120);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(560, 164);
-            this.textBox1.TabIndex = 12;
+            this.textBox1.Size = new System.Drawing.Size(560, 254);
+            this.textBox1.TabIndex = 8;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ファイルFToolStripMenuItem,
             this.テストTToolStripMenuItem,
-            this.開発DToolStripMenuItem,
             this.その他OToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -194,9 +103,7 @@
             // ファイルFToolStripMenuItem
             // 
             this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ViewLogFileToolStripMenuItem,
-            this.DFUToolStripMenuItem,
-            this.DFUNewToolStripMenuItem});
+            this.ViewLogFileToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
             this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
@@ -207,20 +114,6 @@
             this.ViewLogFileToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.ViewLogFileToolStripMenuItem.Text = "管理ツールのログを参照(&L)";
             this.ViewLogFileToolStripMenuItem.Click += new System.EventHandler(this.ViewLogFileToolStripMenuItem_Click);
-            // 
-            // DFUToolStripMenuItem
-            // 
-            this.DFUToolStripMenuItem.Name = "DFUToolStripMenuItem";
-            this.DFUToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.DFUToolStripMenuItem.Text = "ファームウェアを更新";
-            this.DFUToolStripMenuItem.Click += new System.EventHandler(this.DFUToolStripMenuItem_Click);
-            // 
-            // DFUNewToolStripMenuItem
-            // 
-            this.DFUNewToolStripMenuItem.Name = "DFUNewToolStripMenuItem";
-            this.DFUNewToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.DFUNewToolStripMenuItem.Text = "ファームウェアを新規導入";
-            this.DFUNewToolStripMenuItem.Click += new System.EventHandler(this.DFUNewToolStripMenuItem_Click);
             // 
             // テストTToolStripMenuItem
             // 
@@ -324,45 +217,78 @@
             this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
             this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
             // 
-            // 開発DToolStripMenuItem
+            // ButtonFIDOAttestation
             // 
-            this.開発DToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DoEraseBondsToolStripMenuItem,
-            this.DoBootLoaderModeToolStripMenuItem});
-            this.開発DToolStripMenuItem.Name = "開発DToolStripMenuItem";
-            this.開発DToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.開発DToolStripMenuItem.Text = "開発(&D)";
+            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(422, 89);
+            this.ButtonFIDOAttestation.Name = "ButtonFIDOAttestation";
+            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(150, 25);
+            this.ButtonFIDOAttestation.TabIndex = 7;
+            this.ButtonFIDOAttestation.Text = "FIDO鍵・証明書設定";
+            this.ButtonFIDOAttestation.UseVisualStyleBackColor = true;
+            this.ButtonFIDOAttestation.Click += new System.EventHandler(this.ButtonFIDOAttestation_Click);
             // 
-            // DoEraseBondsToolStripMenuItem
+            // buttonSetPivParam
             // 
-            this.DoEraseBondsToolStripMenuItem.Name = "DoEraseBondsToolStripMenuItem";
-            this.DoEraseBondsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.DoEraseBondsToolStripMenuItem.Text = "ペアリング情報削除";
-            this.DoEraseBondsToolStripMenuItem.Click += new System.EventHandler(this.DoEraseBondsToolStripMenuItem_Click);
+            this.buttonSetPivParam.Enabled = false;
+            this.buttonSetPivParam.Location = new System.Drawing.Point(238, 58);
+            this.buttonSetPivParam.Name = "buttonSetPivParam";
+            this.buttonSetPivParam.Size = new System.Drawing.Size(150, 25);
+            this.buttonSetPivParam.TabIndex = 4;
+            this.buttonSetPivParam.Text = "PIV機能設定";
+            this.buttonSetPivParam.UseVisualStyleBackColor = true;
             // 
-            // DoBootLoaderModeToolStripMenuItem
+            // buttonDFU
             // 
-            this.DoBootLoaderModeToolStripMenuItem.Name = "DoBootLoaderModeToolStripMenuItem";
-            this.DoBootLoaderModeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.DoBootLoaderModeToolStripMenuItem.Text = "ブートローダーモード遷移";
-            this.DoBootLoaderModeToolStripMenuItem.Click += new System.EventHandler(this.DoBootLoaderModeToolStripMenuItem_Click);
+            this.buttonDFU.Location = new System.Drawing.Point(238, 89);
+            this.buttonDFU.Name = "buttonDFU";
+            this.buttonDFU.Size = new System.Drawing.Size(150, 25);
+            this.buttonDFU.TabIndex = 5;
+            this.buttonDFU.Text = "ファームウェア更新";
+            this.buttonDFU.UseVisualStyleBackColor = true;
+            this.buttonDFU.Click += new System.EventHandler(this.buttonDFU_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.buttonPairing);
+            this.groupBox1.Controls.Add(this.buttonUnpairing);
+            this.groupBox1.Location = new System.Drawing.Point(12, 27);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(191, 87);
+            this.groupBox1.TabIndex = 18;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "BLEペアリング";
+            // 
+            // buttonPairing
+            // 
+            this.buttonPairing.Location = new System.Drawing.Point(18, 18);
+            this.buttonPairing.Name = "buttonPairing";
+            this.buttonPairing.Size = new System.Drawing.Size(150, 25);
+            this.buttonPairing.TabIndex = 1;
+            this.buttonPairing.Text = "ペアリング実行";
+            this.buttonPairing.UseVisualStyleBackColor = true;
+            this.buttonPairing.Click += new System.EventHandler(this.buttonPairing_Click);
+            // 
+            // buttonUnpairing
+            // 
+            this.buttonUnpairing.Location = new System.Drawing.Point(18, 49);
+            this.buttonUnpairing.Name = "buttonUnpairing";
+            this.buttonUnpairing.Size = new System.Drawing.Size(150, 25);
+            this.buttonUnpairing.TabIndex = 2;
+            this.buttonUnpairing.Text = "ペアリング解除";
+            this.buttonUnpairing.UseVisualStyleBackColor = true;
+            this.buttonUnpairing.Click += new System.EventHandler(this.buttonUnpairing_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.buttonDFU);
+            this.Controls.Add(this.buttonSetPivParam);
+            this.Controls.Add(this.ButtonFIDOAttestation);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.buttonPath2);
-            this.Controls.Add(this.buttonPath1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textPath2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textPath1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonSetPinParam);
             this.Controls.Add(this.buttonQuit);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -372,8 +298,10 @@
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -382,18 +310,8 @@
         #endregion
 
         private System.Windows.Forms.Button buttonQuit;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textPath1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textPath2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button buttonPath1;
-        private System.Windows.Forms.Button buttonPath2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonSetPinParam;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem その他OToolStripMenuItem;
@@ -411,11 +329,12 @@
         private System.Windows.Forms.ToolStripMenuItem DoHIDGetVersionInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewLogFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DFUToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DFUNewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 開発DToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DoEraseBondsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DoBootLoaderModeToolStripMenuItem;
+        private System.Windows.Forms.Button ButtonFIDOAttestation;
+        private System.Windows.Forms.Button buttonSetPivParam;
+        private System.Windows.Forms.Button buttonDFU;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button buttonPairing;
+        private System.Windows.Forms.Button buttonUnpairing;
     }
 }
 
