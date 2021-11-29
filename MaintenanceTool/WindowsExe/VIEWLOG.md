@@ -16,11 +16,11 @@ FIDO認証器管理ツールの実行中に出力されるログは、Windowsの
 ログファイルの格納場所を、Windowsのエクスプローラで開くことができます。<br>
 下図のメニュー「管理ツールのログを参照」を選択します。
 
-<img src="assets02/0002.png" width="400">
+<img src="assets02/0002.jpg" width="400">
 
 ログファイル「MaintenanceTool.log」を格納するディレクトリーが、Windowsのエクスプローラで表示されます。
 
-<img src="assets02/0003.jpg" width="600">
+<img src="assets02/0003.jpg" width="500">
 
 ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより内容を参照することが可能です。
 
