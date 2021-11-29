@@ -17,7 +17,7 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 * ログファイル格納ディレクトリー参照機能
 
 ### 画面イメージ
-<img src="../assets/0002.png" width="500">
+<img src="../assets/0002.jpg" width="500">
 
 ### 動作環境
 Windows 10（64bit）
