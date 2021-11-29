@@ -43,29 +43,28 @@ PC環境に導入した管理ツールを使用し、鍵・証明書のインス
 
 ## CTAP2ヘルスチェックの実行
 
-MDBT50Q DongleをPCのUSBポートに装着後、管理ツールを起動します。<br>
-「USB HIDデバイスに接続されました。」というメッセージが表示されていることを確認します。
+管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
-<img src="assets/0021.png" width="400">
+<img src="assets/0020.jpg" width="400">
 
-メニューから「テスト(T)」-->「USB」-->「CTAP2ヘルスチェック実行」を選択します。
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面のメニューから「テスト(T)」-->「USB」-->「CTAP2ヘルスチェック実行」を選択します。
 
-<img src="assets/0022.png" width="400">
+<img src="assets/0022.jpg" width="400">
 
 PIN入力画面がポップアップ表示されますので、認証器に設定したPINコード（暗証番号）を入力し「OK」をクリックします。
 
-<img src="assets/0023.png" width="400">
+<img src="assets/0023.jpg" width="400">
 
 ヘルスチェック処理が進み、ほどなく下図のようなメッセージが表示され、ユーザー所在確認が要求されます。
 
-<img src="assets/0024.png" width="400">
+<img src="assets/0024.jpg" width="400">
 
-MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
+FIDO2認証器上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 ヘルスチェック処理が成功すると「CTAP2ヘルスチェックが成功しました。」というメッセージが表示されます。
 
-<img src="assets/0025.png" width="400">
+<img src="assets/0025.jpg" width="400">
 
 これで、CTAP2ヘルスチェックの実行は完了です。
