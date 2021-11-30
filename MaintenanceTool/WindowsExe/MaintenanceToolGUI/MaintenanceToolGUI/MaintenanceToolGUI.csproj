@@ -115,6 +115,7 @@
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolBLEDFU.cs" />
     <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
