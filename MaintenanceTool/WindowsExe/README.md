@@ -40,6 +40,9 @@ Windows版管理ツールを「管理者として実行」しなかった場合�
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをWindows環境にインストールする手順を掲載しています。
 
+- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
+
 - <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
 
@@ -52,7 +55,7 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[自動認証パラメーター設定手順](BLEAUTHPARAM.md)</b><br>
 [BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
 
-- <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
+- <b>[ファームウェア更新手順（USB）](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
