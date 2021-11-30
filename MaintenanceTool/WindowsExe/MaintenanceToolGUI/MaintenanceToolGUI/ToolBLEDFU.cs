@@ -110,8 +110,8 @@ namespace MaintenanceToolGUI
             }
 
             // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
-            int currentVersionDec = CalculateDecimalVersion(CurrentVersion);
-            int updateVersionDec = CalculateDecimalVersion(UpdateVersion);
+            int currentVersionDec = AppCommon.CalculateDecimalVersion(CurrentVersion);
+            int updateVersionDec = AppCommon.CalculateDecimalVersion(UpdateVersion);
             if (currentVersionDec > updateVersionDec) {
                 string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                     CurrentVersion, UpdateVersion);
@@ -129,16 +129,6 @@ namespace MaintenanceToolGUI
             }
 
             return true;
-        }
-
-        private int CalculateDecimalVersion(string versionStr)
-        {
-            // バージョン文字列 "1.2.11" -> "010211" 形式に変換
-            int decimalVersion = 0;
-            foreach (string element in versionStr.Split('.')) {
-                decimalVersion = decimalVersion * 100 + int.Parse(element);
-            }
-            return decimalVersion;
         }
 
         //
