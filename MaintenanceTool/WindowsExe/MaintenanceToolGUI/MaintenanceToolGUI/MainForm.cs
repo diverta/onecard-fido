@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPreference toolPreference;
+        private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
         private string commandTitle = "";
 
@@ -55,6 +56,7 @@ namespace MaintenanceToolGUI
             PinCodeParamFormRef = new PinCodeParamForm();
 
             // DFU処理クラスを生成
+            toolBLEDFU = new ToolBLEDFU(this, ble);
             toolDFU = new ToolDFU(this, hid);
         }
 
@@ -574,6 +576,9 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
 
             // ファームウェア更新
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
+                toolBLEDFU.DoCommandBLEDFU();
+            }
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandDFU();
             }
