@@ -3,7 +3,7 @@ using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
 {
-    internal class BLEMain
+    public class BLEMain
     {
         private enum BLERequestType
         {   

@@ -2,13 +2,14 @@
 
 namespace MaintenanceToolGUI
 {
-    class ToolBLEDFU
+    public class ToolBLEDFU
     {
         // 更新対象アプリケーション＝version 0.4.0
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
 
         // 画面の参照を保持
         private MainForm mainForm;
+        private BLEDFUStartForm startForm;
 
         // 処理クラスの参照を保持
         private BLEMain bleMain;
@@ -33,6 +34,9 @@ namespace MaintenanceToolGUI
 
             // BLE処理クラスの参照を保持
             bleMain = b;
+
+            // 処理開始／進捗画面を生成
+            startForm = new BLEDFUStartForm();
 
             // 更新イメージクラスを初期化
             toolBLEDFUImage = new ToolBLEDFUImage();
@@ -64,10 +68,16 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // TODO: 仮の実装です。
-            AppCommon.OutputLogDebug(string.Format(
-                "ToolBLEDFU: CurrentVersion={0}, CurrentBoardname={1}", CurrentVersion, CurrentBoardname));
-            NotifyCancel();
+            // 処理開始画面を表示
+            if (startForm.OpenForm(mainForm, this)) {
+                // 処理開始画面でOKクリック-->DFU接続成功の場合、
+                // DFU主処理開始
+                DoProcessDFU();
+            } else {
+                // キャンセルボタンがクリックされた場合は
+                // メイン画面に通知
+                NotifyCancel();
+            }
         }
 
         private void NotifyCancel()
@@ -161,6 +171,15 @@ namespace MaintenanceToolGUI
             AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             FormUtil.ShowWarningMessage(mainForm, MainForm.GetMaintenanceToolTitle(), ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             NotifyCancel();
+        }
+
+        // 
+        // DFU主処理
+        // 
+        private void DoProcessDFU()
+        {
+            // TODO: 仮の実装です。
+            mainForm.OnAppMainProcessExited(true);
         }
 
         //
