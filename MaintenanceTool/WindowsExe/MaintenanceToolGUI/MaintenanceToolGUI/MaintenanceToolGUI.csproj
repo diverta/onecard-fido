@@ -295,6 +295,7 @@
     </Compile>
     <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.1.zip" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.1.zip" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.1.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
