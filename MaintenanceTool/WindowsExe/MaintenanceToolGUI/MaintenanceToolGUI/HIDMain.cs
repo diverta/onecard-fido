@@ -416,6 +416,12 @@ namespace MaintenanceToolGUI
 
         private void DoResponseGetFlashStat(byte[] message, int length)
         {
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (message[0] != 0x00) {
+                // エラーの場合は画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
             // 戻りメッセージから、取得情報CSVを抽出
             byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);

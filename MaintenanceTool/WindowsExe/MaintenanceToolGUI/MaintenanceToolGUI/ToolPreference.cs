@@ -219,6 +219,16 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト監視終了
             // TODO
 
+            // 自動認証設定照会でエラーが発生した場合
+            if (toolPreferenceParameter.CommandType == CommandType.COMMAND_AUTH_PARAM_INQUIRY && ret == false) {
+                // 共有情報にデータをセット（BLE自動認証機能を無効化）
+                toolPreferenceParameter.BleScanAuthEnabled = false;
+                ToolContext.GetInstance().SetBleScanAuthParamValues(toolPreferenceParameter);
+                // メイン画面に制御を戻す
+                mainForm.DoResponseToolPreferenceParamInquiry();
+                return;
+            }
+
             // 処理結果を画面表示し、ボタンを押下可能とする
             toolPreferenceForm.OnToolPreferenceCommandExecuted(ret, errMessage);
         }

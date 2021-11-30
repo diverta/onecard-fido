@@ -14,7 +14,7 @@
         // ホーム画面
         public const string MSG_PROMPT_SELECT_PKEY_PATH = "秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_CRT_PATH = "証明書ファイル(CRT)のパスを選択してください";
-        public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・キーハンドルをすべて削除します。";
+        public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_INSTALL_SKEY_CERT = "FIDO認証器に鍵・証明書をインストールします。";
         public const string MSG_PROMPT_INSTL_SKEY_CERT = "インストールを実行しますか？";
@@ -79,7 +79,7 @@
         public const string MSG_COMMENT_START_DFU_PROCESS = "署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち「はい」ボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。";
 
         // コマンド種別に対応する処理名称
-        public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
+        public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書の削除";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";

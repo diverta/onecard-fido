@@ -88,6 +88,12 @@ namespace MaintenanceToolGUI
             return copyright.Copyright;
         }
 
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            // 終了ボタンにフォーカス
+            buttonQuit.Focus();
+        }
+
         private void CommandTimerElapsed(object sender, EventArgs e)
         {
             // コマンドタイムアウト発生時
@@ -135,7 +141,7 @@ namespace MaintenanceToolGUI
             enableButtons(false);
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(button1)) {
+            if (sender.Equals(buttonPairing)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
                 ble.doPairing();
@@ -145,18 +151,7 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
-            if (sender.Equals(button2)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
-                DisplayStartMessage(commandTitle);
-                hid.DoEraseSkeyCert();
-
-            }
-            else if (sender.Equals(button3)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT;
-                DisplayStartMessage(commandTitle);
-                hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
-            }
-            else if (sender.Equals(DoHIDPingTestToolStripMenuItem)) {
+            if (sender.Equals(DoHIDPingTestToolStripMenuItem)) {
                 // CTAPHID_INIT --> CTAPHID_PING の順に実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
                 DisplayStartMessage(commandTitle);
@@ -172,16 +167,11 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoGetVersionInfo();
             } 
-            else if (sender.Equals(DoEraseBondsToolStripMenuItem)) {
+            else if (sender.Equals(buttonUnpairing)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
                 DisplayStartMessage(commandTitle);
                 hid.DoEraseBonds();
 
-            } 
-            else if (sender.Equals(DoBootLoaderModeToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_BOOT_LOADER_MODE;
-                DisplayStartMessage(commandTitle);
-                hid.DoBootLoaderMode();
             } 
             else if (sender.Equals(DoBLEPingTestToolStripMenuItem)) {
                 // BLE経由でPINGコマンドを実行する
@@ -236,6 +226,35 @@ namespace MaintenanceToolGUI
             } else {
                 // PINコード設定
                 hid.DoClientPinSet(f.PinNew, f.PinOld);
+            }
+        }
+
+        private void DoCommandFIDOAttestation(object sender, EventArgs e)
+        {
+            // 鍵・証明書設定画面を表示
+            FIDOAttestationForm f = new FIDOAttestationForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // 鍵・証明書設定画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+
+            // 鍵・証明書消去
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
+                DisplayStartMessage(commandTitle);
+                hid.DoEraseSkeyCert();
+            }
+
+            // 鍵・証明書インストール
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
+                DisplayStartMessage(commandTitle);
+                hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
             }
         }
 
@@ -367,12 +386,6 @@ namespace MaintenanceToolGUI
             bLEToolStripMenuItem.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // ペアリング実行
-            doCommand(sender);
-        }
-
         public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
@@ -382,69 +395,13 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonPairing_Click(object sender, EventArgs e)
         {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_ERASE_SKEY_CERT,
-                ToolGUICommon.MSG_PROMPT_ERASE_SKEY_CERT);
-
-            // 鍵・証明書削除
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, message))
-            {
-                doCommand(sender);
-            }
+            // ペアリング実行
+            doCommand(sender);
         }
 
-        private bool checkPathEntry(TextBox textBox, string errorMessage)
-        {
-            // 入力済みの場合はチェックOK
-            if (textBox.Text.Length > 0)
-            {
-                return true;
-            }
-
-            // 未入力の場合はポップアップメッセージを表示して
-            // テキストボックスにフォーカスを移す
-            FormUtil.ShowWarningMessage(MaintenanceToolTitle, errorMessage);
-            textBox.Focus();
-
-            return false;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // ファイルパス入力チェック
-            if (checkPathEntry(textPath1, ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
-            {
-                return;
-            }
-            if (checkPathEntry(textPath2, ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH) == false)
-            {
-                return;
-            }
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_INSTALL_SKEY_CERT,
-                ToolGUICommon.MSG_PROMPT_INSTL_SKEY_CERT);
-
-            // 鍵・証明書インストール
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, message)) {
-                doCommand(sender);
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
+        private void buttonSetPinParam_Click(object sender, EventArgs e)
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (CheckUSBDeviceDisconnected()) {
@@ -453,32 +410,22 @@ namespace MaintenanceToolGUI
             DoCommandClientPinSet(sender, e);
         }
 
-        private void buttonPath1_Click(object sender, EventArgs e)
+        private void ButtonFIDOAttestation_Click(object sender, EventArgs e)
         {
-            FormUtil.selectFilePath(openFileDialog1,
-                ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH,
-                ToolGUICommon.FILTER_SELECT_PEM_PATH,
-                textPath1);
-        }
-
-        private void buttonPath2_Click(object sender, EventArgs e)
-        {
-            FormUtil.selectFilePath(openFileDialog1,
-                ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH,
-                ToolGUICommon.FILTER_SELECT_CRT_PATH,
-                textPath2);
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            DoCommandFIDOAttestation(sender, e);
         }
 
         private void enableButtons(bool enabled)
         {
-            button1.Enabled = enabled;
-            button2.Enabled = enabled;
-            button3.Enabled = enabled;
-            button4.Enabled = enabled;
-            buttonPath1.Enabled = enabled;
-            buttonPath2.Enabled = enabled;
-            textPath1.Enabled = enabled;
-            textPath2.Enabled = enabled;
+            buttonPairing.Enabled = enabled;
+            buttonUnpairing.Enabled = enabled;
+            buttonSetPinParam.Enabled = enabled;
+            buttonDFU.Enabled = enabled;
+            ButtonFIDOAttestation.Enabled = enabled;
             buttonQuit.Enabled = enabled;
             menuStrip1.Enabled = enabled;
         }
@@ -585,7 +532,7 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void DoEraseBondsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void buttonUnpairing_Click(object sender, EventArgs e)
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (CheckUSBDeviceDisconnected()) {
@@ -602,23 +549,6 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void DoBootLoaderModeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_BOOT_LOADER_MODE,
-                AppCommon.MSG_PROMPT_BOOT_LOADER_MODE);
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
-                return;
-            }
-            // ブートローダーモード遷移コマンドを実行
-            doCommand(sender);
-        }
-
         private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 管理ツールのログファイルを格納している
@@ -626,37 +556,25 @@ namespace MaintenanceToolGUI
             Process.Start(AppCommon.OutputLogFileDirectoryPath());
         }
 
-        private void DFUToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // DFU処理を実行
-            DoCommandDFU(sender, e);
-        }
-
-        private void DFUNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // DFU処理を実行
-            DoCommandDFU(sender, e);
-        }
-
         //
         // DFU関連インターフェース
         //
-        private void DoCommandDFU(object sender, EventArgs e)
+        private void buttonDFU_Click(object sender, EventArgs e)
         {
+            // ファームウェア更新画面を表示
+            DFUForm f = new DFUForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // ファームウェア更新画面でCancelの場合は終了
+                return;
+            }
+
             // ボタンを押下不可とする
             enableButtons(false);
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
 
-            // 処理名称を設定し、処理を開始
-            commandTitle = ToolGUICommon.PROCESS_NAME_USB_DFU;
-            if (sender.Equals(DFUNewToolStripMenuItem)) {
-                // ファームウェア新規導入
-                toolDFU.DoCommandDFUNew();
-            } else {
-                // ファームウェア更新
+            // ファームウェア更新
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandDFU();
             }
         }
