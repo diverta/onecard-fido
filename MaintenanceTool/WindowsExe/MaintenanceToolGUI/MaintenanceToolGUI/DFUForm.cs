@@ -55,5 +55,24 @@ namespace MaintenanceToolGUI
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
         }
+
+        private void buttonBLEDFU_Click(object sender, EventArgs e)
+        {
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                ToolGUICommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                ToolGUICommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+
+            // プロンプトを表示し、Yesの場合だけ処理を続行する
+            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+                return;
+            }
+
+            // 画面入力値をパラメーターに保持
+            CommandTitle = ToolGUICommon.PROCESS_NAME_BLE_DFU;
+
+            // 画面項目を初期化し、この画面を閉じる
+            TerminateWindow(DialogResult.OK);
+        }
     }
 }
