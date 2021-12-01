@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
@@ -7,6 +8,8 @@ namespace MaintenanceToolGUI
     {
         // 更新対象アプリケーション＝version 0.4.0
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
+        // イメージ反映所要時間（秒）
+        public const int DFU_WAITING_SEC_ESTIMATED = 25;
 
         // 画面の参照を保持
         private MainForm mainForm;
@@ -26,6 +29,9 @@ namespace MaintenanceToolGUI
         public string CurrentVersion { get; set; }
         public string CurrentBoardname { get; set; }
 
+        // 転送処理クラス
+        private ToolBLEDFUProcess toolDFUProcess;
+
         // バージョン更新判定フラグ
         private bool NeedCompareUpdateVersion;
 
@@ -43,6 +49,9 @@ namespace MaintenanceToolGUI
 
             // 更新イメージクラスを初期化
             toolBLEDFUImage = new ToolBLEDFUImage();
+
+            // DFU転送処理クラスを初期化
+            toolDFUProcess = new ToolBLEDFUProcess(toolBLEDFUImage);
 
             // バージョン更新判定フラグをリセット
             NeedCompareUpdateVersion = false;
@@ -145,6 +154,17 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // 更新イメージファイル転送完了
+        // ～バージョン照会処理完了の間に
+        // MainFormがタイムアウト検知した場合の処理
+        //
+        public void DoCommandTimedOut()
+        {
+            // DFU処理失敗の旨を処理進捗画面に通知
+            processingForm.NotifyTerminateDFUProcess(false);
+        }
+
+        //
         // バージョン照会処理
         //
         public void NotifyFirmwareVersionResponse(string strFWRev, string strHWRev)
@@ -160,7 +180,7 @@ namespace MaintenanceToolGUI
 
                 // バージョン情報を比較して終了判定
                 // --> 判定結果を処理進捗画面に戻す
-                // dfuProcessingForm.NotifyTerminateDFUProcess(CompareUpdateVersion());
+                processingForm.NotifyTerminateDFUProcess(CompareUpdateVersion());
 
             } else {
                 // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
@@ -176,11 +196,34 @@ namespace MaintenanceToolGUI
             NotifyCancel();
         }
 
+        private bool CompareUpdateVersion()
+        {
+            // バージョン情報を比較
+            bool versionEqual = (CurrentVersion == UpdateVersion);
+            if (versionEqual) {
+                // バージョンが同じであればDFU処理は正常終了
+                AppCommon.OutputLogInfo(string.Format(
+                    ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+
+            } else {
+                // バージョンが同じでなければ異常終了
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
+            }
+
+            // メイン画面に制御を戻す
+            return versionEqual;
+        }
+
         // 
         // DFU主処理
         // 
         private void DoProcessDFU()
         {
+            // DFU主処理を起動
+            Task task = Task.Run(() => {
+                InvokeDFUProcess();
+            });
+
             // 処理進捗画面を表示
             DialogResult ret = processingForm.OpenForm(mainForm);
             if (ret == DialogResult.Cancel) {
@@ -190,6 +233,35 @@ namespace MaintenanceToolGUI
 
             // 処理結果（成功 or 失敗）をメイン画面に戻す
             mainForm.OnAppMainProcessExited(ret == DialogResult.OK);
+        }
+
+        private void InvokeDFUProcess()
+        {
+            // 処理進捗画面にDFU処理開始を通知
+            int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
+            processingForm.NotifyStartDFUProcess(maximum);
+            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+
+            // メイン画面に開始メッセージを表示／処理タイムアウト監視を開始
+            mainForm.OnDFUStarted();
+
+            // DFU主処理を開始
+            toolDFUProcess.PerformDFU(this);
+        }
+
+        public void DFUProcessTerminated(bool success)
+        {
+            if (success) {
+                // 処理進捗画面に通知
+                processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+
+                // DFU転送成功時は、バージョン更新判定フラグをセット
+                NeedCompareUpdateVersion = true;
+
+            } else {
+                // DFU転送失敗時は処理進捗画面に制御を戻す
+                processingForm.NotifyTerminateDFUProcess(success);
+            }
         }
 
         //

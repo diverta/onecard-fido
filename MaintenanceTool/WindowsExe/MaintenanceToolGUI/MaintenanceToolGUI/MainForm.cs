@@ -191,11 +191,15 @@ namespace MaintenanceToolGUI
 
         private bool DoCommandTimedOut(object sender, EventArgs e)
         {
+            // DFU処理の場合、ToolDFU／ToolBLEDFU内で終了処理を行う
+            //  最終的に、OnAppMainProcessExitedを経由して
+            //  MainFormに異常終了が通知されます。
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
-                // DFU処理の場合、ToolDFU内で終了処理を行う
-                //  最終的に、OnAppMainProcessExitedを経由して
-                //  MainFormに異常終了が通知されます。
                 toolDFU.DoCommandTimedOut();
+                return true;
+            }
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
+                toolBLEDFU.DoCommandTimedOut();
                 return true;
             }
 

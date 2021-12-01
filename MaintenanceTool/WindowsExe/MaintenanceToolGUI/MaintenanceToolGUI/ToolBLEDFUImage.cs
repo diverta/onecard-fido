@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace MaintenanceToolGUI
 {
-    class ToolBLEDFUImage
+    public class ToolBLEDFUImage
     {
         //
         // nRF5340アプリケーションファームウェアのバイナリーイメージを保持。
