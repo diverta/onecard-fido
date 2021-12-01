@@ -52,6 +52,7 @@
         public const string MSG_WRITE_UUID_SCAN_PARAM = "FIDO認証器上の自動認証設定を変更します。";
 
         // BLE DFU関連
+        public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
         public const string MSG_DFU_SUB_PROCESS_FAILED = "ファームウェア更新機能の内部処理が失敗しました。";
         public const string MSG_DFU_VERSION_INFO_GET_FAILED = "FIDO認証器ファームウェアのバージョンが取得できませんでした。";
         public const string MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE = "FIDO認証器ファームウェアをバージョン{0}に更新するためには、ファームウェアをバージョン0.4.0以降に更新してください。";

@@ -59,6 +59,8 @@ namespace MaintenanceToolGUI
 
         public void OnFormDestroy()
         {
+            // BLE SMPサービスの接続を切断
+            toolDFUProcess.DoDisconnect();
         }
 
         //
@@ -244,13 +246,19 @@ namespace MaintenanceToolGUI
             // 処理進捗画面にDFU処理開始を通知
             int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
             processingForm.NotifyStartDFUProcess(maximum);
-            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PRE_PROCESS, 0);
 
             // メイン画面に開始メッセージを表示／処理タイムアウト監視を開始
             mainForm.OnDFUStarted();
 
             // DFU主処理を開始
             toolDFUProcess.PerformDFU(this);
+        }
+
+        public void NotifyDFUProcess(string message, int progressValue)
+        {
+            // 進捗表示を更新
+            processingForm.NotifyDFUProcess(message, progressValue);
         }
 
         public void DFUProcessTerminated(bool success)
