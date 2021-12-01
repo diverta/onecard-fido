@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPreference toolPreference;
+        private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
         private string commandTitle = "";
 
@@ -55,6 +56,7 @@ namespace MaintenanceToolGUI
             PinCodeParamFormRef = new PinCodeParamForm();
 
             // DFU処理クラスを生成
+            toolBLEDFU = new ToolBLEDFU(this, ble);
             toolDFU = new ToolDFU(this, hid);
         }
 
@@ -189,11 +191,15 @@ namespace MaintenanceToolGUI
 
         private bool DoCommandTimedOut(object sender, EventArgs e)
         {
+            // DFU処理の場合、ToolDFU／ToolBLEDFU内で終了処理を行う
+            //  最終的に、OnAppMainProcessExitedを経由して
+            //  MainFormに異常終了が通知されます。
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
-                // DFU処理の場合、ToolDFU内で終了処理を行う
-                //  最終的に、OnAppMainProcessExitedを経由して
-                //  MainFormに異常終了が通知されます。
                 toolDFU.DoCommandTimedOut();
+                return true;
+            }
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
+                toolBLEDFU.DoCommandTimedOut();
                 return true;
             }
 
@@ -574,6 +580,9 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
 
             // ファームウェア更新
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
+                toolBLEDFU.DoCommandBLEDFU();
+            }
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandDFU();
             }

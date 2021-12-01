@@ -3,7 +3,7 @@ using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
 {
-    internal class BLEMain
+    public class BLEMain
     {
         private enum BLERequestType
         {   
@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
             TestBLEPing,
             TestBLECTAP2,
             TestBLEU2F,
+            GetVersionInfo,
         };
         private BLERequestType bleRequestType = BLERequestType.None;
 
@@ -84,6 +85,9 @@ namespace MaintenanceToolGUI
             case BLERequestType.TestBLEU2F:
                 DoResponseBLEU2F(receivedMessage, receivedLen);
                 break;
+            case BLERequestType.GetVersionInfo:
+                DoResponseGetVersionInfoForDFU(receivedMessage, receivedLen);
+                break;
             default:
                 break;
             }
@@ -91,6 +95,11 @@ namespace MaintenanceToolGUI
 
         public void OnReceiveBLEFailed(bool critical, byte reserved)
         {
+            if (bleRequestType == BLERequestType.GetVersionInfo) {
+                DoResponseGetVersionInfoForDFU(null, 0);
+                return;
+            }
+
             if (critical) {
                 // BLE接続失敗時等のエラー発生時は画面に制御を戻す
                 // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
@@ -144,6 +153,52 @@ namespace MaintenanceToolGUI
             // BLEヘッダーを除去し、PINGレスポンス処理を実行
             ExtractResponseData(receivedMessage, receivedLen);
             ctap2.DoResponsePing(BLEResponseData, BLEResponseLength);
+        }
+
+        //
+        // バージョン照会コマンド
+        //
+        private ToolBLEDFU toolBLEDFURef;
+
+        public void DoGetVersionInfoForDFU(ToolBLEDFU ref_)
+        {
+            // 呼出し元の参照を保持
+            toolBLEDFURef = ref_;
+            // バージョン照会を実行
+            bleRequestType = BLERequestType.GetVersionInfo;
+            byte[] message = new byte[1];
+            SendBLEMessage(Const.HID_CMD_GET_VERSION_INFO, message, message.Length);
+        }
+
+        private void DoResponseGetVersionInfoForDFU(byte[] receivedMessage, int receivedLen)
+        {
+            // 処理失敗時は、DFU処理クラスに通知
+            if (receivedMessage == null || receivedLen == 0) {
+                toolBLEDFURef.NotifyFirmwareVersionResponseFailed();
+                return;
+            }
+
+            // BLEヘッダーを除去
+            ExtractResponseData(receivedMessage, receivedLen);
+
+            // 戻りメッセージから、取得情報CSVを抽出
+            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(BLEResponseData, BLEResponseLength);
+            string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
+
+            // 情報取得CSVからバージョンに関する情報を抽出
+            string[] vars = responseCSV.Split(',');
+            string strFWRev = "";
+            string strHWRev = "";
+            foreach (string v in vars) {
+                if (v.StartsWith("FW_REV=")) {
+                    strFWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("HW_REV=")) {
+                    strHWRev = v.Split('=')[1].Replace("\"", "");
+                }
+            }
+
+            // DFU処理クラスにバージョンを通知
+            toolBLEDFURef.NotifyFirmwareVersionResponse(strFWRev, strHWRev);
         }
 
         //

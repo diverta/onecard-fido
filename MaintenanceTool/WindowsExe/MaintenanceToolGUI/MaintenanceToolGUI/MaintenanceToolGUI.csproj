@@ -81,6 +81,18 @@
     <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
       <Link>BLEService.cs</Link>
     </Compile>
+    <Compile Include="BLEDFUProcessingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BLEDFUProcessingForm.Designer.cs">
+      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BLEDFUStartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BLEDFUStartForm.designer.cs">
+      <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
@@ -115,6 +127,9 @@
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolBLEDFU.cs" />
+    <Compile Include="ToolBLEDFUImage.cs" />
+    <Compile Include="ToolBLEDFUProcess.cs" />
     <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
@@ -246,6 +261,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BLEDFUProcessingForm.resx">
+      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BLEDFUStartForm.resx">
+      <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DFUForm.resx">
       <DependentUpon>DFUForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -295,6 +316,7 @@
     </Compile>
     <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.1.zip" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.1.zip" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.1.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

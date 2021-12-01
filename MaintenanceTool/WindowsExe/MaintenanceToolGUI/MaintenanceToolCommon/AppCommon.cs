@@ -306,6 +306,16 @@ namespace MaintenanceToolCommon
             return cborBytes;
         }
 
+        public static int CalculateDecimalVersion(string versionStr)
+        {
+            // バージョン文字列 "1.2.11" -> "010211" 形式に変換
+            int decimalVersion = 0;
+            foreach (string element in versionStr.Split('.')) {
+                decimalVersion = decimalVersion * 100 + int.Parse(element);
+            }
+            return decimalVersion;
+        }
+
         //
         // 処理区分
         //

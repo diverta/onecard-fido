@@ -90,13 +90,13 @@
             // 
             // buttonBLEDFU
             // 
-            this.buttonBLEDFU.Enabled = false;
             this.buttonBLEDFU.Location = new System.Drawing.Point(8, 18);
             this.buttonBLEDFU.Name = "buttonBLEDFU";
             this.buttonBLEDFU.Size = new System.Drawing.Size(346, 23);
             this.buttonBLEDFU.TabIndex = 2;
             this.buttonBLEDFU.Text = "ファームウェアを更新（BLE）";
             this.buttonBLEDFU.UseVisualStyleBackColor = true;
+            this.buttonBLEDFU.Click += new System.EventHandler(this.buttonBLEDFU_Click);
             // 
             // label1
             // 
