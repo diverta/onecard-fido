@@ -57,6 +57,10 @@ namespace MaintenanceToolGUI
             NeedCompareUpdateVersion = false;
         }
 
+        public void OnFormDestroy()
+        {
+        }
+
         //
         // メイン画面用のインターフェース
         //

@@ -129,6 +129,7 @@ namespace MaintenanceToolGUI
             // このアプリケーションを終了する
             ble.OnFormDestroy();
             hid.OnFormDestroy();
+            toolBLEDFU.OnFormDestroy();
             AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
