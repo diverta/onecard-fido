@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
 {
@@ -10,6 +11,7 @@ namespace MaintenanceToolGUI
         // 画面の参照を保持
         private MainForm mainForm;
         private BLEDFUStartForm startForm;
+        private BLEDFUProcessingForm processingForm;
 
         // 処理クラスの参照を保持
         private BLEMain bleMain;
@@ -37,6 +39,7 @@ namespace MaintenanceToolGUI
 
             // 処理開始／進捗画面を生成
             startForm = new BLEDFUStartForm();
+            processingForm = new BLEDFUProcessingForm();
 
             // 更新イメージクラスを初期化
             toolBLEDFUImage = new ToolBLEDFUImage();
@@ -178,8 +181,15 @@ namespace MaintenanceToolGUI
         // 
         private void DoProcessDFU()
         {
-            // TODO: 仮の実装です。
-            mainForm.OnAppMainProcessExited(true);
+            // 処理進捗画面を表示
+            DialogResult ret = processingForm.OpenForm(mainForm);
+            if (ret == DialogResult.Cancel) {
+                NotifyCancel();
+                return;
+            }
+
+            // 処理結果（成功 or 失敗）をメイン画面に戻す
+            mainForm.OnAppMainProcessExited(ret == DialogResult.OK);
         }
 
         //

@@ -81,6 +81,12 @@
     <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
       <Link>BLEService.cs</Link>
     </Compile>
+    <Compile Include="BLEDFUProcessingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BLEDFUProcessingForm.Designer.cs">
+      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLEDFUStartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,6 +260,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BLEDFUProcessingForm.resx">
+      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BLEDFUStartForm.resx">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
     </EmbeddedResource>
