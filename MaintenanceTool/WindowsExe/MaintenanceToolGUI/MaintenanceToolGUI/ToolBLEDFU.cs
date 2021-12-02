@@ -279,9 +279,14 @@ namespace MaintenanceToolGUI
         //
         // メッセージボックス
         //
-        void ShowWarningMessage(string captionText, string messageText)
+        private void ShowWarningMessage(string captionText, string messageText)
         {
             FormUtil.ShowWarningMessage(mainForm, captionText, messageText);
+        }
+
+        public void NotifyMessage(string messageText)
+        {
+            mainForm.OnPrintMessageText(messageText);
         }
     }
 }
