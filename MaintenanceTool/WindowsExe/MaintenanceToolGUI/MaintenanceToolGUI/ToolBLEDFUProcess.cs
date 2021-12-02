@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System;
 using System.Linq;
 
 namespace MaintenanceToolGUI
@@ -100,7 +101,7 @@ namespace MaintenanceToolGUI
             SendSMPRequestData(bodyBytes, headerBytes);
         }
 
-        private void DoResponseGetSlotInfo()
+        private void DoResponseGetSlotInfo(byte[] responseData)
         {
             // TODO: 仮の実装です。
             System.Threading.Thread.Sleep(1000);
@@ -138,6 +139,11 @@ namespace MaintenanceToolGUI
                 requestData.Length, dump));
         }
 
+        // 受信済みデータ／バイト数を保持
+        private byte[] ResponseData;
+        private int received = 0;
+        private int totalSize = 0;
+
         public void OnDataReceived(byte[] receivedData)
         {
             // ログ出力
@@ -146,14 +152,42 @@ namespace MaintenanceToolGUI
                 "Incoming SMP response ({0} bytes)\r\n{1}",
                 receivedData.Length, dump));
 
-            // 処理区分に応じて分岐
-            switch (Command) {
-                case BLEDFUCommand.GetSlotInfo:
-                    DoResponseGetSlotInfo();
-                    break;
-                default:
-                    break;
+            // 受信したレスポンスデータを保持
+            int responseSize = receivedData.Length;
+            if (received == 0) {
+                // レスポンスヘッダーからデータ長を抽出
+                totalSize = GetSmpResponseBodySize(receivedData);
+                // 受信済みデータを保持
+                received = responseSize - SMP_HEADER_SIZE;
+                ResponseData = new byte[received];
+                Array.Copy(receivedData, SMP_HEADER_SIZE, ResponseData, 0, received);
+
+            } else {
+                // 受信済みデータに連結
+                received += responseSize;
+                ResponseData.Concat(receivedData);
             }
+
+            // 全フレームを受信したら、レスポンス処理を実行
+            if (received == totalSize) {
+                // 処理区分に応じて分岐
+                switch (Command) {
+                    case BLEDFUCommand.GetSlotInfo:
+                        DoResponseGetSlotInfo(ResponseData);
+                        break;
+                    default:
+                        break;
+                }
+                received = 0;
+                totalSize = 0;
+            }
+        }
+
+        private int GetSmpResponseBodySize(byte[] responseData)
+        {
+            // レスポンスヘッダーの３・４バイト目からデータ長を抽出
+            int totalSize = ((responseData[2] << 8) & 0xff00) + (responseData[3] & 0x00ff);
+            return totalSize;
         }
 
         public void OnTransactionFailed()
