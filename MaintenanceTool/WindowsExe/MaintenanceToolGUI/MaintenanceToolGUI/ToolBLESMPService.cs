@@ -138,19 +138,54 @@ namespace MaintenanceToolGUI
             }
         }
 
+        public async void Send(byte[] requestData)
+        {
+            if (BLESMPService == null) {
+                AppCommon.OutputLogError(string.Format("BLESMPService.Send: service is null"));
+                ToolBLEDFUProcessRef.OnTransactionFailed();
+            }
+
+            try {
+                // リクエストデータを生成
+                DataWriter writer = new DataWriter();
+                for (int i = 0; i < requestData.Length; i++) {
+                    writer.WriteByte(requestData[i]);
+                }
+
+                // 書込みオプションを設定
+                GattWriteOption writeOption = GattWriteOption.WriteWithoutResponse;
+                if ((BLESMPCharacteristic.CharacteristicProperties & GattCharacteristicProperties.WriteWithoutResponse) == 0) {
+                    writeOption = GattWriteOption.WriteWithResponse;
+                }
+
+                // リクエストを実行（SMPキャラクタリスティックに書込）
+                GattCommunicationStatus result = await BLESMPCharacteristic.WriteValueAsync(writer.DetachBuffer(), writeOption);
+                if (result != GattCommunicationStatus.Success) {
+                    AppCommon.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
+                    ToolBLEDFUProcessRef.OnTransactionFailed();
+                }
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
+                ToolBLEDFUProcessRef.OnTransactionFailed();
+            }
+        }
+
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
             try {
-                // レスポンスを受領（U2F Statusを読込）
+                // レスポンスを受領（SMPキャラクタリスティックから読込）
                 uint len = eventArgs.CharacteristicValue.Length;
                 byte[] responseBytes = new byte[len];
                 DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
 
                 // レスポンスを転送
-                // DataReceived(responseBytes, (int)len);
+                ToolBLEDFUProcessRef.OnDataReceived(responseBytes);
 
             } catch (Exception e) {
+                // エラー通知
                 AppCommon.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
+                ToolBLEDFUProcessRef.OnTransactionFailed();
             }
         }
 
