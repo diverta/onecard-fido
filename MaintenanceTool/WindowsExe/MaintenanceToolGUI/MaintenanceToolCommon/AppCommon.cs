@@ -258,6 +258,14 @@ namespace MaintenanceToolCommon
             }
         }
 
+        public static void ConvertUint16ToLEBytes(UInt16 ui, byte[] b, int offset)
+        {
+            byte[] s = BitConverter.GetBytes(ui);
+            for (int i = 0; i < s.Length; i++) {
+                b[i + offset] = s[i];
+            }
+        }
+
         public static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
         {
             // AES256-CBCにより暗号化
