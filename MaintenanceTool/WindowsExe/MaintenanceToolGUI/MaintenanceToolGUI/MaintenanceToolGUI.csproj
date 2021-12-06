@@ -93,6 +93,7 @@
     <Compile Include="BLEDFUStartForm.designer.cs">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BLESMPCBORDecoder.cs" />
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
