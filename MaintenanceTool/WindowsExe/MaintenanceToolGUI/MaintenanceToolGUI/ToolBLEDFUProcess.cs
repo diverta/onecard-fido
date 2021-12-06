@@ -32,9 +32,18 @@ namespace MaintenanceToolGUI
         private BLEDFUCommand Command;
 
         // クラスの参照を保持
-        private ToolBLEDFU ToolBLEDFURef;
         private ToolBLEDFUImage ToolBLEDFUImageRef;
         private ToolBLESMPService ToolBLESMPService;
+
+        // DFU転送処理のイベントを定義
+        public delegate void NotifyDFUProgressEvent(string message, int progressValue);
+        public event NotifyDFUProgressEvent OnNotifyDFUProgress;
+
+        public delegate void NotifyDFUErrorMessageEvent(string message);
+        public event NotifyDFUErrorMessageEvent OnNotifyDFUErrorMessage;
+
+        public delegate void TerminatedDFUProcessEvent(bool success);
+        public event TerminatedDFUProcessEvent OnTerminatedDFUProcess;
 
         public ToolBLEDFUProcess(ToolBLEDFUImage imageRef)
         {
@@ -49,10 +58,8 @@ namespace MaintenanceToolGUI
             ToolBLESMPService.OnTransactionFailed += new ToolBLESMPService.TransactionFailedEvent(OnTransactionFailed);
         }
 
-        public void PerformDFU(ToolBLEDFU dfuRef)
+        public void PerformDFU()
         {
-            ToolBLEDFURef = dfuRef;
-
             // BLE SMPサービスに接続
             DoConnect();
         }
@@ -60,7 +67,7 @@ namespace MaintenanceToolGUI
         private void TerminateDFUProcess(bool success)
         {
             // メイン画面にDFU処理の終了を通知
-            ToolBLEDFURef.DFUProcessTerminated(success);
+            OnTerminatedDFUProcess(success);
         }
 
         //
@@ -96,7 +103,7 @@ namespace MaintenanceToolGUI
         private void DoRequestGetSlotInfo()
         {
             // DFU実行開始を通知
-            ToolBLEDFURef.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+            OnNotifyDFUProgress(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
 
             // リクエストデータを生成
             byte[] bodyBytes = new byte[] { 0xbf, 0xff };
@@ -231,7 +238,7 @@ namespace MaintenanceToolGUI
             // 処理区分に応じて分岐
             switch (Command) {
                 case BLEDFUCommand.GetSlotInfo:
-                    NotifyErrorMessage(ToolGUICommon.MSG_DFU_SLOT_INFO_GET_FAILED);
+                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_SLOT_INFO_GET_FAILED);
                     break;
                 default:
                     break;
@@ -239,13 +246,6 @@ namespace MaintenanceToolGUI
 
             // 画面に異常終了を通知
             TerminateDFUProcess(false);
-        }
-
-        private void NotifyErrorMessage(string message)
-        {
-            // エラーメッセージ文言を画面とログに出力
-            ToolBLEDFURef.NotifyMessage(message);
-            AppCommon.OutputLogError(message);
         }
     }
 }
