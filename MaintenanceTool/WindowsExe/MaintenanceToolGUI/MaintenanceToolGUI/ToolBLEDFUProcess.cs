@@ -38,8 +38,15 @@ namespace MaintenanceToolGUI
 
         public ToolBLEDFUProcess(ToolBLEDFUImage imageRef)
         {
+            // クラスの参照を保持
             ToolBLEDFUImageRef = imageRef;
-            ToolBLESMPService = new ToolBLESMPService(this);
+            ToolBLESMPService = new ToolBLESMPService();
+
+            // BLE SMPサービスのイベントを登録
+            ToolBLESMPService.OnConnected += new ToolBLESMPService.ConnectedEvent(OnConnected);
+            ToolBLESMPService.OnConnectionFailed += new ToolBLESMPService.ConnectionFailedEvent(OnConnectionFailed);
+            ToolBLESMPService.OnDataReceived += new ToolBLESMPService.DataReceivedEvent(OnDataReceived);
+            ToolBLESMPService.OnTransactionFailed += new ToolBLESMPService.TransactionFailedEvent(OnTransactionFailed);
         }
 
         public void PerformDFU(ToolBLEDFU dfuRef)
@@ -65,13 +72,13 @@ namespace MaintenanceToolGUI
             ToolBLESMPService.ConnectBLESMPService();
         }
 
-        public void OnConnectionFailed()
+        private void OnConnectionFailed()
         {
             // 画面に異常終了を通知
             TerminateDFUProcess(false);
         }
 
-        public void OnConnected()
+        private void OnConnected()
         {
             // スロット照会実行からスタート
             DoRequestGetSlotInfo();
@@ -144,7 +151,7 @@ namespace MaintenanceToolGUI
         private int received = 0;
         private int totalSize = 0;
 
-        public void OnDataReceived(byte[] receivedData)
+        private void OnDataReceived(byte[] receivedData)
         {
             // ログ出力
             string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
@@ -190,7 +197,7 @@ namespace MaintenanceToolGUI
             return totalSize;
         }
 
-        public void OnTransactionFailed()
+        private void OnTransactionFailed()
         {
             // 処理区分に応じて分岐
             switch (Command) {

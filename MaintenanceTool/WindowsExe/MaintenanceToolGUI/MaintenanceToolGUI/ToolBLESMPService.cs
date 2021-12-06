@@ -21,12 +21,21 @@ namespace MaintenanceToolGUI
         // サービスをディスカバーできたデバイスを保持
         private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
 
-        // クラスの参照を保持
-        private ToolBLEDFUProcess ToolBLEDFUProcessRef;
+        // BLE SMPサービスのイベントを定義
+        public delegate void ConnectedEvent();
+        public event ConnectedEvent OnConnected;
 
-        public ToolBLESMPService(ToolBLEDFUProcess processRef)
+        public delegate void ConnectionFailedEvent();
+        public event ConnectionFailedEvent OnConnectionFailed;
+
+        public delegate void DataReceivedEvent(byte[] receivedData);
+        public event DataReceivedEvent OnDataReceived;
+
+        public delegate void TransactionFailedEvent();
+        public event TransactionFailedEvent OnTransactionFailed;
+
+        public ToolBLESMPService()
         {
-            ToolBLEDFUProcessRef = processRef;
             FreeResources();
         }
 
@@ -35,14 +44,14 @@ namespace MaintenanceToolGUI
             if (IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await StartCommunicate() == false) {
-                    ToolBLEDFUProcessRef.OnConnectionFailed();
+                    OnConnectionFailed();
                     return;
                 }
                 AppCommon.OutputLogInfo("BLE SMPサービスに接続されました。");
             }
 
             // FIDO認証器に接続完了
-            ToolBLEDFUProcessRef.OnConnected();
+            OnConnected();
         }
 
         public void DisconnectBLESMPService()
@@ -142,7 +151,7 @@ namespace MaintenanceToolGUI
         {
             if (BLESMPService == null) {
                 AppCommon.OutputLogError(string.Format("BLESMPService.Send: service is null"));
-                ToolBLEDFUProcessRef.OnTransactionFailed();
+                OnTransactionFailed();
             }
 
             try {
@@ -162,12 +171,12 @@ namespace MaintenanceToolGUI
                 GattCommunicationStatus result = await BLESMPCharacteristic.WriteValueAsync(writer.DetachBuffer(), writeOption);
                 if (result != GattCommunicationStatus.Success) {
                     AppCommon.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                    ToolBLEDFUProcessRef.OnTransactionFailed();
+                    OnTransactionFailed();
                 }
 
             } catch (Exception e) {
                 AppCommon.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
-                ToolBLEDFUProcessRef.OnTransactionFailed();
+                OnTransactionFailed();
             }
         }
 
@@ -180,12 +189,12 @@ namespace MaintenanceToolGUI
                 DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
 
                 // レスポンスを転送
-                ToolBLEDFUProcessRef.OnDataReceived(responseBytes);
+                OnDataReceived(responseBytes);
 
             } catch (Exception e) {
                 // エラー通知
                 AppCommon.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
-                ToolBLEDFUProcessRef.OnTransactionFailed();
+                OnTransactionFailed();
             }
         }
 
