@@ -110,9 +110,38 @@ namespace MaintenanceToolGUI
 
         private void DoResponseGetSlotInfo(byte[] responseData)
         {
+            // スロット照会情報を参照し、チェックでNGの場合は以降の処理を行わない
+            if (CheckSlotInfo(responseData) == false) {
+                TerminateDFUProcess(false);
+            }
+
             // TODO: 仮の実装です。
             System.Threading.Thread.Sleep(1000);
             TerminateDFUProcess(false);
+        }
+
+        private bool CheckSlotInfo(byte[] responseData)
+        {
+            // CBORをデコードしてスロット照会情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeSlotInfo(responseData) == false) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                return false;
+            }
+
+            // スロット照会情報から、スロット#0のハッシュを抽出
+            byte[] hashSlot = decoder.SlotInfos[0].Hash;
+
+            // SHA-256ハッシュデータをイメージから抽出
+            byte[] hashUpdate = ToolBLEDFUImageRef.SHA256Hash;
+
+            // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
+            bool active = decoder.SlotInfos[0].Active;
+            if (active && hashSlot.Equals(hashUpdate)) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_IMAGE_ALREADY_INSTALLED);
+                return false;
+            }
+            return true;
         }
 
         private byte[] BuildSMPHeader(byte op, byte flags, ushort len, ushort group, byte seq, byte id_int)

@@ -69,6 +69,7 @@
         public const string MSG_DFU_IMAGE_READ_FAILED = "更新ファームウェアの読込に失敗しました。";
         public const string MSG_DFU_IMAGE_TRANSFER_FAILED = "更新ファームウェアの転送に失敗しました。";
         public const string MSG_DFU_IMAGE_TRANSFER_SUCCESS = "更新ファームウェアの転送が完了しました。";
+        public const string MSG_DFU_IMAGE_ALREADY_INSTALLED = "更新ファームウェアが既に導入済みなので、ファームウェア更新処理を続行できません。";
         public const string MSG_DFU_TARGET_NOT_BOOTLOADER_MODE = "FIDO認証器をブートローダーモードに遷移させることができません。";
         public const string MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER = "FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。";
         public const string MSG_DFU_TARGET_NOT_CONNECTED = "FIDO認証器がブートローダーモードに遷移していません。";
