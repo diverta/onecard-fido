@@ -69,6 +69,34 @@ namespace MaintenanceToolGUI
             return true;
         }
 
+        public bool DecodeUploadResultInfo(byte[] cborBytes)
+        {
+            // ルートのMapを抽出
+            CBORObject uploadResultInfoMap = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+
+            // Map内を探索
+            foreach (CBORObject uploadResultInfoKey in uploadResultInfoMap.Keys) {
+                string keyStr = uploadResultInfoKey.AsString();
+                if (keyStr.Equals("rc")) {
+                    // "rc"エントリーを抽出（数値）
+                    byte rc = 0;
+                    if (ParseByteValue(uploadResultInfoMap, uploadResultInfoKey, ref rc) == false) {
+                        return false;
+                    }
+                    ResultInfo.Rc = rc;
+                }
+                if (keyStr.Equals("off")) {
+                    // "off"エントリーを抽出（数値）
+                    UInt32 off = 0;
+                    if (ParseUInt32Value(uploadResultInfoMap, uploadResultInfoKey, ref off) == false) {
+                        return false;
+                    }
+                    ResultInfo.Off = off;
+                }
+            }
+            return true;
+        }
+
         private bool ParseImageArray(CBORObject map, CBORObject key)
         {
             // Mapから指定キーのエントリーを抽出
@@ -134,60 +162,80 @@ namespace MaintenanceToolGUI
         private bool ParseByteValue(CBORObject map, CBORObject key, ref byte b)
         {
             // Mapから指定キーのエントリーを抽出
-            CBORObject active = map[key];
-            if (active == null) {
+            CBORObject value = map[key];
+            if (value == null) {
                 AppCommon.OutputLogError(string.Format("ParseByteValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
-            if (active.Type != CBORType.Number) {
+            if (value.Type != CBORType.Number) {
                 AppCommon.OutputLogError(string.Format("ParseByteValue: {0} is not CBORType.Number", key.AsString()));
                 return false;
             }
 
             // 値を抽出
-            b = active.AsByte();
+            b = value.AsByte();
             return true;
         }
 
         private bool ParseFixedBytesValue(CBORObject map, CBORObject key, ref byte[] b)
         {
             // Mapから指定キーのエントリーを抽出
-            CBORObject active = map[key];
-            if (active == null) {
+            CBORObject value = map[key];
+            if (value == null) {
                 AppCommon.OutputLogError(string.Format("ParseFixedBytesValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
-            if (active.Type != CBORType.ByteString) {
+            if (value.Type != CBORType.ByteString) {
                 AppCommon.OutputLogError(string.Format("ParseFixedBytesValue: {0} is not CBORType.ByteString", key.AsString()));
                 return false;
             }
 
             // 値を抽出
-            b = active.GetByteString();
+            b = value.GetByteString();
             return true;
         }
 
         private bool ParseBooleanValue(CBORObject map, CBORObject key, ref bool b)
         {
             // Mapから指定キーのエントリーを抽出
-            CBORObject active = map[key];
-            if (active == null) {
+            CBORObject value = map[key];
+            if (value == null) {
                 AppCommon.OutputLogError(string.Format("ParseBooleanValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
-            if (active.Type != CBORType.Boolean) {
+            if (value.Type != CBORType.Boolean) {
                 AppCommon.OutputLogError(string.Format("ParseBooleanValue: {0} is not CBORType.Boolean", key.AsString()));
                 return false;
             }
 
             // 値を抽出
-            b = active.AsBoolean();
+            b = value.AsBoolean();
+            return true;
+        }
+
+        private bool ParseUInt32Value(CBORObject map, CBORObject key, ref UInt32 ui)
+        {
+            // Mapから指定キーのエントリーを抽出
+            CBORObject value = map[key];
+            if (value == null) {
+                AppCommon.OutputLogError(string.Format("ParseUInt32Value: {0} is null", key.AsString()));
+                return false;
+            }
+
+            // 型をチェック
+            if (value.Type != CBORType.Number) {
+                AppCommon.OutputLogError(string.Format("ParseUInt32Value: {0} is not CBORType.Number", key.AsString()));
+                return false;
+            }
+
+            // 値を抽出
+            ui = value.AsUInt32();
             return true;
         }
     }
