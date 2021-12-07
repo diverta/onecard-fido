@@ -401,7 +401,7 @@ namespace MaintenanceToolGUI
             } else {
                 // 受信済みデータに連結
                 received += responseSize;
-                ResponseData.Concat(receivedData);
+                ResponseData = ResponseData.Concat(receivedData).ToArray();
             }
 
             // 全フレームを受信したら、レスポンス処理を実行
