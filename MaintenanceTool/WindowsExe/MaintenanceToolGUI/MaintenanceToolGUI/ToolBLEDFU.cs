@@ -55,6 +55,7 @@ namespace MaintenanceToolGUI
 
             // DFU転送処理のイベントを登録
             toolDFUProcess.OnNotifyDFUProgress += new ToolBLEDFUProcess.NotifyDFUProgressEvent(OnNotifyDFUProgress);
+            toolDFUProcess.OnNotifyDFUInfoMessage += new ToolBLEDFUProcess.NotifyDFUInfoMessageEvent(OnNotifyDFUInfoMessage);
             toolDFUProcess.OnNotifyDFUErrorMessage += new ToolBLEDFUProcess.NotifyDFUErrorMessageEvent(OnNotifyDFUErrorMessage);
             toolDFUProcess.OnTerminatedDFUProcess += new ToolBLEDFUProcess.TerminatedDFUProcessEvent(OnTerminatedDFUProcess);
 
@@ -253,6 +254,13 @@ namespace MaintenanceToolGUI
         {
             // 進捗表示を更新
             processingForm.NotifyDFUProcess(message, progressValue);
+        }
+
+        private void OnNotifyDFUInfoMessage(string message)
+        {
+            // メッセージ文言を画面とログに出力
+            NotifyMessage(message);
+            AppCommon.OutputLogInfo(message);
         }
 
         private void OnNotifyDFUErrorMessage(string message)

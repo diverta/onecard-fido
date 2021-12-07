@@ -22,6 +22,8 @@ namespace MaintenanceToolGUI
 
         private const int SMP_HEADER_SIZE = 8;
 
+        private const bool IMAGE_UPDATE_TEST_MODE = true;
+
         // 処理区分
         private enum BLEDFUCommand
         {
@@ -45,6 +47,9 @@ namespace MaintenanceToolGUI
         // DFU転送処理のイベントを定義
         public delegate void NotifyDFUProgressEvent(string message, int progressValue);
         public event NotifyDFUProgressEvent OnNotifyDFUProgress;
+
+        public delegate void NotifyDFUInfoMessageEvent(string message);
+        public event NotifyDFUInfoMessageEvent OnNotifyDFUInfoMessage;
 
         public delegate void NotifyDFUErrorMessageEvent(string message);
         public event NotifyDFUErrorMessageEvent OnNotifyDFUErrorMessage;
@@ -339,9 +344,74 @@ namespace MaintenanceToolGUI
         //
         private void DoRequestChangeImageUpdateMode()
         {
+            // リクエストデータを生成
+            byte[] bodyBytes = GenerateBodyForRequestChangeImageUpdateMode(IMAGE_UPDATE_TEST_MODE);
+            ushort len = (ushort)bodyBytes.Length;
+            byte[] headerBytes = BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
+
+            // リクエストデータを送信
+            Command = BLEDFUCommand.ChangeImageUpdateMode;
+            SendSMPRequestData(bodyBytes, headerBytes);
+        }
+
+        private void DoResponseChangeImageUpdateMode(byte[] responseData)
+        {
+            // スロット照会情報を参照し、チェックでNGの場合は以降の処理を行わない
+            if (CheckUploadedSlotInfo(responseData) == false) {
+                TerminateDFUProcess(false);
+                return;
+            }
+
+            // DFU転送成功を通知
+            OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
+
             // TODO: 仮の実装です。
             System.Threading.Thread.Sleep(1000);
             TerminateDFUProcess(false);
+        }
+
+        private byte[] GenerateBodyForRequestChangeImageUpdateMode(bool imageUpdateTestMode)
+        {
+            // リクエストデータ
+            byte[] body = {
+                0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x00,
+                0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20
+            };
+
+            // イメージ反映モードを設定（confirm=false/true）
+            if (imageUpdateTestMode) {
+                body[9] = 0xf4;
+            } else {
+                body[9] = 0xf5;
+            }
+
+            // SHA-256ハッシュデータをイメージから抽出
+            byte[] hashUpdate = ToolBLEDFUImageRef.SHA256Hash;
+
+            // 本体にSHA-256ハッシュを連結
+            body = body.Concat(hashUpdate).ToArray();
+
+            // 終端文字を設定して戻す
+            byte[] terminator = { 0xff };
+            return body.Concat(terminator).ToArray();
+        }
+
+        private bool CheckUploadedSlotInfo(byte[] responseData)
+        {
+            // CBORをデコードしてスロット照会情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeSlotInfo(responseData) == false) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                return false;
+            }
+
+            // スロット情報の代わりに rc が設定されている場合はエラー
+            byte rc = decoder.ResultInfo.Rc;
+            if (rc != 0) {
+                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc));
+                return false;
+            }
+            return true;
         }
 
         private byte[] BuildSMPHeader(byte op, byte flags, ushort len, ushort group, byte seq, byte id_int)
@@ -414,6 +484,9 @@ namespace MaintenanceToolGUI
                     case BLEDFUCommand.UploadImage:
                         DoResponseUploadImage(ResponseData);
                         break;
+                    case BLEDFUCommand.ChangeImageUpdateMode:
+                        DoResponseChangeImageUpdateMode(ResponseData);
+                        break;
                     default:
                         break;
                 }
@@ -438,6 +511,9 @@ namespace MaintenanceToolGUI
                     break;
                 case BLEDFUCommand.UploadImage:
                     OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED);
+                    break;
+                case BLEDFUCommand.ChangeImageUpdateMode:
+                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED);
                     break;
                 default:
                     break;
