@@ -174,9 +174,30 @@ namespace MaintenanceToolGUI
 
         private void DoResponseUploadImage(byte[] responseData)
         {
-            // TODO: 仮の実装です。
-            System.Threading.Thread.Sleep(1000);
-            TerminateDFUProcess(false);
+            // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
+            if (CheckUploadResultInfo(responseData) == false) {
+                TerminateDFUProcess(false);
+                return;
+            }
+
+            // 転送比率を計算
+            int imageBytesTotal = ToolBLEDFUImageRef.NRF53AppBinSize;
+            int percentage = ImageBytesSent * 100 / imageBytesTotal;
+            AppCommon.OutputLogDebug(string.Format("DFU image sent {0} bytes ({1}%)", ImageBytesSent, percentage));
+
+            // 転送状況を画面表示
+            string progressMessage = string.Format(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
+            OnNotifyDFUProgress(progressMessage, percentage);
+
+            // イメージ全体が転送されたかどうかチェック
+            if (ImageBytesSent < imageBytesTotal) {
+                // 転送処理を続行
+                DoRequestUploadImage();
+
+            } else {
+                // 反映要求に移行
+                DoRequestChangeImageUpdateMode();
+            }
         }
 
         private byte[] GenerateBodyForRequestUploadImage()
@@ -285,6 +306,37 @@ namespace MaintenanceToolGUI
 
             // 転送イメージを連結して戻す
             return bodyBytes.Concat(sendData).ToArray();
+        }
+
+        private bool CheckUploadResultInfo(byte[] responseData)
+        {
+            // CBORをデコードして転送結果情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeUploadResultInfo(responseData) == false) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                return false;
+            }
+
+            // 転送結果情報の rc が設定されている場合はエラー
+            byte rc = decoder.ResultInfo.Rc;
+            if (rc != 0) {
+                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc));
+                return false;
+            }
+
+            // 転送結果情報の off 値を転送済みバイト数に設定
+            ImageBytesSent = (int)decoder.ResultInfo.Off;
+            return true;
+        }
+
+        //
+        // 反映要求
+        //
+        private void DoRequestChangeImageUpdateMode()
+        {
+            // TODO: 仮の実装です。
+            System.Threading.Thread.Sleep(1000);
+            TerminateDFUProcess(false);
         }
 
         private byte[] BuildSMPHeader(byte op, byte flags, ushort len, ushort group, byte seq, byte id_int)
