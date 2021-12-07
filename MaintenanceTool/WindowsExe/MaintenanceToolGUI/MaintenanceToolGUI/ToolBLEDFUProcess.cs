@@ -32,6 +32,9 @@ namespace MaintenanceToolGUI
         };
         private BLEDFUCommand Command;
 
+        // 転送元データを保持
+        byte[] ImageDataTotal;
+
         // 転送済みバイト数を保持
         private int ImageBytesSent = 0;
 
@@ -126,6 +129,9 @@ namespace MaintenanceToolGUI
                 TerminateDFUProcess(false);
             }
 
+            // 転送元データを抽出
+            ImageDataTotal = ToolBLEDFUImageRef.NRF53AppBin.Take(ToolBLEDFUImageRef.NRF53AppBinSize).ToArray();
+
             // 転送済みバイト数を事前にクリア
             ImageBytesSent = 0;
 
@@ -205,16 +211,15 @@ namespace MaintenanceToolGUI
             // リクエストデータ
             byte[] body = { 0xbf };
 
-            // 転送元データ
-            byte[] imageDataTotal = ToolBLEDFUImageRef.NRF53AppBin;
-            uint bytesTotal = (uint)ToolBLEDFUImageRef.NRF53AppBinSize;
+            // 転送元データ長
+            uint bytesTotal = (uint)ImageDataTotal.Length;
 
             if (ImageBytesSent == 0) {
                 // 初回呼び出しの場合、イメージ長を設定
                 body = body.Concat(GenerateLenBytes(bytesTotal)).ToArray();
 
                 // イメージのハッシュ値を設定
-                body = body.Concat(GenerateSHA256HashData(imageDataTotal)).ToArray();
+                body = body.Concat(GenerateSHA256HashData(ImageDataTotal)).ToArray();
             }
 
             // 転送済みバイト数を設定
@@ -222,7 +227,7 @@ namespace MaintenanceToolGUI
 
             // 転送イメージを連結（データ本体が240バイトに収まるよう、上限サイズを事前計算）
             int remainingSize = 240 - body.Length - 1;
-            body = body.Concat(GenerateDataBytes(imageDataTotal, ImageBytesSent, remainingSize)).ToArray();
+            body = body.Concat(GenerateDataBytes(ImageDataTotal, ImageBytesSent, remainingSize)).ToArray();
 
             // 終端文字を設定して戻す
             byte[] terminator = { 0xff };
