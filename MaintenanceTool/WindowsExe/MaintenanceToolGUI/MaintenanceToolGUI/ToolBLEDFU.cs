@@ -165,17 +165,6 @@ namespace MaintenanceToolGUI
         }
 
         //
-        // 更新イメージファイル転送完了
-        // ～バージョン照会処理完了の間に
-        // MainFormがタイムアウト検知した場合の処理
-        //
-        public void DoCommandTimedOut()
-        {
-            // DFU処理失敗の旨を処理進捗画面に通知
-            processingForm.NotifyTerminateDFUProcess(false);
-        }
-
-        //
         // バージョン照会処理
         //
         public void NotifyFirmwareVersionResponse(string strFWRev, string strHWRev)
@@ -253,8 +242,8 @@ namespace MaintenanceToolGUI
             processingForm.NotifyStartDFUProcess(maximum);
             processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PRE_PROCESS, 0);
 
-            // メイン画面に開始メッセージを表示／処理タイムアウト監視を開始
-            mainForm.OnDFUStarted();
+            // メイン画面に開始メッセージを表示
+            mainForm.OnBLEDFUStarted();
 
             // DFU主処理を開始
             toolDFUProcess.PerformDFU();
