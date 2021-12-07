@@ -253,12 +253,12 @@ namespace MaintenanceToolGUI
 
             } else if (bytesSent < 0x10000) {
                 offBytes[4] = 0x19;
-                AppCommon.ConvertUint16ToLEBytes((UInt16)bytesSent, offBytes, 5);
+                AppCommon.ConvertUint16ToBEBytes((UInt16)bytesSent, offBytes, 5);
                 len = 7;
 
             } else {
                 offBytes[4] = 0x1a;
-                AppCommon.ConvertUint32ToLEBytes((UInt32)bytesSent, offBytes, 5);
+                AppCommon.ConvertUint32ToBEBytes((UInt32)bytesSent, offBytes, 5);
             }
 
             // 不要な末尾バイトを除去して戻す
