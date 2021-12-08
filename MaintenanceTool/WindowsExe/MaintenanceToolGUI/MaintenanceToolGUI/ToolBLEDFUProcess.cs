@@ -57,6 +57,9 @@ namespace MaintenanceToolGUI
         public delegate void TerminatedDFUProcessEvent(bool success);
         public event TerminatedDFUProcessEvent OnTerminatedDFUProcess;
 
+        // 応答タイムアウト監視用タイマー
+        private CommandTimer responseTimer = null;
+
         public ToolBLEDFUProcess(ToolBLEDFUImage imageRef)
         {
             // クラスの参照を保持
@@ -68,6 +71,10 @@ namespace MaintenanceToolGUI
             ToolBLESMPService.OnConnectionFailed += new ToolBLESMPService.ConnectionFailedEvent(OnConnectionFailed);
             ToolBLESMPService.OnDataReceived += new ToolBLESMPService.DataReceivedEvent(OnDataReceived);
             ToolBLESMPService.OnTransactionFailed += new ToolBLESMPService.TransactionFailedEvent(OnTransactionFailed);
+
+            // 応答タイムアウト発生時のイベントを登録
+            responseTimer = new CommandTimer("ToolBLEDFUProcess", 10000);
+            responseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
         }
 
         public void PerformDFU()
@@ -453,6 +460,9 @@ namespace MaintenanceToolGUI
             AppCommon.OutputLogDebug(string.Format(
                 "Transmit SMP request ({0} bytes)\r\n{1}",
                 requestData.Length, dump));
+
+            // 応答タイムアウト監視開始
+            responseTimer.Start();
         }
 
         // 受信済みデータ／バイト数を保持
@@ -462,6 +472,9 @@ namespace MaintenanceToolGUI
 
         private void OnDataReceived(byte[] receivedData)
         {
+            // 応答タイムアウト監視終了
+            responseTimer.Stop();
+
             // ログ出力
             string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
             AppCommon.OutputLogDebug(string.Format(
@@ -514,6 +527,9 @@ namespace MaintenanceToolGUI
 
         private void OnTransactionFailed()
         {
+            // 応答タイムアウト監視終了
+            responseTimer.Stop();
+
             // 処理区分に応じて分岐
             switch (Command) {
                 case BLEDFUCommand.GetSlotInfo:
@@ -530,6 +546,16 @@ namespace MaintenanceToolGUI
             }
 
             // 画面に異常終了を通知
+            TerminateDFUProcess(false);
+        }
+
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_PROCESS_TIMEOUT);
             TerminateDFUProcess(false);
         }
     }
