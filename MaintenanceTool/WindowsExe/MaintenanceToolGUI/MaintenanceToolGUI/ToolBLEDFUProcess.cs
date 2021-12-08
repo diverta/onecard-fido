@@ -159,10 +159,19 @@ namespace MaintenanceToolGUI
             // SHA-256ハッシュデータをイメージから抽出
             byte[] hashUpdate = ToolBLEDFUImageRef.SHA256Hash;
 
+            // スロット#0と転送対象イメージのハッシュを比較
+            bool hashIsEqual = true;
+            for (int i = 0; i < 32; i++) {
+                if (hashSlot[i] != hashUpdate[i]) {
+                    hashIsEqual = false;
+                    break;
+                }
+            }
+
             // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
             bool active = decoder.SlotInfos[0].Active;
-            if (active && hashSlot.Equals(hashUpdate)) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_IMAGE_ALREADY_INSTALLED);
+            if (active && hashIsEqual) {
+                OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_IMAGE_ALREADY_INSTALLED);
                 return false;
             }
             return true;
