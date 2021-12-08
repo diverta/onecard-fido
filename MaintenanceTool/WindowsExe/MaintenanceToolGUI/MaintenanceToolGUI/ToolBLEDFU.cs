@@ -47,6 +47,9 @@ namespace MaintenanceToolGUI
             startForm = new BLEDFUStartForm();
             processingForm = new BLEDFUProcessingForm();
 
+            // Cancelボタン押下イベントを登録
+            processingForm.OnCanceledDFUByUser += new BLEDFUProcessingForm.CanceledDFUByUserEvent(OnCanceledDFUByUser);
+
             // 更新イメージクラスを初期化
             toolBLEDFUImage = new ToolBLEDFUImage();
 
@@ -57,6 +60,7 @@ namespace MaintenanceToolGUI
             toolDFUProcess.OnNotifyDFUProgress += new ToolBLEDFUProcess.NotifyDFUProgressEvent(OnNotifyDFUProgress);
             toolDFUProcess.OnNotifyDFUInfoMessage += new ToolBLEDFUProcess.NotifyDFUInfoMessageEvent(OnNotifyDFUInfoMessage);
             toolDFUProcess.OnNotifyDFUErrorMessage += new ToolBLEDFUProcess.NotifyDFUErrorMessageEvent(OnNotifyDFUErrorMessage);
+            toolDFUProcess.OnNotifyDFUTransfer += new ToolBLEDFUProcess.NotifyDFUTransferEvent(OnNotifyDFUTransfer);
             toolDFUProcess.OnTerminatedDFUProcess += new ToolBLEDFUProcess.TerminatedDFUProcessEvent(OnTerminatedDFUProcess);
 
             // バージョン更新判定フラグをリセット
@@ -238,6 +242,9 @@ namespace MaintenanceToolGUI
 
         private void InvokeDFUProcess()
         {
+            // キャンセルフラグをクリア
+            toolDFUProcess.CancelFlag = false;
+
             // 処理進捗画面にDFU処理開始を通知
             int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
             processingForm.NotifyStartDFUProcess(maximum);
@@ -270,8 +277,31 @@ namespace MaintenanceToolGUI
             AppCommon.OutputLogError(message);
         }
 
+        private void OnNotifyDFUTransfer(bool transferring)
+        {
+            // 処理進捗画面のCancelボタンを押下可能／不可能とする
+            processingForm.NotifyCancelable(transferring);
+        }
+
+        private void OnCanceledDFUByUser()
+        {
+            // 処理進捗画面のCancelボタンがクリックされた場合
+            // メッセージ文言を画面とログに出力
+            OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+
+            // キャンセルフラグを設定
+            toolDFUProcess.CancelFlag = true;
+        }
+
         private void OnTerminatedDFUProcess(bool success)
         {
+            if (toolDFUProcess.CancelFlag) {
+                // 転送が中止された旨を、処理通知画面に通知
+                toolDFUProcess.CancelFlag = false;
+                processingForm.NotifyCancelDFUProcess();
+                return;
+            }
+
             if (success) {
                 // 処理進捗画面に通知
                 processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);

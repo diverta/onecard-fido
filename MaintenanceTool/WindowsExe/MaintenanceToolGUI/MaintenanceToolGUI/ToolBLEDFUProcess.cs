@@ -40,6 +40,9 @@ namespace MaintenanceToolGUI
         // 転送済みバイト数を保持
         private int ImageBytesSent = 0;
 
+        // 処理進捗画面でCancelボタンが押下されたら true
+        public bool CancelFlag { get; set; }
+
         // クラスの参照を保持
         private ToolBLEDFUImage ToolBLEDFUImageRef;
         private ToolBLESMPService ToolBLESMPService;
@@ -53,6 +56,9 @@ namespace MaintenanceToolGUI
 
         public delegate void NotifyDFUErrorMessageEvent(string message);
         public event NotifyDFUErrorMessageEvent OnNotifyDFUErrorMessage;
+
+        public delegate void NotifyDFUTransferEvent(bool transferring);
+        public event NotifyDFUTransferEvent OnNotifyDFUTransfer;
 
         public delegate void TerminatedDFUProcessEvent(bool success);
         public event TerminatedDFUProcessEvent OnTerminatedDFUProcess;
@@ -202,6 +208,12 @@ namespace MaintenanceToolGUI
 
         private void DoResponseUploadImage(byte[] responseData)
         {
+            // 処理進捗画面でCancelボタンが押下された時は、転送処理を終了し、BLE接続を切断
+            if (CancelFlag) {
+                TerminateDFUProcess(false);
+                return;
+            }
+
             // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
             if (CheckUploadResultInfo(responseData) == false) {
                 TerminateDFUProcess(false);
@@ -219,10 +231,14 @@ namespace MaintenanceToolGUI
 
             // イメージ全体が転送されたかどうかチェック
             if (ImageBytesSent < imageBytesTotal) {
+                // 転送中であることを通知
+                OnNotifyDFUTransfer(true);
                 // 転送処理を続行
                 DoRequestUploadImage();
 
             } else {
+                // 転送が完了したことを通知
+                OnNotifyDFUTransfer(false);
                 // 反映要求に移行
                 DoRequestChangeImageUpdateMode();
             }
