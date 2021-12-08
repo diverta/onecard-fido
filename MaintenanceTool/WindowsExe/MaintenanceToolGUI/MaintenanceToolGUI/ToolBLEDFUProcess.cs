@@ -233,12 +233,14 @@ namespace MaintenanceToolGUI
             if (ImageBytesSent < imageBytesTotal) {
                 // 転送中であることを通知
                 OnNotifyDFUTransfer(true);
+
                 // 転送処理を続行
                 DoRequestUploadImage();
 
             } else {
                 // 転送が完了したことを通知
                 OnNotifyDFUTransfer(false);
+
                 // 反映要求に移行
                 DoRequestChangeImageUpdateMode();
             }
@@ -398,9 +400,8 @@ namespace MaintenanceToolGUI
             // DFU転送成功を通知
             OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
 
-            // TODO: 仮の実装です。
-            System.Threading.Thread.Sleep(1000);
-            TerminateDFUProcess(false);
+            // リセット要求に移行
+            DoRequestResetApplication();
         }
 
         private byte[] GenerateBodyForRequestChangeImageUpdateMode(bool imageUpdateTestMode)
@@ -445,6 +446,27 @@ namespace MaintenanceToolGUI
                 return false;
             }
             return true;
+        }
+
+        //
+        // リセット要求
+        //
+        private void DoRequestResetApplication()
+        {
+            // リクエストデータを生成
+            byte[] bodyBytes = new byte[] { 0xbf, 0xff };
+            ushort len = (ushort)bodyBytes.Length;
+            byte[] headerBytes = BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_OS_MGMT, 0x00, CMD_OS_MGMT_RESET);
+
+            // リクエストデータを送信
+            Command = BLEDFUCommand.ResetApplication;
+            SendSMPRequestData(bodyBytes, headerBytes);
+        }
+
+        private void DoResponseResetApplication(byte[] responseData)
+        {
+            // DFU主処理の正常終了を通知
+            TerminateDFUProcess(true);
         }
 
         private byte[] BuildSMPHeader(byte op, byte flags, ushort len, ushort group, byte seq, byte id_int)
@@ -526,6 +548,9 @@ namespace MaintenanceToolGUI
                     case BLEDFUCommand.ChangeImageUpdateMode:
                         DoResponseChangeImageUpdateMode(ResponseData);
                         break;
+                    case BLEDFUCommand.ResetApplication:
+                        DoResponseResetApplication(ResponseData);
+                        break;
                     default:
                         break;
                 }
@@ -556,6 +581,9 @@ namespace MaintenanceToolGUI
                     break;
                 case BLEDFUCommand.ChangeImageUpdateMode:
                     OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED);
+                    break;
+                case BLEDFUCommand.ResetApplication:
+                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_RESET_APPLICATION_FAILED);
                     break;
                 default:
                     break;
