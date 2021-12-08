@@ -245,7 +245,7 @@ namespace MaintenanceToolGUI
             byte[] lenBytes = {
                 0x63, 0x6c, 0x65, 0x6e, 0x1a, 0x00, 0x00, 0x00, 0x00
             };
-            AppCommon.ConvertUint32ToLEBytes(bytesTotal, lenBytes, 5);
+            AppCommon.ConvertUint32ToBEBytes(bytesTotal, lenBytes, 5);
             return lenBytes;
         }
 
