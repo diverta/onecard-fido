@@ -132,6 +132,7 @@ namespace MaintenanceToolGUI
             // スロット照会情報を参照し、チェックでNGの場合は以降の処理を行わない
             if (CheckSlotInfo(responseData) == false) {
                 TerminateDFUProcess(false);
+                return;
             }
 
             // 転送元データを抽出
