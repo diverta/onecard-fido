@@ -8,8 +8,12 @@ namespace MaintenanceToolGUI
     {
         // 更新対象アプリケーション＝version 0.4.0
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
+
         // イメージ反映所要時間（秒）
         public const int DFU_WAITING_SEC_ESTIMATED = 25;
+
+        // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
+        public const bool IMAGE_UPDATE_TEST_MODE = false;
 
         // 画面の参照を保持
         private MainForm mainForm;
@@ -47,14 +51,30 @@ namespace MaintenanceToolGUI
             startForm = new BLEDFUStartForm();
             processingForm = new BLEDFUProcessingForm();
 
+            // Cancelボタン押下イベントを登録
+            processingForm.OnCanceledDFUByUser += new BLEDFUProcessingForm.CanceledDFUByUserEvent(OnCanceledDFUByUser);
+
             // 更新イメージクラスを初期化
             toolBLEDFUImage = new ToolBLEDFUImage();
 
             // DFU転送処理クラスを初期化
             toolDFUProcess = new ToolBLEDFUProcess(toolBLEDFUImage);
 
+            // DFU転送処理のイベントを登録
+            toolDFUProcess.OnNotifyDFUProgress += new ToolBLEDFUProcess.NotifyDFUProgressEvent(OnNotifyDFUProgress);
+            toolDFUProcess.OnNotifyDFUInfoMessage += new ToolBLEDFUProcess.NotifyDFUInfoMessageEvent(OnNotifyDFUInfoMessage);
+            toolDFUProcess.OnNotifyDFUErrorMessage += new ToolBLEDFUProcess.NotifyDFUErrorMessageEvent(OnNotifyDFUErrorMessage);
+            toolDFUProcess.OnNotifyDFUTransfer += new ToolBLEDFUProcess.NotifyDFUTransferEvent(OnNotifyDFUTransfer);
+            toolDFUProcess.OnTerminatedDFUProcess += new ToolBLEDFUProcess.TerminatedDFUProcessEvent(OnTerminatedDFUProcess);
+
             // バージョン更新判定フラグをリセット
             NeedCompareUpdateVersion = false;
+        }
+
+        public void OnFormDestroy()
+        {
+            // BLE SMPサービスの接続を切断
+            toolDFUProcess.DoDisconnect();
         }
 
         //
@@ -62,7 +82,8 @@ namespace MaintenanceToolGUI
         //
         public void DoCommandBLEDFU()
         {
-            // 認証器に導入中のバージョンを照会
+            // 認証器に導入中のバージョンを、BLE経由で照会
+            // --> NotifyFirmwareVersionResponse が呼び出される
             bleMain.DoGetVersionInfoForDFU(this);
         }
 
@@ -154,17 +175,6 @@ namespace MaintenanceToolGUI
         }
 
         //
-        // 更新イメージファイル転送完了
-        // ～バージョン照会処理完了の間に
-        // MainFormがタイムアウト検知した場合の処理
-        //
-        public void DoCommandTimedOut()
-        {
-            // DFU処理失敗の旨を処理進捗画面に通知
-            processingForm.NotifyTerminateDFUProcess(false);
-        }
-
-        //
         // バージョン照会処理
         //
         public void NotifyFirmwareVersionResponse(string strFWRev, string strHWRev)
@@ -179,8 +189,8 @@ namespace MaintenanceToolGUI
                 NeedCompareUpdateVersion = false;
 
                 // バージョン情報を比較して終了判定
-                // --> 判定結果を処理進捗画面に戻す
-                processingForm.NotifyTerminateDFUProcess(CompareUpdateVersion());
+                // --> 判定結果をメイン画面に戻す
+                mainForm.OnAppMainProcessExited(CompareUpdateVersion());
 
             } else {
                 // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
@@ -192,7 +202,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージを表示し、メイン画面に制御を戻す
             AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
-            FormUtil.ShowWarningMessage(mainForm, MainForm.GetMaintenanceToolTitle(), ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+            ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             NotifyCancel();
         }
 
@@ -202,12 +212,11 @@ namespace MaintenanceToolGUI
             bool versionEqual = (CurrentVersion == UpdateVersion);
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
-                AppCommon.OutputLogInfo(string.Format(
-                    ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+                AppCommon.OutputLogInfo(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
+                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
             }
 
             // メイン画面に制御を戻す
@@ -227,36 +236,91 @@ namespace MaintenanceToolGUI
             // 処理進捗画面を表示
             DialogResult ret = processingForm.OpenForm(mainForm);
             if (ret == DialogResult.Cancel) {
+                // メッセージをポップアップ表示したのち、画面に制御を戻す
+                ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
                 NotifyCancel();
                 return;
             }
 
-            // 処理結果（成功 or 失敗）をメイン画面に戻す
-            mainForm.OnAppMainProcessExited(ret == DialogResult.OK);
+            if (ret == DialogResult.OK) {
+                // バージョン更新判定フラグをセット
+                NeedCompareUpdateVersion = true;
+
+                // 認証器に導入された更新バージョンを、BLE経由で照会
+                // --> NotifyFirmwareVersionResponse が呼び出される
+                bleMain.DoGetVersionInfoForDFU(this);
+
+            } else {
+                // 処理失敗の旨をメイン画面に通知
+                mainForm.OnAppMainProcessExited(false);
+            }
         }
 
         private void InvokeDFUProcess()
         {
+            // キャンセルフラグをクリア
+            toolDFUProcess.CancelFlag = false;
+
             // 処理進捗画面にDFU処理開始を通知
             int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
             processingForm.NotifyStartDFUProcess(maximum);
-            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PRE_PROCESS, 0);
 
-            // メイン画面に開始メッセージを表示／処理タイムアウト監視を開始
-            mainForm.OnDFUStarted();
+            // メイン画面に開始メッセージを表示
+            mainForm.OnBLEDFUStarted();
 
             // DFU主処理を開始
-            toolDFUProcess.PerformDFU(this);
+            toolDFUProcess.PerformDFU();
         }
 
-        public void DFUProcessTerminated(bool success)
+        private void OnNotifyDFUProgress(string message, int progressValue)
         {
-            if (success) {
-                // 処理進捗画面に通知
-                processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+            // 進捗表示を更新
+            processingForm.NotifyDFUProcess(message, progressValue);
+        }
 
-                // DFU転送成功時は、バージョン更新判定フラグをセット
-                NeedCompareUpdateVersion = true;
+        private void OnNotifyDFUInfoMessage(string message)
+        {
+            // メッセージ文言を画面とログに出力
+            NotifyMessage(message);
+            AppCommon.OutputLogInfo(message);
+        }
+
+        private void OnNotifyDFUErrorMessage(string message)
+        {
+            // エラーメッセージ文言を画面とログに出力
+            NotifyMessage(message);
+            AppCommon.OutputLogError(message);
+        }
+
+        private void OnNotifyDFUTransfer(bool transferring)
+        {
+            // 処理進捗画面のCancelボタンを押下可能／不可能とする
+            processingForm.NotifyCancelable(transferring);
+        }
+
+        private void OnCanceledDFUByUser()
+        {
+            // 処理進捗画面のCancelボタンがクリックされた場合
+            // メッセージ文言を画面とログに出力
+            OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+
+            // キャンセルフラグを設定
+            toolDFUProcess.CancelFlag = true;
+        }
+
+        private void OnTerminatedDFUProcess(bool success)
+        {
+            if (toolDFUProcess.CancelFlag) {
+                // 転送が中止された旨を、処理進捗画面に通知
+                toolDFUProcess.CancelFlag = false;
+                processingForm.NotifyCancelDFUProcess();
+                return;
+            }
+
+            if (success) {
+                // DFU反映待ち処理を起動
+                PerformDFUUpdateMonitor();
 
             } else {
                 // DFU転送失敗時は処理進捗画面に制御を戻す
@@ -264,12 +328,41 @@ namespace MaintenanceToolGUI
             }
         }
 
+        // 
+        // DFU反映待ち処理
+        // 
+        private void PerformDFUUpdateMonitor()
+        {
+            // 処理進捗画面に通知
+            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+
+            // 反映待ち（リセットによるファームウェア再始動完了まで待機）
+            for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
+                // 処理進捗画面に通知
+                OnNotifyDFUProgress(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            // 処理進捗画面に通知（DialogResult.OKで画面を閉じるよう指示）
+            processingForm.NotifyTerminateDFUProcess(true);
+        }
+
         //
         // メッセージボックス
         //
-        void ShowWarningMessage(string captionText, string messageText)
+        private void ShowWarningMessageWithTitle(string messageText)
+        {
+            FormUtil.ShowWarningMessage(mainForm, MainForm.GetMaintenanceToolTitle(), messageText);
+        }
+
+        private void ShowWarningMessage(string captionText, string messageText)
         {
             FormUtil.ShowWarningMessage(mainForm, captionText, messageText);
+        }
+
+        public void NotifyMessage(string messageText)
+        {
+            mainForm.OnPrintMessageText(messageText);
         }
     }
 }

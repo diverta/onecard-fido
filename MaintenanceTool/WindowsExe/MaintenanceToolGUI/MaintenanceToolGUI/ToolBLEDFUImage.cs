@@ -14,6 +14,9 @@ namespace MaintenanceToolGUI
         public byte[] NRF53AppBin = new byte[524288];
         public int NRF53AppBinSize { get; set; }
 
+        // 更新イメージファイルのハッシュ値
+        public byte[] SHA256Hash = new byte[32];
+
         // 更新イメージファイルのリソース名称
         private string DFUImageResourceName;
 
@@ -38,7 +41,8 @@ namespace MaintenanceToolGUI
                 return false;
             }
 
-            return true;
+            // イメージからSHA-256ハッシュを抽出
+            return ExtractImageHashSha256();
         }
 
         public string GetUpdateVersionFromDFUImage()
@@ -95,6 +99,45 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(string.Format("ToolBLEDFUImage.ReadDFUImage: {0}", e.Message));
                 return false;
             }
+        }
+
+        private bool ExtractImageHashSha256()
+        {
+            // magicの値を抽出
+            ulong magic = (ulong)AppCommon.ToInt32(NRF53AppBin, 0, false);
+
+            // イメージヘッダー／データ長を抽出
+            int image_header_size = AppCommon.ToInt32(NRF53AppBin, 8, false);
+            int image_data_size = AppCommon.ToInt32(NRF53AppBin, 12, false);
+            int image_size = image_header_size + image_data_size;
+
+            // イメージヘッダーから、イメージTLVの開始位置を計算
+            int tlv_info;
+            if (magic == 0x96f3b83c) {
+                tlv_info = image_size;
+            } else {
+                tlv_info = image_size + 4;
+            }
+
+            // イメージTLVからSHA-256ハッシュの開始位置を検出
+            while (tlv_info < NRF53AppBinSize) {
+                // タグ／長さを抽出
+                int tag = AppCommon.ToInt16(NRF53AppBin, tlv_info, false);
+                tlv_info += 2;
+                int len = AppCommon.ToInt16(NRF53AppBin, tlv_info, false);
+                tlv_info += 2;
+
+                // SHA-256のタグであり、長さが32バイトであればデータをバッファにコピー
+                if (tag == 0x10 && len == 0x20) {
+                    Array.Copy(NRF53AppBin, tlv_info, SHA256Hash, 0, len);
+                    return true;
+                } else {
+                    tlv_info += len;
+                }
+            }
+            // SHA-256ハッシュが見つからなかった場合はエラー
+            AppCommon.OutputLogError("ToolBLEDFUImage.ExtractImageHashSha256: SHA-256 hash of image not found");
+            return false;
         }
 
         private string ExtractUpdateVersion(string resName)

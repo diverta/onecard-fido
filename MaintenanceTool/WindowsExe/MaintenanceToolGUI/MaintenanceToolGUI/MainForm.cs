@@ -129,6 +129,7 @@ namespace MaintenanceToolGUI
             // このアプリケーションを終了する
             ble.OnFormDestroy();
             hid.OnFormDestroy();
+            toolBLEDFU.OnFormDestroy();
             AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
@@ -191,15 +192,11 @@ namespace MaintenanceToolGUI
 
         private bool DoCommandTimedOut(object sender, EventArgs e)
         {
-            // DFU処理の場合、ToolDFU／ToolBLEDFU内で終了処理を行う
+            // DFU処理の場合、ToolDFU内で終了処理を行う
             //  最終的に、OnAppMainProcessExitedを経由して
             //  MainFormに異常終了が通知されます。
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandTimedOut();
-                return true;
-            }
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
-                toolBLEDFU.DoCommandTimedOut();
                 return true;
             }
 
@@ -595,6 +592,12 @@ namespace MaintenanceToolGUI
 
             // コマンドタイムアウト監視開始
             commandTimer.Start();
+        }
+
+        public void OnBLEDFUStarted()
+        {
+            // 開始メッセージを表示
+            DisplayStartMessage(commandTitle);
         }
 
         public void OnDFUCanceled()

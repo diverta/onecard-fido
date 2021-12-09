@@ -4,6 +4,10 @@ namespace MaintenanceToolGUI
 {
     public partial class BLEDFUProcessingForm : Form
     {
+        // Cancelボタン押下イベントを定義
+        public delegate void CanceledDFUByUserEvent();
+        public event CanceledDFUByUserEvent OnCanceledDFUByUser;
+
         public BLEDFUProcessingForm()
         {
             InitializeComponent();
@@ -17,8 +21,11 @@ namespace MaintenanceToolGUI
 
         private void ButtonCancel_Click(object sender, System.EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            TerminateWindow();
+            // Cancelボタンを使用不可とする
+            ButtonCancel.Enabled = false;
+
+            // Cancelボタンがクリックされた旨をDFU処理クラスに通知
+            OnCanceledDFUByUser();
         }
 
         public void NotifyStartDFUProcess(int maximum)
@@ -34,6 +41,19 @@ namespace MaintenanceToolGUI
             // 進捗表示を更新
             LabelProgress.Text = message;
             LevelIndicator.Value = progressValue;
+        }
+
+        public void NotifyCancelable(bool cancelable)
+        {
+            // 転送処理中の場合は、Cancelボタンを押下可能とする
+            ButtonCancel.Enabled = cancelable;
+        }
+
+        public void NotifyCancelDFUProcess()
+        {
+            // DFU処理がキャンセルされた場合はCancelを戻す
+            DialogResult = DialogResult.Cancel;
+            TerminateWindow();
         }
 
         public void NotifyTerminateDFUProcess(bool success)
