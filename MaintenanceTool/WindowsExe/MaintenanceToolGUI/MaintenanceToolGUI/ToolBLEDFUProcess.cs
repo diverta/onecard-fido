@@ -22,8 +22,6 @@ namespace MaintenanceToolGUI
 
         private const int SMP_HEADER_SIZE = 8;
 
-        private const bool IMAGE_UPDATE_TEST_MODE = true;
-
         // 処理区分
         private enum BLEDFUCommand
         {
@@ -380,7 +378,7 @@ namespace MaintenanceToolGUI
         private void DoRequestChangeImageUpdateMode()
         {
             // リクエストデータを生成
-            byte[] bodyBytes = GenerateBodyForRequestChangeImageUpdateMode(IMAGE_UPDATE_TEST_MODE);
+            byte[] bodyBytes = GenerateBodyForRequestChangeImageUpdateMode(ToolBLEDFU.IMAGE_UPDATE_TEST_MODE);
             ushort len = (ushort)bodyBytes.Length;
             byte[] headerBytes = BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
 
@@ -494,10 +492,12 @@ namespace MaintenanceToolGUI
             ToolBLESMPService.Send(requestData);
 
             // ログ出力
-            string dump = AppCommon.DumpMessage(requestData, requestData.Length);
-            AppCommon.OutputLogDebug(string.Format(
-                "Transmit SMP request ({0} bytes)\r\n{1}",
-                requestData.Length, dump));
+            if (Command != BLEDFUCommand.UploadImage) {
+                string dump = AppCommon.DumpMessage(requestData, requestData.Length);
+                AppCommon.OutputLogDebug(string.Format(
+                    "Transmit SMP request ({0} bytes)\r\n{1}",
+                    requestData.Length, dump));
+            }
 
             // 応答タイムアウト監視開始
             responseTimer.Start();
@@ -514,10 +514,12 @@ namespace MaintenanceToolGUI
             responseTimer.Stop();
 
             // ログ出力
-            string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
-            AppCommon.OutputLogDebug(string.Format(
-                "Incoming SMP response ({0} bytes)\r\n{1}",
-                receivedData.Length, dump));
+            if (Command != BLEDFUCommand.UploadImage) {
+                string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
+                AppCommon.OutputLogDebug(string.Format(
+                    "Incoming SMP response ({0} bytes)\r\n{1}",
+                    receivedData.Length, dump));
+            }
 
             // 受信したレスポンスデータを保持
             int responseSize = receivedData.Length;
