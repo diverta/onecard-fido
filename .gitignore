@@ -7,9 +7,9 @@ RTE
 JLinkLog.txt
 JLinkSettings.ini
 
-# ignore extension for Visual Studio
-*.obj
-*.db
+# ignore sub directories for Visual Studio
+obj
+Release
 
 # ignore sub directories
 core
