@@ -33,6 +33,11 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 
 ## What's new
 
+#### 2021/12/09
+
+FIDO認証器管理ツール（Windows版）を修正しました。<br>
+詳細につきましては、ドキュメント<b>[「Release 202104」](https://github.com/diverta/onecard-fido/releases/tag/Release_202104)</b>をご参照願います。
+
 #### 2021/11/24
 
 FIDO認証器管理ツール（macOS版）を修正しました。<br>

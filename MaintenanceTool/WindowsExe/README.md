@@ -20,7 +20,7 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 <img src="../assets/0002.jpg" width="500">
 
 ### 動作環境
-Windows 10（64bit）
+Windows 10（64bit、November 2019 Update以降のバージョン）
 
 ### 実行にあたってのご注意
 
