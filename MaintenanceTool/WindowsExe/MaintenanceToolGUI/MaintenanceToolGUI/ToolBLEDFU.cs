@@ -202,7 +202,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージを表示し、メイン画面に制御を戻す
             AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
-            FormUtil.ShowWarningMessage(mainForm, MainForm.GetMaintenanceToolTitle(), ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+            ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             NotifyCancel();
         }
 
@@ -236,6 +236,8 @@ namespace MaintenanceToolGUI
             // 処理進捗画面を表示
             DialogResult ret = processingForm.OpenForm(mainForm);
             if (ret == DialogResult.Cancel) {
+                // メッセージをポップアップ表示したのち、画面に制御を戻す
+                ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
                 NotifyCancel();
                 return;
             }
@@ -348,6 +350,11 @@ namespace MaintenanceToolGUI
         //
         // メッセージボックス
         //
+        private void ShowWarningMessageWithTitle(string messageText)
+        {
+            FormUtil.ShowWarningMessage(mainForm, MainForm.GetMaintenanceToolTitle(), messageText);
+        }
+
         private void ShowWarningMessage(string captionText, string messageText)
         {
             FormUtil.ShowWarningMessage(mainForm, captionText, messageText);
