@@ -563,7 +563,7 @@
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
-            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
+            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, update];
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative];
             return false;
         }
