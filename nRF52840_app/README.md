@@ -3,7 +3,7 @@
 ## 概要
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)（nRF52840）上で稼働するアプリケーションです。<br>
-[nRF5 SDK v17.0.2](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を使用して開発されています。
+[nRF5 SDK v17.1.0](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を使用して開発されています。
 
 ## 搭載機能
 
