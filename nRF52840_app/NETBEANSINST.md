@@ -4,11 +4,12 @@ NetBeansとARM GCC、nRF5 SDKを使用し、nRF52840の開発環境を構築す�
 
 ## 前提ソフトウェアのインストール
 
-まず最初に、ARM GCCツールチェイン、nRF5 SDKをインストールします。<br>
+まず最初に、ARM GCCツールチェイン、nRF5 SDK、nRF Command Line Toolsをインストールします。<br>
 以下の手順書をご参照願います。
 
 - <b>[ARM GCCインストール手順](ARMGCCINST.md)</b>
 - <b>[nRF5 SDKインストール手順](NR5SDKINST.md)</b>
+- <b>[nRF Command Line Toolsインストール手順](NRFCLTOOLINST.md)</b>
 
 ## インストール用媒体の取得
 
@@ -22,21 +23,6 @@ https://netbeans.org/downloads/8.2/<br>
 
 「NetBeans IDE ダウンロードバンドル」の「C/C++」をダウンロードします。<br>
 「netbeans-8.2-cpp-macosx.dmg」というファイルがダウンロードされます。
-
-### nRFコマンドラインツール
-
-こちらのサイトにアクセスします。<br>
-https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF5-Command-Line-Tools/Download<br>
-下図のような画面に遷移します。
-
-<img src="assets02/0004.jpg" width="600">
-
-サイト中段のラジオボタン「9.8.1 macOS」をチェックします。<br>
-その後、右上にある「Download file」をクリックし、ダウンロードを開始させます。
-
-<img src="assets02/0005.jpg" width="600">
-
-「nRF-Command-Line-Tools_9_8_1_OSX.tar」という名前のファイルがダウンロードされます。
 
 ### SEGGER J-Link
 
@@ -101,7 +87,7 @@ NetBeansを起動し、Preferencesを実行します。
 <img src="assets02/0018.jpg" width="600">
 
 「実行コマンド・パスの変更」欄に`nrfjprog`（nRF5xコマンドライン・ツールのひとつ）のパスを追加します。<br>
-下記例では「`;${HOME}/opt/nRF-Command-Line-Tools_10_9_0_OSX/nrfjprog`」という文字列を追加しています。
+下記例では「`;/Applications/Nordic Semiconductor/bin/`」という文字列を追加しています。
 
 入力が完了したら「OK」をクリックします。
 
