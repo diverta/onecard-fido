@@ -35,7 +35,7 @@ bash-3.2$
 
 #### オリジナルソースの取得
 
-nRF5 SDKのサンプルアプリケーション・フォルダー（`${HOME}/opt/nRF5_SDK_17.0.2/examples/ble_peripheral/ble_app_hrs`）から、必要なソースコードを取得します。<br>
+nRF5 SDKのサンプルアプリケーション・フォルダー（`${HOME}/opt/nRF5_SDK_17.1.0/examples/ble_peripheral/ble_app_hrs`）から、必要なソースコードを取得します。<br>
 今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/examples/diverta`](../../../nRF52840_app/examples/diverta)配下に配置いたしました。
 
 `ble_app_hrs`サブフォルダーには、不要なファイルが含まれていますので、適宜削除します。<br>
@@ -64,7 +64,7 @@ bash-3.2$
 
 [MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)は、Nordic社のドングル「nRF52840 Dongle」から回路を修正しているため、`PCA_10059`のソースがそのまま利用できません。<br>
 また、FIDO2機能で使用する汎用USB HIDサービスは、Nordic社ライブラリーの内容では動作させることができません。<br>
-そのため、nRF5 SDKのフォルダー（`/nRF5_SDK_17.0.2/components/`）から、必要なソースコードを取得し、一部修正を加えております。
+そのため、nRF5 SDKのフォルダー（`/nRF5_SDK_17.1.0/components/`）から、必要なソースコードを取得し、一部修正を加えております。
 
 MDBT50Q Dongle用の独自定義、独自実装は下記ファイルになります。
 
@@ -135,7 +135,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 nRF52840アプリケーションに必要な定義を適宜加えています。<br>
 また、リンク用スクリプトファイル名を変えています。
 ```
-SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 CCID_DIR := $(PROJ_DIR)/../../../../CCID

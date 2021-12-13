@@ -32,7 +32,7 @@ CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 # disable ATECC608A (or ATECC608A is not installed)
 # CFLAGS += -DNO_SECURE_IC
 
-SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 CCID_DIR := $(PROJ_DIR)/../../../../CCID
