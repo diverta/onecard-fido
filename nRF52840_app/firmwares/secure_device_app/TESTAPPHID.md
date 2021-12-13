@@ -48,23 +48,23 @@ FIDO2機能の動作確認は、管理ツールのヘルスチェック機能（
 
 #### 鍵・証明書のインストール
 
-管理ツールを起動し、画面の「鍵ファイルのパス」「証明書ファイルのパス」欄に、鍵・証明書ファイル名のフルパスを入力します。<br>
-（ファイル入力欄の右側「選択」ボタンをクリックすることにより、ファイルが選択できます）
+管理ツール画面の「FIDO鍵・証明書設定」ボタンをクリックし、FIDO鍵・証明書設定画面を表示させます。
 
 <img src="assets02/0002.jpg" width="300">
 
-ファイル名のフルパスを入力したら、画面上のボタン「鍵・証明書ファイルのインストール」をクリックします。
+秘密鍵ファイル（PEM形式）、証明書ファイル（DER形式）を、それぞれ「参照」ボタンをクリックして選択します。<br>
+ファイル選択後、管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
 
-<img src="assets02/0002.jpg" width="300">
+<img src="assets02/0003.jpg" width="300">
 
 下図のような確認ダイアログが表示されます。<br>
 「Yes」ボタンをクリックし、鍵・証明書ファイルのインストール処理を実行させます。
 
-<img src="assets02/0003.jpg" width="300">
+<img src="assets02/0004.jpg" width="300">
 
 ほどなくインストール処理が完了し、ポップアップが表示されます。
 
-<img src="assets02/0004.jpg" width="300">
+<img src="assets02/0005.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
@@ -73,7 +73,7 @@ FIDO2機能の動作確認は、管理ツールのヘルスチェック機能（
 WebAuthn機能（Windows版）で使用するPIN番号を設定します。<br>
 管理ツール画面上の「PINコード設定」ボタンをクリックします。
 
-<img src="assets02/0005.jpg" width="300">
+<img src="assets02/0006.jpg" width="300">
 
 下図のようなPINコード設定画面が表示されます。<br>
 ６桁のPIN番号を数字で入力します。<br>
@@ -81,11 +81,11 @@ WebAuthn機能（Windows版）で使用するPIN番号を設定します。<br>
 
 「新規設定」ボタンをクリックし、PINコード設定処理を実行させます。
 
-<img src="assets02/0006.jpg" width="300">
+<img src="assets02/0007.jpg" width="300">
 
 ほどなくPIN設定処理が完了し、ポップアップが表示されます。
 
-<img src="assets02/0007.jpg" width="300">
+<img src="assets02/0008.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
@@ -94,23 +94,23 @@ WebAuthn機能（Windows版）で使用するPIN番号を設定します。<br>
 WebAuthn機能（Windows版）で使用される「CTAP2」のヘルスチェックを実行します。<br>
 管理ツール画面のメニュー「Test --> USB --> CTAP2ヘルスチェック実行」を選択します。
 
-<img src="assets02/0008.jpg" width="300">
+<img src="assets02/0009.jpg" width="300">
 
 下図のようなPINコード入力画面が表示されます。<br>
 先ほど設定した、６桁のPIN番号を数字で入力します。
 
 「OK」ボタンをクリックし、CTAP2ヘルスチェック処理を実行させます。
 
-<img src="assets02/0009.jpg" width="300">
+<img src="assets02/0010.jpg" width="300">
 
 下図のようなメッセージが表示されたら、MDBT50Q Dongleの基板上のボタンを１回押します。<br>
 （約３０秒以内に押してください）
 
-<img src="assets02/0010.jpg" width="300">
+<img src="assets02/0011.jpg" width="300">
 
 ほどなくCTAP2ヘルスチェック処理が完了し、ポップアップが表示されます。
 
-<img src="assets02/0011.jpg" width="300">
+<img src="assets02/0012.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
@@ -119,16 +119,16 @@ WebAuthn機能（Windows版）で使用される「CTAP2」のヘルスチェッ
 WebAuthn機能（macOS版）で使用される「U2F」のヘルスチェックを実行します。<br>
 管理ツール画面のメニュー「Test --> USB --> U2Fヘルスチェック実行」を選択します。
 
-<img src="assets02/0012.jpg" width="300">
+<img src="assets02/0013.jpg" width="300">
 
 U2Fヘルスチェック処理が開始されます。<br>
 下図のようなメッセージが表示されたら、MDBT50Q Dongleの基板上のボタンを１回押します。<br>
 （約３０秒以内に押してください）
 
-<img src="assets02/0013.jpg" width="300">
+<img src="assets02/0014.jpg" width="300">
 
 ほどなくU2Fヘルスチェック処理が完了し、ポップアップが表示されます。
 
-<img src="assets02/0014.jpg" width="300">
+<img src="assets02/0015.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
