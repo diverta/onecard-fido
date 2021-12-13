@@ -39,6 +39,8 @@ nRF52840アプリケーションのファームウェアは、フォルダー[`f
 
 - <b>[nRF5 SDKインストール手順](NR5SDKINST.md)</b>
 
+- <b>[nRF Command Line Toolsインストール手順](NRFCLTOOLINST.md)</b>
+
 - <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
 
 - <b>[nRF Utilインストール手順](NRFUTILINST.md)</b>
