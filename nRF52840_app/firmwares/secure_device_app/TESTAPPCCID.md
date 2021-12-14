@@ -50,11 +50,11 @@ GitHubリポジトリーの「[`/CCID/pemForTest.zip`](../../../CCID/pemForTest.
 ## 動作確認の実施
 
 PIV機能の動作確認は、PIV機能設定の実行により行います。<br>
-管理ツールの`Option --> PIV機能設定`メニューで実行できます。
+管理ツールのPIV機能設定画面で実行できます。
 
 #### PIV機能設定画面の表示
 
-管理ツール画面のメニュー「`Option --> PIV機能設定`」を選択します。
+管理ツール画面の「PIV機能設定」ボタンをクリックします。
 
 <img src="assets03/0001.jpg" width="300">
 
@@ -89,11 +89,11 @@ PIV機能に必要な、３種類の鍵・証明書をインストールしま�
 まず最初に、<b>PIV認証用</b>の鍵・証明書ファイルのインストールを実行します。<br>
 画面上の「インストールする鍵・証明書」（ラジオボタン）から「PIV認証用」を選択します。<br>
 
-その後、鍵・証明書ファイルのパス欄（画面の「鍵ファイル」「証明書ファイル」欄）に、鍵・証明書ファイル名のフルパスを入力します。<br>
-（ファイル入力欄の右側「選択」ボタンをクリックすることにより、ファイルが選択できます）
+その後、鍵・証明書ファイルを、それぞれ「参照」ボタンをクリックして選択します。<br>
+（画面の「鍵ファイル」「証明書ファイル」欄の右側「選択」ボタンをクリックすることにより、ファイルが選択できます）
 
 下図は、先述の「[`/CCID/pemForTest.zip`](../../../CCID/pemForTest.zip)」をダウンロード後解凍し、その解凍されたファイルを選択した状態です。<br>
-「鍵ファイル」に`Downloads/pemForTest/rsa_prv_9a.pem`、「証明書ファイル」に`Downloads/pemForTest/rsa_crt_9a.pem`がそれぞれ入力されています。
+「鍵ファイル」に`Downloads/rsa_prv_9a.pem`、「証明書ファイル」に`Downloads/rsa_crt_9a.pem`がそれぞれ選択されています。
 
 <img src="assets03/0006.jpg" width="300">
 
@@ -121,11 +121,11 @@ PIN番号を入力したら、画面下部の「鍵・証明書ファイルの�
 引き続き、他の種類（<b>電子署名用</b>、<b>管理機能用</b>）の鍵・証明書ファイルのインストールも、上記手順と同様に実行してください。
 
 ・<b>電子署名用</b>の鍵・証明書ファイルのインストール<br>
-（下図は「鍵ファイル」に`Downloads/pemForTest/ecc_prv_9c.pem`、「証明書ファイル」に`Downloads/pemForTest/ecc_crt_9c.pem`がそれぞれ入力されている例）
+（下図は「鍵ファイル」に`Downloads/ecc_prv_9c.pem`、「証明書ファイル」に`Downloads/ecc_crt_9c.pem`がそれぞれ選択されている例）
 <img src="assets03/0010.jpg" width="300">
 
 ・<b>管理機能用</b>の鍵・証明書ファイルのインストール<br>
-（下図は「鍵ファイル」に`Downloads/pemForTest/ecc_prv_9d.pem`、「証明書ファイル」に`Downloads/pemForTest/ecc_crt_9d.pem`がそれぞれ入力されている例）
+（下図は「鍵ファイル」に`Downloads/ecc_prv_9d.pem`、「証明書ファイル」に`Downloads/ecc_crt_9d.pem`がそれぞれ選択されている例）
 <img src="assets03/0011.jpg" width="300">
 
 以上で、鍵・証明書のインストールは完了です。
