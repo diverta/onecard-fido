@@ -30,36 +30,41 @@ https://gpgtools.org<br>
 
 <img src="assets01/0001.jpg" width="600">
 
-画面中央の「Download」ボタンをクリックしてダウンロードを実行すると「GPG_Suite-2020.2.dmg」というファイルがダウンロードされます。
+画面中央の「Download」ボタンをクリックしてダウンロードを実行すると「GPG_Suite-2021.3.dmg」というファイルがダウンロードされます。
+
+<img src="assets01/0002.jpg" width="450">
 
 ## インストール
 
 ダウンロードされた「GPG_Suite-2020.2.dmg」をダブルクリックしてインストールを実行します。<br>
-下図のような画面（インストール用媒体）が表示されたら、左側の「Install」ボタンをクリックします。
-
-<img src="assets01/0002.jpg" width="350">
-
-インストーラー画面が起動しますので、画面の案内にしたがってインストールを進めます。
+下図のような画面（パッケージフォルダー）が表示されたら、左側の「Install」をダブルクリックします。
 
 <img src="assets01/0003.jpg" width="350">
 
-
-インストールが完了したら「閉じる」ボタンをクリックします。
+インストーラが起動しますので、画面の案内にしたがってインストールを進めます。
 
 <img src="assets01/0004.jpg" width="350">
 
-「GPG Keychain」というアプリが自動的に起動します。<br>
-表示されたポップアップ画面「キャンセル」ボタンをクリックして閉じてください。
+インストールが完了したら「閉じる」ボタンをクリックします。
 
-<img src="assets01/0005.jpg" width="540">
+<img src="assets01/0005.jpg" width="350">
+
+「GPG Keychain」というアプリが自動的に起動します。<br>
+表示されたポップアップ画面の「OK」ボタンをクリックして閉じてください。
+
+<img src="assets01/0006.jpg" width="600">
+
+続いて表示されたポップアップ画面の「キャンセル」ボタンをクリックして閉じてください。
+
+<img src="assets01/0007.jpg" width="600">
 
 GPG Keychainアプリを終了させます。
 
-<img src="assets01/0006.jpg" width="540">
+<img src="assets01/0019.jpg" width="600">
 
 最後に、インストール用媒体を閉じます。<br>
 メニューから「"GPG Suite"を取り出す」を選択して実行します。
 
-<img src="assets01/0007.jpg" width="350">
+<img src="assets01/0020.jpg" width="350">
 
 以上でGPG Suiteのインストールは完了です。
