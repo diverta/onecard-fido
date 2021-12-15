@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		s2Y7g/SwrKquqkFYuhauDe4lbxc=
+		XZI9jfSkqkiIAWkJ6W0kbySijcw=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -64,13 +64,13 @@
 		<data>
 		5rw8vAW+dIBMkK91ov1lsZyhM5E=
 		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.1.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.2.zip</key>
 		<data>
-		ZwpG/IkzUS2xosJR2d2dUXz9PYs=
+		mDt+LLfw4ZLvesyTGkmrvrpuQPk=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.1.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.2.zip</key>
 		<data>
-		AtskTQ8VozUBKe2pDqj/NwHhlqI=
+		NrKhhXsG3lNV8S7+Az2go9GzosA=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -104,7 +104,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			d5uU0NIvsgUITbmG3JjVgaslP/EojI7u74w5yli1tOo=
+			X+TeQe8YYz2L/m1Co3eB8QlqsJoEvsc5tE4rwGt7fLQ=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -198,18 +198,18 @@
 			Q++qDAK+npnr68rqeY3J0pPSC0bUp8CoB8M8x3qYfpw=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.1.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.2.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zzTj7Gzd0974rwMKT/2oaWCftKnhmlUKW6WtxWbcKNc=
+			XBNE6A8RVVnToV/pRJ8LTJZPN76ovm9teElAPY5zWVA=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.1.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.2.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ELWzH7htwxL6T6E8L/e5S9K2TcEfMAXM85rrT7A9ivs=
+			JyRCrzmr4eyKix+Qt+Dl2+OCFXY8ISbYly+oDtdLhLY=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
