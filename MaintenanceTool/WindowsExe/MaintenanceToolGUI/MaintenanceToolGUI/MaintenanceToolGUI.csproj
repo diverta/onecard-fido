@@ -316,9 +316,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.1.zip" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.1.zip" />
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.1.bin" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.2.zip" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.2.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
