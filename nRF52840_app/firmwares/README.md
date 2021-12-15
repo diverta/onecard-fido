@@ -5,7 +5,7 @@
 ## ファームウェアの種類
 
 以下の３点を格納しています。<br>
-いずれも、[nRF5 SDK v17.0.2](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を利用して制作されています。
+いずれも、[nRF5 SDK v17.1.0](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を利用して制作されています。
 
 ### [nRF52840アプリケーション](../../nRF52840_app/firmwares/secure_device_app/README.md)
 

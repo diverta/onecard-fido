@@ -7,7 +7,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059_01
 
 # application version info
-FW_REV := 0.3.1
+FW_REV := 0.3.2
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -32,7 +32,7 @@ CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 # disable ATECC608A (or ATECC608A is not installed)
 # CFLAGS += -DNO_SECURE_IC
 
-SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 CCID_DIR := $(PROJ_DIR)/../../../../CCID

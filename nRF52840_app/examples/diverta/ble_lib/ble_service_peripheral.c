@@ -15,6 +15,7 @@
 #include "nrf_sdh_soc.h"
 #include "app_timer.h"
 #include "nrf_ble_qwr.h"
+#include "peer_manager.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_service_peripheral
@@ -238,6 +239,11 @@ void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
     m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
     ret_code_t err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
     APP_ERROR_CHECK(err_code);
+
+    err_code = pm_conn_secure(p_ble_evt->evt.gap_evt.conn_handle, false);
+    if (err_code != NRF_ERROR_BUSY) {
+        APP_ERROR_CHECK(err_code);
+    }
 }
 
 void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)

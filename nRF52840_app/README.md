@@ -3,7 +3,7 @@
 ## 概要
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)（nRF52840）上で稼働するアプリケーションです。<br>
-[nRF5 SDK v17.0.2](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を使用して開発されています。
+[nRF5 SDK v17.1.0](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を使用して開発されています。
 
 ## 搭載機能
 
@@ -38,6 +38,8 @@ nRF52840アプリケーションのファームウェアは、フォルダー[`f
 - <b>[ARM GCCインストール手順](ARMGCCINST.md)</b>
 
 - <b>[nRF5 SDKインストール手順](NR5SDKINST.md)</b>
+
+- <b>[nRF Command Line Toolsインストール手順](NRFCLTOOLINST.md)</b>
 
 - <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
 

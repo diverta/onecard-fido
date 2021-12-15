@@ -58,17 +58,17 @@ MDBT50Q DongleがPCのUSBポートに装着されている状態だと、管理�
 
 管理ツールを起動し、画面上の「ペアリング実行」ボタンをクリックします。
 
-<img src="assets04/0005.jpg" width="300">
+<img src="assets04/0004.jpg" width="300">
 
 ほどなくペアリング処理が完了し、ポップアップが表示されます。
 
-<img src="assets04/0006.jpg" width="300">
+<img src="assets04/0005.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
 Bluetooth設定画面で、デバイス「Secure Dongle」が表示されていれば、ペアリングは成功です。
 
-<img src="assets04/0004.jpg" width="300">
+<img src="assets04/0006.jpg" width="300">
 
 ## 動作確認の実施
 
