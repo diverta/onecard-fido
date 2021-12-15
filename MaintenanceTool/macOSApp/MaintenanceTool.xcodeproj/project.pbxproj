@@ -49,6 +49,8 @@
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
+		7A6A69EB2769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */; };
+		7A6A69EC2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */; };
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
@@ -57,8 +59,6 @@
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
-		7AA34AF8274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */; };
-		7AA34AFA274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AAC498E27448E4400AB3E67 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */; };
 		7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAC498C27448E4400AB3E67 /* FIDOAttestationWindow.xib */; };
@@ -167,6 +167,8 @@
 		7A6687912575CCC70054F0DE /* ToolPIVCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVCommand.m; sourceTree = "<group>"; };
 		7A6687932575CCF60054F0DE /* ToolPIVCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommand.h; sourceTree = "<group>"; };
 		7A6687942575CDB70054F0DE /* ToolPIVCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommon.h; sourceTree = "<group>"; };
+		7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.2.zip; sourceTree = "<group>"; };
+		7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.2.zip; sourceTree = "<group>"; };
 		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
 		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
@@ -183,8 +185,6 @@
 		7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.1.bin; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
-		7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.1.zip; sourceTree = "<group>"; };
-		7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.1.zip; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationWindow.m; sourceTree = "<group>"; };
 		7AAC498C27448E4400AB3E67 /* FIDOAttestationWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOAttestationWindow.xib; sourceTree = "<group>"; };
@@ -491,9 +491,9 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */,
+				7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */,
 				7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */,
-				7AA34AF9274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip */,
-				7AA34AF7274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -589,7 +589,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
-				7AA34AFA274DFEA400FD7118 /* appkg.PCA10059_02.0.3.1.zip in Resources */,
+				7A6A69EC2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
@@ -598,8 +598,8 @@
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */,
+				7A6A69EB2769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
-				7AA34AF8274DFAC800FD7118 /* appkg.PCA10059_01.0.3.1.zip in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
@@ -794,7 +794,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -807,7 +807,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.1.36;
+				MARKETING_VERSION = 0.1.37;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -821,7 +821,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -835,7 +835,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.1.36;
+				MARKETING_VERSION = 0.1.37;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
