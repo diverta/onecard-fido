@@ -66,6 +66,7 @@
 		7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
 		7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
+		7AB3C9B7276B13E900DEDD0E /* ToolGPGCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3C9B6276B13E900DEDD0E /* ToolGPGCommand.m */; };
 		7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15A271E6E8B0099D51B /* fido_blob.c */; };
 		7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
 		7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */; };
@@ -196,6 +197,8 @@
 		7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mcumgr_app_image.c; sourceTree = "<group>"; };
 		7AB3BC7922530BA000519124 /* ToolFilePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
 		7AB3BC7A22530BA000519124 /* ToolFilePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
+		7AB3C9B5276B13CC00DEDD0E /* ToolGPGCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolGPGCommand.h; sourceTree = "<group>"; };
+		7AB3C9B6276B13E900DEDD0E /* ToolGPGCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolGPGCommand.m; sourceTree = "<group>"; };
 		7AB4B157271E6E8B0099D51B /* debug_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug_log.h; sourceTree = "<group>"; };
 		7AB4B158271E6E8B0099D51B /* ECDH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
 		7AB4B159271E6E8B0099D51B /* SetPinParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPinParamWindow.h; sourceTree = "<group>"; };
@@ -263,6 +266,7 @@
 				7A712EBA2570BC9400E45E2D /* tool_crypto */,
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7A6687902575CCA80054F0DE /* PIV */,
+				7AB3C9B4276B139400DEDD0E /* GPG */,
 				7AA7464223C2C400001938A7 /* Resources */,
 				7A4B02C5274B3C1500BF44C2 /* DFU */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
@@ -510,6 +514,15 @@
 			path = FIDOAttestation;
 			sourceTree = "<group>";
 		};
+		7AB3C9B4276B139400DEDD0E /* GPG */ = {
+			isa = PBXGroup;
+			children = (
+				7AB3C9B5276B13CC00DEDD0E /* ToolGPGCommand.h */,
+				7AB3C9B6276B13E900DEDD0E /* ToolGPGCommand.m */,
+			);
+			path = GPG;
+			sourceTree = "<group>";
+		};
 		7AB4B156271E6E340099D51B /* ClientPIN */ = {
 			isa = PBXGroup;
 			children = (
@@ -624,6 +637,7 @@
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
 				7A629F4524C00245007ABA89 /* ToolContext.m in Sources */,
 				7A3A1B2B271E6F8D006864A1 /* ToolPreferenceWindow.m in Sources */,
+				7AB3C9B7276B13E900DEDD0E /* ToolGPGCommand.m in Sources */,
 				7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */,
 				7AB4B171271E6E8B0099D51B /* SetPinParamWindow.m in Sources */,
 				7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */,
