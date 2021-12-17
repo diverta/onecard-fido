@@ -10,6 +10,7 @@
 @interface ToolGPGCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)doRequestMakeTempFolder;
 
 @end
 
