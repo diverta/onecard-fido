@@ -18,6 +18,8 @@
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
 		7A1F778A2744994800B3B1A8 /* ToolFIDOAttestationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F77892744994800B3B1A8 /* ToolFIDOAttestationCommand.m */; };
+		7A292D8E27702A4E0010EE4A /* generate_keys.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_keys.sh */; };
+		7A292D9027702D450010EE4A /* generate_keys.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_keys.param */; };
 		7A3A1B20271E6F7E006864A1 /* PinCodeParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */; };
 		7A3A1B21271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B1D271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.m */; };
 		7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3A1B1E271E6F7E006864A1 /* PinCodeParamWindow.xib */; };
@@ -112,6 +114,8 @@
 		7A1F77882744992900B3B1A8 /* ToolFIDOAttestationCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFIDOAttestationCommand.h; sourceTree = "<group>"; };
 		7A1F77892744994800B3B1A8 /* ToolFIDOAttestationCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFIDOAttestationCommand.m; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
+		7A292D8D27702A4E0010EE4A /* generate_keys.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_keys.sh; sourceTree = "<group>"; };
+		7A292D8F27702D450010EE4A /* generate_keys.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_keys.param; sourceTree = "<group>"; };
 		7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinCodeParamWindow.m; sourceTree = "<group>"; };
 		7A3A1B1A271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCTAP2HealthCheckCommand.h; sourceTree = "<group>"; };
 		7A3A1B1B271E6F7E006864A1 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
@@ -495,6 +499,8 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A292D8F27702D450010EE4A /* generate_keys.param */,
+				7A292D8D27702A4E0010EE4A /* generate_keys.sh */,
 				7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */,
 				7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */,
 				7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */,
@@ -602,6 +608,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
+				7A292D9027702D450010EE4A /* generate_keys.param in Resources */,
 				7A6A69EC2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
@@ -612,6 +619,7 @@
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */,
 				7A6A69EB2769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip in Resources */,
+				7A292D8E27702A4E0010EE4A /* generate_keys.sh in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
