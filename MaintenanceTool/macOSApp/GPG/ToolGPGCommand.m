@@ -43,12 +43,15 @@
         [self doRequestCommandLine:COMMAND_GPG_MAKE_TEMP_FOLDER commandPath:path commandArgs:args];
     }
 
-    - (void)doResponseMakeTempFolder:(NSMutableArray<NSString *> *)response {
-        // 生成された作業用フォルダー名称を保持
-        if ([response count] == 1) {
-            [self setTempFolderPath:[response objectAtIndex:0]];
-            [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder path: %@", [self tempFolderPath]];
+    - (void)doResponseMakeTempFolder:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([response count] != 1) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Make temp folder failed: %@", response];
+            return;
         }
+        // 生成された作業用フォルダー名称を保持
+        [self setTempFolderPath:[response objectAtIndex:0]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder path: %@", [self tempFolderPath]];
     }
 
 #pragma mark - Command line processor
@@ -78,7 +81,6 @@
         }];
         // コマンドを実行
         [task launch];
-        [task waitUntilExit];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Command executed: %@", path];
     }
 
