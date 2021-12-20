@@ -168,6 +168,24 @@
         return paramTemplContent;
     }
 
+    - (bool)writeParameterFile:(NSString *)filename fromTemplate:(NSString *)paramTemplContent, ... {
+        // シェルスクリプトのテンプレートを、指定の内容で置き換え、パラメーターを生成
+        va_list args;
+        va_start(args, paramTemplContent);
+        NSString *paramContent = [[NSString alloc] initWithFormat:paramTemplContent arguments:args];
+        va_end(args);
+        // パラメーターファイルの書き出し先（絶対パス）を取得
+        NSString *paramPath = [NSString stringWithFormat:@"%@/%@", [self tempFolderPath], filename];
+        // パラメーターをファイルに書き出し
+        NSError *error;
+        [paramContent writeToFile:paramPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Parameter file write failed: %@", paramPath];
+            return false;
+        }
+        return true;
+    }
+
     - (bool)checkResponseOfScript:(NSArray<NSString *> *)response {
         bool success = false;
         if ([response count] > 0) {
