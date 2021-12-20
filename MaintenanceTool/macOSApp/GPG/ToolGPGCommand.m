@@ -46,12 +46,32 @@
     - (void)doResponseMakeTempFolder:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([response count] != 1) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"Make temp folder failed: %@", response];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Create temp folder failed: %@", response];
             return;
         }
         // 生成された作業用フォルダー名称を保持
         [self setTempFolderPath:[response objectAtIndex:0]];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder path: %@", [self tempFolderPath]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder created: path=%@", [self tempFolderPath]];
+        // 次の処理に移行
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestRemoveTempFolder {
+        // 作業用フォルダーをPC上から削除
+        NSString *path = @"/bin/rm";
+        NSArray *args = @[@"-rf", [self tempFolderPath]];
+        [self doRequestCommandLine:COMMAND_GPG_REMOVE_TEMP_FOLDER commandPath:path commandArgs:args];
+    }
+
+    - (void)doResponseRemoveTempFolder:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([response count] > 0) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Remove temp folder failed: %@", response];
+            return;
+        }
+        // 生成された作業用フォルダー名称をクリア
+        [self setTempFolderPath:nil];
+        [[ToolLogFile defaultLogger] debug:@"Temp folder removed"];
     }
 
 #pragma mark - Command line processor
@@ -117,6 +137,9 @@
         switch ([self command]) {
             case COMMAND_GPG_MAKE_TEMP_FOLDER:
                 [self doResponseMakeTempFolder:outputArray];
+                break;
+            case COMMAND_GPG_REMOVE_TEMP_FOLDER:
+                [self doResponseRemoveTempFolder:outputArray];
                 break;
             default:
                 return;
