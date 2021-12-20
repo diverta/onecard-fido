@@ -93,6 +93,10 @@ static ToolLogFile *sharedInstance;
         va_end(args);
     }
 
+    - (void)dump:(NSString *)logMessage {
+        [self outputLogText:logMessage type:LOG_TYPE_NONE];
+    }
+
     - (void)hexdump:(NSData *)data {
         int length = (int)[data length];
         uint8_t *bytes = (uint8_t *)[data bytes];
