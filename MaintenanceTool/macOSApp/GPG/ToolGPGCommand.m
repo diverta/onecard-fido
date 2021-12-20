@@ -8,6 +8,9 @@
 #import "ToolGPGCommand.h"
 #import "ToolLogFile.h"
 
+#define GenerateMainKeyScriptName               @"generate_main_key.sh"
+#define GenerateMainKeyScriptParamName          @"generate_main_key.param"
+
 @interface ToolGPGCommand ()
 
     // 上位クラスの参照を保持
@@ -101,7 +104,6 @@
         }];
         // コマンドを実行
         [task launch];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Command executed: %@", path];
     }
 
     - (void)extractOutputStringWith:(NSTask *)task {
@@ -118,8 +120,6 @@
     }
 
     - (void)commandDidTerminated {
-        // コマンド実行完了
-        [[ToolLogFile defaultLogger] debug:@"Command terminated"];
         // 応答データを配列に抽出
         NSMutableArray<NSString *> *outputArray = [[NSMutableArray alloc] init];
         for (NSData *data in [self commandOutput]) {
@@ -144,6 +144,44 @@
             default:
                 return;
         }
+    }
+
+#pragma mark - Utility functions
+
+    - (NSString *)getResourceFilePath:(NSString *)filename {
+        // リソースフォルダー配下にあるファイルの絶対パスを取得
+        NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+        NSString *scriptPath = [NSString stringWithFormat:@"%@/%@", resourcePath, filename];
+        return scriptPath;
+    }
+
+    - (NSString *)readParameterTemplateFrom:(NSString *)filename {
+        // パラメーターテンプレートの絶対パスを取得
+        NSString *paramTemplPath = [self getResourceFilePath:filename];
+        // パラメーターテンプレートを読み込み
+        NSError *error;
+        NSString *paramTemplContent = [NSString stringWithContentsOfFile:paramTemplPath encoding:NSUTF8StringEncoding error:&error];
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Template file read failed: %@", paramTemplPath];
+            return nil;
+        }
+        return paramTemplContent;
+    }
+
+    - (bool)checkResponseOfScript:(NSArray<NSString *> *)response {
+        bool success = false;
+        if ([response count] > 0) {
+            for (NSString *text in response) {
+                if ([text isEqualToString:@"Execute script for gnupg success"]) {
+                    // シェルスクリプトから成功メッセージが出力された場合、trueを戻す
+                    success = true;
+                } else {
+                    // シェルスクリプトのログを、管理ツールのログファイルに出力
+                    [[ToolLogFile defaultLogger] dump:text];
+                }
+            }
+        }
+        return success;
     }
 
 @end
