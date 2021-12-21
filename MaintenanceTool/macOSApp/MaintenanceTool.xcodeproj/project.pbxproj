@@ -20,6 +20,7 @@
 		7A1F778A2744994800B3B1A8 /* ToolFIDOAttestationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F77892744994800B3B1A8 /* ToolFIDOAttestationCommand.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
+		7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
 		7A3A1B20271E6F7E006864A1 /* PinCodeParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */; };
 		7A3A1B21271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B1D271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.m */; };
 		7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3A1B1E271E6F7E006864A1 /* PinCodeParamWindow.xib */; };
@@ -118,6 +119,7 @@
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
+		7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = export_pubkey_and_backup.sh; sourceTree = "<group>"; };
 		7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinCodeParamWindow.m; sourceTree = "<group>"; };
 		7A3A1B1A271E6F7E006864A1 /* ToolCTAP2HealthCheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCTAP2HealthCheckCommand.h; sourceTree = "<group>"; };
 		7A3A1B1B271E6F7E006864A1 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
 				7A8528FE277176F10096F41D /* add_sub_key.sh */,
 				7A8528FD277176F10096F41D /* add_sub_key.param */,
+				7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -619,6 +622,7 @@
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
+				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
 				7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */,
