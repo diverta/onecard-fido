@@ -12,6 +12,9 @@
 #define GenerateMainKeyScriptParamName          @"generate_main_key.param"
 #define AddSubKeyScriptName                     @"add_sub_key.sh"
 #define AddSubKeyScriptParamName                @"add_sub_key.param"
+#define ExportPubkeyAndBackupScriptName         @"export_pubkey_and_backup.sh"
+#define ExportedPubkeyFileName                  @"public_key.pgp"
+#define ExportedBackupFileName                  @"GNUPGHOME.tgz"
 
 @interface ToolGPGCommand ()
 
@@ -31,6 +34,7 @@
     @property (nonatomic) NSString                     *mailAddress;
     @property (nonatomic) NSString                     *comment;
     @property (nonatomic) NSString                     *passphrase;
+    @property (nonatomic) NSString                     *exportFolderPath;
 
 @end
 
@@ -118,12 +122,34 @@
     - (void)doResponseAddSubKey:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
+            // 副鍵が３点生成された場合は、次の処理に移行
             if ([self checkIfSubKeysExistFromResponse:response]) {
-                // 副鍵が３点生成された場合
                 [[ToolLogFile defaultLogger] debug:@"Added sub keys"];
+                [self doRequestExportPubkeyAndBackup];
+                return;
             }
         }
-        // 次の処理に移行
+        // 後処理に移行
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestExportPubkeyAndBackup {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:ExportPubkeyAndBackupScriptName];
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self exportFolderPath]];
+        [self doRequestCommandLine:COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseExportPubkeyAndBackup:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            if ([self checkIfPubkeyAndBackupExistIn:[self exportFolderPath]]) {
+                // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
+                [[ToolLogFile defaultLogger] debugWithFormat:@"Exported public key and backup file to %@", [self exportFolderPath]];
+            }
+        }
+        // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
 
@@ -214,6 +240,20 @@
         return false;
     }
 
+    - (bool)checkIfPubkeyAndBackupExistIn:(NSString *)exportPath {
+        // 公開鍵ファイルがエクスポート先に存在するかチェック
+        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:exportPath] == false) {
+            [[ToolLogFile defaultLogger] error:@"Public key file not exported"];
+            return false;
+        }
+        // バックアップファイルがエクスポート先に存在するかチェック
+        if ([self checkIfFileExist:ExportedBackupFileName inFolder:exportPath] == false) {
+            [[ToolLogFile defaultLogger] error:@"Backup file not exported"];
+            return false;
+        }
+        return true;
+    }
+
 #pragma mark - Command line processor
 
     - (void)doRequestCommandLine:(Command)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
@@ -284,6 +324,9 @@
             case COMMAND_GPG_ADD_SUB_KEY:
                 [self doResponseAddSubKey:outputArray];
                 break;
+            case COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP:
+                [self doResponseExportPubkeyAndBackup:outputArray];
+                break;
             default:
                 return;
         }
@@ -343,6 +386,12 @@
             }
         }
         return success;
+    }
+
+    - (bool)checkIfFileExist:(NSString *)filename inFolder:(NSString *)folderPath {
+        // 指定のフォルダー配下にファイルが存在している場合は true
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@", folderPath, filename];
+        return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     }
 
 @end
