@@ -56,6 +56,8 @@
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
+		7A8528FF277176F10096F41D /* add_sub_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FD277176F10096F41D /* add_sub_key.param */; };
+		7A852900277176F10096F41D /* add_sub_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FE277176F10096F41D /* add_sub_key.sh */; };
 		7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E0E2623791A2D00B47026 /* ToolLogFile.m */; };
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
@@ -180,6 +182,8 @@
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
+		7A8528FD277176F10096F41D /* add_sub_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_sub_key.param; sourceTree = "<group>"; };
+		7A8528FE277176F10096F41D /* add_sub_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = add_sub_key.sh; sourceTree = "<group>"; };
 		7A8E0E2523791A0A00B47026 /* ToolLogFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolLogFile.h; sourceTree = "<group>"; };
 		7A8E0E2623791A2D00B47026 /* ToolLogFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolLogFile.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolBLECommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECommand.h; sourceTree = "<group>"; };
@@ -499,11 +503,13 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A292D8F27702D450010EE4A /* generate_main_key.param */,
-				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */,
 				7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */,
 				7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */,
+				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
+				7A292D8F27702D450010EE4A /* generate_main_key.param */,
+				7A8528FE277176F10096F41D /* add_sub_key.sh */,
+				7A8528FD277176F10096F41D /* add_sub_key.param */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -612,6 +618,7 @@
 				7A6A69EC2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
+				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
 				7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */,
@@ -625,6 +632,7 @@
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,
+				7A852900277176F10096F41D /* add_sub_key.sh in Resources */,
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
