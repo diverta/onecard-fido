@@ -24,9 +24,10 @@ SCRIPT_OPT=$3
 export GNUPGHOME=${TEMPDIR}
 
 # Check if parameter file exist
-GENKEYS_COMMAND=${TEMPDIR}/generate_main_key.param
+SCRIPTNAME=`basename $0 .sh`
+GENKEYS_COMMAND=${TEMPDIR}/${SCRIPTNAME}.param
 if [ ! -f ${GENKEYS_COMMAND} ]; then
-    echo "Command file for generating main key is not exists"
+    echo "Command parameter file is not exists"
     exit 1
 fi
 
