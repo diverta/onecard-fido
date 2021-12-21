@@ -10,6 +10,8 @@
 
 #define GenerateMainKeyScriptName               @"generate_main_key.sh"
 #define GenerateMainKeyScriptParamName          @"generate_main_key.param"
+#define AddSubKeyScriptName                     @"add_sub_key.sh"
+#define AddSubKeyScriptParamName                @"add_sub_key.param"
 
 @interface ToolGPGCommand ()
 
@@ -90,6 +92,36 @@
             // 成功した場合は鍵IDを保持
             [self setGeneratedMainKeyId:[self extractMainKeyIdFromResponse:response]];
             [[ToolLogFile defaultLogger] debugWithFormat:@"Generated key id: %@", [self generatedMainKeyId]];
+            // 次の処理に移行
+            [self doRequestAddSubKey];
+        } else {
+            // 後処理に移行
+            [self doRequestRemoveTempFolder];
+        }
+    }
+
+    - (void)doRequestAddSubKey {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:AddSubKeyScriptName];
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:AddSubKeyScriptParamName];
+        if (paramTemplContent == nil) {
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        [self writeParameterFile:AddSubKeyScriptParamName fromTemplate:paramTemplContent];
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        [self doRequestCommandLine:COMMAND_GPG_ADD_SUB_KEY commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseAddSubKey:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            if ([self checkIfSubKeysExistFromResponse:response]) {
+                // 副鍵が３点生成された場合
+                [[ToolLogFile defaultLogger] debug:@"Added sub keys"];
+            }
         }
         // 次の処理に移行
         [self doRequestRemoveTempFolder];
@@ -116,10 +148,11 @@
 #pragma mark - Private functions
 
     - (NSString *)extractMainKeyIdFromResponse:(NSArray<NSString *> *)response {
+        // メッセージ検索用文字列
+        NSString *keyword = @"pub   rsa2048*";
+        // メッセージ文字列から鍵IDを抽出
         NSString *keyid = nil;
         for (NSString *text in response) {
-            // メッセージ文字列から鍵IDを抽出
-            NSString *keyword = @"pub   rsa2048*";
             if ([text isLike:keyword]) {
                 // 改行文字で区切られた文字列を分割
                 NSArray *values = [text componentsSeparatedByString:@"\n"];
@@ -130,6 +163,55 @@
             }
         }
         return keyid;
+    }
+
+    - (bool)checkIfSubKeysExistFromResponse:(NSArray<NSString *> *)response {
+        // メッセージ検索用文字列
+        NSString *keyword1 = [[NSString alloc] initWithFormat:@"%@/pubring.kbx*", [self tempFolderPath]];
+        NSString *keyword2 = @"ssb   rsa2048*";
+        // 副鍵生成の有無を保持
+        bool subKeyS = false;
+        bool subKeyE = false;
+        bool subKeyA = false;
+        // メッセージ文字列から鍵一覧メッセージ（'gpg -K'実行結果）を抽出
+        for (NSString *text in response) {
+            if ([text isLike:keyword1] == false) {
+                continue;
+            }
+            // 改行文字で区切られた文字列を分割
+            NSArray *values = [text componentsSeparatedByString:@"\n"];
+            // 副鍵に関するメッセージを解析
+            for (NSString *value in values) {
+                if ([value isLike:keyword2] == false) {
+                    continue;
+                }
+                // 副鍵の機能を解析
+                if ([value containsString:@"[S]"]) {
+                    subKeyS = true;
+                } else if ([value containsString:@"[E]"]) {
+                    subKeyE = true;
+                } else if ([value containsString:@"[A]"]) {
+                    subKeyA = true;
+                }
+            }
+            break;
+        }
+        // ３点の副鍵が揃っていれば true を戻す
+        if (subKeyS && subKeyE && subKeyA) {
+            return true;
+        }
+        // 揃っていない副鍵についてログを出力
+        if (subKeyS == false) {
+            [[ToolLogFile defaultLogger] error:@"Sub key (for sign) not added"];
+        }
+        if (subKeyE == false) {
+            [[ToolLogFile defaultLogger] error:@"Sub key (for encrypt) not added"];
+        }
+        if (subKeyA == false) {
+            [[ToolLogFile defaultLogger] error:@"Sub key (for authenticate) not added"];
+        }
+        // false を戻す
+        return false;
     }
 
 #pragma mark - Command line processor
@@ -198,6 +280,9 @@
                 break;
             case COMMAND_GPG_GENERATE_MAIN_KEY:
                 [self doResponseGenerateMainKey:outputArray];
+                break;
+            case COMMAND_GPG_ADD_SUB_KEY:
+                [self doResponseAddSubKey:outputArray];
                 break;
             default:
                 return;
