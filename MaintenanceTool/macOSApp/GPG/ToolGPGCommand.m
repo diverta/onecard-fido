@@ -21,6 +21,14 @@
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
     // 生成された作業用フォルダー名称を保持
     @property (nonatomic) NSString                     *tempFolderPath;
+    // 生成された鍵のIDを保持
+    @property (nonatomic) NSString                     *generatedMainKeyId;
+
+    // 鍵作成用パラメーターを保持
+    @property (nonatomic) NSString                     *realName;
+    @property (nonatomic) NSString                     *mailAddress;
+    @property (nonatomic) NSString                     *comment;
+    @property (nonatomic) NSString                     *passphrase;
 
 @end
 
@@ -56,6 +64,34 @@
         [self setTempFolderPath:[response objectAtIndex:0]];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder created: path=%@", [self tempFolderPath]];
         // 次の処理に移行
+        [self doRequestGenerateMainKey];
+    }
+
+    - (void)doRequestGenerateMainKey {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:GenerateMainKeyScriptName];
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:GenerateMainKeyScriptParamName];
+        if (paramTemplContent == nil) {
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        [self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent, [self realName], [self mailAddress], [self comment]];
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], [self passphrase], @"--no-tty"];
+        [self doRequestCommandLine:COMMAND_GPG_GENERATE_MAIN_KEY commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseGenerateMainKey:(NSArray<NSString *> *)response {
+        // 生成鍵IDをクリア
+        [self setGeneratedMainKeyId:nil];
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            // 成功した場合は鍵IDを保持
+            [self setGeneratedMainKeyId:[self extractMainKeyIdFromResponse:response]];
+            [[ToolLogFile defaultLogger] debugWithFormat:@"Generated key id: %@", [self generatedMainKeyId]];
+        }
+        // 次の処理に移行
         [self doRequestRemoveTempFolder];
     }
 
@@ -75,6 +111,25 @@
         // 生成された作業用フォルダー名称をクリア
         [self setTempFolderPath:nil];
         [[ToolLogFile defaultLogger] debug:@"Temp folder removed"];
+    }
+
+#pragma mark - Private functions
+
+    - (NSString *)extractMainKeyIdFromResponse:(NSArray<NSString *> *)response {
+        NSString *keyid = nil;
+        for (NSString *text in response) {
+            // メッセージ文字列から鍵IDを抽出
+            NSString *keyword = @"pub   rsa2048*";
+            if ([text isLike:keyword]) {
+                // 改行文字で区切られた文字列を分割
+                NSArray *values = [text componentsSeparatedByString:@"\n"];
+                // 分割されたメッセージの２件目、後ろから16バイトの文字列を、鍵IDとして抽出
+                NSString *valueOfId = [values objectAtIndex:1];
+                keyid = [valueOfId substringWithRange:NSMakeRange([valueOfId length] - 16, 16)];
+                break;
+            }
+        }
+        return keyid;
     }
 
 #pragma mark - Command line processor
@@ -140,6 +195,9 @@
                 break;
             case COMMAND_GPG_REMOVE_TEMP_FOLDER:
                 [self doResponseRemoveTempFolder:outputArray];
+                break;
+            case COMMAND_GPG_GENERATE_MAIN_KEY:
+                [self doResponseGenerateMainKey:outputArray];
                 break;
             default:
                 return;
