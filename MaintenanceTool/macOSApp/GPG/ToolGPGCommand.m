@@ -15,6 +15,8 @@
 #define ExportPubkeyAndBackupScriptName         @"export_pubkey_and_backup.sh"
 #define ExportedPubkeyFileName                  @"public_key.pgp"
 #define ExportedBackupFileName                  @"GNUPGHOME.tgz"
+#define TransferSubkeyToCardScriptName          @"transfer_subkey_to_card.sh"
+#define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
 
 @interface ToolGPGCommand ()
 
@@ -147,6 +149,35 @@
             if ([self checkIfPubkeyAndBackupExistIn:[self exportFolderPath]]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
                 [[ToolLogFile defaultLogger] debugWithFormat:@"Exported public key and backup file to %@", [self exportFolderPath]];
+                [self doRequestTransferSubkeyToCard];
+                return;
+            }
+        }
+        // 後処理に移行
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestTransferSubkeyToCard {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:TransferSubkeyToCardScriptName];
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:TransferSubkeyToCardScriptParamName];
+        if (paramTemplContent == nil) {
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        [self writeParameterFile:TransferSubkeyToCardScriptParamName fromTemplate:paramTemplContent];
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        [self doRequestCommandLine:COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseTransferSubkeyToCard:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            // 認証器に副鍵が移動された場合
+            if ([self checkIfSubKeysTransferredFromResponse:response]) {
+                [[ToolLogFile defaultLogger] debug:@"Transferred sub key to USB device"];
             }
         }
         // 後処理に移行
@@ -254,6 +285,11 @@
         return true;
     }
 
+    - (bool)checkIfSubKeysTransferredFromResponse:(NSArray<NSString *> *)response {
+        // TODO: 仮の実装です。
+        return true;
+    }
+
 #pragma mark - Command line processor
 
     - (void)doRequestCommandLine:(Command)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
@@ -326,6 +362,9 @@
                 break;
             case COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP:
                 [self doResponseExportPubkeyAndBackup:outputArray];
+                break;
+            case COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
+                [self doResponseTransferSubkeyToCard:outputArray];
                 break;
             default:
                 return;
