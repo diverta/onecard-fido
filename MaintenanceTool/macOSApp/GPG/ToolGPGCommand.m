@@ -125,7 +125,7 @@
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
             // 副鍵が３点生成された場合は、次の処理に移行
-            if ([self checkIfSubKeysExistFromResponse:response]) {
+            if ([self checkIfSubKeysExistFromResponse:response transferred:false]) {
                 [[ToolLogFile defaultLogger] debug:@"Added sub keys"];
                 [self doRequestExportPubkeyAndBackup];
                 return;
@@ -176,7 +176,7 @@
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
             // 認証器に副鍵が移動された場合
-            if ([self checkIfSubKeysTransferredFromResponse:response]) {
+            if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
                 [[ToolLogFile defaultLogger] debug:@"Transferred sub key to USB device"];
             }
         }
@@ -222,10 +222,10 @@
         return keyid;
     }
 
-    - (bool)checkIfSubKeysExistFromResponse:(NSArray<NSString *> *)response {
+    - (bool)checkIfSubKeysExistFromResponse:(NSArray<NSString *> *)response transferred:(bool)transferred {
         // メッセージ検索用文字列
         NSString *keyword1 = [[NSString alloc] initWithFormat:@"%@/pubring.kbx*", [self tempFolderPath]];
-        NSString *keyword2 = @"ssb   rsa2048*";
+        NSString *keyword2 = transferred ? @"ssb>  rsa2048*" : @"ssb   rsa2048*";
         // 副鍵生成の有無を保持
         bool subKeyS = false;
         bool subKeyE = false;
@@ -258,14 +258,15 @@
             return true;
         }
         // 揃っていない副鍵についてログを出力
+        NSString *str = transferred ? @"transferred" : @"added";
         if (subKeyS == false) {
-            [[ToolLogFile defaultLogger] error:@"Sub key (for sign) not added"];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Sub key (for sign) not %@", str];
         }
         if (subKeyE == false) {
-            [[ToolLogFile defaultLogger] error:@"Sub key (for encrypt) not added"];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Sub key (for encrypt) not %@", str];
         }
         if (subKeyA == false) {
-            [[ToolLogFile defaultLogger] error:@"Sub key (for authenticate) not added"];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Sub key (for authenticate) not %@", str];
         }
         // false を戻す
         return false;
@@ -282,11 +283,6 @@
             [[ToolLogFile defaultLogger] error:@"Backup file not exported"];
             return false;
         }
-        return true;
-    }
-
-    - (bool)checkIfSubKeysTransferredFromResponse:(NSArray<NSString *> *)response {
-        // TODO: 仮の実装です。
         return true;
     }
 
