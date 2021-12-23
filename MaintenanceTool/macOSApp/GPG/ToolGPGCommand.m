@@ -81,9 +81,9 @@
     - (void)generatePGPKeyWillStart:(id)sender {
         // スクリプトログ格納配列をクリア
         [self setScriptOutput:[[NSMutableArray alloc] init]];
-        // 作業用フォルダー生成処理から開始
+        // バージョン照会から開始
         [self notifyProcessStarted];
-        [self doRequestMakeTempFolder];
+        [self doRequestGPGVersion];
     }
 
 #pragma mark - Private common methods
@@ -114,6 +114,30 @@
     }
 
 #pragma mark - Private methods
+
+    - (void)doRequestGPGVersion {
+        // MacGPGコマンドが存在するかチェック
+        if ([self checkIfFileExist:@"gpg" inFolder:@"/usr/local/bin"] == false) {
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // インストールされているMacGPGコマンドのバージョンを照会
+        NSString *path = @"/usr/local/bin/gpg";
+        NSArray *args = @[@"--version"];
+        [self doRequestCommandLine:COMMAND_GPG_VERSION commandPath:path commandArgs:args];
+    }
+
+    - (void)doResponseGPGVersion:(NSArray<NSString *> *)response {
+        // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
+        if ([self checkIfGPGVersionAvailable:response] == false) {
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // 次の処理に移行
+        [self doRequestMakeTempFolder];
+    }
 
     - (void)doRequestMakeTempFolder {
         // 作業用フォルダーをPC上に生成
@@ -296,6 +320,30 @@
 
 #pragma mark - Private functions
 
+    - (bool)checkIfGPGVersionAvailable:(NSArray<NSString *> *)response {
+        // メッセージ検索用文字列
+        NSString *keyword = @"gpg (GnuPG/MacGPG2)*";
+        for (NSString *text in response) {
+            if ([text isLike:keyword]) {
+                // 改行文字で区切られた文字列を分割
+                NSArray *array = [text componentsSeparatedByString:@"\n"];
+                // 分割されたメッセージの１件目、バージョン文字列を解析（半角スペース文字で区切られた文字列を分割）
+                NSString *versionInfo = [array objectAtIndex:0];
+                NSArray *infoCols = [versionInfo componentsSeparatedByString:@" "];
+                // 分割されたメッセージの３件目について、鍵の機能を解析
+                if ([infoCols count] == 3) {
+                    // PCに導入されているGPGのバージョンが2.2.27以上の場合は true
+                    NSString *versionStr = [infoCols objectAtIndex:2];
+                    int versionDec = [ToolCommon calculateDecimalVersion:versionStr];
+                    [[ToolLogFile defaultLogger] debugWithFormat:@"Installed MacGPG: version %@", versionStr];
+                    return (versionDec >= 20227);
+                }
+            }
+        }
+        [[ToolLogFile defaultLogger] debug:@"MacGPG is not installed yet"];
+        return false;
+    }
+
     - (NSString *)extractMainKeyIdFromResponse:(NSArray<NSString *> *)response {
         // メッセージ検索用文字列
         NSString *keyword = @"pub   rsa2048*";
@@ -449,6 +497,9 @@
         }
         // レスポンスを処理
         switch ([self command]) {
+            case COMMAND_GPG_VERSION:
+                [self doResponseGPGVersion:outputArray];
+                break;
             case COMMAND_GPG_MAKE_TEMP_FOLDER:
                 [self doResponseMakeTempFolder:outputArray];
                 break;

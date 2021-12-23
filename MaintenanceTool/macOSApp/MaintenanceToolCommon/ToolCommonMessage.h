@@ -308,6 +308,7 @@
 #define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
 
 #pragma mark - OpenPGP関連
+#define MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL   @"バージョン「2021.1」以降のGPG Suiteをインストールしてから実行してください。"
 #define MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL   @"作業用フォルダーを生成出来ませんでした。"
 #define MSG_ERROR_OPENPGP_READ_PARAM_TEMPL_FAIL @"パラメーターテンプレートをファイルから読込むことが出来ませんでした。"
 #define MSG_ERROR_OPENPGP_WRITE_PARAM_FILE_FAIL @"GPGコマンドのパラメーターファイルを書き出すことが出来ませんでした。"
