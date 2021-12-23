@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2021/12/16.
 //
 #import "ToolAppCommand.h"
+#import "ToolCommonMessage.h"
 #import "ToolGPGCommand.h"
 #import "ToolLogFile.h"
 
@@ -18,6 +19,7 @@
 #define TransferSubkeyToCardScriptName          @"transfer_subkey_to_card.sh"
 #define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
+#define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
 
 @interface ToolGPGCommand ()
 
@@ -35,7 +37,8 @@
     @property (nonatomic) bool                          keyStoredSuccess;
     // 副鍵が既に認証器に存在するかどうかを保持
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
-
+    // スクリプトから出力されたログを保持
+    @property (nonatomic) NSMutableArray<NSString *>   *scriptOutput;
     // 鍵作成用パラメーターを保持
     @property (nonatomic) NSString                     *realName;
     @property (nonatomic) NSString                     *mailAddress;
@@ -76,8 +79,38 @@
     }
 
     - (void)generatePGPKeyWillStart:(id)sender {
+        // スクリプトログ格納配列をクリア
+        [self setScriptOutput:[[NSMutableArray alloc] init]];
         // 作業用フォルダー生成処理から開始
+        [self notifyProcessStarted];
         [self doRequestMakeTempFolder];
+    }
+
+#pragma mark - Private common methods
+
+    - (void)notifyProcessStarted {
+        // メイン画面に開始メッセージを出力
+        [[self toolAppCommand] commandStartedProcess:COMMAND_OPENPGP_GENERATE_KEYS type:TRANSPORT_NONE];
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] info:message];
+        [self notifyToolCommandMessage:message];
+    }
+
+    - (void)notifyErrorMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] error:message];
+        [self notifyToolCommandMessage:message];
+    }
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        // メイン画面にメッセージ文字列を表示する
+        [[[self toolAppCommand] delegate] notifyAppCommandMessage:message];
+    }
+
+    - (void)notifyProcessTerminated:(bool)success {
+        // メイン画面に制御を戻す
+        [[self toolAppCommand] commandDidProcess:COMMAND_OPENPGP_GENERATE_KEYS result:success message:nil];
     }
 
 #pragma mark - Private methods
@@ -92,12 +125,13 @@
     - (void)doResponseMakeTempFolder:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([response count] != 1) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"Create temp folder failed: %@", response];
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 生成された作業用フォルダー名称を保持
         [self setTempFolderPath:[response objectAtIndex:0]];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Temp folder created: path=%@", [self tempFolderPath]];
+        [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, [self tempFolderPath]];
         // 次の処理に移行
         [self doRequestGenerateMainKey];
     }
@@ -108,10 +142,14 @@
         // パラメーターテンプレートをファイルから読込み
         NSString *paramTemplContent = [self readParameterTemplateFrom:GenerateMainKeyScriptParamName];
         if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
             return;
         }
         // シェルスクリプトのパラメーターファイルを生成
-        [self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent, [self realName], [self mailAddress], [self comment]];
+        if ([self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent, [self realName], [self mailAddress], [self comment]] == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
         // シェルスクリプトを実行
         NSArray *args = @[[self tempFolderPath], [self passphrase], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_GENERATE_MAIN_KEY commandPath:scriptPath commandArgs:args];
@@ -127,12 +165,13 @@
             if (keyid != nil) {
                 // チェックOKの場合は鍵IDを保持し、次の処理に移行
                 [self setGeneratedMainKeyId:keyid];
-                [[ToolLogFile defaultLogger] debugWithFormat:@"Generated key id: %@", [self generatedMainKeyId]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, [self generatedMainKeyId]];
                 [self doRequestAddSubKey];
                 return;
             }
         }
-        // 後処理に移行
+        // エラーメッセージを出力し、後処理に移行
+        [self notifyErrorMessage:MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL];
         [self doRequestRemoveTempFolder];
     }
 
@@ -142,10 +181,14 @@
         // パラメーターテンプレートをファイルから読込み
         NSString *paramTemplContent = [self readParameterTemplateFrom:AddSubKeyScriptParamName];
         if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
             return;
         }
         // シェルスクリプトのパラメーターファイルを生成
-        [self writeParameterFile:AddSubKeyScriptParamName fromTemplate:paramTemplContent];
+        if ([self writeParameterFile:AddSubKeyScriptParamName fromTemplate:paramTemplContent] == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
         // シェルスクリプトを実行
         NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_ADD_SUB_KEY commandPath:scriptPath commandArgs:args];
@@ -156,12 +199,13 @@
         if ([self checkResponseOfScript:response]) {
             // 副鍵が３点生成された場合は、次の処理に移行
             if ([self checkIfSubKeysExistFromResponse:response transferred:false]) {
-                [[ToolLogFile defaultLogger] debug:@"Added sub keys"];
+                [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_ADDED_SUB_KEYS];
                 [self doRequestExportPubkeyAndBackup];
                 return;
             }
         }
-        // 後処理に移行
+        // エラーメッセージを出力し、後処理に移行
+        [self notifyErrorMessage:MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL];
         [self doRequestRemoveTempFolder];
     }
 
@@ -178,12 +222,13 @@
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfPubkeyAndBackupExistIn:[self exportFolderPath]]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                [[ToolLogFile defaultLogger] debugWithFormat:@"Exported public key and backup file to %@", [self exportFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self exportFolderPath]];
                 [self doRequestTransferSubkeyToCard];
                 return;
             }
         }
-        // 後処理に移行
+        // エラーメッセージを出力し、後処理に移行
+        [self notifyErrorMessage:MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL];
         [self doRequestRemoveTempFolder];
     }
 
@@ -193,10 +238,14 @@
         // パラメーターテンプレートをファイルから読込み
         NSString *paramTemplContent = [self readParameterTemplateFrom:TransferSubkeyToCardScriptParamName];
         if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
             return;
         }
         // シェルスクリプトのパラメーターファイルを生成
-        [self writeParameterFile:TransferSubkeyToCardScriptParamName fromTemplate:paramTemplContent];
+        if ([self writeParameterFile:TransferSubkeyToCardScriptParamName fromTemplate:paramTemplContent] == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
         // シェルスクリプトを実行
         NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD commandPath:scriptPath commandArgs:args];
@@ -207,7 +256,7 @@
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
                 // 副鍵が認証器に移動された場合は後処理に移行
-                [[ToolLogFile defaultLogger] debug:@"Transferred sub key to USB device"];
+                [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE];
                 [self setKeyStoredSuccess:true];
                 [self doRequestRemoveTempFolder];
                 return;
@@ -216,8 +265,11 @@
         // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック後、後処理に移行
         [self setKeyStoredSuccess:false];
         [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Transferred sub key to USB device fail%@",
-            [self keyAlreadyStoredWarning] ? @": sub key already stored in USB device" : @""];
+        if ([self keyAlreadyStoredWarning]) {
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
+        } else {
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
+        }
         [self doRequestRemoveTempFolder];
     }
 
@@ -231,12 +283,15 @@
     - (void)doResponseRemoveTempFolder:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([response count] > 0) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"Remove temp folder failed: %@", response];
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 生成された作業用フォルダー名称をクリア
         [self setTempFolderPath:nil];
-        [[ToolLogFile defaultLogger] debug:@"Temp folder removed"];
+        [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_REMOVED_TEMPDIR];
+        // 処理完了を通知
+        [self notifyProcessTerminated:[self keyStoredSuccess]];
     }
 
 #pragma mark - Private functions
@@ -316,12 +371,12 @@
     - (bool)checkIfPubkeyAndBackupExistIn:(NSString *)exportPath {
         // 公開鍵ファイルがエクスポート先に存在するかチェック
         if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:exportPath] == false) {
-            [[ToolLogFile defaultLogger] error:@"Public key file not exported"];
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL];
             return false;
         }
         // バックアップファイルがエクスポート先に存在するかチェック
         if ([self checkIfFileExist:ExportedBackupFileName inFolder:exportPath] == false) {
-            [[ToolLogFile defaultLogger] error:@"Backup file not exported"];
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_BACKUP_FAIL];
             return false;
         }
         return true;
@@ -433,7 +488,7 @@
         NSError *error;
         NSString *paramTemplContent = [NSString stringWithContentsOfFile:paramTemplPath encoding:NSUTF8StringEncoding error:&error];
         if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"Template file read failed: %@", paramTemplPath];
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_READ_PARAM_TEMPL_FAIL];
             return nil;
         }
         return paramTemplContent;
@@ -451,7 +506,7 @@
         NSError *error;
         [paramContent writeToFile:paramPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
         if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"Parameter file write failed: %@", paramPath];
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_WRITE_PARAM_FILE_FAIL];
             return false;
         }
         return true;
@@ -461,12 +516,12 @@
         bool success = false;
         if ([response count] > 0) {
             for (NSString *text in response) {
-                if ([text isEqualToString:@"Execute script for gnupg success"]) {
+                if ([text isEqualToString:ExecuteScriptSuccessMessage]) {
                     // シェルスクリプトから成功メッセージが出力された場合、trueを戻す
                     success = true;
                 } else {
-                    // シェルスクリプトのログを、管理ツールのログファイルに出力
-                    [[ToolLogFile defaultLogger] dump:text];
+                    // シェルスクリプトのログを、格納配列に追加
+                    [[self scriptOutput] addObject:text];
                 }
             }
         }
