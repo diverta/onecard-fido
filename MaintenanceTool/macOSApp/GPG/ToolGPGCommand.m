@@ -17,6 +17,7 @@
 #define ExportedBackupFileName                  @"GNUPGHOME.tgz"
 #define TransferSubkeyToCardScriptName          @"transfer_subkey_to_card.sh"
 #define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
+#define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 
 @interface ToolGPGCommand ()
 
@@ -30,6 +31,10 @@
     @property (nonatomic) NSString                     *tempFolderPath;
     // 生成された鍵のIDを保持
     @property (nonatomic) NSString                     *generatedMainKeyId;
+    // 副鍵が認証器に移動されたかどうかを保持
+    @property (nonatomic) bool                          keyStoredSuccess;
+    // 副鍵が既に認証器に存在するかどうかを保持
+    @property (nonatomic) bool                          keyAlreadyStoredWarning;
 
     // 鍵作成用パラメーターを保持
     @property (nonatomic) NSString                     *realName;
@@ -95,15 +100,18 @@
         [self setGeneratedMainKeyId:nil];
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
-            // 成功した場合は鍵IDを保持
-            [self setGeneratedMainKeyId:[self extractMainKeyIdFromResponse:response]];
-            [[ToolLogFile defaultLogger] debugWithFormat:@"Generated key id: %@", [self generatedMainKeyId]];
-            // 次の処理に移行
-            [self doRequestAddSubKey];
-        } else {
-            // 後処理に移行
-            [self doRequestRemoveTempFolder];
+            // 生成鍵がCertify機能を有しているかチェック
+            NSString *keyid = [self extractMainKeyIdFromResponse:response];
+            if (keyid != nil) {
+                // チェックOKの場合は鍵IDを保持し、次の処理に移行
+                [self setGeneratedMainKeyId:keyid];
+                [[ToolLogFile defaultLogger] debugWithFormat:@"Generated key id: %@", [self generatedMainKeyId]];
+                [self doRequestAddSubKey];
+                return;
+            }
         }
+        // 後処理に移行
+        [self doRequestRemoveTempFolder];
     }
 
     - (void)doRequestAddSubKey {
@@ -175,12 +183,19 @@
     - (void)doResponseTransferSubkeyToCard:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
-            // 認証器に副鍵が移動された場合
             if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
+                // 副鍵が認証器に移動された場合は後処理に移行
                 [[ToolLogFile defaultLogger] debug:@"Transferred sub key to USB device"];
+                [self setKeyStoredSuccess:true];
+                [self doRequestRemoveTempFolder];
+                return;
             }
         }
-        // 後処理に移行
+        // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック後、後処理に移行
+        [self setKeyStoredSuccess:false];
+        [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Transferred sub key to USB device fail%@",
+            [self keyAlreadyStoredWarning] ? @": sub key already stored in USB device" : @""];
         [self doRequestRemoveTempFolder];
     }
 
@@ -213,9 +228,13 @@
             if ([text isLike:keyword]) {
                 // 改行文字で区切られた文字列を分割
                 NSArray *values = [text componentsSeparatedByString:@"\n"];
-                // 分割されたメッセージの２件目、後ろから16バイトの文字列を、鍵IDとして抽出
-                NSString *valueOfId = [values objectAtIndex:1];
-                keyid = [valueOfId substringWithRange:NSMakeRange([valueOfId length] - 16, 16)];
+                // 分割されたメッセージの１件目について、鍵の機能を解析
+                NSString *valueOfFunc = [values objectAtIndex:0];
+                if ([valueOfFunc containsString:@"[C]"]) {
+                    // 分割されたメッセージの２件目、後ろから16バイトの文字列を、鍵IDとして抽出
+                    NSString *valueOfId = [values objectAtIndex:1];
+                    keyid = [valueOfId substringWithRange:NSMakeRange([valueOfId length] - 16, 16)];
+                }
                 break;
             }
         }
@@ -284,6 +303,15 @@
             return false;
         }
         return true;
+    }
+
+    - (bool)checkIfSubKeyAlreadyStoredFromResponse:(NSArray<NSString *> *)response {
+        for (NSString *text in response) {
+            if ([text containsString:KeyAlreadyStoredWarningMessage]) {
+                return true;
+            }
+        }
+        return false;
     }
 
 #pragma mark - Command line processor
