@@ -10,7 +10,10 @@
 @interface ToolGPGCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)doRequestMakeTempFolder;
+    - (void)setParametersForGeneratePGPKey:(id)sender
+        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
+        passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath;
+    - (void)generatePGPKeyWillStart:(id)sender;
 
 @end
 

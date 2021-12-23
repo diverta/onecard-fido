@@ -60,6 +60,28 @@
         return self;
     }
 
+#pragma mark - Public methods
+
+    - (void)setParametersForGeneratePGPKey:(id)sender
+            realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
+            passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath {
+        // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
+        [self setRealName:realName];
+        [self setMailAddress:mailAddress];
+        [self setComment:comment];
+        // PGP公開鍵とバックアップtarの出力先を指定
+        [self setExportFolderPath:exportFolderPath];
+        // 鍵のpassphraseには、管理用PINを指定（pinentryのloopback使用時、passphraseを複数指定できないための制約）
+        [self setPassphrase:passphrase];
+    }
+
+    - (void)generatePGPKeyWillStart:(id)sender {
+        // 作業用フォルダー生成処理から開始
+        [self doRequestMakeTempFolder];
+    }
+
+#pragma mark - Private methods
+
     - (void)doRequestMakeTempFolder {
         // 作業用フォルダーをPC上に生成
         NSString *path = @"/usr/bin/mktemp";
