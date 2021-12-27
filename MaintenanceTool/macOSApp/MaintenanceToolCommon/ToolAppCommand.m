@@ -12,6 +12,7 @@
 #import "ToolContext.h"
 #import "ToolUSBDFUCommand.h"
 #import "ToolFIDOAttestationCommand.h"
+#import "ToolGPGCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
@@ -28,6 +29,7 @@
     @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
+    @property (nonatomic) ToolGPGCommand        *toolGPGCommand;
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -59,6 +61,8 @@
             [self setToolUSBDFUCommand:[[ToolUSBDFUCommand alloc] initWithDelegate:self]];
             // FIDO鍵・証明書設定機能の初期設定
             [self setToolFIDOAttestationCommand:[[ToolFIDOAttestationCommand alloc] initWithDelegate:self]];
+            // GPG機能の初期設定
+            [self setToolGPGCommand:[[ToolGPGCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -360,6 +364,9 @@
                 if (type == TRANSPORT_HID) {
                     [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 }
+                break;
+            case COMMAND_OPENPGP_GENERATE_KEYS:
+                [self setProcessNameOfCommand:PROCESS_NAME_OPENPGP_GENERATE_KEYS];
                 break;
             default:
                 break;

@@ -69,6 +69,7 @@
 #define PROCESS_NAME_CCID_PIV_IMPORT_KEY            @"鍵・証明書インストール（PIV機能）"
 #define PROCESS_NAME_CCID_PIV_SET_CHUID             @"PIV CHUID設定"
 #define PROCESS_NAME_CCID_PIV_STATUS                @"PIV設定情報取得"
+#define PROCESS_NAME_OPENPGP_GENERATE_KEYS          @"PGP秘密鍵インストール"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -305,5 +306,25 @@
 #define MSG_DESC_PIV_CHANGE_PUK_NUMBER          @"現在のPUK番号を、入力した新しいPUK番号に変更します。"
 #define MSG_DESC_PIV_RESET_PIN_NUMBER           @"現在のPIN番号をリセットし、入力した新しいPIN番号に変更します。"
 #define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
+
+#pragma mark - OpenPGP関連
+#define MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL   @"バージョン「2021.1」以降のGPG Suiteをインストールしてから実行してください。"
+#define MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL   @"作業用フォルダーを生成出来ませんでした。"
+#define MSG_ERROR_OPENPGP_READ_PARAM_TEMPL_FAIL @"パラメーターテンプレートをファイルから読込むことが出来ませんでした。"
+#define MSG_ERROR_OPENPGP_WRITE_PARAM_FILE_FAIL @"GPGコマンドのパラメーターファイルを書き出すことが出来ませんでした。"
+#define MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL @"PGP秘密鍵（主鍵）を生成出来ませんでした。"
+#define MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL @"PGP秘密鍵（副鍵）を生成出来ませんでした。"
+#define MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL    @"PGP公開鍵を指定フォルダーに生成出来ませんでした。"
+#define MSG_ERROR_OPENPGP_BACKUP_FAIL           @"バックアップファイルを指定フォルダーに生成出来ませんでした。"
+#define MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL    @"PGP公開鍵／バックアップファイルの生成が失敗しました。"
+#define MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL    @"生成したPGP秘密鍵（副鍵）を認証器に移動出来ませんでした。"
+#define MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED   @"PGP秘密鍵（副鍵）が既に認証器に格納されているため、生成したPGP秘密鍵（副鍵）を移動出来ませんでした。"
+#define MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL   @"作業用フォルダーが消去出来ませんでした。"
+#define MSG_FORMAT_OPENPGP_CREATED_TEMPDIR      @"作業用フォルダーを新規に生成しました（%@）。"
+#define MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY   @"PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: %@）。"
+#define MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE   @"PGP公開鍵とバックアップファイルを、指定フォルダー（%@）に生成しました。"
+#define MSG_OPENPGP_ADDED_SUB_KEYS              @"PGP秘密鍵（副鍵）を新規に生成しました。"
+#define MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE  @"生成したPGP秘密鍵（副鍵）を認証器に移動しました。"
+#define MSG_OPENPGP_REMOVED_TEMPDIR             @"作業用フォルダーを消去しました。"
 
 #endif /* ToolCommonMessage_h */
