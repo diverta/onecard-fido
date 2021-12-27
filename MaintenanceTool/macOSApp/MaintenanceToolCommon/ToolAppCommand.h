@@ -41,6 +41,7 @@
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
     - (void)toolPreferenceInquiryDidProcess:(bool)result;
 

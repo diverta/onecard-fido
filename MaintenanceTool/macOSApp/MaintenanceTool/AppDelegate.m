@@ -20,6 +20,7 @@
     @property (assign) IBOutlet NSButton    *buttonSetPinParam;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
+    @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
@@ -70,6 +71,7 @@
         [[self buttonSetPinParam] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
+        [[self buttonSetPgpParam] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
@@ -105,6 +107,11 @@
     - (IBAction)buttonDFUDidPress:(id)sender {
         // ファームウェア更新画面を表示
         [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonSetPgpParamDidPress:(id)sender {
+        // OpenPGP機能設定画面を表示
+        [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {

@@ -234,6 +234,13 @@
         [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];
     }
 
+    - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        if ([self checkForHIDCommand]) {
+            // OpenPGP機能設定画面を表示
+            [[self delegate] disableUserInterface];
+        }
+    }
+
 #pragma mark - Perform health check
 
     - (void)performHealthCheckCommand:(Command)command {
