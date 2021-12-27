@@ -16,6 +16,8 @@
     - (id)initWithDelegate:(id<ToolFilePanelDelegate>)delegate;
     - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow
                      withPrompt:(NSString *)prompt withMessage:(NSString *)message withFileTypes:(NSArray<NSString *> *)fileTypes;
+    - (void)panelWillSelectFolder:(id)sender parentWindow:(NSWindow *)parentWindow
+                       withPrompt:(NSString *)prompt withMessage:(NSString *)message;
 
 @end
 

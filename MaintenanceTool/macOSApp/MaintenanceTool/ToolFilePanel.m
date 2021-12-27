@@ -50,6 +50,29 @@
         }];
     }
 
+    - (void)panelWillSelectFolder:(id)sender parentWindow:(NSWindow *)parentWindow
+                       withPrompt:(NSString *)prompt withMessage:(NSString *)message {
+        // フォルダー選択パネルの設定
+        NSOpenPanel *panel = [NSOpenPanel openPanel];
+        [panel setAllowsMultipleSelection:NO];
+        [panel setCanChooseDirectories:YES];
+        [panel setCanChooseFiles:NO];
+        [panel setResolvesAliases:NO];
+        // プロンプト、タイトルを設定
+        [panel setPrompt:prompt];
+        [panel setMessage:message];
+        // フォルダー選択パネルをモーダル表示
+        ToolFilePanel * __weak weakSelf = self;
+        [panel beginSheetModalForWindow:parentWindow completionHandler:^(NSInteger result) {
+            // 呼出元のウィンドウを表示させないようにする
+            [panel orderOut:sender];
+            // フォルダー選択パネルで作成されたファイルパスを引き渡す
+            NSString *filePath = [[panel URL] path];
+            // フォルダーが選択された時の処理
+            [weakSelf panelDidSelectPath:sender modalResponse:result selectedPath:filePath];
+        }];
+    }
+
     - (void)panelDidSelectPath:(id)sender modalResponse:(NSInteger)modalResponse selectedPath:(NSString *)filePath {
         // ファイル選択パネルで作成されたファイルパスを引き渡す
         [[self delegate] panelDidSelectPath:sender filePath:filePath modalResponse:modalResponse];
