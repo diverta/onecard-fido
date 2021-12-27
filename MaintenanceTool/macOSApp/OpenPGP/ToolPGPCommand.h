@@ -10,6 +10,8 @@
 @interface ToolPGPCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
+    - (void)commandDidClosePreferenceWindow;
     - (void)setParametersForGeneratePGPKey:(id)sender
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
         passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath;

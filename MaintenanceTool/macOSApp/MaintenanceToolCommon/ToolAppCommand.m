@@ -238,6 +238,7 @@
         if ([self checkForHIDCommand]) {
             // OpenPGP機能設定画面を表示
             [[self delegate] disableUserInterface];
+            [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
         }
     }
 

@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/12/16.
 //
+#import "PGPPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolPGPCommand.h"
@@ -25,6 +26,8 @@
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
+    // 画面の参照を保持
+    @property (nonatomic) PGPPreferenceWindow          *pgpPreferenceWindow;
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
     // コマンドからの応答データを保持
@@ -59,8 +62,35 @@
         if (self) {
             // 上位クラスの参照を保持
             [self setToolAppCommand:(ToolAppCommand *)delegate];
+            [self clearCommandParameters];
+            // OpenPGP設定画面のインスタンスを生成
+            [self setPgpPreferenceWindow:[[PGPPreferenceWindow alloc] initWithWindowNibName:@"PGPPreferenceWindow"]];
         }
         return self;
+    }
+
+    - (void)clearCommandParameters {
+        // コマンドおよびパラメーターを初期化
+        [self setCommand:COMMAND_NONE];
+        [self setRealName:nil];
+        [self setMailAddress:nil];
+        [self setComment:nil];
+        [self setPassphrase:nil];
+        [self setExportFolderPath:nil];
+    }
+
+#pragma mark - For PGPPreferenceWindow open/close
+
+    - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
+        // OpenPGP機能設定画面を表示（親画面＝メイン画面）
+        if ([[self pgpPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        }
+    }
+
+    - (void)commandDidClosePreferenceWindow {
+        // メイン画面に制御を戻す
+        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods
