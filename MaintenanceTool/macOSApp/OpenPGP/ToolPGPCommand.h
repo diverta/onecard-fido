@@ -1,13 +1,13 @@
 //
-//  ToolGPGCommand.h
+//  ToolPGPCommand.h
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2021/12/16.
 //
-#ifndef ToolGPGCommand_h
-#define ToolGPGCommand_h
+#ifndef ToolPGPCommand_h
+#define ToolPGPCommand_h
 
-@interface ToolGPGCommand : NSObject
+@interface ToolPGPCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
     - (void)setParametersForGeneratePGPKey:(id)sender
@@ -17,4 +17,4 @@
 
 @end
 
-#endif /* ToolGPGCommand_h */
+#endif /* ToolPGPCommand_h */

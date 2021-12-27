@@ -1,12 +1,12 @@
 //
-//  ToolGPGCommand.m
+//  ToolPGPCommand.m
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2021/12/16.
 //
 #import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
-#import "ToolGPGCommand.h"
+#import "ToolPGPCommand.h"
 #import "ToolLogFile.h"
 
 #define GenerateMainKeyScriptName               @"generate_main_key.sh"
@@ -21,7 +21,7 @@
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
 
-@interface ToolGPGCommand ()
+@interface ToolPGPCommand ()
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
@@ -48,7 +48,7 @@
 
 @end
 
-@implementation ToolGPGCommand
+@implementation ToolPGPCommand
 
     - (id)init {
         return [self initWithDelegate:nil];
@@ -456,7 +456,7 @@
         // 応答文字列の格納用配列を初期化
         [self setCommandOutput:[[NSMutableArray alloc] init]];
         // コマンドからの応答を待機
-        ToolGPGCommand * __weak weakSelf = self;
+        ToolPGPCommand * __weak weakSelf = self;
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
         [[NSNotificationCenter defaultCenter]
             addObserverForName:NSFileHandleDataAvailableNotification
