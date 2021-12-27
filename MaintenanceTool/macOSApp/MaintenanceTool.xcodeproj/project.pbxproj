@@ -280,7 +280,7 @@
 				7A712EBA2570BC9400E45E2D /* tool_crypto */,
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7A6687902575CCA80054F0DE /* PIV */,
-				7AB3C9B4276B139400DEDD0E /* GPG */,
+				7AB3C9B4276B139400DEDD0E /* OpenPGP */,
 				7AA7464223C2C400001938A7 /* Resources */,
 				7A4B02C5274B3C1500BF44C2 /* DFU */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
@@ -535,13 +535,13 @@
 			path = FIDOAttestation;
 			sourceTree = "<group>";
 		};
-		7AB3C9B4276B139400DEDD0E /* GPG */ = {
+		7AB3C9B4276B139400DEDD0E /* OpenPGP */ = {
 			isa = PBXGroup;
 			children = (
 				7AB3C9B5276B13CC00DEDD0E /* ToolGPGCommand.h */,
 				7AB3C9B6276B13E900DEDD0E /* ToolGPGCommand.m */,
 			);
-			path = GPG;
+			path = OpenPGP;
 			sourceTree = "<group>";
 		};
 		7AB4B156271E6E340099D51B /* ClientPIN */ = {
