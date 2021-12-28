@@ -169,8 +169,9 @@
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
         // 入力欄の内容をチェック
         if ([self checkForInstallPGPKey:sender]) {
-            // TODO: 仮の実装です。
-            [ToolPopupWindow informational:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
+            // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
+            [self enableButtons:false];
+            [self commandWillInstallPGPKey];
         }
     }
 
@@ -305,6 +306,58 @@
         // PIN番号の確認入力内容をチェック
         NSString *msg = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, name];
         return [ToolCommon compareEntry:dest srcField:source informativeText:msg];
+    }
+
+#pragma mark - For ToolPGPCommand functions
+
+    - (void)commandWillInstallPGPKey {
+        // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
+        NSString *realName = [[self textRealName] stringValue];
+        NSString *mailAddress = [[self textMailAddress] stringValue];
+        NSString *comment = [[self textComment] stringValue];
+        NSString *pubkeyFolderPath = [[self textPubkeyFolderPath] stringValue];
+        NSString *backupFolderPath = [[self textBackupFolderPath] stringValue];
+        NSString *passphrase = [[self textPinConfirm] stringValue];
+        [[self toolPGPCommand] installPGPKeyWillStart:self
+            realName:realName mailAddress:mailAddress comment:comment passphrase:passphrase
+            pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
+    }
+
+    - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        switch (command) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPGPKeyPathFields];
+                    [self initTabPGPKeyEntryFields];
+                }
+                break;
+            default:
+                break;
+        }
+        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
+        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        [self enableButtons:true];
+    }
+
+    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        // 処理名称を設定
+        NSString *name = nil;
+        switch (command) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                name = PROCESS_NAME_OPENPGP_INSTALL_KEYS;
+                break;
+            default:
+                return;
+        }
+        // メッセージをポップアップ表示
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
+                         result ? MSG_SUCCESS:MSG_FAILURE];
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:str informativeText:errorMessage];
+        }
     }
 
 @end

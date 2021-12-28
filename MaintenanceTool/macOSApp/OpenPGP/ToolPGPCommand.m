@@ -43,6 +43,10 @@ typedef enum : NSInteger {
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
     @property (nonatomic) GPGCommand                    gpgCommand;
+    // 処理機能名称を保持
+    @property (nonatomic) NSString                     *nameOfCommand;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString                     *errorMessageOfCommand;
     // コマンドからの応答データを保持
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
     // 生成された作業用フォルダー名称を保持
@@ -136,28 +140,46 @@ typedef enum : NSInteger {
 #pragma mark - Private common methods
 
     - (void)notifyProcessStarted {
-        // メイン画面に開始メッセージを出力
-        [[self toolAppCommand] commandStartedProcess:COMMAND_OPENPGP_INSTALL_KEYS type:TRANSPORT_NONE];
-    }
-
-    - (void)notifyMessage:(NSString *)message {
-        [[ToolLogFile defaultLogger] info:message];
-        [self notifyToolCommandMessage:message];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                [self setNameOfCommand:PROCESS_NAME_OPENPGP_INSTALL_KEYS];
+                break;
+            default:
+                break;
+        }
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
+        // エラーメッセージをログファイルに出力
         [[ToolLogFile defaultLogger] error:message];
-        [self notifyToolCommandMessage:message];
-    }
-
-    - (void)notifyToolCommandMessage:(NSString *)message {
-        // メイン画面にメッセージ文字列を表示する
-        [[[self toolAppCommand] delegate] notifyAppCommandMessage:message];
+        // 戻り先画面に表示させるためのエラーメッセージを保持
+        [self setErrorMessageOfCommand:message];
     }
 
     - (void)notifyProcessTerminated:(bool)success {
-        // メイン画面に制御を戻す
-        [[self toolAppCommand] commandDidProcess:COMMAND_OPENPGP_INSTALL_KEYS result:success message:nil];
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success == false) {
+            // コマンド異常終了メッセージをログ出力
+            if ([self nameOfCommand]) {
+                [[ToolLogFile defaultLogger] error:endMsg];
+            }
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            if ([self nameOfCommand]) {
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
+        }
+        // パラメーターを初期化
+        Command command = [self command];
+        [self clearCommandParameters];
+        // 画面に制御を戻す
+        [[self pgpPreferenceWindow] toolPGPCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
 #pragma mark - Private methods
