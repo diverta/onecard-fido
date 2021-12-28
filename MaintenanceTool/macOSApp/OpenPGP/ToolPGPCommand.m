@@ -1,12 +1,13 @@
 //
-//  ToolGPGCommand.m
+//  ToolPGPCommand.m
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2021/12/16.
 //
+#import "PGPPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
-#import "ToolGPGCommand.h"
+#import "ToolPGPCommand.h"
 #import "ToolLogFile.h"
 
 #define GenerateMainKeyScriptName               @"generate_main_key.sh"
@@ -21,12 +22,31 @@
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
 
-@interface ToolGPGCommand ()
+// GPGコマンド種別
+typedef enum : NSInteger {
+    COMMAND_GPG_NONE = 1,
+    COMMAND_GPG_VERSION,
+    COMMAND_GPG_MAKE_TEMP_FOLDER,
+    COMMAND_GPG_GENERATE_MAIN_KEY,
+    COMMAND_GPG_ADD_SUB_KEY,
+    COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP,
+    COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD,
+    COMMAND_GPG_REMOVE_TEMP_FOLDER
+} GPGCommand;
+
+@interface ToolPGPCommand ()
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
+    // 画面の参照を保持
+    @property (nonatomic) PGPPreferenceWindow          *pgpPreferenceWindow;
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
+    @property (nonatomic) GPGCommand                    gpgCommand;
+    // 処理機能名称を保持
+    @property (nonatomic) NSString                     *nameOfCommand;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString                     *errorMessageOfCommand;
     // コマンドからの応答データを保持
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
     // 生成された作業用フォルダー名称を保持
@@ -44,11 +64,12 @@
     @property (nonatomic) NSString                     *mailAddress;
     @property (nonatomic) NSString                     *comment;
     @property (nonatomic) NSString                     *passphrase;
-    @property (nonatomic) NSString                     *exportFolderPath;
+    @property (nonatomic) NSString                     *pubkeyFolderPath;
+    @property (nonatomic) NSString                     *backupFolderPath;
 
 @end
 
-@implementation ToolGPGCommand
+@implementation ToolPGPCommand
 
     - (id)init {
         return [self initWithDelegate:nil];
@@ -59,26 +80,56 @@
         if (self) {
             // 上位クラスの参照を保持
             [self setToolAppCommand:(ToolAppCommand *)delegate];
+            [self clearCommandParameters];
+            // OpenPGP設定画面のインスタンスを生成
+            [self setPgpPreferenceWindow:[[PGPPreferenceWindow alloc] initWithWindowNibName:@"PGPPreferenceWindow"]];
         }
         return self;
     }
 
+    - (void)clearCommandParameters {
+        // コマンドおよびパラメーターを初期化
+        [self setCommand:COMMAND_NONE];
+        [self setGpgCommand:COMMAND_GPG_NONE];
+        [self setRealName:nil];
+        [self setMailAddress:nil];
+        [self setComment:nil];
+        [self setPassphrase:nil];
+        [self setPubkeyFolderPath:nil];
+        [self setBackupFolderPath:nil];
+    }
+
+#pragma mark - For PGPPreferenceWindow open/close
+
+    - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
+        // OpenPGP機能設定画面を表示（親画面＝メイン画面）
+        if ([[self pgpPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        }
+    }
+
+    - (void)commandDidClosePreferenceWindow {
+        // メイン画面に制御を戻す
+        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
 #pragma mark - Public methods
 
-    - (void)setParametersForGeneratePGPKey:(id)sender
-            realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-            passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath {
+    - (void)installPGPKeyWillStart:(id)sender
+        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
+        passphrase:(NSString *)passphrase
+        pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
+        // 実行コマンドを保持
+        [self setCommand:COMMAND_OPENPGP_INSTALL_KEYS];
         // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
         [self setRealName:realName];
         [self setMailAddress:mailAddress];
         [self setComment:comment];
-        // PGP公開鍵とバックアップtarの出力先を指定
-        [self setExportFolderPath:exportFolderPath];
         // 鍵のpassphraseには、管理用PINを指定（pinentryのloopback使用時、passphraseを複数指定できないための制約）
         [self setPassphrase:passphrase];
-    }
-
-    - (void)generatePGPKeyWillStart:(id)sender {
+        // PGP公開鍵とバックアップtarの出力先を指定
+        [self setPubkeyFolderPath:pubkeyFolder];
+        [self setBackupFolderPath:backupFolder];
         // スクリプトログ格納配列をクリア
         [self setScriptOutput:[[NSMutableArray alloc] init]];
         // バージョン照会から開始
@@ -89,28 +140,46 @@
 #pragma mark - Private common methods
 
     - (void)notifyProcessStarted {
-        // メイン画面に開始メッセージを出力
-        [[self toolAppCommand] commandStartedProcess:COMMAND_OPENPGP_GENERATE_KEYS type:TRANSPORT_NONE];
-    }
-
-    - (void)notifyMessage:(NSString *)message {
-        [[ToolLogFile defaultLogger] info:message];
-        [self notifyToolCommandMessage:message];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                [self setNameOfCommand:PROCESS_NAME_OPENPGP_INSTALL_KEYS];
+                break;
+            default:
+                break;
+        }
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
+        // エラーメッセージをログファイルに出力
         [[ToolLogFile defaultLogger] error:message];
-        [self notifyToolCommandMessage:message];
-    }
-
-    - (void)notifyToolCommandMessage:(NSString *)message {
-        // メイン画面にメッセージ文字列を表示する
-        [[[self toolAppCommand] delegate] notifyAppCommandMessage:message];
+        // 戻り先画面に表示させるためのエラーメッセージを保持
+        [self setErrorMessageOfCommand:message];
     }
 
     - (void)notifyProcessTerminated:(bool)success {
-        // メイン画面に制御を戻す
-        [[self toolAppCommand] commandDidProcess:COMMAND_OPENPGP_GENERATE_KEYS result:success message:nil];
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success == false) {
+            // コマンド異常終了メッセージをログ出力
+            if ([self nameOfCommand]) {
+                [[ToolLogFile defaultLogger] error:endMsg];
+            }
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            if ([self nameOfCommand]) {
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
+        }
+        // パラメーターを初期化
+        Command command = [self command];
+        [self clearCommandParameters];
+        // 画面に制御を戻す
+        [[self pgpPreferenceWindow] toolPGPCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
 #pragma mark - Private methods
@@ -237,16 +306,17 @@
         // シェルスクリプトの絶対パスを取得
         NSString *scriptPath = [self getResourceFilePath:ExportPubkeyAndBackupScriptName];
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self exportFolderPath]];
+        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self pubkeyFolderPath], [self backupFolderPath]];
         [self doRequestCommandLine:COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP commandPath:scriptPath commandArgs:args];
     }
 
     - (void)doResponseExportPubkeyAndBackup:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
-            if ([self checkIfPubkeyAndBackupExistIn:[self exportFolderPath]]) {
+            if ([self checkIfPubkeyAndBackupExist]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self exportFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [self pubkeyFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self backupFolderPath]];
                 [self doRequestTransferSubkeyToCard];
                 return;
             }
@@ -416,14 +486,14 @@
         return false;
     }
 
-    - (bool)checkIfPubkeyAndBackupExistIn:(NSString *)exportPath {
+    - (bool)checkIfPubkeyAndBackupExist {
         // 公開鍵ファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:exportPath] == false) {
+        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[self pubkeyFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL];
             return false;
         }
         // バックアップファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedBackupFileName inFolder:exportPath] == false) {
+        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[self backupFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_BACKUP_FAIL];
             return false;
         }
@@ -441,9 +511,9 @@
 
 #pragma mark - Command line processor
 
-    - (void)doRequestCommandLine:(Command)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
+    - (void)doRequestCommandLine:(GPGCommand)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
         // コマンド種別を保持
-        [self setCommand:command];
+        [self setGpgCommand:command];
         // 標準入力用
         NSTask *task = [[NSTask alloc] init];
         [task setStandardInput:[NSPipe pipe]];
@@ -456,7 +526,7 @@
         // 応答文字列の格納用配列を初期化
         [self setCommandOutput:[[NSMutableArray alloc] init]];
         // コマンドからの応答を待機
-        ToolGPGCommand * __weak weakSelf = self;
+        ToolPGPCommand * __weak weakSelf = self;
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
         [[NSNotificationCenter defaultCenter]
             addObserverForName:NSFileHandleDataAvailableNotification
@@ -496,7 +566,7 @@
             [outputArray addObject:outStr];
         }
         // レスポンスを処理
-        switch ([self command]) {
+        switch ([self gpgCommand]) {
             case COMMAND_GPG_VERSION:
                 [self doResponseGPGVersion:outputArray];
                 break;

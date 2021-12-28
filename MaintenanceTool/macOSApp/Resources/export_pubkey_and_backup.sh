@@ -23,18 +23,25 @@ if [ "${KEYID}" == "" ]; then
     exit 1
 fi
 
-EXPORTDIR=$4
-if [ "${EXPORTDIR}" == "" ]; then
-    echo "Parameter 4 (export/backup directory path) not specified"
+PUBKEYDIR=$4
+if [ "${PUBKEYDIR}" == "" ]; then
+    echo "Parameter 4 (public key export directory path) not specified"
     exit 1
 fi
-if [ ! -d ${EXPORTDIR} ]; then
-    echo "Export/backup directory is not exists"
+if [ ! -d ${PUBKEYDIR} ]; then
+    echo "Public key export directory is not exists"
     exit 1
 fi
 
-# Set gpg command option (additional)
-SCRIPT_OPT=$5
+BACKUPDIR=$5
+if [ "${BACKUPDIR}" == "" ]; then
+    echo "Parameter 4 (backup directory path) not specified"
+    exit 1
+fi
+if [ ! -d ${BACKUPDIR} ]; then
+    echo "Backup directory is not exists"
+    exit 1
+fi
 
 # Set environment value
 export GNUPGHOME=${TEMPDIR}
@@ -59,12 +66,12 @@ fi
 # Create archive for backup
 cd ${TEMPDIR}
 /usr/bin/tar -czf GNUPGHOME.tgz . > /dev/null 2>&1
-/bin/mv GNUPGHOME.tgz ${EXPORTDIR}/
+/bin/mv GNUPGHOME.tgz ${BACKUPDIR}/
 
 #
 # Export public key
 #
-/usr/local/bin/gpg --armor --yes --output ${EXPORTDIR}/public_key.pgp --export ${KEYID}
+/usr/local/bin/gpg --armor --yes --output ${PUBKEYDIR}/public_key.pgp --export ${KEYID}
 RC=`echo $?`
 if [ ${RC} -ne 0 ]; then
     echo "Export public key fail"

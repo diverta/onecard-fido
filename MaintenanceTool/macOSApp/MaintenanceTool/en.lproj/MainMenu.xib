@@ -540,6 +540,16 @@
                             <action selector="buttonDFUDidPress:" target="494" id="tKz-1O-xVi"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wze-D2-dCv" userLabel="buttonSetPgpParam">
+                        <rect key="frame" x="395" y="276" width="155" height="32"/>
+                        <buttonCell key="cell" type="push" title="OpenPGP機能設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="50R-6Y-uu0">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonSetPgpParamDidPress:" target="494" id="1fe-Ak-e0p"/>
+                        </connections>
+                    </button>
                     <box title="BLEペアリング" translatesAutoresizingMaskIntoConstraints="NO" id="7vp-JY-k4p" userLabel="BoxBLE">
                         <rect key="frame" x="17" y="240" width="180" height="103"/>
                         <view key="contentView" id="wQZ-TO-zXS">
@@ -597,12 +607,15 @@
                     <constraint firstItem="IdI-T9-vnq" firstAttribute="trailing" secondItem="hcA-hD-g4U" secondAttribute="trailing" id="Njc-vy-dae"/>
                     <constraint firstAttribute="trailing" secondItem="IdI-T9-vnq" secondAttribute="trailing" constant="20" symbolic="YES" id="PVc-G0-a58"/>
                     <constraint firstAttribute="trailing" secondItem="540" secondAttribute="trailing" constant="-1" id="Qc4-ca-lCB"/>
+                    <constraint firstItem="wze-D2-dCv" firstAttribute="baseline" secondItem="4k9-eQ-arQ" secondAttribute="baseline" id="UGb-L1-7OO"/>
+                    <constraint firstItem="wze-D2-dCv" firstAttribute="trailing" secondItem="hcA-hD-g4U" secondAttribute="trailing" id="UN6-aj-VVj"/>
                     <constraint firstItem="FlF-Id-KYb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7vp-JY-k4p" secondAttribute="trailing" constant="8" symbolic="YES" id="Zzp-92-IAN"/>
                     <constraint firstItem="7vp-JY-k4p" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="eXw-VR-5vC"/>
                     <constraint firstItem="FlF-Id-KYb" firstAttribute="baseline" secondItem="hcA-hD-g4U" secondAttribute="baseline" id="hUq-tp-eqc"/>
                     <constraint firstItem="1rF-YJ-d6M" firstAttribute="leading" secondItem="7vp-JY-k4p" secondAttribute="trailing" constant="35" id="nb0-Rh-EhD"/>
                     <constraint firstItem="7vp-JY-k4p" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="rOR-V1-Tc9"/>
                     <constraint firstItem="540" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="-1" id="sBE-9Y-j1O"/>
+                    <constraint firstItem="wze-D2-dCv" firstAttribute="leading" secondItem="hcA-hD-g4U" secondAttribute="leading" id="sPR-Bk-ReW"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="132" y="107"/>
@@ -613,6 +626,7 @@
                 <outlet property="buttonFIDOAttestation" destination="IdI-T9-vnq" id="pVS-77-IMc"/>
                 <outlet property="buttonPairing" destination="Mg1-7s-419" id="hT7-R3-AGo"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
+                <outlet property="buttonSetPgpParam" destination="wze-D2-dCv" id="mi6-yo-6Vn"/>
                 <outlet property="buttonSetPinParam" destination="FlF-Id-KYb" id="xxD-HA-LNp"/>
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>

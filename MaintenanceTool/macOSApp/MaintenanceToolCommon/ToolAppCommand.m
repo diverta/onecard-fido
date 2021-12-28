@@ -12,7 +12,7 @@
 #import "ToolContext.h"
 #import "ToolUSBDFUCommand.h"
 #import "ToolFIDOAttestationCommand.h"
-#import "ToolGPGCommand.h"
+#import "ToolPGPCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
@@ -29,7 +29,7 @@
     @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
-    @property (nonatomic) ToolGPGCommand        *toolGPGCommand;
+    @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -62,7 +62,7 @@
             // FIDO鍵・証明書設定機能の初期設定
             [self setToolFIDOAttestationCommand:[[ToolFIDOAttestationCommand alloc] initWithDelegate:self]];
             // GPG機能の初期設定
-            [self setToolGPGCommand:[[ToolGPGCommand alloc] initWithDelegate:self]];
+            [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -234,6 +234,14 @@
         [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];
     }
 
+    - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        if ([self checkForHIDCommand]) {
+            // OpenPGP機能設定画面を表示
+            [[self delegate] disableUserInterface];
+            [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+        }
+    }
+
 #pragma mark - Perform health check
 
     - (void)performHealthCheckCommand:(Command)command {
@@ -364,9 +372,6 @@
                 if (type == TRANSPORT_HID) {
                     [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 }
-                break;
-            case COMMAND_OPENPGP_GENERATE_KEYS:
-                [self setProcessNameOfCommand:PROCESS_NAME_OPENPGP_GENERATE_KEYS];
                 break;
             default:
                 break;
