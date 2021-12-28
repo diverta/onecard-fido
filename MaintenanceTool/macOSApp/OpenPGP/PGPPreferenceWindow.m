@@ -324,19 +324,9 @@
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        switch (command) {
-            case COMMAND_OPENPGP_INSTALL_KEYS:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPGPKeyPathFields];
-                    [self initTabPGPKeyEntryFields];
-                }
-                break;
-            default:
-                break;
-        }
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
         [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        [self clearEntry:command withResult:result];
         [self enableButtons:true];
     }
 
@@ -357,6 +347,20 @@
             [ToolPopupWindow informational:str informativeText:nil];
         } else {
             [ToolPopupWindow critical:str informativeText:errorMessage];
+        }
+    }
+
+    - (void)clearEntry:(Command)command withResult:(bool)result {
+        // 全ての入力欄をクリア
+        switch (command) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                if (result) {
+                    [self initTabPGPKeyPathFields];
+                    [self initTabPGPKeyEntryFields];
+                }
+                break;
+            default:
+                break;
         }
     }
 
