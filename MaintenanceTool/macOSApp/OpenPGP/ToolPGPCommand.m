@@ -47,7 +47,8 @@
     @property (nonatomic) NSString                     *mailAddress;
     @property (nonatomic) NSString                     *comment;
     @property (nonatomic) NSString                     *passphrase;
-    @property (nonatomic) NSString                     *exportFolderPath;
+    @property (nonatomic) NSString                     *pubkeyFolderPath;
+    @property (nonatomic) NSString                     *backupFolderPath;
 
 @end
 
@@ -76,7 +77,8 @@
         [self setMailAddress:nil];
         [self setComment:nil];
         [self setPassphrase:nil];
-        [self setExportFolderPath:nil];
+        [self setPubkeyFolderPath:nil];
+        [self setBackupFolderPath:nil];
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -95,20 +97,19 @@
 
 #pragma mark - Public methods
 
-    - (void)setParametersForGeneratePGPKey:(id)sender
-            realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-            passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath {
+    - (void)installPGPKeyWillStart:(id)sender
+        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
+        passphrase:(NSString *)passphrase
+        pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
         // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
         [self setRealName:realName];
         [self setMailAddress:mailAddress];
         [self setComment:comment];
-        // PGP公開鍵とバックアップtarの出力先を指定
-        [self setExportFolderPath:exportFolderPath];
         // 鍵のpassphraseには、管理用PINを指定（pinentryのloopback使用時、passphraseを複数指定できないための制約）
         [self setPassphrase:passphrase];
-    }
-
-    - (void)generatePGPKeyWillStart:(id)sender {
+        // PGP公開鍵とバックアップtarの出力先を指定
+        [self setPubkeyFolderPath:pubkeyFolder];
+        [self setBackupFolderPath:backupFolder];
         // スクリプトログ格納配列をクリア
         [self setScriptOutput:[[NSMutableArray alloc] init]];
         // バージョン照会から開始
@@ -267,16 +268,17 @@
         // シェルスクリプトの絶対パスを取得
         NSString *scriptPath = [self getResourceFilePath:ExportPubkeyAndBackupScriptName];
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self exportFolderPath]];
+        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self pubkeyFolderPath], [self backupFolderPath]];
         [self doRequestCommandLine:COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP commandPath:scriptPath commandArgs:args];
     }
 
     - (void)doResponseExportPubkeyAndBackup:(NSArray<NSString *> *)response {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
-            if ([self checkIfPubkeyAndBackupExistIn:[self exportFolderPath]]) {
+            if ([self checkIfPubkeyAndBackupExist]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self exportFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [self pubkeyFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self backupFolderPath]];
                 [self doRequestTransferSubkeyToCard];
                 return;
             }
@@ -446,14 +448,14 @@
         return false;
     }
 
-    - (bool)checkIfPubkeyAndBackupExistIn:(NSString *)exportPath {
+    - (bool)checkIfPubkeyAndBackupExist {
         // 公開鍵ファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:exportPath] == false) {
+        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[self pubkeyFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL];
             return false;
         }
         // バックアップファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedBackupFileName inFolder:exportPath] == false) {
+        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[self backupFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_BACKUP_FAIL];
             return false;
         }

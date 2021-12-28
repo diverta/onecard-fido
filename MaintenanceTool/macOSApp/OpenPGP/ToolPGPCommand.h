@@ -12,10 +12,12 @@
     - (id)initWithDelegate:(id)delegate;
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
-    - (void)setParametersForGeneratePGPKey:(id)sender
+    - (void)installPGPKeyWillStart:(id)sender
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-        passphrase:(NSString *)passphrase exportFolderPath:(NSString *)exportFolderPath;
-    - (void)generatePGPKeyWillStart:(id)sender;
+        passphrase:(NSString *)passphrase
+        pubkeyFolderPath:(NSString *)pubkeyFolder
+        backupFolderPath:(NSString *)backupFolder;
+
 
 @end
 
