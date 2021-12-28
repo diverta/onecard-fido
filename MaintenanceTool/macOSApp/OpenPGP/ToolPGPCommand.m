@@ -22,6 +22,18 @@
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
 
+// GPGコマンド種別
+typedef enum : NSInteger {
+    COMMAND_GPG_NONE = 1,
+    COMMAND_GPG_VERSION,
+    COMMAND_GPG_MAKE_TEMP_FOLDER,
+    COMMAND_GPG_GENERATE_MAIN_KEY,
+    COMMAND_GPG_ADD_SUB_KEY,
+    COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP,
+    COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD,
+    COMMAND_GPG_REMOVE_TEMP_FOLDER
+} GPGCommand;
+
 @interface ToolPGPCommand ()
 
     // 上位クラスの参照を保持
@@ -30,6 +42,7 @@
     @property (nonatomic) PGPPreferenceWindow          *pgpPreferenceWindow;
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
+    @property (nonatomic) GPGCommand                    gpgCommand;
     // コマンドからの応答データを保持
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
     // 生成された作業用フォルダー名称を保持
@@ -73,6 +86,7 @@
     - (void)clearCommandParameters {
         // コマンドおよびパラメーターを初期化
         [self setCommand:COMMAND_NONE];
+        [self setGpgCommand:COMMAND_GPG_NONE];
         [self setRealName:nil];
         [self setMailAddress:nil];
         [self setComment:nil];
@@ -101,6 +115,8 @@
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
         passphrase:(NSString *)passphrase
         pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
+        // 実行コマンドを保持
+        [self setCommand:COMMAND_OPENPGP_INSTALL_KEYS];
         // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
         [self setRealName:realName];
         [self setMailAddress:mailAddress];
@@ -121,7 +137,7 @@
 
     - (void)notifyProcessStarted {
         // メイン画面に開始メッセージを出力
-        [[self toolAppCommand] commandStartedProcess:COMMAND_OPENPGP_GENERATE_KEYS type:TRANSPORT_NONE];
+        [[self toolAppCommand] commandStartedProcess:COMMAND_OPENPGP_INSTALL_KEYS type:TRANSPORT_NONE];
     }
 
     - (void)notifyMessage:(NSString *)message {
@@ -141,7 +157,7 @@
 
     - (void)notifyProcessTerminated:(bool)success {
         // メイン画面に制御を戻す
-        [[self toolAppCommand] commandDidProcess:COMMAND_OPENPGP_GENERATE_KEYS result:success message:nil];
+        [[self toolAppCommand] commandDidProcess:COMMAND_OPENPGP_INSTALL_KEYS result:success message:nil];
     }
 
 #pragma mark - Private methods
@@ -473,9 +489,9 @@
 
 #pragma mark - Command line processor
 
-    - (void)doRequestCommandLine:(Command)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
+    - (void)doRequestCommandLine:(GPGCommand)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
         // コマンド種別を保持
-        [self setCommand:command];
+        [self setGpgCommand:command];
         // 標準入力用
         NSTask *task = [[NSTask alloc] init];
         [task setStandardInput:[NSPipe pipe]];
@@ -528,7 +544,7 @@
             [outputArray addObject:outStr];
         }
         // レスポンスを処理
-        switch ([self command]) {
+        switch ([self gpgCommand]) {
             case COMMAND_GPG_VERSION:
                 [self doResponseGPGVersion:outputArray];
                 break;

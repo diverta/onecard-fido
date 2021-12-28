@@ -373,9 +373,6 @@
                     [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 }
                 break;
-            case COMMAND_OPENPGP_GENERATE_KEYS:
-                [self setProcessNameOfCommand:PROCESS_NAME_OPENPGP_GENERATE_KEYS];
-                break;
             default:
                 break;
         }
