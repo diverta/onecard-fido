@@ -86,6 +86,8 @@
 		7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AB4B164271E6E8B0099D51B /* SetPinParamWindow.xib */; };
 		7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B166271E6E8B0099D51B /* debug_log.c */; };
 		7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B167271E6E8B0099D51B /* AES256CBC.c */; };
+		7AB6312B277B01FB004917B9 /* card_reset.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AB63129277B01FB004917B9 /* card_reset.param */; };
+		7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AB6312A277B01FB004917B9 /* card_reset.sh */; };
 		7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */; };
 		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
@@ -238,6 +240,8 @@
 		7AB4B168271E6E8B0099D51B /* fido_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_blob.h; sourceTree = "<group>"; };
 		7AB4B169271E6E8B0099D51B /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
 		7AB4B16A271E6E8B0099D51B /* ToolClientPINCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
+		7AB63129277B01FB004917B9 /* card_reset.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_reset.param; sourceTree = "<group>"; };
+		7AB6312A277B01FB004917B9 /* card_reset.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_reset.sh; sourceTree = "<group>"; };
 		7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUStartWindow.xib; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
@@ -524,6 +528,8 @@
 				7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */,
 				7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */,
 				7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */,
+				7AB6312A277B01FB004917B9 /* card_reset.sh */,
+				7AB63129277B01FB004917B9 /* card_reset.param */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -640,12 +646,14 @@
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
+				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
 				7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */,
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */,
 				7A6A69EB2769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip in Resources */,
+				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
