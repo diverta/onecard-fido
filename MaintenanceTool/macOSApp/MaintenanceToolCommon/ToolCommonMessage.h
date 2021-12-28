@@ -326,5 +326,7 @@
 #define MSG_OPENPGP_ADDED_SUB_KEYS              @"PGP秘密鍵（副鍵）を新規に生成しました。"
 #define MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE  @"生成したPGP秘密鍵（副鍵）を認証器に移動しました。"
 #define MSG_OPENPGP_REMOVED_TEMPDIR             @"作業用フォルダーを消去しました。"
+#define MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER     @"PGP公開鍵ファイルの出力先フォルダーを選択してください"
+#define MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER     @"バックアップファイルの出力先フォルダーを選択してください"
 
 #endif /* ToolCommonMessage_h */

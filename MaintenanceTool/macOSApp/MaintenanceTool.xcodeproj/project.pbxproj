@@ -55,6 +55,8 @@
 		7A6A69EB2769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A6A69E92769C29F00C056A3 /* appkg.PCA10059_02.0.3.2.zip */; };
 		7A6A69EC2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */; };
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
+		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
+		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A8528FF277176F10096F41D /* add_sub_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FD277176F10096F41D /* add_sub_key.param */; };
@@ -182,6 +184,9 @@
 		7A6A69EA2769C29F00C056A3 /* appkg.PCA10059_01.0.3.2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.2.zip; sourceTree = "<group>"; };
 		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
 		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
+		7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPPreferenceWindow.m; sourceTree = "<group>"; };
+		7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PGPPreferenceWindow.xib; sourceTree = "<group>"; };
+		7A72011927794E5400EE3AD6 /* PGPPreferenceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGPPreferenceWindow.h; sourceTree = "<group>"; };
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
@@ -538,6 +543,9 @@
 		7AB3C9B4276B139400DEDD0E /* OpenPGP */ = {
 			isa = PBXGroup;
 			children = (
+				7A72011927794E5400EE3AD6 /* PGPPreferenceWindow.h */,
+				7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */,
+				7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */,
 				7AB3C9B5276B13CC00DEDD0E /* ToolPGPCommand.h */,
 				7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */,
 			);
@@ -622,6 +630,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */,
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
@@ -675,6 +684,7 @@
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */,
+				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
 				7AAC498E27448E4400AB3E67 /* FIDOAttestationWindow.m in Sources */,
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
