@@ -70,6 +70,7 @@
 #define PROCESS_NAME_CCID_PIV_SET_CHUID             @"PIV CHUID設定"
 #define PROCESS_NAME_CCID_PIV_STATUS                @"PIV設定情報取得"
 #define PROCESS_NAME_OPENPGP_INSTALL_KEYS           @"PGP秘密鍵インストール"
+#define PROCESS_NAME_OPENPGP_STATUS                 @"OpenPGP設定情報取得"
 #define PROCESS_NAME_OPENPGP_RESET                  @"OpenPGP機能リセット"
 
 #pragma mark - ToolCommandクラス専用メッセージ
