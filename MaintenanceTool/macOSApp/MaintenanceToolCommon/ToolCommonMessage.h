@@ -339,10 +339,13 @@
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM      @"%@を数字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM  @"%@を正しく入力してください"
 #define MSG_PROMPT_INSTALL_PGP_KEY              @"インストールを実行しますか？"
+#define MSG_PROMPT_OPENPGP_RESET                @"OpenPGP機能の設定（鍵・PIN番号等）が全て削除され、OpenPGP機能が使用できなくなります。\n\n処理を開始しますか？"
 #define MSG_LABEL_PGP_REAL_NAME                 @"名前"
 #define MSG_LABEL_PGP_MAIL_ADDRESS              @"メールアドレス"
 #define MSG_LABEL_PGP_COMMENT                   @"コメント"
 #define MSG_LABEL_PGP_ADMIN_PIN                 @"OpenPGP機能の管理用PIN"
 #define MSG_LABEL_PGP_ADMIN_PIN_CONFIRM         @"OpenPGP機能の管理用PIN（確認）"
+#define MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS  @"PGP秘密鍵のインストール"
+#define MSG_LABEL_COMMAND_OPENPGP_RESET         @"設定情報の消去"
 
 #endif /* ToolCommonMessage_h */
