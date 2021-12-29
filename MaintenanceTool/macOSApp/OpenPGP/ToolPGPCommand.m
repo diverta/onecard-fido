@@ -21,6 +21,10 @@
 #define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
+#define CardResetScriptName                     @"card_reset.sh"
+#define CardResetScriptParamName                @"card_reset.param"
+#define SelectingCardFailedWarningMessage       @"selecting card failed"
+#define GpgCardStatusStartingMessage            @"Reader ...........:"
 
 // GPGコマンド種別
 typedef enum : NSInteger {
@@ -31,7 +35,8 @@ typedef enum : NSInteger {
     COMMAND_GPG_ADD_SUB_KEY,
     COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP,
     COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD,
-    COMMAND_GPG_REMOVE_TEMP_FOLDER
+    COMMAND_GPG_REMOVE_TEMP_FOLDER,
+    COMMAND_GPG_CARD_RESET,
 } GPGCommand;
 
 @interface ToolPGPCommand ()
@@ -155,6 +160,9 @@ typedef enum : NSInteger {
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_INSTALL_KEYS];
                 break;
+            case COMMAND_OPENPGP_RESET:
+                [self setNameOfCommand:PROCESS_NAME_OPENPGP_RESET];
+                break;
             default:
                 break;
         }
@@ -235,8 +243,18 @@ typedef enum : NSInteger {
         // 生成された作業用フォルダー名称を保持
         [self setTempFolderPath:[response objectAtIndex:0]];
         [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, [self tempFolderPath]];
-        // 次の処理に移行
-        [self doRequestGenerateMainKey];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                [self doRequestGenerateMainKey];
+                break;
+            case COMMAND_OPENPGP_RESET:
+                [self doRequestCardReset];
+                break;
+            default:
+                [self notifyProcessTerminated:false];
+                break;
+        }
     }
 
     - (void)doRequestGenerateMainKey {
@@ -373,6 +391,46 @@ typedef enum : NSInteger {
         } else {
             [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
         }
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestCardReset {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:CardResetScriptName];
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:CardResetScriptParamName];
+        if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        if ([self writeParameterFile:CardResetScriptParamName fromTemplate:paramTemplContent] == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], @"--no-tty"];
+        [self doRequestCommandLine:COMMAND_GPG_CARD_RESET commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseCardReset:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response] == false) {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL];
+            }
+        } else {
+            // スクリプト正常終了の場合は副鍵３点が存在しない事をチェック
+            if ([self checkIfNoSubKeyExistFromResponse:response]) {
+                [self setCommandSuccess:true];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED];
+            }
+        }
+        // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
 
@@ -518,6 +576,54 @@ typedef enum : NSInteger {
         return false;
     }
 
+    - (bool)checkIfCardErrorFromResponse:(NSArray<NSString *> *)response {
+        // gpg --edit-card の出力メッセージをチェック
+        for (NSString *text in response) {
+            if ([text containsString:SelectingCardFailedWarningMessage]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    - (bool)checkIfNoSubKeyExistFromResponse:(NSArray<NSString *> *)response {
+        // gpg --card-status の出力メッセージを抽出
+        NSString *cardStatusMessage = [self extractCardStatusMessageFrom:response];
+        if (cardStatusMessage == nil) {
+            return false;
+        }
+        // 副鍵の有無を保持
+        bool subKeyS = false;
+        bool subKeyE = false;
+        bool subKeyA = false;
+        // 改行文字で区切られた文字列を分割
+        NSArray *values = [cardStatusMessage componentsSeparatedByString:@"\n"];
+        // 副鍵に関するメッセージを解析
+        for (NSString *value in values) {
+            // 副鍵の機能を解析
+            if ([value containsString:@"Signature key"]) {
+                subKeyS = [value containsString:@"[none]"];
+            } else if ([value containsString:@"Encryption key"]) {
+                subKeyE = [value containsString:@"[none]"];
+            } else if ([value containsString:@"Authentication key"]) {
+                subKeyA = [value containsString:@"[none]"];
+            }
+        }
+        // ３点の副鍵が削除されていれば true を戻す
+        return (subKeyS && subKeyE && subKeyA);
+    }
+
+    - (NSString *)extractCardStatusMessageFrom:(NSArray<NSString *> *)response {
+        for (NSString *text in response) {
+            // gpg --card-status の出力メッセージをチェック
+            if ([text containsString:GpgCardStatusStartingMessage]) {
+                return text;
+            }
+        }
+        [[ToolLogFile defaultLogger] error:@"Card status command output does not exist"];
+        return nil;
+    }
+
 #pragma mark - Command line processor
 
     - (void)doRequestCommandLine:(GPGCommand)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
@@ -596,6 +702,9 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
                 [self doResponseTransferSubkeyToCard:outputArray];
+                break;
+            case COMMAND_GPG_CARD_RESET:
+                [self doResponseCardReset:outputArray];
                 break;
             default:
                 return;
