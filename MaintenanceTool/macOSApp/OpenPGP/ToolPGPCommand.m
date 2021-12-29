@@ -47,14 +47,14 @@ typedef enum : NSInteger {
     @property (nonatomic) NSString                     *nameOfCommand;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString                     *errorMessageOfCommand;
+    // コマンドが成功したかどうかを保持
+    @property (nonatomic) bool                          commandSuccess;
     // コマンドからの応答データを保持
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
     // 生成された作業用フォルダー名称を保持
     @property (nonatomic) NSString                     *tempFolderPath;
     // 生成された鍵のIDを保持
     @property (nonatomic) NSString                     *generatedMainKeyId;
-    // 副鍵が認証器に移動されたかどうかを保持
-    @property (nonatomic) bool                          keyStoredSuccess;
     // 副鍵が既に認証器に存在するかどうかを保持
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
     // スクリプトから出力されたログを保持
@@ -148,6 +148,8 @@ typedef enum : NSInteger {
 #pragma mark - Private common methods
 
     - (void)notifyProcessStarted {
+        // コマンド処理結果を初期化
+        [self setCommandSuccess:false];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
@@ -359,13 +361,12 @@ typedef enum : NSInteger {
             if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
                 // 副鍵が認証器に移動された場合は後処理に移行
                 [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE];
-                [self setKeyStoredSuccess:true];
+                [self setCommandSuccess:true];
                 [self doRequestRemoveTempFolder];
                 return;
             }
         }
         // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック後、後処理に移行
-        [self setKeyStoredSuccess:false];
         [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
         if ([self keyAlreadyStoredWarning]) {
             [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
@@ -393,7 +394,7 @@ typedef enum : NSInteger {
         [self setTempFolderPath:nil];
         [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_REMOVED_TEMPDIR];
         // 処理完了を通知
-        [self notifyProcessTerminated:[self keyStoredSuccess]];
+        [self notifyProcessTerminated:[self commandSuccess]];
     }
 
 #pragma mark - Private functions
