@@ -17,7 +17,7 @@
         passphrase:(NSString *)passphrase
         pubkeyFolderPath:(NSString *)pubkeyFolder
         backupFolderPath:(NSString *)backupFolder;
-
+    - (void)pgpResetWillStart:(id)sender;
 
 @end
 

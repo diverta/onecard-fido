@@ -39,6 +39,7 @@
     @property (assign) IBOutlet NSTextField         *textPin;
     @property (assign) IBOutlet NSTextField         *textPinConfirm;
     @property (assign) IBOutlet NSButton            *buttonInstallPGPKey;
+    @property (assign) IBOutlet NSButton            *buttonPGPReset;
 
     // 親画面を保持
     @property (nonatomic, weak) NSWindow            *parentWindow;
@@ -91,6 +92,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonPGPReset] setEnabled:enabled];
         // 現在選択中のタブ内も同様に制御を行う
         NSTabViewItem *item = [[self tabView] selectedTabViewItem];
         if (item == [self tabPGPKeyManagement]) {
@@ -172,6 +174,16 @@
             // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
             [self enableButtons:false];
             [self commandWillInstallPGPKey];
+        }
+    }
+
+    - (IBAction)buttonPGPResetDidPress:(id)sender {
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_LABEL_COMMAND_OPENPGP_RESET];
+        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
+            // PGPリセット処理を実行
+            [self enableButtons:false];
+            [self commandWillPGPReset];
         }
     }
 
@@ -323,6 +335,11 @@
             pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
     }
 
+    - (void)commandWillPGPReset {
+        // PGPリセット処理を実行
+        [[self toolPGPCommand] pgpResetWillStart:self];
+    }
+
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
         [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
@@ -335,7 +352,10 @@
         NSString *name = nil;
         switch (command) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
-                name = PROCESS_NAME_OPENPGP_INSTALL_KEYS;
+                name = MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
+                break;
+            case COMMAND_OPENPGP_RESET:
+                name = MSG_LABEL_COMMAND_OPENPGP_RESET;
                 break;
             default:
                 return;
