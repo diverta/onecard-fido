@@ -137,6 +137,14 @@ typedef enum : NSInteger {
         [self doRequestGPGVersion];
     }
 
+    - (void)pgpResetWillStart:(id)sender {
+        // 実行コマンドを保持
+        [self setCommand:COMMAND_OPENPGP_RESET];
+        // バージョン照会から開始
+        [self notifyProcessStarted];
+        [self doRequestGPGVersion];
+    }
+
 #pragma mark - Private common methods
 
     - (void)notifyProcessStarted {

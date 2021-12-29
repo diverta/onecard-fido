@@ -337,8 +337,7 @@
 
     - (void)commandWillPGPReset {
         // PGPリセット処理を実行
-        // TODO: 仮の実装です。
-        [self toolPGPCommandDidProcess:COMMAND_OPENPGP_RESET withResult:true withErrorMessage:nil];
+        [[self toolPGPCommand] pgpResetWillStart:self];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
