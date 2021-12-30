@@ -432,8 +432,12 @@ typedef enum : NSInteger {
             [self setStatusInfoString:[response objectAtIndex:0]];
             [self setCommandSuccess:true];
         } else {
-            // エラーメッセージを通知
-            [self notifyErrorMessage:MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL];
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL];
+            }
         }
         // 後処理に移行
         [self doRequestRemoveTempFolder];
