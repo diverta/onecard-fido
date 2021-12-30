@@ -57,7 +57,7 @@ typedef enum : NSInteger {
     // コマンドが成功したかどうかを保持
     @property (nonatomic) bool                          commandSuccess;
     // コマンドからの応答データを保持
-    @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
+    @property (nonatomic) NSMutableArray<NSData *>     *standardOutputArray;
     // ステータス照会情報を保持
     @property (nonatomic) NSString                     *statusInfoString;
     // 生成された作業用フォルダー名称を保持
@@ -67,7 +67,7 @@ typedef enum : NSInteger {
     // 副鍵が既に認証器に存在するかどうかを保持
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
     // スクリプトから出力されたログを保持
-    @property (nonatomic) NSMutableArray<NSString *>   *scriptOutput;
+    @property (nonatomic) NSMutableArray<NSString *>   *scriptLogArray;
     // 鍵作成用パラメーターを保持
     @property (nonatomic) NSString                     *realName;
     @property (nonatomic) NSString                     *mailAddress;
@@ -171,7 +171,7 @@ typedef enum : NSInteger {
         // コマンド処理結果を初期化
         [self setCommandSuccess:false];
         // スクリプトログ格納配列をクリア
-        [self setScriptOutput:[[NSMutableArray alloc] init]];
+        [self setScriptLogArray:[[NSMutableArray alloc] init]];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
@@ -684,7 +684,7 @@ typedef enum : NSInteger {
         [task setLaunchPath:path];
         [task setArguments:args];
         // 応答文字列の格納用配列を初期化
-        [self setCommandOutput:[[NSMutableArray alloc] init]];
+        [self setStandardOutputArray:[[NSMutableArray alloc] init]];
         // コマンドからの応答を待機
         ToolPGPCommand * __weak weakSelf = self;
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
@@ -706,7 +706,7 @@ typedef enum : NSInteger {
             return;
         }
         // 応答データを配列に保持
-        [[self commandOutput] addObject:output];
+        [[self standardOutputArray] addObject:output];
         // 次の応答があれば待機
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
     }
@@ -714,7 +714,7 @@ typedef enum : NSInteger {
     - (void)commandDidTerminated {
         // 応答データを配列に抽出
         NSMutableArray<NSString *> *outputArray = [[NSMutableArray alloc] init];
-        for (NSData *data in [self commandOutput]) {
+        for (NSData *data in [self standardOutputArray]) {
             // データ末尾に改行文字があれば削除
             NSData *output = data;
             uint8_t *bytes = (uint8_t *)[data bytes];
@@ -808,7 +808,7 @@ typedef enum : NSInteger {
                     success = true;
                 } else {
                     // シェルスクリプトのログを、格納配列に追加
-                    [[self scriptOutput] addObject:text];
+                    [[self scriptLogArray] addObject:text];
                 }
             }
         }
