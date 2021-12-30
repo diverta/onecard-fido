@@ -242,8 +242,16 @@ typedef enum : NSInteger {
             [self notifyProcessTerminated:false];
             return;
         }
-        // 次の処理に移行
-        [self doRequestMakeTempFolder];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_STATUS:
+                [self doRequestCardStatus];
+                break;
+            default:
+                // 次の処理に移行
+                [self doRequestMakeTempFolder];
+                break;
+        }
     }
 
     - (void)doRequestMakeTempFolder {
@@ -267,9 +275,6 @@ typedef enum : NSInteger {
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 [self doRequestGenerateMainKey];
-                break;
-            case COMMAND_OPENPGP_STATUS:
-                [self doRequestCardStatus];
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self doRequestCardReset];
@@ -421,7 +426,7 @@ typedef enum : NSInteger {
         // シェルスクリプトの絶対パスを取得
         NSString *scriptPath = [self getResourceFilePath:CardStatusScriptName];
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath]];
+        NSArray *args = @[];
         [self doRequestCommandLine:COMMAND_GPG_CARD_STATUS commandPath:scriptPath commandArgs:args];
     }
 
@@ -439,8 +444,8 @@ typedef enum : NSInteger {
                 [self notifyErrorMessage:MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL];
             }
         }
-        // 後処理に移行
-        [self doRequestRemoveTempFolder];
+        // 処理完了を通知
+        [self notifyProcessTerminated:[self commandSuccess]];
     }
 
     - (void)doRequestCardReset {
