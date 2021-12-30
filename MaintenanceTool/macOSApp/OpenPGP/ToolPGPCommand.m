@@ -405,20 +405,27 @@ typedef enum : NSInteger {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
-                // 副鍵が認証器に移動された場合は後処理に移行
+                // 副鍵が認証器に移動された場合は、処理成功を通知
                 [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE];
                 [self setCommandSuccess:true];
-                [self doRequestRemoveTempFolder];
-                return;
+            } else {
+                // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
+                [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
+                if ([self keyAlreadyStoredWarning]) {
+                    [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
+                } else {
+                    [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
+                }
+            }
+        } else {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL];
             }
         }
-        // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック後、後処理に移行
-        [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
-        if ([self keyAlreadyStoredWarning]) {
-            [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
-        } else {
-            [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
-        }
+        // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
 

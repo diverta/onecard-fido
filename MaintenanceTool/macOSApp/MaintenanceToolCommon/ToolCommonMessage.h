@@ -320,6 +320,7 @@
 #define MSG_ERROR_OPENPGP_BACKUP_FAIL           @"バックアップファイルを指定フォルダーに生成出来ませんでした。"
 #define MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL    @"PGP公開鍵／バックアップファイルの生成が失敗しました。"
 #define MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL    @"生成したPGP秘密鍵（副鍵）を認証器に移動出来ませんでした。"
+#define MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL  @"生成したPGP秘密鍵（副鍵）を認証器に移動するための内部処理が失敗しました。"
 #define MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED   @"PGP秘密鍵（副鍵）が既に認証器に格納されているため、生成したPGP秘密鍵（副鍵）を移動出来ませんでした。"
 #define MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL   @"作業用フォルダーが消去出来ませんでした。"
 #define MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL   @"OpenPGPステータス照会コマンドの実行に失敗しました。"
