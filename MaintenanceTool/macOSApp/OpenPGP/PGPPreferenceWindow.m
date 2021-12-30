@@ -39,6 +39,7 @@
     @property (assign) IBOutlet NSTextField         *textPin;
     @property (assign) IBOutlet NSTextField         *textPinConfirm;
     @property (assign) IBOutlet NSButton            *buttonInstallPGPKey;
+    @property (assign) IBOutlet NSButton            *buttonPGPStatus;
     @property (assign) IBOutlet NSButton            *buttonPGPReset;
 
     // 親画面を保持
@@ -92,6 +93,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonPGPStatus] setEnabled:enabled];
         [[self buttonPGPReset] setEnabled:enabled];
         // 現在選択中のタブ内も同様に制御を行う
         NSTabViewItem *item = [[self tabView] selectedTabViewItem];
@@ -175,6 +177,12 @@
             [self enableButtons:false];
             [self commandWillInstallPGPKey];
         }
+    }
+
+    - (IBAction)buttonPGPStatusDidPress:(id)sender {
+        // PGPステータス照会処理を実行
+        [self enableButtons:false];
+        [self commandWillPGPStatus];
     }
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
@@ -335,6 +343,11 @@
             pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
     }
 
+    - (void)commandWillPGPStatus {
+        // PGPステータス照会処理を実行
+        [[self toolPGPCommand] pgpStatusWillStart:self];
+    }
+
     - (void)commandWillPGPReset {
         // PGPリセット処理を実行
         [[self toolPGPCommand] pgpResetWillStart:self];
@@ -356,6 +369,16 @@
                 break;
             case COMMAND_OPENPGP_RESET:
                 name = MSG_LABEL_COMMAND_OPENPGP_RESET;
+                break;
+            case COMMAND_OPENPGP_STATUS:
+                if (result) {
+                    // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
+                    [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
+                        withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
+                        infoString:[[self toolPGPCommand] pgpStatusInfoString]];
+                    return;
+                }
+                name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
                 break;
             default:
                 return;

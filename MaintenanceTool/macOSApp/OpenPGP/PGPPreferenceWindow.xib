@@ -12,6 +12,7 @@
                 <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
                 <outlet property="buttonInstallPGPKey" destination="aYG-wl-NhX" id="PEg-WS-j6h"/>
                 <outlet property="buttonPGPReset" destination="bXg-F8-xgl" id="0zp-xQ-5s8"/>
+                <outlet property="buttonPGPStatus" destination="PWJ-aC-YsL" id="c3B-Cb-zhP"/>
                 <outlet property="buttonPubkeyFolderPath" destination="pCe-YJ-TVY" id="SwC-In-YqT"/>
                 <outlet property="labelCurPin" destination="6un-mf-b2T" id="juB-i4-SzM"/>
                 <outlet property="labelNewPin" destination="KQz-Ea-7T1" id="lhg-Oe-MGq"/>
@@ -461,10 +462,13 @@
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PWJ-aC-YsL">
                         <rect key="frame" x="14" y="13" width="140" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="設定情報を参照" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sb7-Xt-57q">
+                        <buttonCell key="cell" type="push" title="設定情報を参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sb7-Xt-57q">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonPGPStatusDidPress:" target="-2" id="4nz-Bs-GXo"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bXg-F8-xgl">
                         <rect key="frame" x="386" y="13" width="140" height="32"/>

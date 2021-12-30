@@ -21,6 +21,7 @@
 #define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
+#define CardStatusScriptName                    @"card_status.sh"
 #define CardResetScriptName                     @"card_reset.sh"
 #define CardResetScriptParamName                @"card_reset.param"
 #define SelectingCardFailedWarningMessage       @"selecting card failed"
@@ -36,6 +37,7 @@ typedef enum : NSInteger {
     COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP,
     COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD,
     COMMAND_GPG_REMOVE_TEMP_FOLDER,
+    COMMAND_GPG_CARD_STATUS,
     COMMAND_GPG_CARD_RESET,
 } GPGCommand;
 
@@ -55,7 +57,9 @@ typedef enum : NSInteger {
     // コマンドが成功したかどうかを保持
     @property (nonatomic) bool                          commandSuccess;
     // コマンドからの応答データを保持
-    @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
+    @property (nonatomic) NSMutableArray<NSData *>     *standardOutputArray;
+    // ステータス照会情報を保持
+    @property (nonatomic) NSString                     *statusInfoString;
     // 生成された作業用フォルダー名称を保持
     @property (nonatomic) NSString                     *tempFolderPath;
     // 生成された鍵のIDを保持
@@ -63,7 +67,7 @@ typedef enum : NSInteger {
     // 副鍵が既に認証器に存在するかどうかを保持
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
     // スクリプトから出力されたログを保持
-    @property (nonatomic) NSMutableArray<NSString *>   *scriptOutput;
+    @property (nonatomic) NSMutableArray<NSString *>   *scriptLogArray;
     // 鍵作成用パラメーターを保持
     @property (nonatomic) NSString                     *realName;
     @property (nonatomic) NSString                     *mailAddress;
@@ -135,8 +139,14 @@ typedef enum : NSInteger {
         // PGP公開鍵とバックアップtarの出力先を指定
         [self setPubkeyFolderPath:pubkeyFolder];
         [self setBackupFolderPath:backupFolder];
-        // スクリプトログ格納配列をクリア
-        [self setScriptOutput:[[NSMutableArray alloc] init]];
+        // バージョン照会から開始
+        [self notifyProcessStarted];
+        [self doRequestGPGVersion];
+    }
+    
+    - (void)pgpStatusWillStart:(id)sender {
+        // 実行コマンドを保持
+        [self setCommand:COMMAND_OPENPGP_STATUS];
         // バージョン照会から開始
         [self notifyProcessStarted];
         [self doRequestGPGVersion];
@@ -150,15 +160,25 @@ typedef enum : NSInteger {
         [self doRequestGPGVersion];
     }
 
+    - (NSString *)pgpStatusInfoString {
+        // ステータス照会情報を戻す
+        return [self statusInfoString];
+    }
+
 #pragma mark - Private common methods
 
     - (void)notifyProcessStarted {
         // コマンド処理結果を初期化
         [self setCommandSuccess:false];
+        // スクリプトログ格納配列をクリア
+        [self setScriptLogArray:[[NSMutableArray alloc] init]];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_INSTALL_KEYS];
+                break;
+            case COMMAND_OPENPGP_STATUS:
+                [self setNameOfCommand:PROCESS_NAME_OPENPGP_STATUS];
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_RESET];
@@ -172,8 +192,9 @@ typedef enum : NSInteger {
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
-        // エラーメッセージをログファイルに出力
-        [[ToolLogFile defaultLogger] error:message];
+        // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
+        NSString *logMessage = [message stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        [[ToolLogFile defaultLogger] error:logMessage];
         // 戻り先画面に表示させるためのエラーメッセージを保持
         [self setErrorMessageOfCommand:message];
     }
@@ -222,8 +243,16 @@ typedef enum : NSInteger {
             [self notifyProcessTerminated:false];
             return;
         }
-        // 次の処理に移行
-        [self doRequestMakeTempFolder];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_STATUS:
+                [self doRequestCardStatus];
+                break;
+            default:
+                // 次の処理に移行
+                [self doRequestMakeTempFolder];
+                break;
+        }
     }
 
     - (void)doRequestMakeTempFolder {
@@ -377,21 +406,54 @@ typedef enum : NSInteger {
         // レスポンスをチェック
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfSubKeysExistFromResponse:response transferred:true]) {
-                // 副鍵が認証器に移動された場合は後処理に移行
+                // 副鍵が認証器に移動された場合は、処理成功を通知
                 [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE];
                 [self setCommandSuccess:true];
-                [self doRequestRemoveTempFolder];
-                return;
+            } else {
+                // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
+                [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
+                if ([self keyAlreadyStoredWarning]) {
+                    [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
+                } else {
+                    [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
+                }
+            }
+        } else {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL];
             }
         }
-        // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック後、後処理に移行
-        [self setKeyAlreadyStoredWarning:[self checkIfSubKeyAlreadyStoredFromResponse:response]];
-        if ([self keyAlreadyStoredWarning]) {
-            [self notifyErrorMessage:MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED];
-        } else {
-            [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
-        }
+        // 後処理に移行
         [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestCardStatus {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:CardStatusScriptName];
+        // シェルスクリプトを実行
+        NSArray *args = @[];
+        [self doRequestCommandLine:COMMAND_GPG_CARD_STATUS commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseCardStatus:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            // レスポンスを保持
+            [self setStatusInfoString:[response objectAtIndex:0]];
+            [self setCommandSuccess:true];
+        } else {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL];
+            }
+        }
+        // 処理完了を通知
+        [self notifyProcessTerminated:[self commandSuccess]];
     }
 
     - (void)doRequestCardReset {
@@ -639,7 +701,7 @@ typedef enum : NSInteger {
         [task setLaunchPath:path];
         [task setArguments:args];
         // 応答文字列の格納用配列を初期化
-        [self setCommandOutput:[[NSMutableArray alloc] init]];
+        [self setStandardOutputArray:[[NSMutableArray alloc] init]];
         // コマンドからの応答を待機
         ToolPGPCommand * __weak weakSelf = self;
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
@@ -661,7 +723,7 @@ typedef enum : NSInteger {
             return;
         }
         // 応答データを配列に保持
-        [[self commandOutput] addObject:output];
+        [[self standardOutputArray] addObject:output];
         // 次の応答があれば待機
         [[[task standardOutput] fileHandleForReading] waitForDataInBackgroundAndNotify];
     }
@@ -669,7 +731,7 @@ typedef enum : NSInteger {
     - (void)commandDidTerminated {
         // 応答データを配列に抽出
         NSMutableArray<NSString *> *outputArray = [[NSMutableArray alloc] init];
-        for (NSData *data in [self commandOutput]) {
+        for (NSData *data in [self standardOutputArray]) {
             // データ末尾に改行文字があれば削除
             NSData *output = data;
             uint8_t *bytes = (uint8_t *)[data bytes];
@@ -702,6 +764,9 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
                 [self doResponseTransferSubkeyToCard:outputArray];
+                break;
+            case COMMAND_GPG_CARD_STATUS:
+                [self doResponseCardStatus:outputArray];
                 break;
             case COMMAND_GPG_CARD_RESET:
                 [self doResponseCardReset:outputArray];
@@ -760,7 +825,7 @@ typedef enum : NSInteger {
                     success = true;
                 } else {
                     // シェルスクリプトのログを、格納配列に追加
-                    [[self scriptOutput] addObject:text];
+                    [[self scriptLogArray] addObject:text];
                 }
             }
         }

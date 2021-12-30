@@ -70,6 +70,7 @@
 #define PROCESS_NAME_CCID_PIV_SET_CHUID             @"PIV CHUID設定"
 #define PROCESS_NAME_CCID_PIV_STATUS                @"PIV設定情報取得"
 #define PROCESS_NAME_OPENPGP_INSTALL_KEYS           @"PGP秘密鍵インストール"
+#define PROCESS_NAME_OPENPGP_STATUS                 @"OpenPGP設定情報取得"
 #define PROCESS_NAME_OPENPGP_RESET                  @"OpenPGP機能リセット"
 
 #pragma mark - ToolCommandクラス専用メッセージ
@@ -319,9 +320,11 @@
 #define MSG_ERROR_OPENPGP_BACKUP_FAIL           @"バックアップファイルを指定フォルダーに生成出来ませんでした。"
 #define MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL    @"PGP公開鍵／バックアップファイルの生成が失敗しました。"
 #define MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL    @"生成したPGP秘密鍵（副鍵）を認証器に移動出来ませんでした。"
+#define MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL  @"生成したPGP秘密鍵（副鍵）を認証器に移動するための内部処理が失敗しました。"
 #define MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED   @"PGP秘密鍵（副鍵）が既に認証器に格納されているため、生成したPGP秘密鍵（副鍵）を移動出来ませんでした。"
 #define MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL   @"作業用フォルダーが消去出来ませんでした。"
-#define MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL   @"OpenPGP機能を認識出来ませんでした。認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。"
+#define MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL   @"OpenPGPステータス照会コマンドの実行に失敗しました。"
+#define MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL   @"OpenPGP機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。"
 #define MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED    @"PGP秘密鍵（副鍵）を認証器から正しく削除できませんでした。"
 #define MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL    @"PGP秘密鍵（副鍵）を認証器から削除時、不明なエラーが発生しました。"
 #define MSG_FORMAT_OPENPGP_CREATED_TEMPDIR      @"作業用フォルダーを新規に生成しました（%@）。"
@@ -349,6 +352,7 @@
 #define MSG_LABEL_PGP_ADMIN_PIN                 @"OpenPGP機能の管理用PIN"
 #define MSG_LABEL_PGP_ADMIN_PIN_CONFIRM         @"OpenPGP機能の管理用PIN（確認）"
 #define MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS  @"PGP秘密鍵のインストール"
+#define MSG_LABEL_COMMAND_OPENPGP_STATUS        @"設定情報の参照"
 #define MSG_LABEL_COMMAND_OPENPGP_RESET         @"設定情報の消去"
 
 #endif /* ToolCommonMessage_h */
