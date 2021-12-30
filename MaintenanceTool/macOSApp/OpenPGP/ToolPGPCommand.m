@@ -21,6 +21,7 @@
 #define TransferSubkeyToCardScriptParamName     @"transfer_subkey_to_card.param"
 #define KeyAlreadyStoredWarningMessage          @"such a key has already been stored on the card!"
 #define ExecuteScriptSuccessMessage             @"Execute script for gnupg success"
+#define CardStatusScriptName                    @"card_status.sh"
 #define CardResetScriptName                     @"card_reset.sh"
 #define CardResetScriptParamName                @"card_reset.param"
 #define SelectingCardFailedWarningMessage       @"selecting card failed"
@@ -36,6 +37,7 @@ typedef enum : NSInteger {
     COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP,
     COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD,
     COMMAND_GPG_REMOVE_TEMP_FOLDER,
+    COMMAND_GPG_CARD_STATUS,
     COMMAND_GPG_CARD_RESET,
 } GPGCommand;
 
@@ -56,6 +58,8 @@ typedef enum : NSInteger {
     @property (nonatomic) bool                          commandSuccess;
     // コマンドからの応答データを保持
     @property (nonatomic) NSMutableArray<NSData *>     *commandOutput;
+    // ステータス照会情報を保持
+    @property (nonatomic) NSString                     *statusInfoString;
     // 生成された作業用フォルダー名称を保持
     @property (nonatomic) NSString                     *tempFolderPath;
     // 生成された鍵のIDを保持
@@ -141,6 +145,14 @@ typedef enum : NSInteger {
         [self notifyProcessStarted];
         [self doRequestGPGVersion];
     }
+    
+    - (void)pgpStatusWillStart:(id)sender {
+        // 実行コマンドを保持
+        [self setCommand:COMMAND_OPENPGP_STATUS];
+        // バージョン照会から開始
+        [self notifyProcessStarted];
+        [self doRequestGPGVersion];
+    }
 
     - (void)pgpResetWillStart:(id)sender {
         // 実行コマンドを保持
@@ -148,6 +160,11 @@ typedef enum : NSInteger {
         // バージョン照会から開始
         [self notifyProcessStarted];
         [self doRequestGPGVersion];
+    }
+
+    - (NSString *)pgpStatusInfoString {
+        // ステータス照会情報を戻す
+        return [self statusInfoString];
     }
 
 #pragma mark - Private common methods
@@ -159,6 +176,9 @@ typedef enum : NSInteger {
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_INSTALL_KEYS];
+                break;
+            case COMMAND_OPENPGP_STATUS:
+                [self setNameOfCommand:PROCESS_NAME_OPENPGP_STATUS];
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_RESET];
@@ -247,6 +267,9 @@ typedef enum : NSInteger {
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 [self doRequestGenerateMainKey];
+                break;
+            case COMMAND_OPENPGP_STATUS:
+                [self doRequestCardStatus];
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self doRequestCardReset];
@@ -391,6 +414,28 @@ typedef enum : NSInteger {
         } else {
             [self notifyErrorMessage:MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL];
         }
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestCardStatus {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:CardStatusScriptName];
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath]];
+        [self doRequestCommandLine:COMMAND_GPG_CARD_STATUS commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseCardStatus:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response]) {
+            // レスポンスを保持
+            [self setStatusInfoString:[response objectAtIndex:0]];
+            [self setCommandSuccess:true];
+        } else {
+            // エラーメッセージを通知
+            [self notifyErrorMessage:MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL];
+        }
+        // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
 
@@ -702,6 +747,9 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
                 [self doResponseTransferSubkeyToCard:outputArray];
+                break;
+            case COMMAND_GPG_CARD_STATUS:
+                [self doResponseCardStatus:outputArray];
                 break;
             case COMMAND_GPG_CARD_RESET:
                 [self doResponseCardReset:outputArray];
