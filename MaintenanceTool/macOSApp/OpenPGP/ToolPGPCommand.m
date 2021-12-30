@@ -139,8 +139,6 @@ typedef enum : NSInteger {
         // PGP公開鍵とバックアップtarの出力先を指定
         [self setPubkeyFolderPath:pubkeyFolder];
         [self setBackupFolderPath:backupFolder];
-        // スクリプトログ格納配列をクリア
-        [self setScriptOutput:[[NSMutableArray alloc] init]];
         // バージョン照会から開始
         [self notifyProcessStarted];
         [self doRequestGPGVersion];
@@ -172,6 +170,8 @@ typedef enum : NSInteger {
     - (void)notifyProcessStarted {
         // コマンド処理結果を初期化
         [self setCommandSuccess:false];
+        // スクリプトログ格納配列をクリア
+        [self setScriptOutput:[[NSMutableArray alloc] init]];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
