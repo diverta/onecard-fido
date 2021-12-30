@@ -192,8 +192,9 @@ typedef enum : NSInteger {
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
-        // エラーメッセージをログファイルに出力
-        [[ToolLogFile defaultLogger] error:message];
+        // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
+        NSString *logMessage = [message stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        [[ToolLogFile defaultLogger] error:logMessage];
         // 戻り先画面に表示させるためのエラーメッセージを保持
         [self setErrorMessageOfCommand:message];
     }
