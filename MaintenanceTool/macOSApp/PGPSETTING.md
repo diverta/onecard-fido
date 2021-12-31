@@ -6,10 +6,11 @@
 
 [FIDO認証器管理ツール](README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
 
-## ソフトウェアのバージョン確認
+## ソフトウェアのバージョン確認／インストール
 
 OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という仕組みを使用しております。<br>
-この仕組みを使用するためには、管理ツール、ファームウェア共に、必要バージョン以降である必要があります。
+この仕組みを使用するためには、管理ツール、ファームウェア共に、必要バージョン以降である必要があります。<br>
+また、[GPG Suite](https://gpgtools.org)というツールを、PCに別途インストールする必要があります。
 
 #### 管理ツールのバージョン確認
 まずは[インストール手順](INSTALLPRG.md)を参照し、管理ツールをmacOSにインストールします。<br>
@@ -35,6 +36,14 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 （下記例では「0.3.1」となっております）
 
 <img src="assets07/0002.jpg" width="400">
+
+#### GPG Suiteのインストール
+
+管理ツールのOpenPGP機能設定においては、[GPG Suite](https://gpgtools.org)というツールに同梱の「MacGPG2」を管理ツールで内部利用しているため、あらかじめ<b>GPG SuiteがPCにインストールされている</b>必要があります。
+
+<img src="../../CCID/OpenPGP/assets01/0001.jpg" width="400">
+
+GPG Suiteのインストール手順につきましては、別ドキュメント「<b>[GPG Suiteインストール手順書](../../CCID/OpenPGP/GPGINSTMAC.md)</b>」をご参照願います。
 
 ## OpenPGP機能設定画面の表示
 

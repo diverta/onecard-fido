@@ -19,10 +19,16 @@
 WIndows 10環境では、CCIDドライバーのインストールは不要になります。
 
 - <b>[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)</b><br>
-GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。
+GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。<br>
+GPG Suiteは、下記「管理ツールによるGPG鍵インストール手順」でも必要となりますので、事前にインストール願います。
 
-- <b>[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)</b><br>
+- <b>[管理ツールによる鍵インストール手順](../../MaintenanceTool/macOSApp/PGPSETTING.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のOpenPGPカードエミュレーション機能のために必要となる、秘密鍵のインストール手順について掲載しています。
 
 - <b>[OpenPGPを使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTION.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のOpenPGPカードエミュレーション機能を使用し、macOS上でファイルを暗号化／復号化をする手順について掲載しています。
+
+## ご参考
+
+- <b>[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)</b><br>
+秘密鍵のインストールを、GPG Suiteだけを使用して行う場合の手順について掲載しています。
