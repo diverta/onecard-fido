@@ -221,6 +221,13 @@ static void command_erase_bonding_data_response(bool success)
     }
 }
 
+static void command_system_reset(void)
+{
+    // 最初にレスポンスを送信
+    fido_log_info("System reset will start immediately...");
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
 void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -243,6 +250,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
+            break;
+        case MNT_COMMAND_SYSTEM_RESET:
+            command_system_reset();
             break;
         default:
             break;
@@ -274,6 +284,10 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
+            break;
+        case MNT_COMMAND_SYSTEM_RESET:
+            // nRF52840のシステムリセットを実行
+            NVIC_SystemReset();
             break;
         default:
             break;
