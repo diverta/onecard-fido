@@ -18,6 +18,7 @@
     @property (assign) IBOutlet NSView              *windowView;
     @property (assign) IBOutlet NSTabView           *tabView;
     @property (assign) IBOutlet NSButton            *buttonClose;
+    @property (assign) IBOutlet NSButton            *buttonFirmwareReset;
     @property (assign) IBOutlet NSButton            *buttonPivStatus;
     @property (assign) IBOutlet NSButton            *buttonInitialSetting;
     @property (assign) IBOutlet NSButton            *buttonClearSetting;
@@ -118,6 +119,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonFirmwareReset] setEnabled:enabled];
         [[self buttonPivStatus] setEnabled:enabled];
         [[self buttonInitialSetting] setEnabled:enabled];
         [[self buttonClearSetting] setEnabled:enabled];
@@ -193,6 +195,10 @@
 
     - (IBAction)buttonCloseDidPress:(id)sender {
         [self terminateWindow:NSModalResponseOK];
+    }
+
+    - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // TODO: 認証器のファームウェアを再起動
     }
 
 #pragma mark - For PIVPreferenceWindow open/close

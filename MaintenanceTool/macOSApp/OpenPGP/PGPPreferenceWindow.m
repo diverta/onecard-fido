@@ -27,6 +27,7 @@
     @property (assign) IBOutlet NSView              *windowView;
     @property (assign) IBOutlet NSTabView           *tabView;
     @property (assign) IBOutlet NSButton            *buttonClose;
+    @property (assign) IBOutlet NSButton            *buttonFirmwareReset;
 
     @property (assign) IBOutlet NSTabViewItem       *tabPGPKeyManagement;
     @property (assign) IBOutlet NSTextField         *textRealName;
@@ -93,6 +94,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonFirmwareReset] setEnabled:enabled];
         [[self buttonPGPStatus] setEnabled:enabled];
         [[self buttonPGPReset] setEnabled:enabled];
         // 現在選択中のタブ内も同様に制御を行う
@@ -123,6 +125,10 @@
 
     - (IBAction)buttonCloseDidPress:(id)sender {
         [self terminateWindow:NSModalResponseOK];
+    }
+
+    - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // TODO: 認証器のファームウェアを再起動
     }
 
 #pragma mark - For PGPPreferenceWindow open/close

@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="buttonClearSetting" destination="bXg-F8-xgl" id="uDc-5x-mdL"/>
                 <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
+                <outlet property="buttonFirmwareReset" destination="NxD-KV-yno" id="Rrk-zf-uPV"/>
                 <outlet property="buttonInitialSetting" destination="uye-kV-qWV" id="lvZ-ze-eM0"/>
                 <outlet property="buttonInstallPkeyCert" destination="aYG-wl-NhX" id="mJ1-Ew-5hU"/>
                 <outlet property="buttonPath1" destination="pCe-YJ-TVY" id="hnm-ct-BZx"/>
@@ -44,14 +45,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="540" height="469"/>
+            <rect key="contentRect" x="196" y="240" width="540" height="479"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="540" height="469"/>
+                <rect key="frame" x="0.0" y="0.0" width="540" height="479"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EEC-S0-L06">
-                        <rect key="frame" x="18" y="432" width="88" height="19"/>
+                        <rect key="frame" x="18" y="442" width="88" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="PIV機能設定" id="3Bl-bQ-o7f">
                             <font key="font" metaFont="system" size="16"/>
@@ -60,7 +61,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="raO-ar-z97">
-                        <rect key="frame" x="406" y="424" width="120" height="32"/>
+                        <rect key="frame" x="406" y="434" width="120" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="閉じる" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bZn-ko-WOh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -456,12 +457,23 @@
                             </tabViewItem>
                         </tabViewItems>
                     </tabView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NxD-KV-yno">
+                        <rect key="frame" x="266" y="434" width="140" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="認証器のリセット" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ffn-CY-eTW">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonFirmwareResetDidPress:" target="-2" id="kxa-Yj-gjA"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="knQ-u8-sHd"/>
             </connections>
-            <point key="canvasLocation" x="142" y="144.5"/>
+            <point key="canvasLocation" x="142" y="149.5"/>
         </window>
     </objects>
 </document>
