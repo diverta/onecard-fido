@@ -19,10 +19,16 @@
 WIndows 10環境では、CCIDドライバーのインストールは不要になります。
 
 - <b>[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)</b><br>
-GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。
+GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。<br>
+GPG Suiteは、PGP鍵インストール時に必要となりますので、事前にインストール願います。
+
+- <b>[PGP鍵インストール手順書](../../MaintenanceTool/macOSApp/PGPKEYINST.md)</b><br>
+管理ツールを使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
+
+- <b>[PGP鍵を使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTION.md)</b><br>
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にインストールしたPGP鍵を使用し、macOS上でファイルを暗号化／復号化をする手順について掲載しています。
+
+## ご参考
 
 - <b>[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)</b><br>
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のOpenPGPカードエミュレーション機能のために必要となる、秘密鍵のインストール手順について掲載しています。
-
-- <b>[OpenPGPを使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTION.md)</b><br>
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のOpenPGPカードエミュレーション機能を使用し、macOS上でファイルを暗号化／復号化をする手順について掲載しています。
+PGP鍵のインストールを、管理ツールを使用せず、GPG Suiteだけを使用して行う場合の手順について掲載しています。

@@ -14,6 +14,7 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 * バージョン情報取得機能
 * 自動認証パラメーター設定機能
 * PIV機能設定
+* OpenPGP機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
@@ -45,6 +46,9 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 
 - <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
+
+- <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
+[OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順（USB）](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
