@@ -27,6 +27,7 @@
     @property (assign) IBOutlet NSView              *windowView;
     @property (assign) IBOutlet NSTabView           *tabView;
     @property (assign) IBOutlet NSButton            *buttonClose;
+    @property (assign) IBOutlet NSButton            *buttonFirmwareReset;
 
     @property (assign) IBOutlet NSTabViewItem       *tabPGPKeyManagement;
     @property (assign) IBOutlet NSTextField         *textRealName;
@@ -93,6 +94,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonFirmwareReset] setEnabled:enabled];
         [[self buttonPGPStatus] setEnabled:enabled];
         [[self buttonPGPReset] setEnabled:enabled];
         // 現在選択中のタブ内も同様に制御を行う
@@ -123,6 +125,12 @@
 
     - (IBAction)buttonCloseDidPress:(id)sender {
         [self terminateWindow:NSModalResponseOK];
+    }
+
+    - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // 認証器のファームウェアを再起動
+        [self enableButtons:false];
+        [self commandWillResetFirmware];
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -330,6 +338,10 @@
 
 #pragma mark - For ToolPGPCommand functions
 
+    - (void)commandWillResetFirmware {
+        [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
+    }
+
     - (void)commandWillInstallPGPKey {
         // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
         NSString *realName = [[self textRealName] stringValue];
@@ -379,6 +391,9 @@
                     return;
                 }
                 name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
             default:
                 return;

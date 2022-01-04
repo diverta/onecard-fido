@@ -18,6 +18,7 @@
     @property (assign) IBOutlet NSView              *windowView;
     @property (assign) IBOutlet NSTabView           *tabView;
     @property (assign) IBOutlet NSButton            *buttonClose;
+    @property (assign) IBOutlet NSButton            *buttonFirmwareReset;
     @property (assign) IBOutlet NSButton            *buttonPivStatus;
     @property (assign) IBOutlet NSButton            *buttonInitialSetting;
     @property (assign) IBOutlet NSButton            *buttonClearSetting;
@@ -118,6 +119,7 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
+        [[self buttonFirmwareReset] setEnabled:enabled];
         [[self buttonPivStatus] setEnabled:enabled];
         [[self buttonInitialSetting] setEnabled:enabled];
         [[self buttonClearSetting] setEnabled:enabled];
@@ -195,6 +197,12 @@
         [self terminateWindow:NSModalResponseOK];
     }
 
+    - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // 認証器のファームウェアを再起動
+        [self enableButtons:false];
+        [self commandWillResetFirmware];
+    }
+
 #pragma mark - For PIVPreferenceWindow open/close
 
     - (bool)windowWillOpenWithCommandRef:(id)ref parentWindow:(NSWindow *)parent {
@@ -231,6 +239,10 @@
     }
 
 #pragma mark - For ToolPIVCommand functions
+
+    - (void)commandWillResetFirmware {
+        [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
+    }
 
     - (void)commandWillStatus {
         [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
@@ -271,11 +283,11 @@
         [[self toolPIVCommand] commandWillChangePin:command withNewPinCode:newPin withAuthPinCode:authPin];
     }
 
-    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result {
+    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
         switch (command) {
             case COMMAND_CCID_PIV_STATUS:
                 // PIV設定情報を、情報表示画面に表示
-                [self openToolInfoWindowWithDescriptionWithResult:result];
+                [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 // 全ての入力欄をクリア
@@ -296,11 +308,11 @@
                 break;
         }
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:result withCommand:command];
+        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
         [self enableButtons:true];
     }
 
-    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result {
+    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result withErrorMessage:(NSString *)errorMessage {
         if (result) {
             // PIV設定情報を、情報表示画面に表示
             ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
@@ -310,12 +322,11 @@
                                           infoString:[command getPIVSettingDescriptionString]];
         } else {
             // 異常終了メッセージをポップアップ表示
-            [ToolPopupWindow critical:MSG_PIV_STATUS_GET_FAILED
-                      informativeText:[[self toolPIVCommand] lastErrorMessage]];
+            [ToolPopupWindow critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage];
         }
     }
 
-    - (void)displayResultMessage:(bool)result withCommand:(Command)command {
+    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
         // 処理名称を設定
         NSString *name = [self functionNameOfCommand:command];
         // メッセージをポップアップ表示
@@ -325,7 +336,7 @@
             if (result) {
                 [ToolPopupWindow informational:str informativeText:nil];
             } else {
-                [ToolPopupWindow critical:str informativeText:[[self toolPIVCommand] lastErrorMessage]];
+                [ToolPopupWindow critical:str informativeText:errorMessage];
             }
         }
     }
@@ -584,6 +595,9 @@
                 break;
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 name = MSG_PIV_RESET_PIN_NUMBER;
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
             default:
                 break;

@@ -164,6 +164,14 @@
         }
     }
 
+    - (void)doCommandFirmwareResetForCommandRef:(id)ref {
+        if ([self checkForHIDCommand]) {
+            // 認証器にファームウェアリセットを要求
+            [[self delegate] disableUserInterface];
+            [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
+        }
+    }
+
     - (bool)checkForHIDCommand {
         // USBポートに接続されていない場合はfalse
         return [[self toolHIDCommand] checkUSBHIDConnection];
@@ -302,6 +310,34 @@
         [self commandDidProcess:command result:result message:MSG_BOOT_LOADER_MODE_UNSUPP];
     }
 
+#pragma mark - Perform firmware reset
+
+    - (void)doRequestForResetFirmware:(Command)command forCommandRef:(id)ref {
+        // 認証器のファームウェアリセットを要求
+        [[self toolHIDCommand] hidHelperWillProcess:command withData:nil forCommand:ref];
+    }
+
+    - (void)didResponseForResetFirmware:(Command)command response:(NSData *)response forCommandRef:(id)ref {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認し、エラーの場合は画面に制御を戻す
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            [self completedResetFirmware:command success:false forCommandRef:ref];
+        } else {
+            // 再接続まで待機 --> completedResetFirmware が呼び出される
+            [[self toolHIDCommand] hidHelperWillDetectConnect:command forCommand:ref];
+        }
+    }
+
+    - (void)completedResetFirmware:(Command)command success:(bool)success forCommandRef:(id)ref {
+        // 画面に制御を戻す
+        if ([ref isMemberOfClass:[ToolPIVCommand class]]) {
+            [[self toolPIVCommand] commandDidResetFirmware:success];
+        }
+        if ([ref isMemberOfClass:[ToolPGPCommand class]]) {
+            [[self toolPGPCommand] commandDidResetFirmware:success];
+        }
+    }
+
 #pragma mark - Interface for AppDelegate
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type {
@@ -339,6 +375,9 @@
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
@@ -425,6 +464,9 @@
                 [self didChangeToBootloaderMode:command response:response];
             }
         }
+        if (command == COMMAND_HID_FIRMWARE_RESET) {
+            [self didResponseForResetFirmware:command response:response forCommandRef:ref];
+        }
     }
 
     - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
@@ -440,6 +482,15 @@
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // DFU処理にHID接続開始を通知
         [[self toolUSBDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
+    }
+
+    - (void)hidCommandDidDetectConnect:(Command)command toolCommandRef:(id)ref {
+        [self notifyToolCommandMessage:MSG_HID_CONNECTED];
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
+        // 所定のコマンドにHID接続を通知
+        if (command == COMMAND_HID_FIRMWARE_RESET) {
+            [self completedResetFirmware:command success:true forCommandRef:ref];
+        }
     }
 
     - (void)hidCommandDidDetectRemoval {

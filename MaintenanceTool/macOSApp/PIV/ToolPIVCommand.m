@@ -98,6 +98,9 @@
                     // 機能実行に先立ち、PIVアプレットをSELECT
                     [self doRequestPivInsSelectApplication];
                     return;
+                } else {
+                    // PIV機能を認識できなかった旨のエラーメッセージを設定
+                    [self setLastErrorMessage:MSG_ERROR_PIV_SELECTING_CARD_FAIL];
                 }
                 break;
             default:
@@ -180,6 +183,21 @@
     - (void)commandWillStatus:(Command)command {
         // コマンドを実行
         [self ccidHelperWillProcess:command];
+    }
+
+    - (void)commandWillResetFirmware:(Command)command {
+        // コマンドを待避
+        [self setCommand:command];
+        // HIDインターフェース経由でファームウェアをリセット
+        [self startCommandProcess];
+        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+    }
+
+    - (void)commandDidResetFirmware:(bool)success {
+        if (success == false) {
+            [self setLastErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
+        }
+        [self exitCommandProcess:success];
     }
 
 #pragma mark - Command functions
@@ -704,6 +722,9 @@
             case COMMAND_CCID_PIV_STATUS:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
+                break;
             default:
                 break;
         }
@@ -721,7 +742,9 @@
         if (success == false) {
             // 処理失敗時はエラーメッセージをログ出力
             if ([self lastErrorMessage]) {
-                [[ToolLogFile defaultLogger] error:[self lastErrorMessage]];
+                // 出力前に改行文字を削除
+                NSString *logMessage = [[self lastErrorMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                [[ToolLogFile defaultLogger] error:logMessage];
             }
             // コマンド異常終了メッセージをログ出力
             if ([self processNameOfCommand]) {
@@ -737,7 +760,7 @@
         Command command = [self command];
         [self clearCommandParameters];
         // 画面に制御を戻す
-        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success];
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success withErrorMessage:[self lastErrorMessage]];
     }
 
 #pragma mark - Utility functions

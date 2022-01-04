@@ -19,6 +19,7 @@
     - (void)displayMessage:(NSString *)string;
     - (void)hidHelperWillProcess:(Command)command;
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef;
+    - (void)hidHelperWillDetectConnect:(Command)command forCommand:(id)commandRef;
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;
@@ -41,6 +42,7 @@
     - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response;
     - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
     - (void)hidCommandDidDetectConnect;
+    - (void)hidCommandDidDetectConnect:(Command)command toolCommandRef:(id)ref;
     - (void)hidCommandDidDetectRemoval;
 
 @end

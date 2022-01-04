@@ -23,6 +23,8 @@
     - (void)commandWillReset:(Command)command;
     - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer;
     - (void)commandWillStatus:(Command)command;
+    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPIVSettingDescriptionString;
 

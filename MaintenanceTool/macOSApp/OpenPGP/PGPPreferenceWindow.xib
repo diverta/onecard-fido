@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="buttonBackupFolderPath" destination="bAH-Qj-qo6" id="N5C-Rd-nhn"/>
                 <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
+                <outlet property="buttonFirmwareReset" destination="J2Q-ZN-qxo" id="PS8-o2-Rfj"/>
                 <outlet property="buttonInstallPGPKey" destination="aYG-wl-NhX" id="PEg-WS-j6h"/>
                 <outlet property="buttonPGPReset" destination="bXg-F8-xgl" id="0zp-xQ-5s8"/>
                 <outlet property="buttonPGPStatus" destination="PWJ-aC-YsL" id="c3B-Cb-zhP"/>
@@ -36,14 +37,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="540" height="600"/>
+            <rect key="contentRect" x="196" y="240" width="540" height="610"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="540" height="600"/>
+                <rect key="frame" x="0.0" y="0.0" width="540" height="610"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EEC-S0-L06">
-                        <rect key="frame" x="18" y="563" width="134" height="19"/>
+                        <rect key="frame" x="18" y="573" width="134" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="OpenPGP機能設定" id="3Bl-bQ-o7f">
                             <font key="font" metaFont="system" size="16"/>
@@ -52,7 +53,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="raO-ar-z97">
-                        <rect key="frame" x="406" y="555" width="120" height="32"/>
+                        <rect key="frame" x="406" y="565" width="120" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="閉じる" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bZn-ko-WOh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -481,12 +482,23 @@
                             <action selector="buttonPGPResetDidPress:" target="-2" id="ITf-Xz-ZNv"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J2Q-ZN-qxo">
+                        <rect key="frame" x="266" y="565" width="140" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="認証器のリセット" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1vd-wY-O9F">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonFirmwareResetDidPress:" target="-2" id="fiB-BQ-dEj"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="knQ-u8-sHd"/>
             </connections>
-            <point key="canvasLocation" x="142" y="195"/>
+            <point key="canvasLocation" x="142" y="200"/>
         </window>
     </objects>
 </document>
