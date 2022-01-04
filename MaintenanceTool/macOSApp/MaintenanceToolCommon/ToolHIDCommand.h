@@ -41,7 +41,6 @@
     - (void)hidCommandStartedProcess:(Command)command;
     - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response;
     - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
-    - (void)hidCommandDidDetectConnect;
     - (void)hidCommandDidDetectConnect:(Command)command toolCommandRef:(id)ref;
     - (void)hidCommandDidDetectRemoval;
 

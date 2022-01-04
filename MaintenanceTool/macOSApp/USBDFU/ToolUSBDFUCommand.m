@@ -124,18 +124,13 @@
 
 #pragma mark - Call back from AppDelegate
 
-    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
+    - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref {
         // 認証器の現在バージョンをクリア
         [self setCurrentVersion:@""];
-        // バージョン更新判定フラグがセットされていない場合は終了
-        if ([self needCompareUpdateVersion] == false) {
-            return;
-        }
         // USB HID経由でバージョン照会コマンドを実行
-        if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
+        if ([ref isMemberOfClass:[ToolUSBDFUCommand class]] == false) {
             return;
         }
-        [self setToolHIDCommand:(ToolHIDCommand *)toolHIDCommandRef];
         dispatch_async([self subQueue], ^{
             // サブスレッドでバージョン情報照会を実行 --> notifyFirmwareVersionが呼び出される
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_FOR_DFU
@@ -546,6 +541,8 @@
             [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
             [self setNeedCompareUpdateVersion:true];
             [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
+            // 再接続まで待機 --> hidCommandDidDetectConnect が呼び出される
+            [[self toolHIDCommand] hidHelperWillDetectConnect:COMMAND_USB_DFU forCommand:self];
         }
         return ret;
     }
