@@ -10,6 +10,8 @@
 @interface ToolPGPCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandDidResetFirmware:(bool)success;
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
     - (void)installPGPKeyWillStart:(id)sender

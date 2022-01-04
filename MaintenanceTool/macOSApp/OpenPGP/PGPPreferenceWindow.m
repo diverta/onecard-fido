@@ -128,7 +128,9 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
-        // TODO: 認証器のファームウェアを再起動
+        // 認証器のファームウェアを再起動
+        [self enableButtons:false];
+        [self commandWillResetFirmware];
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -336,6 +338,10 @@
 
 #pragma mark - For ToolPGPCommand functions
 
+    - (void)commandWillResetFirmware {
+        [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
+    }
+
     - (void)commandWillInstallPGPKey {
         // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
         NSString *realName = [[self textRealName] stringValue];
@@ -385,6 +391,9 @@
                     return;
                 }
                 name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
             default:
                 return;

@@ -108,6 +108,23 @@ typedef enum : NSInteger {
         [self setBackupFolderPath:nil];
     }
 
+#pragma mark - For reset firmware
+
+    - (void)commandWillResetFirmware:(Command)command {
+        // 実行コマンドを保持
+        [self setCommand:command];
+        // HIDインターフェース経由でファームウェアをリセット
+        [self notifyProcessStarted];
+        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+    }
+
+    - (void)commandDidResetFirmware:(bool)success {
+        if (success == false) {
+            [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
+        }
+        [self notifyProcessTerminated:success];
+    }
+
 #pragma mark - For PGPPreferenceWindow open/close
 
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
@@ -182,6 +199,9 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self setNameOfCommand:PROCESS_NAME_OPENPGP_RESET];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self setNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
             default:
                 break;
