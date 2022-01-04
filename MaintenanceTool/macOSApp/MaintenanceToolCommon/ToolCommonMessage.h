@@ -262,6 +262,7 @@
 #define MSG_ERROR_PIV_PUK_LOCKED                @"PUKがすでに無効です。PIV機能をリセットする必要があります。"
 #define MSG_ERROR_PIV_RESET_FAIL                @"PINまたはPUKが未だ無効になっていません。"
 #define MSG_ERROR_PIV_UNKNOWN                   @"不明なエラーが発生しました（SW=0x%04x）"
+#define MSG_ERROR_PIV_SELECTING_CARD_FAIL       @"PIV機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。"
 #define MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH     @"PIV秘密鍵ファイル(PEM)のパスを選択してください"
 #define MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH     @"PIV証明書ファイル(PEM)のパスを選択してください"
 #define MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED      @"PIV秘密鍵ファイル読込処理が失敗しました（%@）"
