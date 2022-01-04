@@ -198,7 +198,9 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
-        // TODO: 認証器のファームウェアを再起動
+        // 認証器のファームウェアを再起動
+        [self enableButtons:false];
+        [self commandWillResetFirmware];
     }
 
 #pragma mark - For PIVPreferenceWindow open/close
@@ -237,6 +239,10 @@
     }
 
 #pragma mark - For ToolPIVCommand functions
+
+    - (void)commandWillResetFirmware {
+        [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
+    }
 
     - (void)commandWillStatus {
         [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
@@ -590,6 +596,9 @@
                 break;
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 name = MSG_PIV_RESET_PIN_NUMBER;
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
             default:
                 break;

@@ -182,6 +182,21 @@
         [self ccidHelperWillProcess:command];
     }
 
+    - (void)commandWillResetFirmware:(Command)command {
+        // コマンドを待避
+        [self setCommand:command];
+        // HIDインターフェース経由でファームウェアをリセット
+        [self startCommandProcess];
+        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+    }
+
+    - (void)commandDidResetFirmware:(bool)success {
+        if (success == false) {
+            [self setLastErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
+        }
+        [self exitCommandProcess:success];
+    }
+
 #pragma mark - Command functions
 
     - (void)doRequestPivInsSelectApplication {
@@ -703,6 +718,9 @@
                 break;
             case COMMAND_CCID_PIV_STATUS:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
             default:
                 break;
