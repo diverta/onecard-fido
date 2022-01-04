@@ -29,6 +29,7 @@
     - (void)doCommandHidU2fHealthCheck;
     - (void)doCommandEraseBond;
     - (void)doCommandBLMode;
+    - (void)doCommandFirmwareResetForCommandRef:(id)ref;
     - (bool)checkForHIDCommand;
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;

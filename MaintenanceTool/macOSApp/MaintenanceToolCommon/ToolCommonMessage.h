@@ -42,6 +42,7 @@
 #define MSG_BOOT_LOADER_MODE_UNSUPP @"FIDO認証器をブートローダーモードに遷移できません。"
 #define MSG_BOOT_LOADER_MODE        @"FIDO認証器をブートローダーモードに遷移させます。"
 #define MSG_PROMPT_BOOT_LOADER_MODE @"ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？"
+#define MSG_FIRMWARE_RESET_UNSUPP   @"FIDO認証器のファームウェアをリセットさせることができません。"
 
 #pragma mark - コマンド種別に対応する処理名称
 #define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書の削除"
@@ -62,6 +63,7 @@
 #define PROCESS_NAME_BLE_DFU                        @"FIDO認証器のファームウェア更新"
 #define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
 #define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
+#define PROCESS_NAME_FIRMWARE_RESET                 @"認証器のリセット"
 #define PROCESS_NAME_CCID_PIV_CHANGE_PIN            @"PIV PINコード変更"
 #define PROCESS_NAME_CCID_PIV_CHANGE_PUK            @"PIV PUKコード変更"
 #define PROCESS_NAME_CCID_PIV_UNBLOCK_PIN           @"PIV PIN解除"
