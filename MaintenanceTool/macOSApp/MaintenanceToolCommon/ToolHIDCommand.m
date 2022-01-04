@@ -36,7 +36,8 @@
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
-
+    // HID接続の検知時、所定コマンドへの通知の要否を保持
+    @property(nonatomic) bool       needNotifyDetectConnect;
     // 呼び出し元のコマンドオブジェクト参照を保持
     @property(nonatomic, weak) id   toolCommandRef;
 
@@ -130,6 +131,9 @@
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self doRequestHidBootloaderMode:[self getNewCIDFrom:message]];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self doRequestHidFirmwareReset:[self getNewCIDFrom:message]];
                 break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
@@ -280,6 +284,25 @@
         }
     }
 
+    - (void)doHidFirmwareReset {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doRequestHidFirmwareReset:(NSData *)cid {
+        // コマンド 0xC7 を実行（メッセージはブランクとする）
+        NSData *message = [[NSData alloc] init];
+        [self doRequest:message CID:cid CMD:HID_CMD_FIRMWARE_RESET];
+    }
+
+    - (void)doResponseHidFirmwareReset:(NSData *)message CMD:(uint8_t)cmd {
+        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
+            return;
+        }
+    }
+
     - (void)doEraseBonds {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -398,6 +421,8 @@
     }
 
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
+        // HID接続検知時、所定のコマンドに通知しないようにする
+        [self setNeedNotifyDetectConnect:false];
         // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
         [self setToolCommandRef:commandRef];
         [self setProcessData:data];
@@ -419,6 +444,9 @@
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self doHidBootloaderMode];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self doHidFirmwareReset];
                 break;
             case COMMAND_ERASE_BONDS:
                 [self doEraseBonds];
@@ -462,6 +490,14 @@
         [self hidHelperWillProcess:command withData:nil forCommand:nil];
     }
 
+    - (void)hidHelperWillDetectConnect:(Command)command forCommand:(id)commandRef {
+        // HID接続が検知されたら、所定のコマンドに通知
+        [self setNeedNotifyDetectConnect:true];
+        // コマンドと呼出元の参照を待避
+        [self setCommand:command];
+        [self setToolCommandRef:commandRef];
+    }
+
 #pragma mark - For tool preference parameters
 
     - (void)doToolPreferenceParameter {
@@ -500,6 +536,9 @@
             case HID_CMD_BOOTLOADER_MODE:
                 [self doResponseHidBootloaderMode:message CMD:cmd];
                 break;
+            case HID_CMD_FIRMWARE_RESET:
+                [self doResponseHidFirmwareReset:message CMD:cmd];
+                break;
             case HID_CMD_ERASE_BONDS:
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
@@ -529,6 +568,10 @@
                 // DFU処理クラスに制御を戻す
                 [self doResponseHidBootloaderMode:message CMD:cmd];
                 break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                // DFU処理クラスに制御を戻す
+                [self doResponseHidFirmwareReset:message CMD:cmd];
+                break;
             default:
                 // メッセージを画面表示
                 [[self delegate] hidCommandDidProcess:[self command] result:false message:MSG_OCCUR_UNKNOWN_ERROR];
@@ -542,7 +585,13 @@
     }
 
     - (void)hidHelperDidDetectConnect {
-        [[self delegate] hidCommandDidDetectConnect];
+        if ([self needNotifyDetectConnect]) {
+            // HID接続検知を所定のコマンドに通知する必要がある場合
+            [[self delegate] hidCommandDidDetectConnect:[self command] toolCommandRef:[self toolCommandRef]];
+        } else {
+            // HID接続検知を所定のコマンドに通知する必要がない場合
+            [[self delegate] hidCommandDidDetectConnect];
+        }
     }
 
     - (void)hidHelperDidDetectRemoval {
