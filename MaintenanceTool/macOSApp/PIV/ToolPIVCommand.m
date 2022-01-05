@@ -81,6 +81,8 @@
         [self setPivAuthChallenge:nil];
     }
 
+#pragma mark - For CCID interface
+
     - (void)ccidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
@@ -145,6 +147,23 @@
         }
     }
 
+#pragma mark - For reset firmware
+
+    - (void)commandWillResetFirmware:(Command)command {
+        // コマンドを待避
+        [self setCommand:command];
+        // HIDインターフェース経由でファームウェアをリセット
+        [self startCommandProcess];
+        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+    }
+
+    - (void)commandDidResetFirmware:(bool)success {
+        if (success == false) {
+            [self setErrorMessageOfCommand:MSG_FIRMWARE_RESET_UNSUPP];
+        }
+        [self exitCommandProcess:success];
+    }
+
 #pragma mark - For PIVPreferenceWindow open/close
 
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
@@ -185,21 +204,6 @@
     - (void)commandWillStatus:(Command)command {
         // コマンドを実行
         [self ccidHelperWillProcess:command];
-    }
-
-    - (void)commandWillResetFirmware:(Command)command {
-        // コマンドを待避
-        [self setCommand:command];
-        // HIDインターフェース経由でファームウェアをリセット
-        [self startCommandProcess];
-        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
-    }
-
-    - (void)commandDidResetFirmware:(bool)success {
-        if (success == false) {
-            [self setErrorMessageOfCommand:MSG_FIRMWARE_RESET_UNSUPP];
-        }
-        [self exitCommandProcess:success];
     }
 
 #pragma mark - Command functions
@@ -698,7 +702,7 @@
         [self exitCommandProcess:(sw == SW_SUCCESS)];
     }
 
-#pragma mark - Exit function
+#pragma mark - Private common methods
 
     - (void)startCommandProcess {
         // コマンドに応じ、以下の処理に分岐

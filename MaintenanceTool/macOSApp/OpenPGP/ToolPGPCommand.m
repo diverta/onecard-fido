@@ -241,7 +241,7 @@ typedef enum : NSInteger {
         [[self pgpPreferenceWindow] toolPGPCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
-#pragma mark - Private methods
+#pragma mark - Command functions
 
     - (void)doRequestGPGVersion {
         // MacGPGコマンドが存在するかチェック
