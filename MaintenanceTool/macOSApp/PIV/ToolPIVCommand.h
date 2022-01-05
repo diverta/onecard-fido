@@ -17,13 +17,14 @@
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
 
+    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandDidResetFirmware:(bool)success;
+
     - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporterRef:(id)importer;
     - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
     - (void)commandWillReset:(Command)command;
     - (void)commandWillSetCHUIDAndCCC:(Command)command withImporterRef:(id)importer;
     - (void)commandWillStatus:(Command)command;
-    - (void)commandWillResetFirmware:(Command)command;
-    - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPIVSettingDescriptionString;
 

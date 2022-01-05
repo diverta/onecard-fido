@@ -17,14 +17,16 @@
 
     - (void)commandWillResetFirmware:(Command)command;
     - (void)commandDidResetFirmware:(bool)success;
-    - (void)installPGPKeyWillStart:(id)sender
+
+    - (void)commandWillInstallPGPKey:(id)sender
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
         passphrase:(NSString *)passphrase
         pubkeyFolderPath:(NSString *)pubkeyFolder
         backupFolderPath:(NSString *)backupFolder;
-    - (void)pgpStatusWillStart:(id)sender;
-    - (void)pgpResetWillStart:(id)sender;
-    - (NSString *)pgpStatusInfoString;
+    - (void)commandWillPGPStatus:(id)sender;
+    - (void)commandWillPGPReset:(id)sender;
+
+    - (NSString *)getPGPStatusInfoString;
 
 @end
 
