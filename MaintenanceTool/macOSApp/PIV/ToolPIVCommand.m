@@ -104,7 +104,7 @@
                     return;
                 } else {
                     // PIV機能を認識できなかった旨のエラーメッセージを設定
-                    [self setErrorMessageOfCommand:MSG_ERROR_PIV_SELECTING_CARD_FAIL];
+                    [self notifyErrorMessage:MSG_ERROR_PIV_SELECTING_CARD_FAIL];
                 }
                 break;
             default:
@@ -159,7 +159,7 @@
 
     - (void)commandDidResetFirmware:(bool)success {
         if (success == false) {
-            [self setErrorMessageOfCommand:MSG_FIRMWARE_RESET_UNSUPP];
+            [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
         }
         [self notifyProcessTerminated:success];
     }
@@ -243,6 +243,14 @@
         [[ToolLogFile defaultLogger] info:startMsg];
     }
 
+    - (void)notifyErrorMessage:(NSString *)message {
+        // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
+        NSString *logMessage = [message stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        [[ToolLogFile defaultLogger] error:logMessage];
+        // 戻り先画面に表示させるためのエラーメッセージを保持
+        [self setErrorMessageOfCommand:message];
+    }
+
     - (void)notifyProcessTerminated:(bool)success {
         // CCIDデバイスから切断
         [[self toolCCIDHelper] ccidHelperWillDisconnect];
@@ -250,12 +258,6 @@
         NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
                                 success ? MSG_SUCCESS : MSG_FAILURE];
         if (success == false) {
-            // 処理失敗時はエラーメッセージをログ出力
-            if ([self errorMessageOfCommand]) {
-                // 出力前に改行文字を削除
-                NSString *logMessage = [[self errorMessageOfCommand] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-                [[ToolLogFile defaultLogger] error:logMessage];
-            }
             // コマンド異常終了メッセージをログ出力
             if ([self nameOfCommand]) {
                 [[ToolLogFile defaultLogger] error:endMsg];
@@ -283,7 +285,7 @@
     - (void)doResponsePivInsSelectApplication:(NSData *)response status:(uint16_t)sw {
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            [self setErrorMessageOfCommand:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
+            [self notifyErrorMessage:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
             [self notifyProcessTerminated:false];
             return;
         }
@@ -322,9 +324,9 @@
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             if ([self pivAuthChallenge] == nil) {
-                [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED];
+                [self notifyErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED];
             } else {
-                [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
+                [self notifyErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
             }
             [self notifyProcessTerminated:false];
             return;
@@ -420,7 +422,7 @@
     - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
         NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
-        [self setErrorMessageOfCommand:msg];
+        [self notifyErrorMessage:msg];
     }
 
     - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
@@ -494,7 +496,7 @@
         }
         if ([challenge isEqualToData:[self pivAuthChallenge]] == false) {
             // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
-            [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF];
+            [self notifyErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF];
             return false;
         }
         return true;
@@ -716,16 +718,16 @@
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
             NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
-            [self setErrorMessageOfCommand:msg];
+            [self notifyErrorMessage:msg];
         }
         // PINブロック or リトライカウンターの状態に応じメッセージを編集
         if (isPinBlocked) {
-            [self setErrorMessageOfCommand:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
+            [self notifyErrorMessage:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
 
         } else if (retries < 3) {
             NSString *name = isPinAuth ? @"PIN" : @"PUK";
             NSString *msg = [[NSString alloc] initWithFormat:MSG_ERROR_PIV_WRONG_PIN, name, name, retries];
-            [self setErrorMessageOfCommand:msg];
+            [self notifyErrorMessage:msg];
         }
         return (sw == SW_SUCCESS);
     }
@@ -759,12 +761,12 @@
         // ステータスワードの内容に応じメッセージを編集
         if (sw == SW_SEC_STATUS_NOT_SATISFIED) {
             // PIN／PUKがまだブロックされていない場合
-            [self setErrorMessageOfCommand:MSG_ERROR_PIV_RESET_FAIL];
+            [self notifyErrorMessage:MSG_ERROR_PIV_RESET_FAIL];
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
             NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
-            [self setErrorMessageOfCommand:msg];
+            [self notifyErrorMessage:msg];
         }
         [self notifyProcessTerminated:(sw == SW_SUCCESS)];
     }
@@ -873,7 +875,7 @@
     - (void)setLastErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
         NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
         NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
-        [self setErrorMessageOfCommand:errorMsg];
+        [self notifyErrorMessage:errorMsg];
     }
 
 @end
