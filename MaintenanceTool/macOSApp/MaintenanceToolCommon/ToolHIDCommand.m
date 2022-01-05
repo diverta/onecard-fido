@@ -588,10 +588,10 @@
         if ([self needNotifyDetectConnect]) {
             // HID接続検知を所定のコマンドに通知する必要がある場合
             [self setNeedNotifyDetectConnect:false];
-            [[self delegate] hidCommandDidDetectConnect:[self command] toolCommandRef:[self toolCommandRef]];
+            [[self delegate] hidCommandDidDetectConnect:[self command] forCommandRef:[self toolCommandRef]];
         } else {
             // HID接続検知を所定のコマンドに通知する必要がない場合
-            [[self delegate] hidCommandDidDetectConnect:COMMAND_NONE toolCommandRef:nil];
+            [[self delegate] hidCommandDidDetectConnect:COMMAND_NONE forCommandRef:nil];
         }
     }
 

@@ -127,6 +127,10 @@
     - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref {
         // 認証器の現在バージョンをクリア
         [self setCurrentVersion:@""];
+        // バージョン更新判定フラグがセットされていない場合は終了
+        if ([self needCompareUpdateVersion] == false) {
+            return;
+        }
         // USB HID経由でバージョン照会コマンドを実行
         if ([ref isMemberOfClass:[ToolUSBDFUCommand class]] == false) {
             return;

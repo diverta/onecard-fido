@@ -477,7 +477,7 @@
         [self commandStartedProcess:command type:TRANSPORT_HID];
     }
 
-    - (void)hidCommandDidDetectConnect:(Command)command toolCommandRef:(id)ref {
+    - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref {
         [self notifyToolCommandMessage:MSG_HID_CONNECTED];
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // 所定のコマンドにHID接続を通知
