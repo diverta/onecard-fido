@@ -284,31 +284,15 @@
     }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        switch (command) {
-            case COMMAND_CCID_PIV_STATUS:
-                // PIV設定情報を、情報表示画面に表示
-                [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
-                break;
-            case COMMAND_CCID_PIV_IMPORT_KEY:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPkeyCertPathFields];
-                    [self initTabPkeyCertPinFields];
-                }
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PIN:
-            case COMMAND_CCID_PIV_CHANGE_PUK:
-            case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPinManagementPinFields];
-                }
-                break;
-            default:
-                break;
+        if (command == COMMAND_CCID_PIV_STATUS) {
+            // PIV設定情報を、情報表示画面に表示
+            [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
+            [self enableButtons:true];
+            return;
         }
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
         [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        [self clearEntry:command withResult:result];
         [self enableButtons:true];
     }
 
@@ -338,6 +322,29 @@
             } else {
                 [ToolPopupWindow critical:str informativeText:errorMessage];
             }
+        }
+    }
+
+    - (void)clearEntry:(Command)command withResult:(bool)result {
+        // 全ての入力欄をクリア
+        switch (command) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPkeyCertPathFields];
+                    [self initTabPkeyCertPinFields];
+                }
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPinManagementPinFields];
+                }
+                break;
+            default:
+                break;
         }
     }
 
