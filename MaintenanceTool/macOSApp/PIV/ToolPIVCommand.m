@@ -26,7 +26,7 @@
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
     // 処理機能名称を保持
-    @property (nonatomic) NSString          *processNameOfCommand;
+    @property (nonatomic) NSString          *nameOfCommand;
     // コマンドを保持
     @property (nonatomic) Command            command;
     @property (nonatomic) uint8_t            commandIns;
@@ -72,7 +72,7 @@
 
     - (void)clearCommandParameters {
         // コマンドおよびパラメーターを初期化
-        [self setProcessNameOfCommand:nil];
+        [self setNameOfCommand:nil];
         [self setCommand:COMMAND_NONE];
         [self setCommandIns:0x00];
         [self setPinCodeCur:nil];
@@ -110,7 +110,7 @@
             default:
                 break;
         }
-        [self exitCommandProcess:false];
+        [self notifyProcessTerminated:false];
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
@@ -142,7 +142,7 @@
                 [self doResponsePivInsGetData:resp status:sw];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -153,7 +153,7 @@
         // コマンドを待避
         [self setCommand:command];
         // HIDインターフェース経由でファームウェアをリセット
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
     }
 
@@ -161,7 +161,7 @@
         if (success == false) {
             [self setErrorMessageOfCommand:MSG_FIRMWARE_RESET_UNSUPP];
         }
-        [self exitCommandProcess:success];
+        [self notifyProcessTerminated:success];
     }
 
 #pragma mark - For PIVPreferenceWindow open/close
@@ -208,46 +208,46 @@
 
 #pragma mark - Private common methods
 
-    - (void)startCommandProcess {
+    - (void)notifyProcessStarted {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
                 break;
             case COMMAND_CCID_PIV_CHANGE_PUK:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
                 break;
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
                 break;
             case COMMAND_CCID_PIV_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
                 break;
             case COMMAND_CCID_PIV_STATUS:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
+                [self setNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
+                [self setNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
             default:
                 break;
         }
         // コマンド開始メッセージをログファイルに出力
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self processNameOfCommand]];
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
         [[ToolLogFile defaultLogger] info:startMsg];
     }
 
-    - (void)exitCommandProcess:(bool)success {
+    - (void)notifyProcessTerminated:(bool)success {
         // CCIDデバイスから切断
         [[self toolCCIDHelper] ccidHelperWillDisconnect];
         // コマンド終了メッセージを生成
-        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
                                 success ? MSG_SUCCESS : MSG_FAILURE];
         if (success == false) {
             // 処理失敗時はエラーメッセージをログ出力
@@ -257,12 +257,12 @@
                 [[ToolLogFile defaultLogger] error:logMessage];
             }
             // コマンド異常終了メッセージをログ出力
-            if ([self processNameOfCommand]) {
+            if ([self nameOfCommand]) {
                 [[ToolLogFile defaultLogger] error:endMsg];
             }
         } else {
             // コマンド正常終了メッセージをログ出力
-            if ([self processNameOfCommand]) {
+            if ([self nameOfCommand]) {
                 [[ToolLogFile defaultLogger] info:endMsg];
             }
         }
@@ -284,7 +284,7 @@
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             [self setErrorMessageOfCommand:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // コマンドに応じ、以下の処理に分岐
@@ -307,7 +307,7 @@
                 [self doYkPivStatusProcess];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -326,7 +326,7 @@
             } else {
                 [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
             }
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // PIV管理機能認証レスポンスに対する処理を続行
@@ -354,7 +354,7 @@
                 [self doYkPivStatusProcessWithPinRetryResponse:response status:sw];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -369,7 +369,7 @@
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_PKEY_FAILED withImporter:[self toolPIVImporter]];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功のログを出力
@@ -394,7 +394,7 @@
                 [self doYkPivSetCHUIDProcessContinue:response status:sw];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -412,7 +412,7 @@
                 [self doResponseYkPivStatusFetchObjects:response status:sw];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -445,7 +445,7 @@
         NSData *witness = [self decryptPivAdminAuthWitness:encrypted];
         if (witness == nil) {
             [self setLastErrorMessageWithFuncError:MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 8バイトのランダムベクターを送信チャレンジに設定
@@ -464,7 +464,7 @@
         }
         // 送受信チャレンジの内容一致チェック
         if ([self verifyPivAuthAdminChallenge:insAuthResp] == false) {
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // コマンドに応じ、以下の処理に分岐
@@ -478,7 +478,7 @@
                 [self doYkPivSetCHUIDProcess];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -504,7 +504,7 @@
 
     - (void)doYkPivImportKey {
         // 処理開始メッセージをログ出力
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         // PIV管理機能認証（往路）を実行
         [self doRequestPivAdminAuth];
     }
@@ -513,7 +513,7 @@
         // ステータスワードをチェックし、PIN認証の成否を判定
         if ([self checkPivInsReplyUsingPinOrPukWithStatus:sw isPinAuth:true] == false) {
             // PIN認証が失敗した場合は処理終了
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 秘密鍵インポート処理を実行
@@ -533,20 +533,20 @@
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_CERT_FAILED withImporter:[self toolPIVImporter]];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功のログを出力
         [self outputLogWithFormat:MSG_PIV_CERT_PEM_IMPORTED withImporter:[self toolPIVImporter]];
         // 制御を戻す
-        [self exitCommandProcess:true];
+        [self notifyProcessTerminated:true];
     }
 
 #pragma mark - CHUID and CCC management functions
 
     - (void)doYkPivSetCHUID {
         // 処理開始メッセージをログ出力
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         // PIV管理機能認証（往路）を実行
         [self doRequestPivAdminAuth];
     }
@@ -564,7 +564,7 @@
         if (sw != SW_SUCCESS) {
             // 処理失敗ログを出力し、制御を戻す
             [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:[self cccImportProcessing]];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功ログを出力
@@ -574,7 +574,7 @@
             // フラグをクリア
             [self setCccImportProcessing:false];
             // 制御を戻す
-            [self exitCommandProcess:true];
+            [self notifyProcessTerminated:true];
         } else {
             // フラグを設定
             [self setCccImportProcessing:true];
@@ -597,7 +597,7 @@
 
     - (void)doYkPivStatusProcess {
         // 処理開始メッセージをログ出力
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         // PINリトライカウンターを照会
         [self doRequestPivInsVerify:nil];
     }
@@ -616,7 +616,7 @@
         } else {
             // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED];
-            [self exitCommandProcess:false];
+            [self notifyProcessTerminated:false];
         }
     }
 
@@ -655,10 +655,10 @@
                 [self doYkPivStatusFetchObjects:PIV_OBJ_KEY_MANAGEMENT];
                 break;
             case PIV_OBJ_KEY_MANAGEMENT:
-                [self exitCommandProcess:true];
+                [self notifyProcessTerminated:true];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
@@ -686,11 +686,11 @@
                 p2 = PIV_KEY_PIN;
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 return;
         }
         // 処理開始メッセージをログ出力
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         // コマンドAPDUを生成
         NSData *apdu = [self getPivChangePinData:[self pinCodeCur] withPinCodeNew:[self pinCodeNew]];
         // コマンドを実行
@@ -739,17 +739,17 @@
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                [self exitCommandProcess:ret];
+                [self notifyProcessTerminated:ret];
                 break;
             default:
-                [self exitCommandProcess:false];
+                [self notifyProcessTerminated:false];
                 break;
         }
     }
 
     - (void)doYkPivInsReset {
         // 処理開始メッセージをログ出力
-        [self startCommandProcess];
+        [self notifyProcessStarted];
         // コマンドを実行
         [self setCommandIns:YKPIV_INS_RESET];
         [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:nil le:0xff];
@@ -766,7 +766,7 @@
             NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
             [self setErrorMessageOfCommand:msg];
         }
-        [self exitCommandProcess:(sw == SW_SUCCESS)];
+        [self notifyProcessTerminated:(sw == SW_SUCCESS)];
     }
 
 #pragma mark - Utility functions
