@@ -34,6 +34,8 @@
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
     @property (nonatomic) ToolPIVImporter   *toolPIVImporter;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString          *errorMessageOfCommand;
     // PIV管理機能認証（往路）のチャレンジを保持
     @property (nonatomic) NSData            *pivAuthChallenge;
     // CCCインポート処理が実行中かどうかを保持
@@ -83,7 +85,7 @@
         // コマンドを待避
         [self setCommand:command];
         // コマンド実行時のエラーテキストをクリア
-        [self setLastErrorMessage:nil];
+        [self setErrorMessageOfCommand:nil];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
@@ -100,7 +102,7 @@
                     return;
                 } else {
                     // PIV機能を認識できなかった旨のエラーメッセージを設定
-                    [self setLastErrorMessage:MSG_ERROR_PIV_SELECTING_CARD_FAIL];
+                    [self setErrorMessageOfCommand:MSG_ERROR_PIV_SELECTING_CARD_FAIL];
                 }
                 break;
             default:
@@ -195,7 +197,7 @@
 
     - (void)commandDidResetFirmware:(bool)success {
         if (success == false) {
-            [self setLastErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
+            [self setErrorMessageOfCommand:MSG_FIRMWARE_RESET_UNSUPP];
         }
         [self exitCommandProcess:success];
     }
@@ -210,7 +212,7 @@
     - (void)doResponsePivInsSelectApplication:(NSData *)response status:(uint16_t)sw {
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            [self setLastErrorMessage:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
+            [self setErrorMessageOfCommand:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
             [self exitCommandProcess:false];
             return;
         }
@@ -249,9 +251,9 @@
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             if ([self pivAuthChallenge] == nil) {
-                [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED];
+                [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED];
             } else {
-                [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
+                [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
             }
             [self exitCommandProcess:false];
             return;
@@ -347,7 +349,7 @@
     - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
         NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
-        [self setLastErrorMessage:msg];
+        [self setErrorMessageOfCommand:msg];
     }
 
     - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
@@ -421,7 +423,7 @@
         }
         if ([challenge isEqualToData:[self pivAuthChallenge]] == false) {
             // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
-            [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF];
+            [self setErrorMessageOfCommand:MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF];
             return false;
         }
         return true;
@@ -643,16 +645,16 @@
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
             NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
-            [self setLastErrorMessage:msg];
+            [self setErrorMessageOfCommand:msg];
         }
         // PINブロック or リトライカウンターの状態に応じメッセージを編集
         if (isPinBlocked) {
-            [self setLastErrorMessage:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
+            [self setErrorMessageOfCommand:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
 
         } else if (retries < 3) {
             NSString *name = isPinAuth ? @"PIN" : @"PUK";
             NSString *msg = [[NSString alloc] initWithFormat:MSG_ERROR_PIV_WRONG_PIN, name, name, retries];
-            [self setLastErrorMessage:msg];
+            [self setErrorMessageOfCommand:msg];
         }
         return (sw == SW_SUCCESS);
     }
@@ -686,12 +688,12 @@
         // ステータスワードの内容に応じメッセージを編集
         if (sw == SW_SEC_STATUS_NOT_SATISFIED) {
             // PIN／PUKがまだブロックされていない場合
-            [self setLastErrorMessage:MSG_ERROR_PIV_RESET_FAIL];
+            [self setErrorMessageOfCommand:MSG_ERROR_PIV_RESET_FAIL];
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
             NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
-            [self setLastErrorMessage:msg];
+            [self setErrorMessageOfCommand:msg];
         }
         [self exitCommandProcess:(sw == SW_SUCCESS)];
     }
@@ -741,9 +743,9 @@
                                 success ? MSG_SUCCESS : MSG_FAILURE];
         if (success == false) {
             // 処理失敗時はエラーメッセージをログ出力
-            if ([self lastErrorMessage]) {
+            if ([self errorMessageOfCommand]) {
                 // 出力前に改行文字を削除
-                NSString *logMessage = [[self lastErrorMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                NSString *logMessage = [[self errorMessageOfCommand] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
                 [[ToolLogFile defaultLogger] error:logMessage];
             }
             // コマンド異常終了メッセージをログ出力
@@ -760,7 +762,7 @@
         Command command = [self command];
         [self clearCommandParameters];
         // 画面に制御を戻す
-        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success withErrorMessage:[self lastErrorMessage]];
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
 #pragma mark - Utility functions
@@ -867,7 +869,7 @@
     - (void)setLastErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
         NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
         NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
-        [self setLastErrorMessage:errorMsg];
+        [self setErrorMessageOfCommand:errorMsg];
     }
 
 @end
