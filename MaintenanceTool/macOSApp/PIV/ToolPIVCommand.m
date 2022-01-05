@@ -206,6 +206,73 @@
         [self ccidHelperWillProcess:command];
     }
 
+#pragma mark - Private common methods
+
+    - (void)startCommandProcess {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
+                break;
+            default:
+                break;
+        }
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self processNameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
+    }
+
+    - (void)exitCommandProcess:(bool)success {
+        // CCIDデバイスから切断
+        [[self toolCCIDHelper] ccidHelperWillDisconnect];
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success == false) {
+            // 処理失敗時はエラーメッセージをログ出力
+            if ([self errorMessageOfCommand]) {
+                // 出力前に改行文字を削除
+                NSString *logMessage = [[self errorMessageOfCommand] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                [[ToolLogFile defaultLogger] error:logMessage];
+            }
+            // コマンド異常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] error:endMsg];
+            }
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
+        }
+        // パラメーターを初期化
+        Command command = [self command];
+        [self clearCommandParameters];
+        // 画面に制御を戻す
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
+    }
+
 #pragma mark - Command functions
 
     - (void)doRequestPivInsSelectApplication {
@@ -700,73 +767,6 @@
             [self setErrorMessageOfCommand:msg];
         }
         [self exitCommandProcess:(sw == SW_SUCCESS)];
-    }
-
-#pragma mark - Private common methods
-
-    - (void)startCommandProcess {
-        // コマンドに応じ、以下の処理に分岐
-        switch ([self command]) {
-            case COMMAND_CCID_PIV_CHANGE_PIN:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PUK:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
-                break;
-            case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
-                break;
-            case COMMAND_CCID_PIV_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
-                break;
-            case COMMAND_CCID_PIV_IMPORT_KEY:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
-                break;
-            case COMMAND_CCID_PIV_SET_CHUID:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
-                break;
-            case COMMAND_CCID_PIV_STATUS:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
-                break;
-            case COMMAND_HID_FIRMWARE_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
-                break;
-            default:
-                break;
-        }
-        // コマンド開始メッセージをログファイルに出力
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self processNameOfCommand]];
-        [[ToolLogFile defaultLogger] info:startMsg];
-    }
-
-    - (void)exitCommandProcess:(bool)success {
-        // CCIDデバイスから切断
-        [[self toolCCIDHelper] ccidHelperWillDisconnect];
-        // コマンド終了メッセージを生成
-        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
-                                success ? MSG_SUCCESS : MSG_FAILURE];
-        if (success == false) {
-            // 処理失敗時はエラーメッセージをログ出力
-            if ([self errorMessageOfCommand]) {
-                // 出力前に改行文字を削除
-                NSString *logMessage = [[self errorMessageOfCommand] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-                [[ToolLogFile defaultLogger] error:logMessage];
-            }
-            // コマンド異常終了メッセージをログ出力
-            if ([self processNameOfCommand]) {
-                [[ToolLogFile defaultLogger] error:endMsg];
-            }
-        } else {
-            // コマンド正常終了メッセージをログ出力
-            if ([self processNameOfCommand]) {
-                [[ToolLogFile defaultLogger] info:endMsg];
-            }
-        }
-        // パラメーターを初期化
-        Command command = [self command];
-        [self clearCommandParameters];
-        // 画面に制御を戻す
-        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
 #pragma mark - Utility functions
