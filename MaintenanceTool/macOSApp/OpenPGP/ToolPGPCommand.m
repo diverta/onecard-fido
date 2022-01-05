@@ -141,7 +141,7 @@ typedef enum : NSInteger {
 
 #pragma mark - Public methods
 
-    - (void)installPGPKeyWillStart:(id)sender
+    - (void)commandWillInstallPGPKey:(id)sender
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
         passphrase:(NSString *)passphrase
         pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
@@ -161,7 +161,7 @@ typedef enum : NSInteger {
         [self doRequestGPGVersion];
     }
     
-    - (void)pgpStatusWillStart:(id)sender {
+    - (void)commandWillPGPStatus:(id)sender {
         // 実行コマンドを保持
         [self setCommand:COMMAND_OPENPGP_STATUS];
         // バージョン照会から開始
@@ -169,7 +169,7 @@ typedef enum : NSInteger {
         [self doRequestGPGVersion];
     }
 
-    - (void)pgpResetWillStart:(id)sender {
+    - (void)commandWillPGPReset:(id)sender {
         // 実行コマンドを保持
         [self setCommand:COMMAND_OPENPGP_RESET];
         // バージョン照会から開始
@@ -177,7 +177,7 @@ typedef enum : NSInteger {
         [self doRequestGPGVersion];
     }
 
-    - (NSString *)pgpStatusInfoString {
+    - (NSString *)getPGPStatusInfoString {
         // ステータス照会情報を戻す
         return [self statusInfoString];
     }
@@ -241,7 +241,7 @@ typedef enum : NSInteger {
         [[self pgpPreferenceWindow] toolPGPCommandDidProcess:command withResult:success withErrorMessage:[self errorMessageOfCommand]];
     }
 
-#pragma mark - Private methods
+#pragma mark - Command functions
 
     - (void)doRequestGPGVersion {
         // MacGPGコマンドが存在するかチェック

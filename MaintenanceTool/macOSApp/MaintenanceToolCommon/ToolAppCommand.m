@@ -477,27 +477,25 @@
         [self commandStartedProcess:command type:TRANSPORT_HID];
     }
 
-    - (void)hidCommandDidDetectConnect {
-        [self notifyToolCommandMessage:MSG_HID_CONNECTED];
-        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
-        // DFU処理にHID接続開始を通知
-        [[self toolUSBDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
-    }
-
-    - (void)hidCommandDidDetectConnect:(Command)command toolCommandRef:(id)ref {
+    - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref {
         [self notifyToolCommandMessage:MSG_HID_CONNECTED];
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // 所定のコマンドにHID接続を通知
+        if (command == COMMAND_USB_DFU) {
+            [[self toolUSBDFUCommand] hidCommandDidDetectConnect:command forCommandRef:ref];
+        }
         if (command == COMMAND_HID_FIRMWARE_RESET) {
             [self completedResetFirmware:command success:true forCommandRef:ref];
         }
     }
 
-    - (void)hidCommandDidDetectRemoval {
+    - (void)hidCommandDidDetectRemoval:(Command)command forCommandRef:(id)ref {
         [self notifyToolCommandMessage:MSG_HID_REMOVED];
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
-        // DFU処理にHID接続切断を通知
-        [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
+        // 所定のコマンドにHID接続切断を通知
+        if (command == COMMAND_USB_DFU) {
+            [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:command forCommandRef:ref];
+        }
     }
 
 @end

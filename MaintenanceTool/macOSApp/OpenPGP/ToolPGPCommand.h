@@ -7,21 +7,26 @@
 #ifndef ToolPGPCommand_h
 #define ToolPGPCommand_h
 
+#import "ToolCommon.h"
+
 @interface ToolPGPCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)commandWillResetFirmware:(Command)command;
-    - (void)commandDidResetFirmware:(bool)success;
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
-    - (void)installPGPKeyWillStart:(id)sender
+
+    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandDidResetFirmware:(bool)success;
+
+    - (void)commandWillInstallPGPKey:(id)sender
         realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
         passphrase:(NSString *)passphrase
         pubkeyFolderPath:(NSString *)pubkeyFolder
         backupFolderPath:(NSString *)backupFolder;
-    - (void)pgpStatusWillStart:(id)sender;
-    - (void)pgpResetWillStart:(id)sender;
-    - (NSString *)pgpStatusInfoString;
+    - (void)commandWillPGPStatus:(id)sender;
+    - (void)commandWillPGPReset:(id)sender;
+
+    - (NSString *)getPGPStatusInfoString;
 
 @end
 

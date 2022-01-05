@@ -36,8 +36,9 @@
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
-    // HID接続の検知時、所定コマンドへの通知の要否を保持
+    // HID接続／切断の検知時、所定コマンドへの通知の要否を保持
     @property(nonatomic) bool       needNotifyDetectConnect;
+    @property(nonatomic) bool       needNotifyDetectRemoval;
     // 呼び出し元のコマンドオブジェクト参照を保持
     @property(nonatomic, weak) id   toolCommandRef;
 
@@ -421,8 +422,9 @@
     }
 
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
-        // HID接続検知時、所定のコマンドに通知しないようにする
+        // HID接続／切断検知時、所定のコマンドに通知しないようにする
         [self setNeedNotifyDetectConnect:false];
+        [self setNeedNotifyDetectRemoval:false];
         // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
         [self setToolCommandRef:commandRef];
         [self setProcessData:data];
@@ -493,6 +495,16 @@
     - (void)hidHelperWillDetectConnect:(Command)command forCommand:(id)commandRef {
         // HID接続が検知されたら、所定のコマンドに通知
         [self setNeedNotifyDetectConnect:true];
+        [self setNeedNotifyDetectRemoval:false];
+        // コマンドと呼出元の参照を待避
+        [self setCommand:command];
+        [self setToolCommandRef:commandRef];
+    }
+
+    - (void)hidHelperWillDetectRemoval:(Command)command forCommand:(id)commandRef {
+        // HID接続の切断が検知されたら、所定のコマンドに通知
+        [self setNeedNotifyDetectConnect:false];
+        [self setNeedNotifyDetectRemoval:true];
         // コマンドと呼出元の参照を待避
         [self setCommand:command];
         [self setToolCommandRef:commandRef];
@@ -587,15 +599,23 @@
     - (void)hidHelperDidDetectConnect {
         if ([self needNotifyDetectConnect]) {
             // HID接続検知を所定のコマンドに通知する必要がある場合
-            [[self delegate] hidCommandDidDetectConnect:[self command] toolCommandRef:[self toolCommandRef]];
+            [self setNeedNotifyDetectConnect:false];
+            [[self delegate] hidCommandDidDetectConnect:[self command] forCommandRef:[self toolCommandRef]];
         } else {
             // HID接続検知を所定のコマンドに通知する必要がない場合
-            [[self delegate] hidCommandDidDetectConnect];
+            [[self delegate] hidCommandDidDetectConnect:COMMAND_NONE forCommandRef:nil];
         }
     }
 
     - (void)hidHelperDidDetectRemoval {
-        [[self delegate] hidCommandDidDetectRemoval];
+        if ([self needNotifyDetectRemoval]) {
+            // HID接続切断検知を所定のコマンドに通知する必要がある場合
+            [self setNeedNotifyDetectRemoval:false];
+            [[self delegate] hidCommandDidDetectRemoval:[self command] forCommandRef:[self toolCommandRef]];
+        } else {
+            // HID接続切断検知を所定のコマンドに通知する必要がない場合
+            [[self delegate] hidCommandDidDetectRemoval:COMMAND_NONE forCommandRef:nil];
+        }
     }
 
 #pragma mark - Common method

@@ -16,8 +16,8 @@
     - (bool)checkUSBHIDConnection;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolHIDCommandRef:(id)toolHIDCommandRef;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
-    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
+    - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref;
+    - (void)hidCommandDidDetectRemoval:(Command)command forCommandRef:(id)ref;
     - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)response;
     - (void)commandWillChangeToBootloaderMode;
 

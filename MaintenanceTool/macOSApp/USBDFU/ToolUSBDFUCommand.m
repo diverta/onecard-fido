@@ -124,7 +124,7 @@
 
 #pragma mark - Call back from AppDelegate
 
-    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
+    - (void)hidCommandDidDetectConnect:(Command)command forCommandRef:(id)ref {
         // 認証器の現在バージョンをクリア
         [self setCurrentVersion:@""];
         // バージョン更新判定フラグがセットされていない場合は終了
@@ -132,10 +132,9 @@
             return;
         }
         // USB HID経由でバージョン照会コマンドを実行
-        if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
+        if ([ref isMemberOfClass:[ToolUSBDFUCommand class]] == false) {
             return;
         }
-        [self setToolHIDCommand:(ToolHIDCommand *)toolHIDCommandRef];
         dispatch_async([self subQueue], ^{
             // サブスレッドでバージョン情報照会を実行 --> notifyFirmwareVersionが呼び出される
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_FOR_DFU
@@ -143,8 +142,11 @@
         });
     }
 
-    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef {
+    - (void)hidCommandDidDetectRemoval:(Command)command forCommandRef:(id)ref {
         // ブートローダーモード遷移判定フラグがセットされている場合（モード遷移完了待ち）
+        if ([ref isMemberOfClass:[ToolUSBDFUCommand class]] == false) {
+            return;
+        }
         if ([self needCheckBootloaderMode]) {
             // ブートローダーモード遷移判定フラグをリセット
             [self setNeedCheckBootloaderMode:false];
@@ -214,8 +216,10 @@
     - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd {
         // ブートローダーモード遷移コマンド成功時
         if (cmd == HID_CMD_BOOTLOADER_MODE) {
-            // ブートローダーモード遷移判定フラグをセット --> hidCommandDidDetectRemovalが呼び出される
+            // ブートローダーモード遷移判定フラグをセット
             [self setNeedCheckBootloaderMode:true];
+            // 接続断まで待機 --> hidCommandDidDetectRemoval が呼び出される
+            [[self toolHIDCommand] hidHelperWillDetectRemoval:COMMAND_USB_DFU forCommand:self];
 
         } else {
             // ブートローダーモード遷移コマンド失敗時は、ブートローダーモード遷移判定フラグをリセット
@@ -546,6 +550,8 @@
             [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
             [self setNeedCompareUpdateVersion:true];
             [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
+            // 再接続まで待機 --> hidCommandDidDetectConnect が呼び出される
+            [[self toolHIDCommand] hidHelperWillDetectConnect:COMMAND_USB_DFU forCommand:self];
         }
         return ret;
     }

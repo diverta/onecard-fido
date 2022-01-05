@@ -350,19 +350,19 @@
         NSString *pubkeyFolderPath = [[self textPubkeyFolderPath] stringValue];
         NSString *backupFolderPath = [[self textBackupFolderPath] stringValue];
         NSString *passphrase = [[self textPinConfirm] stringValue];
-        [[self toolPGPCommand] installPGPKeyWillStart:self
+        [[self toolPGPCommand] commandWillInstallPGPKey:self
             realName:realName mailAddress:mailAddress comment:comment passphrase:passphrase
             pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
     }
 
     - (void)commandWillPGPStatus {
         // PGPステータス照会処理を実行
-        [[self toolPGPCommand] pgpStatusWillStart:self];
+        [[self toolPGPCommand] commandWillPGPStatus:self];
     }
 
     - (void)commandWillPGPReset {
         // PGPリセット処理を実行
-        [[self toolPGPCommand] pgpResetWillStart:self];
+        [[self toolPGPCommand] commandWillPGPReset:self];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
@@ -387,7 +387,7 @@
                     // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
                     [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
                         withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
-                        infoString:[[self toolPGPCommand] pgpStatusInfoString]];
+                        infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
                     return;
                 }
                 name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
