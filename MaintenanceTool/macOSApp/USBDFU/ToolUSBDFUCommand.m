@@ -142,8 +142,11 @@
         });
     }
 
-    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef {
+    - (void)hidCommandDidDetectRemoval:(Command)command forCommandRef:(id)ref {
         // ブートローダーモード遷移判定フラグがセットされている場合（モード遷移完了待ち）
+        if ([ref isMemberOfClass:[ToolUSBDFUCommand class]] == false) {
+            return;
+        }
         if ([self needCheckBootloaderMode]) {
             // ブートローダーモード遷移判定フラグをリセット
             [self setNeedCheckBootloaderMode:false];
@@ -213,8 +216,10 @@
     - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd {
         // ブートローダーモード遷移コマンド成功時
         if (cmd == HID_CMD_BOOTLOADER_MODE) {
-            // ブートローダーモード遷移判定フラグをセット --> hidCommandDidDetectRemovalが呼び出される
+            // ブートローダーモード遷移判定フラグをセット
             [self setNeedCheckBootloaderMode:true];
+            // 接続断まで待機 --> hidCommandDidDetectRemoval が呼び出される
+            [[self toolHIDCommand] hidHelperWillDetectRemoval:COMMAND_USB_DFU forCommand:self];
 
         } else {
             // ブートローダーモード遷移コマンド失敗時は、ブートローダーモード遷移判定フラグをリセット

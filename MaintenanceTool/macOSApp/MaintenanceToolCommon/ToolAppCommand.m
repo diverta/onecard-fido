@@ -489,11 +489,13 @@
         }
     }
 
-    - (void)hidCommandDidDetectRemoval {
+    - (void)hidCommandDidDetectRemoval:(Command)command forCommandRef:(id)ref {
         [self notifyToolCommandMessage:MSG_HID_REMOVED];
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
-        // DFU処理にHID接続切断を通知
-        [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
+        // 所定のコマンドにHID接続切断を通知
+        if (command == COMMAND_USB_DFU) {
+            [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:command forCommandRef:ref];
+        }
     }
 
 @end
