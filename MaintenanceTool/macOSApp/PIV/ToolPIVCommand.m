@@ -169,14 +169,14 @@
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporter:(ToolPIVImporter *)importer {
+    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporterRef:(id)importer {
         [self setPinCodeCur:pinCodeCur];
-        [self setToolPIVImporter:importer];
+        [self setToolPIVImporter:(ToolPIVImporter *)importer];
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer {
-        [self setToolPIVImporter:importer];
+    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporterRef:(id)importer {
+        [self setToolPIVImporter:(ToolPIVImporter *)importer];
         [self ccidHelperWillProcess:command];
     }
 

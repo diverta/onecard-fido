@@ -8,6 +8,7 @@
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
+#import "ToolPIVImporter.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
@@ -251,7 +252,7 @@
     - (void)commandWillSetCHUIDAndCCC {
         ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
         [importer generateChuidAndCcc];
-        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporter:importer];
+        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporterRef:importer];
     }
 
     - (void)commandWillReset {
@@ -275,7 +276,7 @@
             [ToolPopupWindow critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info];
             return false;
         }
-        [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporter:importer];
+        [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
         return true;
     }
 
