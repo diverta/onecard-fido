@@ -46,11 +46,6 @@
             hidMain = h;
         }
 
-        public void SetTitleAndVersionText()
-        {
-            // ツール名、バージョンを引き渡し
-        }
-
         public void ShowDialog()
         {
             // TODO: 仮の実装です。

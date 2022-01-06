@@ -54,9 +54,7 @@ namespace MaintenanceToolGUI
             toolPreference.SetTitleAndVersionText();
 
             // OpenPGP機能設定画面を生成
-            // タイトル、バージョンを引き渡し
             toolPGP = new ToolPGP(this, hid);
-            toolPGP.SetTitleAndVersionText();
 
             // パラメーター入力画面を生成
             PinCodeParamFormRef = new PinCodeParamForm();
