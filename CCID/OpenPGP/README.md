@@ -20,7 +20,11 @@ WIndows 10環境では、CCIDドライバーのインストールは不要にな
 
 - <b>[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)</b><br>
 GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。<br>
-GPG Suiteは、PGP鍵インストール時に必要となりますので、事前にインストール願います。
+GPG Suiteは、macOS環境へのPGP鍵インストール時に必要となりますので、事前にインストール願います。
+
+- <b>[Gpg4winインストール手順](../../CCID/OpenPGP/GPGINSTWIN.md)</b><br>
+GPGツール群「[Gpg4win](https://www.gnupg.org)」を、Windows環境にインストールする手順について掲載しています。<br>
+GPG Suiteは、Windows環境へのPGP鍵インストール時に必要となりますので、事前にインストール願います。
 
 - <b>[PGP鍵インストール手順書](../../MaintenanceTool/macOSApp/PGPKEYINST.md)</b><br>
 管理ツールを使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
