@@ -369,7 +369,14 @@ namespace MaintenanceToolCommon
             TestCtapHidPing,
             TestMakeCredential,
             TestGetAssertion,
-            AuthReset
+            AuthReset,
+            //
+            // OpenPGP
+            //
+            OpenPGPInstallKeys,
+            OpenPGPStatus,
+            OpenPGPReset,
+            HidFirmwareReset
         };
     }
 }

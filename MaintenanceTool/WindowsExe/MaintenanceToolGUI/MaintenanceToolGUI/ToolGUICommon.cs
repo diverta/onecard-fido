@@ -95,6 +95,9 @@
         public const string MSG_PROMPT_START_DFU_PROCESS = "ファームウェア新規導入処理を開始しますか？";
         public const string MSG_COMMENT_START_DFU_PROCESS = "署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち「はい」ボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。";
 
+        // OpenPGP機能設定関連
+        public const string MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL = "バージョン「4.0.0」以降のGpg4winをインストールしてから実行してください。";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書の削除";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
@@ -114,6 +117,10 @@
         public const string PROCESS_NAME_USB_DFU = "FIDO認証器のファームウェア更新(USB)";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
+        public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
+        public const string PROCESS_NAME_OPENPGP_INSTALL_KEYS = "PGP秘密鍵インストール";
+        public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報取得";
+        public const string PROCESS_NAME_OPENPGP_RESET = "OpenPGP機能リセット";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
