@@ -552,6 +552,10 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
+        private void buttonSetPgpParam_Click(object sender, EventArgs e)
+        {
+        }
+
         private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 管理ツールのログファイルを格納している

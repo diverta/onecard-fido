@@ -55,6 +55,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonPairing = new System.Windows.Forms.Button();
             this.buttonUnpairing = new System.Windows.Forms.Button();
+            this.buttonSetPgpParam = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -133,7 +134,7 @@
             this.DoHIDGetFlashInfoToolStripMenuItem,
             this.DoHIDGetVersionInfoToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
             // DoHIDCtap2TestToolStripMenuItem
@@ -178,7 +179,7 @@
             this.DoBLEU2fTestToolStripMenuItem,
             this.DoBLEPingTestToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoBLECtap2TestToolStripMenuItem
@@ -213,7 +214,7 @@
             // ToolPreferenceStripMenuItem
             // 
             this.ToolPreferenceStripMenuItem.Name = "ToolPreferenceStripMenuItem";
-            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
             this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
             // 
@@ -278,11 +279,22 @@
             this.buttonUnpairing.UseVisualStyleBackColor = true;
             this.buttonUnpairing.Click += new System.EventHandler(this.buttonUnpairing_Click);
             // 
+            // buttonSetPgpParam
+            // 
+            this.buttonSetPgpParam.Location = new System.Drawing.Point(422, 58);
+            this.buttonSetPgpParam.Name = "buttonSetPgpParam";
+            this.buttonSetPgpParam.Size = new System.Drawing.Size(150, 25);
+            this.buttonSetPgpParam.TabIndex = 19;
+            this.buttonSetPgpParam.Text = "OpenPGP機能設定";
+            this.buttonSetPgpParam.UseVisualStyleBackColor = true;
+            this.buttonSetPgpParam.Click += new System.EventHandler(this.buttonSetPgpParam_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
+            this.Controls.Add(this.buttonSetPgpParam);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonDFU);
             this.Controls.Add(this.buttonSetPivParam);
@@ -335,6 +347,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonPairing;
         private System.Windows.Forms.Button buttonUnpairing;
+        private System.Windows.Forms.Button buttonSetPgpParam;
     }
 }
 
