@@ -320,6 +320,8 @@
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.1.bin" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.3.zip" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.3.zip" />
+    <EmbeddedResource Include="Resources\card_reset.bat" />
+    <EmbeddedResource Include="Resources\card_reset.param" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
