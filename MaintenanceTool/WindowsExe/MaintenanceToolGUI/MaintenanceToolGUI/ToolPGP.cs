@@ -36,6 +36,9 @@ namespace MaintenanceToolGUI
         // エラーメッセージテキストを保持
         private string ErrorMessageOfCommand;
 
+        // 生成された作業用フォルダー名称を保持
+        private string TempFolderPath;
+
         // 実行する自動認証設定コマンドの種別
         public enum GPGCommand
         {
@@ -112,13 +115,128 @@ namespace MaintenanceToolGUI
                 return;
             }
 
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+                case AppCommon.RequestType.OpenPGPStatus:
+                    DoRequestCardStatus();
+                    break;
+                default:
+                    // 次の処理に移行
+                    DoRequestMakeTempFolder();
+                    break;
+            }
+        }
+
+        private void DoRequestCardStatus()
+        {
+        }
+
+        private void DoRequestMakeTempFolder()
+        {
+            // 作業用フォルダーをPC上に生成
+            MakeTempFolder();
+        }
+
+        private void DoResponseMakeTempFolder(bool success, string createdTempFolderPath)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL);
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // 生成された作業用フォルダー名称を保持
+            TempFolderPath = createdTempFolderPath;
+            AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, TempFolderPath));
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+                case AppCommon.RequestType.OpenPGPInstallKeys:
+                    DoRequestGenerateMainKey();
+                    break;
+                case AppCommon.RequestType.OpenPGPReset:
+                    DoRequestCardReset();
+                    break;
+                default:
+                    NotifyProcessTerminated(false);
+                    break;
+            }
+        }
+
+        private void DoRequestGenerateMainKey()
+        {
             // TODO: 仮の実装です。
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestCardReset()
+        {
+        }
+
+        private void DoRequestRemoveTempFolder()
+        {
+            // 作業用フォルダーをPC上から削除
+            RemoveTempFolder();
+        }
+
+        private void DoResponseRemoveTempFolder(bool success)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL);
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // 生成された作業用フォルダー名称をクリア
+            TempFolderPath = null;
+            AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_REMOVED_TEMPDIR);
+
+            // 処理完了を通知
             NotifyProcessTerminated(true);
         }
 
         //
         // 内部処理
         //
+        private void MakeTempFolder()
+        {
+            bool success = false;
+            string tempFilePath = "";
+
+            try {
+                // 作業用フォルダーを生成
+                tempFilePath = Path.GetTempFileName();
+                File.Delete(tempFilePath);
+                Directory.CreateDirectory(tempFilePath);
+                success = true;
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("ToolPGP.MakeTempFolder exception: {0}", e.Message));
+            }
+
+            // 生成された作業用フォルダーを戻す
+            DoResponseMakeTempFolder(success, tempFilePath);
+        }
+
+        private void RemoveTempFolder()
+        {
+            bool success = false;
+
+            try {
+                // 作業用フォルダーを、内包しているファイルごと削除
+                Directory.Delete(TempFolderPath, true);
+                success = true;
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("ToolPGP.RemoveTempFolder exception: {0}", e.Message));
+            }
+
+            // 作業用フォルダー削除の成否を戻す
+            DoResponseRemoveTempFolder(success);
+        }
+
         private bool CheckIfGPGVersionAvailable(string response)
         {
             // メッセージ検索用文字列
