@@ -2,6 +2,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -35,6 +37,9 @@ namespace MaintenanceToolGUI
 
         // エラーメッセージテキストを保持
         private string ErrorMessageOfCommand;
+
+        // コマンドが成功したかどうかを保持
+        private bool CommandSuccess;
 
         // ステータス照会情報を保持
         private string StatusInfoString;
@@ -109,6 +114,18 @@ namespace MaintenanceToolGUI
 
             // バージョン照会から開始
             NotifyProcessStarted(AppCommon.RequestType.OpenPGPStatus);
+            DoRequestGPGVersion();
+        }
+
+        public void DoCommandPGPReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (mainForm.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // バージョン照会から開始
+            NotifyProcessStarted(AppCommon.RequestType.OpenPGPReset);
             DoRequestGPGVersion();
         }
 
@@ -210,6 +227,48 @@ namespace MaintenanceToolGUI
 
         private void DoRequestCardReset()
         {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_reset.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "card_reset.param";
+            if (WriteScriptToTempFolder(paramName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} --no-tty", TempFolderPath);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_RESET, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseCardReset(bool success, string response)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(response)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL);
+                }
+
+            } else {
+                // スクリプト正常終了の場合は副鍵３点が存在しない事をチェック
+                if (CheckIfNoSubKeyExistFromResponse(response)) {
+                    CommandSuccess = true;
+                } else {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED);
+                }
+            }
+
+            // 後処理に移行
+            DoRequestRemoveTempFolder();
         }
 
         private void DoRequestRemoveTempFolder()
@@ -232,7 +291,7 @@ namespace MaintenanceToolGUI
             AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_REMOVED_TEMPDIR);
 
             // 処理完了を通知
-            NotifyProcessTerminated(true);
+            NotifyProcessTerminated(CommandSuccess);
         }
 
         //
@@ -244,8 +303,7 @@ namespace MaintenanceToolGUI
             string keyword = "selecting card failed";
 
             // 改行文字で区切られた文字列を分割
-            string[] responseArray = Regex.Split(response, "\r\n|\n");
-            foreach (string text in responseArray) {
+            foreach (string text in TextArrayOfResponse(response)) {
                 if (text.Contains(keyword)) {
                     return true;
                 }
@@ -296,8 +354,7 @@ namespace MaintenanceToolGUI
             string keyword = "gpg (GnuPG) ";
 
             // 改行文字で区切られた文字列を分割
-            string[] responseArray = Regex.Split(response, "\r\n|\n");
-            foreach (string text in responseArray) {
+            foreach (string text in TextArrayOfResponse(response)) {
                 if (text.StartsWith(keyword)) {
                     // バージョン文字列を抽出
                     string versionStr = text.Replace(keyword, "");
@@ -310,6 +367,126 @@ namespace MaintenanceToolGUI
             }
             AppCommon.OutputLogDebug("GnuPG is not installed yet");
             return false;
+        }
+
+        private bool CheckIfNoSubKeyExistFromResponse(string response)
+        {
+            // ステータス開始行の有無を保持
+            bool header = false;
+
+            // 副鍵の有無を保持
+            bool subKeyS = false;
+            bool subKeyE = false;
+            bool subKeyA = false;
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains("Reader ...........:")) {
+                    header = true;
+                } else if (text.Contains("Signature key")) {
+                    subKeyS = text.Contains("[none]");
+                } else if (text.Contains("Encryption key")) {
+                    subKeyE = text.Contains("[none]");
+                } else if (text.Contains("Authentication key")) {
+                    subKeyA = text.Contains("[none]");
+                }
+            }
+
+            // ３点の副鍵が削除されていれば true を戻す
+            return (header && subKeyS && subKeyE && subKeyA);
+        }
+
+        //
+        // スクリプト／パラメーターファイル関連
+        //
+        private bool WriteScriptToTempFolder(string scriptName)
+        {
+            // スクリプトをリソースから読込み
+            string scriptResourceName = GetScriptResourceName(scriptName);
+            if (scriptResourceName == null) {
+                AppCommon.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
+                return false;
+            }
+            string scriptContent = GetScriptResourceContent(scriptResourceName);
+            if (scriptContent == null) {
+                AppCommon.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
+                return false;
+            }
+
+            // スクリプトファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(scriptContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GetScriptResourceName(string scriptName)
+        {
+            // 検索対象のリソース名
+            string resourceName = string.Format("MaintenanceToolGUI.Resources.{0}", scriptName);
+
+            // このアプリケーションに同梱されているリソース名を取得
+            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            string[] resnames = myAssembly.GetManifestResourceNames();
+            foreach (string resName in resnames) {
+                // リソース名が
+                // "MaintenanceToolGUI.Resources.<scriptName>"
+                // という名称の場合
+                if (resName.Equals(resourceName)) {
+                    return resourceName;
+                }
+            }
+            return null;
+        }
+
+        // スクリプト内容を読込むための領域
+        private byte[] ScriptContentBytes = new byte[5120];
+        private int ScriptContentSize { get; set; }
+
+        private string GetScriptResourceContent(string resourceName)
+        {
+            // リソースファイルを開く
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Stream stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) {
+                return null;
+            }
+
+            try {
+                // リソースファイルを配列に読込
+                ScriptContentSize = stream.Read(ScriptContentBytes, 0, (int)stream.Length);
+
+                // リソースファイルを閉じる
+                stream.Close();
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("ToolPGP.GetScriptResourceContent exception:\n{0}", e.Message));
+                return null;
+            }
+
+            // 読込んだスクリプト内容を戻す
+            byte[] b = ScriptContentBytes.Take(ScriptContentSize).ToArray();
+            string text = Encoding.UTF8.GetString(b);
+            return text;
+        }
+
+        bool WriteStringToFile(string contents, string filePath)
+        {
+            try {
+                File.WriteAllText(filePath, contents);
+                return true;
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("ToolPGP.WriteStringToFile exception:\n{0}", e.Message));
+                return false;
+            }
+        }
+
+        string[] TextArrayOfResponse(string response)
+        {
+            return Regex.Split(response, "\r\n|\n");
         }
 
         //
@@ -344,11 +521,6 @@ namespace MaintenanceToolGUI
                 // コマンドからの応答を待機
                 child.WaitForExit();
 
-                // エラー出力があればログに出力
-                if (stdErrorString != null && stdErrorString.Length > 0) {
-                    AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine error:\n{0}", stdErrorString));
-                }
-
                 // コマンドの戻り値が０であれば true
                 if (child.ExitCode == 0) {
                     success = true;
@@ -376,7 +548,10 @@ namespace MaintenanceToolGUI
                 case GPGCommand.COMMAND_GPG_CARD_STATUS:
                     DoResponseCardStatus(success, response);
                     break;
-                default:
+                case GPGCommand.COMMAND_GPG_CARD_RESET:
+                    DoResponseCardReset(success, response);
+                    break;
+            default:
                     break;
             }
         }
@@ -386,6 +561,9 @@ namespace MaintenanceToolGUI
         //
         private void NotifyProcessStarted(AppCommon.RequestType requestType)
         {
+            // コマンド処理結果を初期化
+            CommandSuccess = false;
+
             // 処理機能に応じ、以下の処理に分岐
             RequestType = requestType;
             switch (RequestType) {
