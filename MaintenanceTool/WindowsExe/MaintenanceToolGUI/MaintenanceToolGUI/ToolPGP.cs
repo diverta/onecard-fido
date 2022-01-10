@@ -213,7 +213,7 @@ namespace MaintenanceToolGUI
                 success = true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.MakeTempFolder exception: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("ToolPGP.MakeTempFolder exception:\n{0}", e.Message));
             }
 
             // 生成された作業用フォルダーを戻す
@@ -230,7 +230,7 @@ namespace MaintenanceToolGUI
                 success = true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.RemoveTempFolder exception: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("ToolPGP.RemoveTempFolder exception:\n{0}", e.Message));
             }
 
             // 作業用フォルダー削除の成否を戻す
@@ -272,6 +272,7 @@ namespace MaintenanceToolGUI
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError = true;
             psi.StandardOutputEncoding = Encoding.UTF8;
+            psi.StandardErrorEncoding = Encoding.UTF8;
             if (workingDirectory != null) {
                 psi.WorkingDirectory = workingDirectory;
             }
@@ -292,7 +293,7 @@ namespace MaintenanceToolGUI
 
                 // エラー出力があればログに出力
                 if (stdErrorString != null && stdErrorString.Length > 0) {
-                    AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine error: {0}", stdErrorString));
+                    AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine error:\n{0}", stdErrorString));
                 }
 
                 // コマンドの戻り値が０であれば true
@@ -301,11 +302,15 @@ namespace MaintenanceToolGUI
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine exception: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine exception:\n{0}", e.Message));
             }
 
             // コマンドからの応答文字列を戻す
-            OnCommandTerminated(command, success, stdOutputString);
+            if (success) {
+                OnCommandTerminated(command, success, stdOutputString);
+            } else {
+                OnCommandTerminated(command, success, stdErrorString);
+            }
         }
 
         private void OnCommandTerminated(GPGCommand command, bool success, string response)
@@ -352,8 +357,8 @@ namespace MaintenanceToolGUI
 
         private void NotifyErrorMessage(string message)
         {
-            // エラーメッセージをログファイルに出力
-            AppCommon.OutputLogError(message);
+            // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
+            AppCommon.OutputLogError(message.Replace("\n", ""));
 
             // 戻り先画面に表示させるためのエラーメッセージを保持
             ErrorMessageOfCommand = message;
