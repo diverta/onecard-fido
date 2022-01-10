@@ -36,6 +36,9 @@ namespace MaintenanceToolGUI
         // エラーメッセージテキストを保持
         private string ErrorMessageOfCommand;
 
+        // ステータス照会情報を保持
+        private string StatusInfoString;
+
         // 生成された作業用フォルダー名称を保持
         private string TempFolderPath;
 
@@ -97,6 +100,18 @@ namespace MaintenanceToolGUI
             DoRequestGPGVersion();
         }
 
+        public void DoCommandPGPStatus()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (mainForm.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // バージョン照会から開始
+            NotifyProcessStarted(AppCommon.RequestType.OpenPGPStatus);
+            DoRequestGPGVersion();
+        }
+
         //
         // GPGコマンド実行関数
         // 
@@ -129,6 +144,29 @@ namespace MaintenanceToolGUI
 
         private void DoRequestCardStatus()
         {
+            // インストールされているGPGコマンドのバージョンを照会
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_STATUS, "gpg", "--card-status", null);
+        }
+
+        private void DoResponseCardStatus(bool success, string response)
+        {
+            // レスポンスをチェック
+            if (success) {
+                // レスポンスを保持
+                StatusInfoString = response;
+                AppCommon.OutputLogInfo(StatusInfoString);
+
+            } else {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(response)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL);
+                }
+            }
+
+            // 処理完了を通知
+            NotifyProcessTerminated(success);
         }
 
         private void DoRequestMakeTempFolder()
@@ -200,6 +238,21 @@ namespace MaintenanceToolGUI
         //
         // 内部処理
         //
+        private bool CheckIfCardErrorFromResponse(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "selecting card failed";
+
+            // 改行文字で区切られた文字列を分割
+            string[] responseArray = Regex.Split(response, "\r\n|\n");
+            foreach (string text in responseArray) {
+                if (text.Contains(keyword)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void MakeTempFolder()
         {
             bool success = false;
@@ -319,6 +372,9 @@ namespace MaintenanceToolGUI
             switch (command) {
                 case GPGCommand.COMMAND_GPG_VERSION:
                     DoResponseGPGVersion(success, response);
+                    break;
+                case GPGCommand.COMMAND_GPG_CARD_STATUS:
+                    DoResponseCardStatus(success, response);
                     break;
                 default:
                     break;
