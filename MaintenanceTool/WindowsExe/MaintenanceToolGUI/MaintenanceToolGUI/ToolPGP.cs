@@ -307,6 +307,40 @@ namespace MaintenanceToolGUI
 
         private void DoRequestExportPubkeyAndBackup()
         {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "export_pubkey_and_backup.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} {2} {3} {4}", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId,
+                toolPGPParameter.PubkeyFolderPath, toolPGPParameter.BackupFolderPath);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseExportPubkeyAndBackup(bool success, string response)
+        {
+            // レスポンスをチェック
+            if (CheckResponseOfScript(response)) {
+                if (CheckIfPubkeyAndBackupExist(response)) {
+                    // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, toolPGPParameter.PubkeyFolderPath));
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, toolPGPParameter.BackupFolderPath));
+                    DoRequestTransferSubkeyToCard();
+                    return;
+                }
+            }
+
+            // エラーメッセージを出力し、後処理に移行
+            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL);
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestTransferSubkeyToCard()
+        {
             // TODO: 仮の実装です。
             DoRequestRemoveTempFolder();
         }
@@ -550,6 +584,11 @@ namespace MaintenanceToolGUI
             return false;
         }
 
+        private bool CheckIfPubkeyAndBackupExist(string response)
+        {
+            return true;
+        }
+
         private bool CheckIfNoSubKeyExistFromResponse(string response)
         {
             // ステータス開始行の有無を保持
@@ -764,6 +803,9 @@ namespace MaintenanceToolGUI
                     break;
                 case GPGCommand.COMMAND_GPG_ADD_SUB_KEY:
                     DoResponseAddSubKey(success, response);
+                    break;
+                case GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP:
+                    DoResponseExportPubkeyAndBackup(success, response);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response);
