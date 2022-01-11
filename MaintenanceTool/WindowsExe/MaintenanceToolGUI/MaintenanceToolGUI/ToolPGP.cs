@@ -325,7 +325,7 @@ namespace MaintenanceToolGUI
         {
             // レスポンスをチェック
             if (CheckResponseOfScript(response)) {
-                if (CheckIfPubkeyAndBackupExist(response)) {
+                if (CheckIfPubkeyAndBackupExist()) {
                     // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
                     AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, toolPGPParameter.PubkeyFolderPath));
                     AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, toolPGPParameter.BackupFolderPath));
@@ -584,9 +584,28 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private bool CheckIfPubkeyAndBackupExist(string response)
+        private bool CheckIfPubkeyAndBackupExist()
         {
+            // 公開鍵ファイルがエクスポート先に存在するかチェック
+            if (CheckIfFileExist("public_key.pgp", toolPGPParameter.PubkeyFolderPath) == false) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
+                return false;
+            }
+
+            // バックアップファイルがエクスポート先に存在するかチェック
+            if (CheckIfFileExist("GNUPGHOME.tgz", toolPGPParameter.BackupFolderPath) == false) {
+                AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
+                return false;
+            }
+
             return true;
+        }
+
+        private bool CheckIfFileExist(string filename, string inFolderPath)
+        {
+            // 指定のフォルダー配下にファイルが存在している場合は true
+            string filePath = string.Format("{0}\\{1}", inFolderPath, filename);
+            return File.Exists(filePath);
         }
 
         private bool CheckIfNoSubKeyExistFromResponse(string response)

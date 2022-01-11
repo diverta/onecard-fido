@@ -100,6 +100,8 @@
         public const string MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL = "作業用フォルダーを生成出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL = "PGP秘密鍵（主鍵）を生成出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL = "PGP秘密鍵（副鍵）を生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL = "PGP公開鍵を指定フォルダーに生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_BACKUP_FAIL = "バックアップファイルを指定フォルダーに生成出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL = "PGP公開鍵／バックアップファイルの生成が失敗しました。";
         public const string MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL = "作業用フォルダーが消去出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL = "OpenPGPステータス照会コマンドの実行に失敗しました。";
