@@ -324,6 +324,8 @@
     <EmbeddedResource Include="Resources\card_reset.param" />
     <EmbeddedResource Include="Resources\generate_main_key.bat" />
     <EmbeddedResource Include="Resources\generate_main_key.param" />
+    <EmbeddedResource Include="Resources\add_sub_key.bat" />
+    <EmbeddedResource Include="Resources\add_sub_key.param" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
