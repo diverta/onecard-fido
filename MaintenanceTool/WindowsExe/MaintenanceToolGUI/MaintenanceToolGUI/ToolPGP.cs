@@ -268,6 +268,45 @@ namespace MaintenanceToolGUI
 
         private void DoRequestAddSubKey()
         {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "add_sub_key.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "add_sub_key.param";
+            if (WriteScriptToTempFolder(paramName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_ADD_SUB_KEY, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseAddSubKey(bool success, string response)
+        {
+            // レスポンスをチェック
+            if (CheckResponseOfScript(response)) {
+                if (CheckIfSubKeysExistFromResponse(response, false)) {
+                    // 副鍵が３点生成された場合は、次の処理に移行
+                    AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADDED_SUB_KEYS);
+                    DoRequestExportPubkeyAndBackup();
+                    return;
+                }
+            }
+
+            // エラーメッセージを出力し、後処理に移行
+            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL);
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestExportPubkeyAndBackup()
+        {
             // TODO: 仮の実装です。
             DoRequestRemoveTempFolder();
         }
@@ -453,6 +492,62 @@ namespace MaintenanceToolGUI
 
             // 抽出された鍵IDを戻す
             return keyid;
+        }
+
+        private bool CheckIfSubKeysExistFromResponse(string response, bool transferred)
+        {
+            // メッセージ検索用文字列
+            string keyword1 = string.Format("{0}\\pubring.kbx", TempFolderPath);
+            string keyword2 = transferred ? "ssb>  rsa2048" : "ssb   rsa2048";
+
+            // 副鍵生成の有無を保持
+            bool subKeyS = false;
+            bool subKeyE = false;
+            bool subKeyA = false;
+
+            // メッセージ文字列から鍵一覧メッセージ（'gpg -K'実行結果）を抽出
+            bool gpgKisAvailable = false;
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.StartsWith(keyword1)) {
+                    // 'gpg -K'の実行結果が、メッセージ文字列中に存在すると判断
+                    gpgKisAvailable = true;
+                    continue;
+                }
+                // 'gpg -K'の実行結果を解析
+                if (gpgKisAvailable) {
+                    // 副鍵に関するメッセージを解析
+                    if (text.StartsWith(keyword2)) {
+                        // 副鍵の機能を解析
+                        if (text.Contains("[S]")) {
+                            subKeyS = true;
+                        } else if (text.Contains("[E]")) {
+                            subKeyE = true;
+                        } else if (text.Contains("[A]")) {
+                            subKeyA = true;
+                        }
+                    }
+                }
+            }
+
+            // ３点の副鍵が揃っていれば true を戻す
+            if (subKeyS && subKeyE && subKeyA) {
+                return true;
+            }
+
+            // 揃っていない副鍵についてログを出力
+            string str = transferred ? "transferred" : "added";
+            if (subKeyS == false) {
+                AppCommon.OutputLogDebug(string.Format("Sub key (for sign) not {0}", str));
+            }
+            if (subKeyE == false) {
+                AppCommon.OutputLogDebug(string.Format("Sub key (for encrypt) not {0}", str));
+            }
+            if (subKeyA == false) {
+                AppCommon.OutputLogDebug(string.Format("Sub key (for authenticate) not {0}", str));
+            }
+
+            // false を戻す
+            return false;
         }
 
         private bool CheckIfNoSubKeyExistFromResponse(string response)
@@ -666,6 +761,9 @@ namespace MaintenanceToolGUI
                     break;
                 case GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY:
                     DoResponseGenerateMainKey(success, response);
+                    break;
+                case GPGCommand.COMMAND_GPG_ADD_SUB_KEY:
+                    DoResponseAddSubKey(success, response);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response);
