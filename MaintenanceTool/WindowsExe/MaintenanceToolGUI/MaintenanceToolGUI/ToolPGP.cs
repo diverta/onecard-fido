@@ -47,6 +47,9 @@ namespace MaintenanceToolGUI
         // 生成された作業用フォルダー名称を保持
         private string TempFolderPath;
 
+        // 生成された鍵のIDを保持
+        private string GeneratedMainKeyId;
+
         // 実行する自動認証設定コマンドの種別
         public enum GPGCommand
         {
@@ -221,6 +224,50 @@ namespace MaintenanceToolGUI
 
         private void DoRequestGenerateMainKey()
         {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "generate_main_key.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "generate_main_key.param";
+            if (WriteParamForGenerateMainKeyToTempFolder(paramName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} --no-tty", TempFolderPath, toolPGPParameter.Passphrase);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseGenerateMainKey(bool success, string response)
+        {
+            // 生成鍵IDをクリア
+            GeneratedMainKeyId = null;
+
+            if (CheckResponseOfScript(response)) {
+                // 生成鍵がCertify機能を有しているかチェック
+                string keyid = ExtractMainKeyIdFromResponse(response);
+                if (keyid != null) {
+                    // チェックOKの場合は鍵IDを保持し、次の処理に移行
+                    GeneratedMainKeyId = keyid;
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, GeneratedMainKeyId));
+                    DoRequestAddSubKey();
+                    return;
+                }
+            }
+
+            // エラーメッセージを出力し、後処理に移行
+            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL);
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestAddSubKey()
+        {
             // TODO: 仮の実装です。
             DoRequestRemoveTempFolder();
         }
@@ -297,6 +344,21 @@ namespace MaintenanceToolGUI
         //
         // 内部処理
         //
+        private bool CheckResponseOfScript(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "Execute script for gnupg success";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keyword)) {
+                    // シェルスクリプトから成功メッセージが出力された場合、trueを戻す
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool CheckIfCardErrorFromResponse(string response)
         {
             // メッセージ検索用文字列
@@ -367,6 +429,30 @@ namespace MaintenanceToolGUI
             }
             AppCommon.OutputLogDebug("GnuPG is not installed yet");
             return false;
+        }
+
+        string ExtractMainKeyIdFromResponse(string response)
+        {
+            // メッセージ文字列から鍵IDを抽出
+            string keyid = null;
+
+            // メッセージ検索用文字列
+            string keyword = "pub   rsa2048";
+
+            // 改行文字で区切られた文字列を分割
+            string[] textArray = TextArrayOfResponse(response);
+
+            // 分割されたメッセージの１件目について、鍵の機能を解析
+            if (textArray[0].StartsWith(keyword)) {
+                if (textArray[0].Contains("[C]")) {
+                    // 分割されたメッセージの２件目、後ろから16バイトの文字列を、鍵IDとして抽出
+                    int startIndex = textArray[1].Length - 16;
+                    keyid = textArray[1].Substring(startIndex);
+                }
+            }
+
+            // 抽出された鍵IDを戻す
+            return keyid;
         }
 
         private bool CheckIfNoSubKeyExistFromResponse(string response)
@@ -577,6 +663,9 @@ namespace MaintenanceToolGUI
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_STATUS:
                     DoResponseCardStatus(success, response);
+                    break;
+                case GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY:
+                    DoResponseGenerateMainKey(success, response);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response);
