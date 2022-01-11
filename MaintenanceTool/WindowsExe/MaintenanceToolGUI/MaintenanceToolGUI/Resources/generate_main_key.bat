@@ -35,7 +35,7 @@ if not exist "%GENKEYS_COMMAND%" (
 rem
 rem Perform generate keys command
 rem
-gpg --command-file %GENKEYS_COMMAND% --pinentry-mode loopback --passphrase %PASSPHRASE% --expert --full-gen-key %SCRIPT_OPT%
+type %GENKEYS_COMMAND% | gpg --command-fd 0 --pinentry-mode loopback --passphrase %PASSPHRASE% --expert --full-gen-key %SCRIPT_OPT%
 if %ERRORLEVEL% neq 0 (
     echo "Execute script for gnupg fail"
     exit 1
