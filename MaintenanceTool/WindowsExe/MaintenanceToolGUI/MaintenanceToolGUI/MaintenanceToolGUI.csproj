@@ -327,6 +327,8 @@
     <EmbeddedResource Include="Resources\add_sub_key.bat" />
     <EmbeddedResource Include="Resources\add_sub_key.param" />
     <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
