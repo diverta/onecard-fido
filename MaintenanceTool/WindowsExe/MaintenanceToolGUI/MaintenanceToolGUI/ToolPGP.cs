@@ -402,14 +402,8 @@ namespace MaintenanceToolGUI
         private bool WriteScriptToTempFolder(string scriptName)
         {
             // スクリプトをリソースから読込み
-            string scriptResourceName = GetScriptResourceName(scriptName);
-            if (scriptResourceName == null) {
-                AppCommon.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
-                return false;
-            }
-            string scriptContent = GetScriptResourceContent(scriptResourceName);
+            string scriptContent = GetScriptResourceContentString(scriptName);
             if (scriptContent == null) {
-                AppCommon.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
                 return false;
             }
 
@@ -420,6 +414,42 @@ namespace MaintenanceToolGUI
             }
 
             return true;
+        }
+
+        private bool WriteParamForGenerateMainKeyToTempFolder(string scriptName)
+        {
+            // パラメーターをリソースから読込み
+            string scriptContent = GetScriptResourceContentString(scriptName);
+            if (scriptContent == null) {
+                return false;
+            }
+
+            // パラメーターを置き換え
+            string parameterContent = string.Format(scriptContent, toolPGPParameter.RealName, toolPGPParameter.MailAddress, toolPGPParameter.Comment);
+
+            // パラメーターファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(parameterContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GetScriptResourceContentString(string scriptName)
+        {
+            // スクリプトをリソースから読込み
+            string scriptResourceName = GetScriptResourceName(scriptName);
+            if (scriptResourceName == null) {
+                AppCommon.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
+                return null;
+            }
+            string scriptContent = GetScriptResourceContent(scriptResourceName);
+            if (scriptContent == null) {
+                AppCommon.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
+                return null;
+            }
+            return scriptContent;
         }
 
         private string GetScriptResourceName(string scriptName)
