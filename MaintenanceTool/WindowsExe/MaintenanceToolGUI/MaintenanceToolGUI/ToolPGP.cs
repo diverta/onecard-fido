@@ -141,7 +141,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_VERSION, "gpg", "--version", null);
         }
 
-        private void DoResponseGPGVersion(bool success, string response)
+        private void DoResponseGPGVersion(bool success, string response, string error)
         {
             // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
             if (success == false || CheckIfGPGVersionAvailable(response) == false) {
@@ -168,7 +168,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_STATUS, "gpg", "--card-status", null);
         }
 
-        private void DoResponseCardStatus(bool success, string response)
+        private void DoResponseCardStatus(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (success) {
@@ -178,7 +178,7 @@ namespace MaintenanceToolGUI
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
-                if (CheckIfCardErrorFromResponse(response)) {
+                if (CheckIfCardErrorFromResponse(error)) {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL);
@@ -244,7 +244,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY, exe, param, TempFolderPath);
         }
 
-        private void DoResponseGenerateMainKey(bool success, string response)
+        private void DoResponseGenerateMainKey(bool success, string response, string error)
         {
             // 生成鍵IDをクリア
             GeneratedMainKeyId = null;
@@ -288,7 +288,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_ADD_SUB_KEY, exe, param, TempFolderPath);
         }
 
-        private void DoResponseAddSubKey(bool success, string response)
+        private void DoResponseAddSubKey(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (CheckResponseOfScript(response)) {
@@ -321,7 +321,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP, exe, param, TempFolderPath);
         }
 
-        private void DoResponseExportPubkeyAndBackup(bool success, string response)
+        private void DoResponseExportPubkeyAndBackup(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (CheckResponseOfScript(response)) {
@@ -361,7 +361,7 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD, exe, param, TempFolderPath);
         }
 
-        private void DoResponseTransferSubkeyToCard(bool success, string response)
+        private void DoResponseTransferSubkeyToCard(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (CheckResponseOfScript(response)) {
@@ -372,7 +372,8 @@ namespace MaintenanceToolGUI
 
                 } else {
                     // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
-                    if (CheckIfSubKeyAlreadyStoredFromResponse(response)) {
+                    // （標準エラーに出力されるメッセージをチェック）
+                    if (CheckIfSubKeyAlreadyStoredFromResponse(error)) {
                         NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED);
                     } else {
                         NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL);
@@ -381,7 +382,7 @@ namespace MaintenanceToolGUI
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
-                if (CheckIfCardErrorFromResponse(response)) {
+                if (CheckIfCardErrorFromResponse(error)) {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL);
@@ -414,12 +415,12 @@ namespace MaintenanceToolGUI
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_RESET, exe, param, TempFolderPath);
         }
 
-        private void DoResponseCardReset(bool success, string response)
+        private void DoResponseCardReset(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (success == false) {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
-                if (CheckIfCardErrorFromResponse(response)) {
+                if (CheckIfCardErrorFromResponse(error)) {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL);
@@ -860,38 +861,34 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine exception:\n{0}", e.Message));
             }
 
-            // コマンドからの応答文字列を戻す
-            if (success) {
-                OnCommandTerminated(command, success, stdOutputString);
-            } else {
-                OnCommandTerminated(command, success, stdErrorString);
-            }
+            // コマンドからの応答文字列／エラー出力を戻す
+            OnCommandTerminated(command, success, stdOutputString, stdErrorString);
         }
 
-        private void OnCommandTerminated(GPGCommand command, bool success, string response)
+        private void OnCommandTerminated(GPGCommand command, bool success, string response, string error)
         {
             // レスポンスを処理
             switch (command) {
                 case GPGCommand.COMMAND_GPG_VERSION:
-                    DoResponseGPGVersion(success, response);
+                    DoResponseGPGVersion(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_STATUS:
-                    DoResponseCardStatus(success, response);
+                    DoResponseCardStatus(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY:
-                    DoResponseGenerateMainKey(success, response);
+                    DoResponseGenerateMainKey(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_ADD_SUB_KEY:
-                    DoResponseAddSubKey(success, response);
+                    DoResponseAddSubKey(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP:
-                    DoResponseExportPubkeyAndBackup(success, response);
+                    DoResponseExportPubkeyAndBackup(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
-                    DoResponseTransferSubkeyToCard(success, response);
+                    DoResponseTransferSubkeyToCard(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
-                    DoResponseCardReset(success, response);
+                    DoResponseCardReset(success, response, error);
                     break;
             default:
                     break;
