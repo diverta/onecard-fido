@@ -341,7 +341,54 @@ namespace MaintenanceToolGUI
 
         private void DoRequestTransferSubkeyToCard()
         {
-            // TODO: 仮の実装です。
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "transfer_subkey_to_card.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "transfer_subkey_to_card.param";
+            if (WriteScriptToTempFolder(paramName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseTransferSubkeyToCard(bool success, string response)
+        {
+            // レスポンスをチェック
+            if (CheckResponseOfScript(response)) {
+                if (CheckIfSubKeysExistFromResponse(response, true)) {
+                    // 副鍵が認証器に移動された場合は、処理成功を通知
+                    AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
+                    CommandSuccess = true;
+
+                } else {
+                    // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
+                    if (CheckIfSubKeyAlreadyStoredFromResponse(response)) {
+                        NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED);
+                    } else {
+                        NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL);
+                    }
+                }
+
+            } else {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(response)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL);
+                }
+            }
+
+            // 後処理に移行
             DoRequestRemoveTempFolder();
         }
 
@@ -608,6 +655,20 @@ namespace MaintenanceToolGUI
             return File.Exists(filePath);
         }
 
+        private bool CheckIfSubKeyAlreadyStoredFromResponse(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "such a key has already been stored on the card!";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keyword)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool CheckIfNoSubKeyExistFromResponse(string response)
         {
             // ステータス開始行の有無を保持
@@ -825,6 +886,9 @@ namespace MaintenanceToolGUI
                     break;
                 case GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP:
                     DoResponseExportPubkeyAndBackup(success, response);
+                    break;
+                case GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD:
+                    DoResponseTransferSubkeyToCard(success, response);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response);
