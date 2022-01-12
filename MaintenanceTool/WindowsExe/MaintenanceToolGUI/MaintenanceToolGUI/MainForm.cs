@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPreference toolPreference;
+        private ToolPGP toolPGP;
         private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
         private string commandTitle = "";
@@ -51,6 +52,9 @@ namespace MaintenanceToolGUI
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
             toolPreference.SetTitleAndVersionText();
+
+            // OpenPGP機能設定画面を生成
+            toolPGP = new ToolPGP(this, hid);
 
             // パラメーター入力画面を生成
             PinCodeParamFormRef = new PinCodeParamForm();
@@ -550,6 +554,16 @@ namespace MaintenanceToolGUI
             }
             // ペアリング情報削除コマンドを実行
             doCommand(sender);
+        }
+
+        private void buttonSetPgpParam_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // OpenPGP機能設定画面を表示
+            toolPGP.ShowDialog();
         }
 
         private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
