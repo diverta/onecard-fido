@@ -24,10 +24,10 @@ namespace MaintenanceToolGUI
     public class ToolPGP
     {
         // 画面の参照を保持
-        private MainForm mainForm;
+        private MainForm MainFormRef;
 
         // 処理クラスの参照を保持
-        private HIDMain hidMain;
+        private HIDMain HidMainRef;
 
         // 処理機能を保持
         private AppCommon.RequestType RequestType;
@@ -71,10 +71,10 @@ namespace MaintenanceToolGUI
         public ToolPGP(MainForm f, HIDMain h)
         {
             // メイン画面の参照を保持
-            mainForm = f;
+            MainFormRef = f;
 
             // HID処理クラスの参照を保持
-            hidMain = h;
+            HidMainRef = h;
         }
 
         public void ShowDialog()
@@ -96,7 +96,7 @@ namespace MaintenanceToolGUI
         public void DoCommandInstallPGPKey(ToolPGPParameter parameter)
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (mainForm.CheckUSBDeviceDisconnected()) {
+            if (MainFormRef.CheckUSBDeviceDisconnected()) {
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace MaintenanceToolGUI
         public void DoCommandPGPStatus()
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (mainForm.CheckUSBDeviceDisconnected()) {
+            if (MainFormRef.CheckUSBDeviceDisconnected()) {
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace MaintenanceToolGUI
         public void DoCommandPGPReset()
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (mainForm.CheckUSBDeviceDisconnected()) {
+            if (MainFormRef.CheckUSBDeviceDisconnected()) {
                 return;
             }
 
@@ -950,7 +950,7 @@ namespace MaintenanceToolGUI
             }
 
             // TODO: 画面に制御を戻す
-            MessageBox.Show(mainForm, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(MainFormRef, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
