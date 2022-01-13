@@ -23,7 +23,10 @@ namespace MaintenanceToolGUI
 
     public class ToolPGP
     {
-        // 画面の参照を保持
+        // OpenPGP機能設定画面
+        private PGPPreferenceForm PreferenceForm;
+
+        // メイン画面の参照を保持
         private MainForm MainFormRef;
 
         // 処理クラスの参照を保持
@@ -75,19 +78,15 @@ namespace MaintenanceToolGUI
 
             // HID処理クラスの参照を保持
             HidMainRef = h;
+
+            // OpenPGP機能設定画面を生成
+            PreferenceForm = new PGPPreferenceForm(this);
         }
 
         public void ShowDialog()
         {
-            // TODO: 仮の実装です。
-            ToolPGPParameter parameter = new ToolPGPParameter();
-            parameter.RealName = "";
-            parameter.MailAddress = "";
-            parameter.Comment = "";
-            parameter.Passphrase = "";
-            parameter.PubkeyFolderPath = "";
-            parameter.BackupFolderPath = "";
-            DoCommandInstallPGPKey(parameter);
+            // ツール設定画面を表示
+            PreferenceForm.ShowDialog();
         }
 
         //

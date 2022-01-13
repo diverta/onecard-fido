@@ -128,6 +128,12 @@
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PGPPreferenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PGPPreferenceForm.designer.cs">
+      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolBLEDFU.cs" />
     <Compile Include="ToolBLEDFUImage.cs" />
     <Compile Include="ToolBLEDFUProcess.cs" />
@@ -288,6 +294,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PGPPreferenceForm.resx">
+      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
