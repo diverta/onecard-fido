@@ -57,22 +57,22 @@
             this.checkKeyForSign = new System.Windows.Forms.CheckBox();
             this.buttonInstallPGPKey = new System.Windows.Forms.Button();
             this.tabPagePinManagement = new System.Windows.Forms.TabPage();
-            this.buttonPGPStatus = new System.Windows.Forms.Button();
-            this.buttonPGPReset = new System.Windows.Forms.Button();
-            this.buttonFirmwareReset = new System.Windows.Forms.Button();
-            this.buttonClose = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.buttonPGPStatus = new System.Windows.Forms.Button();
+            this.buttonPGPReset = new System.Windows.Forms.Button();
+            this.buttonFirmwareReset = new System.Windows.Forms.Button();
+            this.buttonClose = new System.Windows.Forms.Button();
             this.tabPreference.SuspendLayout();
             this.tabPagePGPKeyManagement.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -80,8 +80,8 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPagePinManagement.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPreference
@@ -378,87 +378,15 @@
             this.tabPagePinManagement.Text = "PIN番号管理";
             this.tabPagePinManagement.UseVisualStyleBackColor = true;
             // 
-            // buttonPGPStatus
+            // button1
             // 
-            this.buttonPGPStatus.Location = new System.Drawing.Point(16, 500);
-            this.buttonPGPStatus.Name = "buttonPGPStatus";
-            this.buttonPGPStatus.Size = new System.Drawing.Size(110, 23);
-            this.buttonPGPStatus.TabIndex = 1;
-            this.buttonPGPStatus.Text = "設定情報を参照";
-            this.buttonPGPStatus.UseVisualStyleBackColor = true;
-            // 
-            // buttonPGPReset
-            // 
-            this.buttonPGPReset.Location = new System.Drawing.Point(136, 500);
-            this.buttonPGPReset.Name = "buttonPGPReset";
-            this.buttonPGPReset.Size = new System.Drawing.Size(110, 23);
-            this.buttonPGPReset.TabIndex = 2;
-            this.buttonPGPReset.Text = "設定情報を消去";
-            this.buttonPGPReset.UseVisualStyleBackColor = true;
-            // 
-            // buttonFirmwareReset
-            // 
-            this.buttonFirmwareReset.Location = new System.Drawing.Point(268, 500);
-            this.buttonFirmwareReset.Name = "buttonFirmwareReset";
-            this.buttonFirmwareReset.Size = new System.Drawing.Size(110, 23);
-            this.buttonFirmwareReset.TabIndex = 3;
-            this.buttonFirmwareReset.Text = "認証器のリセット";
-            this.buttonFirmwareReset.UseVisualStyleBackColor = true;
-            // 
-            // buttonClose
-            // 
-            this.buttonClose.Location = new System.Drawing.Point(388, 500);
-            this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(80, 23);
-            this.buttonClose.TabIndex = 4;
-            this.buttonClose.Text = "閉じる";
-            this.buttonClose.UseVisualStyleBackColor = true;
-            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.radioButton3);
-            this.groupBox5.Controls.Add(this.radioButton2);
-            this.groupBox5.Controls.Add(this.radioButton1);
-            this.groupBox5.Enabled = false;
-            this.groupBox5.Location = new System.Drawing.Point(18, 20);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(417, 53);
-            this.groupBox5.TabIndex = 15;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "実行する機能";
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(18, 23);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(98, 16);
-            this.radioButton1.TabIndex = 14;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "PIN番号を変更";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(128, 23);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(134, 16);
-            this.radioButton2.TabIndex = 15;
-            this.radioButton2.Text = "管理用PIN番号を変更";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(273, 23);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(106, 16);
-            this.radioButton3.TabIndex = 16;
-            this.radioButton3.Text = "PIN番号をリセット";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(146, 216);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(160, 23);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "実行";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // groupBox6
             // 
@@ -475,6 +403,22 @@
             this.groupBox6.TabIndex = 18;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "認証情報";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(175, 77);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(130, 19);
+            this.textBox3.TabIndex = 22;
+            this.textBox3.UseSystemPasswordChar = true;
+            // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(13, 80);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(155, 12);
+            this.label13.TabIndex = 21;
+            this.label13.Text = "新しい管理用PIN番号（確認）";
             // 
             // textBox1
             // 
@@ -508,31 +452,88 @@
             this.label12.TabIndex = 19;
             this.label12.Text = "現在の管理用PIN番号";
             // 
-            // label13
+            // groupBox5
             // 
-            this.label13.Location = new System.Drawing.Point(13, 80);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(155, 12);
-            this.label13.TabIndex = 21;
-            this.label13.Text = "新しい管理用PIN番号（確認）";
+            this.groupBox5.Controls.Add(this.radioButton3);
+            this.groupBox5.Controls.Add(this.radioButton2);
+            this.groupBox5.Controls.Add(this.radioButton1);
+            this.groupBox5.Enabled = false;
+            this.groupBox5.Location = new System.Drawing.Point(18, 20);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(417, 53);
+            this.groupBox5.TabIndex = 15;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "実行する機能";
             // 
-            // textBox3
+            // radioButton3
             // 
-            this.textBox3.Location = new System.Drawing.Point(175, 77);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(130, 19);
-            this.textBox3.TabIndex = 22;
-            this.textBox3.UseSystemPasswordChar = true;
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(273, 23);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(106, 16);
+            this.radioButton3.TabIndex = 16;
+            this.radioButton3.Text = "PIN番号をリセット";
+            this.radioButton3.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // radioButton2
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(146, 216);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(160, 23);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "実行";
-            this.button1.UseVisualStyleBackColor = true;
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(128, 23);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(134, 16);
+            this.radioButton2.TabIndex = 15;
+            this.radioButton2.Text = "管理用PIN番号を変更";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(18, 23);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(98, 16);
+            this.radioButton1.TabIndex = 14;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "PIN番号を変更";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // buttonPGPStatus
+            // 
+            this.buttonPGPStatus.Location = new System.Drawing.Point(16, 500);
+            this.buttonPGPStatus.Name = "buttonPGPStatus";
+            this.buttonPGPStatus.Size = new System.Drawing.Size(110, 23);
+            this.buttonPGPStatus.TabIndex = 1;
+            this.buttonPGPStatus.Text = "設定情報を参照";
+            this.buttonPGPStatus.UseVisualStyleBackColor = true;
+            // 
+            // buttonPGPReset
+            // 
+            this.buttonPGPReset.Location = new System.Drawing.Point(136, 500);
+            this.buttonPGPReset.Name = "buttonPGPReset";
+            this.buttonPGPReset.Size = new System.Drawing.Size(110, 23);
+            this.buttonPGPReset.TabIndex = 2;
+            this.buttonPGPReset.Text = "設定情報を消去";
+            this.buttonPGPReset.UseVisualStyleBackColor = true;
+            // 
+            // buttonFirmwareReset
+            // 
+            this.buttonFirmwareReset.Location = new System.Drawing.Point(268, 500);
+            this.buttonFirmwareReset.Name = "buttonFirmwareReset";
+            this.buttonFirmwareReset.Size = new System.Drawing.Size(110, 23);
+            this.buttonFirmwareReset.TabIndex = 3;
+            this.buttonFirmwareReset.Text = "認証器のリセット";
+            this.buttonFirmwareReset.UseVisualStyleBackColor = true;
+            this.buttonFirmwareReset.Click += new System.EventHandler(this.buttonFirmwareReset_Click);
+            // 
+            // buttonClose
+            // 
+            this.buttonClose.Location = new System.Drawing.Point(388, 500);
+            this.buttonClose.Name = "buttonClose";
+            this.buttonClose.Size = new System.Drawing.Size(80, 23);
+            this.buttonClose.TabIndex = 4;
+            this.buttonClose.Text = "閉じる";
+            this.buttonClose.UseVisualStyleBackColor = true;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // PGPPreferenceForm
             // 
@@ -563,10 +564,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPagePinManagement.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }

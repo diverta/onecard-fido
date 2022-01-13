@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolCommon;
+using System;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
@@ -19,6 +20,13 @@ namespace MaintenanceToolGUI
 
             // 処理クラスの参照を保持
             ToolPGPRef = toolPGP;
+        }
+
+        private void buttonFirmwareReset_Click(object sender, EventArgs e)
+        {
+            // 認証器のファームウェアを再起動
+            EnableButtons(false);
+            DoCommandResetFirmware();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -99,6 +107,43 @@ namespace MaintenanceToolGUI
             buttonPubkeyFolderPath.Enabled = enabled;
             buttonBackupFolderPath.Enabled = enabled;
             buttonInstallPGPKey.Enabled = enabled;
+        }
+
+        //
+        // OpenPGP設定機能の各処理
+        //
+        void DoCommandResetFirmware()
+        {
+            ToolPGPRef.DoCommandResetFirmware();
+        }
+
+        public void OnCommandProcessTerminated(AppCommon.RequestType requestType, bool success, string errMessage)
+        {
+            // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
+            DisplayResultMessage(requestType, success, errMessage);
+            EnableButtons(true);
+        }
+
+        private void DisplayResultMessage(AppCommon.RequestType requestType, bool success, string errMessage)
+        {
+            // 処理名称を設定
+            string name = "";
+            switch (requestType) {
+                case AppCommon.RequestType.HidFirmwareReset:
+                    name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
+                    break;
+                default:
+                    break;
+            }
+            // メッセージをポップアップ表示
+            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+                name,
+                success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            if (success) {
+                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } else {
+                MessageBox.Show(this, errMessage, formatted, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

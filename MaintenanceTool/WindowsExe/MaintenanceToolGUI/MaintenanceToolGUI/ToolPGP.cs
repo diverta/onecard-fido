@@ -972,8 +972,8 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(formatted);
             }
 
-            // TODO: 画面に制御を戻す
-            MessageBox.Show(MainFormRef, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // 画面に制御を戻す
+            PreferenceForm.OnCommandProcessTerminated(RequestType, success, ErrorMessageOfCommand);
         }
     }
 }
