@@ -447,6 +447,9 @@ namespace MaintenanceToolGUI
                 // DFU転送成功時は、バージョン更新判定フラグをセット
                 NeedCompareUpdateVersion = true;
 
+                // 再接続まで待機 --> OnUSBDeviceArrival が呼び出される
+                hidMain.WaitForNotifyHIDDetectConnect(this);
+
             } else {
                 // DFU転送失敗時は処理進捗画面に制御を戻す
                 dfuProcessingForm.NotifyTerminateDFUProcess(success);

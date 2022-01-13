@@ -90,6 +90,30 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // ファームウェアリセット用関数
+        //
+        public void DoCommandResetFirmware()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (MainFormRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // HIDインターフェース経由でファームウェアをリセット
+            AppCommon.RequestType requestType = AppCommon.RequestType.HidFirmwareReset;
+            NotifyProcessStarted(requestType);
+            HidMainRef.DoFirmwareReset(requestType, this);
+        }
+
+        public void DoResponseResetFirmware(bool success)
+        {
+            if (success == false) {
+                NotifyErrorMessage(ToolGUICommon.MSG_FIRMWARE_RESET_UNSUPP);
+            }
+            NotifyProcessTerminated(success);
+        }
+
+        //
         // OpenPGP機能設定用関数
         // 
         public void DoCommandInstallPGPKey(ToolPGPParameter parameter)
