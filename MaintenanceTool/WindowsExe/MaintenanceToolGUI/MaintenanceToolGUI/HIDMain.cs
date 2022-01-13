@@ -19,6 +19,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
         public const int HID_CMD_BOOTLOADER_MODE = 0xc5;
         public const int HID_CMD_ERASE_BONDS = 0xc6;
+        public const int HID_CMD_FIRMWARE_RESET = 0xc7;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
@@ -55,6 +56,12 @@ namespace MaintenanceToolGUI
         // 実行機能を保持
         private AppCommon.RequestType requestType;
 
+        // 実行コマンドクラスの参照を保持
+        private Object ToolCommandRef = null;
+
+        // HID接続検知時、通知先の実行コマンドクラスの参照を保持
+        private Object NeedNotifyDetectConnectRef = null;
+
         // DFU処理
         public ToolDFU ToolDFURef;
 
@@ -71,7 +78,7 @@ namespace MaintenanceToolGUI
             // イベントの登録
             hidProcess.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             hidProcess.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
-            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDConnected);
+            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDDetectConnect);
 
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
@@ -143,6 +150,9 @@ namespace MaintenanceToolGUI
                     ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
                 }
                 break;
+            case Const.HID_CMD_FIRMWARE_RESET:
+                DoResponseFirmwareReset(hidProcess.receivedCMD, message);
+                break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
                     // ツール設定から呼び出された場合は、ツール設定クラスに制御を戻す
@@ -150,6 +160,9 @@ namespace MaintenanceToolGUI
                 } else if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
                     // DFU処理から呼び出された場合は、DFU処理クラスに制御を戻す
                     ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
+                } else if (requestType == AppCommon.RequestType.HidFirmwareReset) {
+                    // ファームウェアリセットの場合
+                    DoResponseFirmwareReset(hidProcess.receivedCMD, message);
                 } else {
                     // メイン画面に制御を戻す
                     mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -157,12 +170,6 @@ namespace MaintenanceToolGUI
                 }
                 break;
             }
-        }
-
-        private void NotifyHIDConnected()
-        {
-            // HID接続処理が完了したら、DFU処理に通知
-            ToolDFURef.OnUSBDeviceArrival();
         }
 
         private void PrintMessageText(string messageText)
@@ -249,6 +256,9 @@ namespace MaintenanceToolGUI
                 break;
             case AppCommon.RequestType.GotoBootLoaderMode:
                 DoRequestBootLoaderMode();
+                break;
+            case AppCommon.RequestType.HidFirmwareReset:
+                DoRequestFirmwareReset();
                 break;
             case AppCommon.RequestType.EraseSkeyCert:
                 DoRequestEraseSkeyCert();
@@ -608,6 +618,84 @@ namespace MaintenanceToolGUI
         {
             // コマンドバイトだけを送信する
             hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
+        }
+
+        //
+        // ファームウェアリセットコマンド
+        //
+        public void DoFirmwareReset(AppCommon.RequestType requestType, Object toolCommandRef)
+        {
+            // 実行コマンドクラスの参照を保持
+            ToolCommandRef = toolCommandRef;
+
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(requestType);
+        }
+
+        private void DoRequestFirmwareReset()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_FIRMWARE_RESET, RequestData, 0);
+        }
+
+        private void DoResponseFirmwareReset(byte receivedCmd, byte[] message)
+        {
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (message[0] != 0x00) {
+                // エラーの場合は画面に制御を戻す
+                CompletedResetFirmware(false);
+
+            } else {
+                // 再接続まで待機 --> completedResetFirmware が呼び出される
+                WaitForNotifyHIDDetectConnect(ToolCommandRef);
+            }
+        }
+
+        private void CompletedResetFirmware(bool success)
+        {
+            // 実行コマンドクラスの参照がない場合は終了
+            if (ToolCommandRef == null) {
+                return;
+            }
+
+            // レスポンスを戻す
+            if (ToolCommandRef is ToolPGP) {
+                ToolPGP toolPGP = (ToolPGP)ToolCommandRef;
+                toolPGP.DoResponseResetFirmware(success);
+            }
+
+            // 実行コマンドクラスの参照を初期化
+            ToolCommandRef = null;
+        }
+
+        //
+        // USB接続検知時の処理
+        //
+        public void WaitForNotifyHIDDetectConnect(Object toolCommandRef)
+        {
+            // HID接続が検知されたら、所定のコマンドに通知
+            NeedNotifyDetectConnectRef = toolCommandRef;
+        }
+
+        private void NotifyHIDDetectConnect()
+        {
+            // 通知先コマンドクラスの参照がない場合は終了
+            if (NeedNotifyDetectConnectRef == null) {
+                return;
+            }
+
+            // HID接続検知を所定のコマンドに通知
+            if (NeedNotifyDetectConnectRef is ToolDFU) {
+                ToolDFURef.OnUSBDeviceArrival();
+
+            } else if (NeedNotifyDetectConnectRef is ToolPGP) {
+                if (requestType == AppCommon.RequestType.HidFirmwareReset) {
+                    CompletedResetFirmware(true);
+                }
+            }
+
+            // 通知先コマンドクラスの参照を初期化
+            NeedNotifyDetectConnectRef = null;
         }
     }
 }
