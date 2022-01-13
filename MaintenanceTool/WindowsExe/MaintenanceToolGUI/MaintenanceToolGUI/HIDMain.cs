@@ -59,8 +59,8 @@ namespace MaintenanceToolGUI
         // 実行コマンドクラスの参照を保持
         private Object ToolCommandRef = null;
 
-        // HID接続検知時、所定コマンドへの通知の要否を保持
-        private bool NeedNotifyDetectConnect = false;
+        // HID接続検知時、通知先の実行コマンドクラスの参照を保持
+        private Object NeedNotifyDetectConnectRef = null;
 
         // DFU処理
         public ToolDFU ToolDFURef;
@@ -78,7 +78,7 @@ namespace MaintenanceToolGUI
             // イベントの登録
             hidProcess.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             hidProcess.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
-            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDConnected);
+            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDDetectConnect);
 
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
@@ -170,13 +170,6 @@ namespace MaintenanceToolGUI
                 }
                 break;
             }
-        }
-
-        private void NotifyHIDConnected()
-        {
-            // HID接続処理が完了したら、DFU処理に通知
-            ToolDFURef.OnUSBDeviceArrival();
-            NotifyHIDDetectConnect();
         }
 
         private void PrintMessageText(string messageText)
@@ -654,7 +647,7 @@ namespace MaintenanceToolGUI
 
             } else {
                 // 再接続まで待機 --> completedResetFirmware が呼び出される
-                WaitForNotifyHIDDetectConnect();
+                WaitForNotifyHIDDetectConnect(ToolCommandRef);
             }
         }
 
@@ -678,21 +671,31 @@ namespace MaintenanceToolGUI
         //
         // USB接続検知時の処理
         //
-        private void WaitForNotifyHIDDetectConnect()
+        public void WaitForNotifyHIDDetectConnect(Object toolCommandRef)
         {
             // HID接続が検知されたら、所定のコマンドに通知
-            NeedNotifyDetectConnect = true;
+            NeedNotifyDetectConnectRef = toolCommandRef;
         }
 
         private void NotifyHIDDetectConnect()
         {
+            // 通知先コマンドクラスの参照がない場合は終了
+            if (NeedNotifyDetectConnectRef == null) {
+                return;
+            }
+
             // HID接続検知を所定のコマンドに通知
-            if (NeedNotifyDetectConnect) {
-                NeedNotifyDetectConnect = false;
+            if (NeedNotifyDetectConnectRef is ToolDFU) {
+                ToolDFURef.OnUSBDeviceArrival();
+
+            } else if (NeedNotifyDetectConnectRef is ToolPGP) {
                 if (requestType == AppCommon.RequestType.HidFirmwareReset) {
                     CompletedResetFirmware(true);
                 }
             }
+
+            // 通知先コマンドクラスの参照を初期化
+            NeedNotifyDetectConnectRef = null;
         }
     }
 }
