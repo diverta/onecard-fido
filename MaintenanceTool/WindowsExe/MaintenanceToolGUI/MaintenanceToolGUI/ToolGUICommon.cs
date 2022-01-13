@@ -20,6 +20,7 @@
         public const string MSG_PROMPT_INSTL_SKEY_CERT = "インストールを実行しますか？";
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
+        public const string MSG_FIRMWARE_RESET_UNSUPP = "FIDO認証器のファームウェアをリセットさせることができません。";
 
         // PIN設定画面
         public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";
