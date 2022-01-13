@@ -514,6 +514,7 @@
             this.buttonPGPReset.TabIndex = 2;
             this.buttonPGPReset.Text = "設定情報を消去";
             this.buttonPGPReset.UseVisualStyleBackColor = true;
+            this.buttonPGPReset.Click += new System.EventHandler(this.buttonPGPReset_Click);
             // 
             // buttonFirmwareReset
             // 

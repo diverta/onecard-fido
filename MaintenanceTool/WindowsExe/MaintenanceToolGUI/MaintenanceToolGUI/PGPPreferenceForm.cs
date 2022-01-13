@@ -22,6 +22,23 @@ namespace MaintenanceToolGUI
             ToolPGPRef = toolPGP;
         }
 
+        private void buttonPGPReset_Click(object sender, EventArgs e)
+        {
+            // プロンプトで表示されるタイトル
+            string title = string.Format(
+                ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
+                ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET);
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (FormUtil.DisplayPromptPopup(this, title, ToolGUICommon.MSG_PROMPT_OPENPGP_RESET) == false) {
+                return;
+            }
+
+            // PGPリセット処理を実行
+            EnableButtons(false);
+            DoCommandPGPReset();
+        }
+
         private void buttonFirmwareReset_Click(object sender, EventArgs e)
         {
             // 認証器のファームウェアを再起動
@@ -112,6 +129,11 @@ namespace MaintenanceToolGUI
         //
         // OpenPGP設定機能の各処理
         //
+        void DoCommandPGPReset()
+        {
+            ToolPGPRef.DoCommandPGPReset();
+        }
+
         void DoCommandResetFirmware()
         {
             ToolPGPRef.DoCommandResetFirmware();
@@ -129,6 +151,9 @@ namespace MaintenanceToolGUI
             // 処理名称を設定
             string name = "";
             switch (requestType) {
+                case AppCommon.RequestType.OpenPGPReset:
+                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
+                    break;
                 case AppCommon.RequestType.HidFirmwareReset:
                     name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
                     break;

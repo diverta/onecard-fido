@@ -30,6 +30,16 @@ namespace MaintenanceToolGUI
             return (dialogResult == DialogResult.Yes);
         }
 
+        public static bool DisplayPromptPopup(IWin32Window owner, string title, string message)
+        {
+            DialogResult dialogResult = MessageBox.Show(owner,
+                message, title,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Yesがクリックされた場合 true を戻す
+            return (dialogResult == DialogResult.Yes);
+        }
+
         public static void selectFilePath(
             OpenFileDialog dialog, string title, string filter, TextBox textBox)
         {
