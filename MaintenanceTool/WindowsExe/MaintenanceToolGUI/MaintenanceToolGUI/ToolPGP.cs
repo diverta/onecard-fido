@@ -89,6 +89,11 @@ namespace MaintenanceToolGUI
             PreferenceForm.ShowDialog();
         }
 
+        public string getPGPStatusInfoString()
+        {
+            return StatusInfoString;
+        }
+
         //
         // ファームウェアリセット用関数
         //
@@ -197,7 +202,6 @@ namespace MaintenanceToolGUI
             if (success) {
                 // レスポンスを保持
                 StatusInfoString = response;
-                AppCommon.OutputLogInfo(StatusInfoString);
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
@@ -860,6 +864,7 @@ namespace MaintenanceToolGUI
             if (workingDirectory != null) {
                 psi.WorkingDirectory = workingDirectory;
             }
+            psi.CreateNoWindow = true;
 
             // 出力格納領域を初期化
             string stdOutputString = "";
