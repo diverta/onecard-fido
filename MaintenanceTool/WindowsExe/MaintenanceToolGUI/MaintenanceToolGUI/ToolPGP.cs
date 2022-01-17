@@ -89,7 +89,7 @@ namespace MaintenanceToolGUI
             PreferenceForm.ShowDialog();
         }
 
-        public string getPGPStatusInfoString()
+        public string GetPGPStatusInfoString()
         {
             return StatusInfoString;
         }
@@ -876,7 +876,7 @@ namespace MaintenanceToolGUI
                 Process child = Process.Start(psi);
                 stdOutputString = child.StandardOutput.ReadToEnd();
                 stdErrorString = child.StandardError.ReadToEnd();
-                
+
                 // コマンドからの応答を待機
                 child.WaitForExit();
 
