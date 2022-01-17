@@ -505,6 +505,7 @@
             this.buttonPGPStatus.TabIndex = 1;
             this.buttonPGPStatus.Text = "設定情報を参照";
             this.buttonPGPStatus.UseVisualStyleBackColor = true;
+            this.buttonPGPStatus.Click += new System.EventHandler(this.buttonPGPStatus_Click);
             // 
             // buttonPGPReset
             // 

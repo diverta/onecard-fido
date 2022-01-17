@@ -22,6 +22,13 @@ namespace MaintenanceToolGUI
             ToolPGPRef = toolPGP;
         }
 
+        private void buttonPGPStatus_Click(object sender, EventArgs e)
+        {
+            // PGPステータス照会処理を実行
+            EnableButtons(false);
+            DoCommandPGPStatus();
+        }
+
         private void buttonPGPReset_Click(object sender, EventArgs e)
         {
             // プロンプトで表示されるタイトル
@@ -129,6 +136,11 @@ namespace MaintenanceToolGUI
         //
         // OpenPGP設定機能の各処理
         //
+        void DoCommandPGPStatus()
+        {
+            ToolPGPRef.DoCommandPGPStatus();
+        }
+
         void DoCommandPGPReset()
         {
             ToolPGPRef.DoCommandPGPReset();
@@ -151,7 +163,15 @@ namespace MaintenanceToolGUI
             // 処理名称を設定
             string name = "";
             switch (requestType) {
-                case AppCommon.RequestType.OpenPGPReset:
+                case AppCommon.RequestType.OpenPGPStatus:
+                    if (success) {
+                        // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
+                        MessageBox.Show(this, ToolPGPRef.getPGPStatusInfoString(), MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
+                    break;
+            case AppCommon.RequestType.OpenPGPReset:
                     name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
