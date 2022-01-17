@@ -73,6 +73,7 @@
             this.buttonPGPReset = new System.Windows.Forms.Button();
             this.buttonFirmwareReset = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.tabPreference.SuspendLayout();
             this.tabPagePGPKeyManagement.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -177,6 +178,7 @@
             this.buttonBackupFolderPath.TabIndex = 21;
             this.buttonBackupFolderPath.Text = "参照";
             this.buttonBackupFolderPath.UseVisualStyleBackColor = true;
+            this.buttonBackupFolderPath.Click += new System.EventHandler(this.buttonBackupFolderPath_Click);
             // 
             // buttonPubkeyFolderPath
             // 
@@ -186,6 +188,7 @@
             this.buttonPubkeyFolderPath.TabIndex = 18;
             this.buttonPubkeyFolderPath.Text = "参照";
             this.buttonPubkeyFolderPath.UseVisualStyleBackColor = true;
+            this.buttonPubkeyFolderPath.Click += new System.EventHandler(this.buttonPubkeyFolderPath_Click);
             // 
             // textBackupFolderPath
             // 
@@ -622,5 +625,6 @@
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }

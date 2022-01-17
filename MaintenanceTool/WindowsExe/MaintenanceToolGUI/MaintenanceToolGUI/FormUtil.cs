@@ -55,6 +55,20 @@ namespace MaintenanceToolGUI
             }
         }
 
+        public static void SelectFolderPath(FolderBrowserDialog dialog, TextBox textBox)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            dialog.Reset();
+            if (textBox.Text != "") {
+                dialog.SelectedPath = textBox.Text;
+            }
+            dialog.ShowNewFolderButton = false;
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                textBox.Text = dialog.SelectedPath;
+            }
+        }
+
         public static bool checkIsNumeric(TextBox textBox, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {

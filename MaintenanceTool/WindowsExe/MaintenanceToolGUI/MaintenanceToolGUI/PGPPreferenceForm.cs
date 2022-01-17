@@ -22,6 +22,18 @@ namespace MaintenanceToolGUI
             ToolPGPRef = toolPGP;
         }
 
+        private void buttonPubkeyFolderPath_Click(object sender, EventArgs e)
+        {
+            // フォルダーを選択
+            FormUtil.SelectFolderPath(folderBrowserDialog1, textPubkeyFolderPath);
+        }
+
+        private void buttonBackupFolderPath_Click(object sender, EventArgs e)
+        {
+            // フォルダーを選択
+            FormUtil.SelectFolderPath(folderBrowserDialog1, textBackupFolderPath);
+        }
+
         private void buttonPGPStatus_Click(object sender, EventArgs e)
         {
             // PGPステータス照会処理を実行
