@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
@@ -131,9 +132,13 @@ namespace MaintenanceToolGUI
             // 画面から引き渡されたパラメーターを退避
             toolPGPParameter = parameter;
 
-            // バージョン照会から開始
+            // コマンド開始処理
             NotifyProcessStarted(requestType);
-            DoRequestGPGVersion();
+
+            // コマンドを別スレッドで起動（バージョン照会から開始）
+            Task task = Task.Run(() => {
+                DoRequestGPGVersion();
+            });
         }
 
         //
