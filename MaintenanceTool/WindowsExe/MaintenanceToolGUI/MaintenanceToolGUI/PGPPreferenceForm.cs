@@ -138,12 +138,12 @@ namespace MaintenanceToolGUI
         //
         void DoCommandPGPStatus()
         {
-            ToolPGPRef.DoCommandPGPStatus();
+            ToolPGPRef.DoOpenPGPCommand(AppCommon.RequestType.OpenPGPStatus, null);
         }
 
         void DoCommandPGPReset()
         {
-            ToolPGPRef.DoCommandPGPReset();
+            ToolPGPRef.DoOpenPGPCommand(AppCommon.RequestType.OpenPGPReset, null);
         }
 
         void DoCommandResetFirmware()
@@ -166,7 +166,7 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.OpenPGPStatus:
                     if (success) {
                         // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
-                        MessageBox.Show(this, ToolPGPRef.getPGPStatusInfoString(), MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, ToolPGPRef.GetPGPStatusInfoString(), MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
                     name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;

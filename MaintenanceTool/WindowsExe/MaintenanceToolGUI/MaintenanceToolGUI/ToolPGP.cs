@@ -121,7 +121,7 @@ namespace MaintenanceToolGUI
         //
         // OpenPGP機能設定用関数
         // 
-        public void DoCommandInstallPGPKey(ToolPGPParameter parameter)
+        public void DoOpenPGPCommand(AppCommon.RequestType requestType, ToolPGPParameter parameter)
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (MainFormRef.CheckUSBDeviceDisconnected()) {
@@ -132,31 +132,7 @@ namespace MaintenanceToolGUI
             toolPGPParameter = parameter;
 
             // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPInstallKeys);
-            DoRequestGPGVersion();
-        }
-
-        public void DoCommandPGPStatus()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPStatus);
-            DoRequestGPGVersion();
-        }
-
-        public void DoCommandPGPReset()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPReset);
+            NotifyProcessStarted(requestType);
             DoRequestGPGVersion();
         }
 
