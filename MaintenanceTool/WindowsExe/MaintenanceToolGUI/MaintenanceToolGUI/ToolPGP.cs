@@ -139,6 +139,9 @@ namespace MaintenanceToolGUI
             Task task = Task.Run(() => {
                 DoRequestGPGVersion();
             });
+
+            // 進捗画面を表示
+            CommonProcessingForm.OpenForm(PreferenceForm);
         }
 
         //
@@ -957,6 +960,9 @@ namespace MaintenanceToolGUI
             } else {
                 AppCommon.OutputLogError(formatted);
             }
+
+            // 進捗画面を閉じる
+            CommonProcessingForm.NotifyTerminate();
 
             // 画面に制御を戻す
             PreferenceForm.OnCommandProcessTerminated(RequestType, success, ErrorMessageOfCommand);
