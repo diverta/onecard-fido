@@ -1,11 +1,23 @@
 ﻿using MaintenanceToolCommon;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
 {
     public partial class PGPPreferenceForm : Form
     {
+        // 入力可能文字数
+        private const int OPENPGP_ENTRY_SIZE_MAX = 32;
+        private const int OPENPGP_ADMIN_PIN_CODE_SIZE_MIN = 8;
+        private const int OPENPGP_ADMIN_PIN_CODE_SIZE_MAX = 8;
+
+        // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
+        private const string OPENPGP_ENTRY_PATTERN_ASCII = "([ -z]+)";
+
+        // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
+        private const string OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+
         // 処理クラスの参照を保持
         private ToolPGP ToolPGPRef;
 
@@ -160,8 +172,126 @@ namespace MaintenanceToolGUI
         //
         private bool CheckForInstallPGPKey()
         {
+            // 入力欄のチェック
+            if (CheckMustEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+                return false;
+            }
+            if (CheckAsciiEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+                return false;
+            }
+            if (CheckMustEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
+                return false;
+            }
+            if (CheckAddressEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
+                return false;
+            }
+            if (CheckMustEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+                return false;
+            }
+            if (CheckAsciiEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+                return false;
+            }
+            if (CheckPathEntry(textPubkeyFolderPath, ToolGUICommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER) == false) {
+                return false;
+            }
+            if (CheckPathEntry(textBackupFolderPath, ToolGUICommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER) == false) {
+                return false;
+            }
+            if (CheckPinNumber(textPin, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN) == false) {
+                return false;
+            }
+            if (CheckPinNumber(textPinConfirm, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
+                return false;
+            }
+
+            // 確認用PINコードのチェック
+            if (CheckPinConfirm(textPinConfirm, textPin, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
+                return false;
+            }
+
             // プロンプトを表示し、Yesの場合だけ処理を行う
             return FormUtil.DisplayPromptPopup(this, ToolGUICommon.MSG_OPENPGP_INSTALL_PGP_KEY, ToolGUICommon.MSG_PROMPT_INSTALL_PGP_KEY);
+        }
+
+        private bool CheckMustEntry(TextBox text, string fieldName)
+        {
+            // 必須チェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName);
+            if (text.Text.Length == 0) {
+                FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, informativeText);
+                text.Focus();
+                return false;
+            }
+
+            // 長さチェック
+            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName);
+            if (FormUtil.checkEntrySize(text, 1, OPENPGP_ENTRY_SIZE_MAX, informativeText) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckAsciiEntry(TextBox text, string fieldName)
+        {
+            // 入力パターンチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName);
+            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, informativeText) == false) {
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckAddressEntry(TextBox text, string fieldName)
+        {
+            // 入力パターンチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
+            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, informativeText) == false) {
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckPathEntry(TextBox text, string messageIfError)
+        {
+            // 必須チェック（ただし、入力できないのでフォーカスは移動しない）
+            if (text.Text.Length == 0) {
+                FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, messageIfError);
+                return false;
+            }
+
+            // 入力されたファイルパスが存在しない場合は終了
+            string path = text.Text;
+            if (Directory.Exists(path) == false) {
+                FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, messageIfError);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckPinNumber(TextBox text, string fieldName)
+        {
+            // 長さチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, fieldName);
+            if (FormUtil.checkEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, informativeText) == false) {
+                return false;
+            }
+
+            // 数字チェック
+            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
+            if (FormUtil.checkIsNumeric(text, informativeText) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckPinConfirm(TextBox textPinConfirm, TextBox textPin, string fieldName)
+        {
+            // PIN番号の確認入力内容をチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
+            return FormUtil.compareEntry(textPinConfirm, textPin, informativeText);
         }
 
         //
