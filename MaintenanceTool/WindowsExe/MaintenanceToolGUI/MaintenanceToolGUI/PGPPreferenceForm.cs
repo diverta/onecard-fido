@@ -14,7 +14,7 @@ namespace MaintenanceToolGUI
         private const int OPENPGP_ADMIN_PIN_CODE_SIZE_MAX = 8;
 
         // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
-        private const string OPENPGP_ENTRY_PATTERN_ASCII = "([ -z]+)";
+        private const string OPENPGP_ENTRY_PATTERN_ASCII = "^[ -z]+$";
 
         // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
         private const string OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
