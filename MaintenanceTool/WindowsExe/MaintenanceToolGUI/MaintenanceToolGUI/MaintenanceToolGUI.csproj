@@ -97,6 +97,12 @@
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
+    <Compile Include="CommonDisplayInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommonDisplayInfoForm.designer.cs">
+      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommonProcessingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -281,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BLEDFUStartForm.resx">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommonDisplayInfoForm.resx">
+      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommonProcessingForm.resx">
       <DependentUpon>CommonProcessingForm.cs</DependentUpon>
