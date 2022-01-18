@@ -55,13 +55,16 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public static void SelectFolderPath(FolderBrowserDialog dialog, TextBox textBox)
+        public static void SelectFolderPath(FolderBrowserDialog dialog, string dialogDescription, TextBox textBox)
         {
             // ファイル選択ダイアログで選択されたパスを
             // 指定のテキストボックスにセット
             dialog.Reset();
-            if (textBox.Text != "") {
+            if (textBox.Text.Length > 0) {
                 dialog.SelectedPath = textBox.Text;
+            }
+            if (dialogDescription.Length > 0) {
+                dialog.Description = dialogDescription;
             }
             dialog.ShowNewFolderButton = false;
             if (dialog.ShowDialog() == DialogResult.OK) {

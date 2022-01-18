@@ -41,13 +41,13 @@ namespace MaintenanceToolGUI
         private void buttonPubkeyFolderPath_Click(object sender, EventArgs e)
         {
             // フォルダーを選択
-            FormUtil.SelectFolderPath(folderBrowserDialog1, textPubkeyFolderPath);
+            FormUtil.SelectFolderPath(folderBrowserDialog1, ToolGUICommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER, textPubkeyFolderPath);
         }
 
         private void buttonBackupFolderPath_Click(object sender, EventArgs e)
         {
             // フォルダーを選択
-            FormUtil.SelectFolderPath(folderBrowserDialog1, textBackupFolderPath);
+            FormUtil.SelectFolderPath(folderBrowserDialog1, ToolGUICommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER, textBackupFolderPath);
         }
 
         private void buttonInstallPGPKey_Click(object sender, EventArgs e)
