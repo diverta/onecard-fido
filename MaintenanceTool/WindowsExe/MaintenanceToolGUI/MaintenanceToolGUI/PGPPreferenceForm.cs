@@ -8,6 +8,7 @@ namespace MaintenanceToolGUI
     public partial class PGPPreferenceForm : Form
     {
         // 入力可能文字数
+        private const int OPENPGP_NAME_SIZE_MIN = 5;
         private const int OPENPGP_ENTRY_SIZE_MAX = 32;
         private const int OPENPGP_ADMIN_PIN_CODE_SIZE_MIN = 8;
         private const int OPENPGP_ADMIN_PIN_CODE_SIZE_MAX = 8;
@@ -173,19 +174,19 @@ namespace MaintenanceToolGUI
         private bool CheckForInstallPGPKey()
         {
             // 入力欄のチェック
-            if (CheckMustEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+            if (CheckMustEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME, OPENPGP_NAME_SIZE_MIN, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
             if (CheckAsciiEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
                 return false;
             }
-            if (CheckMustEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
+            if (CheckMustEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
             if (CheckAddressEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
                 return false;
             }
-            if (CheckMustEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+            if (CheckMustEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
             if (CheckAsciiEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
@@ -213,7 +214,7 @@ namespace MaintenanceToolGUI
             return FormUtil.DisplayPromptPopup(this, ToolGUICommon.MSG_OPENPGP_INSTALL_PGP_KEY, ToolGUICommon.MSG_PROMPT_INSTALL_PGP_KEY);
         }
 
-        private bool CheckMustEntry(TextBox text, string fieldName)
+        private bool CheckMustEntry(TextBox text, string fieldName, int sizeMin, int sizeMax)
         {
             // 必須チェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName);
@@ -224,8 +225,8 @@ namespace MaintenanceToolGUI
             }
 
             // 長さチェック
-            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName);
-            if (FormUtil.checkEntrySize(text, 1, OPENPGP_ENTRY_SIZE_MAX, informativeText) == false) {
+            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, sizeMin, sizeMax);
+            if (FormUtil.checkEntrySize(text, sizeMin, sizeMax, informativeText) == false) {
                 return false;
             }
 
