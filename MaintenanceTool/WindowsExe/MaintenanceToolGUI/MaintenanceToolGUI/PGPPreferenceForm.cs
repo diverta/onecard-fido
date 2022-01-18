@@ -362,7 +362,7 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.OpenPGPStatus:
                     if (success) {
                         // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
-                        MessageBox.Show(this, ToolPGPRef.GetPGPStatusInfoString(), MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CommonDisplayInfoForm.OpenForm(this, ToolGUICommon.PROCESS_NAME_OPENPGP_STATUS, ToolPGPRef.GetPGPStatusInfoString());
                         return;
                     }
                     name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
