@@ -16,6 +16,9 @@ namespace MaintenanceToolGUI
         // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
         private const string OPENPGP_ENTRY_PATTERN_ASCII = "^[ -z]+$";
 
+        // ASCII項目入力パターン [ -z]（両端の半角スペースは許容しない）
+        private const string OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS = "^[!-z]+[ -z]*[!-z]+$";
+
         // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
         private const string OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
@@ -180,6 +183,9 @@ namespace MaintenanceToolGUI
             if (CheckAsciiEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
                 return false;
             }
+            if (CheckEntryNoSpaceExistOnBothEnds(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+                return false;
+            }
             if (CheckMustEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
@@ -190,6 +196,9 @@ namespace MaintenanceToolGUI
                 return false;
             }
             if (CheckAsciiEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+                return false;
+            }
+            if (CheckEntryNoSpaceExistOnBothEnds(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
                 return false;
             }
             if (CheckPathEntry(textPubkeyFolderPath, ToolGUICommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER) == false) {
@@ -248,6 +257,16 @@ namespace MaintenanceToolGUI
             // 入力パターンチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
             if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, informativeText) == false) {
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckEntryNoSpaceExistOnBothEnds(TextBox text, string fieldName)
+        {
+            // 先頭または末尾に半角スペース文字が入っている場合はエラー
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS, fieldName);
+            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, informativeText) == false) {
                 return false;
             }
             return true;
