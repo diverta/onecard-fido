@@ -367,6 +367,7 @@
             this.buttonInstallPGPKey.TabIndex = 27;
             this.buttonInstallPGPKey.Text = "PGP秘密鍵のインストール";
             this.buttonInstallPGPKey.UseVisualStyleBackColor = true;
+            this.buttonInstallPGPKey.Click += new System.EventHandler(this.buttonInstallPGPKey_Click);
             // 
             // tabPagePinManagement
             // 

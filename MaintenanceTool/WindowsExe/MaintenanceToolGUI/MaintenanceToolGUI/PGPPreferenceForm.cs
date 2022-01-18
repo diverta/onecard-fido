@@ -34,6 +34,16 @@ namespace MaintenanceToolGUI
             FormUtil.SelectFolderPath(folderBrowserDialog1, textBackupFolderPath);
         }
 
+        private void buttonInstallPGPKey_Click(object sender, EventArgs e)
+        {
+            // 入力欄の内容をチェック
+            if (CheckForInstallPGPKey()) {
+                // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
+                EnableButtons(false);
+                DoCommandInstallPGPKey();
+            }
+        }
+
         private void buttonPGPStatus_Click(object sender, EventArgs e)
         {
             // PGPステータス照会処理を実行
@@ -146,8 +156,28 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // 入力チェック関連
+        //
+        private bool CheckForInstallPGPKey()
+        {
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            return FormUtil.DisplayPromptPopup(this, ToolGUICommon.MSG_OPENPGP_INSTALL_PGP_KEY, ToolGUICommon.MSG_PROMPT_INSTALL_PGP_KEY);
+        }
+
+        //
         // OpenPGP設定機能の各処理
         //
+        void DoCommandInstallPGPKey()
+        {
+            parameter.RealName = textRealName.Text;
+            parameter.MailAddress = textMailAddress.Text;
+            parameter.Comment = textComment.Text;
+            parameter.Passphrase = textPinConfirm.Text;
+            parameter.PubkeyFolderPath = textPubkeyFolderPath.Text;
+            parameter.BackupFolderPath = textBackupFolderPath.Text;
+            ToolPGPRef.DoOpenPGPCommand(AppCommon.RequestType.OpenPGPInstallKeys, parameter);
+        }
+
         void DoCommandPGPStatus()
         {
             ToolPGPRef.DoOpenPGPCommand(AppCommon.RequestType.OpenPGPStatus, null);
@@ -167,6 +197,7 @@ namespace MaintenanceToolGUI
         {
             // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
             DisplayResultMessage(requestType, success, errMessage);
+            ClearEntry(requestType, success);
             EnableButtons(true);
         }
 
@@ -175,6 +206,9 @@ namespace MaintenanceToolGUI
             // 処理名称を設定
             string name = "";
             switch (requestType) {
+                case AppCommon.RequestType.OpenPGPInstallKeys:
+                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
+                    break;
                 case AppCommon.RequestType.OpenPGPStatus:
                     if (success) {
                         // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
@@ -183,7 +217,7 @@ namespace MaintenanceToolGUI
                     }
                     name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
                     break;
-            case AppCommon.RequestType.OpenPGPReset:
+                case AppCommon.RequestType.OpenPGPReset:
                     name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
@@ -192,6 +226,7 @@ namespace MaintenanceToolGUI
                 default:
                     break;
             }
+
             // メッセージをポップアップ表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 name,
@@ -200,6 +235,21 @@ namespace MaintenanceToolGUI
                 MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
             } else {
                 MessageBox.Show(this, errMessage, formatted, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ClearEntry(AppCommon.RequestType requestType, bool success)
+        {
+            // 全ての入力欄をクリア
+            switch (requestType) {
+                case AppCommon.RequestType.OpenPGPInstallKeys:
+                    if (success) {
+                        InitTabPGPKeyPathFields();
+                        InitTabPGPKeyEntryFields();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
