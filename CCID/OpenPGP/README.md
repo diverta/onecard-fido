@@ -38,6 +38,9 @@ Gpg4winは、Windows環境へのPGP鍵インストール時に必要となりま
 - <b>[PGP鍵インストール手順書](../../MaintenanceTool/WindowsExe/PGPKEYINST.md)</b><br>
 管理ツールを使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
 
+- <b>[PGP鍵を使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTIONWIN.md)</b><br>
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にインストールしたPGP鍵を使用し、Windows上でファイルを暗号化／復号化をする手順について掲載しています。
+
 ## ご参考
 
 - <b>[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)</b><br>
