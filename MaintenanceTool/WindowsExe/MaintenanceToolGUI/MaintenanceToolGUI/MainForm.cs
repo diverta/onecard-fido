@@ -433,6 +433,7 @@ namespace MaintenanceToolGUI
             buttonSetPinParam.Enabled = enabled;
             buttonDFU.Enabled = enabled;
             ButtonFIDOAttestation.Enabled = enabled;
+            buttonSetPgpParam.Enabled = enabled;
             buttonQuit.Enabled = enabled;
             menuStrip1.Enabled = enabled;
         }
