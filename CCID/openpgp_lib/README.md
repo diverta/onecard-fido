@@ -1,6 +1,6 @@
 # OpenPGPカードエミュレーション
 
-最終更新日：2021/3/11
+最終更新日：2022/1/20
 
 ## 概要
 OpenPGPカードと同等の機能（OpenPGPカードエミュレーション機能）をnRF52840上に実装するためのモジュールです。
@@ -115,6 +115,6 @@ OpenPGPに関する仕様は以下になります。
 |1|RID|`D2 76 00 01 24`|OpenPGPアプリケーションの固有ID|
 |2|PIX|`01`|OpenPGPアプリケーションの固有ID|
 |3|Application version|`03 04`|Version 3.4|
-|4|Manufacturer|`F1 D0`|ダミー値|
+|4|Manufacturer|`00 00`|ダミー値|
 |5|Serial number|`00 00 00 00`|ダミー値|
 |6|RFU|`00 00`|設定不要|
