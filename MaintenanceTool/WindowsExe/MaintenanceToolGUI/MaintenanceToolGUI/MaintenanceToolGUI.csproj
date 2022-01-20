@@ -345,8 +345,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.1.bin" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.3.zip" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.3.zip" />
     <EmbeddedResource Include="Resources\card_reset.bat" />
     <EmbeddedResource Include="Resources\card_reset.param" />
     <EmbeddedResource Include="Resources\generate_main_key.bat" />
@@ -356,6 +354,8 @@
     <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
     <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
     <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.3.zip" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.3.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
