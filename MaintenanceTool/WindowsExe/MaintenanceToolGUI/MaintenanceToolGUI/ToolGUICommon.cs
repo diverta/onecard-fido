@@ -116,9 +116,31 @@
         public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE = "PGP公開鍵ファイルを、指定フォルダー（{0}）に生成しました。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE = "PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（{0}）に生成しました。";
+        public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
         public const string MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE = "生成したPGP秘密鍵（副鍵）を認証器に移動しました。";
         public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
+        public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
+        public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";
+        public const string MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER = "バックアップファイルの出力先フォルダーを選択してください";
+        public const string MSG_PROMPT_INPUT_PGP_MUST_ENTRY = "{0}は必ず入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT = "{0}は{1}～{2}文字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ASCII_ENTRY = "{0}は半角文字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY = "{0}を正しく入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT = "{0}を8桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM = "{0}を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM = "{0}を正しく入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS = "{0}の先頭または末尾の半角スペースを除去してください";
+        public const string MSG_PROMPT_INSTALL_PGP_KEY = "インストールを実行しますか？";
+        public const string MSG_PROMPT_OPENPGP_RESET = "OpenPGP機能の設定（鍵・PIN番号等）が全て削除され、OpenPGP機能が使用できなくなります。\n\n処理を開始しますか？";
+        public const string MSG_LABEL_PGP_REAL_NAME = "名前";
+        public const string MSG_LABEL_PGP_MAIL_ADDRESS = "メールアドレス";
+        public const string MSG_LABEL_PGP_COMMENT = "コメント";
+        public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
+        public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
+        public const string MSG_LABEL_COMMAND_OPENPGP_STATUS = "設定情報の参照";
+        public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書の削除";

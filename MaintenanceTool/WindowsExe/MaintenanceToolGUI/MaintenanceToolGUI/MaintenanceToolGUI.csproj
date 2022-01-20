@@ -97,6 +97,18 @@
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
+    <Compile Include="CommonDisplayInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommonDisplayInfoForm.designer.cs">
+      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommonProcessingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommonProcessingForm.designer.cs">
+      <DependentUpon>CommonProcessingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DFUDevice.cs" />
     <Compile Include="DFUForm.cs">
       <SubType>Form</SubType>
@@ -127,6 +139,12 @@
     </Compile>
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PGPPreferenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PGPPreferenceForm.designer.cs">
+      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolBLEDFU.cs" />
     <Compile Include="ToolBLEDFUImage.cs" />
@@ -270,6 +288,12 @@
     <EmbeddedResource Include="BLEDFUStartForm.resx">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommonDisplayInfoForm.resx">
+      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommonProcessingForm.resx">
+      <DependentUpon>CommonProcessingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DFUForm.resx">
       <DependentUpon>DFUForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -288,6 +312,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PGPPreferenceForm.resx">
+      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

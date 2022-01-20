@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace MaintenanceToolGUI
 {
@@ -23,7 +23,10 @@ namespace MaintenanceToolGUI
 
     public class ToolPGP
     {
-        // 画面の参照を保持
+        // OpenPGP機能設定画面
+        private PGPPreferenceForm PreferenceForm;
+
+        // メイン画面の参照を保持
         private MainForm MainFormRef;
 
         // 処理クラスの参照を保持
@@ -75,19 +78,20 @@ namespace MaintenanceToolGUI
 
             // HID処理クラスの参照を保持
             HidMainRef = h;
+
+            // OpenPGP機能設定画面を生成
+            PreferenceForm = new PGPPreferenceForm(this);
         }
 
         public void ShowDialog()
         {
-            // TODO: 仮の実装です。
-            ToolPGPParameter parameter = new ToolPGPParameter();
-            parameter.RealName = "";
-            parameter.MailAddress = "";
-            parameter.Comment = "";
-            parameter.Passphrase = "";
-            parameter.PubkeyFolderPath = "";
-            parameter.BackupFolderPath = "";
-            DoCommandInstallPGPKey(parameter);
+            // ツール設定画面を表示
+            PreferenceForm.ShowDialog();
+        }
+
+        public string GetPGPStatusInfoString()
+        {
+            return StatusInfoString;
         }
 
         //
@@ -117,7 +121,7 @@ namespace MaintenanceToolGUI
         //
         // OpenPGP機能設定用関数
         // 
-        public void DoCommandInstallPGPKey(ToolPGPParameter parameter)
+        public void DoOpenPGPCommand(AppCommon.RequestType requestType, ToolPGPParameter parameter)
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (MainFormRef.CheckUSBDeviceDisconnected()) {
@@ -127,33 +131,16 @@ namespace MaintenanceToolGUI
             // 画面から引き渡されたパラメーターを退避
             toolPGPParameter = parameter;
 
-            // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPInstallKeys);
-            DoRequestGPGVersion();
-        }
+            // コマンド開始処理
+            NotifyProcessStarted(requestType);
 
-        public void DoCommandPGPStatus()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
+            // コマンドを別スレッドで起動（バージョン照会から開始）
+            Task task = Task.Run(() => {
+                DoRequestGPGVersion();
+            });
 
-            // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPStatus);
-            DoRequestGPGVersion();
-        }
-
-        public void DoCommandPGPReset()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // バージョン照会から開始
-            NotifyProcessStarted(AppCommon.RequestType.OpenPGPReset);
-            DoRequestGPGVersion();
+            // 進捗画面を表示
+            CommonProcessingForm.OpenForm(PreferenceForm);
         }
 
         //
@@ -198,7 +185,6 @@ namespace MaintenanceToolGUI
             if (success) {
                 // レスポンスを保持
                 StatusInfoString = response;
-                AppCommon.OutputLogInfo(StatusInfoString);
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
@@ -861,6 +847,7 @@ namespace MaintenanceToolGUI
             if (workingDirectory != null) {
                 psi.WorkingDirectory = workingDirectory;
             }
+            psi.CreateNoWindow = true;
 
             // 出力格納領域を初期化
             string stdOutputString = "";
@@ -872,7 +859,7 @@ namespace MaintenanceToolGUI
                 Process child = Process.Start(psi);
                 stdOutputString = child.StandardOutput.ReadToEnd();
                 stdErrorString = child.StandardError.ReadToEnd();
-                
+
                 // コマンドからの応答を待機
                 child.WaitForExit();
 
@@ -973,8 +960,11 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(formatted);
             }
 
-            // TODO: 画面に制御を戻す
-            MessageBox.Show(MainFormRef, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // 進捗画面を閉じる
+            CommonProcessingForm.NotifyTerminate();
+
+            // 画面に制御を戻す
+            PreferenceForm.OnCommandProcessTerminated(RequestType, success, ErrorMessageOfCommand);
         }
     }
 }

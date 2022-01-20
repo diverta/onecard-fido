@@ -30,6 +30,16 @@ namespace MaintenanceToolGUI
             return (dialogResult == DialogResult.Yes);
         }
 
+        public static bool DisplayPromptPopup(IWin32Window owner, string title, string message)
+        {
+            DialogResult dialogResult = MessageBox.Show(owner,
+                message, title,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Yesがクリックされた場合 true を戻す
+            return (dialogResult == DialogResult.Yes);
+        }
+
         public static void selectFilePath(
             OpenFileDialog dialog, string title, string filter, TextBox textBox)
         {
@@ -42,6 +52,23 @@ namespace MaintenanceToolGUI
             dialog.RestoreDirectory = true;
             if (dialog.ShowDialog() == DialogResult.OK) {
                 textBox.Text = dialog.FileName;
+            }
+        }
+
+        public static void SelectFolderPath(FolderBrowserDialog dialog, string dialogDescription, TextBox textBox)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            dialog.Reset();
+            if (textBox.Text.Length > 0) {
+                dialog.SelectedPath = textBox.Text;
+            }
+            if (dialogDescription.Length > 0) {
+                dialog.Description = dialogDescription;
+            }
+            dialog.ShowNewFolderButton = false;
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                textBox.Text = dialog.SelectedPath;
             }
         }
 
