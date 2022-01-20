@@ -1,0 +1,46 @@
+# PIVカードエミュレーション対応
+
+## 概要
+
+[nRF52840アプリケーション](../nRF52840_app)に、PIVカードと同等の機能（PIVカードエミュレーション機能）を追加する対応です。
+
+[PIVカードエミュレーション機能](../CCID/ccid_lib/README_PIV.md)は、[USB CCIDインターフェース](../CCID/ccid_lib/README.md)上で動作します。
+
+## 利用例
+
+<img src="../FIDO2Device/MDBT50Q_Dongle/assets01/0003.jpg" width="720">
+<img src="../FIDO2Device/MDBT50Q_Dongle/assets01/0004.jpg" width="720">
+
+nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCに装着すると、macOSにPIN番号を使ってログインできるようになります。<br>
+詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
+
+## 手順書
+
+- <b>[CCIDドライバーインストール手順](../CCID/INSTALLPRG.md)</b><br>
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールする手順を掲載しています。<br>
+WIndows 10環境では、CCIDドライバーのインストールは不要になります。
+
+- <b>[PIV機能の設定手順](../MaintenanceTool/macOSApp/PIVSETTING.md)</b><br>
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、[FIDO認証器管理ツール（macOS版）](../MaintenanceTool/macOSApp/README.md)を使用して、PIV機能に必要な各種設定を行う手順を掲載します。
+
+- <b>[PIN番号を使用したmacOSログイン確認手順](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)</b><br>
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のPIV機能を使用して、macOSにPIN番号でログインする手順を掲載します。
+
+## 手順書（ご参考）
+
+- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../CCID/PIVTOOLMACINST.md)</b><br>
+PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、macOS環境に導入する手順を掲載します。
+
+- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../CCID/PIVTOOLWININST.md)</b><br>
+PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、Windows 10環境に導入する手順を掲載します。
+
+- <b>[Yubico PIV Toolによる初期データ導入手順](../CCID/YKPIVUSAGE.md)</b><br>
+Yubico PIV Tool (command line) を使用して、鍵・証明書などを[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する手順を掲載します。
+
+- <b>[Yubico PIV Toolによる各種手順](../CCID/YKPIVUSAGE_1.md)</b><br>
+Yubico PIV Tool (command line) を使用した（前項以外の）各種手順を掲載します。
+
+## 開発情報（ご参考）
+
+- <b>[PIN番号を使用したmacOSログイン時の動作](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN_DEV.md)</b><br>
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のPIV機能を使用して、macOSにPIN番号でログイン時、PC〜nRF52840間で行われるやり取りについて掲載しています。

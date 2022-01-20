@@ -24,7 +24,12 @@ FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケ�
 ### PIVカードエミュレーション機能
 
 PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
-詳細につきましては、別ドキュメント（[CCIDインターフェース追加対応](../CCID/README.md)）をご参照願います。
+詳細につきましては、別ドキュメント（[PIVカードエミュレーション対応](../CCID/PIVCARDEMUL.md)）をご参照願います。
+
+### OpenPGPカードエミュレーション機能
+
+OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
 
 ## ファームウェア
 
