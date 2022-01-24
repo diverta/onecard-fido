@@ -99,6 +99,8 @@
 		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
+		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
+		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
 		7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
 /* End PBXBuildFile section */
 
@@ -262,6 +264,9 @@
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
+		7AF43D12279E37080016086E /* ToolProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToolProcessingWindow.xib; sourceTree = "<group>"; };
+		7AF43D13279E37080016086E /* ToolProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolProcessingWindow.m; sourceTree = "<group>"; };
+		7AF43D14279E37080016086E /* ToolProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolProcessingWindow.h; sourceTree = "<group>"; };
 		7AF4EDBC273507A000C126D9 /* BLEDFUDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUDefine.h; sourceTree = "<group>"; };
 		7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLESMPCommand.m; sourceTree = "<group>"; };
 		7AF9B0F12728E4250070F8A4 /* ToolBLESMPCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLESMPCommand.h; sourceTree = "<group>"; };
@@ -513,6 +518,9 @@
 				7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */,
 				7A667222258ADF6300CAF308 /* ToolInfoWindow.h */,
 				7A667220258ADF5000CAF308 /* ToolInfoWindow.m */,
+				7AF43D12279E37080016086E /* ToolProcessingWindow.xib */,
+				7AF43D14279E37080016086E /* ToolProcessingWindow.h */,
+				7AF43D13279E37080016086E /* ToolProcessingWindow.m */,
 			);
 			path = MaintenanceToolCommon;
 			sourceTree = "<group>";
@@ -657,6 +665,7 @@
 				7A5839C52782CF5300169205 /* appkg.PCA10059_02.0.3.3.zip in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */,
+				7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */,
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
@@ -708,6 +717,7 @@
 				7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */,
 				7A4D118A271E6A750095C29E /* DFUProcessingWindow.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
+				7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */,
 				7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */,
