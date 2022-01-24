@@ -18,6 +18,8 @@
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MAX     8
 // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
 #define OPENPGP_ENTRY_PATTERN_ASCII         @"^[ -z]+$"
+// ASCII項目入力パターン [ -z]（両端の半角スペースは許容しない）
+#define OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND  @"^[!-z]+[ -z]*[!-z]+$"
 // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
 #define OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS  @"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
 
@@ -234,6 +236,9 @@
         if ([self checkAsciiEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
             return false;
         }
+        if ([self checkEntryNoSpaceExistOnBothEnds:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
+            return false;
+        }
         if ([self checkMustEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS] == false) {
             return false;
         }
@@ -244,6 +249,9 @@
             return false;
         }
         if ([self checkAsciiEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
+            return false;
+        }
+        if ([self checkEntryNoSpaceExistOnBothEnds:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
             return false;
         }
         if ([self checkPathEntry:[self textPubkeyFolderPath] messageIfError:MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER] == false) {
@@ -298,6 +306,15 @@
         // 入力パターンチェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName];
         if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS informativeText:message] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkEntryNoSpaceExistOnBothEnds:(NSTextField *)field fieldName:(NSString *)fieldName {
+        // 入力パターンチェック
+        NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTHEND, fieldName];
+        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND informativeText:message] == false) {
             return false;
         }
         return true;
