@@ -17,7 +17,7 @@
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MIN     8
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MAX     8
 // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
-#define OPENPGP_ENTRY_PATTERN_ASCII         @"([ -z]+)"
+#define OPENPGP_ENTRY_PATTERN_ASCII         @"^[ -z]+$"
 // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
 #define OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS  @"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
 
