@@ -9,6 +9,7 @@
 #import "ToolInfoWindow.h"
 #import "ToolPGPCommand.h"
 #import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
@@ -357,10 +358,15 @@
 #pragma mark - For ToolPGPCommand functions
 
     - (void)commandWillResetFirmware {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
+        // 認証器リセット処理を実行
         [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
     }
 
     - (void)commandWillInstallPGPKey {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
         NSString *realName = [[self textRealName] stringValue];
         NSString *mailAddress = [[self textMailAddress] stringValue];
@@ -374,16 +380,22 @@
     }
 
     - (void)commandWillPGPStatus {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // PGPステータス照会処理を実行
         [[self toolPGPCommand] commandWillPGPStatus:self];
     }
 
     - (void)commandWillPGPReset {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // PGPリセット処理を実行
         [[self toolPGPCommand] commandWillPGPReset:self];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK];
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
         [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
         [self clearEntry:command withResult:result];
