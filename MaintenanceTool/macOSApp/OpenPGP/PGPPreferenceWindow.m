@@ -13,6 +13,7 @@
 #import "ToolLogFile.h"
 
 // 入力可能文字数
+#define OPENPGP_NAME_SIZE_MIN               5
 #define OPENPGP_ENTRY_SIZE_MAX              32
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MIN     8
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MAX     8
@@ -230,7 +231,7 @@
 
     - (bool)checkForInstallPGPKey:(id)sender {
         // 入力欄のチェック
-        if ([self checkMustEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
+        if ([self checkMustEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME sizeMin:OPENPGP_NAME_SIZE_MIN sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAsciiEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
@@ -239,13 +240,13 @@
         if ([self checkEntryNoSpaceExistOnBothEnds:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS] == false) {
+        if ([self checkMustEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS sizeMin:1 sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAddressEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
+        if ([self checkMustEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT sizeMin:1 sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAsciiEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
@@ -279,15 +280,15 @@
         return true;
     }
 
-    - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName {
+    - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName sizeMin:(int)min sizeMax:(int)max {
         // 必須チェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName];
         if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
             return false;
         }
         // 長さチェック
-        message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName];
-        if ([ToolCommon checkEntrySize:field minSize:1 maxSize:OPENPGP_ENTRY_SIZE_MAX informativeText:message] == false) {
+        message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, min, max];
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:message] == false) {
             return false;
         }
         return true;

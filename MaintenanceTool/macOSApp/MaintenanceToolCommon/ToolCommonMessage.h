@@ -341,7 +341,7 @@
 #define MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER     @"PGP公開鍵ファイルの出力先フォルダーを選択してください"
 #define MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER     @"バックアップファイルの出力先フォルダーを選択してください"
 #define MSG_PROMPT_INPUT_PGP_MUST_ENTRY         @"%@は必ず入力してください"
-#define MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT        @"%@は32文字以内で入力してください"
+#define MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT        @"%@は%d～%d文字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ASCII_ENTRY        @"%@は半角文字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY      @"%@を正しく入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT    @"%@を8桁で入力してください"
