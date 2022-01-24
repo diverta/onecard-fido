@@ -9,15 +9,19 @@
 #import "ToolInfoWindow.h"
 #import "ToolPGPCommand.h"
 #import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 // 入力可能文字数
+#define OPENPGP_NAME_SIZE_MIN               5
 #define OPENPGP_ENTRY_SIZE_MAX              32
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MIN     8
 #define OPENPGP_ADMIN_PIN_CODE_SIZE_MAX     8
 // ASCII項目入力パターン [ -z]（表示可能な半角文字はすべて許容）
-#define OPENPGP_ENTRY_PATTERN_ASCII         @"([ -z]+)"
+#define OPENPGP_ENTRY_PATTERN_ASCII         @"^[ -z]+$"
+// ASCII項目入力パターン [ -z]（両端の半角スペースは許容しない）
+#define OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND  @"^[!-z]+[ -z]*[!-z]+$"
 // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
 #define OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS  @"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
 
@@ -228,22 +232,28 @@
 
     - (bool)checkForInstallPGPKey:(id)sender {
         // 入力欄のチェック
-        if ([self checkMustEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
+        if ([self checkMustEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME sizeMin:OPENPGP_NAME_SIZE_MIN sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAsciiEntry:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS] == false) {
+        if ([self checkEntryNoSpaceExistOnBothEnds:[self textRealName] fieldName:MSG_LABEL_PGP_REAL_NAME] == false) {
+            return false;
+        }
+        if ([self checkMustEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS sizeMin:1 sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAddressEntry:[self textMailAddress] fieldName:MSG_LABEL_PGP_MAIL_ADDRESS] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
+        if ([self checkMustEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT sizeMin:1 sizeMax:OPENPGP_ENTRY_SIZE_MAX] == false) {
             return false;
         }
         if ([self checkAsciiEntry:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
+            return false;
+        }
+        if ([self checkEntryNoSpaceExistOnBothEnds:[self textComment] fieldName:MSG_LABEL_PGP_COMMENT] == false) {
             return false;
         }
         if ([self checkPathEntry:[self textPubkeyFolderPath] messageIfError:MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER] == false) {
@@ -271,15 +281,15 @@
         return true;
     }
 
-    - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName {
+    - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName sizeMin:(int)min sizeMax:(int)max {
         // 必須チェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName];
         if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
             return false;
         }
         // 長さチェック
-        message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName];
-        if ([ToolCommon checkEntrySize:field minSize:1 maxSize:OPENPGP_ENTRY_SIZE_MAX informativeText:message] == false) {
+        message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, min, max];
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:message] == false) {
             return false;
         }
         return true;
@@ -298,6 +308,15 @@
         // 入力パターンチェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName];
         if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS informativeText:message] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkEntryNoSpaceExistOnBothEnds:(NSTextField *)field fieldName:(NSString *)fieldName {
+        // 入力パターンチェック
+        NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTHEND, fieldName];
+        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND informativeText:message] == false) {
             return false;
         }
         return true;
@@ -339,10 +358,15 @@
 #pragma mark - For ToolPGPCommand functions
 
     - (void)commandWillResetFirmware {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
+        // 認証器リセット処理を実行
         [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
     }
 
     - (void)commandWillInstallPGPKey {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
         NSString *realName = [[self textRealName] stringValue];
         NSString *mailAddress = [[self textMailAddress] stringValue];
@@ -356,16 +380,22 @@
     }
 
     - (void)commandWillPGPStatus {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // PGPステータス照会処理を実行
         [[self toolPGPCommand] commandWillPGPStatus:self];
     }
 
     - (void)commandWillPGPReset {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // PGPリセット処理を実行
         [[self toolPGPCommand] commandWillPGPReset:self];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK];
         // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
         [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
         [self clearEntry:command withResult:result];
