@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		XZI9jfSkqkiIAWkJ6W0kbySijcw=
+		6a/kSDUUPe3/mRo81cFmDzX43gI=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -36,9 +36,13 @@
 		<data>
 		3Wk+Uc3JPHNZim5IgwhIHY7R8cQ=
 		</data>
+		<key>Resources/PGPPreferenceWindow.nib</key>
+		<data>
+		qwh4qGrYcLJOr/J7a9zk0mLC3uQ=
+		</data>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<data>
-		D54qFkT4AMWHtrGHIH+XSktlJTU=
+		QXepzPzBUAZZaZmTtMXSD29xSJk=
 		</data>
 		<key>Resources/PinCodeParamWindow.nib</key>
 		<data>
@@ -60,17 +64,41 @@
 		<data>
 		jnbnPO9bJ0IbIV7XK8caLFDhjPE=
 		</data>
+		<key>Resources/ToolProcessingWindow.nib</key>
+		<data>
+		KM7Aj5kLMzWRRYEFVswcNyv8XWg=
+		</data>
+		<key>Resources/add_sub_key.param</key>
+		<data>
+		9nbP3R/MyRpavrOgZ+W0xYZ27CI=
+		</data>
+		<key>Resources/add_sub_key.sh</key>
+		<data>
+		RsqlGTJBKY0KYFwYxvxE6lXDzBc=
+		</data>
 		<key>Resources/app_update.PCA10095.0.4.1.bin</key>
 		<data>
 		5rw8vAW+dIBMkK91ov1lsZyhM5E=
 		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.2.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.3.zip</key>
 		<data>
-		mDt+LLfw4ZLvesyTGkmrvrpuQPk=
+		rks2DKl79OVoZLBYVczv9SmqRZg=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.2.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.3.zip</key>
 		<data>
-		NrKhhXsG3lNV8S7+Az2go9GzosA=
+		0r6PZ5wODVlbHkQfm+XnI3FuPak=
+		</data>
+		<key>Resources/card_reset.param</key>
+		<data>
+		p+Q27g8MvAiW+Gij7HnOQLvSpN4=
+		</data>
+		<key>Resources/card_reset.sh</key>
+		<data>
+		yCb88/qytIrNEPsAANuqDlj6U6s=
+		</data>
+		<key>Resources/card_status.sh</key>
+		<data>
+		LkaZ+msDASLMAKLlocaVrCgHg0I=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -85,11 +113,31 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			ki4xdkLnHgnTzN2FZBoFiSoShNM=
+			3TDbkfGJvGdIAvjj56aHubePveM=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
+		<key>Resources/export_pubkey_and_backup.sh</key>
+		<data>
+		l27+Ig6g+I5XO3EzQJSMipUMZ1Y=
+		</data>
+		<key>Resources/generate_main_key.param</key>
+		<data>
+		r6Ff49H4Ggx/QmewooowZg6Q1bk=
+		</data>
+		<key>Resources/generate_main_key.sh</key>
+		<data>
+		gcaEPr0JMcWdXq09f4XX3p6sXpo=
+		</data>
+		<key>Resources/transfer_subkey_to_card.param</key>
+		<data>
+		+wcwBoqVL9wuAOPmVWsyDKsg1Hg=
+		</data>
+		<key>Resources/transfer_subkey_to_card.sh</key>
+		<data>
+		2GHfWt3I4OAYpY0Hla82R+J2Wcw=
+		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -104,7 +152,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			X+TeQe8YYz2L/m1Co3eB8QlqsJoEvsc5tE4rwGt7fLQ=
+			2JUdJ1JCRcfVlseh4WzFya4ZcvdKXLN/JEynSGIzU10=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -149,11 +197,18 @@
 			i0bswD7wZquE7xznuhx2EJy0b2VYoDJWCJN/tLrNak8=
 			</data>
 		</dict>
+		<key>Resources/PGPPreferenceWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			s2HrrXWsRt6+Gg5u9tdlEPacrLbD51wF8XOoJG2pNAE=
+			</data>
+		</dict>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			erTYH/GNxfbo0GhiWOj1VZ+x9YeE1tyxE6TrirZicGc=
+			cx212HZLbpyoKV2x9T7U+WrQr+4fI2wIhPKD3hBJX98=
 			</data>
 		</dict>
 		<key>Resources/PinCodeParamWindow.nib</key>
@@ -191,6 +246,27 @@
 			bbcJ5Oy3A7czEyzg5Q0MbZ1yE0ALXkhUUmsw3OBWEco=
 			</data>
 		</dict>
+		<key>Resources/ToolProcessingWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			s9rW5tAblIi+nRgB6EMF1OmTTCMahvomERG5h/Yg55U=
+			</data>
+		</dict>
+		<key>Resources/add_sub_key.param</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			H2LiUHxDVgYHpYaeoyHyq7Gm0mGb/jUSZa7khnLlsn4=
+			</data>
+		</dict>
+		<key>Resources/add_sub_key.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			MvXLJt12u/aCuerb+Uj7kd/e3OGo7nz/aM3MMLvjYM0=
+			</data>
+		</dict>
 		<key>Resources/app_update.PCA10095.0.4.1.bin</key>
 		<dict>
 			<key>hash2</key>
@@ -198,18 +274,39 @@
 			Q++qDAK+npnr68rqeY3J0pPSC0bUp8CoB8M8x3qYfpw=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.2.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.3.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			XBNE6A8RVVnToV/pRJ8LTJZPN76ovm9teElAPY5zWVA=
+			DhcHXzQsThVn71JXqf3MEI9K7m9HNTwwEi4PDEHExgQ=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.2.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.3.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JyRCrzmr4eyKix+Qt+Dl2+OCFXY8ISbYly+oDtdLhLY=
+			QbLrk6MqeUrk3WuKhIzQlnQtCBp8VG0PiD+7wszv2QA=
+			</data>
+		</dict>
+		<key>Resources/card_reset.param</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			YMDkkO0oOgQOWC5Ww2vymMqXcURtm6/WQU3ADJMgUYo=
+			</data>
+		</dict>
+		<key>Resources/card_reset.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			r8aSe0tFg2Ql/N8ZffdztFakvoFvu66XyPdWm6ta30Y=
+			</data>
+		</dict>
+		<key>Resources/card_status.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			fRcDWkNjmDGg9QpcQdWM3LPy8OViBA78TgosQNYEJHs=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
@@ -225,10 +322,45 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			EpIsn/ogS+DvX9vmkJdbX3rI2D/QJW9JQecL5BHSf98=
+			kY2fiL5ljhET3oJOeuYSlC4xOiAt1OdiQ0VVF91hqL8=
 			</data>
 			<key>optional</key>
 			<true/>
+		</dict>
+		<key>Resources/export_pubkey_and_backup.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			zneFM/0Xlo8DVKEklzHuyiS4Nau7ik7X4HRooyQBLho=
+			</data>
+		</dict>
+		<key>Resources/generate_main_key.param</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ItEFKQAT0OGbf83OMHh9czAQGdyybfTl3odLcTsNHXU=
+			</data>
+		</dict>
+		<key>Resources/generate_main_key.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			p96kycL9pj2+rUeF2ZFEQQOLr4l491N7EV3n0fdtoH0=
+			</data>
+		</dict>
+		<key>Resources/transfer_subkey_to_card.param</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Add82QljbrtNBnIX1bBKFsWH2M/3OMIDga4hZO9RIi4=
+			</data>
+		</dict>
+		<key>Resources/transfer_subkey_to_card.sh</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			SSgl6+Wdjlg5/X55bKSjBQVXsFS0uW5bLQVHu7FuRhs=
+			</data>
 		</dict>
 	</dict>
 	<key>rules</key>
