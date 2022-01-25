@@ -4,17 +4,13 @@
 
 ## 前提条件
 
-まずは以下の手順書を参照し、現在使用中のnRF5 SDK（nRF5 SDK v17.0.2）による開発環境が整備されていることを前提とします。
+まずは下記手順書により、各種ソフトウェアがインストールされていることを前提とします。<br>
 
-#### [NetBeansインストール手順](../nRF52840_app/NETBEANSINST.md)
-[nRF52840アプリケーション](../nRF52840_app/README.md)のビルドに必要なツールを準備します。<br>
-具体的には、nRF Connect SDKを新規導入するために最低限必要な、以下のツール群をインストールします。
-- nRFコマンドラインツール（nrfjprogコマンドが含まれる）
-- ARM GCCツールチェイン
-- SEGGER J-Link
+- <b>[ARM GCCインストール手順](../nRF52840_app/ARMGCCINST.md)</b><br>
+コンパイル、リンク等を実行するためのコマンドラインツール群がインストールされます。
 
-#### [CMakeインストール手順](../nRF5340_app/INSTALLCMAKE.md)
-メイクファイル生成コマンド「cmake」を含むツール「CMake」を準備します。
+- <b>[CMakeインストール手順](../nRF5340_app/INSTALLCMAKE.md)</b><br>
+メイクファイル生成コマンド「`cmake`」を含むツール「CMake」がインストールされます。
 
 ## Python3環境の準備
 
