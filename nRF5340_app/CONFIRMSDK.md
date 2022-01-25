@@ -142,3 +142,51 @@ Starting Nordic UART service example
 ## サンプルアプリの動作確認
 
 Androidアプリ「nRF Connect」を使用し、nRF5340に書き込んだ「Peripheral UART」が正常に動作することを確認します。
+
+### 接続とデータ送受信
+
+Androidアプリ「nRF Connect」を起動します。<br>
+デバイス一覧に「Nordic_UART_Service」がリストされていることを確認します。
+
+その後、右横の「CONNECT」ボタンをタップします。
+
+<img width="160" src="assets01/0011.jpg">
+
+画面右上のメニューを表示させ、「Discover services」をタップします。
+
+<img width="160" src="assets01/0012.jpg">
+
+サービス一覧が表示されます。<br>
+一覧の中から「Nordic UART Service」をタップします。
+
+<img width="160" src="assets01/0013.jpg">
+
+下部に３点のキャラクタリスティックが一覧表示されます。
+
+「TX Charactaristic」の右横のアイコンをタップすると、DescriptorsのValueが「Notifications enabled」に切り替わります。<br>
+この状態で、nRF5340から文字列データを受信することができるようになります。
+
+まずは、AndroidからnRF5340へ、文字列データを送信してみます。<br>
+「RX Charactaristic」の右横のアイコンをタップします。
+
+<img width="160" src="assets01/0014.jpg">
+
+下図のようなポップアップが表示されるので、任意の文字列（`qwerty`）を入力し「SEND」をタップします。
+
+<img width="160" src="assets01/0015.jpg">
+
+Android側から送信した文字列データが、nRF5340側で受信されます。<br>
+下図のように、受信した文字列データ（`qwerty`）がデバッグ出力されます。
+
+次に、nRF5340からAndroidへ、文字列データを送信してみます。<br>
+screenコマンドが実行中のターミナル画面上で、任意の文字列（`asdfg`）を入力し、Enterキーを押します。<br>
+（入力した`asdfg`は、ターミナル画面上にエコーバックされないのでご注意ください）
+
+<img width="500" src="assets01/0016.jpg">
+
+nRF5340側から送信した文字列データが、Android側で受信されます。<br>
+「TX Charactaristic」のValueに、受信した文字列データ（`asdfg`）が表示されます。
+
+<img width="160" src="assets01/0017.jpg">
+
+以上で、サンプルアプリの動作確認は完了です。
