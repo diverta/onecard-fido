@@ -1,0 +1,22 @@
+ZEPHYR_BASE=/Users/makmorit/opt/ncs_1.8.0-rc2/zephyr (origin: env)
+-- west flash: rebuilding
+cmake version 3.20.2 is OK; minimum version is 3.13.1
+Running CMake: /usr/local/bin/cmake --build build_signed
+[0/4] Performing build step for 'hci_rpmsg_subimage'
+ninja: no work to do.
+-- west flash: using runner nrfjprog
+runners.nrfjprog: nrfjprog --ids
+Using board 960160943
+-- runners.nrfjprog: Flashing file: /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/merged_domains.hex
+-- runners.nrfjprog: /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/merged_domains.hex targets both nRF53 coprocessors; splitting it into: /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/GENERATED_CP_NETWORK_merged_domains.hex and /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/GENERATED_CP_APPLICATION_merged_domains.hex
+runners.nrfjprog: nrfjprog --program /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/GENERATED_CP_NETWORK_merged_domains.hex --sectorerase -f NRF53 --snr 960160943 --coprocessor CP_NETWORK
+Parsing image file.
+Applying system reset.
+Verified OK.
+runners.nrfjprog: nrfjprog --program /Users/makmorit/GitHub/onecard-fido/nRF5340_app/peripheral_uart/build_signed/zephyr/GENERATED_CP_APPLICATION_merged_domains.hex --sectorerase -f NRF53 --snr 960160943 --coprocessor CP_APPLICATION
+Parsing image file.
+Applying system reset.
+Verified OK.
+runners.nrfjprog: nrfjprog --pinreset -f NRF53 --snr 960160943
+Applying pin reset.
+-- runners.nrfjprog: Board with serial number 960160943 flashed successfully.

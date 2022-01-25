@@ -34,11 +34,9 @@ nRF5340アプリケーションのファームウェアは、フォルダー[`fi
 
 以下の手順書をご参照願います。
 
-- <b>[ARM GCCインストール手順](../nRF52840_app/ARMGCCINST.md)</b>
-
-- <b>[NetBeansインストール手順](../nRF52840_app/NETBEANSINST.md)</b>
-
 - <b>[nRF Connect SDKインストール手順書](../nRF5340_app/INSTALLSDK.md)</b>
+
+- <b>[nRF Connect SDK動作確認手順書](../nRF5340_app/CONFIRMSDK.md)</b>
 
 ## 技術情報
 
