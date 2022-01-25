@@ -96,7 +96,7 @@ You should consider upgrading via the 'pip install --upgrade pip' command.
 #### リポジトリーのチェックアウト
 
 GitHubリポジトリーから「nRF Connect SDK v1.8.0-rc2」の全ファイルイメージをチェックアウトします。<br>
-ターミナルから以下のコマンドを実行します。
+ターミナルから以下のコマンドを実行します。（実行例は<b>[こちら](assets01/west.log)</b>）
 
 （注：`west zephyr-export`の実行前に、`cmake`コマンドへの実行パスを通しています）
 
@@ -107,20 +107,16 @@ PATH=${PATH}:/Applications/CMake.app/Contents/bin
 west zephyr-export
 ```
 
-<b>[実行例はこちら](assets01/west.log)</b>
-
 #### 依存ライブラリーの導入
 
 nRF Connect SDKの依存ライブラリーを、前述の仮想環境にインストールします。<br>
-以下のコマンドを実行します。
+以下のコマンドを実行します。（実行例は<b>[こちら](assets01/pip3.log)</b>）
 
 ```
 pip3 install -r zephyr/scripts/requirements.txt
 pip3 install -r nrf/scripts/requirements.txt
 pip3 install -r bootloader/mcuboot/scripts/requirements.txt
 ```
-
-<b>[実行例はこちら](assets01/pip3.log)</b>
 
 #### westコマンドのカスタマイズ
 
