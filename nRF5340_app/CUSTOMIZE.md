@@ -1,18 +1,10 @@
-# カスタマイズ内容
+# USB DFU対応に伴うカスタマイズ
 
-USB経由によるファームウェア更新（DFU）に対応させるため、Zephyrプラットフォームのコードを直接カスタマイズしています。
+USB経由ファームウェア更新（USB DFU）対応のために必要となる、Zephyrプラットフォームのコード修正内容について掲載しています。
 
 ## Zephyrライブラリーのカスタマイズ
 
 以下のファイルは、`secure_device_app`のプロジェクトファイル（`CMakeLists.txt`等）で制御できないため、直接内容を修正する必要があります。
-
-#### Bluetoothのカスタマイズ
-
-ディレクトリー＝`ncs/ncs/zephyr/subsys/bluetooth/host`
-
-|ファイル名|変更内容|変更目的|備考|
-|:--|:-|:-|:-|
-|`hci_core.c`|プログラムコード部分修正|`bt_gatt_clear`関数実行時のHard Fault発生回避||
 
 #### MCUBOOTのカスタマイズ
 
@@ -34,21 +26,6 @@ USB経由によるファームウェア更新（DFU）に対応させるため�
 |`usb_dfu.c`|プログラムコード部分削除|ファームウェアイメージを抜き取られるのを回避||
 
 ## 個別修正内容
-
-##### ncs/zephyr/subsys/bluetooth/host/hci_core.c
-
-- `bt_gatt_clear`関数実行時のHard Fault発生回避
-
-```
-bash-3.2$ diff ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/zephyr/subsys/bluetooth/host/hci_core.c.original ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/zephyr/subsys/bluetooth/host/hci_core.c
-1658a1659
-> #if !defined(CONFIG_MCUMGR_SMP_BT_CUSTOM)
-1659a1661
-> #endif /* !defined(CONFIG_MCUMGR_SMP_BT_CUSTOM) */
-bash-3.2$
-```
-
-詳細は、プルリクエスト#479（[障害] BLE DFU実行後にペアリング情報削除を実行すると認証器がダウン）をご参照願います。
 
 ##### ncs/bootloader/mcuboot/boot/zephyr/prj.conf
 

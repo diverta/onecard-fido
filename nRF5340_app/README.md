@@ -45,3 +45,6 @@ Zephyrプラットフォームにおけるデータの永続化に関する技�
 
 - <b>[ファームウェア更新機能（BLE）](../nRF5340_app/BLEDFU_FUNC_OBJC.md)</b><br>
 ZephyrアプリケーションのBLE DFU機能についての技術情報を掲載しています。
+
+- <b>[USB DFU対応に伴うカスタマイズ](../nRF5340_app/CUSTOMIZE.md)</b><br>
+USB経由ファームウェア更新（USB DFU）対応のために必要となる、Zephyrプラットフォームのコード修正内容について掲載しています。
