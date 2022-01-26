@@ -40,14 +40,16 @@ nRF52840アプリケーションのファームウェアは、フォルダー[`f
 
 以下の手順書をご参照願います。
 
-- <b>[ARM GCCインストール手順](ARMGCCINST.md)</b>
+- <b>[ARM GCCインストール手順](../nRF52840_app/ARMGCCINST.md)</b>
 
-- <b>[nRF5 SDKインストール手順](NR5SDKINST.md)</b>
+- <b>[CMakeインストール手順](../nRF5340_app/INSTALLCMAKE.md)</b>
 
-- <b>[nRF Command Line Toolsインストール手順](NRFCLTOOLINST.md)</b>
+- <b>[nRF5 SDKインストール手順](../nRF52840_app/NR5SDKINST.md)</b>
 
-- <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
+- <b>[nRF Command Line Toolsインストール手順](../nRF52840_app/NRFCLTOOLINST.md)</b>
 
-- <b>[nRF Utilインストール手順](NRFUTILINST.md)</b>
+- <b>[NetBeansインストール手順](../nRF52840_app/NETBEANSINST.md)</b>
 
-- <b>[nRF Connect for Desktop導入手順](NRFCONNECTINST.md)</b>
+- <b>[nRF Utilインストール手順](../nRF52840_app/NRFUTILINST.md)</b>
+
+- <b>[nRF Connect for Desktop導入手順](../nRF52840_app/NRFCONNECTINST.md)</b>
