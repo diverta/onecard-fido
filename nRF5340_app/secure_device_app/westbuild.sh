@@ -10,11 +10,10 @@ export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
 
 # Paths for command
 export PATH=${PATH}:/Applications/CMake.app/Contents/bin
-export PATH=${PATH}:${HOME}/opt/nRF-Command-Line-Tools_10_9_0_OSX/nrfjprog
+export PATH=${PATH}:/usr/local/bin
 
 # bash completion
-export REPO_HOME=${HOME}/GitHub/onecard-fido
-export NCS_HOME=${REPO_HOME}/pyvenvs/ncs
+export NCS_HOME=${HOME}/opt/ncs_1.8.0-rc2
 export ZEPHYR_BASE=${NCS_HOME}/zephyr
 source ${NCS_HOME}/west-completion.bash
 
