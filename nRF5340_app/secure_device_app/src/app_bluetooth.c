@@ -143,7 +143,8 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
     }
 }
 
-static struct bt_conn_cb conn_callbacks = {
+// 接続時コールバックの設定
+BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected = connected,
     .disconnected = disconnected,
     .security_changed = security_changed,
@@ -189,9 +190,6 @@ void app_bluetooth_start(void)
         LOG_ERR("Bluetooth init failed (err %d)", rc);
         return;
     }
-
-    // 接続時コールバックの設定
-    bt_conn_cb_register(&conn_callbacks);
 
     // Initialize the Bluetooth mcumgr transport.
     app_ble_smp_bt_register();
