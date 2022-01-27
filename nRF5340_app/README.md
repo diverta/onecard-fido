@@ -16,7 +16,7 @@
 nRF52840アプリケーションと等価の管理機能を提供します。<br>
 FIDO機能で使用する秘密鍵／証明書（Attestation）の導入や、PINコード設定、BLEペアリング実行、ヘルスチェック等の機能があります。
 
-最終更新日現在、いずれも[管理ツール（macOS版）](../MaintenanceTool/macOSApp/README.md)により実行可能となっております。
+最終更新日現在、いずれも管理ツール（[macOS版](../MaintenanceTool/macOSApp/README.md)／[Windows版](../MaintenanceTool/WindowsExe/README.md)）により実行可能となっております。
 
 ### [ファームウェア更新機能](../nRF5340_app/DFUFUNC.md)
 nRF5340アプリケーションでは、BLE経由、USB経由のファームウェア更新機能（DFU）を用意しています。<br>
@@ -45,3 +45,6 @@ Zephyrプラットフォームにおけるデータの永続化に関する技�
 
 - <b>[ファームウェア更新機能（BLE）](../nRF5340_app/BLEDFU_FUNC_OBJC.md)</b><br>
 ZephyrアプリケーションのBLE DFU機能についての技術情報を掲載しています。
+
+- <b>[USB DFU対応に伴うカスタマイズ](../nRF5340_app/CUSTOMIZE.md)</b><br>
+USB経由ファームウェア更新（USB DFU）対応のために必要となる、Zephyrプラットフォームのコード修正内容について掲載しています。

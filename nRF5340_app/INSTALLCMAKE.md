@@ -4,25 +4,35 @@
 
 ## インストール媒体の取得
 
-下図のような[ダウンロードページ](https://cmake.org/download/)からバイナリーをダウンロードします。<br>
-macOS環境にインストールする場合は、ファイル「`cmake-3.18.0-Darwin-x86_64.dmg`」をダウンロードします。
+CMakeの[ダウンロードページ](https://cmake.org/download/)を開きます。
 
-<img src="assets01/0001.jpg" width="600">
+<img src="assets01/0001.jpg" width="550">
 
-### CMakeの導入
+ダウンロードページを下にスクロールし、ファイルの一覧を表示させます。<br>
+macOS環境にインストールする場合は、ファイル「`cmake-3.22.2-macos-universal.dmg`」をダウンロードします。
 
-ダウンロードした`cmake-3.18.0-Darwin-x86_64.dmg`を右クリックして「開く」を実行します。
+<img src="assets01/0002.jpg" width="550">
 
-<img src="assets01/0002.jpg" width="400">
+### CMakeのインストール
+
+ダウンロードした`cmake-3.22.2-macos-universal.dmg`を右クリックして「開く」を実行します。
+
+<img src="assets01/0003.jpg" width="460">
 
 以下のようなダイアログが表示された場合は「Agree」をクリックします。
 
-<img src="assets01/0003.jpg" width="400">
+<img src="assets01/0004.jpg" width="390">
 
 インストーラーが起動しますので、画面左側のアイコン「CMake.app」をドラッグし「Applications」にドロップしてください。
 
-<img src="assets01/0004.jpg" width="400">
+<img src="assets01/0005.jpg" width="360">
 
-アプリケーションフォルダーにCMakeのアイコンができていれば、インストールは完了です。
+アプリケーションフォルダーにCMakeのアイコンができていれば、インストールは成功です。
 
-<img src="assets01/0005.jpg" width="400">
+<img src="assets01/0006.jpg" width="470">
+
+最後に、ファイルメニューから「"cmake-3.22.2-macos-universal"を取り出す」を選択し、パッケージフォルダーを閉じます。
+
+<img src="assets01/0007.jpg" width="360">
+
+以上で、CMakeのインストールは完了です。

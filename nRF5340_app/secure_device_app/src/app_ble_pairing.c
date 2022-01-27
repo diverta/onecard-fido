@@ -56,7 +56,7 @@ static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 {
     (void)id;
     const uint8_t *data = addr->a.val;
-    LOG_INF("Bonding information deleted: address=%x%x%x%x%x%x",
+    LOG_INF("Bonding information deleted: address=%02x%02x%02x%02x%02x%02x",
             data[5], data[4], data[3], data[2], data[1], data[0]);
 }
 
