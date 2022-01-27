@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <usb/usb_common.h>
+#include <usb/usb_ch9.h>
 
 #ifdef __cplusplus
 extern "C" {
