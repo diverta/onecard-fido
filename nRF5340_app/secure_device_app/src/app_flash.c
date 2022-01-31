@@ -64,7 +64,7 @@ bool app_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)stat_csv_data, 
         "words_available=%d,words_used=%d,corruption=%d", 
-        total_size, free_size, corruption);
+        total_size, total_size - free_size, corruption);
     *stat_csv_size = strlen((char *)stat_csv_data);
     LOG_DBG("Flash ROM statistics csv created (%d bytes)", *stat_csv_size);
     return true;
