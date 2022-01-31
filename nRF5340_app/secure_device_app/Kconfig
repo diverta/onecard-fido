@@ -12,35 +12,13 @@ config MCUMGR_SMP_BT_CUSTOM
 	help
 	  Enables handling of SMP commands received over Bluetooth.
 
-config SETTINGS_NVS_CUSTOM
-	bool "NVS non-volatile storage support"
-	depends on NVS
-	depends on FLASH_MAP
-	help
-	  Enables NVS storage support
-
-config SETTINGS_NVS_SECTOR_SIZE_MULT
-	int "Sector size of the NVS settings area"
-	default 1
-	depends on SETTINGS && SETTINGS_NVS_CUSTOM
-	help
-	  The sector size to use for the NVS settings area as a multiple of
-	  FLASH_ERASE_BLOCK_SIZE.
-
-config SETTINGS_NVS_SECTOR_COUNT
-	int "Sector count of the NVS settings area"
-	default 8
-	depends on SETTINGS && SETTINGS_NVS_CUSTOM
-	help
-	  Number of sectors used for the NVS settings area
-
 #
 # Application settings
 #
 config APP_SETTINGS_BUFFER_SIZE
 	int "Read buffer size for app_settings"
 	default 128
-	depends on SETTINGS && SETTINGS_NVS_CUSTOM
+	depends on SETTINGS && SETTINGS_NVS
 	help
 	  Size of buffer for reading data from NVS
 

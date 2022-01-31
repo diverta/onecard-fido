@@ -8,10 +8,6 @@ if(CONFIG_MCUMGR_SMP_BT_CUSTOM)
     add_subdirectory(zephyr_custom/subsys/mgmt/mcumgr)
 endif()
 
-if(CONFIG_SETTINGS_NVS_CUSTOM)
-    add_subdirectory(zephyr_custom/subsys/settings/src)
-endif()
-
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
