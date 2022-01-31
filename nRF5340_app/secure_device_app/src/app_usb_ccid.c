@@ -31,7 +31,7 @@ USBD_CLASS_DESCR_DEFINE(primary, 0) struct usb_ccid_config usb_ccid_cfg = {
     // Interface descriptor
     .if0 = {
         .bLength = sizeof(struct usb_if_descriptor),
-        .bDescriptorType = USB_INTERFACE_DESC,
+        .bDescriptorType = USB_DESC_INTERFACE,
         .bInterfaceNumber = 0,
         .bAlternateSetting = 0,
         .bNumEndpoints = 2,
@@ -43,7 +43,7 @@ USBD_CLASS_DESCR_DEFINE(primary, 0) struct usb_ccid_config usb_ccid_cfg = {
     .if0_ccid_desc = {
         .bLength = sizeof(struct usb_ccid_descriptor),
         .bDescriptorType = 0x21,
-        .bcdCCID = sys_cpu_to_le16(USB_1_1),
+        .bcdCCID = sys_cpu_to_le16(0x0110), // USB_1_1
         .bMaxSlotIndex = (CCID_NUMBER_OF_SLOTS-1),
         .bVoltageSupport = 0x07,
         .dwProtocols = sys_cpu_to_le32(0x00000002),
@@ -67,7 +67,7 @@ USBD_CLASS_DESCR_DEFINE(primary, 0) struct usb_ccid_config usb_ccid_cfg = {
     // First Endpoint IN
     .if0_in_ep = {
         .bLength = sizeof(struct usb_ep_descriptor),
-        .bDescriptorType = USB_ENDPOINT_DESC,
+        .bDescriptorType = USB_DESC_ENDPOINT,
         .bEndpointAddress = CCID_IN_EP_ADDR,
         .bmAttributes = USB_DC_EP_BULK,
         .wMaxPacketSize = sys_cpu_to_le16(CCID_BULK_EP_MPS),
@@ -76,7 +76,7 @@ USBD_CLASS_DESCR_DEFINE(primary, 0) struct usb_ccid_config usb_ccid_cfg = {
     // Second Endpoint OUT
     .if0_out_ep = {
         .bLength = sizeof(struct usb_ep_descriptor),
-        .bDescriptorType = USB_ENDPOINT_DESC,
+        .bDescriptorType = USB_DESC_ENDPOINT,
         .bEndpointAddress = CCID_OUT_EP_ADDR,
         .bmAttributes = USB_DC_EP_BULK,
         .wMaxPacketSize = sys_cpu_to_le16(CCID_BULK_EP_MPS),
@@ -181,16 +181,16 @@ static int usb_ccid_handler(struct usb_setup_packet *setup, int32_t *len, uint8_
 {
     LOG_DBG("Class request: bRequest 0x%x bmRequestType 0x%x len %d", setup->bRequest, setup->bmRequestType, *len);
 
-    if (REQTYPE_GET_RECIP(setup->bmRequestType) != REQTYPE_RECIP_DEVICE) {
+    if (USB_REQTYPE_GET_RECIPIENT(setup->bmRequestType) != USB_REQTYPE_RECIPIENT_DEVICE) {
         return -ENOTSUP;
     }
 
-    if (REQTYPE_GET_DIR(setup->bmRequestType) == REQTYPE_DIR_TO_DEVICE && setup->bRequest == 0x5b) {
+    if (USB_REQTYPE_GET_DIR(setup->bmRequestType) == USB_REQTYPE_DIR_TO_DEVICE && setup->bRequest == 0x5b) {
         LOG_DBG("Host-to-Device, data %p", *data);
         return 0;
     }
 
-    if ((REQTYPE_GET_DIR(setup->bmRequestType) == REQTYPE_DIR_TO_HOST) && (setup->bRequest == 0x5c)) {
+    if ((USB_REQTYPE_GET_DIR(setup->bmRequestType) == USB_REQTYPE_DIR_TO_HOST) && (setup->bRequest == 0x5c)) {
         LOG_DBG("Device-to-Host, wLength %d, data %p", setup->wLength, *data);
         return 0;
     }
