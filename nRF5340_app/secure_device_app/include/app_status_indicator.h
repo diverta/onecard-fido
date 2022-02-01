@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void app_status_indicator_notify_usb_available(bool available);
+bool app_status_indicator_is_usb_available(void);
 void app_status_indicator_light_all(bool b);
 void app_status_indicator_none(void);
 void app_status_indicator_idle(void);

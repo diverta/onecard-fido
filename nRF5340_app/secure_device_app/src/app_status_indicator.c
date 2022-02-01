@@ -61,6 +61,12 @@ void app_status_indicator_notify_usb_available(bool available)
     app_status_indicator_idle();
 }
 
+bool app_status_indicator_is_usb_available(void)
+{
+    // USBが利用可能かどうかを戻す
+    return m_usb_available;
+}
+
 //
 // LED点灯／消灯制御関連
 //

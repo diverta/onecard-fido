@@ -60,11 +60,12 @@ void app_main_init(void)
 //
 // データ処理イベント関連
 //
+static bool m_initialized = false;
+
 void app_main_data_channel_initialized(void)
 {
     // 初期化処理が実行済みの場合は終了
-    static bool initialized = false;
-    if (initialized) {
+    if (m_initialized) {
         return;
     }
 
@@ -77,7 +78,13 @@ void app_main_data_channel_initialized(void)
     LOG_INF("Secure device application (%s) version %s", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR);
 
     // 初期化処理完了
-    initialized = true;
+    m_initialized = true;
+}
+
+bool app_main_is_data_channel_initialized(void)
+{
+    // 初期化処理が完了しているかどうかを戻す
+    return m_initialized;
 }
 
 void app_main_hid_configured(void)
