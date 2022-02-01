@@ -111,14 +111,17 @@ bool app_ble_stop_advertising(void)
 
 static void connected(struct bt_conn *conn, uint8_t err)
 {
-    (void)conn;
     if (err) {
         LOG_ERR("Connection failed (err 0x%02x)", err);
-    } else {
-        LOG_INF("Connected");
 
-        // BLE接続イベントを業務処理スレッドに引き渡す
-        app_event_notify(APEVT_BLE_CONNECTED);
+    } else {
+        // セキュリティーレベルを明示的に
+        // `Level 2: Encryption and no authentication (no MITM)`
+        // に変更
+        int rc = bt_conn_set_security(conn, BT_SECURITY_L2);
+        if (rc != 0) {
+            LOG_ERR("Set security level failed (rc=%d)", rc);
+        }
     }
 }
 
@@ -137,7 +140,16 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
     bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
 
     if (err == BT_SECURITY_ERR_SUCCESS) {
-        LOG_INF("Security changed: %s level %u", log_strdup(addr), level);
+        if (level < BT_SECURITY_L2) {
+            LOG_WRN("Security change failed: %s level %u", log_strdup(addr), level);
+
+        } else {
+            // セキュリティーレベル変更が成功したら、
+            // BLE接続イベントを業務処理スレッドに引き渡す
+            LOG_INF("Connected %s with security level %u", log_strdup(addr), level);
+            app_event_notify(APEVT_BLE_CONNECTED);
+        }
+
     } else {
         LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr), level, err);
     }
