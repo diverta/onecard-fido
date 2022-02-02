@@ -131,9 +131,6 @@ static void ble_available(void)
 
     // 永続化機能を初期化
     app_settings_initialize();
-    
-    // アドバタイジング開始
-    app_ble_start_advertising();
 }
 
 static void ble_unavailable(void)
@@ -177,11 +174,12 @@ static void ble_disconnected(void)
 
 static void usb_configured(void)
 {
-    // BLEアドバタイズを停止させる
-    app_ble_stop_advertising();
-
-    // BLE接続アイドルタイマーを停止
-    app_timer_stop_for_idling();
+    if (app_main_is_data_channel_initialized()) {
+        // 既にBLEチャネルが起動している場合は、
+        // システムを再始動させる
+        app_board_prepare_for_system_reset();
+        return;
+    }
 
     // USBが使用可能になったことを
     // LED点滅制御に通知
@@ -219,6 +217,11 @@ static void enter_to_bootloader(void)
 
 static void led_blink_begin(void)
 {
+    // USBが使用可能でない場合は、BLEアドバタイズを開始
+    if (app_status_indicator_is_usb_available() == false) {
+        app_ble_start_advertising();
+    }
+
     // アイドル時のLED点滅パターンを設定
     app_status_indicator_idle();
 
