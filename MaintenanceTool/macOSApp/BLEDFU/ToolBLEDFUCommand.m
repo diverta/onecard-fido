@@ -46,8 +46,6 @@ typedef enum : NSInteger {
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t          mainQueue;
     @property (nonatomic) dispatch_queue_t          subQueue;
-    // 処理タイムアウト検知フラグ
-    @property (nonatomic) bool                      needTimeoutMonitor;
     // 処理ステータス
     @property (nonatomic) BLEDFUStatus              bleDfuStatus;
     // デバイス接続の切断理由を保持
@@ -158,8 +156,8 @@ typedef enum : NSInteger {
     }
 
     - (void)compareUpdateVersion {
-        // 処理タイムアウト検知フラグをリセット
-        [self setNeedTimeoutMonitor:false];
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         // バージョン情報を比較
         bool ret = [self compareUpdateCurrentVersionToAppImage:[self currentVersion]];
         // 処理進捗画面に対し、処理結果を通知する
@@ -290,18 +288,18 @@ typedef enum : NSInteger {
     }
 
     - (void)notifyErrorToProcessingWindow {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知フラグをリセット
-            [self setNeedTimeoutMonitor:false];
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
     }
 
     - (void)notifyCancelToProcessingWindow {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知フラグをリセット
-            [self setNeedTimeoutMonitor:false];
             // 処理進捗画面に対し、処理キャンセルの旨を通知する
             [[self bleDfuProcessingWindow] commandDidCancelDFUProcess];
         });
@@ -319,18 +317,13 @@ typedef enum : NSInteger {
         [self stopDFUTimeoutMonitor];
         // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
         [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
-        // 処理タイムアウト検知フラグを設定
-        [self setNeedTimeoutMonitor:true];
     }
 
     - (void)DFUProcessDidTimeout {
-        // 処理タイムアウト検知フラグが設定されている場合
-        if ([self needTimeoutMonitor]) {
-            // 処理タイムアウトを検知したので、異常終了と判断
-            [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-            // BLE接続を切断
-            [self doDisconnectByError:true];
-        }
+        // 処理タイムアウトを検知したので、異常終了と判断
+        [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
+        // BLE接続を切断
+        [self doDisconnectByError:true];
     }
 
 #pragma mark - DFU process
