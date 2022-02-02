@@ -158,8 +158,8 @@ typedef enum : NSInteger {
     }
 
     - (void)compareUpdateVersion {
-        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-        [self clearFlagsForProcess];
+        // 処理タイムアウト検知フラグをリセット
+        [self setNeedTimeoutMonitor:false];
         // バージョン情報を比較
         bool ret = [self compareUpdateCurrentVersionToAppImage:[self currentVersion]];
         // 処理進捗画面に対し、処理結果を通知する
@@ -291,8 +291,8 @@ typedef enum : NSInteger {
 
     - (void)notifyErrorToProcessingWindow {
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
+            // 処理タイムアウト検知フラグをリセット
+            [self setNeedTimeoutMonitor:false];
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
@@ -300,8 +300,8 @@ typedef enum : NSInteger {
 
     - (void)notifyCancelToProcessingWindow {
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
+            // 処理タイムアウト検知フラグをリセット
+            [self setNeedTimeoutMonitor:false];
             // 処理進捗画面に対し、処理キャンセルの旨を通知する
             [[self bleDfuProcessingWindow] commandDidCancelDFUProcess];
         });
@@ -664,11 +664,6 @@ typedef enum : NSInteger {
     }
 
 #pragma mark - Private common methods
-
-    - (void)clearFlagsForProcess {
-        // 処理タイムアウト検知フラグをリセット
-        [self setNeedTimeoutMonitor:false];
-    }
 
     - (void)notifyProgress:(NSString *)message progressValue:(int)progress {
         dispatch_async([self mainQueue], ^{
