@@ -281,9 +281,6 @@ namespace MaintenanceToolGUI
             // ステータスを更新
             Status = BLEDFUStatus.UploadProcess;
 
-            // キャンセルフラグをクリア
-            toolDFUProcess.CancelFlag = false;
-
             // 処理進捗画面にDFU処理開始を通知
             int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
             processingForm.NotifyStartDFUProcess(maximum);
@@ -328,15 +325,17 @@ namespace MaintenanceToolGUI
             // メッセージ文言を画面とログに出力
             OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
 
-            // キャンセルフラグを設定
-            toolDFUProcess.CancelFlag = true;
+            // ステータスを更新（処理キャンセル）
+            Status = BLEDFUStatus.Canceled;
+
+            // 転送処理のキャンセルを要求
+            toolDFUProcess.CancelDFUProcess();
         }
 
         private void OnTerminatedDFUProcess(bool success)
         {
-            if (toolDFUProcess.CancelFlag) {
+            if (Status == BLEDFUStatus.Canceled) {
                 // 転送が中止された旨を、処理進捗画面に通知
-                toolDFUProcess.CancelFlag = false;
                 processingForm.NotifyCancelDFUProcess();
                 return;
             }

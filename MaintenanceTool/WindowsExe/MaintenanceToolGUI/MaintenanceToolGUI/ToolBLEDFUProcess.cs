@@ -39,7 +39,7 @@ namespace MaintenanceToolGUI
         private int ImageBytesSent = 0;
 
         // 処理進捗画面でCancelボタンが押下されたら true
-        public bool CancelFlag { get; set; }
+        private bool CancelFlag { get; set; }
 
         // クラスの参照を保持
         private ToolBLEDFUImage ToolBLEDFUImageRef;
@@ -83,8 +83,17 @@ namespace MaintenanceToolGUI
 
         public void PerformDFU()
         {
+            // キャンセルフラグを初期化
+            CancelFlag = false;
+
             // BLE SMPサービスに接続
             DoConnect();
+        }
+
+        public void CancelDFUProcess()
+        {
+            // キャンセルフラグを設定
+            CancelFlag = true;
         }
 
         private void TerminateDFUProcess(bool success)
