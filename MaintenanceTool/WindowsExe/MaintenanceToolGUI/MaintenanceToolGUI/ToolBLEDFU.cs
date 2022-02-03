@@ -6,6 +6,17 @@ namespace MaintenanceToolGUI
 {
     public class ToolBLEDFU
     {
+        private enum BLEDFUStatus
+        {
+            None = 0,
+            GetCurrentVersion,
+            UploadProcess,
+            Canceled,
+            ResetDone,
+            WaitForBoot,
+            CheckUpdateVersion,
+        };
+
         // 更新対象アプリケーション＝version 0.4.0
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
 
@@ -36,8 +47,8 @@ namespace MaintenanceToolGUI
         // 転送処理クラス
         private ToolBLEDFUProcess toolDFUProcess;
 
-        // バージョン更新判定フラグ
-        private bool NeedCompareUpdateVersion;
+        // 処理ステータス
+        private BLEDFUStatus Status;
 
         public ToolBLEDFU(MainForm f, BLEMain b)
         {
@@ -67,8 +78,8 @@ namespace MaintenanceToolGUI
             toolDFUProcess.OnNotifyDFUTransfer += new ToolBLEDFUProcess.NotifyDFUTransferEvent(OnNotifyDFUTransfer);
             toolDFUProcess.OnTerminatedDFUProcess += new ToolBLEDFUProcess.TerminatedDFUProcessEvent(OnTerminatedDFUProcess);
 
-            // バージョン更新判定フラグをリセット
-            NeedCompareUpdateVersion = false;
+            // ステータスを初期化
+            Status = BLEDFUStatus.None;
         }
 
         public void OnFormDestroy()
@@ -82,6 +93,9 @@ namespace MaintenanceToolGUI
         //
         public void DoCommandBLEDFU()
         {
+            // ステータスを更新
+            Status = BLEDFUStatus.GetCurrentVersion;
+
             // 認証器に導入中のバージョンを、BLE経由で照会
             // --> NotifyFirmwareVersionResponse が呼び出される
             bleMain.DoGetVersionInfoForDFU(this);
@@ -183,16 +197,19 @@ namespace MaintenanceToolGUI
             CurrentVersion = strFWRev;
             CurrentBoardname = strHWRev;
 
-            // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
-            if (NeedCompareUpdateVersion) {
-                // バージョン更新判定フラグをリセット
-                NeedCompareUpdateVersion = false;
+            // バージョン更新判定の場合（ファームウェア反映待ち）
+            if (Status == BLEDFUStatus.CheckUpdateVersion) {
+	            // ステータスを初期化
+	            Status = BLEDFUStatus.None;
 
                 // バージョン情報を比較して終了判定
                 // --> 判定結果をメイン画面に戻す
                 mainForm.OnAppMainProcessExited(CompareUpdateVersion());
+                return;
+            }
 
-            } else {
+            // 現在バージョン照会の場合（処理開始画面の表示前）
+            if (Status == BLEDFUStatus.GetCurrentVersion) {
                 // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
                 ResumeCommandDFU();
             }
@@ -243,14 +260,17 @@ namespace MaintenanceToolGUI
             }
 
             if (ret == DialogResult.OK) {
-                // バージョン更新判定フラグをセット
-                NeedCompareUpdateVersion = true;
+	            // ステータスを更新（バージョン更新判定）
+	            Status = BLEDFUStatus.CheckUpdateVersion;
 
                 // 認証器に導入された更新バージョンを、BLE経由で照会
                 // --> NotifyFirmwareVersionResponse が呼び出される
                 bleMain.DoGetVersionInfoForDFU(this);
 
             } else {
+	            // ステータスを初期化
+	            Status = BLEDFUStatus.None;
+
                 // 処理失敗の旨をメイン画面に通知
                 mainForm.OnAppMainProcessExited(false);
             }
@@ -258,6 +278,9 @@ namespace MaintenanceToolGUI
 
         private void InvokeDFUProcess()
         {
+            // ステータスを更新
+            Status = BLEDFUStatus.UploadProcess;
+
             // キャンセルフラグをクリア
             toolDFUProcess.CancelFlag = false;
 
@@ -319,6 +342,9 @@ namespace MaintenanceToolGUI
             }
 
             if (success) {
+                // ステータスを更新（DFU反映待ち）
+                Status = BLEDFUStatus.WaitForBoot;
+                
                 // DFU反映待ち処理を起動
                 PerformDFUUpdateMonitor();
 
