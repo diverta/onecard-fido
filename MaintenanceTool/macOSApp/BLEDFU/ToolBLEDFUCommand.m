@@ -22,6 +22,17 @@
 #include "debug_log.h"
 #include "mcumgr_cbor_decode.h"
 
+// 処理ステータス
+typedef enum : NSInteger {
+    BLEDFU_ST_NONE = 0,
+    BLEDFU_ST_GET_CURRENT_VERSION,
+    BLEDFU_ST_UPLOAD_PROCESS,
+    BLEDFU_ST_CANCELED,
+    BLEDFU_ST_RESET_DONE,
+    BLEDFU_ST_WAIT_FOR_BOOT,
+    BLEDFU_ST_CHECK_UPDATE_VERSION,
+} BLEDFUStatus;
+
 @interface ToolBLEDFUCommand () <ToolBLESMPCommandDelegate>
 
     // 上位クラスの参照を保持
@@ -35,14 +46,8 @@
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t          mainQueue;
     @property (nonatomic) dispatch_queue_t          subQueue;
-    // 処理タイムアウト検知フラグ
-    @property (nonatomic) bool                      needTimeoutMonitor;
-    // リセット要求済みフラグ
-    @property (nonatomic) bool                      resetApplicationRequested;
-    // バージョン更新判定フラグ
-    @property (nonatomic) bool                      needCompareUpdateVersion;
-    // 処理キャンセルフラグ
-    @property (nonatomic) bool                      cancelFlag;
+    // 処理ステータス
+    @property (nonatomic) BLEDFUStatus              bleDfuStatus;
     // デバイス接続の切断理由を保持
     @property (nonatomic) bool                      disconnectByError;
     // 転送するイメージデータを保持
@@ -78,8 +83,8 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.bledfu", DISPATCH_QUEUE_SERIAL)];
-        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-        [self clearFlagsForProcess];
+        // ステータスを初期化
+        [self setBleDfuStatus:BLEDFU_ST_NONE];
         return self;
     }
 
@@ -87,6 +92,8 @@
         // 処理開始／進捗画面に親画面参照をセット
         [[self bleDfuStartWindow] setParentWindow:parentWindow];
         [[self bleDfuProcessingWindow] setParentWindow:parentWindow];
+        // ステータスを更新（現在バージョン照会）
+        [self setBleDfuStatus:BLEDFU_ST_GET_CURRENT_VERSION];
         // 事前にBLE経由でバージョン情報を取得
         [self setToolBLECommand:(ToolBLECommand *)toolBLECommandRef];
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
@@ -95,11 +102,12 @@
     - (void)toolBLECommandDidProcess:(Command)command success:(bool)success response:(NSData *)response {
         switch (command) {
             case COMMAND_BLE_GET_VERSION_INFO:
-                if ([self needCompareUpdateVersion]) {
-                    // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
+                // バージョン更新判定の場合（ファームウェア反映待ち）
+                if ([self bleDfuStatus] == BLEDFU_ST_CHECK_UPDATE_VERSION) {
                     [self notifyFirmwareVersionForComplete:success response:response];
-                } else {
-                    // バージョン更新判定フラグがセットされていない場合（処理開始画面の表示前）
+                }
+                // 現在バージョン照会の場合（処理開始画面の表示前）
+                if ([self bleDfuStatus] == BLEDFU_ST_GET_CURRENT_VERSION) {
                     [self notifyFirmwareVersionForStart:success response:response];
                 }
                 break;
@@ -148,8 +156,8 @@
     }
 
     - (void)compareUpdateVersion {
-        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-        [self clearFlagsForProcess];
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         // バージョン情報を比較
         bool ret = [self compareUpdateCurrentVersionToAppImage:[self currentVersion]];
         // 処理進捗画面に対し、処理結果を通知する
@@ -216,8 +224,6 @@
     }
 
     - (void)invokeDFUProcess {
-        // キャンセルフラグをクリア
-        [self setCancelFlag:false];
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
@@ -238,6 +244,9 @@
     }
 
     - (void)bleDfuProcessingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // ステータスを初期化
+        [self setBleDfuStatus:BLEDFU_ST_NONE];
+        // 処理進捗画面を閉じる
         [[self bleDfuProcessingWindow] close];
         switch (modalResponse) {
             case NSModalResponseOK:
@@ -257,14 +266,17 @@
     }
 
     - (void)bleDfuProcessingWindowNotifyCancel {
-        // 処理進捗画面のCancelボタンがクリックされた場合は、キャンセルフラグを設定
+        // 処理進捗画面のCancelボタンがクリックされた場合
         [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
-        [self setCancelFlag:true];
+        // ステータスを更新（処理キャンセル）
+        [self setBleDfuStatus:BLEDFU_ST_CANCELED];
     }
 
 #pragma mark - Main process
 
     - (void)startDFUProcess {
+        // 処理ステータスを更新
+        [self setBleDfuStatus:BLEDFU_ST_UPLOAD_PROCESS];
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
         // BLE DFU処理を開始
@@ -276,18 +288,18 @@
     }
 
     - (void)notifyErrorToProcessingWindow {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
     }
 
     - (void)notifyCancelToProcessingWindow {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
         dispatch_async([self mainQueue], ^{
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
             // 処理進捗画面に対し、処理キャンセルの旨を通知する
             [[self bleDfuProcessingWindow] commandDidCancelDFUProcess];
         });
@@ -295,30 +307,28 @@
 
 #pragma mark - Process timeout monitor
 
+    - (void)stopDFUTimeoutMonitor {
+        // 処理タイムアウト監視を停止
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+    }
+
     - (void)startDFUTimeoutMonitor {
         // 処理タイムアウト監視を事前停止
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        [self stopDFUTimeoutMonitor];
         // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
         [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
-        // 処理タイムアウト検知フラグを設定
-        [self setNeedTimeoutMonitor:true];
     }
 
     - (void)DFUProcessDidTimeout {
-        // 処理タイムアウト検知フラグが設定されている場合
-        if ([self needTimeoutMonitor]) {
-            // 処理タイムアウトを検知したので、異常終了と判断
-            [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-            // BLE接続を切断
-            [self doDisconnectByError:true];
-        }
+        // 処理タイムアウトを検知したので、異常終了と判断
+        [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
+        // BLE接続を切断
+        [self doDisconnectByError:true];
     }
 
 #pragma mark - DFU process
 
     - (void)doConnect {
-        // リセット要求済みフラグをクリア
-        [self setResetApplicationRequested:false];
         // BLE SMPサービスに接続 --> doRequestGetSlotInfoが呼び出される
         [[self toolBLESMPCommand] commandWillConnect];
     }
@@ -363,7 +373,7 @@
             return;
         }
         // 処理進捗画面でCancelボタンが押下された時は、転送処理を終了し、BLE接続を切断
-        if ([self cancelFlag]) {
+        if ([self bleDfuStatus] == BLEDFU_ST_CANCELED) {
             [self doDisconnectByError:false];
             return;
         }
@@ -433,8 +443,8 @@
             [self notifyErrorToProcessingWindow];
             return;
         }
-        // リセット要求済みフラグを設定
-        [self setResetApplicationRequested:true];
+        // ステータスを更新（リセット要求済み）
+        [self setBleDfuStatus:BLEDFU_ST_RESET_DONE];
         // nRF側が自動的にリセット --> 切断検知によりDFU反映待ち処理に移行
         [[ToolLogFile defaultLogger] debug:@"Requested to reset application"];
     }
@@ -448,8 +458,8 @@
         }
         // 処理進捗画面に通知
         [self notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:(100 + DFU_WAITING_SEC_ESTIMATED)];
-        // バージョン更新判定フラグをセット
-        [self setNeedCompareUpdateVersion:true];
+        // ステータスを更新（バージョン更新判定）
+        [self setBleDfuStatus:BLEDFU_ST_CHECK_UPDATE_VERSION];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
@@ -487,20 +497,23 @@
 
     - (void)bleSmpCommandDidDisconnectWithError:(NSError *)error {
         // リセット要求中に接続断が検知された場合
-        if (error && [self resetApplicationRequested]) {
-            // リセット要求済みフラグをクリア
-            [self setResetApplicationRequested:false];
+        if (error && [self bleDfuStatus] == BLEDFU_ST_RESET_DONE) {
+            // 接続断検知の旨をログ出力
+            [[ToolLogFile defaultLogger] debug:@"BLE disconnected by resetting application"];
+            // ステータスを更新（DFU反映待ち）
+            [self setBleDfuStatus:BLEDFU_ST_WAIT_FOR_BOOT];
             // DFU反映待ち処理に移行
             dispatch_async([self subQueue], ^{
                 [self performDFUUpdateMonitor];
             });
+
         } else if ([self disconnectByError]) {
             // エラーとして画面に制御を戻す
             [self setDisconnectByError:false];
             [self notifyErrorToProcessingWindow];
-        } else if ([self cancelFlag]) {
+
+        } else if ([self bleDfuStatus] == BLEDFU_ST_CANCELED) {
             // 転送キャンセルとして画面に制御を戻す
-            [self setCancelFlag:false];
             [self notifyCancelToProcessingWindow];
         }
     }
@@ -644,13 +657,6 @@
     }
 
 #pragma mark - Private common methods
-
-    - (void)clearFlagsForProcess {
-        // 処理タイムアウト検知フラグをリセット
-        [self setNeedTimeoutMonitor:false];
-        // バージョン更新判定フラグをリセット
-        [self setNeedCompareUpdateVersion:false];
-    }
 
     - (void)notifyProgress:(NSString *)message progressValue:(int)progress {
         dispatch_async([self mainQueue], ^{

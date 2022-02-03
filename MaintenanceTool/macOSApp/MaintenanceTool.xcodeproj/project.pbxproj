@@ -54,6 +54,7 @@
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
+		7A6C0BDC27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */; };
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
@@ -64,7 +65,6 @@
 		7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E0E2623791A2D00B47026 /* ToolLogFile.m */; };
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
-		7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AAC498E27448E4400AB3E67 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */; };
@@ -187,6 +187,7 @@
 		7A6687912575CCC70054F0DE /* ToolPIVCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVCommand.m; sourceTree = "<group>"; };
 		7A6687932575CCF60054F0DE /* ToolPIVCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommand.h; sourceTree = "<group>"; };
 		7A6687942575CDB70054F0DE /* ToolPIVCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommon.h; sourceTree = "<group>"; };
+		7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.2.bin; sourceTree = "<group>"; };
 		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
 		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
 		7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPPreferenceWindow.m; sourceTree = "<group>"; };
@@ -205,7 +206,6 @@
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
 		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
-		7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.1.bin; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
@@ -528,9 +528,9 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */,
 				7A5839C22782CF5300169205 /* appkg.PCA10059_01.0.3.3.zip */,
 				7A5839C32782CF5300169205 /* appkg.PCA10059_02.0.3.3.zip */,
-				7A980791274E203C000D072A /* app_update.PCA10095.0.4.1.bin */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
 				7A8528FE277176F10096F41D /* add_sub_key.sh */,
@@ -647,6 +647,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A6C0BDC27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin in Resources */,
 				7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */,
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
@@ -664,7 +665,6 @@
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A5839C52782CF5300169205 /* appkg.PCA10059_02.0.3.3.zip in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
-				7A980792274E203C000D072A /* app_update.PCA10095.0.4.1.bin in Resources */,
 				7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */,
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
