@@ -1,6 +1,6 @@
 # nRF5340アプリケーションについて
 
-最終更新日：2022/02/04
+最終更新日：2022/02/07
 
 ## 概要
 
@@ -37,12 +37,26 @@ nRF5340やZephyrプラットフォームに依存する処理は、以下のコ�
 [注1] USB DFUで使用する予定でしたが、本プロジェクトでは採用を見送ったので、最終更新日現在、ブートローダーモード遷移機能を実行することは出来ません。<br>
 [注2] USB DFUは、本プロジェクトでは採用を見送ったので、最終更新日現在、このモジュールは機能しておりません。
 
+## ハードウェア非依存コード
+
+[nRF52840アプリケーション](../nRF52840_app)と共用しているコードです。
+
+|モジュール名|内容|詳細|
+|:--|:-|:-|
+|`CCID/ccid_lib`|CCID共通／PIV関連|[注1]|
+|`CCID/openpgp_lib`|OpenPGP関連|[注1]|
+|`FIDO2Device/ctap2_lib`|CTAP2関連|CBOR生成／解析処理<br>PIN管理機能処理<br>WebAuthn認証処理|
+|`FIDO2Device/fido2_lib`|FIDO2関連|トランスポート関連処理<br>暗号化／署名関連処理<br>永続化関連処理<br>管理機能処理<br>その他共通処理|
+|`FIDO2Device/u2f_lib`|U2F関連|U2F認証処理<br>キーハンドル関連<br>ECDSA署名処理|
+
+[注1] 最終更新日現在、リンクされていません。将来的にnRF5340アプリケーションにPIV／OpenPGP機能を移植する際、リンク予定です。
+
 ## 各種定義体
 
 nRF5340やZephyrプラットフォームについての各種定義は下記の通りです。<br>
 いずれも、最終更新日現在の設定値になります。
 
-#### nRF5340に関する定義
+### nRF5340に関する定義
 
 この定義は、nRF5340を使用する基板のデザイン（回路・配線等）で変更される場合があります。<br>
 現状は、nRF5340 DKと同様の基板デザインであることを前提した定義となっています。
@@ -55,3 +69,134 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_BT_DIS_HW_REV_STR`|`"PCA10095"`|基板名|
 |`CONFIG_BT_DEVICE_NAME`|`"Secure device 53"`|デバイス名|
 |`CONFIG_HEAP_MEM_POOL_SIZE`|`4096`||
+
+
+### nRF5340アプリケーションに関する定義
+
+#### Bluetooth関連
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_BT`|`y`||
+|`CONFIG_BT_PERIPHERAL`|`y`||
+|`CONFIG_BT_GATT_DYNAMIC_DB`|`y`||
+|`CONFIG_BT_L2CAP_TX_MTU`|`126`||
+|`CONFIG_BT_BUF_ACL_RX_SIZE`|`128`||
+|`CONFIG_BT_MAX_CONN`|`1`|最大接続数を`1`とし、複数端末／サービスからの接続を許容しません。|
+|`CONFIG_BT_MAX_PAIRED`|`10`|`10`端末までペアリングできます。|
+|`CONFIG_BT_SETTINGS`|`y`||
+|`CONFIG_BT_SMP`|`y`||
+|`CONFIG_BT_SMP_SC_PAIR_ONLY`|`y`||
+|`CONFIG_BT_TINYCRYPT_ECC`|`y`||
+
+#### デバイス情報関連
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_BT_DIS`|`y`||
+|`CONFIG_BT_DIS_SETTINGS`|`y`||
+|`CONFIG_BT_DIS_STR_MAX`|`21`||
+|`CONFIG_BT_DIS_PNP`|`n`||
+|`CONFIG_BT_DIS_MODEL`|`"Secure device"`||
+|`CONFIG_BT_DIS_MANUF`|`"Diverta Inc."`||
+|`CONFIG_BT_DIS_SERIAL_NUMBER`|`n`||
+|`CONFIG_BT_DIS_FW_REV`|`n`|この設定は上書きされます。|
+|`CONFIG_BT_DIS_HW_REV`|`n`|この設定は上書きされます。|
+|`CONFIG_BT_DIS_SW_REV`|`n`||
+|`CONFIG_BT_DIS_SERIAL_NUMBER_STR`|`""`||
+|`CONFIG_BT_DIS_FW_REV_STR`|`""`|この設定は上書きされます。|
+|`CONFIG_BT_DIS_HW_REV_STR`|`""`|この設定は上書きされます。|
+|`CONFIG_BT_DIS_SW_REV_STR`|`""`||
+|`CONFIG_BT_DEVICE_NAME`|`"Secure device"`|この設定は上書きされます。|
+
+#### USB関連
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_USB_DEVICE_STACK`|`y`||
+|`CONFIG_USB_DEVICE_HID`|`y`||
+|`CONFIG_USB_DEVICE_VID`|`0xf055`|仮の設定 [注1]|
+|`CONFIG_USB_DEVICE_PID`|`0x0001`|仮の設定 [注1]|
+|`CONFIG_USB_DEVICE_MANUFACTURER`|`"Diverta Inc."`||
+|`CONFIG_USB_DEVICE_PRODUCT`|`"Secure Dongle"`||
+|`CONFIG_USB_DEVICE_SN`|`"000000000000"`|変更不可 [注1]|
+|`CONFIG_ENABLE_HID_INT_OUT_EP`|`y`||
+|`CONFIG_HID_INTERRUPT_EP_MPS`|`64`||
+|`CONFIG_USB_HID_POLL_INTERVAL_MS`|`10`||
+|`CONFIG_USB_HID_BOOT_PROTOCOL`|`n`||
+
+[注1] [USB-IF](https://www.usb.org)でいまだ割り当てられていないとされるベンダーIDですが、製品化の際は割り当てを検討する必要があります。<br>
+[注2] Zephyrでは、USBデバイスのシリアル番号を、ハードウェアIDから自動的に取得して生成しています。詳細については[技術情報補足](../nRF5340_app/TECHNICAL.md)ご参照
+
+#### 永続化関連
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_FLASH`|`y`||
+|`CONFIG_FLASH_MAP`|`y`||
+|`CONFIG_FLASH_PAGE_LAYOUT`|`y`||
+|`CONFIG_FLASH_LOG_LEVEL_DBG`|`n`||
+|`CONFIG_NVS`|`y`||
+|`CONFIG_SETTINGS`|`y`||
+|`CONFIG_APP_SETTINGS_BUFFER_SIZE`|`1024`|永続化項目１件あたりの最大バイト数。<br>これを超える長さのデータは、Flash ROMに保存できません。|
+
+#### 暗号化関連
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_NORDIC_SECURITY_BACKEND`|`y`||
+|`CONFIG_NRF_SECURITY_RNG`|`y`||
+|`CONFIG_ENTROPY_GENERATOR`|`y`||
+|`CONFIG_MBEDTLS`|`y`||
+|`CONFIG_MBEDTLS_LIBRARY`|`y`||
+|`CONFIG_MBEDTLS_ENABLE_HEAP`|`y`||
+|`CONFIG_MBEDTLS_HEAP_SIZE`|`65536`||
+|`CONFIG_MBEDTLS_INSTALL_PATH`|`"DUMMY"`||
+
+#### その他
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_GPIO`|`y`||
+|`CONFIG_PM`|`y`||
+|`CONFIG_PM_DEVICE`|`y`||
+|`CONFIG_COUNTER`|`y`||
+|`CONFIG_COUNTER_RTC0`|`y`||
+|`CONFIG_COMPILER_OPT`|`"-DFIDO_ZEPHYR -DMBEDTLS_DES_C"`|特別なコンパイラーオプションは、<br>ここで追加指定します。|
+|`CONFIG_BT_DEBUG_LOG`|`n`||
+|`CONFIG_BT_DEBUG_NONE`|`n`||
+|`CONFIG_BT_DEBUG_SMP`|`n`||
+|`CONFIG_RESET_ON_FATAL_ERROR`|`n`||
+
+### BLE DFUに関する定義
+
+#### 基本設定
+サンプル`smp_svr/prj.conf`から転記した内容です。
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_MCUMGR`|`y`||
+|`CONFIG_BOOTLOADER_MCUBOOT`|`y`||
+|`CONFIG_THREAD_MONITOR`|`y`||
+|`CONFIG_STATS`|`n`||
+|`CONFIG_STATS_NAMES`|`n`||
+|`CONFIG_MCUMGR_CMD_IMG_MGMT`|`y`||
+|`CONFIG_MCUMGR_CMD_OS_MGMT`|`y`||
+|`CONFIG_MCUMGR_CMD_STAT_MGMT`|`n`||
+|`CONFIG_LOG`|`y`||
+|`CONFIG_MCUBOOT_UTIL_LOG_LEVEL_WRN`|`y`||
+
+#### Bluetooth関連設定
+サンプル`smp_svr/overlay-bt.conf`から転記した内容です（一部変更あり）。
+
+|定義名|設定値|内容|
+|:--|:-|:-|
+|`CONFIG_BT_L2CAP_TX_MTU`|`252`||
+|`CONFIG_BT_BUF_ACL_RX_SIZE`|`256`||
+|`CONFIG_MCUMGR_SMP_BT_CUSTOM`|`y`|カスタマイズしています [注1]|
+|`CONFIG_MCUMGR_SMP_BT`|`n`|カスタマイズしています [注1]|
+|`CONFIG_MCUMGR_SMP_BT_AUTHEN`|`n`||
+|`CONFIG_MCUMGR_SMP_SHELL`|`n`||
+|`CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE`|`2304`||
+|`CONFIG_MCUMGR_CMD_FS_MGMT`|`n`||
+
+[注1] サンプルで使用していた`smp_bt.c`から[一部変更したコード](../nRF5340_app/secure_device_app/zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c)をリンク対象とするための定義です。
