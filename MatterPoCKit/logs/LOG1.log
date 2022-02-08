@@ -1,0 +1,321 @@
+bash-3.2$ export ANDROID_NDK_HOME=/Applications/AndroidNDK7075529.app/Contents/NDK
+bash-3.2$ export ANDROID_HOME=/Users/makmorit/Library/Android/sdk
+bash-3.2$ export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
+bash-3.2$
+bash-3.2$ TARGET_CPU=arm64 ./scripts/examples/android_app_ide.sh
++ env
+SHELL=/bin/zsh
+XPC_FLAGS=0x0
+TERM_PROGRAM_VERSION=433
+PKG_CONFIG_PATH=:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.T32iFRr3Zw/Listeners
+PW_PROJECT_ROOT=/Users/makmorit/GitHub/connectedhomeip
+TERM_SESSION_ID=31074391-3DCC-49E8-ADA2-B944482A203B
+PWD=/Users/makmorit/GitHub/connectedhomeip
+LOGNAME=makmorit
+PW_ROOT=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo
+HOME=/Users/makmorit
+LANG=ja_JP.UTF-8
+VIRTUAL_ENV=/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv
+TMPDIR=/var/folders/hn/087_vn3j0lq1sbh89zfjl0640000gp/T/
+PW_PYTHON_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python
+ANDROID_NDK_HOME=/Applications/AndroidNDK7075529.app/Contents/NDK
+ANDROID_HOME=/Users/makmorit/Library/Android/sdk
+TERM=xterm-256color
+USER=makmorit
+TARGET_CPU=arm64
+SHLVL=3
+XPC_SERVICE_NAME=0
+_PW_ACTUAL_ENVIRONMENT_ROOT=/Users/makmorit/GitHub/connectedhomeip/.environment
+PATH=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin
+PW_PIGWEED_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed
+OLDPWD=/Users/makmorit/GitHub/connectedhomeip
+TERM_PROGRAM=Apple_Terminal
+_=/usr/bin/env
++ '[' -z /Users/makmorit/Library/Android/sdk ']'
++ '[' -z /Applications/AndroidNDK7075529.app/Contents/NDK ']'
++ '[' -z arm64 ']'
++ source scripts/activate.sh
+++ _bootstrap_or_activate ./scripts/examples/android_app_ide.sh
+++ '[' -n /usr/local/bin/bash ']'
+++ local _BOOTSTRAP_PATH=scripts/activate.sh
+++ local _BOOTSTRAP_NAME=activate.sh
++++ cd scripts/..
++++ pwd
+++ local _CHIP_ROOT=/Users/makmorit/GitHub/connectedhomeip
+++ local _CONFIG_FILE=scripts/environment.json
+++ '[' activate.sh = no_cipd_bootstrap.sh ']'
+++ '[' activate.sh = bootstrap.sh ']'
+++ '[' '!' -f /Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/pw_env_setup/util.sh ']'
++++ cat
+++ local '_CHIP_BANNER=           ░▓░
+           ▓█▓
+           ▓█▓                                                     ▒█     ▒█
+      ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▒█▒░░░▒█▓░   ██▒░░
+    ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
+    ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
+     ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
+ ░▒████████░ ░███▓▓█▓▓▒         ░█      ▒▒      █░   ░█▓██▓█░▒█    ░▓▓█░  ░▓▓█░   ▒▓▓██▓█░   ▒▓
+ ░██▒░  ▒██▒ ▒██░  ░▒█▓
+         ░▓░ ░▓░'
+++ PW_PROJECT_ROOT=/Users/makmorit/GitHub/connectedhomeip
+++ export PW_PROJECT_ROOT
+++ PW_ROOT=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo
+++ export PW_ROOT
+++ . /Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/pw_env_setup/util.sh
++++ export PATH
+++++ cat
++++ _PW_BANNER=' ▒█████▄   █▓  ▄███▒  ▒█    ▒█ ░▓████▒ ░▓████▒ ▒▓████▄
+  ▒█░  █░ ░█▒ ██▒ ▀█▒ ▒█░ █ ▒█  ▒█   ▀  ▒█   ▀  ▒█  ▀█▌
+  ▒█▄▄▄█░ ░█▒ █▓░ ▄▄░ ▒█░ █ ▒█  ▒███    ▒███    ░█   █▌
+  ▒█▀     ░█░ ▓█   █▓ ░█░ █ ▒█  ▒█   ▄  ▒█   ▄  ░█  ▄█▌
+  ▒█      ░█░ ░▓███▀   ▒█▓▀▓█░ ░▓████▒ ░▓████▒ ▒▓████▀'
++++ _PW_BANNER_FUNC=_pw_banner
+++ local _PW_BANNER_FUNC=_chip_bootstrap_banner
++++ pw_get_env_root
++++ '[' -z '' ']'
++++ '[' -n /Users/makmorit/GitHub/connectedhomeip ']'
++++ echo /Users/makmorit/GitHub/connectedhomeip/.environment
+++ export _PW_ACTUAL_ENVIRONMENT_ROOT=/Users/makmorit/GitHub/connectedhomeip/.environment
+++ _PW_ACTUAL_ENVIRONMENT_ROOT=/Users/makmorit/GitHub/connectedhomeip/.environment
+++ local _SETUP_SH=/Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh
+++ export PW_DOCTOR_SKIP_CIPD_CHECKS=1
+++ PW_DOCTOR_SKIP_CIPD_CHECKS=1
+++ export PATH
+++ '[' activate.sh = bootstrap.sh ']'
+++ '[' '!' -f /Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh ']'
+++ '[' '!' -s /Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh ']'
+++ pw_activate
+++ _pw_hello '  ACTIVATOR! This sets your shell environment variables.\n'
+++ _PW_TEXT='  ACTIVATOR! This sets your shell environment variables.\n'
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ pw_green '\n  WELCOME TO...\n'
+++ echo -e '\033[0;32m\n  WELCOME TO...\n\033[0m'
+
+  WELCOME TO...
+
+++ _chip_bootstrap_banner
+++ '[' -z '' ']'
+++ '[' -z '' ']'
+++ pw_bold_white '           ░▓░
+           ▓█▓
+           ▓█▓                                                     ▒█     ▒█
+      ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▒█▒░░░▒█▓░   ██▒░░
+    ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
+    ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
+     ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
+ ░▒████████░ ░███▓▓█▓▓▒         ░█      ▒▒      █░   ░█▓██▓█░▒█    ░▓▓█░  ░▓▓█░   ▒▓▓██▓█░   ▒▓
+ ░██▒░  ▒██▒ ▒██░  ░▒█▓
+         ░▓░ ░▓░\n'
+++ echo -e '\033[1;37m           ░▓░
+           ▓█▓
+           ▓█▓                                                     ▒█     ▒█
+      ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▒█▒░░░▒█▓░   ██▒░░
+    ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
+    ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
+     ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
+ ░▒████████░ ░███▓▓█▓▓▒         ░█      ▒▒      █░   ░█▓██▓█░▒█    ░▓▓█░  ░▓▓█░   ▒▓▓██▓█░   ▒▓
+ ░██▒░  ▒██▒ ▒██░  ░▒█▓
+         ░▓░ ░▓░\n\033[0m'
+           ░▓░
+           ▓█▓
+           ▓█▓                                                     ▒█     ▒█
+      ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▒█▒░░░▒█▓░   ██▒░░
+    ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
+    ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
+     ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
+ ░▒████████░ ░███▓▓█▓▓▒         ░█      ▒▒      █░   ░█▓██▓█░▒█    ░▓▓█░  ░▓▓█░   ▒▓▓██▓█░   ▒▓
+ ░██▒░  ▒██▒ ▒██░  ░▒█▓
+         ░▓░ ░▓░
+
+++ pw_green '  ACTIVATOR! This sets your shell environment variables.\n'
+++ echo -e '\033[0;32m  ACTIVATOR! This sets your shell environment variables.\n\033[0m'
+  ACTIVATOR! This sets your shell environment variables.
+
+++ _PW_ENV_SETUP_STATUS=0
+++ pw_finalize activate /Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh
+++ _PW_NAME=activate
+++ _PW_SETUP_SH=/Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh
+++ '[' 0 -ne 0 ']'
+++ '[' -f /Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh ']'
+++ . /Users/makmorit/GitHub/connectedhomeip/.environment/activate.sh
++++ PW_PROJECT_ROOT=/Users/makmorit/GitHub/connectedhomeip
++++ export PW_PROJECT_ROOT
++++ PW_ROOT=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo
++++ export PW_ROOT
++++ _PW_ACTUAL_ENVIRONMENT_ROOT=/Users/makmorit/GitHub/connectedhomeip/.environment
++++ export _PW_ACTUAL_ENVIRONMENT_ROOT
++++ '[' -z '' ']'
++++ echo 'Activating environment (setting environment variables):'
+Activating environment (setting environment variables):
++++ '[' -z '' ']'
++++ echo ''
+
++++ '[' -z '' ']'
++++ echo -n '  Setting environment variables for CIPD package manager...'
+  Setting environment variables for CIPD package manager...++++ echo '/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PW_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd
++++ export PW_CIPD_INSTALL_DIR
++++ CIPD_CACHE_DIR=/Users/makmorit/.cipd-cache-dir
++++ export CIPD_CACHE_DIR
+++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
+++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PW_PIGWEED_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed
++++ export PW_PIGWEED_CIPD_INSTALL_DIR
+++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
+++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PW_PYTHON_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python
++++ export PW_PYTHON_CIPD_INSTALL_DIR
++++ '[' -z '' ']'
++++ echo done
+done
++++ '[' -z '' ']'
++++ echo -n '  Setting environment variables for Python environment.....'
+  Setting environment variables for Python environment.....+++ VIRTUAL_ENV=/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv
++++ export VIRTUAL_ENV
+++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ unset PYTHONHOME
++++ unset __PYVENV_LAUNCHER__
++++ '[' -z '' ']'
++++ echo done
+done
++++ '[' -z '' ']'
++++ echo -n '  Setting environment variables for pw packages............'
+  Setting environment variables for pw packages............+++ '[' -z '' ']'
++++ echo skipped
+skipped
++++ '[' -z '' ']'
++++ echo -n '  Setting environment variables for Host tools.............'
+  Setting environment variables for Host tools.............++++ echo '/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:|:|g;'
+++++ sed 's|^/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:||g;'
+++++ sed 's|:/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools$||g;'
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ PATH='/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin'
++++ export PATH
++++ '[' -z '' ']'
++++ echo done
+done
++++ '[' -z '' ']'
++++ echo ''
+
++++ '[' -n /usr/local/bin/bash -o -n '' ']'
++++ hash -r
++++ '[' -z '' ']'
++++ echo 'Checking the environment:'
+Checking the environment:
++++ '[' -z '' ']'
++++ echo ''
+
++++ '[' -z '' ']'
++++ pw --no-banner --loglevel info doctor
+20220208 11:45:53 INF Environment passes all checks!
++++ '[' 0 -ne 0 ']'
++++ '[' -z '' ']'
++++ echo ''
+
++++ '[' -z '' ']'
++++ echo 'Environment looks good, you are ready to go!'
+Environment looks good, you are ready to go!
++++ '[' -z '' ']'
++++ echo ''
+
+++ '[' 0 -eq 0 ']'
+++ '[' activate = bootstrap ']'
+++ unset -f _bootstrap_or_activate
+++ pw_cleanup
+++ unset _PW_BANNER
+++ unset _PW_BANNER_FUNC
+++ unset PW_BANNER_FUNC
+++ unset _PW_ENV_SETUP
+++ unset _PW_NAME
+++ unset _PW_PYTHON
+++ unset _PW_SETUP_SH
+++ unset _PW_DEACTIVATE_SH
+++ unset _NEW_PW_ROOT
+++ unset _PW_ENV_SETUP_STATUS
+++ unset -f pw_none
+++ unset -f pw_red
+++ unset -f pw_bold_red
+++ unset -f pw_yellow
+++ unset -f pw_bold_yellow
+++ unset -f pw_green
+++ unset -f pw_bold_green
+++ unset -f pw_blue
+++ unset -f pw_cyan
+++ unset -f pw_magenta
+++ unset -f pw_bold_white
+++ unset -f pw_eval_sourced
+++ unset -f pw_check_root
+++ unset -f pw_get_env_root
+++ unset -f _pw_banner
+++ unset -f pw_bootstrap
+++ unset -f pw_activate
+++ unset -f pw_finalize
+++ unset -f pw_cleanup
+++ unset -f _pw_hello
+++ unset PW_CIPD_INSTALL_DIR
+++ unset CIPD_CACHE_DIR
+++ unset _PW_BANNER_FUNC
+++ unset _PW_TEXT
+++ unset PW_DOCTOR_SKIP_CIPD_CHECKS
+++ unset -f _chip_bootstrap_banner
++ python3 build/chip/java/tests/generate_jars_for_test.py
++ python3 third_party/android_deps/set_up_android_deps.py
+
+BUILD SUCCESSFUL in 427ms
+4 actionable tasks: 1 executed, 3 up-to-date
++ echo 'build ide'
+build ide
++ gn gen --check --fail-on-unused-args out/android_arm64 '--args=target_os="android" target_cpu="arm64" android_ndk_root="/Applications/AndroidNDK7075529.app/Contents/NDK" android_sdk_root="/Users/makmorit/Library/Android/sdk"' --ide=json --json-ide-script=//scripts/examples/gn_to_cmakelists.py
+Generating JSON projects took 94ms
+Done. Made 2361 targets from 224 files in 646ms
+bash-3.2$

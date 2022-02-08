@@ -1,0 +1,72 @@
+bash-3.2$ ./westbuild.sh -f
+ZEPHYR_BASE=/Users/makmorit/opt/ncs_1.8.99/zephyr (origin: env)
+-- west flash: rebuilding
+cmake version 3.20.2 is OK; minimum version is 3.13.1
+Running CMake: /usr/local/bin/cmake --build build
+[0/9] cd /Users/makmorit/GitHub/connectedhomeip && /Users/...tup/nrfconnect/update_ncs.py --check --quiet || ( exit 0 )
+[1/9] Performing build step for 'chip-gn'
+Generating compile_commands took 6ms
+Done. Made 70 targets from 76 files in 28ms
+ninja: no work to do.
+[2/7] Performing build step for 'multiprotocol_rpmsg_subimage'
+ninja: no work to do.
+[4/4] cd /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/...pt/ncs_1.8.99/modules/lib/openthread/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_DUA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_TMF_NETWORK_DIAG_MTD_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+KERNEL
+__ZEPHYR__=1
+_FORTIFY_SOURCE=2
+BUILD_VERSION=v2.7.0-ncs1
+__LINUX_ERRNO_EXTENSIONS__
+USE_PARTITION_MANAGER=1
+__PROGRAM_START
+NRF5340_XXAA_APPLICATION
+NRF_802154_USE_RAW_API=1
+NRF_802154_PENDING_SHORT_ADDRESSES=
+NRF_802154_PENDING_EXTENDED_ADDRESSES=
+NRF_802154_RX_BUFFERS=16
+NRF_802154_CCA_CORR_LIMIT_DEFAULT=
+NRF_802154_CCA_CORR_THRESHOLD_DEFAULT=
+NRF_802154_CCA_ED_THRESHOLD_DEFAULT=
+NRF_802154_CSMA_CA_ENABLED=1
+NRF_802154_TX_STARTED_NOTIFY_ENABLED=1
+NRF_802154_ACK_TIMEOUT_ENABLED=1
+NRF_802154_ENCRYPTION_ENABLED=0
+NRF_802154_SECURITY_WRITER_ENABLED=0
+NRF_802154_IE_WRITER_ENABLED=0
+NRF_802154_INTERNAL_RADIO_IRQ_HANDLING=0
+PSA_CRYPTO_SECURE
+MBEDTLS_CONFIG_FILE=nrf-config.h
+-- west flash: using runner nrfjprog
+runners.nrfjprog: nrfjprog --ids
+Using board 960160943
+-- runners.nrfjprog: Flashing file: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/merged_domains.hex
+-- runners.nrfjprog: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/merged_domains.hex targets both nRF53 coprocessors; splitting it into: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/GENERATED_CP_NETWORK_merged_domains.hex and /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/GENERATED_CP_APPLICATION_merged_domains.hex
+runners.nrfjprog: nrfjprog --program /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/GENERATED_CP_NETWORK_merged_domains.hex --sectorerase -f NRF53 --snr 960160943 --coprocessor CP_NETWORK
+Parsing image file.
+WARNING: A programming operation has been performed without --verify.
+WARNING: Programming can fail without error.
+runners.nrfjprog: nrfjprog --program /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/GENERATED_CP_APPLICATION_merged_domains.hex --sectorerase -f NRF53 --snr 960160943 --coprocessor CP_APPLICATION
+Parsing image file.
+WARNING: A programming operation has been performed without --verify.
+WARNING: Programming can fail without error.
+runners.nrfjprog: nrfjprog --pinreset -f NRF53 --snr 960160943
+Applying pin reset.
+-- runners.nrfjprog: Board with serial number 960160943 flashed successfully.
+bash-3.2$

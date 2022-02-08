@@ -8,7 +8,16 @@
 
 概ね以下の手順でライブラリーの更新／動作確認を実施します。
 
-## nRF Connect SDKの更新
+- nRF5340サンプルアプリの更新
+
+- Androidサンプルアプリの更新
+
+## nRF5340サンプルアプリの更新
+
+nRF5340サンプルアプリを更新します。<br>
+その段階で、nRF Connect SDKも更新されます。
+
+### nRF Connect SDKの更新
 
 nRF Connect SDKの最新版をチェックアウトします。<br>
 同時に、Matterが推奨するバージョン（タグ）と整合させます。
@@ -24,83 +33,30 @@ bash-3.2$ cd ${HOME}/opt/ncs_1.8.99;source bin/activate
 ```
 
 #### nRF Connect SDKの再導入
-nRF Connect SDKの最新版をチェックアウトします。
+nRF Connect SDKの最新版をチェックアウトします。<br>
+以下のコマンドを実行します。
 
 ```
-(ncs_1.8.99) bash-3.2$ pip3 install west
-Collecting west
-  Using cached https://files.pythonhosted.org/packages/8e/0c/9f8ee26eb8b27b3aae9e2a2b6ec7cd72ba119c234548ceee184c2df700a2/west-0.12.0-py3-none-any.whl
-Collecting pykwalify (from west)
-:
-Successfully installed PyYAML-6.0 colorama-0.4.4 docopt-0.6.2 packaging-21.3 pykwalify-1.8.0 pyparsing-3.0.7 python-dateutil-2.8.2 ruamel.yaml-0.17.20 ruamel.yaml.clib-0.2.6 six-1.16.0 west-0.12.0
-You are using pip version 19.0.3, however version 22.0.3 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-(ncs_1.8.99) bash-3.2$ west init -m https://github.com/nrfconnect/sdk-nrf
-=== Initializing in /Users/makmorit/opt/ncs_1.8.99
---- Cloning manifest repository from https://github.com/nrfconnect/sdk-nrf
-Cloning into '/Users/makmorit/opt/ncs_1.8.99/.west/manifest-tmp'...
-remote: Enumerating objects: 97976, done.
-remote: Total 97976 (delta 0), reused 0 (delta 0), pack-reused 97976
-Receiving objects: 100% (97976/97976), 55.01 MiB | 4.66 MiB/s, done.
-Resolving deltas: 100% (72373/72373), done.
---- setting manifest.path to nrf
-=== Initialized. Now run "west update" inside /Users/makmorit/opt/ncs_1.8.99.
-(ncs_1.8.99) bash-3.2$ west update
-=== updating zephyr (zephyr):
---- zephyr: initializing
-Initialized empty Git repository in /Users/makmorit/opt/ncs_1.8.99/zephyr/.git/
---- zephyr: fetching, need revision v2.7.99-ncs1-rc1
-remote: Enumerating objects: 642346, done.
-:
-Resolving deltas: 100% (3134/3134), done.
-From https://github.com/zephyrproject-rtos/zscilib
- * [new branch]      gh-pages   -> refs/west/gh-pages
- * [new branch]      master     -> refs/west/master
- * [new tag]         v0.2.0-rc1 -> v0.2.0-rc1
-HEAD is now at 12bfe3f Merge pull request #28 from microbuilder/doccleanup
-HEAD is now at 12bfe3f Merge pull request #28 from microbuilder/doccleanup
-(ncs_1.8.99) bash-3.2$ PATH=${PATH}:/Applications/CMake.app/Contents/bin
-(ncs_1.8.99) bash-3.2$ west zephyr-export
-Zephyr (/Users/makmorit/opt/ncs_1.8.99/zephyr/share/zephyr-package/cmake)
-has been added to the user package registry in:
-~/.cmake/packages/Zephyr
-
-ZephyrUnittest (/Users/makmorit/opt/ncs_1.8.99/zephyr/share/zephyrunittest-package/cmake)
-has been added to the user package registry in:
-~/.cmake/packages/ZephyrUnittest
-
-(ncs_1.8.99) bash-3.2$
-
+pip3 install west
+west init -m https://github.com/nrfconnect/sdk-nrf
+west update
+PATH=${PATH}:/Applications/CMake.app/Contents/bin
+west zephyr-export
 ```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG4.log)）
 
 #### 依存ライブラリーの導入
 Python3の依存ライブラリーをインストールします。
 
 ```
-(ncs_1.8.99) bash-3.2$ pip3 install -r zephyr/scripts/requirements.txt
-Ignoring windows-curses: markers 'sys_platform == "win32"' don't match your environment
-Collecting pyelftools>=0.26 (from -r zephyr/scripts/requirements-base.txt (line 7))
-:
-Successfully installed MarkupSafe-2.0.1 Pillow-9.0.1 PyGithub-1.55 aenum-3.1.8 alabaster-0.7.12 anytree-2.8.0 appdirs-1.4.4 arrow-1.2.2 astroid-2.9.3 attrs-21.4.0 babel-2.9.1 breathe-4.32.0 canopen-1.2.1 capstone-4.0.2 cbor-1.0.0 certifi-2021.10.8 cffi-1.15.0 charset-normalizer-2.0.11 click-8.0.3 cmsis-pack-manager-0.4.0 coverage-6.3.1 cryptography-36.0.1 deprecated-1.2.13 docutils-0.18.1 future-0.18.2 gcovr-5.0 gitlint-0.17.0 gitlint-core-0.17.0 hidapi-0.11.0.post2 idna-3.3 imagesize-1.3.0 imgtool-1.8.0 importlib-metadata-4.10.1 iniconfig-1.1.1 intelhex-2.3.0 intervaltree-3.1.0 isort-5.10.1 jinja2-3.0.3 junit2html-30.0.6 junitparser-1.6.3 lazy-object-proxy-1.7.1 libusb-package-1.0.25.0 lpc-checksum-2.2.0 lxml-4.7.1 mccabe-0.6.1 milksnake-0.1.5 mock-4.0.3 mypy-0.931 mypy-extensions-0.4.3 natsort-8.1.0 platformdirs-2.4.1 pluggy-1.0.0 ply-3.11 prettytable-2.5.0 progress-1.6 protobuf-3.19.4 psutil-5.9.0 py-1.11.0 pycparser-2.21 pyelftools-0.28 pygments-2.11.2 pyjwt-2.3.0 pylink-square-0.11.1 pylint-2.12.2 pynacl-1.5.0 pyocd-0.33.0 pyocd-pemicro-1.1.3 pypemicro-0.1.9 pyserial-3.5 pytest-7.0.0 python-can-3.3.4 python-magic-0.4.25 pytz-2021.3 pyusb-1.2.1 requests-2.27.1 sh-1.14.2 snowballstemmer-2.2.0 sortedcontainers-2.4.0 sphinx-4.4.0 sphinx-notfound-page-0.8 sphinx-rtd-theme-1.0.0 sphinx-tabs-3.2.0 sphinxcontrib-applehelp-1.0.2 sphinxcontrib-devhelp-1.0.2 sphinxcontrib-htmlhelp-2.0.0 sphinxcontrib-jsmath-1.0.1 sphinxcontrib-qthelp-1.0.3 sphinxcontrib-serializinghtml-1.1.5 sphinxcontrib-svg2pdfconverter-1.2.0 tabulate-0.8.9 toml-0.10.2 tomli-2.0.0 typed-ast-1.5.2 typing-extensions-4.0.1 urllib3-1.26.8 wcwidth-0.2.5 wrapt-1.13.3 zipp-3.7.0
-You are using pip version 19.0.3, however version 22.0.3 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-(ncs_1.8.99) bash-3.2$
-(ncs_1.8.99) bash-3.2$ pip3 install -r nrf/scripts/requirements.txt
-Requirement already satisfied: west>=0.12.0 in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-base.txt (line 1)) (0.12.0)
-Collecting ecdsa (from -r nrf/scripts/requirements-build.txt (line 1))
-:
-Successfully installed CommonMark-0.9.1 azure-core-1.22.0 azure-storage-blob-12.9.0 cached-property-1.5.2 cbor2-5.4.2.post1 cddl-gen-0.3.0 ecdsa-0.17.0 isodate-0.6.1 m2r2-0.3.2 markdown-3.3.4 mistune-0.8.4 msrest-0.6.21 oauthlib-3.2.0 pygit2-1.8.0 recommonmark-0.6.0 regex-2022.1.18 requests-oauthlib-1.3.1 sphinx-markdown-tables-0.0.15 sphinx-ncs-theme-0.7.0 sphinxcontrib-mscgen-0.6 sphinxcontrib-plantuml-0.22
-You are using pip version 19.0.3, however version 22.0.3 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-(ncs_1.8.99) bash-3.2$
-(ncs_1.8.99) bash-3.2$ pip3 install -r bootloader/mcuboot/scripts/requirements.txt
-Requirement already satisfied: cryptography>=2.6 in ./lib/python3.7/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 1)) (36.0.1)
-:
-Requirement already satisfied: typing-extensions>=3.6.4; python_version < "3.8" in ./lib/python3.7/site-packages (from importlib-metadata; python_version < "3.8"->click->-r bootloader/mcuboot/scripts/requirements.txt (line 3)) (4.0.1)
-You are using pip version 19.0.3, however version 22.0.3 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-(ncs_1.8.99) bash-3.2$
+pip3 install -r zephyr/scripts/requirements.txt
+pip3 install -r nrf/scripts/requirements.txt
+pip3 install -r bootloader/mcuboot/scripts/requirements.txt
 ```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG5.log)）
+
 
 #### 環境設定
 `west-completion.bash`というスクリプトを生成しておきます。
@@ -130,25 +86,13 @@ bash-3.2$
 最後に、nCSのバージョンを、Matterが推奨するバージョン（タグ）と整合させます。
 
 ```
-bash-3.2$ cd ${HOME}/opt/ncs_1.8.99;source bin/activate
-(ncs_1.8.99) bash-3.2$
-(ncs_1.8.99) bash-3.2$ export NCS_HOME=${HOME}/opt/ncs_1.8.99
-(ncs_1.8.99) bash-3.2$ export ZEPHYR_BASE=${NCS_HOME}/zephyr
-(ncs_1.8.99) bash-3.2$ source ${NCS_HOME}/west-completion.bash
-(ncs_1.8.99) bash-3.2$
-(ncs_1.8.99) bash-3.2$ /Users/makmorit/GitHub/connectedhomeip/scripts/setup/nrfconnect/update_ncs.py --update
-Updating nRF Connect SDK to recommended revision...
-Note: switching to 'cfedfdfa08567b2252b511a4d1db15fbeba8152d'.
-:
-=== updating tinycbor (modules/lib/tinycbor):
-HEAD is now at 40daca9 zephyr: Remove TINYCBOR from interface libraries
-=== updating tinycrypt (modules/crypto/tinycrypt):
-HEAD is now at 3e9a49d cmake: Fix conditional in root CMakeLists.txt
-=== updating TraceRecorderSource (modules/debug/TraceRecorder):
-HEAD is now at 36c5777 Merge remote-tracking branch 'upstream/main' into zephyr
-(ncs_1.8.99) bash-3.2$ deactivate
-bash-3.2$
+export NCS_HOME=${HOME}/opt/ncs_1.8.99
+export ZEPHYR_BASE=${NCS_HOME}/zephyr
+source ${NCS_HOME}/west-completion.bash
+${HOME}/GitHub/connectedhomeip/scripts/setup/nrfconnect/update_ncs.py --update
 ```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG6.log)）
 
 ### サンプルアプリを使用した動作確認
 
@@ -158,49 +102,13 @@ nRF5340にサンプルアプリを書込み、始動まで確認します。
 
 `westbuild.sh`を使用し、サンプルアプリをビルドします。
 
-```
-bash-3.2$ ./westbuild.sh
--- west build: generating a build system
-Including boilerplate (Zephyr base): /Users/makmorit/opt/ncs_1.8.99/zephyr/cmake/app/boilerplate.cmake
--- Application: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect
--- Zephyr version: 2.7.0 (/Users/makmorit/opt/ncs_1.8.99/zephyr), build: v2.7.0-ncs1
--- Found Python3: /Users/makmorit/opt/ncs_1.8.99/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter
--- Found west (found suitable version "0.12.0", minimum required is "0.7.1")
--- Board: nrf5340dk_nrf5340_cpuapp
-:
-[829/894] No configure step for 'chip-gn'
-[830/894] Performing build step for 'chip-gn'
-Generating compile_commands took 12ms
-Done. Made 70 targets from 76 files in 46ms
-[327/327] stamp obj/ABS_PATH/Users/makmorit/GitHub/connectedhomeip/config/nrfconnect/chip-gn/default.stamp
-[885/894] Linking CXX executable zephyr/zephyr_prebuilt.elf
-
-[892/894] Linking CXX executable zephyr/zephyr.elf
-Memory region         Used Size  Region Size  %age Used
-           FLASH:      658828 B      1008 KB     63.83%
-            SRAM:      198798 B       448 KB     43.33%
-        IDT_LIST:          0 GB         2 KB      0.00%
-[894/894] Generating zephyr/merged_domains.hex
-bash-3.2$
-```
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG7.log)）
 
 #### サンプルアプリの書込み
 
-`westbuild.sh`を使用し、サンプルアプリをnRF5340に書込みます。
+`westbuild.sh -f`を使用し、サンプルアプリをnRF5340に書込みます。
 
-```
-bash-3.2$ ./westbuild.sh -f
-ZEPHYR_BASE=/Users/makmorit/opt/ncs_1.8.99/zephyr (origin: env)
--- west flash: rebuilding
-cmake version 3.20.2 is OK; minimum version is 3.13.1
-Running CMake: /usr/local/bin/cmake --build build
-[0/9] cd /Users/makmorit/GitHub/connectedhomeip && /Users/...tup/nrfconnect/update_ncs.py --check --quiet || ( exit 0 )
-:
-runners.nrfjprog: nrfjprog --pinreset -f NRF53 --snr 960160943
-Applying pin reset.
--- runners.nrfjprog: Board with serial number 960160943 flashed successfully.
-bash-3.2$
-```
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG8.log)）
 
 #### 起動確認
 nRF5340上のサンプルアプリから出力されるログを確認します。<br>
@@ -270,3 +178,80 @@ D: 1248 [DMG]Endpoint 0, Cluster 0x0000_0033 update version to b318c38c
 I: 1254 [ZCL]PlatformMgrDelegate: OnStartUp
 D: 1258 [EVL]LogEvent event number: 0x0000000000000000 priority: 2, endpoint id:  0x0 cluster id: 0x0000_0028 event id: 0x0 Sys timestamp: 0x00000000000004EA
 ```
+
+## Androidサンプルアプリの更新
+
+#### 環境準備
+
+以下のコマンドを実行します。
+
+```
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
+cd ${HOME}/GitHub/connectedhomeip
+source scripts/bootstrap.sh
+```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG3.log)）
+
+#### Android Studio用のライブラリー更新
+
+以下のコマンドを実行します。<br>
+（環境準備で生成された仮想環境を使用します）
+
+```
+cd ${HOME}/GitHub/connectedhomeip
+. scripts/activate.sh
+export ANDROID_NDK_HOME=/Applications/AndroidNDK7075529.app/Contents/NDK
+export ANDROID_HOME=${HOME}/Library/Android/sdk
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
+TARGET_CPU=arm64 ./scripts/examples/android_app_ide.sh
+deactivate
+```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG1.log)）
+
+#### Androidサンプルアプリのビルド
+
+以下のコマンドを実行します。<br>
+（環境準備で生成された仮想環境を使用します）
+
+```
+cd ${HOME}/GitHub/connectedhomeip
+. scripts/activate.sh
+./scripts/build/build_examples.py --target android-arm64-chip-tool build
+deactivate
+```
+
+（実行例は[こちらをご参照](../MatterPoCKit/logs/LOG2.log)）
+
+プロジェクトフォルダー配下の`out/android-arm64-chip-tool/outputs/apk/debug/`という場所に、サンプルアプリのインストール用ファイル`app-debug.apk`が生成されます。
+
+```
+bash-3.2$ cd ${HOME}/GitHub/connectedhomeip
+bash-3.2$ ls -al out/android-arm64-chip-tool/outputs/apk/debug/
+total 52512
+drwxr-xr-x  4 makmorit  staff       128  2  8 11:51 .
+drwxr-xr-x  4 makmorit  staff       128  2  8 11:52 ..
+-rw-r--r--  1 makmorit  staff  26879457  2  8 11:51 app-debug.apk
+-rw-r--r--  1 makmorit  staff       325  2  8 11:51 output-metadata.json
+bash-3.2$
+```
+
+`app-debug.apk`は、適宜PCからUSB経由（または電子メール経由）でAndroidに格納してください。
+
+<img src="logs/0001.jpg" width="200">
+
+`app-debug.apk`をタップしてインストールすると、サンプルアプリ`CHIPTool`がインストールされます。
+
+<img src="logs/0002.jpg" width="200">
+
+## 確認結果
+
+最終更新日現在、以上のサンプルアプリ更新を実施しても、nRF5340サンプルアプリ〜Androidサンプルアプリ間で、[Matterコミッショニング](https://github.com/project-chip/connectedhomeip/blob/master/docs/guides/nrfconnect_android_commissioning.md)が成立できていません。[注1]<br>
+nRF5340アプリケーションが下記のようなログ[注2]を出力しているので、おそらくそれが要因の一つと考えられますが、原因は掴めておりません。
+
+```
+E: 142201 [DL]OnSrpClientNotification: Operation refused for security reasons
+```
+[注1] コミッショニング処理の過程におけるnRF5340〜Android間のBLEペアリング、nRF5340-->MatterハブのThreadネットワーク参加は、確認できておりました。<br>
+[注2] nRF5340のコミッショニング失敗までのログ全量は[こちらをご参照](../MatterPoCKit/logs/LOG9.log)
