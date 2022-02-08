@@ -1,0 +1,203 @@
+bash-3.2$ ./westbuild.sh
+-- west build: generating a build system
+Including boilerplate (Zephyr base): /Users/makmorit/opt/ncs_1.8.99/zephyr/cmake/app/boilerplate.cmake
+-- Application: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect
+-- Zephyr version: 2.7.0 (/Users/makmorit/opt/ncs_1.8.99/zephyr), build: v2.7.0-ncs1
+-- Found Python3: /Users/makmorit/opt/ncs_1.8.99/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter
+-- Found west (found suitable version "0.12.0", minimum required is "0.7.1")
+-- Board: nrf5340dk_nrf5340_cpuapp
+-- Cache files will be written to: /Users/makmorit/Library/Caches/zephyr
+-- Found toolchain: gnuarmemb (/Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update)
+-- Found BOARD.dts: /Users/makmorit/opt/ncs_1.8.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpuapp.dts
+-- Generated zephyr.dts: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/zephyr.dts
+-- Generated devicetree_unfixed.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/devicetree_unfixed.h
+-- Generated device_extern.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/device_extern.h
+-- Including generated dts.cmake file: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/dts.cmake
+
+warning: Experimental symbol NET_CONNECTION_MANAGER is enabled.
+
+Parsing /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/Kconfig
+Loaded configuration '/Users/makmorit/opt/ncs_1.8.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpuapp_defconfig'
+Merged configuration '/Users/makmorit/GitHub/connectedhomeip/config/nrfconnect/app/sample-defaults.conf'
+Merged configuration '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/prj.conf'
+Merged configuration '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/boards/nrf5340dk_nrf5340_cpuapp.conf'
+Configuration saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/.config'
+Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/autoconf.h'
+-- The C compiler identification is GNU 9.3.1
+-- The CXX compiler identification is GNU 9.3.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+
+=== child image multiprotocol_rpmsg - CPUNET begin ===
+Including boilerplate (Zephyr base): /Users/makmorit/opt/ncs_1.8.99/zephyr/cmake/app/boilerplate.cmake
+-- Application: /Users/makmorit/opt/ncs_1.8.99/nrf/samples/nrf5340/multiprotocol_rpmsg
+-- Zephyr version: 2.7.0 (/Users/makmorit/opt/ncs_1.8.99/zephyr), build: v2.7.0-ncs1
+-- Found Python3: /Users/makmorit/opt/ncs_1.8.99/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter
+-- Found west (found suitable version "0.12.0", minimum required is "0.7.1")
+-- Board: nrf5340dk_nrf5340_cpunet
+-- Cache files will be written to: /Users/makmorit/Library/Caches/zephyr
+-- Found toolchain: gnuarmemb (/Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update)
+-- Found BOARD.dts: /Users/makmorit/opt/ncs_1.8.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpunet.dts
+-- Generated zephyr.dts: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/zephyr.dts
+-- Generated devicetree_unfixed.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/devicetree_unfixed.h
+-- Generated device_extern.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/device_extern.h
+-- Including generated dts.cmake file: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/dts.cmake
+Parsing /Users/makmorit/opt/ncs_1.8.99/zephyr/Kconfig
+Loaded configuration '/Users/makmorit/opt/ncs_1.8.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpunet_defconfig'
+Merged configuration '/Users/makmorit/opt/ncs_1.8.99/nrf/samples/nrf5340/multiprotocol_rpmsg/prj.conf'
+Merged configuration '/Users/makmorit/opt/ncs_1.8.99/nrf/subsys/partition_manager/partition_manager_enabled.conf'
+Configuration saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/.config'
+Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/autoconf.h'
+-- The C compiler identification is GNU 9.3.1
+-- The CXX compiler identification is GNU 9.3.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+-- libmetal version: 1.0.0 (/Users/makmorit/opt/ncs_1.8.99/nrf/samples/nrf5340/multiprotocol_rpmsg)
+-- Build type:
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: cortexm
+-- Looking for include file stdatomic.h
+-- Looking for include file stdatomic.h - found
+-- open-amp version: 1.0.0 (/Users/makmorit/opt/ncs_1.8.99/modules/lib/open-amp/open-amp)
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: cortexm
+-- C_FLAGS :  -Wall -Wextra
+-- Looking for include file fcntl.h
+-- Looking for include file fcntl.h - found
+CMake Warning at /Users/makmorit/opt/ncs_1.8.99/zephyr/CMakeLists.txt:722 (message):
+  No SOURCES given to Zephyr library: drivers__console
+
+  Excluding target from build.
+
+
+CMake Warning at /Users/makmorit/opt/ncs_1.8.99/zephyr/CMakeLists.txt:1662 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg
+=== child image multiprotocol_rpmsg - CPUNET end ===
+
+-- libmetal version: 1.0.0 (/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect)
+-- Build type:
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: cortexm
+-- Looking for include file stdatomic.h
+-- Looking for include file stdatomic.h - found
+-- open-amp version: 1.0.0 (/Users/makmorit/opt/ncs_1.8.99/modules/lib/open-amp/open-amp)
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: cortexm
+-- C_FLAGS :  -Wall -Wextra
+-- Looking for include file fcntl.h
+-- Looking for include file fcntl.h - found
+-- OpenThread Source Directory: /Users/makmorit/opt/ncs_1.8.99/modules/lib/openthread
+-- Check if the system is big endian
+-- Searching 16 bit integer
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of unsigned short
+-- Check size of unsigned short - done
+-- Searching 16 bit integer - Using unsigned short
+-- Check if the system is big endian - little endian
+-- Package Name: OPENTHREAD
+-- Setting default package version: thread-reference-20200818-ncs1-rc3-380-g69eb7030c
+-- Package Version: thread-reference-20200818-ncs1-rc3-380-g69eb7030c
+CMake Warning at /Users/makmorit/opt/ncs_1.8.99/nrfxlib/nrf_802154/sl/sl/CMakeLists.txt:14 (message):
+  This combination of SoC and floating point ABI is not supported by the
+  nrf_802154_sl
+  lib.(/Users/makmorit/opt/ncs_1.8.99/nrfxlib/nrf_802154/sl/sl/lib/nRF5340_CPUAPP/hard-float
+  doesn't exist.)
+
+
+-- Found Python3: /Users/makmorit/opt/ncs_1.8.99/bin/python3 (found version "3.7.3") found components: Interpreter
+CMake Warning at /Users/makmorit/opt/ncs_1.8.99/zephyr/CMakeLists.txt:1662 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Found partition manager static configuration: configuration/nrf5340dk_nrf5340_cpuapp/pm_static.yml
+Partition 'settings_storage' is not included in the dynamic resolving since it is statically defined.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build
+-- west build: building application
+[0/894] cd /Users/makmorit/GitHub/connectedhomeip && /User...tup/nrfconnect/update_ncs.py --check --quiet || ( exit 0 )
+[1/894] Preparing syscall dependency handling
+
+[32/894] Performing build step for 'multiprotocol_rpmsg_subimage'
+[1/273] Preparing syscall dependency handling
+
+[264/273] Linking C executable zephyr/zephyr_prebuilt.elf
+
+[271/273] Linking C executable zephyr/zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      223708 B       256 KB     85.34%
+            SRAM:       58768 B        64 KB     89.67%
+           SRAM1:          0 GB        64 KB      0.00%
+        IDT_LIST:          0 GB         2 KB      0.00%
+[273/273] Generating zephyr/merged_CPUNET.hex
+[69/894] cd /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/modules/openthread/build && /usr/local/Cellar/cmake/3.20.2/bin/cmake -DLIST="OPENTHREAD_CONFIG_ASSERT_ENABLE=1;OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0;OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0;OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0;OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0;OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0;OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE=1;OPENTHREAD_CONFIG_ECDSA_ENABLE=1;OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE=1;OPENTHREAD_CONFIG_DUA_ENABLE=1;OPENTHREAD_CONFIG_MLR_ENABLE=1;OPENTHREAD_CONFIG_TMF_NETWORK_DIAG_MTD_ENABLE=1;OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1;OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1;OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0;PACKAGE_NAME="OPENTHREAD";OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2;OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1;KERNEL;__ZEPHYR__=1;_FORTIFY_SOURCE=2;BUILD_VERSION=v2.7.0-ncs1;__LINUX_ERRNO_EXTENSIONS__;USE_PARTITION_MANAGER=1;__PROGRAM_START;NRF5340_XXAA_APPLICATION;NRF_802154_USE_RAW_API=1;NRF_802154_PENDING_SHORT_ADDRESSES=;NRF_802154_PENDING_EXTENDED_ADDRESSES=;NRF_802154_RX_BUFFERS=16;NRF_802154_CCA_CORR_LIMIT_DEFAULT=;NRF_802154_CCA_CORR_THRESHOLD_DEFAULT=;NRF_802154_CCA_ED_THRESHOLD_DEFAULT=;NRF_802154_CSMA_CA_ENABLED=1;NRF_802154_TX_STARTED_NOTIFY_ENABLED=1;NRF_802154_ACK_TIMEOUT_ENABLED=1;NRF_802154_ENCRYPTION_ENABLED=0;NRF_802154_SECURITY_WRITER_ENABLED=0;NRF_802154_IE_WRITER_ENABLED=0;NRF_802154_INTERNAL_RADIO_IRQ_HANDLING=0;PSA_CRYPTO_SECURE;MBEDTLS_CONFIG_FILE="nrf-config.h"" -P /Users/makmorit/opt/ncs_1.8.99/modules/lib/openthread/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_DUA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_TMF_NETWORK_DIAG_MTD_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+KERNEL
+__ZEPHYR__=1
+_FORTIFY_SOURCE=2
+BUILD_VERSION=v2.7.0-ncs1
+__LINUX_ERRNO_EXTENSIONS__
+USE_PARTITION_MANAGER=1
+__PROGRAM_START
+NRF5340_XXAA_APPLICATION
+NRF_802154_USE_RAW_API=1
+NRF_802154_PENDING_SHORT_ADDRESSES=
+NRF_802154_PENDING_EXTENDED_ADDRESSES=
+NRF_802154_RX_BUFFERS=16
+NRF_802154_CCA_CORR_LIMIT_DEFAULT=
+NRF_802154_CCA_CORR_THRESHOLD_DEFAULT=
+NRF_802154_CCA_ED_THRESHOLD_DEFAULT=
+NRF_802154_CSMA_CA_ENABLED=1
+NRF_802154_TX_STARTED_NOTIFY_ENABLED=1
+NRF_802154_ACK_TIMEOUT_ENABLED=1
+NRF_802154_ENCRYPTION_ENABLED=0
+NRF_802154_SECURITY_WRITER_ENABLED=0
+NRF_802154_IE_WRITER_ENABLED=0
+NRF_802154_INTERNAL_RADIO_IRQ_HANDLING=0
+PSA_CRYPTO_SECURE
+MBEDTLS_CONFIG_FILE=nrf-config.h
+[829/894] No configure step for 'chip-gn'
+[830/894] Performing build step for 'chip-gn'
+Generating compile_commands took 12ms
+Done. Made 70 targets from 76 files in 46ms
+[327/327] stamp obj/ABS_PATH/Users/makmorit/GitHub/connectedhomeip/config/nrfconnect/chip-gn/default.stamp
+[885/894] Linking CXX executable zephyr/zephyr_prebuilt.elf
+
+[892/894] Linking CXX executable zephyr/zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      658828 B      1008 KB     63.83%
+            SRAM:      198798 B       448 KB     43.33%
+        IDT_LIST:          0 GB         2 KB      0.00%
+[894/894] Generating zephyr/merged_domains.hex
+bash-3.2$

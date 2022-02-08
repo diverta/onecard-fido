@@ -1,0 +1,164 @@
+bash-3.2$ source scripts/bootstrap.sh
+Submodule 'cyw30739_sdk/30739A0' (https://github.com/Infineon/30739A0.git) registered for path 'third_party/cyw30739_sdk/repos/30739A0'
+Submodule 'cyw30739_sdk/target' (https://github.com/Infineon/TARGET_CYW930739M2EVB-01.git) registered for path 'third_party/cyw30739_sdk/repos/CYW930739M2EVB-01'
+Submodule 'cyw30739_sdk/include' (https://github.com/Infineon/btsdk-include.git) registered for path 'third_party/cyw30739_sdk/repos/btsdk-include'
+Submodule 'cyw30739_sdk/tools' (https://github.com/Infineon/btsdk-tools.git) registered for path 'third_party/cyw30739_sdk/repos/btsdk-tools'
+Submodule 'third_party/jsoncpp/repo' (https://github.com/open-source-parsers/jsoncpp.git) registered for path 'third_party/jsoncpp/repo'
+Submodule 'third_party/mbed-mcu-boot/repo' (https://github.com/ATmobica/mcuboot.git) registered for path 'third_party/mbed-mcu-boot/repo'
+Submodule 'mbed-os-cypress-capsense-button' (https://github.com/ARMmbed/mbed-os-cypress-capsense-button.git) registered for path 'third_party/mbed-os-cypress-capsense-button/repo'
+Submodule 'third_party/openthread/ot-ifx' (https://github.com/Infineon/ot-ifx-release.git) registered for path 'third_party/openthread/ot-ifx'
+Submodule 'p6/TARGET_CY8CKIT-062S2-43012' (https://github.com/Infineon/TARGET_CY8CKIT-062S2-43012) registered for path 'third_party/p6/p6_sdk/libs/TARGET_CY8CKIT-062S2-43012'
+Submodule 'p6/abstraction-rtos' (https://github.com/Infineon/abstraction-rtos) registered for path 'third_party/p6/p6_sdk/libs/abstraction-rtos'
+Submodule 'p6/bluetooth-freertos' (https://github.com/Infineon/bluetooth-freertos) registered for path 'third_party/p6/p6_sdk/libs/bluetooth-freertos'
+Submodule 'p6/btstack' (https://github.com/Infineon/btstack) registered for path 'third_party/p6/p6_sdk/libs/btstack'
+Submodule 'p6/clib-support' (https://github.com/Infineon/clib-support) registered for path 'third_party/p6/p6_sdk/libs/clib-support'
+Submodule 'p6/connectivity-utilities' (https://github.com/Infineon/connectivity-utilities) registered for path 'third_party/p6/p6_sdk/libs/connectivity-utilities'
+Submodule 'p6/core-lib' (https://github.com/Infineon/core-lib) registered for path 'third_party/p6/p6_sdk/libs/core-lib'
+Submodule 'p6/core-make' (https://github.com/Infineon/core-make) registered for path 'third_party/p6/p6_sdk/libs/core-make'
+Submodule 'p6/freertos' (https://github.com/Infineon/freertos) registered for path 'third_party/p6/p6_sdk/libs/freertos'
+Submodule 'p6/kv-store' (https://github.com/Infineon/kv-store) registered for path 'third_party/p6/p6_sdk/libs/kv-store'
+Submodule 'p6/lwip' (https://github.com/lwip-tcpip/lwip.git) registered for path 'third_party/p6/p6_sdk/libs/lwip'
+Submodule 'p6/mbedtls' (https://github.com/ARMmbed/mbedtls) registered for path 'third_party/p6/p6_sdk/libs/mbedtls'
+Submodule 'p6/mtb-hal-cat1' (https://github.com/Infineon/mtb-hal-cat1) registered for path 'third_party/p6/p6_sdk/libs/mtb-hal-cat1'
+Submodule 'p6/mtb-pdl-cat1' (https://github.com/Infineon/mtb-pdl-cat1) registered for path 'third_party/p6/p6_sdk/libs/mtb-pdl-cat1'
+Submodule 'p6/psoc6cm0p' (https://github.com/Infineon/psoc6cm0p) registered for path 'third_party/p6/p6_sdk/libs/psoc6cm0p'
+Submodule 'p6/recipe-make-cat1a' (https://github.com/Infineon/recipe-make-cat1a) registered for path 'third_party/p6/p6_sdk/libs/recipe-make-cat1a'
+Submodule 'p6/retarget-io' (https://github.com/Infineon/retarget-io) registered for path 'third_party/p6/p6_sdk/libs/retarget-io'
+Submodule 'p6/secure-sockets' (https://github.com/Infineon/secure-sockets) registered for path 'third_party/p6/p6_sdk/libs/secure-sockets'
+Submodule 'p6/whd-bsp-integration' (https://github.com/Infineon/whd-bsp-integration) registered for path 'third_party/p6/p6_sdk/libs/whd-bsp-integration'
+Submodule 'p6/wifi-connection-manager' (https://github.com/Infineon/wifi-connection-manager) registered for path 'third_party/p6/p6_sdk/libs/wifi-connection-manager'
+Submodule 'p6/wifi-host-driver' (https://github.com/Infineon/wifi-host-driver) registered for path 'third_party/p6/p6_sdk/libs/wifi-host-driver'
+Submodule 'p6/wifi-mw-core' (https://github.com/Infineon/wifi-mw-core) registered for path 'third_party/p6/p6_sdk/libs/wifi-mw-core'
+Submodule 'third_party/pybind11/repo' (https://github.com/pybind/pybind11) registered for path 'third_party/pybind11/repo'
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/cyw30739_sdk/repos/30739A0'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/cyw30739_sdk/repos/CYW930739M2EVB-01'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/cyw30739_sdk/repos/btsdk-include'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/cyw30739_sdk/repos/btsdk-tools'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/jsoncpp/repo'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/mbed-mcu-boot/repo'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/mbed-os-cypress-capsense-button/repo'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/openthread/ot-ifx'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/TARGET_CY8CKIT-062S2-43012'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/abstraction-rtos'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/bluetooth-freertos'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/btstack'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/clib-support'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/connectivity-utilities'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/core-lib'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/core-make'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/freertos'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/kv-store'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/lwip'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/mbedtls'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/mtb-hal-cat1'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/mtb-pdl-cat1'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/psoc6cm0p'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/recipe-make-cat1a'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/retarget-io'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/secure-sockets'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/whd-bsp-integration'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/wifi-connection-manager'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/wifi-host-driver'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/wifi-mw-core'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/pybind11/repo'...
+Submodule path 'third_party/bluez/repo': checked out 'bb12ef4a9f71550ba84033f565a27773d893d8bf'
+Submodule path 'third_party/cirque/repo': checked out '262ea7724667229f0d21d6a1c1e96d90415f0906'
+Submodule path 'third_party/cyw30739_sdk/repos/30739A0': checked out 'c50b1e77f78d7a52f3677bae8cdb58dd1880a9fe'
+Submodule path 'third_party/cyw30739_sdk/repos/CYW930739M2EVB-01': checked out '92ec8873d34162c9ce5aab23bb7b0275d8e21806'
+Submodule path 'third_party/cyw30739_sdk/repos/btsdk-include': checked out 'b1eb9b39f3ef86211164c4d9825bee6316ac76c6'
+Submodule path 'third_party/cyw30739_sdk/repos/btsdk-tools': checked out '9743681eed4d3f16a291bff6f8aee65349d1241b'
+Submodule path 'third_party/efr32_sdk/repo': checked out '744316bcf0525fd6e07ea86969dd907c2cb10e5f'
+Submodule path 'third_party/jsoncpp/repo': checked out '42e892d96e47b1f6e29844cc705e148ec4856448'
+Submodule path 'third_party/mbed-mcu-boot/repo': checked out '46070d75e06058a2e6a525d8be71b9b872178514'
+Submodule path 'third_party/mbed-os-cypress-capsense-button/repo': checked out 'fef47a05455670206f6c2eb4958cb1f08d698bc1'
+Submodule path 'third_party/mbed-os-posix-socket/repo': checked out '366a8994839c257f62b727f1700a02314957f2e2'
+Submodule path 'third_party/mbed-os/repo': checked out '149c5b12fa8a6c84d340361975cb992f08367b43'
+Submodule path 'third_party/nanopb/repo': checked out 'ab19ecbe1b9f377ab4ee8e762bfe16c39068ad68'
+Submodule path 'third_party/openthread/ot-efr32': checked out '19e9f80977f13dba5b0177fb487691e94dbbae7b'
+remote: Enumerating objects: 71, done.
+remote: Counting objects: 100% (71/71), done.
+remote: Compressing objects: 100% (38/38), done.
+remote: Total 63 (delta 18), reused 63 (delta 18), pack-reused 0
+Unpacking objects: 100% (63/63), done.
+From https://github.com/Infineon/ot-ifx-release
+ * branch            da522560fbff49f6b27bfef2139e898018c5f0f4 -> FETCH_HEAD
+Submodule path 'third_party/openthread/ot-ifx': checked out 'da522560fbff49f6b27bfef2139e898018c5f0f4'
+Submodule path 'third_party/openthread/ot-nxp': checked out 'ca96d5cf66e63f86cf6c6f4026f5f2b15a63e39f'
+Submodule path 'third_party/openthread/ot-qorvo': checked out 'db1990748c4f801e75b2763ae492a1b37184d57a'
+Submodule path 'third_party/openthread/repo': checked out '9ea34d1e2053b6b2a80e1d46b65a6aee99fc504a'
+warning: unable to rmdir 'third_party/d3js/repo': Directory not empty
+Submodule path 'third_party/ot-br-posix/repo': checked out 'a4880eb0a782adb9e6104cb00aa285d0be3a669a'
+Submodule path 'third_party/p6/p6_sdk/libs/TARGET_CY8CKIT-062S2-43012': checked out 'b5ab9e8d529b7d94d4d4ee3d521ba6f2a42f06b3'
+Submodule path 'third_party/p6/p6_sdk/libs/abstraction-rtos': checked out 'd083ab11d7d3f151ea1ae90c1e779b261e073034'
+Submodule path 'third_party/p6/p6_sdk/libs/bluetooth-freertos': checked out '634ad198af17a4d84dc8aa62d3ae38faadd1987b'
+Submodule path 'third_party/p6/p6_sdk/libs/btstack': checked out '5f82d0813f139325310087d01e7de10aaa0e59c4'
+Submodule path 'third_party/p6/p6_sdk/libs/clib-support': checked out '4a63ab0635609f67e73573973495a058c86ad4f2'
+Submodule path 'third_party/p6/p6_sdk/libs/connectivity-utilities': checked out 'bbed663a71670b02d362c6f1bd69fe970ff814ec'
+Submodule path 'third_party/p6/p6_sdk/libs/core-lib': checked out 'ab67dc9b428c1ac0d6e34ff4b1d67d5cedb20a7a'
+Submodule path 'third_party/p6/p6_sdk/libs/core-make': checked out '0afbd06b571673034a9a2508d29ab1635766bb0f'
+Submodule path 'third_party/p6/p6_sdk/libs/freertos': checked out 'd3bf12c52cc9ebaee1fb85ed2da60df8a6e25744'
+Submodule path 'third_party/p6/p6_sdk/libs/kv-store': checked out 'c81d0a32cb8301b307b9e32c126bf1a1f6465fbb'
+Submodule path 'third_party/p6/p6_sdk/libs/lwip': checked out 'bef26c44236a078d4352e76392ef16f019bea501'
+Submodule path 'third_party/p6/p6_sdk/libs/mbedtls': checked out 'abc460236f17be148036e2c7e07e6a05f938b656'
+Submodule path 'third_party/p6/p6_sdk/libs/mtb-hal-cat1': checked out 'f468ebe53b8df9485e32ac8cd18d9225280ae415'
+Submodule path 'third_party/p6/p6_sdk/libs/mtb-pdl-cat1': checked out '255d23f774f5b14343d022bea5b3fc67be7d6d39'
+Submodule path 'third_party/p6/p6_sdk/libs/psoc6cm0p': checked out '2b8e6d793331834965e814fdc945f7d0451a0ee5'
+Submodule path 'third_party/p6/p6_sdk/libs/recipe-make-cat1a': checked out 'c44efd9d4e2d1811e45576c9c76b61f9451f5690'
+Submodule path 'third_party/p6/p6_sdk/libs/retarget-io': checked out '135a764cb356d49d8b55780d63239116c413c7c1'
+Submodule path 'third_party/p6/p6_sdk/libs/secure-sockets': checked out 'af2bd139cd3762ea45c027ae25e8a21b6d9fc3d4'
+Submodule path 'third_party/p6/p6_sdk/libs/whd-bsp-integration': checked out '30d33bca1faeef183cf7480526667124ec7efb14'
+Submodule path 'third_party/p6/p6_sdk/libs/wifi-connection-manager': checked out 'e0375bb94455b304b6ebb866fdce1ff4bbf6b922'
+Submodule path 'third_party/p6/p6_sdk/libs/wifi-host-driver': checked out '19968e1b77db296b1be9f1352147f615200354f2'
+Submodule path 'third_party/p6/p6_sdk/libs/wifi-mw-core': checked out '906346acbb093364f92a720d830d1c191ffbdc89'
+Submodule path 'third_party/pigweed/repo': checked out 'f30bce8bf2513e924f461da6f2e7d1f2620a89f3'
+Submodule path 'third_party/pybind11/repo': checked out '8de7772cc72daca8e947b79b83fea46214931604'
+Submodule path 'third_party/qpg_sdk/repo': checked out '2b463adb2a9323fc54d435f359cd0f167845dfb1'
+Submodule path 'third_party/simw-top-mini/repo': checked out '69d6929ff8286b9d54f9387c4ef289c39c8c0df5'
+Submodule path 'third_party/zap/repo': checked out '149d47c22621df1a064be1e24fa2f1185b69dfef'
+
+  WELCOME TO...
+
+           ░▓░
+           ▓█▓
+           ▓█▓                                                     ▒█     ▒█
+      ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▒█▒░░░▒█▓░   ██▒░░
+    ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
+    ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
+     ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
+ ░▒████████░ ░███▓▓█▓▓▒         ░█      ▒▒      █░   ░█▓██▓█░▒█    ░▓▓█░  ░▓▓█░   ▒▓▓██▓█░   ▒▓
+ ░██▒░  ▒██▒ ▒██░  ░▒█▓
+         ░▓░ ░▓░
+
+  BOOTSTRAP! Bootstrap may take a few minutes; please be patient.
+
+Downloading and installing packages into local source directory:
+
+  Setting up CIPD package manager...done (2.5s)
+  Setting up Python environment.....done (1m37.1s)
+  Setting up pw packages............skipped (0.1s)
+  Setting up Host tools.............done (0.1s)
+
+Activating environment (setting environment variables):
+
+  Setting environment variables for CIPD package manager...done
+  Setting environment variables for Python environment.....done
+  Setting environment variables for pw packages............skipped
+  Setting environment variables for Host tools.............done
+
+Checking the environment:
+
+20220208 11:35:42 INF Environment passes all checks!
+
+Environment looks good, you are ready to go!
+
+To reactivate this environment in the future, run this in your
+terminal:
+
+  source ./activate.sh
+
+To deactivate this environment, run this:
+
+  deactivate
+
+bash-3.2$

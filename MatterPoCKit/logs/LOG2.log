@@ -1,0 +1,1075 @@
+bash-3.2$ ./scripts/build/build_examples.py --target android-arm64-chip-tool build
+2022-02-08 11:47:11 INFO    Building targets: android-arm64-chip-tool
+2022-02-08 11:47:11 INFO    Generating /Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool
+2022-02-08 11:47:11 INFO    Generating JARs for Java build rules test
+2022-02-08 11:47:12 INFO    Command ['python3', 'build/chip/java/tests/generate_jars_for_test.py'] completed
+2022-02-08 11:47:12 INFO    Setting up Android deps through Gradle
+2022-02-08 11:47:13 INFO    > Task :buildSrc:compileJava NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:compileGroovy UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:processResources NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:classes UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:jar UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:assemble UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:compileTestJava NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:compileTestGroovy NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:processTestResources NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:testClasses UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:test NO-SOURCE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:check UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :buildSrc:build UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :copyArtifacts UP-TO-DATE
+2022-02-08 11:47:13 INFO    > Task :setUpAndroidDeps
+2022-02-08 11:47:13 INFO
+2022-02-08 11:47:13 INFO    BUILD SUCCESSFUL in 405ms
+2022-02-08 11:47:13 INFO    4 actionable tasks: 1 executed, 3 up-to-date
+2022-02-08 11:47:13 INFO    Command ['python3', 'third_party/android_deps/set_up_android_deps.py'] completed
+2022-02-08 11:47:13 INFO    Generating android-arm64-chip-tool
+2022-02-08 11:47:14 INFO    Done. Made 2361 targets from 224 files in 792ms
+2022-02-08 11:47:14 INFO    Command ['gn', 'gen', '--check', '--fail-on-unused-args', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool', '--args=target_os="android" target_cpu="arm64" android_ndk_root="/Applications/AndroidNDK7075529.app/Contents/NDK" android_sdk_root="/Users/makmorit/Library/Android/sdk" '] completed
+2022-02-08 11:47:14 INFO    Accepting NDK licenses @ tools
+2022-02-08 11:47:15 WARNING Warning: File /Users/makmorit/.android/repositories.cfg could not be loaded.
+2022-02-08 11:47:15 INFO    Command ['bash', '-c', 'yes | /Users/makmorit/Library/Android/sdk/tools/bin/sdkmanager --licenses >/dev/null'] completed
+2022-02-08 11:47:15 INFO    Building /Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool
+2022-02-08 11:47:15 INFO    Building JNI android-arm64-chip-tool
+2022-02-08 11:47:15 INFO    ninja: Entering directory `/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool'
+2022-02-08 11:47:15 INFO    [1/940] cp /Applications/AndroidNDK7075529.app/Contents/NDK/sources/cxx-stl/llvm-libc++/libs/arm64-v8a/libc++_shared.so lib/jni/arm64-v8a/libc++_shared.so
+2022-02-08 11:47:15 INFO    [2/940] stamp obj/src/lib/dnssd/platform_header.stamp
+2022-02-08 11:47:15 INFO    [3/940] stamp obj/src/trace/trace.stamp
+2022-02-08 11:47:15 INFO    [4/940] stamp obj/src/lib/support/enforce_format.stamp
+2022-02-08 11:47:15 INFO    [5/940] stamp obj/src/lib/support/logging_constants.stamp
+2022-02-08 11:47:15 INFO    [6/940] stamp obj/build/chip/java/shared_cpplib.stamp
+2022-02-08 11:47:15 INFO    [7/940] stamp obj/src/platform/logging/headers.stamp
+2022-02-08 11:47:15 INFO    [8/940] stamp obj/third_party/inipp/inipp.stamp
+2022-02-08 11:47:15 INFO    [9/940] ACTION //src/crypto:gen_crypto_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [10/940] ACTION //src/controller/java:android_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [11/940] ACTION //src/inet:gen_inet_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [12/940] ACTION //src/app:gen_app_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [13/940] ACTION //src/ble:gen_ble_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [14/940] ACTION //src/lib/core:gen_chip_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [15/940] ACTION //src/lib/support:gen_chip_version(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [16/940] ACTION //src/app/server/java:android_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [17/940] ACTION //src/lib/asn1:gen_asn1oid(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [18/940] ACTION //src/setup_payload/java:java_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [19/940] ACTION //src/lwip:gen_lwip_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [20/940] ACTION //src/platform/android:android_sdk_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [21/940] stamp obj/src/crypto/gen_crypto_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [22/940] ACTION //src/platform:gen_platform_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [23/940] stamp obj/src/controller/java/android_config.stamp
+2022-02-08 11:47:15 INFO    [24/940] stamp obj/src/inet/gen_inet_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [25/940] stamp obj/src/app/gen_app_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [26/940] stamp obj/src/ble/gen_ble_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [27/940] stamp obj/src/lib/core/gen_chip_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [28/940] stamp obj/src/lib/support/gen_chip_version.stamp
+2022-02-08 11:47:15 INFO    [29/940] stamp obj/src/app/server/java/android_config.stamp
+2022-02-08 11:47:15 INFO    [30/940] stamp obj/src/lib/asn1/gen_asn1oid.stamp
+2022-02-08 11:47:15 INFO    [31/940] ACTION //src/system:gen_system_buildconfig(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [32/940] ACTION //third_party/android_deps:annotation_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:15 INFO    [33/940] stamp obj/src/setup_payload/java/java_config.stamp
+2022-02-08 11:47:15 INFO    [34/940] stamp obj/src/lwip/gen_lwip_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [35/940] stamp obj/src/platform/android/android_sdk_config.stamp
+2022-02-08 11:47:15 INFO    [36/940] stamp obj/src/crypto/crypto_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [37/940] stamp obj/src/platform/gen_platform_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [38/940] cp /Users/makmorit/Library/Android/sdk/platforms/android-21/android.jar lib/src/controller/java/android.jar
+2022-02-08 11:47:15 INFO    [39/940] stamp obj/src/inet/inet_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [40/940] stamp obj/src/app/app_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [41/940] stamp obj/src/ble/ble_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [42/940] stamp obj/src/lib/core/chip_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [43/940] stamp obj/src/lib/support/chip_version_header.stamp
+2022-02-08 11:47:15 INFO    [44/940] cp /Users/makmorit/Library/Android/sdk/platforms/android-21/android.jar lib/src/app/server/java/android.jar
+2022-02-08 11:47:15 INFO    [45/940] stamp obj/src/lib/asn1/asn1oid_header.stamp
+2022-02-08 11:47:15 INFO    [46/940] stamp obj/src/system/gen_system_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [47/940] stamp obj/third_party/android_deps/annotation_config.stamp
+2022-02-08 11:47:15 INFO    [48/940] stamp obj/src/lwip/lwip_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [49/940] stamp obj/src/platform/platform_buildconfig.stamp
+2022-02-08 11:47:15 INFO    [50/940] stamp obj/src/controller/java/android.stamp
+2022-02-08 11:47:15 INFO    [51/940] cp /Users/makmorit/Library/Android/sdk/platforms/android-21/android.jar lib/src/platform/android/android.jar
+2022-02-08 11:47:15 INFO    [52/940] stamp obj/src/app/server/java/android.stamp
+2022-02-08 11:47:15 INFO    [53/940] stamp obj/src/access/access.inputdeps.stamp
+2022-02-08 11:47:15 INFO    [54/940] stamp obj/src/app/app.inputdeps.stamp
+2022-02-08 11:47:15 INFO    [55/940] stamp obj/src/app/server/server.inputdeps.stamp
+2022-02-08 11:47:15 INFO    [56/940] stamp obj/src/app/common/cluster-objects.inputdeps.stamp
+2022-02-08 11:47:15 INFO    [57/940] stamp obj/src/app/server/java/jni.inputdeps.stamp
+2022-02-08 11:47:15 INFO    [58/940] stamp obj/src/app/tests/helpers.inputdeps.stamp
+2022-02-08 11:47:16 INFO    [59/940] ACTION //src/setup_payload/java:java__javac(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:17 INFO    [60/940] c++ obj/src/access/libaccess.AccessControl.cpp.o
+2022-02-08 11:47:17 INFO    [61/940] c++ obj/src/access/tests/libaccesstest.TestAccessControl.cpp.o
+2022-02-08 11:47:17 INFO    [62/940] c++ obj/src/app/libCHIPDataModel.AttributeAccessInterface.cpp.o
+2022-02-08 11:47:17 INFO    [63/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.aria.c.o
+2022-02-08 11:47:17 INFO    [64/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.aesni.c.o
+2022-02-08 11:47:17 INFO    [65/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.arc4.c.o
+2022-02-08 11:47:17 INFO    [66/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.base64.c.o
+2022-02-08 11:47:17 INFO    [67/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.blowfish.c.o
+2022-02-08 11:47:17 INFO    [68/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.asn1parse.c.o
+2022-02-08 11:47:17 INFO    [69/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.asn1write.c.o
+2022-02-08 11:47:17 INFO    [70/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.camellia.c.o
+2022-02-08 11:47:17 INFO    [71/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.aes.c.o
+2022-02-08 11:47:17 INFO    [72/940] c++ obj/src/access/examples/libaccess.ExampleAccessControlDelegate.cpp.o
+2022-02-08 11:47:17 INFO    [73/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.bignum.c.o
+2022-02-08 11:47:17 INFO    [74/940] c++ obj/src/app/libCHIPDataModel.AttributePathExpandIterator.cpp.o
+2022-02-08 11:47:17 INFO    [75/940] c++ obj/src/app/libCHIPDataModel.DefaultAttributePersistenceProvider.cpp.o
+2022-02-08 11:47:18 INFO    [76/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ArrayBuilder.cpp.o
+2022-02-08 11:47:18 INFO    [77/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ArrayParser.cpp.o
+2022-02-08 11:47:18 INFO    [78/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributePathIBs.cpp.o
+2022-02-08 11:47:18 INFO    [79/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeDataIBs.cpp.o
+2022-02-08 11:47:18 INFO    [80/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeDataIB.cpp.o
+2022-02-08 11:47:18 INFO    [81/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventPathIBs.cpp.o
+2022-02-08 11:47:18 INFO    [82/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributePathIB.cpp.o
+2022-02-08 11:47:18 INFO    [83/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeReportIB.cpp.o
+2022-02-08 11:47:18 INFO    [84/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeReportIBs.cpp.o
+2022-02-08 11:47:18 INFO    [85/940] c++ obj/src/app/libCHIPDataModel.CommandSender.cpp.o
+2022-02-08 11:47:18 INFO    [86/940] c++ obj/src/app/MessageDef/libCHIPDataModel.Builder.cpp.o
+2022-02-08 11:47:18 INFO    [87/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeStatusIB.cpp.o
+2022-02-08 11:47:18 INFO    [88/940] c++ obj/src/app/MessageDef/libCHIPDataModel.AttributeStatusIBs.cpp.o
+2022-02-08 11:47:18 INFO    [89/940] c++ obj/src/app/libCHIPDataModel.CASEClient.cpp.o
+2022-02-08 11:47:18 INFO    [90/940] c++ obj/src/app/libCHIPDataModel.DeviceProxy.cpp.o
+2022-02-08 11:47:18 INFO    [91/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ClusterPathIB.cpp.o
+2022-02-08 11:47:18 INFO    [92/940] c++ obj/src/app/MessageDef/libCHIPDataModel.CommandDataIB.cpp.o
+2022-02-08 11:47:18 INFO    [93/940] c++ obj/src/app/libCHIPDataModel.AttributeCache.cpp.o
+2022-02-08 11:47:18 INFO    [94/940] c++ obj/src/app/libCHIPDataModel.BufferedReadCallback.cpp.o
+2022-02-08 11:47:18 INFO    [95/940] c++ obj/src/app/libCHIPDataModel.EventManagement.cpp.o
+2022-02-08 11:47:18 INFO    [96/940] c++ obj/src/app/MessageDef/libCHIPDataModel.CommandPathIB.cpp.o
+2022-02-08 11:47:18 INFO    [97/940] c++ obj/src/app/MessageDef/libCHIPDataModel.DataVersionFilterIB.cpp.o
+2022-02-08 11:47:18 INFO    [98/940] c++ obj/src/app/MessageDef/libCHIPDataModel.CommandStatusIB.cpp.o
+2022-02-08 11:47:18 INFO    [99/940] c++ obj/src/app/libCHIPDataModel.InteractionModelEngine.cpp.o
+2022-02-08 11:47:19 INFO    [100/940] c++ obj/src/app/MessageDef/libCHIPDataModel.DataVersionFilterIBs.cpp.o
+2022-02-08 11:47:19 INFO    [101/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventDataIB.cpp.o
+2022-02-08 11:47:19 INFO    [102/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventFilterIBs.cpp.o
+2022-02-08 11:47:19 INFO    [103/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventFilterIB.cpp.o
+2022-02-08 11:47:19 INFO    [104/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventPathIB.cpp.o
+2022-02-08 11:47:19 INFO    [105/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ListBuilder.cpp.o
+2022-02-08 11:47:19 INFO    [106/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventReportIB.cpp.o
+2022-02-08 11:47:19 INFO    [107/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventReportIBs.cpp.o
+2022-02-08 11:47:19 INFO    [108/940] c++ obj/src/app/MessageDef/libCHIPDataModel.EventStatusIB.cpp.o
+2022-02-08 11:47:19 INFO    [109/940] c++ obj/src/app/MessageDef/libCHIPDataModel.InvokeRequests.cpp.o
+2022-02-08 11:47:19 INFO    [110/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ListParser.cpp.o
+2022-02-08 11:47:19 INFO    [111/940] c++ obj/src/app/MessageDef/libCHIPDataModel.InvokeRequestMessage.cpp.o
+2022-02-08 11:47:19 INFO    [112/940] c++ obj/src/app/MessageDef/libCHIPDataModel.InvokeResponseIBs.cpp.o
+2022-02-08 11:47:19 INFO    [113/940] c++ obj/src/app/MessageDef/libCHIPDataModel.InvokeResponseIB.cpp.o
+2022-02-08 11:47:19 INFO    [114/940] c++ obj/src/app/MessageDef/libCHIPDataModel.InvokeResponseMessage.cpp.o
+2022-02-08 11:47:19 INFO    [115/940] c++ obj/src/app/MessageDef/libCHIPDataModel.MessageBuilder.cpp.o
+2022-02-08 11:47:19 INFO    [116/940] c++ obj/src/app/MessageDef/libCHIPDataModel.MessageDefHelper.cpp.o
+2022-02-08 11:47:19 INFO    [117/940] c++ obj/src/app/libCHIPDataModel.CommandHandler.cpp.o
+2022-02-08 11:47:19 INFO    [118/940] c++ obj/src/app/MessageDef/libCHIPDataModel.Parser.cpp.o
+2022-02-08 11:47:19 INFO    [119/940] c++ obj/src/app/libCHIPDataModel.TimedRequest.cpp.o
+2022-02-08 11:47:19 INFO    [120/940] c++ obj/src/app/MessageDef/libCHIPDataModel.MessageParser.cpp.o
+2022-02-08 11:47:19 INFO    [121/940] c++ obj/src/app/libCHIPDataModel.CASESessionManager.cpp.o
+2022-02-08 11:47:19 INFO    [122/940] c++ obj/src/app/MessageDef/libCHIPDataModel.StructBuilder.cpp.o
+2022-02-08 11:47:19 INFO    [123/940] c++ obj/src/app/MessageDef/libCHIPDataModel.StructParser.cpp.o
+2022-02-08 11:47:19 INFO    [124/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ReadRequestMessage.cpp.o
+2022-02-08 11:47:19 INFO    [125/940] c++ obj/src/app/MessageDef/libCHIPDataModel.StatusResponseMessage.cpp.o
+2022-02-08 11:47:19 INFO    [126/940] c++ obj/src/app/MessageDef/libCHIPDataModel.ReportDataMessage.cpp.o
+2022-02-08 11:47:19 INFO    [127/940] c++ obj/src/app/MessageDef/libCHIPDataModel.StatusIB.cpp.o
+2022-02-08 11:47:19 INFO    [128/940] c++ obj/src/app/MessageDef/libCHIPDataModel.SubscribeRequestMessage.cpp.o
+2022-02-08 11:47:19 INFO    [129/940] c++ obj/src/app/MessageDef/libCHIPDataModel.SubscribeResponseMessage.cpp.o
+2022-02-08 11:47:19 INFO    [130/940] c++ obj/src/app/MessageDef/libCHIPDataModel.TimedRequestMessage.cpp.o
+2022-02-08 11:47:19 INFO    [131/940] c++ obj/src/app/MessageDef/libCHIPDataModel.WriteRequestMessage.cpp.o
+2022-02-08 11:47:19 INFO    [132/940] c++ obj/src/app/MessageDef/libCHIPDataModel.WriteResponseMessage.cpp.o
+2022-02-08 11:47:20 INFO    [133/940] c++ obj/src/app/libCHIPDataModel.StatusResponse.cpp.o
+2022-02-08 11:47:20 INFO    [134/940] c++ obj/src/app/libCHIPDataModel.OperationalDeviceProxy.cpp.o
+2022-02-08 11:47:20 INFO    [135/940] stamp obj/src/app/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:20 INFO    [136/940] c++ obj/src/app/server/libCHIPAppServer.EchoHandler.cpp.o
+2022-02-08 11:47:20 INFO    [137/940] c++ obj/src/app/libCHIPDataModel.ReadClient.cpp.o
+2022-02-08 11:47:20 INFO    [138/940] c++ obj/src/app/libCHIPDataModel.ReadHandler.cpp.o
+2022-02-08 11:47:20 INFO    [139/940] c++ obj/src/app/libCHIPDataModel.TimedHandler.cpp.o
+2022-02-08 11:47:20 INFO    [140/940] c++ obj/src/app/libCHIPDataModel.WriteClient.cpp.o
+2022-02-08 11:47:20 INFO    [141/940] c++ obj/src/app/reporting/libCHIPDataModel.Engine.cpp.o
+2022-02-08 11:47:20 INFO    [142/940] c++ obj/src/app/libCHIPDataModel.RequiredPrivilege.cpp.o
+2022-02-08 11:47:20 INFO    [143/940] c++ obj/src/app/tests/libAppTests.TestCommandPathParams.cpp.o
+2022-02-08 11:47:21 INFO    [144/940] c++ obj/src/app/tests/libAppTests.TestClusterInfo.cpp.o
+2022-02-08 11:47:21 INFO    [145/940] c++ obj/src/app/tests/libAppTests.TestBuilderParser.cpp.o
+2022-02-08 11:47:21 INFO    [146/940] c++ obj/src/app/tests/libAppTests.TestEventPathParams.cpp.o
+2022-02-08 11:47:21 INFO    [147/940] c++ obj/src/app/tests/libAppTests.TestAttributePathExpandIterator.cpp.o
+2022-02-08 11:47:21 INFO    [148/940] c++ obj/src/app/libCHIPDataModel.WriteHandler.cpp.o
+2022-02-08 11:47:21 INFO    [149/940] c++ obj/src/app/server/java/libCHIPAppServerJni.ChipThreadWork.cpp.o
+2022-02-08 11:47:21 INFO    [150/940] c++ obj/src/app/tests/libAppTestHelpers.AppTestContext.cpp.o
+2022-02-08 11:47:21 INFO    [151/940] c++ obj/src/app/server/java/libCHIPAppServerJni.CHIPAppServer-JNI.cpp.o
+2022-02-08 11:47:21 INFO    [152/940] c++ obj/src/app/server/libCHIPAppServer.CommissioningWindowManager.cpp.o
+2022-02-08 11:47:21 INFO    [153/940] c++ obj/src/app/tests/libAppTests.TestAttributeValueEncoder.cpp.o
+2022-02-08 11:47:21 INFO    [154/940] c++ obj/src/app/tests/libAppTests.TestAttributeValueDecoder.cpp.o
+2022-02-08 11:47:21 INFO    [155/940] c++ obj/src/app/server/libCHIPAppServer.OnboardingCodesUtil.cpp.o
+2022-02-08 11:47:22 INFO    [156/940] c++ obj/src/app/tests/libAppTests.TestNumericAttributeTraits.cpp.o
+2022-02-08 11:47:22 INFO    [157/940] stamp obj/src/protocols/bdx/bdx.inputdeps.stamp
+2022-02-08 11:47:22 INFO    [158/940] stamp obj/src/ble/ble.inputdeps.stamp
+2022-02-08 11:47:22 INFO    [159/940] c++ obj/src/app/server/libCHIPAppServer.Dnssd.cpp.o
+2022-02-08 11:47:22 INFO    [160/940] c++ obj/src/ble/libBleLayer.BleUUID.cpp.o
+2022-02-08 11:47:22 INFO    [161/940] c++ obj/src/app/tests/libAppTests.TestStatusIB.cpp.o
+2022-02-08 11:47:22 INFO    [162/940] c++ obj/src/app/tests/libAppTests.TestMessageDef.cpp.o
+2022-02-08 11:47:22 INFO    [163/940] c++ obj/src/app/tests/libAppTests.TestStatusResponseMessage.cpp.o
+2022-02-08 11:47:22 INFO    [164/940] c++ obj/src/ble/libBleLayer.BtpEngine.cpp.o
+2022-02-08 11:47:22 INFO    [165/940] stamp obj/src/ble/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:22 INFO    [166/940] c++ obj/src/app/server/java/libCHIPAppServerJni.AndroidAppServerWrapper.cpp.o
+2022-02-08 11:47:22 INFO    [167/940] c++ obj/src/app/server/libCHIPAppServer.Server.cpp.o
+2022-02-08 11:47:22 INFO    [168/940] stamp obj/src/controller/controller.inputdeps.stamp
+2022-02-08 11:47:22 INFO    [169/940] c++ obj/src/ble/libBleLayer.BleLayer.cpp.o
+2022-02-08 11:47:22 INFO    [170/940] c++ obj/src/ble/tests/libBleLayerTests.TestBleErrorStr.cpp.o
+2022-02-08 11:47:22 INFO    [171/940] c++ obj/src/ble/tests/libBleLayerTests.TestBleUUID.cpp.o
+2022-02-08 11:47:22 INFO    [172/940] c++ obj/src/ble/libBleLayer.BleError.cpp.o
+2022-02-08 11:47:22 INFO    [173/940] c++ obj/src/app/tests/libAppTests.TestDataModelSerialization.cpp.o
+2022-02-08 11:47:22 INFO    [174/940] c++ obj/src/ble/libBleLayer.BLEEndPoint.cpp.o
+2022-02-08 11:47:23 INFO    [175/940] c++ obj/src/controller/libChipController.AbstractDnssdDiscoveryController.cpp.o
+2022-02-08 11:47:23 INFO    [176/940] c++ obj/src/app/tests/libAppTests.TestReportingEngine.cpp.o
+2022-02-08 11:47:23 INFO    [177/940] c++ obj/src/app/tests/libAppTests.TestCommandInteraction.cpp.o
+2022-02-08 11:47:23 INFO    [178/940] c++ obj/src/app/util/mock/mock_ember.attribute-storage.cpp.o
+2022-02-08 11:47:23 INFO    [179/940] c++ obj/src/app/tests/libAppTests.TestReadInteraction.cpp.o
+2022-02-08 11:47:23 INFO    [180/940] stamp obj/src/controller/data_model/data_model.inputdeps.stamp
+2022-02-08 11:47:23 INFO    [181/940] c++ obj/src/app/tests/libAppTests.TestTimedHandler.cpp.o
+2022-02-08 11:47:23 INFO    [182/940] c++ obj/src/app/tests/libAppTests.TestEventLogging.cpp.o
+2022-02-08 11:47:23 INFO    [183/940] c++ obj/src/app/tests/libAppTests.TestInteractionModelEngine.cpp.o
+2022-02-08 11:47:23 INFO    [184/940] c++ obj/src/controller/libChipController.CHIPCluster.cpp.o
+2022-02-08 11:47:23 INFO    [185/940] c++ obj/src/controller/libChipController.ExampleOperationalCredentialsIssuer.cpp.o
+2022-02-08 11:47:23 INFO    [186/940] stamp obj/src/crypto/crypto.inputdeps.stamp
+2022-02-08 11:47:23 INFO    [187/940] c++ obj/src/controller/libChipController.EmptyDataModelHandler.cpp.o
+2022-02-08 11:47:24 INFO    [188/940] c++ obj/src/app/util/data_model.attribute-size-util.cpp.o
+2022-02-08 11:47:24 INFO    [189/940] c++ obj/src/controller/libChipController.CHIPCommissionableNodeController.cpp.o
+2022-02-08 11:47:24 INFO    [190/940] c++ obj/src/app/tests/libAppTests.TestBufferedReadCallback.cpp.o
+2022-02-08 11:47:24 INFO    [191/940] c++ obj/src/app/util/data_model.error-mapping.cpp.o
+2022-02-08 11:47:24 INFO    [192/940] c++ obj/src/app/util/data_model.binding-table.cpp.o
+2022-02-08 11:47:24 INFO    [193/940] c++ obj/src/app/tests/libAppTests.TestWriteInteraction.cpp.o
+2022-02-08 11:47:24 INFO    [194/940] c++ obj/src/controller/libChipController.CommissioneeDeviceProxy.cpp.o
+2022-02-08 11:47:25 INFO    [195/940] c++ obj/src/controller/libChipController.CommissionerDiscoveryController.cpp.o
+2022-02-08 11:47:25 INFO    [196/940] c++ obj/src/controller/libChipController.AutoCommissioner.cpp.o
+2022-02-08 11:47:25 INFO    [197/940] c++ obj/src/app/util/data_model.ember-print.cpp.o
+2022-02-08 11:47:25 INFO    [198/940] c++ obj/src/app/tests/libAppTests.TestAttributeCache.cpp.o
+2022-02-08 11:47:25 INFO    [199/940] c++ obj/src/controller/libChipController.CHIPDeviceControllerFactory.cpp.o
+2022-02-08 11:47:25 INFO    [200/940] stamp obj/src/lib/asn1/asn1.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [201/940] stamp obj/src/credentials/tests/cert_test_vectors.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [202/940] c++ obj/src/app/util/data_model.message.cpp.o
+2022-02-08 11:47:25 INFO    [203/940] c++ obj/src/app/util/data_model.af-event.cpp.o
+2022-02-08 11:47:25 INFO    [204/940] c++ obj/src/app/util/data_model.attribute-table.cpp.o
+2022-02-08 11:47:25 INFO    [205/940] stamp obj/src/lib/shell/shell.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [206/940] stamp obj/src/controller/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [207/940] stamp obj/src/credentials/credentials.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [208/940] c++ obj/src/app/util/data_model.attribute-storage.cpp.o
+2022-02-08 11:47:25 INFO    [209/940] c++ obj/src/app/util/data_model.DataModelHandler.cpp.o
+2022-02-08 11:47:25 INFO    [210/940] stamp obj/src/controller/tests/data_model/data_model_lib.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [211/940] c++ obj/src/credentials/tests/libChipCertTestVectors.CHIPAttCert_test_vectors.cpp.o
+2022-02-08 11:47:25 INFO    [212/940] c++ obj/src/credentials/tests/libChipCertTestVectors.CHIPCert_test_vectors.cpp.o
+2022-02-08 11:47:25 INFO    [213/940] c++ obj/src/controller/libChipController.SetUpCodePairer.cpp.o
+2022-02-08 11:47:25 INFO    [214/940] stamp obj/src/lib/dnssd/dnssd.inputdeps.stamp
+2022-02-08 11:47:25 INFO    [215/940] c++ obj/src/app/util/data_model.client-api.cpp.o
+2022-02-08 11:47:26 INFO    [216/940] c++ obj/src/controller/tests/libControllerTests.TestCommissionableNodeController.cpp.o
+2022-02-08 11:47:26 INFO    [217/940] c++ obj/src/lib/dnssd/dnssd.ServiceNaming.cpp.o
+2022-02-08 11:47:26 INFO    [218/940] c++ obj/src/lib/dnssd/dnssd.TxtFields.cpp.o
+2022-02-08 11:47:26 INFO    [219/940] c++ obj/src/app/clusters/occupancy-sensor-server/data_model.occupancy-sensor-server.cpp.o
+2022-02-08 11:47:26 INFO    [220/940] c++ obj/src/app/util/data_model.ember-compatibility-functions.cpp.o
+2022-02-08 11:47:26 INFO    [221/940] c++ obj/src/credentials/libCredentials.CHIPCertFromX509.cpp.o
+2022-02-08 11:47:26 INFO    [222/940] c++ obj/src/app/util/data_model.util.cpp.o
+2022-02-08 11:47:26 INFO    [223/940] c++ obj/src/credentials/libCredentials.DeviceAttestationCredsProvider.cpp.o
+2022-02-08 11:47:26 INFO    [224/940] c++ obj/src/credentials/libCredentials.DeviceAttestationVerifier.cpp.o
+2022-02-08 11:47:27 INFO    [225/940] c++ obj/src/app/clusters/pump-configuration-and-control-client/data_model.pump-configuration-and-control-client.cpp.o
+2022-02-08 11:47:27 INFO    [226/940] c++ obj/zzz_generated/controller-clusters/zap-generated/data_model.callback-stub.cpp.o
+2022-02-08 11:47:27 INFO    [227/940] c++ obj/src/credentials/libCredentials.CHIPCertToX509.cpp.o
+2022-02-08 11:47:27 INFO    [228/940] c++ obj/src/credentials/libCredentials.DeviceAttestationConstructor.cpp.o
+2022-02-08 11:47:27 INFO    [229/940] c++ obj/src/credentials/libCredentials.CHIPCert.cpp.o
+2022-02-08 11:47:27 INFO    [230/940] stamp obj/src/credentials/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:27 INFO    [231/940] c++ obj/zzz_generated/controller-clusters/zap-generated/data_model.IMClusterCommandHandler.cpp.o
+2022-02-08 11:47:27 INFO    [232/940] c++ obj/src/app/clusters/thermostat-client/data_model.thermostat-client.cpp.o
+2022-02-08 11:47:27 INFO    [233/940] c++ obj/src/credentials/examples/libCredentials.DeviceAttestationCredsExample.cpp.o
+2022-02-08 11:47:27 INFO    [234/940] c++ obj/src/credentials/tests/libCredentials.CHIPAttCert_test_vectors.cpp.o
+2022-02-08 11:47:27 INFO    [235/940] c++ obj/src/credentials/libCredentials.CertificationDeclaration.cpp.o
+2022-02-08 11:47:27 INFO    [236/940] c++ obj/src/credentials/tests/libChipCredentials.TestCertificationDeclaration.cpp.o
+2022-02-08 11:47:27 INFO    [237/940] c++ obj/src/credentials/tests/libChipCredentials.TestDeviceAttestationConstruction.cpp.o
+2022-02-08 11:47:27 INFO    [238/940] c++ obj/src/credentials/libCredentials.GenerateChipX509Cert.cpp.o
+2022-02-08 11:47:27 INFO    [239/940] c++ obj/src/credentials/libCredentials.FabricTable.cpp.o
+2022-02-08 11:47:27 INFO    [240/940] c++ obj/src/credentials/examples/libCredentials.DefaultDeviceAttestationVerifier.cpp.o
+2022-02-08 11:47:27 INFO    [241/940] stamp obj/src/crypto/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:27 INFO    [242/940] stamp obj/src/inet/inet.inputdeps.stamp
+2022-02-08 11:47:27 INFO    [243/940] c++ obj/src/credentials/tests/libChipCredentials.TestDeviceAttestationCredentials.cpp.o
+2022-02-08 11:47:27 INFO    [244/940] c++ obj/src/crypto/libChipCrypto.RandUtils.cpp.o
+2022-02-08 11:47:27 INFO    [245/940] c++ obj/src/credentials/tests/libChipCredentials.TestChipCert.cpp.o
+2022-02-08 11:47:27 INFO    [246/940] c++ obj/src/inet/libInetLayer.IPAddress-StringFuncts.cpp.o
+2022-02-08 11:47:27 INFO    [247/940] c++ obj/src/credentials/tests/libChipCredentials.TestFabricTable.cpp.o
+2022-02-08 11:47:27 INFO    [248/940] c++ obj/src/crypto/libChipCrypto.CHIPCryptoPAL.cpp.o
+2022-02-08 11:47:27 INFO    [249/940] c++ obj/src/inet/libInetLayer.IPAddress.cpp.o
+2022-02-08 11:47:27 INFO    [250/940] c++ obj/src/inet/libInetLayer.IPPacketInfo.cpp.o
+2022-02-08 11:47:27 INFO    [251/940] c++ obj/src/inet/libInetLayer.IPPrefix.cpp.o
+2022-02-08 11:47:28 INFO    [252/940] c++ obj/src/controller/tests/libControllerTests.TestReadChunking.cpp.o
+2022-02-08 11:47:28 INFO    [253/940] c++ obj/src/crypto/libChipCrypto.CHIPCryptoPALmbedTLS.cpp.o
+2022-02-08 11:47:28 INFO    [254/940] c++ obj/src/inet/libInetLayer.InetArgParser.cpp.o
+2022-02-08 11:47:28 INFO    [255/940] stamp obj/src/inet/tests/helpers.inputdeps.stamp
+2022-02-08 11:47:28 INFO    [256/940] c++ obj/src/inet/libInetLayer.InetFaultInjection.cpp.o
+2022-02-08 11:47:28 INFO    [257/940] c++ obj/src/inet/libInetLayer.InetError.cpp.o
+2022-02-08 11:47:28 INFO    [258/940] c++ obj/src/inet/libInetLayer.InetInterface.cpp.o
+2022-02-08 11:47:28 INFO    [259/940] c++ obj/src/inet/libInetLayer.TCPEndPoint.cpp.o
+2022-02-08 11:47:28 INFO    [260/940] c++ obj/src/inet/libInetLayer.UDPEndPoint.cpp.o
+2022-02-08 11:47:28 INFO    [261/940] c++ obj/zzz_generated/app-common/app-common/zap-generated/libClusterObjects.cluster-objects.cpp.o
+2022-02-08 11:47:28 INFO    [262/940] stamp obj/src/inet/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:28 INFO    [263/940] c++ obj/src/inet/libInetLayer.TCPEndPointImplSockets.cpp.o
+2022-02-08 11:47:28 INFO    [264/940] c++ obj/src/inet/tests/libInetTestHelpers.TestSetupSignallingPosix.cpp.o
+2022-02-08 11:47:28 INFO    [265/940] c++ obj/src/inet/libInetLayer.UDPEndPointImplSockets.cpp.o
+2022-02-08 11:47:28 INFO    [266/940] c++ obj/src/inet/tests/libInetLayerTests.TestInetErrorStr.cpp.o
+2022-02-08 11:47:28 INFO    [267/940] c++ obj/src/controller/tests/data_model/libDataModelTests.TestWrite.cpp.o
+2022-02-08 11:47:28 INFO    [268/940] c++ obj/src/crypto/tests/libChipCryptoTests.CHIPCryptoPALTest.cpp.o
+2022-02-08 11:47:28 INFO    [269/940] stamp obj/src/lib/core/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:28 INFO    [270/940] c++ obj/src/inet/tests/libInetTestHelpers.TestInetLayerCommon.cpp.o
+2022-02-08 11:47:28 INFO    [271/940] c++ obj/src/lib/asn1/libASN1.ASN1Error.cpp.o
+2022-02-08 11:47:28 INFO    [272/940] c++ obj/src/lib/asn1/libASN1.ASN1OID.cpp.o
+2022-02-08 11:47:28 INFO    [273/940] c++ obj/src/inet/tests/libInetLayerTests.TestInetAddress.cpp.o
+2022-02-08 11:47:28 INFO    [274/940] c++ obj/src/inet/tests/libInetTestHelpers.TestInetCommonOptions.cpp.o
+2022-02-08 11:47:28 INFO    [275/940] c++ obj/src/inet/tests/libInetTestHelpers.TestSetupFaultInjectionPosix.cpp.o
+2022-02-08 11:47:28 INFO    [276/940] c++ obj/src/lib/core/tests/libCoreTests.TestCHIPErrorStr.cpp.o
+2022-02-08 11:47:28 INFO    [277/940] c++ obj/src/credentials/libCredentials.GroupDataProviderImpl.cpp.o
+2022-02-08 11:47:28 INFO    [278/940] c++ obj/src/lib/core/tests/libCoreTests.TestCHIPCallback.cpp.o
+2022-02-08 11:47:28 INFO    [279/940] stamp obj/src/lib/core/core.inputdeps.stamp
+2022-02-08 11:47:28 INFO    [280/940] c++ obj/src/controller/tests/libControllerTests.TestServerCommandDispatch.cpp.o
+2022-02-08 11:47:28 INFO    [281/940] c++ obj/src/lib/core/tests/libCoreTests.TestOTAImageHeader.cpp.o
+2022-02-08 11:47:28 INFO    [282/940] c++ obj/src/inet/tests/libInetLayerTests.TestInetEndPoint.cpp.o
+2022-02-08 11:47:28 INFO    [283/940] c++ obj/src/lib/asn1/libASN1.ASN1Reader.cpp.o
+2022-02-08 11:47:29 INFO    [284/940] c++ obj/src/lib/core/tests/libCoreTests.TestOptional.cpp.o
+2022-02-08 11:47:29 INFO    [285/940] c++ obj/src/lib/core/tests/libCoreTests.TestReferenceCounted.cpp.o
+2022-02-08 11:47:29 INFO    [286/940] c++ obj/src/inet/tests/libInetTestHelpers.TestInetLayer.cpp.o
+2022-02-08 11:47:29 INFO    [287/940] c++ obj/src/lib/core/libChipCore.CHIPError.cpp.o
+2022-02-08 11:47:29 INFO    [288/940] c++ obj/src/lib/core/libChipCore.CHIPKeyIds.cpp.o
+2022-02-08 11:47:29 INFO    [289/940] stamp obj/src/setup_payload/setup_payload.inputdeps.stamp
+2022-02-08 11:47:29 INFO    [290/940] c++ obj/src/lib/core/libChipCore.CHIPTLVDebug.cpp.o
+2022-02-08 11:47:29 INFO    [291/940] c++ obj/src/lib/asn1/libASN1.ASN1Writer.cpp.o
+2022-02-08 11:47:29 INFO    [292/940] stamp obj/src/lib/dnssd/minimal_mdns/minimal_mdns.inputdeps.stamp
+2022-02-08 11:47:29 INFO    [293/940] c++ obj/src/lib/core/libChipCore.CHIPTLVUtilities.cpp.o
+2022-02-08 11:47:29 INFO    [294/940] c++ obj/src/lib/core/libChipCore.CHIPCircularTLVBuffer.cpp.o
+2022-02-08 11:47:29 INFO    [295/940] c++ obj/src/lib/asn1/tests/libASN1Tests.TestASN1.cpp.o
+2022-02-08 11:47:29 INFO    [296/940] c++ obj/src/lib/core/libChipCore.CHIPTLVUpdater.cpp.o
+2022-02-08 11:47:29 INFO    [297/940] c++ obj/src/lib/core/libChipCore.OTAImageHeader.cpp.o
+2022-02-08 11:47:29 INFO    [298/940] c++ obj/src/lib/core/libChipCore.CHIPTLVReader.cpp.o
+2022-02-08 11:47:29 INFO    [299/940] c++ obj/src/lib/dnssd/minimal_mdns/minimal_mdns.RecordData.cpp.o
+2022-02-08 11:47:29 INFO    [300/940] c++ obj/src/lib/core/libChipCore.CHIPTLVWriter.cpp.o
+2022-02-08 11:47:29 INFO    [301/940] stamp obj/src/lib/dnssd/minimal_mdns/core/core.inputdeps.stamp
+2022-02-08 11:47:29 INFO    [302/940] stamp obj/src/system/system_buildconfig.stamp
+2022-02-08 11:47:29 INFO    [303/940] c++ obj/src/lib/dnssd/minimal_mdns/minimal_mdns.ActiveResolveAttempts.cpp.o
+2022-02-08 11:47:29 INFO    [304/940] stamp obj/src/lib/dnssd/minimal_mdns/core/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:29 INFO    [305/940] c++ obj/src/lib/dnssd/minimal_mdns/minimal_mdns.Parser.cpp.o
+2022-02-08 11:47:29 INFO    [306/940] stamp obj/src/setup_payload/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:29 INFO    [307/940] stamp obj/src/system/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [308/940] c++ obj/src/lib/dnssd/minimal_mdns/minimal_mdns.Server.cpp.o
+2022-02-08 11:47:30 INFO    [309/940] c++ obj/src/inet/tests/libInetTestHelpers.TestInetCommonPosix.cpp.o
+2022-02-08 11:47:30 INFO    [310/940] c++ obj/src/credentials/tests/libChipCredentials.TestGroupDataProvider.cpp.o
+2022-02-08 11:47:30 INFO    [311/940] c++ obj/src/setup_payload/libSetupPayload.ManualSetupPayloadGenerator.cpp.o
+2022-02-08 11:47:30 INFO    [312/940] c++ obj/src/lib/dnssd/minimal_mdns/minimal_mdns.ResponseSender.cpp.o
+2022-02-08 11:47:30 INFO    [313/940] stamp obj/src/lib/dnssd/minimal_mdns/records/records.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [314/940] c++ obj/src/lib/dnssd/minimal_mdns/core/core.QName.cpp.o
+2022-02-08 11:47:30 INFO    [315/940] c++ obj/src/setup_payload/libSetupPayload.ManualSetupPayloadParser.cpp.o
+2022-02-08 11:47:30 INFO    [316/940] stamp obj/src/lib/dnssd/minimal_mdns/records/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [317/940] c++ obj/src/lib/core/tests/libCoreTests.TestCHIPTLV.cpp.o
+2022-02-08 11:47:30 INFO    [318/940] c++ obj/src/lib/dnssd/minimal_mdns/core/tests/libMinimalMdnsCoreTests.TestFlatAllocatedQName.cpp.o
+2022-02-08 11:47:30 INFO    [319/940] c++ obj/src/lib/dnssd/minimal_mdns/core/core.RecordWriter.cpp.o
+2022-02-08 11:47:30 INFO    [320/940] c++ obj/zzz_generated/app-common/app-common/zap-generated/attributes/data_model.Accessors.cpp.o
+2022-02-08 11:47:30 INFO    [321/940] c++ obj/src/lib/dnssd/minimal_mdns/core/tests/libMinimalMdnsCoreTests.TestRecordWriter.cpp.o
+2022-02-08 11:47:30 INFO    [322/940] stamp obj/src/transport/retransmit/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [323/940] c++ obj/src/lib/dnssd/minimal_mdns/core/tests/libMinimalMdnsCoreTests.TestQName.cpp.o
+2022-02-08 11:47:30 INFO    [324/940] stamp obj/src/lib/dnssd/minimal_mdns/responders/responders.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [325/940] c++ obj/src/setup_payload/libSetupPayload.SetupPayload.cpp.o
+2022-02-08 11:47:30 INFO    [326/940] c++ obj/src/lib/dnssd/minimal_mdns/records/records.ResourceRecord.cpp.o
+2022-02-08 11:47:30 INFO    [327/940] stamp obj/src/lib/dnssd/minimal_mdns/responders/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [328/940] c++ obj/src/lib/dnssd/minimal_mdns/records/records.IP.cpp.o
+2022-02-08 11:47:30 INFO    [329/940] c++ obj/src/lib/dnssd/minimal_mdns/records/tests/libMinimalMdnsRecordsTests.TestResourceRecordTxt.cpp.o
+2022-02-08 11:47:30 INFO    [330/940] c++ obj/src/lib/dnssd/dnssd.Discovery_ImplPlatform.cpp.o
+2022-02-08 11:47:30 INFO    [331/940] stamp obj/src/lib/dnssd/minimal_mdns/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:30 INFO    [332/940] c++ obj/src/lib/dnssd/minimal_mdns/records/tests/libMinimalMdnsRecordsTests.TestResourceRecord.cpp.o
+2022-02-08 11:47:30 INFO    [333/940] c++ obj/src/lib/dnssd/minimal_mdns/records/tests/libMinimalMdnsRecordsTests.TestResourceRecordPtr.cpp.o
+2022-02-08 11:47:30 INFO    [334/940] c++ obj/src/lib/dnssd/minimal_mdns/records/tests/libMinimalMdnsRecordsTests.TestResourceRecordSrv.cpp.o
+2022-02-08 11:47:30 INFO    [335/940] c++ obj/src/lib/dnssd/minimal_mdns/records/tests/libMinimalMdnsRecordsTests.TestResourceRecordIP.cpp.o
+2022-02-08 11:47:30 INFO    [336/940] c++ obj/src/controller/tests/data_model/libDataModelTests.TestCommands.cpp.o
+2022-02-08 11:47:30 INFO    [337/940] stamp obj/src/lib/dnssd/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [338/940] c++ obj/src/setup_payload/libSetupPayload.SetupPayloadHelper.cpp.o
+2022-02-08 11:47:31 INFO    [339/940] c++ obj/src/lib/dnssd/minimal_mdns/responders/responders.QueryResponder.cpp.o
+2022-02-08 11:47:31 INFO    [340/940] c++ obj/src/lib/dnssd/minimal_mdns/responders/responders.IP.cpp.o
+2022-02-08 11:47:31 INFO    [341/940] c++ obj/src/transport/retransmit/tests/libRetransmitTests.TestCache.cpp.o
+2022-02-08 11:47:31 INFO    [342/940] c++ obj/src/setup_payload/libSetupPayload.QRCodeSetupPayloadParser.cpp.o
+2022-02-08 11:47:31 INFO    [343/940] stamp obj/src/lib/shell/shell_core.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [344/940] c++ obj/src/lib/dnssd/minimal_mdns/tests/libMinimalMdnstests.TestActiveResolveAttempts.cpp.o
+2022-02-08 11:47:31 INFO    [345/940] c++ obj/src/setup_payload/libSetupPayload.QRCodeSetupPayloadGenerator.cpp.o
+2022-02-08 11:47:31 INFO    [346/940] stamp obj/src/lib/shell/commands/commands.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [347/940] c++ obj/src/lib/shell/shell_core.streamer.cpp.o
+2022-02-08 11:47:31 INFO    [348/940] c++ obj/src/lib/shell/libCHIPShell.streamer_stdio.cpp.o
+2022-02-08 11:47:31 INFO    [349/940] c++ obj/src/lib/dnssd/minimal_mdns/responders/tests/libMinimalMdnsRespondersTests.TestIPResponder.cpp.o
+2022-02-08 11:47:31 INFO    [350/940] c++ obj/src/lib/dnssd/minimal_mdns/tests/libMinimalMdnstests.TestQueryReplyFilter.cpp.o
+2022-02-08 11:47:31 INFO    [351/940] c++ obj/src/lib/dnssd/minimal_mdns/responders/tests/libMinimalMdnsRespondersTests.TestPtrResponder.cpp.o
+2022-02-08 11:47:31 INFO    [352/940] c++ obj/src/lib/dnssd/minimal_mdns/tests/libMinimalMdnstests.TestMinimalMdnsAllocator.cpp.o
+2022-02-08 11:47:31 INFO    [353/940] c++ obj/src/lib/dnssd/tests/libMdnsTests.TestServiceNaming.cpp.o
+2022-02-08 11:47:31 INFO    [354/940] c++ obj/src/lib/dnssd/minimal_mdns/responders/tests/libMinimalMdnsRespondersTests.TestQueryResponder.cpp.o
+2022-02-08 11:47:31 INFO    [355/940] c++ obj/src/lib/shell/commands/commands.Help.cpp.o
+2022-02-08 11:47:31 INFO    [356/940] stamp obj/src/lib/shell/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [357/940] c++ obj/src/lib/dnssd/minimal_mdns/tests/libMinimalMdnstests.TestRecordData.cpp.o
+2022-02-08 11:47:31 INFO    [358/940] c++ obj/src/lib/shell/commands/commands.Base64.cpp.o
+2022-02-08 11:47:31 INFO    [359/940] stamp obj/src/lib/support/support.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [360/940] stamp obj/src/lib/support/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:31 INFO    [361/940] c++ obj/src/lib/shell/tests/libTestShell.TestStreamerStdio.cpp.o
+2022-02-08 11:47:31 INFO    [362/940] c++ obj/src/lib/dnssd/tests/libMdnsTests.TestTxtFields.cpp.o
+2022-02-08 11:47:31 INFO    [363/940] c++ obj/src/lib/support/libSupportLayer.Base64.cpp.o
+2022-02-08 11:47:31 INFO    [364/940] c++ obj/src/lib/support/libSupportLayer.BufferWriter.cpp.o
+2022-02-08 11:47:31 INFO    [365/940] c++ obj/src/lib/support/libSupportLayer.BufferReader.cpp.o
+2022-02-08 11:47:31 INFO    [366/940] c++ obj/src/lib/support/libSupportLayer.BytesToHex.cpp.o
+2022-02-08 11:47:31 INFO    [367/940] c++ obj/src/lib/support/libSupportLayer.CHIPCounter.cpp.o
+2022-02-08 11:47:32 INFO    [368/940] c++ obj/src/lib/dnssd/minimal_mdns/tests/libMinimalMdnstests.TestResponseSender.cpp.o
+2022-02-08 11:47:32 INFO    [369/940] c++ obj/src/lib/dnssd/tests/libMdnsTests.TestDnssdCache.cpp.o
+2022-02-08 11:47:32 INFO    [370/940] c++ obj/src/lib/support/libSupportLayer.BytesCircularBuffer.cpp.o
+2022-02-08 11:47:32 INFO    [371/940] c++ obj/src/lib/support/libSupportLayer.FixedBufferAllocator.cpp.o
+2022-02-08 11:47:32 INFO    [372/940] c++ obj/src/lib/support/libSupportLayer.FibonacciUtils.cpp.o
+2022-02-08 11:47:32 INFO    [373/940] c++ obj/src/lib/support/libSupportLayer.CHIPMem.cpp.o
+2022-02-08 11:47:32 INFO    [374/940] c++ obj/src/lib/support/libSupportLayer.CHIPPlatformMemory.cpp.o
+2022-02-08 11:47:32 INFO    [375/940] c++ obj/src/lib/support/libSupportLayer.ErrorStr.cpp.o
+2022-02-08 11:47:32 INFO    [376/940] c++ obj/src/lib/support/libSupportLayer.LifetimePersistedCounter.cpp.o
+2022-02-08 11:47:32 INFO    [377/940] c++ obj/src/lib/support/libSupportLayer.PersistedCounter.cpp.o
+2022-02-08 11:47:32 INFO    [378/940] c++ obj/src/lib/support/libSupportLayer.CHIPArgParser.cpp.o
+2022-02-08 11:47:32 INFO    [379/940] c++ obj/src/controller/tests/data_model/libDataModelTests.TestRead.cpp.o
+2022-02-08 11:47:32 INFO    [380/940] c++ obj/src/lib/support/libSupportLayer.PrivateHeap.cpp.o
+2022-02-08 11:47:32 INFO    [381/940] c++ obj/src/lib/support/libSupportLayer.UnitTestUtils.cpp.o
+2022-02-08 11:47:32 INFO    [382/940] c++ obj/src/lib/support/libSupportLayer.SerializableIntegerSet.cpp.o
+2022-02-08 11:47:32 INFO    [383/940] c++ obj/src/lib/support/libSupportLayer.UnitTestRegistration.cpp.o
+2022-02-08 11:47:32 INFO    [384/940] c++ obj/src/lib/support/libSupportLayer.ZclString.cpp.o
+2022-02-08 11:47:32 INFO    [385/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemPacketBuffer.cpp.o
+2022-02-08 11:47:32 INFO    [386/940] c++ obj/src/lib/support/libSupportLayer.Pool.cpp.o
+2022-02-08 11:47:32 INFO    [387/940] c++ obj/src/lib/support/libSupportLayer.ThreadOperationalDataset.cpp.o
+2022-02-08 11:47:32 INFO    [388/940] c++ obj/src/lib/support/verhoeff/libSupportLayer.Verhoeff.cpp.o
+2022-02-08 11:47:32 INFO    [389/940] c++ obj/src/lib/support/libSupportLayer.TimeUtils.cpp.o
+2022-02-08 11:47:32 INFO    [390/940] c++ obj/src/lib/support/verhoeff/libSupportLayer.Verhoeff10.cpp.o
+2022-02-08 11:47:32 INFO    [391/940] c++ obj/src/lib/support/verhoeff/libSupportLayer.Verhoeff16.cpp.o
+2022-02-08 11:47:32 INFO    [392/940] c++ obj/src/lib/support/verhoeff/libSupportLayer.Verhoeff32.cpp.o
+2022-02-08 11:47:32 INFO    [393/940] c++ obj/src/lib/support/verhoeff/libSupportLayer.Verhoeff36.cpp.o
+2022-02-08 11:47:32 INFO    [394/940] c++ obj/src/lib/support/logging/libSupportLayer.CHIPLogging.cpp.o
+2022-02-08 11:47:32 INFO    [395/940] c++ obj/src/lib/support/libSupportLayer.CHIPFaultInjection.cpp.o
+2022-02-08 11:47:32 INFO    [396/940] c++ obj/src/lib/support/tests/libSupportTests.TestCHIPCounter.cpp.o
+2022-02-08 11:47:32 INFO    [397/940] c++ obj/src/lib/support/tests/libSupportTests.TestBytesToHex.cpp.o
+2022-02-08 11:47:32 INFO    [398/940] c++ obj/src/lib/support/libSupportLayer.CHIPMem-Malloc.cpp.o
+2022-02-08 11:47:32 INFO    [399/940] c++ obj/src/lib/support/tests/libSupportTests.TestBufferWriter.cpp.o
+2022-02-08 11:47:33 INFO    [400/940] c++ obj/src/lib/support/tests/libSupportTests.TestBufferReader.cpp.o
+2022-02-08 11:47:33 INFO    [401/940] c++ obj/src/lib/support/tests/libSupportTests.TestCHIPMem.cpp.o
+2022-02-08 11:47:33 INFO    [402/940] c++ obj/src/lib/shell/libCHIPShell.MainLoopDefault.cpp.o
+2022-02-08 11:47:33 INFO    [403/940] c++ obj/src/lib/support/tests/libSupportTests.TestFixedBufferAllocator.cpp.o
+2022-02-08 11:47:33 INFO    [404/940] c++ obj/src/lib/support/tests/libSupportTests.TestCHIPMemString.cpp.o
+2022-02-08 11:47:33 INFO    [405/940] c++ obj/src/lib/shell/shell_core.Engine.cpp.o
+2022-02-08 11:47:33 INFO    [406/940] c++ obj/src/lib/support/libSupportLayer.JniReferences.cpp.o
+2022-02-08 11:47:33 INFO    [407/940] c++ obj/src/lib/shell/commands/commands.Config.cpp.o
+2022-02-08 11:47:33 INFO    [408/940] c++ obj/src/lib/shell/commands/commands.Device.cpp.o
+2022-02-08 11:47:33 INFO    [409/940] c++ obj/src/lib/support/tests/libSupportTests.TestDefer.cpp.o
+2022-02-08 11:47:33 INFO    [410/940] c++ obj/src/lib/support/tests/libSupportTests.TestOwnerOf.cpp.o
+2022-02-08 11:47:33 INFO    [411/940] c++ obj/src/lib/shell/commands/commands.Meta.cpp.o
+2022-02-08 11:47:33 INFO    [412/940] c++ obj/src/lib/support/tests/libSupportTests.TestErrorStr.cpp.o
+2022-02-08 11:47:33 INFO    [413/940] c++ obj/src/lib/support/tests/libSupportTests.TestPrivateHeap.cpp.o
+2022-02-08 11:47:33 INFO    [414/940] c++ obj/src/lib/shell/commands/commands.OnboardingCodes.cpp.o
+2022-02-08 11:47:33 INFO    [415/940] c++ obj/src/lib/support/tests/libSupportTests.TestSafeString.cpp.o
+2022-02-08 11:47:33 INFO    [416/940] c++ obj/src/lib/support/tests/libSupportTests.TestSafeInt.cpp.o
+2022-02-08 11:47:33 INFO    [417/940] c++ obj/src/lib/support/tests/libSupportTests.TestStringBuilder.cpp.o
+2022-02-08 11:47:33 INFO    [418/940] stamp obj/src/lwip/lwip.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [419/940] c++ obj/src/lib/support/tests/libSupportTests.TestFold.cpp.o
+2022-02-08 11:47:33 INFO    [420/940] c++ obj/src/lib/support/tests/libSupportTests.TestTimeUtils.cpp.o
+2022-02-08 11:47:33 INFO    [421/940] c++ obj/src/lib/support/tests/libSupportTests.TestSpan.cpp.o
+2022-02-08 11:47:33 INFO    [422/940] c++ obj/src/lib/shell/commands/commands.BLE.cpp.o
+2022-02-08 11:47:33 INFO    [423/940] c++ obj/src/lib/shell/commands/commands.WiFi.cpp.o
+2022-02-08 11:47:33 INFO    [424/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.def.c.o
+2022-02-08 11:47:33 INFO    [425/940] c++ obj/src/lib/support/tests/libSupportTests.TestScopedBuffer.cpp.o
+2022-02-08 11:47:33 INFO    [426/940] cc obj/src/lwip/standalone/lwip.sys_arch.c.o
+2022-02-08 11:47:33 INFO    [427/940] c++ obj/src/lib/support/tests/libSupportTests.TestThreadOperationalDataset.cpp.o
+2022-02-08 11:47:33 INFO    [428/940] c++ obj/src/lib/support/tests/libSupportTests.TestBytesCircularBuffer.cpp.o
+2022-02-08 11:47:33 INFO    [429/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.inet_chksum.c.o
+2022-02-08 11:47:33 INFO    [430/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.init.c.o
+2022-02-08 11:47:33 INFO    [431/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.ip.c.o
+2022-02-08 11:47:33 INFO    [432/940] c++ obj/src/lib/shell/commands/commands.Dns.cpp.o
+2022-02-08 11:47:33 INFO    [433/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.mem.c.o
+2022-02-08 11:47:33 INFO    [434/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.dns.c.o
+2022-02-08 11:47:33 INFO    [435/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.memp.c.o
+2022-02-08 11:47:33 INFO    [436/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.stats.c.o
+2022-02-08 11:47:33 INFO    [437/940] c++ obj/src/lib/support/tests/libSupportTests.TestIntrusiveList.cpp.o
+2022-02-08 11:47:33 INFO    [438/940] c++ obj/src/lib/support/tests/libSupportTests.TestSerializableIntegerSet.cpp.o
+2022-02-08 11:47:33 INFO    [439/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.sys.c.o
+2022-02-08 11:47:33 INFO    [440/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.netif.c.o
+2022-02-08 11:47:33 INFO    [441/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.raw.c.o
+2022-02-08 11:47:33 INFO    [442/940] c++ obj/src/lib/support/tests/libSupportTests.TestZclString.cpp.o
+2022-02-08 11:47:33 INFO    [443/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.pbuf.c.o
+2022-02-08 11:47:33 INFO    [444/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.timeouts.c.o
+2022-02-08 11:47:33 INFO    [445/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.udp.c.o
+2022-02-08 11:47:33 INFO    [446/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.autoip.c.o
+2022-02-08 11:47:33 INFO    [447/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.icmp.c.o
+2022-02-08 11:47:33 INFO    [448/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.etharp.c.o
+2022-02-08 11:47:33 INFO    [449/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.ip4_addr.c.o
+2022-02-08 11:47:33 INFO    [450/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.tcp_in.c.o
+2022-02-08 11:47:33 INFO    [451/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.tcp_out.c.o
+2022-02-08 11:47:33 INFO    [452/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.igmp.c.o
+2022-02-08 11:47:33 INFO    [453/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.dhcp6.c.o
+2022-02-08 11:47:33 INFO    [454/940] cc obj/third_party/lwip/repo/lwip/src/core/lwip.tcp.c.o
+2022-02-08 11:47:33 INFO    [455/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.ethip6.c.o
+2022-02-08 11:47:33 INFO    [456/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.dhcp.c.o
+2022-02-08 11:47:33 INFO    [457/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.inet6.c.o
+2022-02-08 11:47:33 INFO    [458/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.ip4.c.o
+2022-02-08 11:47:33 INFO    [459/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv4/lwip.ip4_frag.c.o
+2022-02-08 11:47:33 INFO    [460/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.icmp6.c.o
+2022-02-08 11:47:33 INFO    [461/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.ip6_addr.c.o
+2022-02-08 11:47:33 INFO    [462/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.ip6_route_table.c.o
+2022-02-08 11:47:33 INFO    [463/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.api_lib.c.o
+2022-02-08 11:47:33 INFO    [464/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.ip6_frag.c.o
+2022-02-08 11:47:33 INFO    [465/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.api_msg.c.o
+2022-02-08 11:47:33 INFO    [466/940] stamp obj/src/messaging/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [467/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.if.c.o
+2022-02-08 11:47:33 INFO    [468/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.netbuf.c.o
+2022-02-08 11:47:33 INFO    [469/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.err.c.o
+2022-02-08 11:47:33 INFO    [470/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.netdb.c.o
+2022-02-08 11:47:33 INFO    [471/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.mld6.c.o
+2022-02-08 11:47:33 INFO    [472/940] stamp obj/src/messaging/tests/helpers.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [473/940] stamp obj/src/messaging/messaging.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [474/940] stamp obj/src/platform/platform.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [475/940] stamp obj/src/platform/android/android.inputdeps.stamp
+2022-02-08 11:47:33 INFO    [476/940] stamp obj/src/platform/android/android_sdk.stamp
+2022-02-08 11:47:33 INFO    [477/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.netifapi.c.o
+2022-02-08 11:47:33 INFO    [478/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.ip6.c.o
+2022-02-08 11:47:33 INFO    [479/940] c++ obj/src/lib/support/tests/libSupportTests.TestStateMachine.cpp.o
+2022-02-08 11:47:33 INFO    [480/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.sockets.c.o
+2022-02-08 11:47:33 INFO    [481/940] cc obj/third_party/lwip/repo/lwip/src/netif/lwip.ethernet.c.o
+2022-02-08 11:47:33 INFO    [482/940] cc obj/third_party/lwip/repo/lwip/src/api/lwip.tcpip.c.o
+2022-02-08 11:47:33 INFO    [483/940] cc obj/third_party/lwip/repo/lwip/src/core/ipv6/lwip.nd6.c.o
+2022-02-08 11:47:34 INFO    [484/940] c++ obj/src/messaging/libMessagingLayer.ErrorCategory.cpp.o
+2022-02-08 11:47:34 INFO    [485/940] c++ obj/src/lib/support/tests/libSupportTests.TestVariant.cpp.o
+2022-02-08 11:47:34 INFO    [486/940] c++ obj/src/lib/support/tests/libSupportTests.TestPool.cpp.o
+2022-02-08 11:47:34 INFO    [487/940] c++ obj/src/platform/libDeviceLayer.DiagnosticDataProvider.cpp.o
+2022-02-08 11:47:34 INFO    [488/940] c++ obj/src/platform/libDeviceLayer.Entropy.cpp.o
+2022-02-08 11:47:34 INFO    [489/940] c++ obj/src/lib/support/tests/libSupportTests.TestCHIPArgParser.cpp.o
+2022-02-08 11:47:34 INFO    [490/940] c++ obj/src/messaging/libMessagingLayer.ApplicationExchangeDispatch.cpp.o
+2022-02-08 11:47:34 INFO    [491/940] c++ obj/src/messaging/libMessagingLayer.ExchangeMessageDispatch.cpp.o
+2022-02-08 11:47:34 INFO    [492/940] c++ obj/src/messaging/libMessagingLayer.ReliableMessageContext.cpp.o
+2022-02-08 11:47:34 INFO    [493/940] c++ obj/src/messaging/libMessagingLayer.ExchangeMgr.cpp.o
+2022-02-08 11:47:34 INFO    [494/940] c++ obj/src/messaging/libMessagingLayer.ReliableMessageMgr.cpp.o
+2022-02-08 11:47:35 INFO    [495/940] c++ obj/src/platform/libAndroidPlatform.SingletonConfigurationManager.cpp.o
+2022-02-08 11:47:35 INFO    [496/940] c++ obj/src/messaging/tests/libMessagingTestHelpers.MessagingContext.cpp.o
+2022-02-08 11:47:35 INFO    [497/940] c++ obj/src/messaging/tests/libMessagingLayerTests.TestExchangeMgr.cpp.o
+2022-02-08 11:47:35 INFO    [498/940] c++ obj/src/platform/libAndroidPlatform.DeviceSafeQueue.cpp.o
+2022-02-08 11:47:35 INFO    [499/940] c++ obj/src/platform/libDeviceLayer.GeneralUtils.cpp.o
+2022-02-08 11:47:35 INFO    [500/940] c++ obj/src/messaging/libMessagingLayer.ReliableMessageProtocolConfig.cpp.o
+2022-02-08 11:47:35 INFO    [501/940] c++ obj/src/platform/libDeviceLayer.DeviceControlServer.cpp.o
+2022-02-08 11:47:35 INFO    [502/940] ACTION //src/platform/android:java_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:35 INFO    [503/940] stamp obj/src/platform/android/java_config.stamp
+2022-02-08 11:47:35 INFO    [504/940] c++ obj/src/platform/libDeviceLayer.LockTracker.cpp.o
+2022-02-08 11:47:35 INFO    [505/940] c++ obj/src/platform/libDeviceLayer.PersistedStorage.cpp.o
+2022-02-08 11:47:35 INFO    [506/940] c++ obj/src/platform/libDeviceLayer.PlatformEventSupport.cpp.o
+2022-02-08 11:47:35 INFO    [507/940] c++ obj/src/platform/logging/impl/android/android.Logging.cpp.o
+2022-02-08 11:47:35 INFO    [508/940] c++ obj/src/platform/libDeviceLayer.Globals.cpp.o
+2022-02-08 11:47:35 INFO    [509/940] stamp obj/src/platform/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:35 INFO    [510/940] stamp obj/src/protocols/protocols.inputdeps.stamp
+2022-02-08 11:47:36 INFO    [511/940] c++ obj/src/platform/logging/impl/stdio/stdio.Logging.cpp.o
+2022-02-08 11:47:36 INFO    [512/940] c++ obj/src/messaging/libMessagingLayer.ExchangeContext.cpp.o
+2022-02-08 11:47:36 INFO    [513/940] c++ obj/src/controller/libChipController.CHIPDeviceController.cpp.o
+2022-02-08 11:47:36 INFO    [514/940] c++ obj/src/platform/android/libAndroidPlatform.AndroidChipPlatform-JNI.cpp.o
+2022-02-08 11:47:36 INFO    [515/940] c++ obj/src/protocols/bdx/libBdx.BdxMessages.cpp.o
+2022-02-08 11:47:36 INFO    [516/940] c++ obj/src/platform/android/libAndroidPlatform.KeyValueStoreManagerImpl.cpp.o
+2022-02-08 11:47:36 INFO    [517/940] c++ obj/src/platform/android/libAndroidPlatform.AndroidConfig.cpp.o
+2022-02-08 11:47:36 INFO    [518/940] c++ obj/src/platform/android/libAndroidPlatform.BLEManagerImpl.cpp.o
+2022-02-08 11:47:36 INFO    [519/940] c++ obj/src/platform/android/libAndroidPlatform.ConfigurationManagerImpl.cpp.o
+2022-02-08 11:47:36 INFO    [520/940] c++ obj/src/platform/android/libAndroidPlatform.ConnectivityManagerImpl.cpp.o
+2022-02-08 11:47:37 INFO    [521/940] c++ obj/src/platform/android/libAndroidPlatform.DiagnosticDataProviderImpl.cpp.o
+2022-02-08 11:47:37 INFO    [522/940] stamp obj/src/protocols/bdx/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:37 INFO    [523/940] c++ obj/src/protocols/echo/libChipProtocols.EchoServer.cpp.o
+2022-02-08 11:47:37 INFO    [524/940] ACTION //src/platform/android:java__javac(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:37 INFO    [525/940] c++ obj/src/protocols/echo/libChipProtocols.EchoClient.cpp.o
+2022-02-08 11:47:37 INFO    [526/940] stamp obj/src/platform/android/java__javac.stamp
+2022-02-08 11:47:37 INFO    [527/940] c++ obj/src/messaging/tests/libMessagingLayerTests.TestReliableMessageProtocol.cpp.o
+2022-02-08 11:47:37 INFO    [528/940] stamp obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+2022-02-08 11:47:37 INFO    [529/940] c++ obj/src/protocols/bdx/libBdx.BdxUri.cpp.o
+2022-02-08 11:47:37 INFO    [530/940] c++ obj/src/platform/android/libAndroidPlatform.DeviceNetworkProvisioningDelegateImpl.cpp.o
+2022-02-08 11:47:37 INFO    [531/940] c++ obj/src/protocols/bdx/tests/libBDXTests.TestBdxUri.cpp.o
+2022-02-08 11:47:37 INFO    [532/940] c++ obj/src/protocols/secure_channel/libChipProtocols.MessageCounterManager.cpp.o
+2022-02-08 11:47:37 INFO    [533/940] c++ obj/src/protocols/user_directed_commissioning/libChipProtocols.UserDirectedCommissioningClient.cpp.o
+2022-02-08 11:47:37 INFO    [534/940] c++ obj/src/protocols/bdx/tests/libBDXTests.TestBdxMessages.cpp.o
+2022-02-08 11:47:37 INFO    [535/940] ACTION //src/platform/android:java(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:37 INFO    [536/940] stamp obj/src/protocols/secure_channel/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:37 INFO    [537/940] c++ obj/src/protocols/secure_channel/libSecureChannel.SessionIDAllocator.cpp.o
+2022-02-08 11:47:37 INFO    [538/940] c++ obj/src/protocols/secure_channel/libSecureChannel.StatusReport.cpp.o
+2022-02-08 11:47:37 INFO    [539/940] c++ obj/src/protocols/bdx/tests/libBDXTests.TestBdxTransferSession.cpp.o
+2022-02-08 11:47:37 INFO    [540/940] c++ obj/src/protocols/secure_channel/tests/libSecureChannelTests.TestSessionIDAllocator.cpp.o
+2022-02-08 11:47:37 INFO    [541/940] c++ obj/src/protocols/user_directed_commissioning/libChipProtocols.UserDirectedCommissioningServer.cpp.o
+2022-02-08 11:47:37 INFO    [542/940] c++ obj/src/platform/android/libAndroidPlatform.DnssdImpl.cpp.o
+2022-02-08 11:47:37 INFO    [543/940] stamp obj/src/setup_payload/additional_data_payload.inputdeps.stamp
+2022-02-08 11:47:37 INFO    [544/940] c++ obj/src/protocols/secure_channel/tests/libSecureChannelTests.TestStatusReport.cpp.o
+2022-02-08 11:47:37 INFO    [545/940] c++ obj/src/protocols/bdx/libBdx.BdxTransferSession.cpp.o
+2022-02-08 11:47:38 INFO    [546/940] c++ obj/src/platform/tests/libPlatformTests.TestKeyValueStoreMgr.cpp.o
+2022-02-08 11:47:38 INFO    [547/940] c++ obj/src/platform/tests/libPlatformTests.TestConfigurationMgr.cpp.o
+2022-02-08 11:47:38 INFO    [548/940] stamp obj/src/setup_payload/java/java__javac.stamp
+2022-02-08 11:47:38 INFO    [549/940] c++ obj/src/platform/android/libAndroidPlatform.PlatformManagerImpl.cpp.o
+2022-02-08 11:47:38 INFO    [550/940] c++ obj/src/platform/tests/libPlatformTests.TestPlatformMgr.cpp.o
+2022-02-08 11:47:38 INFO    [551/940] c++ obj/src/protocols/secure_channel/libSecureChannel.CASESessionCache.cpp.o
+2022-02-08 11:47:38 INFO    [552/940] c++ obj/src/platform/tests/libPlatformTests.TestPlatformTime.cpp.o
+2022-02-08 11:47:38 INFO    [553/940] c++ obj/src/setup_payload/libSetupPayload.Base38Encode.cpp.o
+2022-02-08 11:47:38 INFO    [554/940] c++ obj/src/protocols/secure_channel/libSecureChannel.CASEServer.cpp.o
+2022-02-08 11:47:38 INFO    [555/940] stamp obj/src/system/system.inputdeps.stamp
+2022-02-08 11:47:38 INFO    [556/940] c++ obj/src/protocols/secure_channel/libSecureChannel.SessionEstablishmentExchangeDispatch.cpp.o
+2022-02-08 11:47:38 INFO    [557/940] c++ obj/src/system/libSystemLayer.SystemError.cpp.o
+2022-02-08 11:47:38 INFO    [558/940] ACTION //src/setup_payload/java:java(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:38 INFO    [559/940] c++ obj/src/system/libSystemLayer.SystemFaultInjection.cpp.o
+2022-02-08 11:47:38 INFO    [560/940] c++ obj/src/system/libSystemLayer.SystemLayer.cpp.o
+2022-02-08 11:47:38 INFO    [561/940] c++ obj/src/system/libSystemLayer.SystemMutex.cpp.o
+2022-02-08 11:47:38 INFO    [562/940] c++ obj/src/protocols/secure_channel/libSecureChannel.CASESession.cpp.o
+2022-02-08 11:47:38 INFO    [563/940] c++ obj/src/system/libSystemLayer.SystemClock.cpp.o
+2022-02-08 11:47:38 INFO    [564/940] c++ obj/src/setup_payload/additional_data_payload.AdditionalDataPayloadParser.cpp.o
+2022-02-08 11:47:38 INFO    [565/940] c++ obj/src/protocols/secure_channel/libSecureChannel.PASESession.cpp.o
+2022-02-08 11:47:38 INFO    [566/940] c++ obj/src/setup_payload/libSetupPayload.Base38Decode.cpp.o
+2022-02-08 11:47:38 INFO    [567/940] stamp obj/src/system/system_config_header.stamp
+2022-02-08 11:47:38 INFO    [568/940] stamp obj/src/ble/ble_config_header.stamp
+2022-02-08 11:47:38 INFO    [569/940] stamp obj/src/inet/inet_config_header.stamp
+2022-02-08 11:47:38 INFO    [570/940] stamp obj/src/lib/core/chip_config_header.stamp
+2022-02-08 11:47:38 INFO    [571/940] c++ obj/src/setup_payload/additional_data_payload.AdditionalDataPayloadGenerator.cpp.o
+2022-02-08 11:47:38 INFO    [572/940] c++ obj/src/protocols/secure_channel/tests/libSecureChannelTests.TestCASESessionCache.cpp.o
+2022-02-08 11:47:38 INFO    [573/940] c++ obj/src/protocols/secure_channel/tests/libSecureChannelTests.TestPASESession.cpp.o
+2022-02-08 11:47:38 INFO    [574/940] c++ obj/src/protocols/user_directed_commissioning/tests/libUserDirectedCommissioningTests.TestUdcMessages.cpp.o
+2022-02-08 11:47:38 INFO    [575/940] c++ obj/src/system/libSystemLayer.SystemPacketBuffer.cpp.o
+2022-02-08 11:47:38 INFO    [576/940] c++ obj/src/setup_payload/tests/libSetupPayloadTests.TestAdditionalDataPayload.cpp.o
+2022-02-08 11:47:38 INFO    [577/940] c++ obj/src/system/libSystemLayer.WakeEvent.cpp.o
+2022-02-08 11:47:38 INFO    [578/940] c++ obj/src/system/libSystemLayer.SystemStats.cpp.o
+2022-02-08 11:47:38 INFO    [579/940] stamp obj/src/transport/transport.inputdeps.stamp
+2022-02-08 11:47:38 INFO    [580/940] ar stdio.a
+2022-02-08 11:47:38 INFO    [581/940] ar android.a
+2022-02-08 11:47:38 INFO    [582/940] c++ obj/src/system/libSystemLayer.SystemTimer.cpp.o
+2022-02-08 11:47:38 INFO    [583/940] c++ obj/src/system/libSystemLayer.TLVPacketBufferBackingStore.cpp.o
+2022-02-08 11:47:38 INFO    [584/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemErrorStr.cpp.o
+2022-02-08 11:47:39 INFO    [585/940] c++ obj/src/setup_payload/tests/libSetupPayloadTests.TestManualCode.cpp.o
+2022-02-08 11:47:39 INFO    [586/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemClock.cpp.o
+2022-02-08 11:47:39 INFO    [587/940] c++ obj/src/system/tests/libSystemLayerTests.TestTimeSource.cpp.o
+2022-02-08 11:47:39 INFO    [588/940] c++ obj/src/system/libSystemLayer.SystemLayerImplSelect.cpp.o
+2022-02-08 11:47:39 INFO    [589/940] c++ obj/src/protocols/bdx/libBdx.TransferFacilitator.cpp.o
+2022-02-08 11:47:39 INFO    [590/940] stamp obj/src/transport/raw/tests/helpers.inputdeps.stamp
+2022-02-08 11:47:39 INFO    [591/940] stamp obj/src/transport/raw/raw.inputdeps.stamp
+2022-02-08 11:47:39 INFO    [592/940] c++ obj/src/setup_payload/java/libSetupPayloadParser.SetupPayloadParser-JNI.cpp.o
+2022-02-08 11:47:39 INFO    [593/940] c++ obj/src/transport/libTransportLayer.CryptoContext.cpp.o
+2022-02-08 11:47:39 INFO    [594/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemWakeEvent.cpp.o
+2022-02-08 11:47:39 INFO    [595/940] c++ obj/src/setup_payload/tests/libSetupPayloadTests.TestQRCodeTLV.cpp.o
+2022-02-08 11:47:39 INFO    [596/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemTimer.cpp.o
+2022-02-08 11:47:39 INFO    [597/940] stamp obj/src/transport/raw/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:39 INFO    [598/940] c++ obj/src/protocols/secure_channel/tests/libSecureChannelTests.TestCASESession.cpp.o
+2022-02-08 11:47:39 INFO    [599/940] c++ obj/src/setup_payload/tests/libSetupPayloadTests.TestQRCode.cpp.o
+2022-02-08 11:47:39 INFO    [600/940] c++ obj/src/transport/raw/libRawTransport.MessageHeader.cpp.o
+2022-02-08 11:47:39 INFO    [601/940] stamp obj/src/transport/tests/tests_lib.inputdeps.stamp
+2022-02-08 11:47:39 INFO    [602/940] c++ obj/src/transport/libTransportLayer.SessionHolder.cpp.o
+2022-02-08 11:47:39 INFO    [603/940] c++ obj/src/transport/libTransportLayer.TransportMgrBase.cpp.o
+2022-02-08 11:47:39 INFO    [604/940] c++ obj/src/transport/raw/tests/libRawTransportTests.TestPeerAddress.cpp.o
+2022-02-08 11:47:39 INFO    [605/940] c++ obj/src/transport/libTransportLayer.SecureMessageCodec.cpp.o
+2022-02-08 11:47:39 INFO    [606/940] c++ obj/src/transport/libTransportLayer.Session.cpp.o
+2022-02-08 11:47:39 INFO    [607/940] cp ../../third_party/android_deps/artifacts/annotation-1.1.0.jar lib/third_party/android_deps/annotation-1.1.0.jar
+2022-02-08 11:47:39 INFO    [608/940] c++ obj/src/transport/libTransportLayer.SecureSession.cpp.o
+2022-02-08 11:47:39 INFO    [609/940] stamp obj/third_party/android_deps/annotation.stamp
+2022-02-08 11:47:39 INFO    [610/940] c++ obj/src/transport/libTransportLayer.PairingSession.cpp.o
+2022-02-08 11:47:39 INFO    [611/940] c++ obj/src/transport/raw/tests/libRawTransportTests.TestMessageHeader.cpp.o
+2022-02-08 11:47:39 INFO    [612/940] c++ obj/src/transport/raw/libRawTransport.UDP.cpp.o
+2022-02-08 11:47:39 INFO    [613/940] c++ obj/src/transport/raw/libRawTransport.TCP.cpp.o
+2022-02-08 11:47:39 INFO    [614/940] c++ obj/src/transport/libTransportLayer.SessionHandle.cpp.o
+2022-02-08 11:47:39 INFO    [615/940] ACTION //src/app/server/java:java_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:39 INFO    [616/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.certs.c.o
+2022-02-08 11:47:39 INFO    [617/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ccm.c.o
+2022-02-08 11:47:39 INFO    [618/940] ACTION //src/controller/java:java_config(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:39 INFO    [619/940] c++ obj/src/transport/raw/libRawTransport.BLE.cpp.o
+2022-02-08 11:47:39 INFO    [620/940] stamp obj/src/app/server/java/java_config.stamp
+2022-02-08 11:47:39 INFO    [621/940] stamp obj/src/controller/java/java_config.stamp
+2022-02-08 11:47:39 INFO    [622/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.cmac.c.o
+2022-02-08 11:47:39 INFO    [623/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.chacha20.c.o
+2022-02-08 11:47:39 INFO    [624/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.chachapoly.c.o
+2022-02-08 11:47:39 INFO    [625/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ctr_drbg.c.o
+2022-02-08 11:47:39 INFO    [626/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.cipher.c.o
+2022-02-08 11:47:40 INFO    [627/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.debug.c.o
+2022-02-08 11:47:40 INFO    [628/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.cipher_wrap.c.o
+2022-02-08 11:47:40 INFO    [629/940] c++ obj/src/transport/tests/libTransportLayerTests.TestSecureSession.cpp.o
+2022-02-08 11:47:40 INFO    [630/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ecdh.c.o
+2022-02-08 11:47:40 INFO    [631/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.dhm.c.o
+2022-02-08 11:47:40 INFO    [632/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.des.c.o
+2022-02-08 11:47:40 INFO    [633/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ecjpake.c.o
+2022-02-08 11:47:40 INFO    [634/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ecdsa.c.o
+2022-02-08 11:47:40 INFO    [635/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.entropy.c.o
+2022-02-08 11:47:40 INFO    [636/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.entropy_poll.c.o
+2022-02-08 11:47:40 INFO    [637/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.havege.c.o
+2022-02-08 11:47:40 INFO    [638/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.gcm.c.o
+2022-02-08 11:47:40 INFO    [639/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.hkdf.c.o
+2022-02-08 11:47:40 INFO    [640/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.error.c.o
+2022-02-08 11:47:40 INFO    [641/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.md2.c.o
+2022-02-08 11:47:40 INFO    [642/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ecp_curves.c.o
+2022-02-08 11:47:40 INFO    [643/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ecp.c.o
+2022-02-08 11:47:40 INFO    [644/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.hmac_drbg.c.o
+2022-02-08 11:47:40 INFO    [645/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.md4.c.o
+2022-02-08 11:47:40 INFO    [646/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.md.c.o
+2022-02-08 11:47:40 INFO    [647/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.memory_buffer_alloc.c.o
+2022-02-08 11:47:40 INFO    [648/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.nist_kw.c.o
+2022-02-08 11:47:40 INFO    [649/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.padlock.c.o
+2022-02-08 11:47:40 INFO    [650/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.md5.c.o
+2022-02-08 11:47:40 INFO    [651/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.net_sockets.c.o
+2022-02-08 11:47:40 INFO    [652/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pkcs11.c.o
+2022-02-08 11:47:40 INFO    [653/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.oid.c.o
+2022-02-08 11:47:40 INFO    [654/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pem.c.o
+2022-02-08 11:47:40 INFO    [655/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pk.c.o
+2022-02-08 11:47:40 INFO    [656/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pk_wrap.c.o
+2022-02-08 11:47:40 INFO    [657/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pkcs12.c.o
+2022-02-08 11:47:40 INFO    [658/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pkcs5.c.o
+2022-02-08 11:47:40 INFO    [659/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.platform.c.o
+2022-02-08 11:47:40 INFO    [660/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.platform_util.c.o
+2022-02-08 11:47:40 INFO    [661/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pkwrite.c.o
+2022-02-08 11:47:40 INFO    [662/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.poly1305.c.o
+2022-02-08 11:47:40 INFO    [663/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_crypto_se.c.o
+2022-02-08 11:47:40 INFO    [664/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.pkparse.c.o
+2022-02-08 11:47:40 INFO    [665/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_crypto_driver_wrappers.c.o
+2022-02-08 11:47:40 INFO    [666/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_crypto_storage.c.o
+2022-02-08 11:47:40 INFO    [667/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_its_file.c.o
+2022-02-08 11:47:40 INFO    [668/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_crypto_slot_management.c.o
+2022-02-08 11:47:40 INFO    [669/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.rsa_internal.c.o
+2022-02-08 11:47:40 INFO    [670/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ripemd160.c.o
+2022-02-08 11:47:40 INFO    [671/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.sha512.c.o
+2022-02-08 11:47:40 INFO    [672/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_cache.c.o
+2022-02-08 11:47:40 INFO    [673/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.rsa.c.o
+2022-02-08 11:47:40 INFO    [674/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.sha256.c.o
+2022-02-08 11:47:40 INFO    [675/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.sha1.c.o
+2022-02-08 11:47:40 INFO    [676/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_ciphersuites.c.o
+2022-02-08 11:47:40 INFO    [677/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_tls13_keys.c.o
+2022-02-08 11:47:40 INFO    [678/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_cookie.c.o
+2022-02-08 11:47:40 INFO    [679/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_ticket.c.o
+2022-02-08 11:47:40 INFO    [680/940] c++ obj/src/transport/tests/libTransportLayerTests.TestPairingSession.cpp.o
+2022-02-08 11:47:40 INFO    [681/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.threading.c.o
+2022-02-08 11:47:40 INFO    [682/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.psa_crypto.c.o
+2022-02-08 11:47:40 INFO    [683/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.timing.c.o
+2022-02-08 11:47:40 INFO    [684/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.version.c.o
+2022-02-08 11:47:40 INFO    [685/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.version_features.c.o
+2022-02-08 11:47:40 INFO    [686/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_cli.c.o
+2022-02-08 11:47:40 INFO    [687/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509.c.o
+2022-02-08 11:47:40 INFO    [688/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509_create.c.o
+2022-02-08 11:47:40 INFO    [689/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_srv.c.o
+2022-02-08 11:47:40 INFO    [690/940] stamp obj/third_party/nlassert/nlassert.stamp
+2022-02-08 11:47:40 INFO    [691/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509_crl.c.o
+2022-02-08 11:47:40 INFO    [692/940] c++ obj/src/transport/tests/libTransportLayerTests.TestPeerConnections.cpp.o
+2022-02-08 11:47:40 INFO    [693/940] stamp obj/third_party/nlio/nlio.stamp
+2022-02-08 11:47:40 INFO    [694/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509_csr.c.o
+2022-02-08 11:47:40 INFO    [695/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509write_csr.c.o
+2022-02-08 11:47:40 INFO    [696/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509write_crt.c.o
+2022-02-08 11:47:40 INFO    [697/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.xtea.c.o
+2022-02-08 11:47:40 INFO    [698/940] cc obj/third_party/nlunit-test/repo/src/libnlunit-test.nlunit-test.c.o
+2022-02-08 11:47:40 INFO    [699/940] ACTION //build/chip/java/tests:child_library_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:40 INFO    [700/940] ACTION //build/chip/java/tests:child_prebuilt_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:40 INFO    [701/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_msg.c.o
+2022-02-08 11:47:40 INFO    [702/940] stamp python/obj/build/chip/java/tests/child_library_config.stamp
+2022-02-08 11:47:40 INFO    [703/940] ar libnlunit-test.a
+2022-02-08 11:47:40 INFO    [704/940] stamp python/obj/build/chip/java/tests/child_prebuilt_config.stamp
+2022-02-08 11:47:40 INFO    [705/940] c++ obj/src/transport/raw/tests/libRawTransportTests.TestTCP.cpp.o
+2022-02-08 11:47:41 INFO    [706/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.x509_crt.c.o
+2022-02-08 11:47:41 INFO    [707/940] cp /tmp/chip_java_build_test/child_jar.jar python/lib/build/chip/java/tests/child_jar.jar
+2022-02-08 11:47:41 INFO    [708/940] ACTION //build/chip/java/tests:grandchild_library_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [709/940] ACTION //src/app/server/java:java__javac(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:41 INFO    [710/940] stamp python/obj/build/chip/java/tests/child_prebuilt.stamp
+2022-02-08 11:47:41 INFO    [711/940] stamp python/obj/build/chip/java/tests/grandchild_library_config.stamp
+2022-02-08 11:47:41 INFO    [712/940] cc obj/third_party/mbedtls/repo/library/libmbedtls.ssl_tls.c.o
+2022-02-08 11:47:41 INFO    [713/940] stamp obj/src/app/server/java/java__javac.stamp
+2022-02-08 11:47:41 INFO    [714/940] ar libmbedtls.a
+2022-02-08 11:47:41 INFO    [715/940] c++ obj/third_party/nlfaultinjection/repo/src/libnlfaultinjection.nlfaultinjection.cpp.o
+2022-02-08 11:47:41 INFO    [716/940] ar libnlfaultinjection.a
+2022-02-08 11:47:41 INFO    [717/940] ACTION //build/chip/java/tests:java_prebuilt_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [718/940] stamp python/obj/build/chip/java/tests/java_prebuilt_config.stamp
+2022-02-08 11:47:41 INFO    [719/940] ar libSupportLayer.a
+2022-02-08 11:47:41 INFO    [720/940] cp /tmp/chip_java_build_test/prebuilt_jar.jar python/lib/build/chip/java/tests/prebuilt_jar.jar
+2022-02-08 11:47:41 INFO    [721/940] stamp obj/src/lwip/lwip.stamp
+2022-02-08 11:47:41 INFO    [722/940] stamp python/obj/build/chip/java/tests/java_prebuilt.stamp
+2022-02-08 11:47:41 INFO    [723/940] ar libSystemLayer.a
+2022-02-08 11:47:41 INFO    [724/940] ACTION //scripts/idl:idl(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [725/940] stamp obj/src/messaging/messaging_mrp_config.stamp
+2022-02-08 11:47:41 INFO    [726/940] stamp python/obj/scripts/idl/idl.stamp
+2022-02-08 11:47:41 INFO    [727/940] ar libInetLayer.a
+2022-02-08 11:47:41 INFO    [728/940] stamp obj/scripts/idl/idl.stamp
+2022-02-08 11:47:41 INFO    [729/940] c++ obj/src/system/tests/libSystemLayerTests.TestSystemScheduleLambda.cpp.o
+2022-02-08 11:47:41 INFO    [730/940] ar libBleLayer.a
+2022-02-08 11:47:41 INFO    [731/940] c++ obj/src/transport/libTransportLayer.MessageCounter.cpp.o
+2022-02-08 11:47:41 INFO    [732/940] ar libBleLayerTests.a
+2022-02-08 11:47:41 INFO    [733/940] ar libChipCore.a
+2022-02-08 11:47:41 INFO    [734/940] stamp obj/src/ble/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [735/940] stamp obj/src/platform/platform_base.stamp
+2022-02-08 11:47:41 INFO    [736/940] stamp obj/src/transport/retransmit/retransmit.stamp
+2022-02-08 11:47:41 INFO    [737/940] ar libChipCrypto.a
+2022-02-08 11:47:41 INFO    [738/940] ar libCoreTests.a
+2022-02-08 11:47:41 INFO    [739/940] ar libASN1.a
+2022-02-08 11:47:41 INFO    [740/940] ar libClusterObjects.a
+2022-02-08 11:47:41 INFO    [741/940] stamp obj/src/setup_payload/additional_data_payload.stamp
+2022-02-08 11:47:41 INFO    [742/940] stamp obj/src/lib/core/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [743/940] ar libRetransmitTests.a
+2022-02-08 11:47:41 INFO    [744/940] stamp obj/src/transport/retransmit/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [745/940] ar libSetupPayload.a
+2022-02-08 11:47:41 INFO    [746/940] ar libSetupPayloadTests.a
+2022-02-08 11:47:41 INFO    [747/940] ar libAndroidPlatform.a
+2022-02-08 11:47:41 INFO    [748/940] stamp obj/src/setup_payload/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [749/940] ACTION //src/app/server/java:java(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:41 INFO    [750/940] stamp obj/src/platform/android/java.stamp
+2022-02-08 11:47:41 INFO    [751/940] ar libDeviceLayer.a
+2022-02-08 11:47:41 INFO    [752/940] stamp obj/src/lib/shell/shell_core.stamp
+2022-02-08 11:47:41 INFO    [753/940] ar libaccess.a
+2022-02-08 11:47:41 INFO    [754/940] ar libInetTestHelpers.a
+2022-02-08 11:47:41 INFO    [755/940] ar libASN1Tests.a
+2022-02-08 11:47:41 INFO    [756/940] ar dnssd.a
+2022-02-08 11:47:41 INFO    [757/940] ar core.a
+2022-02-08 11:47:41 INFO    [758/940] ar libPlatformTests.a
+2022-02-08 11:47:41 INFO    [759/940] ar libSystemLayerTests.a
+2022-02-08 11:47:41 INFO    [760/940] ar libSupportTests.a
+2022-02-08 11:47:41 INFO    [761/940] ar libRawTransport.a
+2022-02-08 11:47:41 INFO    [762/940] stamp obj/src/lib/asn1/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [763/940] stamp obj/src/platform/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [764/940] ar libaccesstest.a
+2022-02-08 11:47:41 INFO    [765/940] stamp obj/src/system/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [766/940] ar libInetLayerTests.a
+2022-02-08 11:47:41 INFO    [767/940] stamp obj/src/lib/support/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [768/940] ar libMdnsTests.a
+2022-02-08 11:47:41 INFO    [769/940] ar libMinimalMdnsCoreTests.a
+2022-02-08 11:47:41 INFO    [770/940] ar records.a
+2022-02-08 11:47:41 INFO    [771/940] stamp obj/src/access/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [772/940] stamp obj/src/inet/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [773/940] stamp obj/src/lib/dnssd/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [774/940] stamp obj/src/lib/dnssd/minimal_mdns/core/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [775/940] ar libCredentials.a
+2022-02-08 11:47:41 INFO    [776/940] ar responders.a
+2022-02-08 11:47:41 INFO    [777/940] ar libMinimalMdnsRecordsTests.a
+2022-02-08 11:47:41 INFO    [778/940] ar libChipCertTestVectors.a
+2022-02-08 11:47:41 INFO    [779/940] stamp obj/src/lib/dnssd/minimal_mdns/records/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [780/940] ar minimal_mdns.a
+2022-02-08 11:47:41 INFO    [781/940] ar libChipCryptoTests.a
+2022-02-08 11:47:41 INFO    [782/940] ar libChipCredentials.a
+2022-02-08 11:47:41 INFO    [783/940] stamp obj/src/crypto/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [784/940] ar libMinimalMdnsRespondersTests.a
+2022-02-08 11:47:41 INFO    [785/940] stamp obj/src/credentials/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [786/940] stamp obj/src/lib/dnssd/minimal_mdns/responders/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [787/940] c++ obj/src/transport/tests/libTransportLayerTests.TestSessionManager.cpp.o
+2022-02-08 11:47:41 INFO    [788/940] ACTION //build/chip/java/tests:child_library__javac(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [789/940] stamp python/obj/build/chip/java/tests/child_library__javac.stamp
+2022-02-08 11:47:41 INFO    [790/940] ACTION //build/chip/java/tests:grandchild_library__javac(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [791/940] c++ obj/src/transport/raw/tests/libNetworkTestHelpers.NetworkTestHelpers.cpp.o
+2022-02-08 11:47:41 INFO    [792/940] stamp python/obj/build/chip/java/tests/grandchild_library__javac.stamp
+2022-02-08 11:47:41 INFO    [793/940] ar libNetworkTestHelpers.a
+2022-02-08 11:47:41 INFO    [794/940] ar libMinimalMdnstests.a
+2022-02-08 11:47:41 INFO    [795/940] stamp obj/src/lib/dnssd/minimal_mdns/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [796/940] ACTION //build/chip/java/tests:child_library(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [797/940] stamp python/obj/build/chip/java/tests/child_library.stamp
+2022-02-08 11:47:41 INFO    [798/940] c++ obj/src/transport/libTransportLayer.SessionManager.cpp.o
+2022-02-08 11:47:41 INFO    [799/940] ACTION //build/chip/java/tests:grandchild_library(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [800/940] stamp python/obj/build/chip/java/tests/grandchild_library.stamp
+2022-02-08 11:47:41 INFO    [801/940] ar libTransportLayer.a
+2022-02-08 11:47:41 INFO    [802/940] ar libRawTransportTests.a
+2022-02-08 11:47:41 INFO    [803/940] ar libMessagingLayer.a
+2022-02-08 11:47:41 INFO    [804/940] stamp obj/src/transport/raw/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [805/940] ar libSecureChannel.a
+2022-02-08 11:47:41 INFO    [806/940] ar libBdx.a
+2022-02-08 11:47:41 INFO    [807/940] ACTION //build/chip/java/tests:child_library_2_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:41 INFO    [808/940] ar libCHIPDataModel.a
+2022-02-08 11:47:41 INFO    [809/940] ar libBDXTests.a
+2022-02-08 11:47:41 INFO    [810/940] ar libChipProtocols.a
+2022-02-08 11:47:41 INFO    [811/940] stamp python/obj/build/chip/java/tests/child_library_2_config.stamp
+2022-02-08 11:47:41 INFO    [812/940] stamp obj/src/app/util/mock/mock_ember.stamp
+2022-02-08 11:47:41 INFO    [813/940] stamp obj/src/protocols/bdx/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [814/940] ar libMessagingTestHelpers.a
+2022-02-08 11:47:41 INFO    [815/940] ar libUserDirectedCommissioningTests.a
+2022-02-08 11:47:41 INFO    [816/940] ar libCHIPAppServer.a
+2022-02-08 11:47:41 INFO    [817/940] ar libTransportLayerTests.a
+2022-02-08 11:47:41 INFO    [818/940] stamp obj/src/protocols/user_directed_commissioning/tests/tests.stamp
+2022-02-08 11:47:41 INFO    [819/940] stamp obj/src/lib/shell/commands/commands.stamp
+2022-02-08 11:47:41 INFO    [820/940] stamp obj/src/transport/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [821/940] ar libChipController.a
+2022-02-08 11:47:42 INFO    [822/940] ar libAppTestHelpers.a
+2022-02-08 11:47:42 INFO    [823/940] ar libMessagingLayerTests.a
+2022-02-08 11:47:42 INFO    [824/940] ar libSecureChannelTests.a
+2022-02-08 11:47:42 INFO    [825/940] stamp obj/src/controller/data_model/data_model.stamp
+2022-02-08 11:47:42 INFO    [826/940] stamp obj/src/messaging/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [827/940] ar libCHIPShell.a
+2022-02-08 11:47:42 INFO    [828/940] stamp obj/src/protocols/secure_channel/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [829/940] ar libControllerTests.a
+2022-02-08 11:47:42 INFO    [830/940] ar libDataModelTests.a
+2022-02-08 11:47:42 INFO    [831/940] ar libTestShell.a
+2022-02-08 11:47:42 INFO    [832/940] ar libAppTests.a
+2022-02-08 11:47:42 INFO    [833/940] stamp obj/src/controller/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [834/940] stamp obj/src/controller/tests/data_model/data_model.stamp
+2022-02-08 11:47:42 INFO    [835/940] stamp obj/src/lib/shell/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [836/940] stamp obj/src/app/tests/tests.stamp
+2022-02-08 11:47:42 INFO    [837/940] stamp obj/src/tests.stamp
+2022-02-08 11:47:42 INFO    [838/940] ar libCHIP.a
+2022-02-08 11:47:42 INFO    [839/940] ar libCHIPAppServerJni.a
+2022-02-08 11:47:42 INFO    [840/940] stamp obj/src/app/server/java/java.stamp
+2022-02-08 11:47:42 INFO    [841/940] ACTION //src/controller/data_model:java-jni-generate(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:42 INFO    [842/940] stamp obj/src/controller/data_model/java-jni-generate.stamp
+2022-02-08 11:47:42 INFO    [843/940] stamp obj/src/controller/data_model/java-jni-sources.inputdeps.stamp
+2022-02-08 11:47:42 INFO    [844/940] stamp obj/src/controller/java/jni.inputdeps.stamp
+2022-02-08 11:47:42 INFO    [845/940] ld -shared lib/jni/arm64-v8a/libSetupPayloadParser.so
+2022-02-08 11:47:42 INFO    [846/940] ACTION //build/chip/java/tests:child_library_2__javac(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:47:44 INFO    [847/940] ACTION //src/controller/java:java__javac(//build/toolchain/android:android_arm64)
+2022-02-08 11:47:47 INFO    [848/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.AccountLoginClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [849/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BindingClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [850/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ApplicationLauncherClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [851/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BooleanStateClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [852/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BarrierControlClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [853/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.AdministratorCommissioningClient-ReadImpl.cpp.o
+2022-02-08 11:47:47 INFO    [854/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ChannelClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [855/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BinaryInputBasicClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [856/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.AudioOutputClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [857/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.AccessControlClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [858/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ContentLauncherClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [859/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ColorControlClient-ReadImpl.cpp.o
+2022-02-08 11:47:48 INFO    [860/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BridgedActionsClient-ReadImpl.cpp.o
+2022-02-08 11:47:49 INFO    [861/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ApplicationBasicClient-ReadImpl.cpp.o
+2022-02-08 11:47:49 INFO    [862/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BridgedDeviceBasicClient-ReadImpl.cpp.o
+2022-02-08 11:47:49 INFO    [863/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.EthernetNetworkDiagnosticsClient-ReadImpl.cpp.o
+2022-02-08 11:47:49 INFO    [864/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.BasicClient-ReadImpl.cpp.o
+2022-02-08 11:47:50 INFO    [865/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.DescriptorClient-ReadImpl.cpp.o
+2022-02-08 11:47:50 INFO    [866/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.DiagnosticLogsClient-ReadImpl.cpp.o
+2022-02-08 11:47:52 INFO    [867/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.FixedLabelClient-ReadImpl.cpp.o
+2022-02-08 11:47:52 INFO    [868/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.FlowMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:47:52 INFO    [869/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.LocalizationConfigurationClient-ReadImpl.cpp.o
+2022-02-08 11:47:52 INFO    [870/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ModeSelectClient-ReadImpl.cpp.o
+2022-02-08 11:47:52 INFO    [871/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.KeypadInputClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [872/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.GroupsClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [873/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.IdentifyClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [874/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.GeneralCommissioningClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [875/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ElectricalMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [876/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.GroupKeyManagementClient-ReadImpl.cpp.o
+2022-02-08 11:47:53 INFO    [877/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.LowPowerClient-ReadImpl.cpp.o
+2022-02-08 11:47:54 INFO    [878/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.IlluminanceMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:47:55 INFO    [879/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.GeneralDiagnosticsClient-ReadImpl.cpp.o
+2022-02-08 11:47:55 INFO    [880/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.LevelControlClient-ReadImpl.cpp.o
+2022-02-08 11:47:55 INFO    [881/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.MediaInputClient-ReadImpl.cpp.o
+2022-02-08 11:47:56 INFO    [882/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.MediaPlaybackClient-ReadImpl.cpp.o
+2022-02-08 11:47:56 INFO    [883/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.DoorLockClient-ReadImpl.cpp.o
+2022-02-08 11:47:56 INFO    [884/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OtaSoftwareUpdateProviderClient-ReadImpl.cpp.o
+2022-02-08 11:47:56 INFO    [885/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.NetworkCommissioningClient-ReadImpl.cpp.o
+2022-02-08 11:47:57 INFO    [886/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OccupancySensingClient-ReadImpl.cpp.o
+2022-02-08 11:47:57 INFO    [887/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OnOffSwitchConfigurationClient-ReadImpl.cpp.o
+2022-02-08 11:47:58 INFO    [888/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.PressureMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:47:58 INFO    [889/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.PowerSourceConfigurationClient-ReadImpl.cpp.o
+2022-02-08 11:47:58 INFO    [890/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.RelativeHumidityMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:47:58 INFO    [891/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OnOffClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [892/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.SoftwareDiagnosticsClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [893/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OtaSoftwareUpdateRequestorClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [894/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.PowerSourceClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [895/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.OperationalCredentialsClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [896/940] stamp obj/src/controller/java/java__javac.stamp
+2022-02-08 11:47:59 INFO    [897/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ThermostatUserInterfaceConfigurationClient-ReadImpl.cpp.o
+2022-02-08 11:47:59 INFO    [898/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.PumpConfigurationAndControlClient-ReadImpl.cpp.o
+2022-02-08 11:48:00 INFO    [899/940] ACTION //src/controller/java:java(//build/toolchain/android:android_arm64)
+2022-02-08 11:48:00 INFO    [900/940] c++ obj/src/controller/java/libCHIPController.AndroidClusterExceptions.cpp.o
+2022-02-08 11:48:00 INFO    [901/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ScenesClient-ReadImpl.cpp.o
+2022-02-08 11:48:00 INFO    [902/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.TemperatureMeasurementClient-ReadImpl.cpp.o
+2022-02-08 11:48:01 INFO    [903/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.SwitchClient-ReadImpl.cpp.o
+2022-02-08 11:48:01 INFO    [904/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.TargetNavigatorClient-ReadImpl.cpp.o
+2022-02-08 11:48:01 INFO    [905/940] c++ obj/src/controller/java/libCHIPController.AndroidCallbacks.cpp.o
+2022-02-08 11:48:02 INFO    [906/940] c++ obj/src/controller/java/libCHIPController.AndroidCallbacks-JNI.cpp.o
+2022-02-08 11:48:02 INFO    [907/940] stamp obj/src/setup_payload/java/java.stamp
+2022-02-08 11:48:02 INFO    [908/940] c++ obj/src/controller/java/libCHIPController.CHIPDefaultCallbacks.cpp.o
+2022-02-08 11:48:02 INFO    [909/940] stamp python/obj/build/chip/java/tests/child_library_2__javac.stamp
+2022-02-08 11:48:02 INFO    [910/940] ACTION //build/chip/java/tests:child_library_2(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:48:02 INFO    [911/940] stamp python/obj/build/chip/java/tests/child_library_2.stamp
+2022-02-08 11:48:02 INFO    [912/940] ACTION //build/chip/java/tests:java_library_config(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:48:02 INFO    [913/940] stamp python/obj/build/chip/java/tests/java_library_config.stamp
+2022-02-08 11:48:02 INFO    [914/940] c++ obj/src/controller/java/libCHIPController.AndroidDeviceControllerWrapper.cpp.o
+2022-02-08 11:48:02 INFO    [915/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.WakeOnLanClient-ReadImpl.cpp.o
+2022-02-08 11:48:02 INFO    [916/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.UserLabelClient-ReadImpl.cpp.o
+2022-02-08 11:48:02 INFO    [917/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ThermostatClient-ReadImpl.cpp.o
+2022-02-08 11:48:03 INFO    [918/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.UnitLocalizationClient-ReadImpl.cpp.o
+2022-02-08 11:48:03 INFO    [919/940] c++ obj/src/controller/java/libCHIPController.CHIPDeviceController-JNI.cpp.o
+2022-02-08 11:48:03 INFO    [920/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.TimeFormatLocalizationClient-ReadImpl.cpp.o
+2022-02-08 11:48:03 INFO    [921/940] ACTION //build/chip/java/tests:java_library__javac(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:48:03 INFO    [922/940] stamp python/obj/build/chip/java/tests/java_library__javac.stamp
+2022-02-08 11:48:03 INFO    [923/940] ACTION //build/chip/java/tests:java_library(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:48:03 INFO    [924/940] stamp python/obj/build/chip/java/tests/java_library.stamp
+2022-02-08 11:48:03 INFO    [925/940] ACTION //build/chip/java/tests:java_build_test(//third_party/pigweed/repo/pw_build/python_toolchain:python)
+2022-02-08 11:48:03 INFO    [926/940] stamp python/obj/build/chip/java/tests/java_build_test.stamp
+2022-02-08 11:48:03 INFO    [927/940] stamp obj/build/chip/java/tests/java_build_test.stamp
+2022-02-08 11:48:03 INFO    [928/940] c++ obj/src/controller/java/zap-generated/libCHIPController.CHIPInvokeCallbacks.cpp.o
+2022-02-08 11:48:04 INFO    [929/940] c++ obj/src/controller/java/zap-generated/libCHIPController.CHIPAttributeTLVValueDecoder.cpp.o
+2022-02-08 11:48:04 INFO    [930/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.WiFiNetworkDiagnosticsClient-ReadImpl.cpp.o
+2022-02-08 11:48:04 INFO    [931/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.WindowCoveringClient-ReadImpl.cpp.o
+2022-02-08 11:48:05 INFO    [932/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.ThreadNetworkDiagnosticsClient-ReadImpl.cpp.o
+2022-02-08 11:48:07 INFO    [933/940] c++ obj/src/controller/java/zap-generated/libCHIPController.CHIPReadCallbacks.cpp.o
+2022-02-08 11:48:10 INFO    [934/940] c++ obj/out/android-arm64-chip-tool/gen/src/controller/data_model/jni/java-jni-sources.TestClusterClient-ReadImpl.cpp.o
+2022-02-08 11:48:10 INFO    [935/940] stamp obj/src/controller/data_model/java-jni-sources.stamp
+2022-02-08 11:48:13 INFO    [936/940] c++ obj/src/controller/java/zap-generated/libCHIPController.CHIPClustersWrite-JNI.cpp.o
+2022-02-08 11:49:07 INFO    [937/940] c++ obj/src/controller/java/zap-generated/libCHIPController.CHIPClusters-JNI.cpp.o
+2022-02-08 11:49:47 INFO    [938/940] ld -shared lib/jni/arm64-v8a/libCHIPController.so
+2022-02-08 11:49:47 INFO    [939/940] stamp obj/src/controller/java/java.stamp
+2022-02-08 11:49:47 INFO    [940/940] stamp obj/default.stamp
+2022-02-08 11:49:47 INFO    Command ['ninja', '-C', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool'] completed
+2022-02-08 11:49:47 INFO    Prepare Native libs android-arm64-chip-tool
+2022-02-08 11:49:47 INFO    Command ['mkdir', '-p', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/jniLibs/arm64-v8a'] completed
+2022-02-08 11:49:47 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/jni/arm64-v8a/libSetupPayloadParser.so', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/jniLibs/arm64-v8a/libSetupPayloadParser.so'] completed
+2022-02-08 11:49:48 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/jni/arm64-v8a/libCHIPController.so', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/jniLibs/arm64-v8a/libCHIPController.so'] completed
+2022-02-08 11:49:48 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/jni/arm64-v8a/libc++_shared.so', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/jniLibs/arm64-v8a/libc++_shared.so'] completed
+2022-02-08 11:49:48 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/src/controller/java/CHIPController.jar', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/CHIPController.jar'] completed
+2022-02-08 11:49:48 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/src/setup_payload/java/SetupPayloadParser.jar', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/SetupPayloadParser.jar'] completed
+2022-02-08 11:49:48 INFO    Command ['cp', '/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool/lib/src/platform/android/AndroidPlatform.jar', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/libs/AndroidPlatform.jar'] completed
+2022-02-08 11:49:48 INFO    Building APP android-arm64-chip-tool
+2022-02-08 11:49:48 INFO
+2022-02-08 11:49:48 INFO    Welcome to Gradle 7.1.1!
+2022-02-08 11:49:48 INFO
+2022-02-08 11:49:48 INFO    Here are the highlights of this release:
+2022-02-08 11:49:48 INFO     - Faster incremental Java compilation
+2022-02-08 11:49:48 INFO     - Easier source set configuration in the Kotlin DSL
+2022-02-08 11:49:48 INFO
+2022-02-08 11:49:48 INFO    For more details see https://docs.gradle.org/7.1.1/release-notes.html
+2022-02-08 11:49:48 INFO
+2022-02-08 11:49:49 INFO    Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+2022-02-08 11:49:52 INFO
+2022-02-08 11:49:52 INFO    > Configure project :app
+2022-02-08 11:49:52 INFO    Warning: The 'kotlin-android-extensions' Gradle plugin is deprecated. Please use this migration guide (https://goo.gle/kotlin-android-extensions-deprecation) to start working with View Binding (https://developer.android.com/topic/libraries/view-binding) and the 'kotlin-parcelize' plugin.
+2022-02-08 11:49:53 INFO
+2022-02-08 11:49:53 INFO    > Task :app:preBuild UP-TO-DATE
+2022-02-08 11:49:53 INFO    > Task :app:preDebugBuild UP-TO-DATE
+2022-02-08 11:49:53 INFO    > Task :app:compileDebugAidl NO-SOURCE
+2022-02-08 11:49:53 INFO    > Task :app:compileDebugRenderscript NO-SOURCE
+2022-02-08 11:49:53 INFO    > Task :app:generateDebugBuildConfig
+2022-02-08 11:50:14 INFO    > Task :app:generateDebugResValues
+2022-02-08 11:50:14 INFO    > Task :app:generateDebugResources
+2022-02-08 11:50:14 INFO    > Task :app:checkDebugAarMetadata
+2022-02-08 11:50:15 INFO    > Task :app:createDebugCompatibleScreenManifests
+2022-02-08 11:50:15 INFO    > Task :app:extractDeepLinksDebug
+2022-02-08 11:50:15 INFO
+2022-02-08 11:50:15 INFO    > Task :app:mergeDebugResources
+2022-02-08 11:50:15 INFO    /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/res/values/strings.xml:84:4: Multiple substitutions specified in non-positional format of string resource string/send_command_type_label_text. Did you mean to add the formatted="false" attribute?
+2022-02-08 11:50:15 INFO
+2022-02-08 11:50:15 INFO    > Task :app:processDebugMainManifest
+2022-02-08 11:50:16 INFO    > Task :app:processDebugManifest
+2022-02-08 11:50:32 INFO    > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+2022-02-08 11:50:32 INFO    > Task :app:javaPreCompileDebug
+2022-02-08 11:50:32 INFO    > Task :app:mergeDebugShaders
+2022-02-08 11:50:32 INFO    > Task :app:compileDebugShaders NO-SOURCE
+2022-02-08 11:50:32 INFO    > Task :app:generateDebugAssets UP-TO-DATE
+2022-02-08 11:50:32 INFO    > Task :app:mergeDebugAssets
+2022-02-08 11:50:32 INFO    > Task :app:compressDebugAssets
+2022-02-08 11:50:32 INFO    > Task :app:processDebugJavaRes NO-SOURCE
+2022-02-08 11:50:34 INFO    > Task :app:checkDebugDuplicateClasses
+2022-02-08 11:50:34 INFO    > Task :app:mergeLibDexDebug
+2022-02-08 11:50:36 INFO    > Task :app:mergeDebugJniLibFolders
+2022-02-08 11:50:36 INFO    > Task :app:processDebugManifestForPackage
+2022-02-08 11:50:37 INFO    > Task :app:desugarDebugFileDependencies
+2022-02-08 11:50:37 INFO    > Task :app:mergeDebugNativeLibs
+2022-02-08 11:50:40 INFO    > Task :app:processDebugResources
+2022-02-08 11:50:46 INFO    > Task :app:mergeExtDexDebug
+2022-02-08 11:51:01 INFO
+2022-02-08 11:51:01 INFO    > Task :app:compileDebugKotlin
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (57, 3): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (57, 30): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (100, 22): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (100, 49): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (100, 71): Unnecessary non-null assertion (!!) on a non-null receiver of type CHIPDeviceInfo
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (107, 16): This declaration overrides experimental member of supertype 'Callback' and should be annotated with '@kotlinx.coroutines.ExperimentalCoroutinesApi'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (137, 18): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (137, 45): This declaration is experimental and its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (182, 11): 'onActivityResult(Int, Int, Intent?): Unit' is deprecated. Overrides deprecated member in 'androidx.activity.ComponentActivity'. Deprecated in Java
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/CHIPToolActivity.kt: (221, 57): 'toUpperCase(): String' is deprecated. Use uppercase() instead.
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/bluetooth/BluetoothManager.kt: (46, 34): Parameter 'context' is never used
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/SensorClientFragment.kt: (66, 46): Parameter 'textView' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/SensorClientFragment.kt: (149, 57): Unchecked cast: Any? to (Long, Int, ReadCallback /* = ChipClusters.IntegerAttributeCallback */) -> Unit
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/SensorClientFragment.kt: (164, 67): Unchecked cast: Any? to (Long, Int, ReadCallback /* = ChipClusters.IntegerAttributeCallback */) -> Unit
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (214, 50): Parameter 'parent' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (214, 58): Parameter 'view' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (214, 74): Parameter 'id' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (233, 50): Parameter 'parent' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (233, 58): Parameter 'view' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (233, 74): Parameter 'id' is never used, could be renamed to _
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (338, 39): Unnecessary non-null assertion (!!) on a non-null receiver of type Any
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/ClusterDetailFragment.kt: (341, 13): Unnecessary non-null assertion (!!) on a non-null receiver of type Any
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/HistoryCommandAdapter.kt: (177, 39): Unnecessary non-null assertion (!!) on a non-null receiver of type Any
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/clusterclient/clusterinteraction/HistoryCommandAdapter.kt: (180, 13): Unnecessary non-null assertion (!!) on a non-null receiver of type Any
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/setuppayloadscanner/BarcodeFragment.kt: (138, 19): 'onRequestPermissionsResult(Int, Array<(out) String!>, IntArray): Unit' is deprecated. Deprecated in Java
+2022-02-08 11:51:01 INFO    w: /Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/app/src/main/java/com/google/chip/chiptool/setuppayloadscanner/BarcodeFragment.kt: (233, 9): 'requestPermissions(Array<(out) String!>, Int): Unit' is deprecated. Deprecated in Java
+2022-02-08 11:51:03 INFO
+2022-02-08 11:51:03 INFO    > Task :app:compileDebugJavaWithJavac
+2022-02-08 11:51:03 INFO    > Task :app:compileDebugSources
+2022-02-08 11:51:03 INFO    > Task :app:dexBuilderDebug
+2022-02-08 11:51:03 INFO    > Task :app:mergeProjectDexDebug
+2022-02-08 11:51:03 INFO    > Task :app:mergeDebugJavaResource
+2022-02-08 11:51:04 INFO    > Task :app:stripDebugDebugSymbols
+2022-02-08 11:51:04 INFO    > Task :app:validateSigningDebug
+2022-02-08 11:51:04 INFO    > Task :app:writeDebugAppMetadata
+2022-02-08 11:51:04 INFO    > Task :app:writeDebugSigningConfigVersions
+2022-02-08 11:51:05 INFO    > Task :app:packageDebug
+2022-02-08 11:51:05 INFO    > Task :app:assembleDebug
+2022-02-08 11:51:05 INFO
+2022-02-08 11:51:05 INFO    BUILD SUCCESSFUL in 1m 16s
+2022-02-08 11:51:05 INFO    30 actionable tasks: 30 executed
+2022-02-08 11:51:05 INFO    Command ['/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool/gradlew', '-p', '/Users/makmorit/GitHub/connectedhomeip/src/android/CHIPTool', '-PmatterBuildSrcDir=/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool', '-PmatterSdkSourceBuild=false', '-PbuildDir=/Users/makmorit/GitHub/connectedhomeip/out/android-arm64-chip-tool', 'assembleDebug'] completed
+bash-3.2$

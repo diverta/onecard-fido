@@ -1,0 +1,492 @@
+I: nRF5 802154 radio initialized
+I: 4 Sectors of 4096 bytes
+I: alloc wra: 2, f08
+I: data wra: 2, 600
+I: State changed! Flags: 0x00038200 Current role: 0
+*** Booting Zephyr OS build v2.7.0-ncs1  ***
+I: Init CHIP stack
+I: 670 [DL]BLE address: D3:E8:04:28:53:B9
+I: Starting CHIP task
+I: Init Thread stack
+I: 727 [DL]OpenThread started: OK
+I: 730 [DL]Setting OpenThread device type to MINIMAL END DEVICE
+I: 736 [ZCL]Using ZAP configuration...
+D: 751 [DMG]Failed to read stored attribute (0, 0x0000_0028, 0x0000_0005: a0
+D: 768 [DMG]Failed to read stored attribute (0, 0x0000_0028, 0x0000_0010: a0
+D: 786 [DMG]Failed to read stored attribute (0, 0x0000_002B, 0x0000_0001: a0
+D: 803 [DMG]Failed to read stored attribute (0, 0x0000_002C, 0x0000_0000: a0
+D: 821 [DMG]Failed to read stored attribute (0, 0x0000_002C, 0x0000_0001: a0
+I: 830 [ZCL]Initiating Admin Commissioning cluster.
+I: 835 [ZCL]OpCreds: Initiating OpCreds cluster by writing fabrics list from fabric table.
+D: 843 [DIS]Add fabric pairing table delegate
+E: 847 [ZCL]Trying to write invalid Calendar Type
+E: 851 [ZCL]Failed to write calendar type with error: 0x87
+D: 857 [DMG]Endpoint 1, Cluster 0x0000_0006 update version to b3c808d5
+D: 863 [DIS]Init fabric pairing table with server storage
+D: 922 [DMG]AccessControl: initializing
+D: 926 [DMG]Examples::AccessControlDelegate::Init
+D: 941 [DMG]AccessControl: unable to load stored ACL entries; using empty list instead
+D: 949 [IN]UDP::Init bind&listen port=5540
+D: 953 [IN]UDP::Init bound to port=5540
+D: 956 [IN]TransportMgr initialized
+D: 981 [DIS]DNS-SD StartServer modeHasValue=0 modeValue=0
+D: 986 [DL]Using Thread extended MAC for hostname.
+I: 991 [DIS]Failed to find a valid admin pairing. Node ID unknown
+I: 997 [DIS]Start dns-sd server - no current nodeId
+D: 1002 [DL]Using Thread extended MAC for hostname.
+I: 1017 [DIS]Advertise commission parameter vendorID=9050 productID=20043 discriminator=3840/15
+E: 1026 [DIS]Failed to advertise unprovisioned commissionable node: Error CHIP:0x00000003
+D: 1034 [DIS]Scheduling Discovery timeout in secs=900
+E: 1039 [DIS]Failed to finalize service update: Error CHIP:0x0000001C
+I: 1045 [IN]CASE Server enabling CASE session setups
+D: 1049 [DL]Using Thread extended MAC for hostname.
+I: 1054 [SVR]Server Listening...
+I: 1057 [DL]Device Configuration:
+I: 1071 [DL]  Serial Number: TEST_SN
+I: 1074 [DL]  Vendor Id: 9050 (0x235A)
+I: 1078 [DL]  Product Id: 20043 (0x4E4B)
+I: 1092 [DL]  Hardware Version: 0
+I: 1106 [DL]  Setup Pin Code: 20202021
+I: 1120 [DL]  Setup Discriminator: 3840 (0xF00)
+I: 1135 [DL]  Manufacturing Date: (not set)
+I: 1139 [DL]  Device Type: 65535 (0xFFFF)
+I: 1164 [SVR]SetupQRCode: [MT:W0GU2OTB00KA0648G00]
+I: 1168 [SVR]Copy/paste the below URL in a browser to see the QR Code:
+    https://dhrishi.github.io/connectedhomeip/qrcode.html?data=MT%3AW0GU2OTB00KA0648G00
+I: 1204 [SVR]Manual pairing code: [34970112332]
+I: 1229 [SVR]Long manual pairing code: [749701123309050200434]
+D: 1235 [DL]CHIP task running
+I: 1249 [ZCL]GeneralDiagnosticsDelegate: OnDeviceRebooted
+D: 1254 [DMG]Endpoint 0, Cluster 0x0000_0033 update version to 67c48f99
+I: 1260 [ZCL]PlatformMgrDelegate: OnStartUp
+D: 1264 [EVL]LogEvent event number: 0x0000000000000000 priority: 2, endpoint id:  0x0 cluster id: 0x0000_0028 event id: 0x0 Sys timestamp: 0x00000000000004F0
+D: 94595 [SC]Assigned local session key ID 1
+D: 94599 [SC]Waiting for PBKDF param request
+D: 94603 [DL]CHIPoBLE advertising set to on
+D: 94607 [DIS]DNS-SD StartServer modeHasValue=1 modeValue=1
+D: 94612 [DL]Using Thread extended MAC for hostname.
+I: 94617 [DIS]Failed to find a valid admin pairing. Node ID unknown
+I: 94623 [DIS]Start dns-sd server - no current nodeId
+D: 94628 [DL]Using Thread extended MAC for hostname.
+I: 94644 [DIS]Advertise commission parameter vendorID=9050 productID=20043 discriminator=3840/15
+E: 94653 [DIS]Failed to advertise unprovisioned commissionable node: Error CHIP:0x00000003
+D: 94661 [DIS]Scheduling Discovery timeout in secs=900
+E: 94666 [DIS]Failed to finalize service update: Error CHIP:0x0000001C
+I: 94690 [DL]CHIPoBLE advertising started
+I: 98515 [DL]BLE connection established (ConnId: 0x00)
+I: 98520 [DL]Current number of connections: 1/1
+I: 98525 [DL]CHIPoBLE advertising stopped
+D: 99497 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 99503 [BLE]local and remote recv window sizes = 5
+I: 99507 [BLE]selected BTP version 4
+I: 99511 [BLE]using BTP fragment sizes rx 244 / tx 244.
+D: 99647 [DL]ConnId: 0x00, New CCCD value: 0x0001
+D: 99651 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 6)
+D: 99657 [IN]BLE EndPoint 0x20006808 Connection Complete
+I: 99663 [DL]CHIPoBLE connection established (ConnId: 0x00, GATT MTU: 247)
+D: 99749 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 99797 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 99803 [EM]Received message of type 0x20 with protocolId (0, 0) and MessageCounter:3620366426 on exchange 7795r
+D: 99813 [EM]Handling via exchange: 7795r, Delegate: 0x20003d68
+D: 99818 [SC]Received PBKDF param request
+D: 99822 [SC]Peer assigned session ID 1
+D: 99826 [SC]Found MRP parameters in the message
+D: 99830 [SC]Including MRP parameters in PBKDF param response
+I: 99913 [IN]Prepared unauthenticated message 0x200273c0 to 0x0000000000000000 (0)  of type 0x21 and protocolId (0, 0) on exchange 7795r with MessageCounter:3192174016.
+I: 99927 [IN]Sending unauthenticated msg 0x200273c0 with MessageCounter:3192174016 to 0x0000000000000000 at monotonic time: 99927 msec
+D: 99939 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 130)
+D: 99946 [SC]Sent PBKDF param response
+E: 99949 [DL]Long dispatch time: 153 ms, for event type 16388
+D: 100146 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 100247 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 100253 [EM]Received message of type 0x22 with protocolId (0, 0) and MessageCounter:3620366427 on exchange 7795r
+D: 100263 [EM]Found matching exchange: 7795r, Delegate: 0x20003d68
+D: 100269 [SC]Received spake2p msg1
+I: 100407 [IN]Prepared unauthenticated message 0x20027350 to 0x0000000000000000 (0)  of type 0x23 and protocolId (0, 0) on exchange 7795r with MessageCounter:3192174017.
+I: 100422 [IN]Sending unauthenticated msg 0x20027350 with MessageCounter:3192174017 to 0x0000000000000000 at monotonic time: 100422 msec
+D: 100434 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 124)
+D: 100441 [SC]Sent spake2p msg2
+E: 100444 [DL]Long dispatch time: 197 ms, for event type 16388
+D: 100596 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 100649 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 100655 [EM]Received message of type 0x24 with protocolId (0, 0) and MessageCounter:3620366428 on exchange 7795r
+D: 100665 [EM]Found matching exchange: 7795r, Delegate: 0x20003d68
+D: 100671 [SC]Received spake2p msg3
+D: 100674 [SC]Sending status report. Protocol code 0, exchange 7795
+I: 100681 [IN]Prepared unauthenticated message 0x200273d8 to 0x0000000000000000 (0)  of type 0x40 and protocolId (0, 0) on exchange 7795r with MessageCounter:3192174018.
+I: 100696 [IN]Sending unauthenticated msg 0x200273d8 with MessageCounter:3192174018 to 0x0000000000000000 at monotonic time: 100695 msec
+D: 100708 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 27)
+D: 100714 [IN]New secure session created for device 0xFFFFFFFB00000000, LSID:1 PSID:1!
+I: 100723 [SVR]Commissioning completed session establishment step
+D: 100730 [DL]CHIPoBLE advertising set to off
+I: 100734 [SVR]Device completed Rendezvous process
+D: 100799 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 100804 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 100811 [EM]Received message of type 0x2 with protocolId (0, 1) and MessageCounter:9863658 on exchange 7796r
+D: 100821 [EM]Handling via exchange: 7796r, Delegate: 0x20005cd0
+D: 100826 [IM]Received Read request
+D: 100830 [DMG]IM RH moving to [GeneratingReports]
+D: 100834 [DMG]<RE:Run> Cluster 28, Attribute 2 is dirty
+D: 100840 [DMG]Reading attribute: Cluster=0x0000_0028 Endpoint=0 AttributeId=0x0000_0002 (expanded=0)
+D: 100849 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0028 e=0 p=v
+D: 100857 [DMG]<RE> Sending report (payload has 37 bytes)...
+I: 100863 [IN]Prepared secure message 0x20027620 to 0xFFFFFFFB00000000 (0)  of type 0x5 and protocolId (0, 1) on exchange 7796r with MessageCounter:6985896.
+I: 100877 [IN]Sending encrypted msg 0x20027620 with MessageCounter:6985896 to 0xFFFFFFFB00000000 (0) at monotonic time: 100877 msec
+D: 100888 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 72)
+D: 100895 [DMG]<RE> OnReportConfirm: NumReports = 0
+D: 100899 [DMG]<RE> ReportsInFlight = 0 with readHandler 0, RE has no more messages
+D: 100907 [DMG]IM RH moving to [AwaitingDestruction]
+D: 101049 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 101054 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 101061 [EM]Received message of type 0x2 with protocolId (0, 1) and MessageCounter:9863659 on exchange 7797r
+D: 101071 [EM]Handling via exchange: 7797r, Delegate: 0x20005cd0
+D: 101076 [IM]Received Read request
+D: 101080 [DMG]IM RH moving to [GeneratingReports]
+D: 101085 [DMG]<RE:Run> Cluster 28, Attribute 4 is dirty
+D: 101090 [DMG]Reading attribute: Cluster=0x0000_0028 Endpoint=0 AttributeId=0x0000_0004 (expanded=0)
+D: 101099 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0028 e=0 p=v
+D: 101107 [DMG]<RE> Sending report (payload has 37 bytes)...
+I: 101113 [IN]Prepared secure message 0x20027620 to 0xFFFFFFFB00000000 (0)  of type 0x5 and protocolId (0, 1) on exchange 7797r with MessageCounter:6985897.
+I: 101127 [IN]Sending encrypted msg 0x20027620 with MessageCounter:6985897 to 0xFFFFFFFB00000000 (0) at monotonic time: 101127 msec
+D: 101138 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 72)
+D: 101145 [DMG]<RE> OnReportConfirm: NumReports = 0
+D: 101150 [DMG]<RE> ReportsInFlight = 0 with readHandler 0, RE has no more messages
+D: 101157 [DMG]IM RH moving to [AwaitingDestruction]
+D: 101299 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 101304 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 101311 [EM]Received message of type 0x2 with protocolId (0, 1) and MessageCounter:9863660 on exchange 7798r
+D: 101321 [EM]Handling via exchange: 7798r, Delegate: 0x20005cd0
+D: 101326 [IM]Received Read request
+D: 101330 [DMG]IM RH moving to [GeneratingReports]
+D: 101335 [DMG]<RE:Run> Cluster 28, Attribute 9 is dirty
+D: 101340 [DMG]Reading attribute: Cluster=0x0000_0028 Endpoint=0 AttributeId=0x0000_0009 (expanded=0)
+D: 101349 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0028 e=0 p=v
+D: 101357 [DMG]<RE> Sending report (payload has 36 bytes)...
+I: 101363 [IN]Prepared secure message 0x20027620 to 0xFFFFFFFB00000000 (0)  of type 0x5 and protocolId (0, 1) on exchange 7798r with MessageCounter:6985898.
+I: 101377 [IN]Sending encrypted msg 0x20027620 with MessageCounter:6985898 to 0xFFFFFFFB00000000 (0) at monotonic time: 101377 msec
+D: 101388 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 71)
+D: 101395 [DMG]<RE> OnReportConfirm: NumReports = 0
+D: 101400 [DMG]<RE> ReportsInFlight = 0 with readHandler 0, RE has no more messages
+D: 101407 [DMG]IM RH moving to [AwaitingDestruction]
+D: 101549 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 101554 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 101561 [EM]Received message of type 0x2 with protocolId (0, 1) and MessageCounter:9863661 on exchange 7799r
+D: 101571 [EM]Handling via exchange: 7799r, Delegate: 0x20005cd0
+D: 101576 [IM]Received Read request
+D: 101580 [DMG]IM RH moving to [GeneratingReports]
+D: 101585 [DMG]<RE:Run> Cluster 31, Attribute fffc is dirty
+D: 101590 [DMG]Reading attribute: Cluster=0x0000_0031 Endpoint=0 AttributeId=0x0000_FFFC (expanded=1)
+D: 101599 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0031 e=0 p=v
+D: 101607 [DMG]<RE> Sending report (payload has 37 bytes)...
+I: 101613 [IN]Prepared secure message 0x20027620 to 0xFFFFFFFB00000000 (0)  of type 0x5 and protocolId (0, 1) on exchange 7799r with MessageCounter:6985899.
+I: 101627 [IN]Sending encrypted msg 0x20027620 with MessageCounter:6985899 to 0xFFFFFFFB00000000 (0) at monotonic time: 101627 msec
+D: 101639 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 72)
+D: 101645 [DMG]<RE> OnReportConfirm: NumReports = 0
+D: 101650 [DMG]<RE> ReportsInFlight = 0 with readHandler 0, RE has no more messages
+D: 101657 [DMG]IM RH moving to [AwaitingDestruction]
+D: 101849 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 101854 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 101861 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863662 on exchange 7800r
+D: 101871 [EM]Handling via exchange: 7800r, Delegate: 0x20005cd0
+D: 101877 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0030 e=0 p=o
+D: 101885 [DMG]Received command for Endpoint=0 Cluster=0x0000_0030 Command=0x0000_0000
+D: 101893 [DMG]ICR moving to [AddingComm]
+D: 101896 [DMG]ICR moving to [AddedComma]
+D: 101900 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 101907 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7800r with MessageCounter:6985900.
+I: 101921 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985900 to 0xFFFFFFFB00000000 (0) at monotonic time: 101921 msec
+D: 101933 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 71)
+D: 101939 [DMG]ICR moving to [CommandSen]
+D: 101943 [DMG]ICR moving to [AwaitingDe]
+D: 102049 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 102097 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 102103 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863663 on exchange 7801r
+D: 102113 [EM]Handling via exchange: 7801r, Delegate: 0x20005cd0
+D: 102119 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0030 e=0 p=o
+D: 102127 [DMG]Received command for Endpoint=0 Cluster=0x0000_0030 Command=0x0000_0002
+D: 102154 [DMG]ICR moving to [AddingComm]
+D: 102158 [DMG]ICR moving to [AddedComma]
+D: 102162 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 102169 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7801r with MessageCounter:6985901.
+I: 102183 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985901 to 0xFFFFFFFB00000000 (0) at monotonic time: 102182 msec
+D: 102194 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 71)
+D: 102201 [DMG]ICR moving to [CommandSen]
+D: 102205 [DMG]ICR moving to [AwaitingDe]
+E: 102208 [DL]Long dispatch time: 111 ms, for event type 16388
+D: 102349 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 102354 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 102361 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863664 on exchange 7802r
+D: 102371 [EM]Handling via exchange: 7802r, Delegate: 0x20005cd0
+D: 102377 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 102385 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_0002
+I: 102393 [ZCL]OpCreds: Certificate Chain request received for PAI
+D: 102399 [DMG]ICR moving to [AddingComm]
+D: 102402 [DMG]ICR moving to [AddedComma]
+D: 102406 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 102413 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7802r with MessageCounter:6985902.
+I: 102427 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985902 to 0xFFFFFFFB00000000 (0) at monotonic time: 102427 msec
+D: 102439 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 102445 [DMG]ICR moving to [CommandSen]
+D: 102449 [DMG]ICR moving to [AwaitingDe]
+D: 102746 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 102752 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 103096 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 103102 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 57)
+D: 103249 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 103254 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 103261 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863665 on exchange 7803r
+D: 103271 [EM]Handling via exchange: 7803r, Delegate: 0x20005cd0
+D: 103277 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 103285 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_0002
+I: 103293 [ZCL]OpCreds: Certificate Chain request received for DAC
+D: 103299 [DMG]ICR moving to [AddingComm]
+D: 103302 [DMG]ICR moving to [AddedComma]
+D: 103306 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 103313 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7803r with MessageCounter:6985903.
+I: 103327 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985903 to 0xFFFFFFFB00000000 (0) at monotonic time: 103327 msec
+D: 103339 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 103346 [DMG]ICR moving to [CommandSen]
+D: 103350 [DMG]ICR moving to [AwaitingDe]
+D: 103696 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 103702 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 104047 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 104053 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 79)
+D: 104151 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 104182 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 104188 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863666 on exchange 7804r
+D: 104198 [EM]Handling via exchange: 7804r, Delegate: 0x20005cd0
+D: 104204 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 104213 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_0000
+I: 104221 [ZCL]OpCreds: received an AttestationRequest
+D: 104244 [DMG]ICR moving to [AddingComm]
+D: 104248 [DMG]ICR moving to [AddedComma]
+D: 104252 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 104259 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7804r with MessageCounter:6985904.
+I: 104273 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985904 to 0xFFFFFFFB00000000 (0) at monotonic time: 104273 msec
+D: 104284 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 104291 [DMG]ICR moving to [CommandSen]
+D: 104295 [DMG]ICR moving to [AwaitingDe]
+E: 104298 [DL]Long dispatch time: 116 ms, for event type 16388
+D: 104406 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 104412 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 172)
+D: 104481 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 104662 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 104668 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863667 on exchange 7805r
+D: 104678 [EM]Handling via exchange: 7805r, Delegate: 0x20005cd0
+D: 104684 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 104693 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_0004
+I: 104700 [ZCL]OpCreds: commissioner has requested a CSR
+I: 104757 [ZCL]OpCreds: NewCertificateSigningRequest returned 0
+D: 104782 [DMG]ICR moving to [AddingComm]
+D: 104786 [DMG]ICR moving to [AddedComma]
+D: 104789 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 104797 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7805r with MessageCounter:6985905.
+I: 104811 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985905 to 0xFFFFFFFB00000000 (0) at monotonic time: 104810 msec
+D: 104822 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 244)
+D: 104829 [DMG]ICR moving to [CommandSen]
+D: 104833 [DMG]ICR moving to [AwaitingDe]
+E: 104836 [DL]Long dispatch time: 174 ms, for event type 16388
+D: 104916 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 104922 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 137)
+D: 104976 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 105112 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 105144 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 105150 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863668 on exchange 7806r
+D: 105160 [EM]Handling via exchange: 7806r, Delegate: 0x20005cd0
+D: 105166 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 105175 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_000B
+I: 105182 [ZCL]OpCreds: commissioner has added a trusted root Cert
+D: 105188 [DMG]ICR moving to [AddingComm]
+D: 105192 [DMG]ICR moving to [AddedComma]
+D: 105196 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950c9
+D: 105202 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 105210 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (0)  of type 0x9 and protocolId (0, 1) on exchange 7806r with MessageCounter:6985906.
+I: 105223 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985906 to 0xFFFFFFFB00000000 (0) at monotonic time: 105223 msec
+D: 105235 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 68)
+D: 105242 [DMG]ICR moving to [CommandSen]
+D: 105245 [DMG]ICR moving to [AwaitingDe]
+E: 105249 [DL]Long dispatch time: 105 ms, for event type 16388
+D: 105276 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 105367 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 105414 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 105420 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863669 on exchange 7807r
+D: 105430 [EM]Handling via exchange: 7807r, Delegate: 0x20005cd0
+D: 105436 [DMG]AccessControl: checking f=0 a=p s=0xFFFFFFFB00000000 t= c=0x0000_003E e=0 p=o
+D: 105445 [DMG]Received command for Endpoint=0 Cluster=0x0000_003E Command=0x0000_0006
+I: 105452 [ZCL]OpCreds: commissioner has added a NOC
+I: 105468 [DIS]Verifying the received credentials
+D: 105499 [IN]Generating compressed fabric ID using uncompressed fabric ID 0x0000000000000000 and root pubkey
+D: 105509 [IN]0x04, 0x8a, 0x0a, 0x9f, 0xfd, 0x4c, 0x38, 0x13,
+D: 105514 [IN]0xf0, 0x08, 0xc2, 0xf0, 0xb4, 0xcc, 0x85, 0xfb,
+D: 105520 [IN]0x02, 0x11, 0x10, 0x56, 0x94, 0x2c, 0x36, 0xad,
+D: 105526 [IN]0x34, 0x1d, 0x3b, 0x37, 0x68, 0x6c, 0xa9, 0xb2,
+D: 105531 [IN]0x53, 0x1f, 0xc7, 0x9c, 0x78, 0x00, 0x4a, 0x94,
+D: 105537 [IN]0xd8, 0x7e, 0x30, 0x3a, 0x3d, 0xee, 0x24, 0xe8,
+D: 105543 [IN]0xae, 0x3e, 0x96, 0xc0, 0xe1, 0x1a, 0x5c, 0xc3,
+D: 105548 [IN]0x08, 0x20, 0x7b, 0xe6, 0x12, 0x97, 0x56, 0xb5,
+D: 105554 [IN]0xf1,
+D: 105556 [IN]Generated compressed fabric ID
+D: 105561 [IN]0x3c, 0x72, 0xea, 0x9c, 0xec, 0x6f, 0x7c, 0x80,
+I: 105566 [DIS]Added new fabric at index: 1, Initialized: 1
+I: 105572 [DIS]Assigned compressed fabric ID: 0x3C72EA9CEC6F7C80, node ID: 0x0000000000000006
+I: 105580 [DIS]Fabric (1) loaded from storage. Calling OnFabricRetrievedFromStorage
+I: 105587 [ZCL]OpCreds: Fabric 0x1 was retrieved from storage. FabricId 0x0000000000000000, NodeId 0x0000000000000006, VendorId 0x0000
+I: 105599 [ZCL]OpCreds: Call to fabricListChanged
+D: 105603 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950ca
+D: 105610 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950cb
+I: 105639 [DIS]Fabric (1) persisted to storage. Calling OnFabricPersistedToStorage
+I: 105646 [ZCL]OpCreds: Fabric 1 was persisted to storage. FabricId 0000000000000000, NodeId 0000000000000006, VendorId 0x0000
+I: 105657 [ZCL]OpCreds: Call to fabricListChanged
+D: 105661 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950cc
+D: 105668 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950cd
+I: 105675 [DIS]Fabric (1) loaded from storage. Calling OnFabricRetrievedFromStorage
+I: 105682 [ZCL]OpCreds: Fabric 0x1 was retrieved from storage. FabricId 0x0000000000000000, NodeId 0x0000000000000006, VendorId 0x0000
+I: 105694 [ZCL]OpCreds: Call to fabricListChanged
+D: 105698 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950ce
+D: 105705 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950cf
+I: 105717 [DIS]Fabric (1) persisted to storage. Calling OnFabricPersistedToStorage
+I: 105724 [ZCL]OpCreds: Fabric 1 was persisted to storage. FabricId 0000000000000000, NodeId 0000000000000006, VendorId 0x0000
+I: 105735 [ZCL]OpCreds: Call to fabricListChanged
+D: 105740 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950d0
+D: 105746 [DMG]Endpoint 0, Cluster 0x0000_003E update version to 659950d1
+I: 105969 [ZCL]OpCreds: ACL entry created for Fabric 1 CASE Admin NodeId 0x000000000001B669
+D: 105977 [DL]Using Thread extended MAC for hostname.
+I: 105982 [DIS]Advertise operational node 3C72EA9CEC6F7C80-0000000000000006
+D: 105989 [DMG]ICR moving to [AddingComm]
+D: 105993 [DMG]ICR moving to [AddedComma]
+I: 105997 [ZCL]OpCreds: successfully added a NOC
+D: 106001 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 106008 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (1)  of type 0x9 and protocolId (0, 1) on exchange 7807r with MessageCounter:6985907.
+I: 106022 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985907 to 0xFFFFFFFB00000000 (1) at monotonic time: 106022 msec
+D: 106034 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 71)
+D: 106040 [DMG]ICR moving to [CommandSen]
+D: 106044 [DMG]ICR moving to [AwaitingDe]
+E: 106048 [DL]Long dispatch time: 634 ms, for event type 16388
+D: 106086 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 106118 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 106125 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863670 on exchange 7808r
+D: 106134 [EM]Handling via exchange: 7808r, Delegate: 0x20005cd0
+D: 106141 [DMG]AccessControl: checking f=1 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0031 e=0 p=o
+D: 106149 [DMG]Received command for Endpoint=0 Cluster=0x0000_0031 Command=0x0000_0003
+D: 106157 [ZCL]AddOrUpdateThreadNetwork: 0
+D: 106160 [DMG]ICR moving to [AddingComm]
+D: 106164 [DMG]ICR moving to [AddedComma]
+D: 106168 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 106175 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (1)  of type 0x9 and protocolId (0, 1) on exchange 7808r with MessageCounter:6985908.
+I: 106189 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985908 to 0xFFFFFFFB00000000 (1) at monotonic time: 106189 msec
+D: 106201 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 71)
+D: 106207 [DMG]ICR moving to [CommandSen]
+D: 106211 [DMG]ICR moving to [AwaitingDe]
+D: 106251 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 106282 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+I: 106288 [EM]Received message of type 0x8 with protocolId (0, 1) and MessageCounter:9863671 on exchange 7809r
+D: 106298 [EM]Handling via exchange: 7809r, Delegate: 0x20005cd0
+D: 106304 [DMG]AccessControl: checking f=1 a=p s=0xFFFFFFFB00000000 t= c=0x0000_0031 e=0 p=o
+D: 106313 [DMG]Received command for Endpoint=0 Cluster=0x0000_0031 Command=0x0000_0006
+I: State changed! Flags: 0x1006c100 Current role: 0
+I: State changed! Flags: 0x1100101d Current role: 1
+D: 106358 [DL]Using Thread extended MAC for hostname.
+I: 106362 [DIS]Advertise operational node 3C72EA9CEC6F7C80-0000000000000006
+E: 106369 [SVR]Operational advertising enabled
+D: 106373 [DMG]ICR moving to [AddingComm]
+D: 106377 [DMG]ICR moving to [AddedComma]
+D: 106381 [DMG]Decreasing reference count for CommandHandler, remaining 0
+I: 106388 [IN]Prepared secure message 0x20027450 to 0xFFFFFFFB00000000 (1)  of type 0x9 and protocolId (0, 1) on exchange 7809r with MessageCounter:6985909.
+I: 106402 [IN]Sending encrypted msg 0x20027450 with MessageCounter:6985909 to 0xFFFFFFFB00000000 (1) at monotonic time: 106402 msec
+D: 106413 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 74)
+D: 106420 [DMG]ICR moving to [CommandSen]
+D: 106424 [DMG]ICR moving to [AwaitingDe]
+E: 106428 [DL]Long dispatch time: 145 ms, for event type 16388
+D: 106433 [DL]OpenThread State Changed (Flags: 0x1006c100)
+D: 106438 [DL]   Network Name: OpenThread
+D: 106442 [DL]   PAN Id: 0x1234
+D: 106445 [DL]   Extended PAN Id: 0x1111111122222222
+D: 106450 [DL]   Channel: 15
+D: 106453 [DL]   Mesh Prefix: fdde:ad00:beef::/64
+D: 106457 [DL]OpenThread State Changed (Flags: 0x1100101d)
+D: 106463 [DL]   Device Role: DETACHED
+D: 106466 [DL]   Thread Unicast Addresses:
+D: 106470 [DL]        fdde:ad00:beef:0:f88e:cd54:8666:6b05/64 valid
+D: 106476 [DL]        fe80::5cee:5dfe:66f5:7cb0/64 valid preferred
+D: 106482 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+I: 107995 [DL]SRP Client was started, detected server: fd6a:32ca:ce20:4ad6:2235:de58:4291:c49d
+I: State changed! Flags: 0x301132b7 Current role: 2
+I: State changed! Flags: 0x00000001 Current role: 2
+D: 108100 [DL]OpenThread State Changed (Flags: 0x301132b7)
+D: 108106 [DL]   Device Role: CHILD
+D: 108109 [DL]   Network Name: OpenThreadDemo
+D: 108113 [DL]   PAN Id: 0x1234
+D: 108116 [DL]   Extended PAN Id: 0x1111111122222222
+D: 108121 [DL]   Channel: 15
+D: 108124 [DL]   Mesh Prefix: fd6a:32ca:ce20:4ad6::/64
+D: 108128 [DL]   Partition Id: 0x5F55A849
+D: 108132 [DL]   Thread Unicast Addresses:
+D: 108136 [DL]        fd11:22::d7be:2c6b:67f7:7846/64 valid preferred
+D: 108142 [DL]        fd6a:32ca:ce20:4ad6:0:ff:fe00:8401/64 valid rloc
+D: 108149 [DL]        fd6a:32ca:ce20:4ad6:f88e:cd54:8666:6b05/64 valid
+D: 108155 [DL]        fe80::5cee:5dfe:66f5:7cb0/64 valid preferred
+D: 108163 [DL]OpenThread State Changed (Flags: 0x00000001)
+D: 108168 [DL]   Thread Unicast Addresses:
+D: 108172 [DL]        fd11:22::d7be:2c6b:67f7:7846/64 valid preferred
+D: 108178 [DL]        fd6a:32ca:ce20:4ad6:0:ff:fe00:8401/64 valid rloc
+D: 108185 [DL]        fd6a:32ca:ce20:4ad6:f88e:cd54:8666:6b05/64 valid
+D: 108191 [DL]        fe80::5cee:5dfe:66f5:7cb0/64 valid preferred
+E: 108251 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 109012 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+E: 109976 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 111518 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 111547 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+E: 113074 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 114052 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 116559 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 116587 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+E: 118286 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 119092 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 121599 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 121627 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 124132 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 126639 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 126667 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+E: 127145 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 129187 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 131694 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 131722 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 134227 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 136734 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 136762 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 139267 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 141774 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 141802 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+E: 142201 [DL]OnSrpClientNotification: Operation refused for security reasons
+D: 144322 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 146828 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 146857 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 149362 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 151868 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 151942 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 154417 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+D: 156923 [DL]Sending notification for CHIPoBLE TX (ConnId 00, len 3)
+D: 156952 [DL]Notification for CHIPoBLE TX done (ConnId 0x00)
+D: 159472 [DL]Write request received for CHIPoBLE RX (ConnId 0x00)
+E: 161893 [SVR]Commissioning failed with error 32
+E: 161898 [SVR]Commissioning failed (attempt 1): Error CHIP:0x00000032
+D: 161904 [IN]Clearing BLE pending packets.
+I: 161908 [BLE]Releasing end point's BLE connection back to application.
+I: 161914 [DL]Closing BLE GATT connection (ConnId 00)
+D: 161933 [SC]Assigned local session key ID 2
+D: 161937 [SC]Waiting for PBKDF param request
+D: 161941 [DL]CHIPoBLE advertising set to on
+D: 161945 [DIS]DNS-SD StartServer modeHasValue=1 modeValue=1
+D: 161951 [DL]Using Thread extended MAC for hostname.
+D: 161956 [DL]Using Thread extended MAC for hostname.
+I: 161961 [DIS]Advertise operational node 3C72EA9CEC6F7C80-0000000000000006
+E: 161968 [DIS]Failed to advertise operational node: Error CHIP:0x00000003
+I: 161974 [DIS]Have operational credentials
+D: 161978 [DL]Using Thread extended MAC for hostname.
+I: 161996 [DIS]Advertise commission parameter vendorID=9050 productID=20043 discriminator=3840/15
+E: 162005 [DIS]Failed to advertise commissionable node: Error CHIP:0x00000003
+E: 162011 [DIS]Failed to finalize service update: Error CHIP:0x0000001C
+E: 162018 [DL]Long dispatch time: 125 ms, for event type 32784
+I: 162024 [DL]BLE GAP connection terminated (reason 0x16)
+I: 162029 [DL]Current number of connections: 0/1
+I: 162050 [DL]CHIPoBLE advertising started

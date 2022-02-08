@@ -3,12 +3,12 @@
 # Build target
 #   nrf5340dk_nrf5340_cpuapp
 #   nrf52840dk_nrf52840
-export BUILD_TARGET=nrf52840dk_nrf52840
+export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
 
 # Build target
 #   None for Nordic boards
 #   MDBT50Q_dongle_rev2
-export BOARD_TARGET=MDBT50Q_dongle_rev2
+export BOARD_TARGET=
 
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
@@ -16,12 +16,10 @@ export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
 
 # Paths for command
 export PATH=${PATH}:/Applications/CMake.app/Contents/bin
-export PATH=${PATH}:${HOME}/opt/nRF-Command-Line-Tools_10_9_0_OSX/nrfjprog
 export PATH=${PATH}:.
 
 # bash completion
-export REPO_HOME=${HOME}/GitHub/onecard-fido
-export NCS_HOME=${REPO_HOME}/pyvenvs/ncs
+export NCS_HOME=${HOME}/opt/ncs_1.8.99
 export ZEPHYR_BASE=${NCS_HOME}/zephyr
 source ${NCS_HOME}/west-completion.bash
 
