@@ -53,5 +53,12 @@ if [ ${RC} -ne 0 ]; then
     exit 1
 fi
 
+/usr/local/MacGPG2/bin/gpgconf --kill gpg-agent
+RC=`echo $?`
+if [ ${RC} -ne 0 ]; then
+    echo "OpenPGP card kill-agent fail"
+    exit 1
+fi
+
 echo "Execute script for gnupg success"
 exit 0
