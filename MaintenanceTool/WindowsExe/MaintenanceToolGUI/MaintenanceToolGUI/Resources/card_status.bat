@@ -9,4 +9,10 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
+gpgconf --kill gpg-agent
+if %ERRORLEVEL% neq 0 (
+    echo "OpenPGP card kill-agent fail"
+    exit 1
+)
+
 exit 0
