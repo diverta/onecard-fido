@@ -161,22 +161,22 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // コマンドに応じ、以下の処理に分岐
-            switch (RequestType) {
-                case AppCommon.RequestType.OpenPGPStatus:
-                    DoRequestCardStatus();
-                    break;
-                default:
-                    // 次の処理に移行
-                    DoRequestMakeTempFolder();
-                    break;
-            }
+            // 次の処理に移行
+            DoRequestMakeTempFolder();
         }
 
         private void DoRequestCardStatus()
         {
-            // インストールされているGPGコマンドのバージョンを照会
-            DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_STATUS, "gpg", "--card-status", null);
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_status.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            DoRequestCommandLine(GPGCommand.COMMAND_GPG_CARD_STATUS, exe, "", TempFolderPath);
         }
 
         private void DoResponseCardStatus(bool success, string response, string error)
@@ -185,6 +185,7 @@ namespace MaintenanceToolGUI
             if (success) {
                 // レスポンスを保持
                 StatusInfoString = response;
+                CommandSuccess = true;
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
@@ -195,8 +196,8 @@ namespace MaintenanceToolGUI
                 }
             }
 
-            // 処理完了を通知
-            NotifyProcessTerminated(success);
+            // 後処理に移行
+            DoRequestRemoveTempFolder();
         }
 
         private void DoRequestMakeTempFolder()
@@ -220,6 +221,9 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+                case AppCommon.RequestType.OpenPGPStatus:
+                    DoRequestCardStatus();
+                    break;
                 case AppCommon.RequestType.OpenPGPInstallKeys:
                     DoRequestGenerateMainKey();
                     break;

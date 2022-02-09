@@ -51,6 +51,16 @@ rem
 rem List all available certificates
 rem
 gpg -K
+if %ERRORLEVEL% neq 0 (
+    echo "OpenPGP list cert fail"
+    exit 1
+)
+
+gpgconf --kill gpg-agent
+if %ERRORLEVEL% neq 0 (
+    echo "OpenPGP card kill-agent fail"
+    exit 1
+)
 
 echo "Execute script for gnupg success"
 exit 0
