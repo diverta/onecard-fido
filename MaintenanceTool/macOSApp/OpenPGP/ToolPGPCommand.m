@@ -245,13 +245,13 @@ typedef enum : NSInteger {
 
     - (void)doRequestGPGVersion {
         // MacGPGコマンドが存在するかチェック
-        if ([self checkIfFileExist:@"gpg" inFolder:@"/usr/local/bin"] == false) {
+        if ([self checkIfFileExist:@"gpg" inFolder:@"/usr/local/MacGPG2/bin"] == false) {
             [self notifyErrorMessage:MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL];
             [self notifyProcessTerminated:false];
             return;
         }
         // インストールされているMacGPGコマンドのバージョンを照会
-        NSString *path = @"/usr/local/bin/gpg";
+        NSString *path = @"/usr/local/MacGPG2/bin/gpg";
         NSArray *args = @[@"--version"];
         [self doRequestCommandLine:COMMAND_GPG_VERSION commandPath:path commandArgs:args];
     }
