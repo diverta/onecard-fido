@@ -46,6 +46,20 @@ uint8_t ccid_openpgp_pin_pw1_mode82_get(void)
     return m_pw1_mode & 0x02;
 }
 
+void ccid_openpgp_pin_pw1_mode_clear(void)
+{
+    m_pw1_mode = 0x00;
+}
+
+void ccid_openpgp_pin_pw_clear_validated(void)
+{
+    PIN_T *pw1 = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+    pw1->is_validated = false;
+
+    PIN_T *pw3 = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
+    pw3->is_validated = false;
+}
+
 uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // パラメーターのチェック
@@ -125,6 +139,12 @@ static void ccid_openpgp_pin_auth_resume(void)
     // 処理が正常終了
     fido_log_info("OpenPGP PIN verification success");
     ccid_openpgp_object_resume_process(SW_NO_ERROR);
+}
+
+uint16_t ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // TODO: 仮の実装です。
+    return SW_INS_NOT_SUPPORTED;
 }
 
 //

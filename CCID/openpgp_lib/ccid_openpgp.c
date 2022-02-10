@@ -410,6 +410,11 @@ static uint16_t openpgp_ins_pso(command_apdu_t *capdu, response_apdu_t *rapdu)
     return ccid_openpgp_crypto_pso(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_change_reference_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_pin_update(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -450,6 +455,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case OPENPGP_INS_PSO:
             rapdu->sw = openpgp_ins_pso(capdu, rapdu);
             break;
+        case OPENPGP_INS_CHANGE_REFERENCE_DATA:
+            rapdu->sw = openpgp_ins_change_reference_data(capdu, rapdu);
+            break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
             break;
@@ -458,4 +466,8 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 void ccid_openpgp_stop_applet(void)
 {
+    // 認証済みフラグをクリア
+    ccid_openpgp_pin_pw1_mode_clear();
+    ccid_openpgp_pin_pw_clear_validated();
+    fido_log_debug("Applet OpenPGP stopped");
 }
