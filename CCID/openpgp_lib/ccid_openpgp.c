@@ -415,6 +415,11 @@ static uint16_t openpgp_ins_change_reference_data(command_apdu_t *capdu, respons
     return ccid_openpgp_pin_update(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_reset_retry_counter(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_pin_reset(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -457,6 +462,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_CHANGE_REFERENCE_DATA:
             rapdu->sw = openpgp_ins_change_reference_data(capdu, rapdu);
+            break;
+        case OPENPGP_INS_RESET_RETRY_COUNTER:
+            rapdu->sw = openpgp_ins_reset_retry_counter(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

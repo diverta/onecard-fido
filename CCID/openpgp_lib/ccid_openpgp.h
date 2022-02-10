@@ -19,6 +19,7 @@ extern "C" {
 #define OPENPGP_INS_VERIFY                  0x20
 #define OPENPGP_INS_CHANGE_REFERENCE_DATA   0x24
 #define OPENPGP_INS_PSO                     0x2A
+#define OPENPGP_INS_RESET_RETRY_COUNTER     0x2C
 #define OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR 0x47
 #define OPENPGP_INS_ACTIVATE                0x44
 #define OPENPGP_INS_SELECT                  0xA4
