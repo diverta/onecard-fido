@@ -206,8 +206,64 @@ static void ccid_openpgp_pin_update_resume(void)
 
 uint16_t ccid_openpgp_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
-    // TODO: 仮の実装です。
-    return SW_INS_NOT_SUPPORTED;
+    // パラメーターのチェック
+    if ((capdu->p1 != 0x00 && capdu->p1 != 0x02) || capdu->p2 != 0x81) {
+        return SW_WRONG_P1P2;
+    }
+    
+    uint16_t sw;
+    if (capdu->p1 == 0x00) {
+        // リセットコード認証とPINリセットを同時実行する場合
+        // 現在登録されているリセットコードの長さを取得
+        PIN_T *reset_code = ccid_pin_auth_pin_t(OPGP_PIN_RC);
+        uint8_t reset_code_size;
+        sw = ccid_pin_auth_get_code_size(reset_code, &reset_code_size);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
+
+        // リセットコードで認証
+        sw = ccid_pin_auth_verify(reset_code, capdu->data, reset_code_size);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
+
+        // PIN格納領域、PIN長を保持
+        m_new_pin = capdu->data + reset_code_size;
+        m_new_pin_size = capdu->lc - reset_code_size;
+
+    } else {
+        // 事前に管理PINによる認証済みかどうかチェック
+        PIN_T *pw3 = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
+        if (pw3->is_validated == false) {
+            return SW_SECURITY_STATUS_NOT_SATISFIED;
+        }
+
+        // PIN格納領域、PIN長を保持
+        m_new_pin = capdu->data;
+        m_new_pin_size = capdu->lc;
+    }
+
+    // PIN番号を更新し、リトライカウンターをデフォルト値に設定
+    //  Flash ROM更新後、
+    //  ccid_openpgp_pin_retry または
+    //  ccid_openpgp_pin_resume のいずれかが
+    //  コールバックされます。
+    m_pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+    sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_openpgp_object_resume_prepare(capdu, rapdu);
+        m_flash_func = ccid_openpgp_pin_reset;
+    }
+    return sw;
+}
+
+static void ccid_openpgp_pin_reset_resume(void)
+{
+    // 処理が正常終了
+    fido_log_info("OpenPGP PIN reset success");
+    ccid_openpgp_object_resume_process(SW_NO_ERROR);
 }
 
 //
@@ -220,7 +276,7 @@ void ccid_openpgp_pin_retry(void)
         // 現在のリトライカウンターを再度更新
         sw = ccid_pin_auth_update_retries(m_pw);
     }
-    if (m_flash_func == ccid_openpgp_pin_update) {
+    if (m_flash_func == ccid_openpgp_pin_update || m_flash_func == ccid_openpgp_pin_reset) {
         // PIN番号更新を再度実行
         sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
     }
@@ -244,6 +300,10 @@ void ccid_openpgp_pin_resume(bool success)
         if (m_flash_func == ccid_openpgp_pin_update) {
             // Flash ROM書込みが成功した場合はPIN番号更新完了
             ccid_openpgp_pin_update_resume();
+        }
+        if (m_flash_func == ccid_openpgp_pin_reset) {
+            // Flash ROM書込みが成功した場合はPINリセット完了
+            ccid_openpgp_pin_reset_resume();
         }
 
     } else {
