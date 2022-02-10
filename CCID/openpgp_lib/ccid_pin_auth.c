@@ -150,6 +150,51 @@ uint16_t ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len)
     return ccid_pin_func_terminate(SW_NO_ERROR);
 }
 
+uint16_t ccid_pin_auth_get_code_size(PIN_T *pin, uint8_t *size)
+{
+    // パラメーターチェック
+    if (pin == NULL || size == NULL) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // Flash ROMのPINオブジェクトを参照
+    if (restore_pin_object(pin) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    
+    // PINの長さを取得
+    *size = stored_pin_size;
+    return ccid_pin_func_terminate(SW_NO_ERROR);
+}
+
+uint16_t ccid_pin_auth_update_code(PIN_T *pin, uint8_t *new_pin, uint8_t new_pin_size)
+{
+    // Flash ROMのPINオブジェクトを参照
+    // （登録されていない場合はデフォルトが戻ります）
+    if (restore_pin_object(pin) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // PINの長さをチェック
+    if (new_pin_size < pin->size_min || new_pin_size > pin->size_max) {
+        return SW_WRONG_LENGTH;
+    }
+    
+    // PIN番号格納領域に、新しいPIN番号を設定
+    memcpy(stored_pin, new_pin, new_pin_size);
+    
+    // 新しいPIN番号の長さを設定
+    stored_pin_size = new_pin_size;
+    
+    // 新しいPINと、デフォルトのリトライカウンターをセットで登録
+    if (ccid_openpgp_object_pin_set(pin, stored_pin, stored_pin_size, pin->default_retries) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 一時読込領域を初期化して終了
+    return ccid_pin_func_terminate(SW_NO_ERROR);
+}
+
 uint16_t ccid_pin_auth_get_retries(PIN_T *pin) 
 {
     // Flash ROMのPINオブジェクトを参照
