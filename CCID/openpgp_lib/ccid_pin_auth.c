@@ -188,7 +188,7 @@ uint16_t ccid_pin_auth_update_code(PIN_T *pin, uint8_t *new_pin, uint8_t new_pin
     
     // 新しいPINと、デフォルトのリトライカウンターをセットで登録
     if (ccid_openpgp_object_pin_set(pin, stored_pin, stored_pin_size, pin->default_retries) == false) {
-        return SW_UNABLE_TO_PROCESS;
+        return ccid_pin_func_terminate(SW_UNABLE_TO_PROCESS);
     }
 
     // 一時読込領域を初期化して終了
@@ -228,7 +228,7 @@ uint16_t ccid_pin_auth_update_retries(PIN_T *pin)
 
     // PIN／リトライカウンターをセットで登録
     if (ccid_openpgp_object_pin_set(pin, stored_pin, stored_pin_size, pin->current_retries) == false) {
-        return SW_UNABLE_TO_PROCESS;
+        return ccid_pin_func_terminate(SW_UNABLE_TO_PROCESS);
     }
 
     // 一時読込領域を初期化して終了
