@@ -12,6 +12,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// Flash ROM書込み時に実行した関数の参照を保持
+static void *m_flash_func = NULL;
+
 //
 // PIN種別／認証モードを保持
 //
@@ -122,6 +125,7 @@ uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         ccid_openpgp_object_resume_prepare(capdu, rapdu);
+        m_flash_func = ccid_openpgp_pin_auth;
     }
     return sw;
 }
@@ -152,8 +156,11 @@ uint16_t ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu)
 //
 void ccid_openpgp_pin_retry(void)
 {
-    // 現在のリトライカウンターを再度更新
-    uint16_t sw = ccid_pin_auth_update_retries(m_pw);
+    uint16_t sw = SW_NO_ERROR;
+    if (m_flash_func == ccid_openpgp_pin_auth) {
+        // 現在のリトライカウンターを再度更新
+        sw = ccid_pin_auth_update_retries(m_pw);
+    }
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         fido_log_warning("OpenPGP PIN data registration retry");
@@ -167,14 +174,14 @@ void ccid_openpgp_pin_retry(void)
 void ccid_openpgp_pin_resume(bool success)
 {
     if (success) {
-        // Flash ROM書込みが成功した場合はPIN認証完了
-        ccid_openpgp_pin_auth_resume();
+        if (m_flash_func == ccid_openpgp_pin_auth) {
+            // Flash ROM書込みが成功した場合はPIN認証完了
+            ccid_openpgp_pin_auth_resume();
+        }
 
     } else {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
         fido_log_error("OpenPGP PIN data registration fail");
         ccid_openpgp_object_resume_process(SW_UNABLE_TO_PROCESS);
-        return;
     }
-
 }
