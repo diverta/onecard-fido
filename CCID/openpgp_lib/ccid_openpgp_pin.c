@@ -179,18 +179,26 @@ uint16_t ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu)
         return sw;
     }
 
-    // PIN格納領域、PIN長を保持
-    m_new_pin = capdu->data + pin_size;
-    m_new_pin_size = capdu->lc - pin_size;
+    if (m_pw->is_validated == false) {
+        // 認証NGの場合は、現在のリトライカウンターを更新
+        sw = ccid_pin_auth_update_retries(m_pw);
 
-    // PIN番号を更新し、リトライカウンターをデフォルト値に設定
-    //  Flash ROM更新後、
-    //  ccid_openpgp_pin_retry または
-    //  ccid_openpgp_pin_resume のいずれかが
-    //  コールバックされます。
-    sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
+    } else {
+        // PIN格納領域、PIN長を保持
+        m_new_pin = capdu->data + pin_size;
+        m_new_pin_size = capdu->lc - pin_size;
+
+        // 認証OKの場合は、PIN番号を更新し、
+        // リトライカウンターをデフォルト値に設定
+        sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
+    }
+
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        //  Flash ROM更新後、
+        //  ccid_openpgp_pin_retry または
+        //  ccid_openpgp_pin_resume のいずれかが
+        //  コールバックされます。
         ccid_openpgp_object_resume_prepare(capdu, rapdu);
         m_flash_func = ccid_openpgp_pin_update;
     }
@@ -199,6 +207,14 @@ uint16_t ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 static void ccid_openpgp_pin_update_resume(void)
 {
+    if (m_pw->is_validated == false) {
+        // ccid_pin_auth_verify において
+        // 認証NGの場合は、現在のリトライカウンターを戻す
+        fido_log_error("OpenPGP PIN update fail");
+        ccid_openpgp_object_resume_process(SW_PIN_RETRIES + m_pw->current_retries);
+        return;
+    }
+
     // 処理が正常終了
     fido_log_info("OpenPGP PIN update success");
     ccid_openpgp_object_resume_process(SW_NO_ERROR);
