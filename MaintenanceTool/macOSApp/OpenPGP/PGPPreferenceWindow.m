@@ -228,6 +228,11 @@
         }
     }
 
+#pragma mark - PIN番号管理タブ関連
+
+    - (IBAction)buttonPinCommandSelected:(id)sender {
+    }
+
 #pragma mark - 入力チェック関連
 
     - (bool)checkForInstallPGPKey:(id)sender {
