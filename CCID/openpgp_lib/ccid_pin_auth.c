@@ -48,6 +48,12 @@ static uint16_t ccid_pin_func_terminate(uint16_t sw)
     return sw;
 }
 
+bool ccid_pin_auth_assert_admin(void)
+{
+    // 管理機能認証が行われているかどうかを戻す
+    return pw3.is_validated;
+}
+
 //
 // 関数群
 //

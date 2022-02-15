@@ -19,13 +19,6 @@
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 
-static bool assert_validated_admin(void)
-{
-    // 管理機能認証が行われているかどうかを戻す
-    PIN_T *pw3 = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
-    return pw3->is_validated;
-}
-
 //
 // 初期化処理関連
 //
@@ -55,7 +48,7 @@ uint16_t ccid_openpgp_data_terminate(command_apdu_t *capdu, response_apdu_t *rap
 
     // 管理機能認証が行われていない場合は終了
     if (retries_pw3 > 0) {
-        if (assert_validated_admin() == false) {
+        if (ccid_pin_auth_assert_admin() == false) {
             return SW_SECURITY_STATUS_NOT_SATISFIED;
         }
     }
@@ -187,7 +180,7 @@ static uint16_t update_data_object(command_apdu_t *capdu_)
 uint16_t ccid_openpgp_data_put(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // 管理機能認証が行われていない場合は終了
-    if (assert_validated_admin() == false) {
+    if (ccid_pin_auth_assert_admin() == false) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
