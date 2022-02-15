@@ -262,9 +262,8 @@ uint16_t ccid_openpgp_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
         }
 
     } else {
-        // 事前に管理PINによる認証済みかどうかチェック
-        PIN_T *pw3 = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
-        if (pw3->is_validated == false) {
+        // 管理用PINによる認証が行われていない場合は終了
+        if (ccid_pin_auth_assert_admin() == false) {
             return SW_SECURITY_STATUS_NOT_SATISFIED;
         }
 
