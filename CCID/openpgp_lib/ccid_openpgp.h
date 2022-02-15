@@ -17,7 +17,9 @@ extern "C" {
 #define OPENPGP_TEST_DATA
 
 #define OPENPGP_INS_VERIFY                  0x20
+#define OPENPGP_INS_CHANGE_REFERENCE_DATA   0x24
 #define OPENPGP_INS_PSO                     0x2A
+#define OPENPGP_INS_RESET_RETRY_COUNTER     0x2C
 #define OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR 0x47
 #define OPENPGP_INS_ACTIVATE                0x44
 #define OPENPGP_INS_SELECT                  0xA4
@@ -71,6 +73,7 @@ extern "C" {
 #define TAG_KEY_SIG_GENERATION_DATES        0xCE
 #define TAG_KEY_DEC_GENERATION_DATES        0xCF
 #define TAG_KEY_AUT_GENERATION_DATES        0xD0
+#define TAG_RESETTING_CODE                  0xD3
 #define TAG_KEY_INFO                        0xDE
 
 #define OPGP_MAX_CERT_LENGTH                0x480

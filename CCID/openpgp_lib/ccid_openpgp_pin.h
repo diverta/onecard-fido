@@ -20,7 +20,12 @@ void        ccid_openpgp_pin_pw1_mode81_set(bool b);
 void        ccid_openpgp_pin_pw1_mode82_set(bool b);
 uint8_t     ccid_openpgp_pin_pw1_mode81_get(void);
 uint8_t     ccid_openpgp_pin_pw1_mode82_get(void);
+void        ccid_openpgp_pin_pw1_mode_clear(void);
+void        ccid_openpgp_pin_pw_clear_validated(void);
 uint16_t    ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_pin_update_reset_code(command_apdu_t *capdu, response_apdu_t *rapdu);
 void        ccid_openpgp_pin_retry(void);
 void        ccid_openpgp_pin_resume(bool success);
 
