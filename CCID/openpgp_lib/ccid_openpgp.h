@@ -73,6 +73,7 @@ extern "C" {
 #define TAG_KEY_SIG_GENERATION_DATES        0xCE
 #define TAG_KEY_DEC_GENERATION_DATES        0xCF
 #define TAG_KEY_AUT_GENERATION_DATES        0xD0
+#define TAG_RESETTING_CODE                  0xD3
 #define TAG_KEY_INFO                        0xDE
 
 #define OPGP_MAX_CERT_LENGTH                0x480

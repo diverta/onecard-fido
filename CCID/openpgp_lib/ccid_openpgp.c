@@ -377,6 +377,11 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
 
 static uint16_t openpgp_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
+    uint16_t tag = (uint16_t)(capdu->p1 << 8) | capdu->p2;
+    if (tag == TAG_RESETTING_CODE) {
+        return ccid_openpgp_pin_update_reset_code(capdu, rapdu);
+    }
+
     return ccid_openpgp_data_put(capdu, rapdu);
 }
 

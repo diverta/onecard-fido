@@ -305,6 +305,12 @@ static void ccid_openpgp_pin_reset_resume(void)
     ccid_openpgp_object_resume_process(SW_NO_ERROR);
 }
 
+uint16_t ccid_openpgp_pin_update_reset_code(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // TODO: 仮の実装です。
+    return SW_INS_NOT_SUPPORTED;
+}
+
 //
 // Flash ROM更新後のコールバック関数
 //
