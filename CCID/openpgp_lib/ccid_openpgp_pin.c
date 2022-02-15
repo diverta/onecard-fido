@@ -333,8 +333,47 @@ static void ccid_openpgp_pin_reset_resume(void)
 
 uint16_t ccid_openpgp_pin_update_reset_code(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
-    // TODO: 仮の実装です。
-    return SW_INS_NOT_SUPPORTED;
+    // 管理用PINによる認証が行われていない場合は終了
+    if (ccid_pin_auth_assert_admin() == false) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+
+    // リセットコードの参照を取得
+    m_pw = ccid_pin_auth_pin_t(OPGP_PIN_RC);
+
+    // パラメーターチェック
+    if ((capdu->lc > 0 && capdu->lc < m_pw->size_min) || capdu->lc > m_pw->size_max) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // リセットコードをクリア（未サポート）
+    if (capdu->lc == 0) {
+        return SW_WRONG_P1P2;
+    }
+
+    // リセットコードの格納領域／長さを保持
+    m_new_pin = capdu->data;
+    m_new_pin_size = capdu->lc;
+
+    // リセットコードを更新し、リトライカウンターをデフォルト値に設定
+    //  Flash ROM更新後、
+    //  ccid_openpgp_pin_retry または
+    //  ccid_openpgp_pin_resume のいずれかが
+    //  コールバックされます。
+    uint16_t sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_openpgp_object_resume_prepare(capdu, rapdu);
+        m_flash_func = ccid_openpgp_pin_update_reset_code;
+    }
+    return sw;
+}
+
+static void ccid_openpgp_pin_update_reset_code_resume(void)
+{
+    // 処理が正常終了
+    fido_log_info("OpenPGP update resetting code success");
+    ccid_openpgp_object_resume_process(SW_NO_ERROR);
 }
 
 //
@@ -362,6 +401,10 @@ void ccid_openpgp_pin_retry(void)
 
     } else if (m_flash_func == ccid_openpgp_pin_reset) {
         // PIN番号更新を再度実行
+        sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
+
+    } else if (m_flash_func == ccid_openpgp_pin_update_reset_code) {
+        // リセットコード更新を再度実行
         sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
     }
 
@@ -393,6 +436,10 @@ void ccid_openpgp_pin_resume(bool success)
         } else if (m_flash_func == ccid_openpgp_pin_reset) {
             // Flash ROM書込みが成功した場合はPINリセット完了
             ccid_openpgp_pin_reset_resume();
+
+        } else if (m_flash_func == ccid_openpgp_pin_update_reset_code) {
+            // Flash ROM書込みが成功した場合はリセットコード更新完了
+            ccid_openpgp_pin_update_reset_code_resume();
         }
 
     } else {
