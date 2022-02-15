@@ -319,8 +319,8 @@ void ccid_openpgp_pin_retry(void)
     if (m_flash_func == ccid_openpgp_pin_auth) {
         // 現在のリトライカウンターを再度更新
         sw = ccid_pin_auth_update_retries(m_pw);
-    }
-    if (m_flash_func == ccid_openpgp_pin_update || m_flash_func == ccid_openpgp_pin_reset) {
+
+    } else if (m_flash_func == ccid_openpgp_pin_update || m_flash_func == ccid_openpgp_pin_reset) {
         if (m_pw->is_validated == false) {
             // 現在のリトライカウンターを再度更新
             sw = ccid_pin_auth_update_retries(m_pw);
@@ -329,6 +329,7 @@ void ccid_openpgp_pin_retry(void)
             sw = ccid_pin_auth_update_code(m_pw, m_new_pin, m_new_pin_size);
         }
     }
+
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         fido_log_warning("OpenPGP PIN data registration retry");
@@ -345,12 +346,12 @@ void ccid_openpgp_pin_resume(bool success)
         if (m_flash_func == ccid_openpgp_pin_auth) {
             // Flash ROM書込みが成功した場合はPIN認証完了
             ccid_openpgp_pin_auth_resume();
-        }
-        if (m_flash_func == ccid_openpgp_pin_update) {
+
+        } else if (m_flash_func == ccid_openpgp_pin_update) {
             // Flash ROM書込みが成功した場合はPIN番号更新完了
             ccid_openpgp_pin_update_resume();
-        }
-        if (m_flash_func == ccid_openpgp_pin_reset) {
+
+        } else if (m_flash_func == ccid_openpgp_pin_reset) {
             // Flash ROM書込みが成功した場合はPINリセット完了
             ccid_openpgp_pin_reset_resume();
         }
