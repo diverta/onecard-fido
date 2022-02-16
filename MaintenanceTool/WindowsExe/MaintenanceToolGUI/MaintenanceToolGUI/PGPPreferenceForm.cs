@@ -501,7 +501,7 @@ namespace MaintenanceToolGUI
             }
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            string caption = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_DO_PIN_COMMAND, SelectedPinCommandName);
+            string caption = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, SelectedPinCommandName);
             return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
         }
 
