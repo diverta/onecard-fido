@@ -376,6 +376,11 @@ namespace MaintenanceToolCommon
             OpenPGPInstallKeys,
             OpenPGPStatus,
             OpenPGPReset,
+            OpenPGPChangePin,
+            OpenPGPChangeAdminPin,
+            OpenPGPUnblockPin,
+            OpenPGPSetResetCode,
+            OpenPGPUnblock,
             HidFirmwareReset
         };
     }
