@@ -441,9 +441,62 @@ namespace MaintenanceToolGUI
         }
 
         private bool CheckForPerformPinCommand()
-        {        
-            // 入力欄のチェック
-            if (CheckPinNumbersForPinCommand() == false) {
+        {
+            // チェック用パラメーターの設定
+            string msgCurPin = "";
+            string msgNewPin = "";
+            int minSizeCurPin = 0;
+            int minSizeNewPin = 0;
+            switch (SelectedPinCommand) {
+            case AppCommon.RequestType.OpenPGPChangePin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
+                minSizeCurPin = 6;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+                minSizeNewPin = 8;
+                break;
+            case AppCommon.RequestType.OpenPGPUnblockPin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case AppCommon.RequestType.OpenPGPSetResetCode:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+                minSizeNewPin = 8;
+                break;
+            case AppCommon.RequestType.OpenPGPUnblock:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            default:
+                break;
+            }
+
+            // 現在のPINをチェック
+            if (CheckPinNumberForPinCommand(textCurPin, msgCurPin, minSizeCurPin, 64) == false) {
+                return false;
+            }
+
+            // 新しいPINをチェック
+            if (CheckPinNumberForPinCommand(textNewPin, msgNewPin, minSizeNewPin, 64) == false) {
+                return false;
+            }
+
+            // 確認用PINのラベル
+            string msgNewPinConf = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin);
+
+            // 確認用PINをチェック
+            if (CheckPinConfirm(textNewPinConf, textNewPin, msgNewPinConf) == false) {
                 return false;
             }
 
@@ -452,9 +505,20 @@ namespace MaintenanceToolGUI
             return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
         }
 
-        private bool CheckPinNumbersForPinCommand()
+        private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min, int size_max)
         {
-            // TODO: 仮の実装です。
+            // 長さチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min, size_max);
+            if (FormUtil.checkEntrySize(text, size_min, size_max, informativeText) == false) {
+                return false;
+            }
+
+            // 数字チェック
+            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
+            if (FormUtil.checkIsNumeric(text, informativeText) == false) {
+                return false;
+            }
+
             return true;
         }
 
