@@ -223,9 +223,6 @@ namespace MaintenanceToolGUI
         {
             // ラジオボタンの初期化
             InitButtonPinCommandsWithDefault(radioButton1);
-
-            // テキストボックスの初期化
-            InitTabPinManagementPinFields();
         }
 
         private void InitButtonPinCommandsWithDefault(RadioButton radioButton)
@@ -297,6 +294,9 @@ namespace MaintenanceToolGUI
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
             }
+
+            // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+            InitTabPinManagementPinFields();
         }
 
         //
