@@ -118,6 +118,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPerformPinCommand_Click(object sender, EventArgs e)
         {
+            // 入力欄の内容をチェック
+            if (CheckForPerformPinCommand() == false) {
+                return;
+            }
+
             // TODO: 仮の実装です。
             FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, "この機能は実行できません。");
         }
@@ -212,6 +217,7 @@ namespace MaintenanceToolGUI
         // PIN番号管理タブ関連の処理
         //
         private AppCommon.RequestType SelectedPinCommand { get; set; }
+        private string SelectedPinCommandName { get; set; }
 
         private void InitTabPinManagement()
         {
@@ -254,6 +260,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton1)) {
                 // PIN番号を変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPChangePin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
@@ -261,6 +268,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton2)) {
                 // 管理用PIN番号を変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPChangeAdminPin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM;
@@ -268,6 +276,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton3)) {
                 // PIN番号をリセット
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblockPin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
@@ -275,6 +284,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton4)) {
                 // リセットコードを変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPSetResetCode;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONFIRM;
@@ -282,6 +292,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton5)) {
                 // リセットコードでPIN番号をリセット
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblock;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
                 labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
@@ -429,6 +440,24 @@ namespace MaintenanceToolGUI
             // PIN番号の確認入力内容をチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
             return FormUtil.compareEntry(textPinConfirm, textPin, informativeText);
+        }
+
+        private bool CheckForPerformPinCommand()
+        {        
+            // 入力欄のチェック
+            if (CheckPinNumbersForPinCommand() == false) {
+                return false;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string caption = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_DO_PIN_COMMAND, SelectedPinCommandName);
+            return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
+        }
+
+        private bool CheckPinNumbersForPinCommand()
+        {
+            // TODO: 仮の実装です。
+            return true;
         }
 
         //
