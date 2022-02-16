@@ -74,6 +74,8 @@
             this.buttonFirmwareReset = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.tabPreference.SuspendLayout();
             this.tabPagePGPKeyManagement.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -384,8 +386,7 @@
             // 
             // button1
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(146, 216);
+            this.button1.Location = new System.Drawing.Point(146, 236);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(160, 23);
             this.button1.TabIndex = 19;
@@ -400,8 +401,7 @@
             this.groupBox6.Controls.Add(this.textBox2);
             this.groupBox6.Controls.Add(this.label11);
             this.groupBox6.Controls.Add(this.label12);
-            this.groupBox6.Enabled = false;
-            this.groupBox6.Location = new System.Drawing.Point(18, 88);
+            this.groupBox6.Location = new System.Drawing.Point(18, 108);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(417, 114);
             this.groupBox6.TabIndex = 18;
@@ -410,7 +410,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(175, 77);
+            this.textBox3.Location = new System.Drawing.Point(185, 77);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(130, 19);
             this.textBox3.TabIndex = 22;
@@ -420,13 +420,13 @@
             // 
             this.label13.Location = new System.Drawing.Point(13, 80);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(155, 12);
+            this.label13.Size = new System.Drawing.Size(160, 12);
             this.label13.TabIndex = 21;
             this.label13.Text = "新しい管理用PIN番号（確認）";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(175, 50);
+            this.textBox1.Location = new System.Drawing.Point(185, 50);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(130, 19);
             this.textBox1.TabIndex = 12;
@@ -434,7 +434,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(175, 23);
+            this.textBox2.Location = new System.Drawing.Point(185, 23);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(130, 19);
             this.textBox2.TabIndex = 11;
@@ -444,7 +444,7 @@
             // 
             this.label11.Location = new System.Drawing.Point(13, 53);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(155, 12);
+            this.label11.Size = new System.Drawing.Size(160, 12);
             this.label11.TabIndex = 20;
             this.label11.Text = "新しい管理用PIN番号";
             // 
@@ -452,19 +452,20 @@
             // 
             this.label12.Location = new System.Drawing.Point(13, 26);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(155, 12);
+            this.label12.Size = new System.Drawing.Size(160, 12);
             this.label12.TabIndex = 19;
             this.label12.Text = "現在の管理用PIN番号";
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.radioButton5);
+            this.groupBox5.Controls.Add(this.radioButton4);
             this.groupBox5.Controls.Add(this.radioButton3);
             this.groupBox5.Controls.Add(this.radioButton2);
             this.groupBox5.Controls.Add(this.radioButton1);
-            this.groupBox5.Enabled = false;
             this.groupBox5.Location = new System.Drawing.Point(18, 20);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(417, 53);
+            this.groupBox5.Size = new System.Drawing.Size(417, 73);
             this.groupBox5.TabIndex = 15;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "実行する機能";
@@ -540,6 +541,26 @@
             this.buttonClose.Text = "閉じる";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(18, 45);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(115, 16);
+            this.radioButton4.TabIndex = 17;
+            this.radioButton4.Text = "リセットコードを変更";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(139, 45);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(175, 16);
+            this.radioButton5.TabIndex = 18;
+            this.radioButton5.Text = "リセットコードでPIN番号をリセット";
+            this.radioButton5.UseVisualStyleBackColor = true;
             // 
             // PGPPreferenceForm
             // 
@@ -627,5 +648,7 @@
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton4;
     }
 }
