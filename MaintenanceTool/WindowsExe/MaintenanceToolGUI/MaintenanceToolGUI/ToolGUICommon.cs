@@ -138,6 +138,15 @@
         public const string MSG_LABEL_PGP_COMMENT = "コメント";
         public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
         public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";
+        public const string MSG_LABEL_ITEM_NEW_PIN = "新しいPIN番号";
+        public const string MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM = "新しいPIN番号（確認）";
+        public const string MSG_LABEL_ITEM_CUR_ADMPIN = "現在の管理用PIN番号";
+        public const string MSG_LABEL_ITEM_NEW_ADMPIN = "新しい管理用PIN番号";
+        public const string MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM = "新しい管理用PIN番号（確認）";
+        public const string MSG_LABEL_ITEM_CUR_RESET_CODE = "現在のリセットコード";
+        public const string MSG_LABEL_ITEM_NEW_RESET_CODE = "新しいリセットコード";
+        public const string MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONFIRM = "新しいリセットコード（確認）";
         public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
         public const string MSG_LABEL_COMMAND_OPENPGP_STATUS = "設定情報の参照";
         public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
