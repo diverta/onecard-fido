@@ -123,8 +123,9 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // TODO: 仮の実装です。
-            FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, "この機能は実行できません。");
+            // PIN番号管理コマンドを実行
+            EnableButtons(false);
+            DoCommandPinManagement();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -551,6 +552,12 @@ namespace MaintenanceToolGUI
             ToolPGPRef.DoCommandResetFirmware();
         }
 
+        private void DoCommandPinManagement()
+        {
+            // TODO: 仮の実装です。
+            OnCommandProcessTerminated(SelectedPinCommand, false, "この機能は実行できません。");
+        }
+
         public void OnCommandProcessTerminated(AppCommon.RequestType requestType, bool success, string errMessage)
         {
             // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
@@ -581,6 +588,13 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.HidFirmwareReset:
                     name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
                     break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    name = SelectedPinCommandName;
+                    break;
                 default:
                     break;
             }
@@ -604,6 +618,15 @@ namespace MaintenanceToolGUI
                     if (success) {
                         InitTabPGPKeyPathFields();
                         InitTabPGPKeyEntryFields();
+                    }
+                    break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    if (success) {
+                        InitTabPinManagementPinFields();
                     }
                     break;
                 default:
