@@ -260,7 +260,6 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
-                labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
             }
             if (sender.Equals(radioButton2)) {
                 // 管理用PIN番号を変更
@@ -268,7 +267,6 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
-                labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM;
             }
             if (sender.Equals(radioButton3)) {
                 // PIN番号をリセット
@@ -276,7 +274,6 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
-                labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
             }
             if (sender.Equals(radioButton4)) {
                 // リセットコードを変更
@@ -284,7 +281,6 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
-                labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONFIRM;
             }
             if (sender.Equals(radioButton5)) {
                 // リセットコードでPIN番号をリセット
@@ -292,8 +288,10 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
                 labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
                 labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
-                labelNewPinConf.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM;
             }
+
+            // 確認欄のキャプションを設定
+            labelNewPinConf.Text = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
 
             // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
             InitTabPinManagementPinFields();

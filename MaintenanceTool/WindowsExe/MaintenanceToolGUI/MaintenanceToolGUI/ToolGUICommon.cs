@@ -118,6 +118,8 @@
         public const string MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE = "PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（{0}）に生成しました。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_WILL_DO_PIN_COMMAND = "{0}します。";
+        public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
+        public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
         public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
         public const string MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE = "生成したPGP秘密鍵（副鍵）を認証器に移動しました。";
         public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
@@ -142,13 +144,10 @@
         public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
         public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";
         public const string MSG_LABEL_ITEM_NEW_PIN = "新しいPIN番号";
-        public const string MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM = "新しいPIN番号（確認）";
         public const string MSG_LABEL_ITEM_CUR_ADMPIN = "現在の管理用PIN番号";
         public const string MSG_LABEL_ITEM_NEW_ADMPIN = "新しい管理用PIN番号";
-        public const string MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM = "新しい管理用PIN番号（確認）";
         public const string MSG_LABEL_ITEM_CUR_RESET_CODE = "現在のリセットコード";
         public const string MSG_LABEL_ITEM_NEW_RESET_CODE = "新しいリセットコード";
-        public const string MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONFIRM = "新しいリセットコード（確認）";
         public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
         public const string MSG_LABEL_COMMAND_OPENPGP_STATUS = "設定情報の参照";
         public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
