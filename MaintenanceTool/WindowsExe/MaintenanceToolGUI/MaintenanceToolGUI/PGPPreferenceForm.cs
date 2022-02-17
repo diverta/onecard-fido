@@ -52,6 +52,11 @@ namespace MaintenanceToolGUI
 
         private void buttonInstallPGPKey_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // 入力欄の内容をチェック
             if (CheckForInstallPGPKey()) {
                 // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
@@ -62,6 +67,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPGPStatus_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // PGPステータス照会処理を実行
             EnableButtons(false);
             DoCommandPGPStatus();
@@ -69,6 +79,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPGPReset_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // プロンプトで表示されるタイトル
             string title = string.Format(
                 ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
@@ -86,6 +101,11 @@ namespace MaintenanceToolGUI
 
         private void buttonFirmwareReset_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // 認証器のファームウェアを再起動
             EnableButtons(false);
             DoCommandResetFirmware();
@@ -118,6 +138,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPerformPinCommand_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // 入力欄の内容をチェック
             if (CheckForPerformPinCommand() == false) {
                 return;

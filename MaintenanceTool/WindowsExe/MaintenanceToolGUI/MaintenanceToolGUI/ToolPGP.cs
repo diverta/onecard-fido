@@ -101,16 +101,16 @@ namespace MaintenanceToolGUI
             return StatusInfoString;
         }
 
+        public bool CheckUSBDeviceDisconnected()
+        {
+            return MainFormRef.CheckUSBDeviceDisconnected();
+        }
+
         //
         // ファームウェアリセット用関数
         //
         public void DoCommandResetFirmware()
         {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
             // HIDインターフェース経由でファームウェアをリセット
             AppCommon.RequestType requestType = AppCommon.RequestType.HidFirmwareReset;
             NotifyProcessStarted(requestType);
@@ -130,11 +130,6 @@ namespace MaintenanceToolGUI
         // 
         public void DoOpenPGPCommand(AppCommon.RequestType requestType, ToolPGPParameter parameter)
         {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
             // 画面から引き渡されたパラメーターを退避
             Parameter = parameter;
 
