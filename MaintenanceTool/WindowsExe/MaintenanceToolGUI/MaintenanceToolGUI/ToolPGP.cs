@@ -19,6 +19,11 @@ namespace MaintenanceToolGUI
         public string Passphrase { get; set; }
         public string PubkeyFolderPath { get; set; }
         public string BackupFolderPath { get; set; }
+        public string CurrentPin { get; set; }
+        public string NewPin { get; set; }
+        public string NewPinForConfirm { get; set; }
+        public AppCommon.RequestType SelectedPinCommand { get; set; }
+        public string SelectedPinCommandName { get; set; }
     }
 
     public class ToolPGP
@@ -66,6 +71,8 @@ namespace MaintenanceToolGUI
             COMMAND_GPG_REMOVE_TEMP_FOLDER,
             COMMAND_GPG_CARD_STATUS,
             COMMAND_GPG_CARD_RESET,
+            COMMAND_GPG_CARD_EDIT_PASSWD,
+            COMMAND_GPG_CARD_EDIT_UNBLOCK,
         };
 
         // リクエストパラメーターを保持
@@ -229,6 +236,15 @@ namespace MaintenanceToolGUI
                     break;
                 case AppCommon.RequestType.OpenPGPReset:
                     DoRequestCardReset();
+                    break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                    DoRequestCardEditPasswd();
+                    break;
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    DoRequestCardEditUnblock();
                     break;
                 default:
                     NotifyProcessTerminated(false);
@@ -447,6 +463,58 @@ namespace MaintenanceToolGUI
                 } else {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED);
                 }
+            }
+
+            // 後処理に移行
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestCardEditPasswd()
+        {
+            // TODO: 仮の実装です。
+            DoResponseCardEditPasswd(true, "", "");
+        }
+
+        private void DoResponseCardEditPasswd(bool success, string response, string error)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(error)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName);
+                    NotifyErrorMessage(message);
+                }
+
+            } else {
+                CommandSuccess = true;
+            }
+
+            // 後処理に移行
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestCardEditUnblock()
+        {
+            // TODO: 仮の実装です。
+            DoResponseCardEditPasswd(true, "", "");
+        }
+
+        private void DoResponseCardEditUnblock(bool success, string response, string error)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(error)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName);
+                    NotifyErrorMessage(message);
+                }
+
+            } else {
+                CommandSuccess = true;
             }
 
             // 後処理に移行
@@ -905,6 +973,12 @@ namespace MaintenanceToolGUI
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response, error);
                     break;
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_PASSWD:
+                    DoResponseCardEditPasswd(success, response, error);
+                    break;
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    DoResponseCardEditUnblock(success, response, error);
+                    break;
             default:
                     break;
             }
@@ -932,6 +1006,13 @@ namespace MaintenanceToolGUI
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
                     NameOfCommand = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
+                    break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    NameOfCommand = Parameter.SelectedPinCommandName;
                     break;
                 default:
                     NameOfCommand = "";

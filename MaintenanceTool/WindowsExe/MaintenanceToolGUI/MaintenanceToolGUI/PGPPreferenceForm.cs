@@ -554,8 +554,14 @@ namespace MaintenanceToolGUI
 
         private void DoCommandPinManagement()
         {
-            // TODO: 仮の実装です。
-            OnCommandProcessTerminated(SelectedPinCommand, false, "この機能は実行できません。");
+            // 入力PINをパラメーターとして、コマンドを実行
+            ToolPGPParameter parameter = new ToolPGPParameter();
+            parameter.CurrentPin = textCurPin.Text;
+            parameter.NewPin = textNewPin.Text;
+            parameter.NewPinForConfirm = textNewPinConf.Text;
+            parameter.SelectedPinCommand = SelectedPinCommand;
+            parameter.SelectedPinCommandName = SelectedPinCommandName;
+            ToolPGPRef.DoOpenPGPCommand(SelectedPinCommand, parameter);
         }
 
         public void OnCommandProcessTerminated(AppCommon.RequestType requestType, bool success, string errMessage)
