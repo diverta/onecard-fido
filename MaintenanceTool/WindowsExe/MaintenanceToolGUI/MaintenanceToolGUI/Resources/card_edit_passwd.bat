@@ -29,7 +29,7 @@ set GNUPGHOME=%TEMPDIR%
 rem
 rem OpenPGP card edit passwd/unblock
 rem
-type %CARD_EDIT_COMMAND% | gpg --command-fd 0 --pinentry-mode loopback %SCRIPT_OPT% --edit-card
+type %CARD_EDIT_COMMAND% | gpg --command-fd 0 --status-fd 1 --pinentry-mode loopback %SCRIPT_OPT% --edit-card
 if %ERRORLEVEL% neq 0 (
     echo "OpenPGP card edit passwd/unblock fail"
     exit 1
