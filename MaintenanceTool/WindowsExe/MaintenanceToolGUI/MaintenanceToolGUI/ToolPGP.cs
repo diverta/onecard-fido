@@ -69,7 +69,7 @@ namespace MaintenanceToolGUI
         };
 
         // リクエストパラメーターを保持
-        private ToolPGPParameter toolPGPParameter = null;
+        private ToolPGPParameter Parameter = null;
 
         public ToolPGP(MainForm f, HIDMain h)
         {
@@ -129,7 +129,7 @@ namespace MaintenanceToolGUI
             }
 
             // 画面から引き渡されたパラメーターを退避
-            toolPGPParameter = parameter;
+            Parameter = parameter;
 
             // コマンド開始処理
             NotifyProcessStarted(requestType);
@@ -254,7 +254,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} --no-tty", TempFolderPath, toolPGPParameter.Passphrase);
+            string param = string.Format("{0} {1} --no-tty", TempFolderPath, Parameter.Passphrase);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY, exe, param, TempFolderPath);
         }
 
@@ -298,7 +298,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_ADD_SUB_KEY, exe, param, TempFolderPath);
         }
 
@@ -330,8 +330,8 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} {3} {4}", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId,
-                toolPGPParameter.PubkeyFolderPath, toolPGPParameter.BackupFolderPath);
+            string param = string.Format("{0} {1} {2} {3} {4}", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId,
+                Parameter.PubkeyFolderPath, Parameter.BackupFolderPath);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP, exe, param, TempFolderPath);
         }
 
@@ -341,8 +341,8 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfPubkeyAndBackupExist()) {
                     // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, toolPGPParameter.PubkeyFolderPath));
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, toolPGPParameter.BackupFolderPath));
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
                     DoRequestTransferSubkeyToCard();
                     return;
                 }
@@ -371,7 +371,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD, exe, param, TempFolderPath);
         }
 
@@ -649,13 +649,13 @@ namespace MaintenanceToolGUI
         private bool CheckIfPubkeyAndBackupExist()
         {
             // 公開鍵ファイルがエクスポート先に存在するかチェック
-            if (CheckIfFileExist("public_key.pgp", toolPGPParameter.PubkeyFolderPath) == false) {
+            if (CheckIfFileExist("public_key.pgp", Parameter.PubkeyFolderPath) == false) {
                 AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
                 return false;
             }
 
             // バックアップファイルがエクスポート先に存在するかチェック
-            if (CheckIfFileExist("GNUPGHOME.tgz", toolPGPParameter.BackupFolderPath) == false) {
+            if (CheckIfFileExist("GNUPGHOME.tgz", Parameter.BackupFolderPath) == false) {
                 AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
                 return false;
             }
@@ -740,7 +740,7 @@ namespace MaintenanceToolGUI
             }
 
             // パラメーターを置き換え
-            string parameterContent = string.Format(scriptContent, toolPGPParameter.RealName, toolPGPParameter.MailAddress, toolPGPParameter.Comment);
+            string parameterContent = string.Format(scriptContent, Parameter.RealName, Parameter.MailAddress, Parameter.Comment);
 
             // パラメーターファイルを作業用フォルダーに書き出し
             string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
