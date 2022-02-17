@@ -471,37 +471,21 @@ namespace MaintenanceToolGUI
 
         private void DoRequestCardEditPasswd()
         {
-            // TODO: 仮の実装です。
-            DoResponseCardEditPasswd(true, "", "");
-        }
-
-        private void DoResponseCardEditPasswd(bool success, string response, string error)
-        {
-            // レスポンスをチェック
-            if (success == false) {
-                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
-                if (CheckIfCardErrorFromResponse(error)) {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
-                } else {
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName);
-                    NotifyErrorMessage(message);
-                }
-
-            } else {
-                CommandSuccess = true;
-            }
-
-            // 後処理に移行
-            DoRequestRemoveTempFolder();
+            DoRequestCardEditPasswdCommand(GPGCommand.COMMAND_GPG_CARD_EDIT_PASSWD);
         }
 
         private void DoRequestCardEditUnblock()
         {
-            // TODO: 仮の実装です。
-            DoResponseCardEditPasswd(true, "", "");
+            DoRequestCardEditPasswdCommand(GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK);
         }
 
-        private void DoResponseCardEditUnblock(bool success, string response, string error)
+        private void DoRequestCardEditPasswdCommand(GPGCommand command)
+        {
+            // TODO: 仮の実装です。
+            DoResponseCardEditPasswdCommand(true, "", "");
+        }
+
+        private void DoResponseCardEditPasswdCommand(bool success, string response, string error)
         {
             // レスポンスをチェック
             if (success == false) {
@@ -974,10 +958,8 @@ namespace MaintenanceToolGUI
                     DoResponseCardReset(success, response, error);
                     break;
                 case GPGCommand.COMMAND_GPG_CARD_EDIT_PASSWD:
-                    DoResponseCardEditPasswd(success, response, error);
-                    break;
                 case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
-                    DoResponseCardEditUnblock(success, response, error);
+                    DoResponseCardEditPasswdCommand(success, response, error);
                     break;
             default:
                     break;
