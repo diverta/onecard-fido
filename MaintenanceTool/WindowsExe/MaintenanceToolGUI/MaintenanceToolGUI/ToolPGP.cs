@@ -476,8 +476,34 @@ namespace MaintenanceToolGUI
 
         private void DoRequestCardEditPasswdCommand(GPGCommand command)
         {
-            // TODO: 仮の実装です。
-            DoResponseCardEditPasswdCommand(true, "", "");
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_edit_passwd.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイル名を設定
+            string paramName;
+            switch (command) {
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    paramName = "card_edit_unblock.param";
+                    break;
+                default:
+                    paramName = "card_edit_passwd.param";
+                    break;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            if (WriteParamForCardEditUnblockToTempFolder(paramName, command) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} --no-tty", TempFolderPath, paramName);
+            DoRequestCommandLine(command, exe, param, TempFolderPath);
         }
 
         private void DoResponseCardEditPasswdCommand(bool success, string response, string error)
@@ -488,12 +514,19 @@ namespace MaintenanceToolGUI
                 if (CheckIfCardErrorFromResponse(error)) {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName);
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERROR, Parameter.SelectedPinCommandName);
                     NotifyErrorMessage(message);
                 }
 
             } else {
-                CommandSuccess = true;
+                // 成功 or 失敗メッセージが出力されているかどうかチェック
+                if (CheckIfOperationSuccess(response)) {
+                    CommandSuccess = true;
+                } else {
+                    string itemName = ItemNameForCardEditPasswdCommand();
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName, itemName);
+                    NotifyErrorMessage(message);
+                }
             }
 
             // 後処理に移行
@@ -758,6 +791,29 @@ namespace MaintenanceToolGUI
             return (header && subKeyS && subKeyE && subKeyA);
         }
 
+        private bool CheckIfOperationSuccess(string response)
+        {
+            // メッセージ検索用文字列
+            string keywordNG = "SC_OP_FAILURE";
+            string keywordOK = "SC_OP_SUCCESS";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keywordNG)) {
+                    // 失敗メッセージが出力されている場合は false
+                    AppCommon.OutputLogError(string.Format("GnuPG operation failed: {0}", text));
+                    return false;
+
+                } else if (text.Contains(keywordOK)) {
+                    // 成功メッセージが出力されている場合は true
+                    return true;
+                }
+            }
+
+            // 所定のメッセージが出力されていない場合は false
+            return false;
+        }
+
         //
         // スクリプト／パラメーターファイル関連
         //
@@ -796,6 +852,64 @@ namespace MaintenanceToolGUI
             }
 
             return true;
+        }
+
+        private bool WriteParamForCardEditUnblockToTempFolder(string scriptName, GPGCommand command)
+        {
+            // パラメーターをリソースから読込み
+            string scriptContent = GetScriptResourceContentString(scriptName);
+            if (scriptContent == null) {
+                return false;
+            }
+
+            // パラメーターを置き換え
+            string parameterContent;
+            switch (command) {
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    parameterContent = string.Format(scriptContent, Parameter.CurrentPin, Parameter.NewPin, Parameter.NewPinForConfirm);
+                    break;
+                default:
+                    parameterContent = string.Format(scriptContent, MenuNoForCardEditPasswdCommand(), Parameter.CurrentPin, Parameter.NewPin, Parameter.NewPinForConfirm);
+                    break;
+            }
+
+            // パラメーターファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(parameterContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string MenuNoForCardEditPasswdCommand()
+        {
+            switch (Parameter.SelectedPinCommand) {
+                case AppCommon.RequestType.OpenPGPChangePin:
+                    return "1";
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                    return "2";
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                    return "3";
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                    return "4";
+                default:
+                    return "Q";
+            }
+        }
+
+        private string ItemNameForCardEditPasswdCommand()
+        {
+            switch (Parameter.SelectedPinCommand) {
+            case AppCommon.RequestType.OpenPGPUnblockPin:
+            case AppCommon.RequestType.OpenPGPChangeAdminPin:
+            case AppCommon.RequestType.OpenPGPSetResetCode:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+            case AppCommon.RequestType.OpenPGPUnblock:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+            default:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_PIN;
+            }
         }
 
         private string GetScriptResourceContentString(string scriptName)
