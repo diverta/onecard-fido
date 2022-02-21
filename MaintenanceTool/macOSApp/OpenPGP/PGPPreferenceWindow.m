@@ -44,6 +44,21 @@
     @property (assign) IBOutlet NSTextField         *textPin;
     @property (assign) IBOutlet NSTextField         *textPinConfirm;
     @property (assign) IBOutlet NSButton            *buttonInstallPGPKey;
+
+    @property (assign) IBOutlet NSTabViewItem       *tabPinManagement;
+    @property (assign) IBOutlet NSButton            *buttonChangePin;
+    @property (assign) IBOutlet NSButton            *buttonChangeAdminPin;
+    @property (assign) IBOutlet NSButton            *buttonUnblockPin;
+    @property (assign) IBOutlet NSButton            *buttonSetResetCode;
+    @property (assign) IBOutlet NSButton            *buttonUnblock;
+    @property (assign) IBOutlet NSTextField         *textCurPin;
+    @property (assign) IBOutlet NSTextField         *textNewPin;
+    @property (assign) IBOutlet NSTextField         *textNewPinConf;
+    @property (assign) IBOutlet NSTextField         *labelCurPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPinConf;
+    @property (assign) IBOutlet NSButton            *buttonPerformPinCommand;
+
     @property (assign) IBOutlet NSButton            *buttonPGPStatus;
     @property (assign) IBOutlet NSButton            *buttonPGPReset;
 
@@ -231,6 +246,9 @@
 #pragma mark - PIN番号管理タブ関連
 
     - (IBAction)buttonPinCommandSelected:(id)sender {
+    }
+
+    - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
     }
 
 #pragma mark - 入力チェック関連
