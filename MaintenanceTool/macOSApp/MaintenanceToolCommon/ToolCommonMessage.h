@@ -334,6 +334,7 @@
 #define MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY   @"PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: %@）。"
 #define MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE   @"PGP公開鍵ファイルを、指定フォルダー（%@）に生成しました。"
 #define MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE   @"PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（%@）に生成しました。"
+#define MSG_FORMAT_OPENPGP_WILL_DO_PIN_COMMAND  @"%@します。"
 #define MSG_OPENPGP_ADDED_SUB_KEYS              @"PGP秘密鍵（副鍵）を新規に生成しました。"
 #define MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE  @"生成したPGP秘密鍵（副鍵）を認証器に移動しました。"
 #define MSG_OPENPGP_REMOVED_TEMPDIR             @"作業用フォルダーを消去しました。"
@@ -350,6 +351,7 @@
 #define MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTHEND @"%@の先頭または末尾の半角スペースを除去してください"
 #define MSG_PROMPT_INSTALL_PGP_KEY              @"インストールを実行しますか？"
 #define MSG_PROMPT_OPENPGP_RESET                @"OpenPGP機能の設定（鍵・PIN番号等）が全て削除され、OpenPGP機能が使用できなくなります。\n\n処理を開始しますか？"
+#define MSG_PROMPT_OPENPGP_PIN_COMMAND          @"処理を実行しますか？"
 #define MSG_LABEL_PGP_REAL_NAME                 @"名前"
 #define MSG_LABEL_PGP_MAIL_ADDRESS              @"メールアドレス"
 #define MSG_LABEL_PGP_COMMENT                   @"コメント"
@@ -367,5 +369,10 @@
 #define MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS  @"PGP秘密鍵のインストール"
 #define MSG_LABEL_COMMAND_OPENPGP_STATUS        @"設定情報の参照"
 #define MSG_LABEL_COMMAND_OPENPGP_RESET         @"設定情報の消去"
+#define MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN        @"PIN番号を変更"
+#define MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN  @"管理用PIN番号を変更"
+#define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN       @"PIN番号をリセット"
+#define MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE    @"リセットコードを変更"
+#define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードでPIN番号をリセット"
 
 #endif /* ToolCommonMessage_h */
