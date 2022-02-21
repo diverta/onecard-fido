@@ -52,6 +52,11 @@ namespace MaintenanceToolGUI
 
         private void buttonInstallPGPKey_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // 入力欄の内容をチェック
             if (CheckForInstallPGPKey()) {
                 // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
@@ -62,6 +67,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPGPStatus_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // PGPステータス照会処理を実行
             EnableButtons(false);
             DoCommandPGPStatus();
@@ -69,6 +79,11 @@ namespace MaintenanceToolGUI
 
         private void buttonPGPReset_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // プロンプトで表示されるタイトル
             string title = string.Format(
                 ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
@@ -86,9 +101,56 @@ namespace MaintenanceToolGUI
 
         private void buttonFirmwareReset_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
             // 認証器のファームウェアを再起動
             EnableButtons(false);
             DoCommandResetFirmware();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void buttonPerformPinCommand_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPGPRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // 入力欄の内容をチェック
+            if (CheckForPerformPinCommand() == false) {
+                return;
+            }
+
+            // PIN番号管理コマンドを実行
+            EnableButtons(false);
+            DoCommandPinManagement();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -113,6 +175,9 @@ namespace MaintenanceToolGUI
             // PGP鍵管理タブ内の入力項目を初期化（このタブが選択状態になります）
             tabPreference.SelectedTab = tabPagePGPKeyManagement;
             InitTabPGPKeyManagement();
+
+            // PIN番号管理タブ内の入力項目を初期化
+            InitTabPinManagement();
         }
 
         private void InitTabPGPKeyManagement()
@@ -152,8 +217,11 @@ namespace MaintenanceToolGUI
 
             // 現在選択中のタブ内も同様に制御を行う
             TabPage page = tabPreference.SelectedTab;
-            if (page == tabPagePGPKeyManagement) {
+            if (page.Equals(tabPagePGPKeyManagement)) {
                 EnableButtonsInTabPGPKeyManagement(enabled);
+            }
+            if (page.Equals(tabPagePinManagement)) {
+                EnableButtonsInTabPinManagement(enabled);
             }
         }
 
@@ -169,6 +237,90 @@ namespace MaintenanceToolGUI
             buttonPubkeyFolderPath.Enabled = enabled;
             buttonBackupFolderPath.Enabled = enabled;
             buttonInstallPGPKey.Enabled = enabled;
+        }
+
+        //
+        // PIN番号管理タブ関連の処理
+        //
+        private AppCommon.RequestType SelectedPinCommand { get; set; }
+        private string SelectedPinCommandName { get; set; }
+
+        private void InitTabPinManagement()
+        {
+            // ラジオボタンの初期化
+            InitButtonPinCommandsWithDefault(radioButton1);
+        }
+
+        private void InitButtonPinCommandsWithDefault(RadioButton radioButton)
+        {
+            // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+            radioButton.Checked = true;
+            GetSelectedPinCommandValue(radioButton);
+        }
+
+        private void InitTabPinManagementPinFields()
+        {
+            // PIN番号のテキストボックスを初期化
+            textCurPin.Text = "";
+            textNewPin.Text = "";
+            textNewPinConf.Text = "";
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            textCurPin.Focus();
+        }
+
+        void EnableButtonsInTabPinManagement(bool enabled)
+        {
+            // ボタンや入力欄の使用可能／不可制御
+            groupBoxPinCommand.Enabled = enabled;
+            groupBoxPinText.Enabled = enabled;
+            buttonPerformPinCommand.Enabled = enabled;
+        }
+
+        private void GetSelectedPinCommandValue(object sender)
+        {
+            // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+            if (sender.Equals(radioButton1)) {
+                // PIN番号を変更
+                SelectedPinCommand = AppCommon.RequestType.OpenPGPChangePin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
+                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
+                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+            if (sender.Equals(radioButton2)) {
+                // 管理用PIN番号を変更
+                SelectedPinCommand = AppCommon.RequestType.OpenPGPChangeAdminPin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+            }
+            if (sender.Equals(radioButton3)) {
+                // PIN番号をリセット
+                SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblockPin;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
+                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+            if (sender.Equals(radioButton4)) {
+                // リセットコードを変更
+                SelectedPinCommand = AppCommon.RequestType.OpenPGPSetResetCode;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
+                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+            }
+            if (sender.Equals(radioButton5)) {
+                // リセットコードでPIN番号をリセット
+                SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblock;
+                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
+                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+
+            // 確認欄のキャプションを設定
+            labelNewPinConf.Text = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
+
+            // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+            InitTabPinManagementPinFields();
         }
 
         //
@@ -314,6 +466,88 @@ namespace MaintenanceToolGUI
             return FormUtil.compareEntry(textPinConfirm, textPin, informativeText);
         }
 
+        private bool CheckForPerformPinCommand()
+        {
+            // チェック用パラメーターの設定
+            string msgCurPin = "";
+            string msgNewPin = "";
+            int minSizeCurPin = 0;
+            int minSizeNewPin = 0;
+            switch (SelectedPinCommand) {
+            case AppCommon.RequestType.OpenPGPChangePin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
+                minSizeCurPin = 6;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+                minSizeNewPin = 8;
+                break;
+            case AppCommon.RequestType.OpenPGPUnblockPin:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case AppCommon.RequestType.OpenPGPSetResetCode:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+                minSizeNewPin = 8;
+                break;
+            case AppCommon.RequestType.OpenPGPUnblock:
+                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                minSizeCurPin = 8;
+                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            default:
+                break;
+            }
+
+            // 現在のPINをチェック
+            if (CheckPinNumberForPinCommand(textCurPin, msgCurPin, minSizeCurPin, 64) == false) {
+                return false;
+            }
+
+            // 新しいPINをチェック
+            if (CheckPinNumberForPinCommand(textNewPin, msgNewPin, minSizeNewPin, 64) == false) {
+                return false;
+            }
+
+            // 確認用PINのラベル
+            string msgNewPinConf = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin);
+
+            // 確認用PINをチェック
+            if (CheckPinConfirm(textNewPinConf, textNewPin, msgNewPinConf) == false) {
+                return false;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string caption = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, SelectedPinCommandName);
+            return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
+        }
+
+        private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min, int size_max)
+        {
+            // 長さチェック
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min, size_max);
+            if (FormUtil.checkEntrySize(text, size_min, size_max, informativeText) == false) {
+                return false;
+            }
+
+            // 数字チェック
+            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
+            if (FormUtil.checkIsNumeric(text, informativeText) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
         //
         // OpenPGP設定機能の各処理
         //
@@ -341,6 +575,18 @@ namespace MaintenanceToolGUI
         void DoCommandResetFirmware()
         {
             ToolPGPRef.DoCommandResetFirmware();
+        }
+
+        private void DoCommandPinManagement()
+        {
+            // 入力PINをパラメーターとして、コマンドを実行
+            ToolPGPParameter parameter = new ToolPGPParameter();
+            parameter.CurrentPin = textCurPin.Text;
+            parameter.NewPin = textNewPin.Text;
+            parameter.NewPinForConfirm = textNewPinConf.Text;
+            parameter.SelectedPinCommand = SelectedPinCommand;
+            parameter.SelectedPinCommandName = SelectedPinCommandName;
+            ToolPGPRef.DoOpenPGPCommand(SelectedPinCommand, parameter);
         }
 
         public void OnCommandProcessTerminated(AppCommon.RequestType requestType, bool success, string errMessage)
@@ -373,6 +619,13 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.HidFirmwareReset:
                     name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
                     break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    name = SelectedPinCommandName;
+                    break;
                 default:
                     break;
             }
@@ -396,6 +649,15 @@ namespace MaintenanceToolGUI
                     if (success) {
                         InitTabPGPKeyPathFields();
                         InitTabPGPKeyEntryFields();
+                    }
+                    break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    if (success) {
+                        InitTabPinManagementPinFields();
                     }
                     break;
                 default:

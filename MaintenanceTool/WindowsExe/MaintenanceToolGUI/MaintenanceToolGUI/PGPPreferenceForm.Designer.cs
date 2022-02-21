@@ -57,15 +57,17 @@
             this.checkKeyForSign = new System.Windows.Forms.CheckBox();
             this.buttonInstallPGPKey = new System.Windows.Forms.Button();
             this.tabPagePinManagement = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonPerformPinCommand = new System.Windows.Forms.Button();
+            this.groupBoxPinText = new System.Windows.Forms.GroupBox();
+            this.textNewPinConf = new System.Windows.Forms.TextBox();
+            this.labelNewPinConf = new System.Windows.Forms.Label();
+            this.textNewPin = new System.Windows.Forms.TextBox();
+            this.textCurPin = new System.Windows.Forms.TextBox();
+            this.labelNewPin = new System.Windows.Forms.Label();
+            this.labelCurPin = new System.Windows.Forms.Label();
+            this.groupBoxPinCommand = new System.Windows.Forms.GroupBox();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
@@ -81,8 +83,8 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPagePinManagement.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
+            this.groupBoxPinText.SuspendLayout();
+            this.groupBoxPinCommand.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPreference
@@ -371,9 +373,9 @@
             // 
             // tabPagePinManagement
             // 
-            this.tabPagePinManagement.Controls.Add(this.button1);
-            this.tabPagePinManagement.Controls.Add(this.groupBox6);
-            this.tabPagePinManagement.Controls.Add(this.groupBox5);
+            this.tabPagePinManagement.Controls.Add(this.buttonPerformPinCommand);
+            this.tabPagePinManagement.Controls.Add(this.groupBoxPinText);
+            this.tabPagePinManagement.Controls.Add(this.groupBoxPinCommand);
             this.tabPagePinManagement.Location = new System.Drawing.Point(4, 22);
             this.tabPagePinManagement.Name = "tabPagePinManagement";
             this.tabPagePinManagement.Padding = new System.Windows.Forms.Padding(3);
@@ -382,92 +384,117 @@
             this.tabPagePinManagement.Text = "PIN番号管理";
             this.tabPagePinManagement.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // buttonPerformPinCommand
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(146, 216);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(160, 23);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "実行";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonPerformPinCommand.Location = new System.Drawing.Point(146, 236);
+            this.buttonPerformPinCommand.Name = "buttonPerformPinCommand";
+            this.buttonPerformPinCommand.Size = new System.Drawing.Size(160, 23);
+            this.buttonPerformPinCommand.TabIndex = 19;
+            this.buttonPerformPinCommand.Text = "実行";
+            this.buttonPerformPinCommand.UseVisualStyleBackColor = true;
+            this.buttonPerformPinCommand.Click += new System.EventHandler(this.buttonPerformPinCommand_Click);
             // 
-            // groupBox6
+            // groupBoxPinText
             // 
-            this.groupBox6.Controls.Add(this.textBox3);
-            this.groupBox6.Controls.Add(this.label13);
-            this.groupBox6.Controls.Add(this.textBox1);
-            this.groupBox6.Controls.Add(this.textBox2);
-            this.groupBox6.Controls.Add(this.label11);
-            this.groupBox6.Controls.Add(this.label12);
-            this.groupBox6.Enabled = false;
-            this.groupBox6.Location = new System.Drawing.Point(18, 88);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(417, 114);
-            this.groupBox6.TabIndex = 18;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "認証情報";
+            this.groupBoxPinText.Controls.Add(this.textNewPinConf);
+            this.groupBoxPinText.Controls.Add(this.labelNewPinConf);
+            this.groupBoxPinText.Controls.Add(this.textNewPin);
+            this.groupBoxPinText.Controls.Add(this.textCurPin);
+            this.groupBoxPinText.Controls.Add(this.labelNewPin);
+            this.groupBoxPinText.Controls.Add(this.labelCurPin);
+            this.groupBoxPinText.Location = new System.Drawing.Point(18, 108);
+            this.groupBoxPinText.Name = "groupBoxPinText";
+            this.groupBoxPinText.Size = new System.Drawing.Size(417, 114);
+            this.groupBoxPinText.TabIndex = 18;
+            this.groupBoxPinText.TabStop = false;
+            this.groupBoxPinText.Text = "認証情報";
             // 
-            // textBox3
+            // textNewPinConf
             // 
-            this.textBox3.Location = new System.Drawing.Point(175, 77);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(130, 19);
-            this.textBox3.TabIndex = 22;
-            this.textBox3.UseSystemPasswordChar = true;
+            this.textNewPinConf.Location = new System.Drawing.Point(185, 77);
+            this.textNewPinConf.MaxLength = 64;
+            this.textNewPinConf.Name = "textNewPinConf";
+            this.textNewPinConf.Size = new System.Drawing.Size(130, 19);
+            this.textNewPinConf.TabIndex = 22;
+            this.textNewPinConf.UseSystemPasswordChar = true;
             // 
-            // label13
+            // labelNewPinConf
             // 
-            this.label13.Location = new System.Drawing.Point(13, 80);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(155, 12);
-            this.label13.TabIndex = 21;
-            this.label13.Text = "新しい管理用PIN番号（確認）";
+            this.labelNewPinConf.Location = new System.Drawing.Point(13, 80);
+            this.labelNewPinConf.Name = "labelNewPinConf";
+            this.labelNewPinConf.Size = new System.Drawing.Size(160, 12);
+            this.labelNewPinConf.TabIndex = 21;
+            this.labelNewPinConf.Text = "新しい管理用PIN番号（確認）";
             // 
-            // textBox1
+            // textNewPin
             // 
-            this.textBox1.Location = new System.Drawing.Point(175, 50);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(130, 19);
-            this.textBox1.TabIndex = 12;
-            this.textBox1.UseSystemPasswordChar = true;
+            this.textNewPin.Location = new System.Drawing.Point(185, 50);
+            this.textNewPin.MaxLength = 64;
+            this.textNewPin.Name = "textNewPin";
+            this.textNewPin.Size = new System.Drawing.Size(130, 19);
+            this.textNewPin.TabIndex = 12;
+            this.textNewPin.UseSystemPasswordChar = true;
             // 
-            // textBox2
+            // textCurPin
             // 
-            this.textBox2.Location = new System.Drawing.Point(175, 23);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(130, 19);
-            this.textBox2.TabIndex = 11;
-            this.textBox2.UseSystemPasswordChar = true;
+            this.textCurPin.Location = new System.Drawing.Point(185, 23);
+            this.textCurPin.MaxLength = 64;
+            this.textCurPin.Name = "textCurPin";
+            this.textCurPin.Size = new System.Drawing.Size(130, 19);
+            this.textCurPin.TabIndex = 11;
+            this.textCurPin.UseSystemPasswordChar = true;
             // 
-            // label11
+            // labelNewPin
             // 
-            this.label11.Location = new System.Drawing.Point(13, 53);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(155, 12);
-            this.label11.TabIndex = 20;
-            this.label11.Text = "新しい管理用PIN番号";
+            this.labelNewPin.Location = new System.Drawing.Point(13, 53);
+            this.labelNewPin.Name = "labelNewPin";
+            this.labelNewPin.Size = new System.Drawing.Size(160, 12);
+            this.labelNewPin.TabIndex = 20;
+            this.labelNewPin.Text = "新しい管理用PIN番号";
             // 
-            // label12
+            // labelCurPin
             // 
-            this.label12.Location = new System.Drawing.Point(13, 26);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(155, 12);
-            this.label12.TabIndex = 19;
-            this.label12.Text = "現在の管理用PIN番号";
+            this.labelCurPin.Location = new System.Drawing.Point(13, 26);
+            this.labelCurPin.Name = "labelCurPin";
+            this.labelCurPin.Size = new System.Drawing.Size(160, 12);
+            this.labelCurPin.TabIndex = 19;
+            this.labelCurPin.Text = "現在の管理用PIN番号";
             // 
-            // groupBox5
+            // groupBoxPinCommand
             // 
-            this.groupBox5.Controls.Add(this.radioButton3);
-            this.groupBox5.Controls.Add(this.radioButton2);
-            this.groupBox5.Controls.Add(this.radioButton1);
-            this.groupBox5.Enabled = false;
-            this.groupBox5.Location = new System.Drawing.Point(18, 20);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(417, 53);
-            this.groupBox5.TabIndex = 15;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "実行する機能";
+            this.groupBoxPinCommand.Controls.Add(this.radioButton5);
+            this.groupBoxPinCommand.Controls.Add(this.radioButton4);
+            this.groupBoxPinCommand.Controls.Add(this.radioButton3);
+            this.groupBoxPinCommand.Controls.Add(this.radioButton2);
+            this.groupBoxPinCommand.Controls.Add(this.radioButton1);
+            this.groupBoxPinCommand.Location = new System.Drawing.Point(18, 20);
+            this.groupBoxPinCommand.Name = "groupBoxPinCommand";
+            this.groupBoxPinCommand.Size = new System.Drawing.Size(417, 73);
+            this.groupBoxPinCommand.TabIndex = 15;
+            this.groupBoxPinCommand.TabStop = false;
+            this.groupBoxPinCommand.Text = "実行する機能";
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(139, 45);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(175, 16);
+            this.radioButton5.TabIndex = 18;
+            this.radioButton5.Text = "リセットコードでPIN番号をリセット";
+            this.radioButton5.UseVisualStyleBackColor = true;
+            this.radioButton5.CheckedChanged += new System.EventHandler(this.radioButton5_CheckedChanged);
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(18, 45);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(115, 16);
+            this.radioButton4.TabIndex = 17;
+            this.radioButton4.Text = "リセットコードを変更";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
             // 
             // radioButton3
             // 
@@ -478,6 +505,7 @@
             this.radioButton3.TabIndex = 16;
             this.radioButton3.Text = "PIN番号をリセット";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
             // radioButton2
             // 
@@ -488,6 +516,7 @@
             this.radioButton2.TabIndex = 15;
             this.radioButton2.Text = "管理用PIN番号を変更";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -500,6 +529,7 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "PIN番号を変更";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // buttonPGPStatus
             // 
@@ -570,10 +600,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPagePinManagement.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
+            this.groupBoxPinText.ResumeLayout(false);
+            this.groupBoxPinText.PerformLayout();
+            this.groupBoxPinCommand.ResumeLayout(false);
+            this.groupBoxPinCommand.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -614,18 +644,20 @@
         private System.Windows.Forms.Button buttonPGPReset;
         private System.Windows.Forms.Button buttonFirmwareReset;
         private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button buttonPerformPinCommand;
+        private System.Windows.Forms.GroupBox groupBoxPinText;
+        private System.Windows.Forms.TextBox textNewPinConf;
+        private System.Windows.Forms.Label labelNewPinConf;
+        private System.Windows.Forms.TextBox textNewPin;
+        private System.Windows.Forms.TextBox textCurPin;
+        private System.Windows.Forms.Label labelNewPin;
+        private System.Windows.Forms.Label labelCurPin;
+        private System.Windows.Forms.GroupBox groupBoxPinCommand;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton4;
     }
 }
