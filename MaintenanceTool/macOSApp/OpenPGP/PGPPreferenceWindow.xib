@@ -409,34 +409,34 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6un-mf-b2T" userLabel="labelCurPin">
-                                                        <rect key="frame" x="18" y="83" width="150" height="16"/>
+                                                        <rect key="frame" x="18" y="83" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="現在のPUK番号" id="zy7-6n-aUk">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="現在のPIN番号" id="zy7-6n-aUk">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KQz-Ea-7T1" userLabel="labelNewPin">
-                                                        <rect key="frame" x="18" y="52" width="150" height="16"/>
+                                                        <rect key="frame" x="18" y="52" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号" id="iGU-ak-mNK">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPIN番号" id="iGU-ak-mNK">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWk-au-GHF" userLabel="labelNewPinConf">
-                                                        <rect key="frame" x="18" y="21" width="150" height="16"/>
+                                                        <rect key="frame" x="18" y="21" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号（確認）" id="P9l-EJ-dV6">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPIN番号（確認）" id="P9l-EJ-dV6">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MVc-Ph-LY3" userLabel="textCurPin">
-                                                        <rect key="frame" x="178" y="80" width="120" height="21"/>
+                                                        <rect key="frame" x="200" y="80" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Daf-kU-b4q">
                                                             <font key="font" metaFont="system"/>
@@ -448,7 +448,7 @@
                                                         </secureTextFieldCell>
                                                     </secureTextField>
                                                     <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SHa-Cp-Nku" userLabel="textNewPin">
-                                                        <rect key="frame" x="178" y="49" width="120" height="21"/>
+                                                        <rect key="frame" x="200" y="49" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Dmc-B5-7vL">
                                                             <font key="font" metaFont="system"/>
@@ -460,7 +460,7 @@
                                                         </secureTextFieldCell>
                                                     </secureTextField>
                                                     <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f4i-nS-JS0" userLabel="textNewPinConf">
-                                                        <rect key="frame" x="178" y="18" width="120" height="21"/>
+                                                        <rect key="frame" x="200" y="18" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="QLU-Wh-Yu6">
                                                             <font key="font" metaFont="system"/>

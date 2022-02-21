@@ -67,6 +67,8 @@
     // OpenPGP機能処理クラスの参照を保持
     @property (nonatomic, weak) ToolPGPCommand      *toolPGPCommand;
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
+    // 実行するPIN管理コマンドを保持
+    @property (nonatomic) Command                    selectedPinCommand;
 
 @end
 
@@ -83,6 +85,8 @@
         // PGP鍵管理タブ内の入力項目を初期化（このタブが選択状態になります）
         [[self tabView] selectTabViewItem:[self tabPGPKeyManagement]];
         [self initTabPGPKeyManagement];
+        // PIN番号管理タブ内の入力項目を初期化
+        [self initTabPinManagement];
     }
 
     - (void)initTabPGPKeyManagement {
@@ -110,6 +114,27 @@
         [[self textRealName] becomeFirstResponder];
     }
 
+    - (void)initTabPinManagement {
+        // テキストボックスの初期化
+        [self initButtonPinCommandsWithDefault:[self buttonChangePin]];
+        [self initTabPinManagementPinFields];
+    }
+
+    - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
+        // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+        [defaultButton setState:NSControlStateValueOn];
+        [self getSelectedPinCommandValue:defaultButton];
+    }
+
+    - (void)initTabPinManagementPinFields {
+        // テキストボックスを初期化
+        [[self textCurPin] setStringValue:@""];
+        [[self textNewPin] setStringValue:@""];
+        [[self textNewPinConf] setStringValue:@""];
+        // テキストボックスのカーソルを先頭の項目に配置
+        [[self textCurPin] becomeFirstResponder];
+    }
+
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
@@ -120,6 +145,8 @@
         NSTabViewItem *item = [[self tabView] selectedTabViewItem];
         if (item == [self tabPGPKeyManagement]) {
             [self enableButtonsInTabPGPKeyManagement:enabled];
+        } else if (item == [self tabPinManagement]) {
+            [self enableButtonsInTabPinManagement:enabled];
         }
     }
 
@@ -133,6 +160,19 @@
         [[self textPin] setEnabled:enabled];
         [[self textPinConfirm] setEnabled:enabled];
         [[self buttonInstallPGPKey] setEnabled:enabled];
+    }
+
+    - (void)enableButtonsInTabPinManagement:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonChangePin] setEnabled:enabled];
+        [[self buttonChangeAdminPin] setEnabled:enabled];
+        [[self buttonUnblockPin] setEnabled:enabled];
+        [[self buttonSetResetCode] setEnabled:enabled];
+        [[self buttonUnblock] setEnabled:enabled];
+        [[self textCurPin] setEnabled:enabled];
+        [[self textNewPin] setEnabled:enabled];
+        [[self textNewPinConf] setEnabled:enabled];
+        [[self buttonPerformPinCommand] setEnabled:enabled];
     }
 
     - (void)terminateWindow:(NSModalResponse)response {
@@ -246,9 +286,49 @@
 #pragma mark - PIN番号管理タブ関連
 
     - (IBAction)buttonPinCommandSelected:(id)sender {
+        [self getSelectedPinCommandValue:sender];
     }
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
+    }
+
+    - (void)getSelectedPinCommandValue:(NSButton *)button {
+        // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+        if (button == [self buttonChangePin]) {
+            // PIN番号を変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_CHANGE_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_PIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
+        }
+        if (button == [self buttonChangeAdminPin]) {
+            // 管理用PIN番号を変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_CHANGE_ADMIN_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_ADMPIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM];
+        }
+        if (button == [self buttonUnblockPin]) {
+            // PIN番号をリセット
+            [self setSelectedPinCommand:COMMAND_OPENPGP_UNBLOCK_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
+        }
+        if (button == [self buttonSetResetCode]) {
+            // リセットコードを変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_SET_RESET_CODE];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_RESET_CODE];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONF];
+        }
+        if (button == [self buttonUnblock]) {
+            // リセットコードでPIN番号をリセット
+            [self setSelectedPinCommand:COMMAND_OPENPGP_UNBLOCK];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_RESET_CODE];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
+        }
     }
 
 #pragma mark - 入力チェック関連
