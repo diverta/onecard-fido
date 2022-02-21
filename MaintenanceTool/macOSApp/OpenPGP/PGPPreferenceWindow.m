@@ -116,9 +116,8 @@
     }
 
     - (void)initTabPinManagement {
-        // テキストボックスの初期化
+        // ラジオボタンの初期化
         [self initButtonPinCommandsWithDefault:[self buttonChangePin]];
-        [self initTabPinManagementPinFields];
     }
 
     - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
@@ -305,7 +304,6 @@
             [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN];
             [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_PIN];
             [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
-            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
         }
         if (button == [self buttonChangeAdminPin]) {
             // 管理用PIN番号を変更
@@ -313,7 +311,6 @@
             [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN];
             [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
             [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_ADMPIN];
-            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_ADMPIN_FOR_CONFIRM];
         }
         if (button == [self buttonUnblockPin]) {
             // PIN番号をリセット
@@ -321,7 +318,6 @@
             [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN];
             [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
             [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
-            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
         }
         if (button == [self buttonSetResetCode]) {
             // リセットコードを変更
@@ -329,7 +325,6 @@
             [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE];
             [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
             [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_RESET_CODE];
-            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_RESET_CODE_FOR_CONF];
         }
         if (button == [self buttonUnblock]) {
             // リセットコードでPIN番号をリセット
@@ -337,8 +332,12 @@
             [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_UNBLOCK];
             [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_RESET_CODE];
             [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
-            [[self labelNewPinConf] setStringValue:MSG_LABEL_ITEM_NEW_PIN_FOR_CONFIRM];
         }
+        // 確認欄のキャプションを設定
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, [[self labelNewPin] stringValue]];
+        [[self labelNewPinConf] setStringValue:caption];
+        // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+        [self initTabPinManagementPinFields];
     }
 
 #pragma mark - 入力チェック関連
@@ -474,7 +473,7 @@
             return false;
         }
         // 事前に確認ダイアログを表示
-        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_DO_PIN_COMMAND, [self selectedPinCommandName]];
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
         if ([ToolPopupWindow promptYesNo:caption
                          informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND] == false) {
             return false;
