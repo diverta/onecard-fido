@@ -19,6 +19,11 @@ namespace MaintenanceToolGUI
         public string Passphrase { get; set; }
         public string PubkeyFolderPath { get; set; }
         public string BackupFolderPath { get; set; }
+        public string CurrentPin { get; set; }
+        public string NewPin { get; set; }
+        public string NewPinForConfirm { get; set; }
+        public AppCommon.RequestType SelectedPinCommand { get; set; }
+        public string SelectedPinCommandName { get; set; }
     }
 
     public class ToolPGP
@@ -66,10 +71,12 @@ namespace MaintenanceToolGUI
             COMMAND_GPG_REMOVE_TEMP_FOLDER,
             COMMAND_GPG_CARD_STATUS,
             COMMAND_GPG_CARD_RESET,
+            COMMAND_GPG_CARD_EDIT_PASSWD,
+            COMMAND_GPG_CARD_EDIT_UNBLOCK,
         };
 
         // リクエストパラメーターを保持
-        private ToolPGPParameter toolPGPParameter = null;
+        private ToolPGPParameter Parameter = null;
 
         public ToolPGP(MainForm f, HIDMain h)
         {
@@ -94,16 +101,16 @@ namespace MaintenanceToolGUI
             return StatusInfoString;
         }
 
+        public bool CheckUSBDeviceDisconnected()
+        {
+            return MainFormRef.CheckUSBDeviceDisconnected();
+        }
+
         //
         // ファームウェアリセット用関数
         //
         public void DoCommandResetFirmware()
         {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
             // HIDインターフェース経由でファームウェアをリセット
             AppCommon.RequestType requestType = AppCommon.RequestType.HidFirmwareReset;
             NotifyProcessStarted(requestType);
@@ -123,13 +130,8 @@ namespace MaintenanceToolGUI
         // 
         public void DoOpenPGPCommand(AppCommon.RequestType requestType, ToolPGPParameter parameter)
         {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (MainFormRef.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
             // 画面から引き渡されたパラメーターを退避
-            toolPGPParameter = parameter;
+            Parameter = parameter;
 
             // コマンド開始処理
             NotifyProcessStarted(requestType);
@@ -230,6 +232,15 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.OpenPGPReset:
                     DoRequestCardReset();
                     break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                    DoRequestCardEditPasswd();
+                    break;
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    DoRequestCardEditUnblock();
+                    break;
                 default:
                     NotifyProcessTerminated(false);
                     break;
@@ -254,7 +265,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} --no-tty", TempFolderPath, toolPGPParameter.Passphrase);
+            string param = string.Format("{0} {1} --no-tty", TempFolderPath, Parameter.Passphrase);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_GENERATE_MAIN_KEY, exe, param, TempFolderPath);
         }
 
@@ -298,7 +309,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_ADD_SUB_KEY, exe, param, TempFolderPath);
         }
 
@@ -330,8 +341,8 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} {3} {4}", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId,
-                toolPGPParameter.PubkeyFolderPath, toolPGPParameter.BackupFolderPath);
+            string param = string.Format("{0} {1} {2} {3} {4}", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId,
+                Parameter.PubkeyFolderPath, Parameter.BackupFolderPath);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP, exe, param, TempFolderPath);
         }
 
@@ -341,8 +352,8 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfPubkeyAndBackupExist()) {
                     // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, toolPGPParameter.PubkeyFolderPath));
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, toolPGPParameter.BackupFolderPath));
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
+                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
                     DoRequestTransferSubkeyToCard();
                     return;
                 }
@@ -371,7 +382,7 @@ namespace MaintenanceToolGUI
 
             // スクリプトを実行
             string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
-            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, toolPGPParameter.Passphrase, GeneratedMainKeyId);
+            string param = string.Format("{0} {1} {2} --no-tty", TempFolderPath, Parameter.Passphrase, GeneratedMainKeyId);
             DoRequestCommandLine(GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD, exe, param, TempFolderPath);
         }
 
@@ -446,6 +457,75 @@ namespace MaintenanceToolGUI
                     CommandSuccess = true;
                 } else {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED);
+                }
+            }
+
+            // 後処理に移行
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestCardEditPasswd()
+        {
+            DoRequestCardEditPasswdCommand(GPGCommand.COMMAND_GPG_CARD_EDIT_PASSWD);
+        }
+
+        private void DoRequestCardEditUnblock()
+        {
+            DoRequestCardEditPasswdCommand(GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK);
+        }
+
+        private void DoRequestCardEditPasswdCommand(GPGCommand command)
+        {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_edit_passwd.bat";
+            if (WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // パラメーターファイル名を設定
+            string paramName;
+            switch (command) {
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    paramName = "card_edit_unblock.param";
+                    break;
+                default:
+                    paramName = "card_edit_passwd.param";
+                    break;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            if (WriteParamForCardEditUnblockToTempFolder(paramName, command) == false) {
+                NotifyProcessTerminated(false);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string param = string.Format("{0} {1} --no-tty", TempFolderPath, paramName);
+            DoRequestCommandLine(command, exe, param, TempFolderPath);
+        }
+
+        private void DoResponseCardEditPasswdCommand(bool success, string response, string error)
+        {
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (CheckIfCardErrorFromResponse(error)) {
+                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                } else {
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERROR, Parameter.SelectedPinCommandName);
+                    NotifyErrorMessage(message);
+                }
+
+            } else {
+                // 成功 or 失敗メッセージが出力されているかどうかチェック
+                if (CheckIfOperationSuccess(response)) {
+                    CommandSuccess = true;
+                } else {
+                    string itemName = ItemNameForCardEditPasswdCommand();
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName, itemName);
+                    NotifyErrorMessage(message);
                 }
             }
 
@@ -649,13 +729,13 @@ namespace MaintenanceToolGUI
         private bool CheckIfPubkeyAndBackupExist()
         {
             // 公開鍵ファイルがエクスポート先に存在するかチェック
-            if (CheckIfFileExist("public_key.pgp", toolPGPParameter.PubkeyFolderPath) == false) {
+            if (CheckIfFileExist("public_key.pgp", Parameter.PubkeyFolderPath) == false) {
                 AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
                 return false;
             }
 
             // バックアップファイルがエクスポート先に存在するかチェック
-            if (CheckIfFileExist("GNUPGHOME.tgz", toolPGPParameter.BackupFolderPath) == false) {
+            if (CheckIfFileExist("GNUPGHOME.tgz", Parameter.BackupFolderPath) == false) {
                 AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
                 return false;
             }
@@ -711,6 +791,29 @@ namespace MaintenanceToolGUI
             return (header && subKeyS && subKeyE && subKeyA);
         }
 
+        private bool CheckIfOperationSuccess(string response)
+        {
+            // メッセージ検索用文字列
+            string keywordNG = "SC_OP_FAILURE";
+            string keywordOK = "SC_OP_SUCCESS";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keywordNG)) {
+                    // 失敗メッセージが出力されている場合は false
+                    AppCommon.OutputLogError(string.Format("GnuPG operation failed: {0}", text));
+                    return false;
+
+                } else if (text.Contains(keywordOK)) {
+                    // 成功メッセージが出力されている場合は true
+                    return true;
+                }
+            }
+
+            // 所定のメッセージが出力されていない場合は false
+            return false;
+        }
+
         //
         // スクリプト／パラメーターファイル関連
         //
@@ -740,7 +843,7 @@ namespace MaintenanceToolGUI
             }
 
             // パラメーターを置き換え
-            string parameterContent = string.Format(scriptContent, toolPGPParameter.RealName, toolPGPParameter.MailAddress, toolPGPParameter.Comment);
+            string parameterContent = string.Format(scriptContent, Parameter.RealName, Parameter.MailAddress, Parameter.Comment);
 
             // パラメーターファイルを作業用フォルダーに書き出し
             string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
@@ -749,6 +852,64 @@ namespace MaintenanceToolGUI
             }
 
             return true;
+        }
+
+        private bool WriteParamForCardEditUnblockToTempFolder(string scriptName, GPGCommand command)
+        {
+            // パラメーターをリソースから読込み
+            string scriptContent = GetScriptResourceContentString(scriptName);
+            if (scriptContent == null) {
+                return false;
+            }
+
+            // パラメーターを置き換え
+            string parameterContent;
+            switch (command) {
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    parameterContent = string.Format(scriptContent, Parameter.CurrentPin, Parameter.NewPin, Parameter.NewPinForConfirm);
+                    break;
+                default:
+                    parameterContent = string.Format(scriptContent, MenuNoForCardEditPasswdCommand(), Parameter.CurrentPin, Parameter.NewPin, Parameter.NewPinForConfirm);
+                    break;
+            }
+
+            // パラメーターファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(parameterContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string MenuNoForCardEditPasswdCommand()
+        {
+            switch (Parameter.SelectedPinCommand) {
+                case AppCommon.RequestType.OpenPGPChangePin:
+                    return "1";
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                    return "2";
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                    return "3";
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                    return "4";
+                default:
+                    return "Q";
+            }
+        }
+
+        private string ItemNameForCardEditPasswdCommand()
+        {
+            switch (Parameter.SelectedPinCommand) {
+            case AppCommon.RequestType.OpenPGPUnblockPin:
+            case AppCommon.RequestType.OpenPGPChangeAdminPin:
+            case AppCommon.RequestType.OpenPGPSetResetCode:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+            case AppCommon.RequestType.OpenPGPUnblock:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+            default:
+                return ToolGUICommon.MSG_LABEL_ITEM_PGP_PIN;
+            }
         }
 
         private string GetScriptResourceContentString(string scriptName)
@@ -905,6 +1066,10 @@ namespace MaintenanceToolGUI
                 case GPGCommand.COMMAND_GPG_CARD_RESET:
                     DoResponseCardReset(success, response, error);
                     break;
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_PASSWD:
+                case GPGCommand.COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                    DoResponseCardEditPasswdCommand(success, response, error);
+                    break;
             default:
                     break;
             }
@@ -932,6 +1097,13 @@ namespace MaintenanceToolGUI
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
                     NameOfCommand = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
+                    break;
+                case AppCommon.RequestType.OpenPGPChangePin:
+                case AppCommon.RequestType.OpenPGPChangeAdminPin:
+                case AppCommon.RequestType.OpenPGPUnblockPin:
+                case AppCommon.RequestType.OpenPGPSetResetCode:
+                case AppCommon.RequestType.OpenPGPUnblock:
+                    NameOfCommand = Parameter.SelectedPinCommandName;
                     break;
                 default:
                     NameOfCommand = "";
