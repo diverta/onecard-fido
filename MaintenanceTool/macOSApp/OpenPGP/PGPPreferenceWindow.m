@@ -294,6 +294,9 @@
         if ([self checkForPerformPinCommand:sender] == false) {
             return;
         }
+        // PIN番号管理コマンドを実行
+        [self enableButtons:false];
+        [self commandWillPinManagement];
     }
 
     - (void)getSelectedPinCommandValue:(NSButton *)button {
@@ -582,6 +585,11 @@
         [[self toolPGPCommand] commandWillPGPReset:self];
     }
 
+    - (void)commandWillPinManagement {
+        // TODO: 仮の実装です。
+        [self toolPGPCommandDidProcess:[self selectedPinCommand] withResult:false withErrorMessage:@"この機能は実行できません。"];
+    }
+
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
         // 進捗画面を閉じる
         [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK];
@@ -614,6 +622,13 @@
             case COMMAND_HID_FIRMWARE_RESET:
                 name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                name = [self selectedPinCommandName];
+                break;
             default:
                 return;
         }
@@ -634,6 +649,15 @@
                 if (result) {
                     [self initTabPGPKeyPathFields];
                     [self initTabPGPKeyEntryFields];
+                }
+                break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                if (result) {
+                    [self initTabPinManagementPinFields];
                 }
                 break;
             default:
