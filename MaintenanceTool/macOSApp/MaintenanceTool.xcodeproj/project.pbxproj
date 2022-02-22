@@ -55,6 +55,9 @@
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
 		7A6C0BDC27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */; };
+		7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */; };
+		7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */; };
+		7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */; };
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
@@ -188,6 +191,9 @@
 		7A6687932575CCF60054F0DE /* ToolPIVCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommand.h; sourceTree = "<group>"; };
 		7A6687942575CDB70054F0DE /* ToolPIVCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommon.h; sourceTree = "<group>"; };
 		7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.2.bin; sourceTree = "<group>"; };
+		7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_passwd.param; sourceTree = "<group>"; };
+		7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_edit_passwd.sh; sourceTree = "<group>"; };
+		7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_unblock.param; sourceTree = "<group>"; };
 		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
 		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
 		7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPPreferenceWindow.m; sourceTree = "<group>"; };
@@ -541,6 +547,9 @@
 				7AF03FC4277C3BA400ED0E44 /* card_status.sh */,
 				7AB6312A277B01FB004917B9 /* card_reset.sh */,
 				7AB63129277B01FB004917B9 /* card_reset.param */,
+				7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */,
+				7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */,
+				7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -659,11 +668,13 @@
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
+				7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */,
 				7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */,
 				7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */,
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */,
+				7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */,
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A3D872F27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip in Resources */,
@@ -674,6 +685,7 @@
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,
+				7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */,
 				7A852900277176F10096F41D /* add_sub_key.sh in Resources */,
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
