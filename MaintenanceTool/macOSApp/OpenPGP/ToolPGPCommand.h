@@ -18,6 +18,10 @@
     @property (nonatomic) NSString                     *passphrase;
     @property (nonatomic) NSString                     *pubkeyFolderPath;
     @property (nonatomic) NSString                     *backupFolderPath;
+    // PIN番号管理用パラメーターを保持
+    @property (nonatomic) NSString                     *currentPin;
+    @property (nonatomic) NSString                     *renewalPin;
+    @property (nonatomic) NSString                     *pinCommandName;
 
 @end
 
@@ -27,12 +31,8 @@
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
 
-    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter;
     - (void)commandDidResetFirmware:(bool)success;
-
-    - (void)commandWillInstallPGPKey:(id)sender parameter:(ToolPGPParameter *)parameter;
-    - (void)commandWillPGPStatus:(id)sender;
-    - (void)commandWillPGPReset:(id)sender;
 
     - (NSString *)getPGPStatusInfoString;
 

@@ -189,7 +189,7 @@
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
-        [self commandWillResetFirmware];
+        [self commandWillPerformPGPProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -239,17 +239,26 @@
 
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
         // 入力欄の内容をチェック
-        if ([self checkForInstallPGPKey:sender]) {
-            // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
-            [self enableButtons:false];
-            [self commandWillInstallPGPKey];
+        if ([self checkForInstallPGPKey:sender] == false) {
+            return;
         }
+        // 画面入力内容をパラメーターに格納
+        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
+        [parameter setRealName:[[self textRealName] stringValue]];
+        [parameter setMailAddress:[[self textMailAddress] stringValue]];
+        [parameter setComment:[[self textComment] stringValue]];
+        [parameter setPassphrase:[[self textPinConfirm] stringValue]];
+        [parameter setPubkeyFolderPath:[[self textPubkeyFolderPath] stringValue]];
+        [parameter setBackupFolderPath:[[self textBackupFolderPath] stringValue]];
+        // PGP秘密鍵インストール処理を実行
+        [self enableButtons:false];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_INSTALL_KEYS withParameter:parameter];
     }
 
     - (IBAction)buttonPGPStatusDidPress:(id)sender {
         // PGPステータス照会処理を実行
         [self enableButtons:false];
-        [self commandWillPGPStatus];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_STATUS withParameter:nil];
     }
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
@@ -258,7 +267,7 @@
         if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
             // PGPリセット処理を実行
             [self enableButtons:false];
-            [self commandWillPGPReset];
+            [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
         }
     }
 
@@ -294,9 +303,14 @@
         if ([self checkForPerformPinCommand:sender] == false) {
             return;
         }
+        // 画面入力内容をパラメーターに格納
+        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
+        [parameter setPinCommandName:[self selectedPinCommandName]];
+        [parameter setCurrentPin:[[self textCurPin] stringValue]];
+        [parameter setRenewalPin:[[self textNewPin] stringValue]];
         // PIN番号管理コマンドを実行
         [self enableButtons:false];
-        [self commandWillPinManagement];
+        [self commandWillPerformPGPProcess:[self selectedPinCommand] withParameter:parameter];
     }
 
     - (void)getSelectedPinCommandValue:(NSButton *)button {
@@ -549,44 +563,11 @@
 
 #pragma mark - For ToolPGPCommand functions
 
-    - (void)commandWillResetFirmware {
+    - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter {
         // 進捗画面を表示
         [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // 認証器リセット処理を実行
-        [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
-    }
-
-    - (void)commandWillInstallPGPKey {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
-        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
-        [parameter setRealName:[[self textRealName] stringValue]];
-        [parameter setMailAddress:[[self textMailAddress] stringValue]];
-        [parameter setComment:[[self textComment] stringValue]];
-        [parameter setPassphrase:[[self textPinConfirm] stringValue]];
-        [parameter setPubkeyFolderPath:[[self textPubkeyFolderPath] stringValue]];
-        [parameter setBackupFolderPath:[[self textBackupFolderPath] stringValue]];
-        [[self toolPGPCommand] commandWillInstallPGPKey:self parameter:parameter];
-    }
-
-    - (void)commandWillPGPStatus {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // PGPステータス照会処理を実行
-        [[self toolPGPCommand] commandWillPGPStatus:self];
-    }
-
-    - (void)commandWillPGPReset {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // PGPリセット処理を実行
-        [[self toolPGPCommand] commandWillPGPReset:self];
-    }
-
-    - (void)commandWillPinManagement {
-        // TODO: 仮の実装です。
-        [self toolPGPCommandDidProcess:[self selectedPinCommand] withResult:false withErrorMessage:@"この機能は実行できません。"];
+        // OpenPGP機能を実行
+        [[self toolPGPCommand] commandWillPerformPGPProcess:command withParameter:parameter];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {

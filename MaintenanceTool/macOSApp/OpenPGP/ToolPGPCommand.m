@@ -104,14 +104,6 @@ typedef enum : NSInteger {
 
 #pragma mark - For reset firmware
 
-    - (void)commandWillResetFirmware:(Command)command {
-        // 実行コマンドを保持
-        [self setCommand:command];
-        // HIDインターフェース経由でファームウェアをリセット
-        [self notifyProcessStarted];
-        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
-    }
-
     - (void)commandDidResetFirmware:(bool)success {
         if (success == false) {
             [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
@@ -135,29 +127,28 @@ typedef enum : NSInteger {
 
 #pragma mark - Public methods
 
-    - (void)commandWillInstallPGPKey:(id)sender  parameter:(ToolPGPParameter *)parameter {
+    - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter {
         // 実行コマンド／パラメーターを保持
-        [self setCommand:COMMAND_OPENPGP_INSTALL_KEYS];
+        [self setCommand:command];
         [self setCommandParameter:parameter];
-        // バージョン照会から開始
         [self notifyProcessStarted];
-        [self doRequestGPGVersion];
-    }
-    
-    - (void)commandWillPGPStatus:(id)sender {
-        // 実行コマンドを保持
-        [self setCommand:COMMAND_OPENPGP_STATUS];
-        // バージョン照会から開始
-        [self notifyProcessStarted];
-        [self doRequestGPGVersion];
-    }
-
-    - (void)commandWillPGPReset:(id)sender {
-        // 実行コマンドを保持
-        [self setCommand:COMMAND_OPENPGP_RESET];
-        // バージョン照会から開始
-        [self notifyProcessStarted];
-        [self doRequestGPGVersion];
+        // コマンドにより分岐
+        switch (command) {
+            case COMMAND_HID_FIRMWARE_RESET:
+                // HIDインターフェース経由でファームウェアをリセット
+                [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+                break;
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+            case COMMAND_OPENPGP_STATUS:
+            case COMMAND_OPENPGP_RESET:
+                // バージョン照会から開始
+                [self doRequestGPGVersion];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self notifyProcessTerminated:false];
+                break;
+        }
     }
 
     - (NSString *)getPGPStatusInfoString {
