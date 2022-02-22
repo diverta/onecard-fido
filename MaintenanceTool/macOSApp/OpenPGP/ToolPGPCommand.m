@@ -191,8 +191,10 @@ typedef enum : NSInteger {
                 break;
         }
         // コマンド開始メッセージをログファイルに出力
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
-        [[ToolLogFile defaultLogger] info:startMsg];
+        if ([self nameOfCommand]) {
+            NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
+            [[ToolLogFile defaultLogger] info:startMsg];
+        }
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
