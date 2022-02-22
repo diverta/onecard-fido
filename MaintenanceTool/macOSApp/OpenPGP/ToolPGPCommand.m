@@ -41,6 +41,10 @@ typedef enum : NSInteger {
     COMMAND_GPG_CARD_RESET,
 } GPGCommand;
 
+@implementation ToolPGPParameter
+
+@end
+
 @interface ToolPGPCommand ()
 
     // 上位クラスの参照を保持
@@ -50,6 +54,8 @@ typedef enum : NSInteger {
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
     @property (nonatomic) GPGCommand                    gpgCommand;
+    // コマンドパラメーターを保持
+    @property (nonatomic) ToolPGPParameter             *commandParameter;
     // 処理機能名称を保持
     @property (nonatomic) NSString                     *nameOfCommand;
     // エラーメッセージテキストを保持
@@ -68,13 +74,6 @@ typedef enum : NSInteger {
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
     // スクリプトから出力されたログを保持
     @property (nonatomic) NSMutableArray<NSString *>   *scriptLogArray;
-    // 鍵作成用パラメーターを保持
-    @property (nonatomic) NSString                     *realName;
-    @property (nonatomic) NSString                     *mailAddress;
-    @property (nonatomic) NSString                     *comment;
-    @property (nonatomic) NSString                     *passphrase;
-    @property (nonatomic) NSString                     *pubkeyFolderPath;
-    @property (nonatomic) NSString                     *backupFolderPath;
 
 @end
 
@@ -100,12 +99,7 @@ typedef enum : NSInteger {
         // コマンドおよびパラメーターを初期化
         [self setCommand:COMMAND_NONE];
         [self setGpgCommand:COMMAND_GPG_NONE];
-        [self setRealName:nil];
-        [self setMailAddress:nil];
-        [self setComment:nil];
-        [self setPassphrase:nil];
-        [self setPubkeyFolderPath:nil];
-        [self setBackupFolderPath:nil];
+        [self setCommandParameter:nil];
     }
 
 #pragma mark - For reset firmware
@@ -141,21 +135,10 @@ typedef enum : NSInteger {
 
 #pragma mark - Public methods
 
-    - (void)commandWillInstallPGPKey:(id)sender
-        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-        passphrase:(NSString *)passphrase
-        pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
-        // 実行コマンドを保持
+    - (void)commandWillInstallPGPKey:(id)sender  parameter:(ToolPGPParameter *)parameter {
+        // 実行コマンド／パラメーターを保持
         [self setCommand:COMMAND_OPENPGP_INSTALL_KEYS];
-        // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
-        [self setRealName:realName];
-        [self setMailAddress:mailAddress];
-        [self setComment:comment];
-        // 鍵のpassphraseには、管理用PINを指定（pinentryのloopback使用時、passphraseを複数指定できないための制約）
-        [self setPassphrase:passphrase];
-        // PGP公開鍵とバックアップtarの出力先を指定
-        [self setPubkeyFolderPath:pubkeyFolder];
-        [self setBackupFolderPath:backupFolder];
+        [self setCommandParameter:parameter];
         // バージョン照会から開始
         [self notifyProcessStarted];
         [self doRequestGPGVersion];
@@ -316,12 +299,13 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトのパラメーターファイルを生成
-        if ([self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent, [self realName], [self mailAddress], [self comment]] == false) {
+        if ([self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent,
+            [[self commandParameter] realName], [[self commandParameter] mailAddress], [[self commandParameter] comment]] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_GENERATE_MAIN_KEY commandPath:scriptPath commandArgs:args];
     }
 
@@ -360,7 +344,7 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_ADD_SUB_KEY commandPath:scriptPath commandArgs:args];
     }
 
@@ -383,7 +367,8 @@ typedef enum : NSInteger {
         // シェルスクリプトの絶対パスを取得
         NSString *scriptPath = [self getResourceFilePath:ExportPubkeyAndBackupScriptName];
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self pubkeyFolderPath], [self backupFolderPath]];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId],
+                          [[self commandParameter] pubkeyFolderPath], [[self commandParameter] backupFolderPath]];
         [self doRequestCommandLine:COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP commandPath:scriptPath commandArgs:args];
     }
 
@@ -392,8 +377,8 @@ typedef enum : NSInteger {
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfPubkeyAndBackupExist]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [self pubkeyFolderPath]];
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self backupFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [[self commandParameter] pubkeyFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [[self commandParameter] backupFolderPath]];
                 [self doRequestTransferSubkeyToCard];
                 return;
             }
@@ -418,7 +403,7 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD commandPath:scriptPath commandArgs:args];
     }
 
@@ -637,12 +622,12 @@ typedef enum : NSInteger {
 
     - (bool)checkIfPubkeyAndBackupExist {
         // 公開鍵ファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[self pubkeyFolderPath]] == false) {
+        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[[self commandParameter] pubkeyFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL];
             return false;
         }
         // バックアップファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[self backupFolderPath]] == false) {
+        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[[self commandParameter] backupFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_BACKUP_FAIL];
             return false;
         }

@@ -9,6 +9,18 @@
 
 #import "ToolCommon.h"
 
+@interface ToolPGPParameter : NSObject
+
+    // 鍵作成用パラメーターを保持
+    @property (nonatomic) NSString                     *realName;
+    @property (nonatomic) NSString                     *mailAddress;
+    @property (nonatomic) NSString                     *comment;
+    @property (nonatomic) NSString                     *passphrase;
+    @property (nonatomic) NSString                     *pubkeyFolderPath;
+    @property (nonatomic) NSString                     *backupFolderPath;
+
+@end
+
 @interface ToolPGPCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
@@ -18,11 +30,7 @@
     - (void)commandWillResetFirmware:(Command)command;
     - (void)commandDidResetFirmware:(bool)success;
 
-    - (void)commandWillInstallPGPKey:(id)sender
-        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-        passphrase:(NSString *)passphrase
-        pubkeyFolderPath:(NSString *)pubkeyFolder
-        backupFolderPath:(NSString *)backupFolder;
+    - (void)commandWillInstallPGPKey:(id)sender parameter:(ToolPGPParameter *)parameter;
     - (void)commandWillPGPStatus:(id)sender;
     - (void)commandWillPGPReset:(id)sender;
 

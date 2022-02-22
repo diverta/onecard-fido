@@ -560,15 +560,14 @@
         // 進捗画面を表示
         [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
-        NSString *realName = [[self textRealName] stringValue];
-        NSString *mailAddress = [[self textMailAddress] stringValue];
-        NSString *comment = [[self textComment] stringValue];
-        NSString *pubkeyFolderPath = [[self textPubkeyFolderPath] stringValue];
-        NSString *backupFolderPath = [[self textBackupFolderPath] stringValue];
-        NSString *passphrase = [[self textPinConfirm] stringValue];
-        [[self toolPGPCommand] commandWillInstallPGPKey:self
-            realName:realName mailAddress:mailAddress comment:comment passphrase:passphrase
-            pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
+        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
+        [parameter setRealName:[[self textRealName] stringValue]];
+        [parameter setMailAddress:[[self textMailAddress] stringValue]];
+        [parameter setComment:[[self textComment] stringValue]];
+        [parameter setPassphrase:[[self textPinConfirm] stringValue]];
+        [parameter setPubkeyFolderPath:[[self textPubkeyFolderPath] stringValue]];
+        [parameter setBackupFolderPath:[[self textBackupFolderPath] stringValue]];
+        [[self toolPGPCommand] commandWillInstallPGPKey:self parameter:parameter];
     }
 
     - (void)commandWillPGPStatus {
