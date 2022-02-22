@@ -468,8 +468,57 @@
     }
 
     - (bool)checkForPerformPinCommand:(id)sender {
-        // 入力欄のチェック
-        if ([self checkPinNumbersForPinCommand] == false) {
+        // チェック用パラメーターの設定
+        NSString *msgCurPin = @"";
+        NSString *msgNewPin = @"";
+        int minSizeCurPin = 0;
+        int minSizeNewPin = 0;
+        switch ([self selectedPinCommand]) {
+            case COMMAND_OPENPGP_CHANGE_PIN:
+                 msgCurPin = MSG_LABEL_ITEM_CUR_PIN;
+                 minSizeCurPin = 6;
+                 msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                 minSizeNewPin = 6;
+                 break;
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                 msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                 minSizeCurPin = 8;
+                 msgNewPin = MSG_LABEL_ITEM_NEW_ADMPIN;
+                 minSizeNewPin = 8;
+                 break;
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+                msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_RESET_CODE;
+                minSizeNewPin = 8;
+                break;
+            case COMMAND_OPENPGP_UNBLOCK:
+                msgCurPin = MSG_LABEL_ITEM_CUR_RESET_CODE;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            default:
+                break;
+        }
+        // 現在のPINをチェック
+        if ([self checkPinNumbersForPinCommand:[self textCurPin] fieldName:msgCurPin sizeMin:minSizeCurPin sizeMax:64] == false) {
+            return false;
+        }
+        // 新しいPINをチェック
+        if ([self checkPinNumbersForPinCommand:[self textNewPin] fieldName:msgNewPin sizeMin:minSizeNewPin sizeMax:64] == false) {
+            return false;
+        }
+        // 確認用PINのラベル
+        NSString *msgNewPinConf = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin];
+        // 確認用PINコードのチェック
+        if ([self checkPinConfirmFor:[self textNewPinConf] withSource:[self textNewPin] withName:msgNewPinConf] == false) {
             return false;
         }
         // 事前に確認ダイアログを表示
@@ -481,8 +530,17 @@
         return true;
     }
 
-    - (bool)checkPinNumbersForPinCommand {
-        // TODO: 仮の実装です。
+    - (bool)checkPinNumbersForPinCommand:(NSTextField *)field fieldName:(NSString *)name sizeMin:(int)min sizeMax:(int)max {
+        // 長さチェック
+        NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, name, min, max];
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:msg1] == false) {
+            return false;
+        }
+        // 数字チェック
+        NSString *msg2 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, name];
+        if ([ToolCommon checkIsNumeric:field informativeText:msg2] == false) {
+            return false;
+        }
         return true;
     }
 
