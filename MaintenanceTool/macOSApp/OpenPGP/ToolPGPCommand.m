@@ -187,6 +187,7 @@ typedef enum : NSInteger {
                 [self setNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
             default:
+                [self setNameOfCommand:nil];
                 break;
         }
         // コマンド開始メッセージをログファイルに出力
@@ -204,16 +205,14 @@ typedef enum : NSInteger {
 
     - (void)notifyProcessTerminated:(bool)success {
         // コマンド終了メッセージを生成
-        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
-                                success ? MSG_SUCCESS : MSG_FAILURE];
-        if (success == false) {
-            // コマンド異常終了メッセージをログ出力
-            if ([self nameOfCommand]) {
+        if ([self nameOfCommand]) {
+            NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
+                                    success ? MSG_SUCCESS : MSG_FAILURE];
+            if (success == false) {
+                // コマンド異常終了メッセージをログ出力
                 [[ToolLogFile defaultLogger] error:endMsg];
-            }
-        } else {
-            // コマンド正常終了メッセージをログ出力
-            if ([self nameOfCommand]) {
+            } else {
+                // コマンド正常終了メッセージをログ出力
                 [[ToolLogFile defaultLogger] info:endMsg];
             }
         }
