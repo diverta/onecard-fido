@@ -561,7 +561,25 @@ typedef enum : NSInteger {
     }
 
     - (void)doResponseCardEditPasswdCommand:(NSArray<NSString *> *)response {
-        // TODO: 仮の実装です。
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response] == false) {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                NSString *errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, [self nameOfCommand]];
+                [self notifyErrorMessage:errMsg];
+            }
+        } else {
+            // 成功 or 失敗メッセージが出力されているかどうかチェック
+            if ([self checkIfOperationSuccess:response]) {
+                [self setCommandSuccess:true];
+            } else {
+                NSString *itemName = [self itemNameForCardEditPasswdCommand];
+                NSString *errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName];
+                [self notifyErrorMessage:errMsg];
+            }
+        }
         // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
@@ -745,6 +763,27 @@ typedef enum : NSInteger {
         return (subKeyS && subKeyE && subKeyA);
     }
 
+    - (bool)checkIfOperationSuccess:(NSArray<NSString *> *)response {
+        // gpg --edit-card の出力メッセージをチェック
+        for (NSString *text in response) {
+            // 改行文字で区切られた文字列を分割
+            NSArray *values = [text componentsSeparatedByString:@"\n"];
+            for (NSString *value in values) {
+                // 失敗メッセージが出力されている場合は false
+                if ([value containsString:@"SC_OP_FAILURE"]) {
+                    [[ToolLogFile defaultLogger] errorWithFormat:@"GnuPG operation failed: %@", value];
+                    return false;
+                }
+                // 成功メッセージが出力されている場合は true
+                if ([value containsString:@"SC_OP_SUCCESS"]) {
+                    return true;
+                }
+            }
+        }
+        // 所定のメッセージが出力されていない場合は false
+        return false;
+    }
+
     - (NSString *)extractCardStatusMessageFrom:(NSArray<NSString *> *)response {
         for (NSString *text in response) {
             // gpg --card-status の出力メッセージをチェック
@@ -768,6 +807,19 @@ typedef enum : NSInteger {
                 return @"4";
             default:
                 return @"Q";
+        }
+    }
+
+    - (NSString *)itemNameForCardEditPasswdCommand {
+        switch ([self command]) {
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                return MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+            case COMMAND_OPENPGP_UNBLOCK:
+                return MSG_LABEL_ITEM_PGP_RESET_CODE;
+            default:
+                return MSG_LABEL_ITEM_PGP_PIN;
         }
     }
 
