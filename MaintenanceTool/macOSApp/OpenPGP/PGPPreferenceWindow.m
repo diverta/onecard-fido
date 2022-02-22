@@ -187,6 +187,10 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
         [self commandWillPerformPGPProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
@@ -238,6 +242,10 @@
     }
 
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 入力欄の内容をチェック
         if ([self checkForInstallPGPKey:sender] == false) {
             return;
@@ -256,12 +264,20 @@
     }
 
     - (IBAction)buttonPGPStatusDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // PGPステータス照会処理を実行
         [self enableButtons:false];
         [self commandWillPerformPGPProcess:COMMAND_OPENPGP_STATUS withParameter:nil];
     }
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_LABEL_COMMAND_OPENPGP_RESET];
         if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
@@ -299,6 +315,10 @@
     }
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 入力欄の内容をチェック
         if ([self checkForPerformPinCommand:sender] == false) {
             return;

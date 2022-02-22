@@ -35,6 +35,7 @@
     - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPGPStatusInfoString;
+    - (bool)checkUSBHIDConnection;
 
 @end
 

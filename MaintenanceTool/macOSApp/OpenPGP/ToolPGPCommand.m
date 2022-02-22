@@ -870,4 +870,9 @@ typedef enum : NSInteger {
         return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     }
 
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolAppCommand] checkForHIDCommand];
+    }
+
 @end
