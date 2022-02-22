@@ -24,6 +24,9 @@
 #define CardStatusScriptName                    @"card_status.sh"
 #define CardResetScriptName                     @"card_reset.sh"
 #define CardResetScriptParamName                @"card_reset.param"
+#define CardEditPasswdScriptName                @"card_edit_passwd.sh"
+#define CardEditPasswdParamName                 @"card_edit_passwd.param"
+#define CardEditUnblockParamName                @"card_edit_unblock.param"
 #define SelectingCardFailedWarningMessage       @"selecting card failed"
 #define GpgCardStatusStartingMessage            @"Reader ...........:"
 
@@ -518,8 +521,43 @@ typedef enum : NSInteger {
     }
 
     - (void)doRequestCardEditPasswdCommand:(GPGCommand)command  {
-        // TODO: 仮の実装です。
-        [self doResponseCardEditPasswdCommand:@[ExecuteScriptSuccessMessage]];
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:CardEditPasswdScriptName];
+        // パラメーターファイル名／テンプレート置換用引数群を設定
+        NSString *paramName;
+        switch (command) {
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                paramName = CardEditUnblockParamName;
+                break;
+            default:
+                paramName = CardEditPasswdParamName;
+                break;
+        }
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:paramName];
+        if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        bool result;
+        switch (command) {
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                result = [self writeParameterFile:paramName fromTemplate:paramTemplContent,
+                    [[self commandParameter] currentPin], [[self commandParameter] renewalPin], [[self commandParameter] renewalPin]];
+                break;
+            default:
+                result = [self writeParameterFile:paramName fromTemplate:paramTemplContent, [self menuNoForCardEditPasswdCommand],
+                    [[self commandParameter] currentPin], [[self commandParameter] renewalPin], [[self commandParameter] renewalPin]];
+                break;
+        }
+        if (result == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], paramName, @"--no-tty"];
+        [self doRequestCommandLine:command commandPath:scriptPath commandArgs:args];
     }
 
     - (void)doResponseCardEditPasswdCommand:(NSArray<NSString *> *)response {
@@ -718,6 +756,21 @@ typedef enum : NSInteger {
         return nil;
     }
 
+    - (NSString *)menuNoForCardEditPasswdCommand {
+        switch ([self command]) {
+            case COMMAND_OPENPGP_CHANGE_PIN:
+                return @"1";
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+                return @"2";
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                return @"3";
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                return @"4";
+            default:
+                return @"Q";
+        }
+    }
+
 #pragma mark - Command line processor
 
     - (void)doRequestCommandLine:(GPGCommand)command commandPath:(NSString*)path commandArgs:(NSArray*)args {
@@ -802,6 +855,10 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_GPG_CARD_RESET:
                 [self doResponseCardReset:outputArray];
+                break;
+            case COMMAND_GPG_CARD_EDIT_PASSWD:
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                [self doResponseCardEditPasswdCommand:outputArray];
                 break;
             default:
                 return;
