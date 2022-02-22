@@ -39,6 +39,8 @@ typedef enum : NSInteger {
     COMMAND_GPG_REMOVE_TEMP_FOLDER,
     COMMAND_GPG_CARD_STATUS,
     COMMAND_GPG_CARD_RESET,
+    COMMAND_GPG_CARD_EDIT_PASSWD,
+    COMMAND_GPG_CARD_EDIT_UNBLOCK,
 } GPGCommand;
 
 @implementation ToolPGPParameter
@@ -141,6 +143,11 @@ typedef enum : NSInteger {
             case COMMAND_OPENPGP_INSTALL_KEYS:
             case COMMAND_OPENPGP_STATUS:
             case COMMAND_OPENPGP_RESET:
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
                 // バージョン照会から開始
                 [self doRequestGPGVersion];
                 break;
@@ -176,6 +183,14 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
                 [self setNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
+                break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                // パラメーターに格納されたコマンド名から取得する
+                [self setNameOfCommand:[[self commandParameter] pinCommandName]];
                 break;
             default:
                 [self setNameOfCommand:nil];
@@ -274,6 +289,15 @@ typedef enum : NSInteger {
                 break;
             case COMMAND_OPENPGP_RESET:
                 [self doRequestCardReset];
+                break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                [self doRequestCardEditPasswdCommand:COMMAND_GPG_CARD_EDIT_PASSWD];
+                break;
+            case COMMAND_OPENPGP_UNBLOCK:
+                [self doRequestCardEditPasswdCommand:COMMAND_GPG_CARD_EDIT_UNBLOCK];
                 break;
             default:
                 [self notifyProcessTerminated:false];
@@ -489,6 +513,17 @@ typedef enum : NSInteger {
                 [self notifyErrorMessage:MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED];
             }
         }
+        // 後処理に移行
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestCardEditPasswdCommand:(GPGCommand)command  {
+        // TODO: 仮の実装です。
+        [self doResponseCardEditPasswdCommand:@[ExecuteScriptSuccessMessage]];
+    }
+
+    - (void)doResponseCardEditPasswdCommand:(NSArray<NSString *> *)response {
+        // TODO: 仮の実装です。
         // 後処理に移行
         [self doRequestRemoveTempFolder];
     }
