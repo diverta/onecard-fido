@@ -534,8 +534,8 @@ namespace MaintenanceToolGUI
         private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min, int size_max)
         {
             // 長さチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min, size_max);
-            if (FormUtil.checkEntrySize(text, size_min, size_max, informativeText) == false) {
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min);
+            if (FormUtil.checkEntrySize(text, size_min, size_min, informativeText) == false) {
                 return false;
             }
 
