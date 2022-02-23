@@ -119,8 +119,8 @@
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
-        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERROR = "{0}時、不明なエラーが発生しました。";
-        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL = "{0}が失敗しました。\n入力した{1}が間違っている可能性があります。";
+        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
+        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG = "入力した{0}が間違っている可能性があります。";
         public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
         public const string MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE = "生成したPGP秘密鍵（副鍵）を認証器に移動しました。";
         public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
@@ -128,7 +128,7 @@
         public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER = "バックアップファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_INPUT_PGP_MUST_ENTRY = "{0}は必ず入力してください";
-        public const string MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT = "{0}は{1}～{2}文字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT = "{0}は{1}桁で入力してください";
         public const string MSG_PROMPT_INPUT_PGP_ASCII_ENTRY = "{0}は半角文字で入力してください";
         public const string MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY = "{0}を正しく入力してください";
         public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT = "{0}を8桁で入力してください";

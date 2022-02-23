@@ -127,7 +127,7 @@
             // 
             // textPinConfirm
             // 
-            this.textPinConfirm.Location = new System.Drawing.Point(110, 54);
+            this.textPinConfirm.Location = new System.Drawing.Point(150, 54);
             this.textPinConfirm.Name = "textPinConfirm";
             this.textPinConfirm.Size = new System.Drawing.Size(130, 19);
             this.textPinConfirm.TabIndex = 26;
@@ -135,7 +135,7 @@
             // 
             // textPin
             // 
-            this.textPin.Location = new System.Drawing.Point(110, 27);
+            this.textPin.Location = new System.Drawing.Point(150, 27);
             this.textPin.Name = "textPin";
             this.textPin.Size = new System.Drawing.Size(130, 19);
             this.textPin.TabIndex = 24;
@@ -145,17 +145,17 @@
             // 
             this.label5.Location = new System.Drawing.Point(13, 57);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 12);
+            this.label5.Size = new System.Drawing.Size(120, 12);
             this.label5.TabIndex = 25;
-            this.label5.Text = "PIN番号（確認）";
+            this.label5.Text = "管理用PIN番号（確認）";
             // 
             // label10
             // 
             this.label10.Location = new System.Drawing.Point(13, 30);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(70, 12);
+            this.label10.Size = new System.Drawing.Size(120, 12);
             this.label10.TabIndex = 23;
-            this.label10.Text = "PIN番号";
+            this.label10.Text = "管理用PIN番号";
             // 
             // groupBox3
             // 
