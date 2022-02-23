@@ -349,6 +349,7 @@
 #define MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT        @"%@は%d～%d文字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ASCII_ENTRY        @"%@は半角文字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY      @"%@を正しく入力してください"
+#define MSG_PROMPT_INPUT_PGP_PIN_DIGIT          @"%@は%d桁で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT    @"%@を8桁で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM      @"%@を数字で入力してください"
 #define MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM  @"%@を正しく入力してください"

@@ -545,11 +545,11 @@
                 break;
         }
         // 現在のPINをチェック
-        if ([self checkPinNumbersForPinCommand:[self textCurPin] fieldName:msgCurPin sizeMin:minSizeCurPin sizeMax:64] == false) {
+        if ([self checkPinNumbersForPinCommand:[self textCurPin] fieldName:msgCurPin sizeMin:minSizeCurPin] == false) {
             return false;
         }
         // 新しいPINをチェック
-        if ([self checkPinNumbersForPinCommand:[self textNewPin] fieldName:msgNewPin sizeMin:minSizeNewPin sizeMax:64] == false) {
+        if ([self checkPinNumbersForPinCommand:[self textNewPin] fieldName:msgNewPin sizeMin:minSizeNewPin] == false) {
             return false;
         }
         // 確認用PINのラベル
@@ -567,10 +567,10 @@
         return true;
     }
 
-    - (bool)checkPinNumbersForPinCommand:(NSTextField *)field fieldName:(NSString *)name sizeMin:(int)min sizeMax:(int)max {
+    - (bool)checkPinNumbersForPinCommand:(NSTextField *)field fieldName:(NSString *)name sizeMin:(int)min {
         // 長さチェック
-        NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, name, min, max];
-        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:msg1] == false) {
+        NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_PIN_DIGIT, name, min];
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:min informativeText:msg1] == false) {
             return false;
         }
         // 数字チェック
