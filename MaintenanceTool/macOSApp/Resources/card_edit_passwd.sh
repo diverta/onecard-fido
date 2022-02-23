@@ -28,7 +28,7 @@ export GNUPGHOME=${TEMPDIR}
 #
 # OpenPGP card edit passwd/unblock
 #
-cat ${CARD_EDIT_COMMAND} | /usr/local/bin/gpg --command-fd 0 --status-fd 1 --pinentry-mode loopback ${SCRIPT_OPT} --edit-card
+/usr/local/bin/gpg --command-file ${CARD_EDIT_COMMAND} --status-fd 1 --pinentry-mode loopback ${SCRIPT_OPT} --edit-card
 RC=`echo $?`
 if [ ${RC} -ne 0 ]; then
     echo "OpenPGP card edit passwd/unblock fail"
