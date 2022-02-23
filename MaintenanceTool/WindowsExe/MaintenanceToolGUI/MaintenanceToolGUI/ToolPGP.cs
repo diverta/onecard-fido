@@ -514,7 +514,7 @@ namespace MaintenanceToolGUI
                 if (CheckIfCardErrorFromResponse(error)) {
                     NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERROR, Parameter.SelectedPinCommandName);
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, Parameter.SelectedPinCommandName);
                     NotifyErrorMessage(message);
                 }
 
@@ -524,7 +524,7 @@ namespace MaintenanceToolGUI
                     CommandSuccess = true;
                 } else {
                     string itemName = ItemNameForCardEditPasswdCommand();
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_FAIL, Parameter.SelectedPinCommandName, itemName);
+                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName);
                     NotifyErrorMessage(message);
                 }
             }

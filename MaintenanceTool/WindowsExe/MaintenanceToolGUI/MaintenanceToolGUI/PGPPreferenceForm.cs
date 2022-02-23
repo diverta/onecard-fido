@@ -509,12 +509,12 @@ namespace MaintenanceToolGUI
             }
 
             // 現在のPINをチェック
-            if (CheckPinNumberForPinCommand(textCurPin, msgCurPin, minSizeCurPin, 64) == false) {
+            if (CheckPinNumberForPinCommand(textCurPin, msgCurPin, minSizeCurPin) == false) {
                 return false;
             }
 
             // 新しいPINをチェック
-            if (CheckPinNumberForPinCommand(textNewPin, msgNewPin, minSizeNewPin, 64) == false) {
+            if (CheckPinNumberForPinCommand(textNewPin, msgNewPin, minSizeNewPin) == false) {
                 return false;
             }
 
@@ -531,11 +531,11 @@ namespace MaintenanceToolGUI
             return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
         }
 
-        private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min, int size_max)
+        private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min)
         {
             // 長さチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min, size_max);
-            if (FormUtil.checkEntrySize(text, size_min, size_max, informativeText) == false) {
+            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, size_min);
+            if (FormUtil.checkEntrySize(text, size_min, size_min, informativeText) == false) {
                 return false;
             }
 
