@@ -24,6 +24,9 @@
 #define CardStatusScriptName                    @"card_status.sh"
 #define CardResetScriptName                     @"card_reset.sh"
 #define CardResetScriptParamName                @"card_reset.param"
+#define CardEditPasswdScriptName                @"card_edit_passwd.sh"
+#define CardEditPasswdParamName                 @"card_edit_passwd.param"
+#define CardEditUnblockParamName                @"card_edit_unblock.param"
 #define SelectingCardFailedWarningMessage       @"selecting card failed"
 #define GpgCardStatusStartingMessage            @"Reader ...........:"
 
@@ -39,7 +42,13 @@ typedef enum : NSInteger {
     COMMAND_GPG_REMOVE_TEMP_FOLDER,
     COMMAND_GPG_CARD_STATUS,
     COMMAND_GPG_CARD_RESET,
+    COMMAND_GPG_CARD_EDIT_PASSWD,
+    COMMAND_GPG_CARD_EDIT_UNBLOCK,
 } GPGCommand;
+
+@implementation ToolPGPParameter
+
+@end
 
 @interface ToolPGPCommand ()
 
@@ -50,6 +59,8 @@ typedef enum : NSInteger {
     // コマンド種別を保持
     @property (nonatomic) Command                       command;
     @property (nonatomic) GPGCommand                    gpgCommand;
+    // コマンドパラメーターを保持
+    @property (nonatomic) ToolPGPParameter             *commandParameter;
     // 処理機能名称を保持
     @property (nonatomic) NSString                     *nameOfCommand;
     // エラーメッセージテキストを保持
@@ -68,13 +79,6 @@ typedef enum : NSInteger {
     @property (nonatomic) bool                          keyAlreadyStoredWarning;
     // スクリプトから出力されたログを保持
     @property (nonatomic) NSMutableArray<NSString *>   *scriptLogArray;
-    // 鍵作成用パラメーターを保持
-    @property (nonatomic) NSString                     *realName;
-    @property (nonatomic) NSString                     *mailAddress;
-    @property (nonatomic) NSString                     *comment;
-    @property (nonatomic) NSString                     *passphrase;
-    @property (nonatomic) NSString                     *pubkeyFolderPath;
-    @property (nonatomic) NSString                     *backupFolderPath;
 
 @end
 
@@ -100,23 +104,10 @@ typedef enum : NSInteger {
         // コマンドおよびパラメーターを初期化
         [self setCommand:COMMAND_NONE];
         [self setGpgCommand:COMMAND_GPG_NONE];
-        [self setRealName:nil];
-        [self setMailAddress:nil];
-        [self setComment:nil];
-        [self setPassphrase:nil];
-        [self setPubkeyFolderPath:nil];
-        [self setBackupFolderPath:nil];
+        [self setCommandParameter:nil];
     }
 
 #pragma mark - For reset firmware
-
-    - (void)commandWillResetFirmware:(Command)command {
-        // 実行コマンドを保持
-        [self setCommand:command];
-        // HIDインターフェース経由でファームウェアをリセット
-        [self notifyProcessStarted];
-        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
-    }
 
     - (void)commandDidResetFirmware:(bool)success {
         if (success == false) {
@@ -141,40 +132,33 @@ typedef enum : NSInteger {
 
 #pragma mark - Public methods
 
-    - (void)commandWillInstallPGPKey:(id)sender
-        realName:(NSString *)realName mailAddress:(NSString *)mailAddress comment:(NSString *)comment
-        passphrase:(NSString *)passphrase
-        pubkeyFolderPath:(NSString *)pubkeyFolder backupFolderPath:(NSString *)backupFolder {
-        // 実行コマンドを保持
-        [self setCommand:COMMAND_OPENPGP_INSTALL_KEYS];
-        // PGP秘密鍵（主鍵）生成のためのパラメーターを指定
-        [self setRealName:realName];
-        [self setMailAddress:mailAddress];
-        [self setComment:comment];
-        // 鍵のpassphraseには、管理用PINを指定（pinentryのloopback使用時、passphraseを複数指定できないための制約）
-        [self setPassphrase:passphrase];
-        // PGP公開鍵とバックアップtarの出力先を指定
-        [self setPubkeyFolderPath:pubkeyFolder];
-        [self setBackupFolderPath:backupFolder];
-        // バージョン照会から開始
+    - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter {
+        // 実行コマンド／パラメーターを保持
+        [self setCommand:command];
+        [self setCommandParameter:parameter];
         [self notifyProcessStarted];
-        [self doRequestGPGVersion];
-    }
-    
-    - (void)commandWillPGPStatus:(id)sender {
-        // 実行コマンドを保持
-        [self setCommand:COMMAND_OPENPGP_STATUS];
-        // バージョン照会から開始
-        [self notifyProcessStarted];
-        [self doRequestGPGVersion];
-    }
-
-    - (void)commandWillPGPReset:(id)sender {
-        // 実行コマンドを保持
-        [self setCommand:COMMAND_OPENPGP_RESET];
-        // バージョン照会から開始
-        [self notifyProcessStarted];
-        [self doRequestGPGVersion];
+        // コマンドにより分岐
+        switch (command) {
+            case COMMAND_HID_FIRMWARE_RESET:
+                // HIDインターフェース経由でファームウェアをリセット
+                [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+                break;
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+            case COMMAND_OPENPGP_STATUS:
+            case COMMAND_OPENPGP_RESET:
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                // バージョン照会から開始
+                [self doRequestGPGVersion];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self notifyProcessTerminated:false];
+                break;
+        }
     }
 
     - (NSString *)getPGPStatusInfoString {
@@ -203,12 +187,23 @@ typedef enum : NSInteger {
             case COMMAND_HID_FIRMWARE_RESET:
                 [self setNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                // パラメーターに格納されたコマンド名から取得する
+                [self setNameOfCommand:[[self commandParameter] pinCommandName]];
+                break;
             default:
+                [self setNameOfCommand:nil];
                 break;
         }
         // コマンド開始メッセージをログファイルに出力
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
-        [[ToolLogFile defaultLogger] info:startMsg];
+        if ([self nameOfCommand]) {
+            NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self nameOfCommand]];
+            [[ToolLogFile defaultLogger] info:startMsg];
+        }
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
@@ -221,16 +216,14 @@ typedef enum : NSInteger {
 
     - (void)notifyProcessTerminated:(bool)success {
         // コマンド終了メッセージを生成
-        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
-                                success ? MSG_SUCCESS : MSG_FAILURE];
-        if (success == false) {
-            // コマンド異常終了メッセージをログ出力
-            if ([self nameOfCommand]) {
+        if ([self nameOfCommand]) {
+            NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self nameOfCommand],
+                                    success ? MSG_SUCCESS : MSG_FAILURE];
+            if (success == false) {
+                // コマンド異常終了メッセージをログ出力
                 [[ToolLogFile defaultLogger] error:endMsg];
-            }
-        } else {
-            // コマンド正常終了メッセージをログ出力
-            if ([self nameOfCommand]) {
+            } else {
+                // コマンド正常終了メッセージをログ出力
                 [[ToolLogFile defaultLogger] info:endMsg];
             }
         }
@@ -300,6 +293,15 @@ typedef enum : NSInteger {
             case COMMAND_OPENPGP_RESET:
                 [self doRequestCardReset];
                 break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                [self doRequestCardEditPasswdCommand:COMMAND_GPG_CARD_EDIT_PASSWD];
+                break;
+            case COMMAND_OPENPGP_UNBLOCK:
+                [self doRequestCardEditPasswdCommand:COMMAND_GPG_CARD_EDIT_UNBLOCK];
+                break;
             default:
                 [self notifyProcessTerminated:false];
                 break;
@@ -316,12 +318,13 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトのパラメーターファイルを生成
-        if ([self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent, [self realName], [self mailAddress], [self comment]] == false) {
+        if ([self writeParameterFile:GenerateMainKeyScriptParamName fromTemplate:paramTemplContent,
+            [[self commandParameter] realName], [[self commandParameter] mailAddress], [[self commandParameter] comment]] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_GENERATE_MAIN_KEY commandPath:scriptPath commandArgs:args];
     }
 
@@ -360,7 +363,7 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_ADD_SUB_KEY commandPath:scriptPath commandArgs:args];
     }
 
@@ -383,7 +386,8 @@ typedef enum : NSInteger {
         // シェルスクリプトの絶対パスを取得
         NSString *scriptPath = [self getResourceFilePath:ExportPubkeyAndBackupScriptName];
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], [self pubkeyFolderPath], [self backupFolderPath]];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId],
+                          [[self commandParameter] pubkeyFolderPath], [[self commandParameter] backupFolderPath]];
         [self doRequestCommandLine:COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP commandPath:scriptPath commandArgs:args];
     }
 
@@ -392,8 +396,8 @@ typedef enum : NSInteger {
         if ([self checkResponseOfScript:response]) {
             if ([self checkIfPubkeyAndBackupExist]) {
                 // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [self pubkeyFolderPath]];
-                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [self backupFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, [[self commandParameter] pubkeyFolderPath]];
+                [[ToolLogFile defaultLogger] debugWithFormat:MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, [[self commandParameter] backupFolderPath]];
                 [self doRequestTransferSubkeyToCard];
                 return;
             }
@@ -418,7 +422,7 @@ typedef enum : NSInteger {
             return;
         }
         // シェルスクリプトを実行
-        NSArray *args = @[[self tempFolderPath], [self passphrase], [self generatedMainKeyId], @"--no-tty"];
+        NSArray *args = @[[self tempFolderPath], [[self commandParameter] passphrase], [self generatedMainKeyId], @"--no-tty"];
         [self doRequestCommandLine:COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD commandPath:scriptPath commandArgs:args];
     }
 
@@ -510,6 +514,70 @@ typedef enum : NSInteger {
                 [self setCommandSuccess:true];
             } else {
                 [self notifyErrorMessage:MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED];
+            }
+        }
+        // 後処理に移行
+        [self doRequestRemoveTempFolder];
+    }
+
+    - (void)doRequestCardEditPasswdCommand:(GPGCommand)command  {
+        // シェルスクリプトの絶対パスを取得
+        NSString *scriptPath = [self getResourceFilePath:CardEditPasswdScriptName];
+        // パラメーターファイル名／テンプレート置換用引数群を設定
+        NSString *paramName;
+        switch (command) {
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                paramName = CardEditUnblockParamName;
+                break;
+            default:
+                paramName = CardEditPasswdParamName;
+                break;
+        }
+        // パラメーターテンプレートをファイルから読込み
+        NSString *paramTemplContent = [self readParameterTemplateFrom:paramName];
+        if (paramTemplContent == nil) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトのパラメーターファイルを生成
+        bool result;
+        switch (command) {
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                result = [self writeParameterFile:paramName fromTemplate:paramTemplContent,
+                    [[self commandParameter] currentPin], [[self commandParameter] renewalPin], [[self commandParameter] renewalPin]];
+                break;
+            default:
+                result = [self writeParameterFile:paramName fromTemplate:paramTemplContent, [self menuNoForCardEditPasswdCommand],
+                    [[self commandParameter] currentPin], [[self commandParameter] renewalPin], [[self commandParameter] renewalPin]];
+                break;
+        }
+        if (result == false) {
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // シェルスクリプトを実行
+        NSArray *args = @[[self tempFolderPath], paramName, @"--no-tty"];
+        [self doRequestCommandLine:command commandPath:scriptPath commandArgs:args];
+    }
+
+    - (void)doResponseCardEditPasswdCommand:(NSArray<NSString *> *)response {
+        // レスポンスをチェック
+        if ([self checkResponseOfScript:response] == false) {
+            // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+            if ([self checkIfCardErrorFromResponse:response]) {
+                [self notifyErrorMessage:MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL];
+            } else {
+                NSString *errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, [self nameOfCommand]];
+                [self notifyErrorMessage:errMsg];
+            }
+        } else {
+            // 成功 or 失敗メッセージが出力されているかどうかチェック
+            if ([self checkIfOperationSuccess:response]) {
+                [self setCommandSuccess:true];
+            } else {
+                NSString *itemName = [self itemNameForCardEditPasswdCommand];
+                NSString *errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName];
+                [self notifyErrorMessage:errMsg];
             }
         }
         // 後処理に移行
@@ -637,12 +705,12 @@ typedef enum : NSInteger {
 
     - (bool)checkIfPubkeyAndBackupExist {
         // 公開鍵ファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[self pubkeyFolderPath]] == false) {
+        if ([self checkIfFileExist:ExportedPubkeyFileName inFolder:[[self commandParameter] pubkeyFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL];
             return false;
         }
         // バックアップファイルがエクスポート先に存在するかチェック
-        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[self backupFolderPath]] == false) {
+        if ([self checkIfFileExist:ExportedBackupFileName inFolder:[[self commandParameter] backupFolderPath]] == false) {
             [[ToolLogFile defaultLogger] error:MSG_ERROR_OPENPGP_BACKUP_FAIL];
             return false;
         }
@@ -695,6 +763,27 @@ typedef enum : NSInteger {
         return (subKeyS && subKeyE && subKeyA);
     }
 
+    - (bool)checkIfOperationSuccess:(NSArray<NSString *> *)response {
+        // gpg --edit-card の出力メッセージをチェック
+        for (NSString *text in response) {
+            // 改行文字で区切られた文字列を分割
+            NSArray *values = [text componentsSeparatedByString:@"\n"];
+            for (NSString *value in values) {
+                // 失敗メッセージが出力されている場合は false
+                if ([value containsString:@"SC_OP_FAILURE"]) {
+                    [[ToolLogFile defaultLogger] errorWithFormat:@"GnuPG operation failed: %@", value];
+                    return false;
+                }
+                // 成功メッセージが出力されている場合は true
+                if ([value containsString:@"SC_OP_SUCCESS"]) {
+                    return true;
+                }
+            }
+        }
+        // 所定のメッセージが出力されていない場合は false
+        return false;
+    }
+
     - (NSString *)extractCardStatusMessageFrom:(NSArray<NSString *> *)response {
         for (NSString *text in response) {
             // gpg --card-status の出力メッセージをチェック
@@ -704,6 +793,34 @@ typedef enum : NSInteger {
         }
         [[ToolLogFile defaultLogger] error:@"Card status command output does not exist"];
         return nil;
+    }
+
+    - (NSString *)menuNoForCardEditPasswdCommand {
+        switch ([self command]) {
+            case COMMAND_OPENPGP_CHANGE_PIN:
+                return @"1";
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+                return @"2";
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                return @"3";
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                return @"4";
+            default:
+                return @"Q";
+        }
+    }
+
+    - (NSString *)itemNameForCardEditPasswdCommand {
+        switch ([self command]) {
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                return MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+            case COMMAND_OPENPGP_UNBLOCK:
+                return MSG_LABEL_ITEM_PGP_RESET_CODE;
+            default:
+                return MSG_LABEL_ITEM_PGP_PIN;
+        }
     }
 
 #pragma mark - Command line processor
@@ -791,6 +908,10 @@ typedef enum : NSInteger {
             case COMMAND_GPG_CARD_RESET:
                 [self doResponseCardReset:outputArray];
                 break;
+            case COMMAND_GPG_CARD_EDIT_PASSWD:
+            case COMMAND_GPG_CARD_EDIT_UNBLOCK:
+                [self doResponseCardEditPasswdCommand:outputArray];
+                break;
             default:
                 return;
         }
@@ -856,6 +977,11 @@ typedef enum : NSInteger {
         // 指定のフォルダー配下にファイルが存在している場合は true
         NSString *filePath = [NSString stringWithFormat:@"%@/%@", folderPath, filename];
         return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolAppCommand] checkForHIDCommand];
     }
 
 @end

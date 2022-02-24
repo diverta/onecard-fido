@@ -44,6 +44,21 @@
     @property (assign) IBOutlet NSTextField         *textPin;
     @property (assign) IBOutlet NSTextField         *textPinConfirm;
     @property (assign) IBOutlet NSButton            *buttonInstallPGPKey;
+
+    @property (assign) IBOutlet NSTabViewItem       *tabPinManagement;
+    @property (assign) IBOutlet NSButton            *buttonChangePin;
+    @property (assign) IBOutlet NSButton            *buttonChangeAdminPin;
+    @property (assign) IBOutlet NSButton            *buttonUnblockPin;
+    @property (assign) IBOutlet NSButton            *buttonSetResetCode;
+    @property (assign) IBOutlet NSButton            *buttonUnblock;
+    @property (assign) IBOutlet NSTextField         *textCurPin;
+    @property (assign) IBOutlet NSTextField         *textNewPin;
+    @property (assign) IBOutlet NSTextField         *textNewPinConf;
+    @property (assign) IBOutlet NSTextField         *labelCurPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPinConf;
+    @property (assign) IBOutlet NSButton            *buttonPerformPinCommand;
+
     @property (assign) IBOutlet NSButton            *buttonPGPStatus;
     @property (assign) IBOutlet NSButton            *buttonPGPReset;
 
@@ -52,6 +67,9 @@
     // OpenPGP機能処理クラスの参照を保持
     @property (nonatomic, weak) ToolPGPCommand      *toolPGPCommand;
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
+    // 実行するPIN管理コマンドを保持
+    @property (nonatomic) Command                    selectedPinCommand;
+    @property (nonatomic) NSString                  *selectedPinCommandName;
 
 @end
 
@@ -68,6 +86,8 @@
         // PGP鍵管理タブ内の入力項目を初期化（このタブが選択状態になります）
         [[self tabView] selectTabViewItem:[self tabPGPKeyManagement]];
         [self initTabPGPKeyManagement];
+        // PIN番号管理タブ内の入力項目を初期化
+        [self initTabPinManagement];
     }
 
     - (void)initTabPGPKeyManagement {
@@ -95,6 +115,26 @@
         [[self textRealName] becomeFirstResponder];
     }
 
+    - (void)initTabPinManagement {
+        // ラジオボタンの初期化
+        [self initButtonPinCommandsWithDefault:[self buttonChangePin]];
+    }
+
+    - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
+        // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+        [defaultButton setState:NSControlStateValueOn];
+        [self getSelectedPinCommandValue:defaultButton];
+    }
+
+    - (void)initTabPinManagementPinFields {
+        // テキストボックスを初期化
+        [[self textCurPin] setStringValue:@""];
+        [[self textNewPin] setStringValue:@""];
+        [[self textNewPinConf] setStringValue:@""];
+        // テキストボックスのカーソルを先頭の項目に配置
+        [[self textCurPin] becomeFirstResponder];
+    }
+
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonClose] setEnabled:enabled];
@@ -105,6 +145,8 @@
         NSTabViewItem *item = [[self tabView] selectedTabViewItem];
         if (item == [self tabPGPKeyManagement]) {
             [self enableButtonsInTabPGPKeyManagement:enabled];
+        } else if (item == [self tabPinManagement]) {
+            [self enableButtonsInTabPinManagement:enabled];
         }
     }
 
@@ -120,6 +162,19 @@
         [[self buttonInstallPGPKey] setEnabled:enabled];
     }
 
+    - (void)enableButtonsInTabPinManagement:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonChangePin] setEnabled:enabled];
+        [[self buttonChangeAdminPin] setEnabled:enabled];
+        [[self buttonUnblockPin] setEnabled:enabled];
+        [[self buttonSetResetCode] setEnabled:enabled];
+        [[self buttonUnblock] setEnabled:enabled];
+        [[self textCurPin] setEnabled:enabled];
+        [[self textNewPin] setEnabled:enabled];
+        [[self textNewPinConf] setEnabled:enabled];
+        [[self buttonPerformPinCommand] setEnabled:enabled];
+    }
+
     - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         if ([self parentWindow]) {
@@ -132,9 +187,13 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
-        [self commandWillResetFirmware];
+        [self commandWillPerformPGPProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -183,27 +242,48 @@
     }
 
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
-        // 入力欄の内容をチェック
-        if ([self checkForInstallPGPKey:sender]) {
-            // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
-            [self enableButtons:false];
-            [self commandWillInstallPGPKey];
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
         }
+        // 入力欄の内容をチェック
+        if ([self checkForInstallPGPKey:sender] == false) {
+            return;
+        }
+        // 画面入力内容をパラメーターに格納
+        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
+        [parameter setRealName:[[self textRealName] stringValue]];
+        [parameter setMailAddress:[[self textMailAddress] stringValue]];
+        [parameter setComment:[[self textComment] stringValue]];
+        [parameter setPassphrase:[[self textPinConfirm] stringValue]];
+        [parameter setPubkeyFolderPath:[[self textPubkeyFolderPath] stringValue]];
+        [parameter setBackupFolderPath:[[self textBackupFolderPath] stringValue]];
+        // PGP秘密鍵インストール処理を実行
+        [self enableButtons:false];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_INSTALL_KEYS withParameter:parameter];
     }
 
     - (IBAction)buttonPGPStatusDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // PGPステータス照会処理を実行
         [self enableButtons:false];
-        [self commandWillPGPStatus];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_STATUS withParameter:nil];
     }
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_LABEL_COMMAND_OPENPGP_RESET];
         if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
             // PGPリセット処理を実行
             [self enableButtons:false];
-            [self commandWillPGPReset];
+            [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
         }
     }
 
@@ -226,6 +306,75 @@
             [field setStringValue:filePath];
             [field setToolTip:filePath];
         }
+    }
+
+#pragma mark - PIN番号管理タブ関連
+
+    - (IBAction)buttonPinCommandSelected:(id)sender {
+        [self getSelectedPinCommandValue:sender];
+    }
+
+    - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+            return;
+        }
+        // 入力欄の内容をチェック
+        if ([self checkForPerformPinCommand:sender] == false) {
+            return;
+        }
+        // 画面入力内容をパラメーターに格納
+        ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
+        [parameter setPinCommandName:[self selectedPinCommandName]];
+        [parameter setCurrentPin:[[self textCurPin] stringValue]];
+        [parameter setRenewalPin:[[self textNewPin] stringValue]];
+        // PIN番号管理コマンドを実行
+        [self enableButtons:false];
+        [self commandWillPerformPGPProcess:[self selectedPinCommand] withParameter:parameter];
+    }
+
+    - (void)getSelectedPinCommandValue:(NSButton *)button {
+        // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+        if (button == [self buttonChangePin]) {
+            // PIN番号を変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_CHANGE_PIN];
+            [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_PIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+        }
+        if (button == [self buttonChangeAdminPin]) {
+            // 管理用PIN番号を変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_CHANGE_ADMIN_PIN];
+            [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_ADMPIN];
+        }
+        if (button == [self buttonUnblockPin]) {
+            // PIN番号をリセット
+            [self setSelectedPinCommand:COMMAND_OPENPGP_UNBLOCK_PIN];
+            [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+        }
+        if (button == [self buttonSetResetCode]) {
+            // リセットコードを変更
+            [self setSelectedPinCommand:COMMAND_OPENPGP_SET_RESET_CODE];
+            [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_ADMPIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_RESET_CODE];
+        }
+        if (button == [self buttonUnblock]) {
+            // リセットコードでPIN番号をリセット
+            [self setSelectedPinCommand:COMMAND_OPENPGP_UNBLOCK];
+            [self setSelectedPinCommandName:MSG_LABEL_COMMAND_OPENPGP_UNBLOCK];
+            [[self labelCurPin] setStringValue:MSG_LABEL_ITEM_CUR_RESET_CODE];
+            [[self labelNewPin] setStringValue:MSG_LABEL_ITEM_NEW_PIN];
+        }
+        // 確認欄のキャプションを設定
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, [[self labelNewPin] stringValue]];
+        [[self labelNewPinConf] setStringValue:caption];
+        // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+        [self initTabPinManagementPinFields];
     }
 
 #pragma mark - 入力チェック関連
@@ -355,42 +504,90 @@
         return [ToolCommon compareEntry:dest srcField:source informativeText:msg];
     }
 
+    - (bool)checkForPerformPinCommand:(id)sender {
+        // チェック用パラメーターの設定
+        NSString *msgCurPin = @"";
+        NSString *msgNewPin = @"";
+        int minSizeCurPin = 0;
+        int minSizeNewPin = 0;
+        switch ([self selectedPinCommand]) {
+            case COMMAND_OPENPGP_CHANGE_PIN:
+                 msgCurPin = MSG_LABEL_ITEM_CUR_PIN;
+                 minSizeCurPin = 6;
+                 msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                 minSizeNewPin = 6;
+                 break;
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                 msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                 minSizeCurPin = 8;
+                 msgNewPin = MSG_LABEL_ITEM_NEW_ADMPIN;
+                 minSizeNewPin = 8;
+                 break;
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+                msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+                msgCurPin = MSG_LABEL_ITEM_CUR_ADMPIN;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_RESET_CODE;
+                minSizeNewPin = 8;
+                break;
+            case COMMAND_OPENPGP_UNBLOCK:
+                msgCurPin = MSG_LABEL_ITEM_CUR_RESET_CODE;
+                minSizeCurPin = 8;
+                msgNewPin = MSG_LABEL_ITEM_NEW_PIN;
+                minSizeNewPin = 6;
+                break;
+            default:
+                break;
+        }
+        // 現在のPINをチェック
+        if ([self checkPinNumbersForPinCommand:[self textCurPin] fieldName:msgCurPin sizeMin:minSizeCurPin] == false) {
+            return false;
+        }
+        // 新しいPINをチェック
+        if ([self checkPinNumbersForPinCommand:[self textNewPin] fieldName:msgNewPin sizeMin:minSizeNewPin] == false) {
+            return false;
+        }
+        // 確認用PINのラベル
+        NSString *msgNewPinConf = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin];
+        // 確認用PINコードのチェック
+        if ([self checkPinConfirmFor:[self textNewPinConf] withSource:[self textNewPin] withName:msgNewPinConf] == false) {
+            return false;
+        }
+        // 事前に確認ダイアログを表示
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
+        if ([ToolPopupWindow promptYesNo:caption
+                         informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkPinNumbersForPinCommand:(NSTextField *)field fieldName:(NSString *)name sizeMin:(int)min {
+        // 長さチェック
+        NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_PIN_DIGIT, name, min];
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:min informativeText:msg1] == false) {
+            return false;
+        }
+        // 数字チェック
+        NSString *msg2 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, name];
+        if ([ToolCommon checkIsNumeric:field informativeText:msg2] == false) {
+            return false;
+        }
+        return true;
+    }
+
 #pragma mark - For ToolPGPCommand functions
 
-    - (void)commandWillResetFirmware {
+    - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter {
         // 進捗画面を表示
         [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // 認証器リセット処理を実行
-        [[self toolPGPCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
-    }
-
-    - (void)commandWillInstallPGPKey {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
-        NSString *realName = [[self textRealName] stringValue];
-        NSString *mailAddress = [[self textMailAddress] stringValue];
-        NSString *comment = [[self textComment] stringValue];
-        NSString *pubkeyFolderPath = [[self textPubkeyFolderPath] stringValue];
-        NSString *backupFolderPath = [[self textBackupFolderPath] stringValue];
-        NSString *passphrase = [[self textPinConfirm] stringValue];
-        [[self toolPGPCommand] commandWillInstallPGPKey:self
-            realName:realName mailAddress:mailAddress comment:comment passphrase:passphrase
-            pubkeyFolderPath:pubkeyFolderPath backupFolderPath:backupFolderPath];
-    }
-
-    - (void)commandWillPGPStatus {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // PGPステータス照会処理を実行
-        [[self toolPGPCommand] commandWillPGPStatus:self];
-    }
-
-    - (void)commandWillPGPReset {
-        // 進捗画面を表示
-        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
-        // PGPリセット処理を実行
-        [[self toolPGPCommand] commandWillPGPReset:self];
+        // OpenPGP機能を実行
+        [[self toolPGPCommand] commandWillPerformPGPProcess:command withParameter:parameter];
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
@@ -425,6 +622,13 @@
             case COMMAND_HID_FIRMWARE_RESET:
                 name = PROCESS_NAME_FIRMWARE_RESET;
                 break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                name = [self selectedPinCommandName];
+                break;
             default:
                 return;
         }
@@ -445,6 +649,15 @@
                 if (result) {
                     [self initTabPGPKeyPathFields];
                     [self initTabPGPKeyEntryFields];
+                }
+                break;
+            case COMMAND_OPENPGP_CHANGE_PIN:
+            case COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case COMMAND_OPENPGP_UNBLOCK_PIN:
+            case COMMAND_OPENPGP_SET_RESET_CODE:
+            case COMMAND_OPENPGP_UNBLOCK:
+                if (result) {
+                    [self initTabPinManagementPinFields];
                 }
                 break;
             default:

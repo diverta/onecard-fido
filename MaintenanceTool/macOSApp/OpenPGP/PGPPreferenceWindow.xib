@@ -9,21 +9,30 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PGPPreferenceWindow">
             <connections>
                 <outlet property="buttonBackupFolderPath" destination="bAH-Qj-qo6" id="N5C-Rd-nhn"/>
+                <outlet property="buttonChangeAdminPin" destination="khp-d9-xQD" id="0Al-Fy-MsC"/>
+                <outlet property="buttonChangePin" destination="sHN-p0-rvu" id="QBL-sQ-X19"/>
                 <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
                 <outlet property="buttonFirmwareReset" destination="J2Q-ZN-qxo" id="PS8-o2-Rfj"/>
                 <outlet property="buttonInstallPGPKey" destination="aYG-wl-NhX" id="PEg-WS-j6h"/>
                 <outlet property="buttonPGPReset" destination="bXg-F8-xgl" id="0zp-xQ-5s8"/>
                 <outlet property="buttonPGPStatus" destination="PWJ-aC-YsL" id="c3B-Cb-zhP"/>
+                <outlet property="buttonPerformPinCommand" destination="QM5-Wx-HQF" id="jCS-dj-HmL"/>
                 <outlet property="buttonPubkeyFolderPath" destination="pCe-YJ-TVY" id="SwC-In-YqT"/>
+                <outlet property="buttonSetResetCode" destination="jnZ-zR-1Ku" id="S4W-WP-ehV"/>
+                <outlet property="buttonUnblock" destination="4Mz-Az-Bwh" id="aYk-j2-yZS"/>
+                <outlet property="buttonUnblockPin" destination="aea-jx-y5X" id="dDf-SP-HGH"/>
                 <outlet property="labelCurPin" destination="6un-mf-b2T" id="juB-i4-SzM"/>
                 <outlet property="labelNewPin" destination="KQz-Ea-7T1" id="lhg-Oe-MGq"/>
                 <outlet property="labelNewPinConf" destination="rWk-au-GHF" id="DIr-Bg-4QN"/>
                 <outlet property="tabPGPKeyManagement" destination="qgx-2D-ch2" id="8oD-YG-pbl"/>
-                <outlet property="tabPinManagement" destination="gGN-0l-Qmq" id="ekU-Iy-mgz"/>
+                <outlet property="tabPinManagement" destination="gGN-0l-Qmq" id="rSn-3G-Xqg"/>
                 <outlet property="tabView" destination="T2H-Gb-kML" id="K5k-ny-4ZF"/>
                 <outlet property="textBackupFolderPath" destination="fzE-5G-Xcd" id="Cbj-Jp-4cE"/>
                 <outlet property="textComment" destination="nug-SC-whz" id="rJG-yh-xTT"/>
+                <outlet property="textCurPin" destination="MVc-Ph-LY3" id="b4A-4E-seY"/>
                 <outlet property="textMailAddress" destination="wXG-Ks-lbX" id="1eg-eP-Vw8"/>
+                <outlet property="textNewPin" destination="SHa-Cp-Nku" id="SAW-nY-x95"/>
+                <outlet property="textNewPinConf" destination="f4i-nS-JS0" id="HRf-rN-Xxy"/>
                 <outlet property="textPin" destination="mQW-MW-bgr" id="oGf-94-67I"/>
                 <outlet property="textPinConfirm" destination="qia-ck-fbX" id="tmZ-vb-lkY"/>
                 <outlet property="textPubkeyFolderPath" destination="fE7-j2-l4a" id="oSr-4J-RKy"/>
@@ -262,25 +271,25 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5C0-N7-ynh">
-                                                        <rect key="frame" x="10" y="48" width="50" height="16"/>
+                                                        <rect key="frame" x="10" y="48" width="86" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="PIN番号" id="Chg-BL-HaB">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="管理用PIN番号" id="Chg-BL-HaB">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vY2-YE-A7j">
-                                                        <rect key="frame" x="10" y="17" width="98" height="16"/>
+                                                        <rect key="frame" x="10" y="17" width="134" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="PIN番号（確認）" id="sTn-fO-5Kl">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="管理用PIN番号（確認）" id="sTn-fO-5Kl">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
                                                     <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mQW-MW-bgr" userLabel="TextPin">
-                                                        <rect key="frame" x="122" y="45" width="120" height="21"/>
+                                                        <rect key="frame" x="160" y="45" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="nKg-zq-Ab6">
                                                             <font key="font" metaFont="system"/>
@@ -292,7 +301,7 @@
                                                         </secureTextFieldCell>
                                                     </secureTextField>
                                                     <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qia-ck-fbX" userLabel="TextPinConfirm">
-                                                        <rect key="frame" x="122" y="14" width="120" height="21"/>
+                                                        <rect key="frame" x="160" y="14" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="FZK-Br-OY6">
                                                             <font key="font" metaFont="system"/>
@@ -327,90 +336,109 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="実行する機能" translatesAutoresizingMaskIntoConstraints="NO" id="u0c-ye-Jln">
-                                            <rect key="frame" x="6" y="397" width="482" height="55"/>
+                                            <rect key="frame" x="6" y="362" width="482" height="90"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="ahI-Ua-C36">
-                                                <rect key="frame" x="3" y="3" width="476" height="35"/>
+                                                <rect key="frame" x="3" y="3" width="476" height="70"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="28" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L0T-qW-Kg1">
-                                                        <rect key="frame" x="20" y="10" width="388" height="16"/>
-                                                        <subviews>
-                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sHN-p0-rvu">
-                                                                <rect key="frame" x="-1" y="-1" width="104" height="18"/>
-                                                                <buttonCell key="cell" type="radio" title="PIN番号を変更" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="33d-5t-f9S">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </button>
-                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="khp-d9-xQD">
-                                                                <rect key="frame" x="128" y="-1" width="109" height="18"/>
-                                                                <buttonCell key="cell" type="radio" title="PUK番号を変更" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="dZa-FQ-YFE">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </button>
-                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aea-jx-y5X">
-                                                                <rect key="frame" x="262" y="-1" width="128" height="18"/>
-                                                                <buttonCell key="cell" type="radio" title="PIN番号をリセット" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="wvq-Oi-6ql">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </button>
-                                                        </subviews>
-                                                        <visibilityPriorities>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                        </visibilityPriorities>
-                                                        <customSpacing>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                        </customSpacing>
-                                                    </stackView>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sHN-p0-rvu" userLabel="buttonChangePin">
+                                                        <rect key="frame" x="19" y="42" width="104" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="radio" title="PIN番号を変更" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="33d-5t-f9S">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPinCommandSelected:" target="-2" id="xRS-cn-YRC"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="khp-d9-xQD" userLabel="buttonChangeAdminPin">
+                                                        <rect key="frame" x="144" y="42" width="140" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="radio" title="管理用PIN番号を変更" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="dZa-FQ-YFE">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPinCommandSelected:" target="-2" id="X5o-Ah-Iu8"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aea-jx-y5X" userLabel="buttonUnblockPin">
+                                                        <rect key="frame" x="304" y="42" width="128" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="radio" title="PIN番号をリセット" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="wvq-Oi-6ql">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPinCommandSelected:" target="-2" id="oz5-A6-LDi"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jnZ-zR-1Ku" userLabel="buttonSetResetCode">
+                                                        <rect key="frame" x="19" y="15" width="143" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="radio" title="リセットコードを変更" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Hhx-sQ-GcT">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPinCommandSelected:" target="-2" id="gk6-Kw-oMx"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Mz-Az-Bwh" userLabel="buttonUnblock">
+                                                        <rect key="frame" x="184" y="15" width="224" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="radio" title="リセットコードでPIN番号をリセット" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Qd6-Dk-shF">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPinCommandSelected:" target="-2" id="MQu-DN-76R"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="変更する内容" translatesAutoresizingMaskIntoConstraints="NO" id="RpO-dL-kyb">
-                                            <rect key="frame" x="6" y="252" width="482" height="138"/>
+                                            <rect key="frame" x="6" y="214" width="482" height="138"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="jNN-PI-DYJ">
                                                 <rect key="frame" x="3" y="3" width="476" height="118"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6un-mf-b2T">
-                                                        <rect key="frame" x="18" y="83" width="150" height="16"/>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6un-mf-b2T" userLabel="labelCurPin">
+                                                        <rect key="frame" x="18" y="83" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="現在のPUK番号" id="zy7-6n-aUk">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="現在のPIN番号" id="zy7-6n-aUk">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KQz-Ea-7T1">
-                                                        <rect key="frame" x="18" y="52" width="150" height="16"/>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KQz-Ea-7T1" userLabel="labelNewPin">
+                                                        <rect key="frame" x="18" y="52" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号" id="iGU-ak-mNK">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPIN番号" id="iGU-ak-mNK">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWk-au-GHF">
-                                                        <rect key="frame" x="18" y="21" width="150" height="16"/>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWk-au-GHF" userLabel="labelNewPinConf">
+                                                        <rect key="frame" x="18" y="21" width="170" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号（確認）" id="P9l-EJ-dV6">
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPIN番号（確認）" id="P9l-EJ-dV6">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MVc-Ph-LY3">
-                                                        <rect key="frame" x="178" y="80" width="120" height="21"/>
+                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MVc-Ph-LY3" userLabel="textCurPin">
+                                                        <rect key="frame" x="200" y="80" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Daf-kU-b4q">
+                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Daf-kU-b4q">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -419,10 +447,10 @@
                                                             </allowedInputSourceLocales>
                                                         </secureTextFieldCell>
                                                     </secureTextField>
-                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SHa-Cp-Nku">
-                                                        <rect key="frame" x="178" y="49" width="120" height="21"/>
+                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SHa-Cp-Nku" userLabel="textNewPin">
+                                                        <rect key="frame" x="200" y="49" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Dmc-B5-7vL">
+                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Dmc-B5-7vL">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -431,10 +459,10 @@
                                                             </allowedInputSourceLocales>
                                                         </secureTextFieldCell>
                                                     </secureTextField>
-                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f4i-nS-JS0">
-                                                        <rect key="frame" x="178" y="18" width="120" height="21"/>
+                                                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f4i-nS-JS0" userLabel="textNewPinConf">
+                                                        <rect key="frame" x="200" y="18" width="120" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="QLU-Wh-Yu6">
+                                                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="QLU-Wh-Yu6">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -447,13 +475,16 @@
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
-                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QM5-Wx-HQF">
-                                            <rect key="frame" x="187" y="208" width="120" height="32"/>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QM5-Wx-HQF" userLabel="buttonPerformPinCommand">
+                                            <rect key="frame" x="187" y="170" width="120" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="実行" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NxO-fC-Wjn">
+                                            <buttonCell key="cell" type="push" title="実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NxO-fC-Wjn">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="buttonPerformPinCommandDidPress:" target="-2" id="OGb-He-NRD"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </view>
