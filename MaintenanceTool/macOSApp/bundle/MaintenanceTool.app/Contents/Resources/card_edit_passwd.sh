@@ -11,27 +11,27 @@ if [ ! -d ${TEMPDIR} ]; then
     exit 1
 fi
 
-# Set gpg command option (additional)
-SCRIPT_OPT=$2
-
-# Set environment value
-export GNUPGHOME=${TEMPDIR}
-
 # Check if parameter file exist
-SCRIPTNAME=`basename $0 .sh`
-RESET_COMMAND=${TEMPDIR}/${SCRIPTNAME}.param
-if [ ! -f ${RESET_COMMAND} ]; then
+PARAM_FILE_NAME=$2
+CARD_EDIT_COMMAND=${TEMPDIR}/${PARAM_FILE_NAME}
+if [ ! -f ${CARD_EDIT_COMMAND} ]; then
     echo "Command parameter file is not exists"
     exit 1
 fi
 
+# Set gpg command option (additional)
+SCRIPT_OPT=$3
+
+# Set environment value
+export GNUPGHOME=${TEMPDIR}
+
 #
-# OpenPGP card reset
+# OpenPGP card edit passwd/unblock
 #
-/usr/local/bin/gpg --command-file ${RESET_COMMAND} ${SCRIPT_OPT} --edit-card
+/usr/local/bin/gpg --command-file ${CARD_EDIT_COMMAND} --status-fd 1 --pinentry-mode loopback ${SCRIPT_OPT} --edit-card
 RC=`echo $?`
 if [ ${RC} -ne 0 ]; then
-    echo "OpenPGP card reset fail"
+    echo "OpenPGP card edit passwd/unblock fail"
     exit 1
 fi
 
