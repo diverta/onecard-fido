@@ -1,6 +1,6 @@
 # OpenPGP機能の基本設定手順
 
-最終更新日：2021/12/30
+最終更新日：2022/2/24
 
 ## 概要
 
@@ -14,28 +14,28 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 
 #### 管理ツールのバージョン確認
 まずは[インストール手順](INSTALLPRG.md)を参照し、管理ツールをmacOSにインストールします。<br>
-次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.38以降</b>であるかどうか確認します。
+次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.39以降</b>であるかどうか確認します。
 
 管理ツールのメニュー「Preferences」を選択し、ツール設定画面を開きます。
 
-<img src="assets03/0001.jpg" width="400">
+<img src="assets03/0001.jpg" width="360">
 
 ツール設定画面のタブ「バージョン」を選択し、バージョンを確認してください。<br>
-（下記例では「Version 0.1.38」となっております）
+（下記例では「Version 0.1.39」となっております）
 
-<img src="assets07/0001.jpg" width="400">
+<img src="assets07/0001.jpg" width="360">
 
 #### ファームウェアのバージョン確認
-続いて、下記手順でファームウェアのバージョン確認を行い、<b>0.3.1以降</b>であるかどうか確認します。
+続いて、下記手順でファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。
 
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着した後、管理ツールのメニュー「Test-->USB-->バージョン情報取得」を選択します。
 
-<img src="assets05/0031.jpg" width="400">
+<img src="assets05/0031.jpg" width="360">
 
 管理ツール下部のメッセージ欄に表示される、ファームウェアのバージョンを確認してください。<br>
-（下記例では「0.3.1」となっております）
+（下記例では「0.3.4」となっております）
 
-<img src="assets07/0002.jpg" width="400">
+<img src="assets07/0002.jpg" width="360">
 
 #### GPG Suiteのインストール
 
@@ -51,15 +51,15 @@ OpenPGP機能の設定は「OpenPGP機能設定画面」上で行います。
 
 まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
 
-<img src="assets/0028.jpg" width="400">
+<img src="assets/0028.jpg" width="360">
 
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「OpenPGP機能設定」ボタンをクリックします。
 
-<img src="assets07/0003.jpg" width="400">
+<img src="assets07/0003.jpg" width="360">
 
 ホーム画面の上に、OpenPGP機能設定画面がポップアップ表示されます。
 
-<img src="assets07/0004.jpg" width="400">
+<img src="assets07/0004.jpg" width="360">
 
 以後の設定作業は、すべてこの「OpenPGP機能設定画面」で実行します。
 
@@ -89,52 +89,52 @@ OpenPGP機能では、PGP秘密鍵を[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_
 - メールアドレス
 - コメント
 
-<img src="assets07/0005.jpg" width="400">
+<img src="assets07/0005.jpg" width="350">
 
 次に、各種ファイルの出力先フォルダーを選択します。<br>
 「PGP公開鍵」欄右側の「参照」ボタンをクリックします。
 
-<img src="assets07/0006.jpg" width="400">
+<img src="assets07/0006.jpg" width="350">
 
 フォルダー参照ダイアログから、該当の出力先フォルダーを選択し「選択」ボタンをクリックします。
 
-<img src="assets07/0007.jpg" width="400">
+<img src="assets07/0007.jpg" width="350">
 
 フォルダー欄に、選択された出力先フォルダーのパスが表示されます。<br>
 （長いフォルダー名の場合は、マウスカーソルを上から当てると、フルパス名称が小さくToolTip表示されます）
 
-<img src="assets07/0008.jpg" width="400">
+<img src="assets07/0008.jpg" width="350">
 
 同様に、バックアップファイルの出力先フォルダーも選択します。
 
-<img src="assets07/0009.jpg" width="400">
+<img src="assets07/0009.jpg" width="350">
 
 PGP公開鍵、バックアップ両方の出力先フォルダーを選択したら、下部の認証情報欄に、OpenPGP機能で使用する管理用PIN番号を入力します。[注1]
 
 PIN番号を入力したら、下部の「PGP秘密鍵のインストール」ボタンをクリックします。
 
-<img src="assets07/0010.jpg" width="400">
+<img src="assets07/0010.jpg" width="350">
 
 下記のような確認ダイアログが表示されますので、Yesボタンをクリックします。
 
-<img src="assets07/0011.jpg" width="400">
+<img src="assets07/0011.jpg" width="350">
 
 PGP秘密鍵のインストール処理が実行されます。
 
-<img src="assets07/0020.jpg" width="400">
+<img src="assets07/0012.jpg" width="350">
 
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets07/0012.jpg" width="400">
+<img src="assets07/0013.jpg" width="350">
 
-[注1] 管理用PIN番号は初期状態では「`12345678`」となっております。最終更新日現在、管理ツールにはPIN番号の変更機能は有りません。GPG Suiteのコマンド`gpg --card-edit`を使用し、PIN番号を変更することは可能です。
+[注1] 管理用PIN番号は初期状態では「`12345678`」となっております。変更したい場合は、別ドキュメント「[OpenPGP機能の各種設定手順](../../MaintenanceTool/macOSApp/PGPSETTING_OPT.md)」をご参照願います。
 
 ### 確認手順
 
 インストールされた証明書は「OpenPGP設定情報取得画面」で確認できます。<br>
 OpenPGP機能設定画面の左下部のボタン「設定情報を参照」をクリックします。
 
-<img src="assets07/0013.jpg" width="400">
+<img src="assets07/0014.jpg" width="350">
 
 下図のようなOpenPGP設定情報取得画面がポップアップ表示されます。<br>
 以下の３点が設定されていることが確認できます。
@@ -143,7 +143,7 @@ OpenPGP機能設定画面の左下部のボタン「設定情報を参照」を�
 - 暗号／復号化用（Encryption key）の設定情報
 - PGP認証用（Authentication key）の設定情報
 
-<img src="assets07/0014.jpg" width="400">
+<img src="assets07/0015.jpg" width="350">
 
 以上で、PGP秘密鍵のインストールは完了です。
 
@@ -161,19 +161,19 @@ OpenPGP機能設定画面の左下部のボタン「設定情報を参照」を�
 
 OpenPGP機能設定情報の消去を実行するためには、OpenPGP機能設定画面の右下部「設定情報を消去」ボタンをクリックします。
 
-<img src="assets07/0015.jpg" width="400">
+<img src="assets07/0016.jpg" width="350">
 
 下記のような確認ダイアログが表示されますので、Yesボタンをクリックします。
 
-<img src="assets07/0016.jpg" width="400">
+<img src="assets07/0017.jpg" width="350">
 
 設定情報消去処理が実行されます。
 
-<img src="assets07/0022.jpg" width="400">
+<img src="assets07/0018.jpg" width="350">
 
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets07/0018.jpg" width="400">
+<img src="assets07/0019.jpg" width="350">
 
 OpenPGP設定情報取得画面で確認すると、下記３点の設定情報が消去されたことを示しています。
 
@@ -181,27 +181,32 @@ OpenPGP設定情報取得画面で確認すると、下記３点の設定情報�
 - 暗号／復号化用（Encryption key）
 - PGP認証用（Authentication key）
 
-<img src="assets07/0019.jpg" width="400">
+<img src="assets07/0020.jpg" width="350">
 
 これでOpenPGP機能設定の消去は完了です。
 
-#### エラーメッセージが表示された場合
+## 認証器のリセット
 
-「設定情報の消去」を実行時、下図のようなエラーメッセージが表示されることがあります。
+前述の各機能を実行時、下図のようなエラーメッセージが表示されることがあります。
 
-<img src="assets07/0017.jpg" width="350">
+<img src="assets07/0021.jpg" width="350">
 
 この場合は、認証器のリセットをお試しいただくことにより、認証器の再装着が不要となる場合があります。<br>
 画面下部のボタン「認証器のリセット」をクリックします。
 
-<img src="assets07/0021.jpg" width="400">
+<img src="assets07/0022.jpg" width="350">
 
 認証器がUSBに装着されたまま、ファームウェアが再始動されます。
 
-<img src="assets07/0022.jpg" width="400">
+<img src="assets07/0018.jpg" width="350">
 
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets07/0023.jpg" width="400">
+<img src="assets07/0023.jpg" width="350">
 
 万が一、上記手順でも解消しない場合は、一旦MDBT50Q DongleをPCのUSBポートから取り出し、再度装着した後、処理を再試行していただけますようお願いします。
+
+## その他の各種設定
+
+前項までの手順により、OpenPGP機能に最低限必要な基本設定が完了しますが、その他にもPIN番号変更等のオプション機能を用意しております。<br>
+詳細につきましては、別ドキュメント「[OpenPGP機能の各種設定手順](../../MaintenanceTool/macOSApp/PGPSETTING_OPT.md)」をご参照願います。
