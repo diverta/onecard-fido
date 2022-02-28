@@ -243,6 +243,15 @@ namespace MaintenanceToolCommon
             return BitConverter.ToInt16(sub, 0);
         }
 
+        public static uint ToUInt16(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 2);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToUInt16(sub, 0);
+        }
+
         private static byte[] GetSubArray(byte[] src, int startIndex, int count)
         {
             byte[] dst = new byte[count];
