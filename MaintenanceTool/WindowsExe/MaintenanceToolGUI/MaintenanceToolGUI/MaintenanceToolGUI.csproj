@@ -96,6 +96,7 @@
     <Compile Include="BLESMPCBORDecoder.cs" />
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
+    <Compile Include="CCIDDevice.cs" />
     <Compile Include="CommandTimer.cs" />
     <Compile Include="CommonDisplayInfoForm.cs">
       <SubType>Form</SubType>
