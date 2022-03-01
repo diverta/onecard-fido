@@ -22,6 +22,37 @@
 LOG_MODULE_REGISTER(app_process);
 
 //
+// ペアリングモード変更処理
+//
+static void change_to_pairing_mode(void)
+{
+    // ペアリングモード遷移-->アドバタイズ再開
+    if (app_ble_pairing_mode_set(true)) {
+        app_ble_start_advertising();
+
+        // 所定秒数経過後に、アドバタイズを
+        // 停止させるためのタイマーを開始
+        uint32_t advertise_ms = CONFIG_BT_LIM_ADV_TIMEOUT * 1000;
+        app_timer_start_for_ble_advertise(advertise_ms, APEVT_BLE_ADVERTISE_STOPPED);
+    }
+}
+
+static void change_to_non_pairing_mode(void)
+{
+    // ペアリングモード遷移時に開始させたタイマーを停止
+    app_timer_stop_for_ble_advertise();
+    
+    // 非ペアリングモード遷移前に、
+    // アイドル時のLED点滅パターンを設定
+    app_status_indicator_idle();
+
+    // 非ペアリングモード遷移-->アドバタイズ再開
+    if (app_ble_pairing_mode_set(false)) {
+        app_ble_start_advertising();
+    }
+}
+
+//
 // ボタンイベント振分け処理
 //
 static void button_pushed_long(void)
@@ -42,9 +73,7 @@ static void button_pressed_long(void)
     if (app_ble_pairing_mode() == false) {
         // 非ペアリングモード時は、
         // ペアリングモード遷移-->アドバタイズ再開
-        if (app_ble_pairing_mode_set(true)) {
-            app_ble_start_advertising();
-        }
+        change_to_pairing_mode();
     }
 }
 
@@ -148,6 +177,16 @@ static void ble_advertise_started(void)
     data_channel_initialized();
 }
 
+static void ble_advertise_stopped(void)
+{
+    // アドバタイズが停止時の処理
+    if (app_ble_pairing_mode()) {
+        // ペアリングモード時は、
+        // 非ペアリングモード遷移-->アドバタイズ再開
+        change_to_non_pairing_mode();
+    }
+}
+
 static void ble_connected(void)
 {
     // BLE接続アイドルタイマーを停止
@@ -162,13 +201,8 @@ static void ble_disconnected(void)
     // BLE切断時の処理
     if (app_ble_pairing_mode()) {
         // ペアリングモード時は、
-        // 非ペアリングモード遷移前に、
-        // アイドル時のLED点滅パターンを設定
-        app_status_indicator_idle();
         // 非ペアリングモード遷移-->アドバタイズ再開
-        if (app_ble_pairing_mode_set(false)) {
-            app_ble_start_advertising();
-        }
+        change_to_non_pairing_mode();
     }
 }
 
@@ -258,6 +292,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();
+            break;
+        case APEVT_BLE_ADVERTISE_STOPPED:
+            ble_advertise_stopped();
             break;
         case APEVT_BLE_CONNECTED:
             ble_connected();
