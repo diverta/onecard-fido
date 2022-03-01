@@ -111,17 +111,12 @@ bool app_ble_stop_advertising(void)
 
 static void connected(struct bt_conn *conn, uint8_t err)
 {
+    (void)conn;
     if (err) {
         LOG_ERR("Connection failed (err 0x%02x)", err);
 
     } else {
-        // セキュリティーレベルを明示的に
-        // `Level 2: Encryption and no authentication (no MITM)`
-        // に変更
-        int rc = bt_conn_set_security(conn, BT_SECURITY_L2);
-        if (rc != 0) {
-            LOG_ERR("Set security level failed (rc=%d)", rc);
-        }
+         LOG_INF("Connected");
     }
 }
 
