@@ -22,6 +22,29 @@
 LOG_MODULE_REGISTER(app_process);
 
 //
+// ペアリングモード変更処理
+//
+static void change_to_pairing_mode(void)
+{
+    // ペアリングモード遷移-->アドバタイズ再開
+    if (app_ble_pairing_mode_set(true)) {
+        app_ble_start_advertising();
+    }
+}
+
+static void change_to_non_pairing_mode(void)
+{
+    // 非ペアリングモード遷移前に、
+    // アイドル時のLED点滅パターンを設定
+    app_status_indicator_idle();
+
+    // 非ペアリングモード遷移-->アドバタイズ再開
+    if (app_ble_pairing_mode_set(false)) {
+        app_ble_start_advertising();
+    }
+}
+
+//
 // ボタンイベント振分け処理
 //
 static void button_pushed_long(void)
@@ -42,9 +65,7 @@ static void button_pressed_long(void)
     if (app_ble_pairing_mode() == false) {
         // 非ペアリングモード時は、
         // ペアリングモード遷移-->アドバタイズ再開
-        if (app_ble_pairing_mode_set(true)) {
-            app_ble_start_advertising();
-        }
+        change_to_pairing_mode();
     }
 }
 
@@ -162,13 +183,8 @@ static void ble_disconnected(void)
     // BLE切断時の処理
     if (app_ble_pairing_mode()) {
         // ペアリングモード時は、
-        // 非ペアリングモード遷移前に、
-        // アイドル時のLED点滅パターンを設定
-        app_status_indicator_idle();
         // 非ペアリングモード遷移-->アドバタイズ再開
-        if (app_ble_pairing_mode_set(false)) {
-            app_ble_start_advertising();
-        }
+        change_to_non_pairing_mode();
     }
 }
 
