@@ -22,12 +22,14 @@ LOG_MODULE_REGISTER(app_timer);
 static struct k_timer timer_for_longpush;
 static struct k_timer timer_for_idling;
 static struct k_timer timer_for_blinking;
+static struct k_timer timer_for_ble_advertise;
 static struct k_timer timer_for_generic_oneshot;
 static struct k_timer timer_for_generic_repeat;
 
 static void handler_for_longpush(struct k_timer *timer);
 static void handler_for_idling(struct k_timer *timer);
 static void handler_for_blinking(struct k_timer *timer);
+static void handler_for_ble_advertise(struct k_timer *timer);
 static void handler_for_generic_oneshot(struct k_timer *timer);
 static void handler_for_generic_repeat(struct k_timer *timer);
 
@@ -36,6 +38,7 @@ void app_timer_initialize(void)
     k_timer_init(&timer_for_longpush, handler_for_longpush, NULL);
     k_timer_init(&timer_for_idling,   handler_for_idling,   NULL);
     k_timer_init(&timer_for_blinking, handler_for_blinking, NULL);
+    k_timer_init(&timer_for_ble_advertise,   handler_for_ble_advertise,   NULL);
     k_timer_init(&timer_for_generic_oneshot, handler_for_generic_oneshot, NULL);
     k_timer_init(&timer_for_generic_repeat,  handler_for_generic_repeat,  NULL);
 }
@@ -148,6 +151,39 @@ void app_timer_start_for_blinking(uint32_t timeout_ms, APP_EVENT_T event)
 void app_timer_stop_for_blinking(void)
 {
     app_timer_stop(&timer_for_blinking);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Canceled timer");
+#endif
+}
+
+//
+// BLEアドバタイズが所定の時間連続したことを検知するタイマー
+//
+TIMER_CFG cfg_ble_advertise;
+
+static void handler_for_ble_advertise(struct k_timer *timer)
+{
+    // タイムアウト時の処理を実行する
+    (void)timer;
+    app_event_notify(cfg_ble_advertise.callback_event);
+}
+
+void app_timer_start_for_ble_advertise(uint32_t timeout_ms, APP_EVENT_T event)
+{
+    cfg_ble_advertise.timeout_ms = timeout_ms;
+    cfg_ble_advertise.callback_event = event;
+    cfg_ble_advertise.is_repeat = false;
+    app_timer_start(&timer_for_ble_advertise, &cfg_ble_advertise);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Set repeat timer in %u msec", timeout_ms);
+#endif
+}
+
+void app_timer_stop_for_ble_advertise(void)
+{
+    app_timer_stop(&timer_for_ble_advertise);
 
 #if LOG_TIMER_START_STOP
     LOG_DBG("Canceled timer");
