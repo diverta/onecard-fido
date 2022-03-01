@@ -39,6 +39,9 @@ static void change_to_pairing_mode(void)
 
 static void change_to_non_pairing_mode(void)
 {
+    // ペアリングモード遷移時に開始させたタイマーを停止
+    app_timer_stop_for_ble_advertise();
+    
     // 非ペアリングモード遷移前に、
     // アイドル時のLED点滅パターンを設定
     app_status_indicator_idle();
@@ -177,7 +180,11 @@ static void ble_advertise_started(void)
 static void ble_advertise_stopped(void)
 {
     // アドバタイズが停止時の処理
-    // TODO:
+    if (app_ble_pairing_mode()) {
+        // ペアリングモード時は、
+        // 非ペアリングモード遷移-->アドバタイズ再開
+        change_to_non_pairing_mode();
+    }
 }
 
 static void ble_connected(void)
