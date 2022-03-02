@@ -132,7 +132,14 @@
     - (void)doResponseOpenPGPInsVerify:(NSData *)response status:(uint16_t)sw {
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            NSString *errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY];
+            // 入力PINが不正の場合はその旨のメッセージを出力
+            NSString *errMsg;
+            if ((sw & 0xfff0) == SW_PIN_RETRIES) {
+                uint16_t retries = sw & 0x000f;
+                errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries];
+            } else {
+                errMsg = [NSString stringWithFormat:MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY];
+            }
             [[self delegate] ccidCommandDidNotifyErrorMessage:errMsg];
             [self notifyCommandTerminated:false];
             return;

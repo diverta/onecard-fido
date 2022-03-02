@@ -341,6 +341,7 @@
 #define MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM     @"%@（確認用）"
 #define MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR @"%@時、不明なエラーが発生しました。"
 #define MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG  @"入力した%@が間違っている可能性があります。"
+#define MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR       @"入力した%@が間違っています。\n（あと%u回リトライ可能です）"
 #define MSG_OPENPGP_ADDED_SUB_KEYS              @"PGP秘密鍵（副鍵）を新規に生成しました。"
 #define MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE  @"生成したPGP秘密鍵（副鍵）を認証器に移動しました。"
 #define MSG_OPENPGP_REMOVED_TEMPDIR             @"作業用フォルダーを消去しました。"
