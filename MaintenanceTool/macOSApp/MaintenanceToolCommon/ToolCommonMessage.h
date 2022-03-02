@@ -314,6 +314,7 @@
 #define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
 
 #pragma mark - OpenPGP関連
+#define MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED  @"OpenPGP機能を使用することができません。"
 #define MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL   @"バージョン「2021.1」以降のGPG Suiteをインストールしてから実行してください。"
 #define MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL   @"作業用フォルダーを生成出来ませんでした。"
 #define MSG_ERROR_OPENPGP_READ_PARAM_TEMPL_FAIL @"パラメーターテンプレートをファイルから読込むことが出来ませんでした。"
@@ -380,5 +381,6 @@
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN       @"PIN番号リセット"
 #define MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE    @"リセットコード変更"
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードによるPIN番号リセット"
+#define MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY  @"管理用PIN番号の検証"
 
 #endif /* ToolCommonMessage_h */
