@@ -249,6 +249,7 @@
 		7AB4B168271E6E8B0099D51B /* fido_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_blob.h; sourceTree = "<group>"; };
 		7AB4B169271E6E8B0099D51B /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
 		7AB4B16A271E6E8B0099D51B /* ToolClientPINCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
+		7AB576E627CF039000DAFA3F /* ToolPGPCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCommon.h; sourceTree = "<group>"; };
 		7AB63129277B01FB004917B9 /* card_reset.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_reset.param; sourceTree = "<group>"; };
 		7AB6312A277B01FB004917B9 /* card_reset.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_reset.sh; sourceTree = "<group>"; };
 		7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUStartWindow.xib; sourceTree = "<group>"; };
@@ -572,6 +573,7 @@
 				7A72011927794E5400EE3AD6 /* PGPPreferenceWindow.h */,
 				7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */,
 				7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */,
+				7AB576E627CF039000DAFA3F /* ToolPGPCommon.h */,
 				7AB3C9B5276B13CC00DEDD0E /* ToolPGPCommand.h */,
 				7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */,
 			);
