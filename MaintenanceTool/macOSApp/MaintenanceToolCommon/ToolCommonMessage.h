@@ -251,6 +251,7 @@
 #define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（%@）"
 #define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（%@）"
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
+#define MSG_CCID_DEVICE_DISCONNECTED            @"FIDO認証器から切断しました（CCIDデバイス名: %@）"
 #define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（%@）"
 #define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
 #define MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED     @"PIV管理機能認証（往路）が失敗しました。"

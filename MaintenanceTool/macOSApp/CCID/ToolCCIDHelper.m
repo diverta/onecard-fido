@@ -78,6 +78,9 @@
         tool_pcsc_scard_end_transaction();
         // 接続されていた場合は切断
         tool_pcsc_scard_disconnect();
+        // デバイス名をログ出力
+        NSString *slotName = [[NSString alloc] initWithUTF8String:tool_pcsc_scard_slot_name()];
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_CCID_DEVICE_DISCONNECTED, slotName];
     }
 
     - (void)ccidHelperWillSendIns:(uint8_t)sendIns p1:(uint8_t)sendP1 p2:(uint8_t)sendP2 data:(NSData *)sendData le:(uint16_t)sendLe {
