@@ -55,7 +55,6 @@
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
-		7A6C0BDC27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */; };
 		7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */; };
 		7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */; };
 		7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */; };
@@ -63,6 +62,7 @@
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
+		7A794B4D27CF59840076B268 /* app_update.PCA10095.0.4.3.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A794B4C27CF59840076B268 /* app_update.PCA10095.0.4.3.bin */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A8528FF277176F10096F41D /* add_sub_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FD277176F10096F41D /* add_sub_key.param */; };
 		7A852900277176F10096F41D /* add_sub_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FE277176F10096F41D /* add_sub_key.sh */; };
@@ -193,7 +193,6 @@
 		7A6687912575CCC70054F0DE /* ToolPIVCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVCommand.m; sourceTree = "<group>"; };
 		7A6687932575CCF60054F0DE /* ToolPIVCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommand.h; sourceTree = "<group>"; };
 		7A6687942575CDB70054F0DE /* ToolPIVCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVCommon.h; sourceTree = "<group>"; };
-		7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.2.bin; sourceTree = "<group>"; };
 		7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_passwd.param; sourceTree = "<group>"; };
 		7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_edit_passwd.sh; sourceTree = "<group>"; };
 		7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_unblock.param; sourceTree = "<group>"; };
@@ -205,6 +204,7 @@
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
+		7A794B4C27CF59840076B268 /* app_update.PCA10095.0.4.3.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.3.bin; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		7A8528FD277176F10096F41D /* add_sub_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_sub_key.param; sourceTree = "<group>"; };
 		7A8528FE277176F10096F41D /* add_sub_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = add_sub_key.sh; sourceTree = "<group>"; };
@@ -538,9 +538,9 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A794B4C27CF59840076B268 /* app_update.PCA10095.0.4.3.bin */,
 				7A3D872D27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip */,
 				7A3D872C27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip */,
-				7A6C0BDB27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
 				7A8528FE277176F10096F41D /* add_sub_key.sh */,
@@ -663,7 +663,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A6C0BDC27AA0E1D001B7E1E /* app_update.PCA10095.0.4.2.bin in Resources */,
+				7A794B4D27CF59840076B268 /* app_update.PCA10095.0.4.3.bin in Resources */,
 				7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */,
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
