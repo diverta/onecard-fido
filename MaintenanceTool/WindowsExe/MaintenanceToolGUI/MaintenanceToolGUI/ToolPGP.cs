@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 
 namespace MaintenanceToolGUI
 {
+    public class ToolPGPConst
+    {
+        public const uint OPENPGP_INS_SELECT = 0xA4;
+        public const uint OPENPGP_INS_VERIFY = 0x20;
+    }
+
     public class ToolPGPParameter
     {
         // 鍵作成用パラメーター
