@@ -18,10 +18,6 @@ namespace MaintenanceToolGUI
         // CCIDデバイスの参照を保持
         private CCIDDevice Device = null;
 
-        // CCIDデバイスから取得したデータ、ステータスワードを保持
-        public byte[] ResponseData = null;
-        public uint ResponseSW = 0x00;
-
         public CCIDProcess()
         {
         }
@@ -51,8 +47,8 @@ namespace MaintenanceToolGUI
             int sizeAlreadySent = 0;
             int sizeToSend = sendData.Length;
             byte sendCla;
-            ResponseData = new byte[0];
-            ResponseSW = 0;
+            byte[] responseData = new byte[0];
+            UInt16 responseSW = 0;
 
             do {
                 // 送信サイズとCLA値を設定
@@ -86,18 +82,18 @@ namespace MaintenanceToolGUI
                 // 受信データがある場合は連結
                 byte[] received = Device.GetReceivedBytes();
                 int responseDataSize = received.Length - 2;
-                ResponseSW = AppCommon.ToUInt16(received, responseDataSize, true);
+                responseSW = AppCommon.ToUInt16(received, responseDataSize, true);
                 if (responseDataSize > 0) {
-                    ResponseData.Concat(received.Take(responseDataSize));
+                    responseData.Concat(received.Take(responseDataSize));
                 }
-                AppCommon.OutputLogDebug(string.Format("CCID response: Data({0} bytes) SW(0x{1,0:x4})", responseDataSize, ResponseSW));
+                AppCommon.OutputLogDebug(string.Format("CCID response: Data({0} bytes) SW(0x{1,0:x4})", responseDataSize, responseSW));
 
                 // 送信済みサイズを更新
                 sizeAlreadySent += thisSendSize;
 
             } while (sizeAlreadySent < sizeToSend);
 
-            while (ResponseSW >> 8 == 0x61) {
+            while (responseSW >> 8 == 0x61) {
                 // GET RESPONSE APDU
                 int offset = 0;
                 byte[] FrameToSend = new byte[6];
@@ -115,15 +111,15 @@ namespace MaintenanceToolGUI
 
                 byte[] received = Device.GetReceivedBytes();
                 int responseDataSize = received.Length - 2;
-                ResponseSW = AppCommon.ToUInt16(received, responseDataSize, true);
-                if (ResponseSW != CCIDConst.SW_SUCCESS && ResponseSW >> 8 != 0x61) {
+                responseSW = AppCommon.ToUInt16(received, responseDataSize, true);
+                if (responseSW != CCIDConst.SW_SUCCESS && responseSW >> 8 != 0x61) {
                     // ステータスワードが不正の場合は制御を戻す
                     return false;
                 }
 
                 // 受信データがある場合は連結
                 if (responseDataSize > 0) {
-                    ResponseData.Concat(received.Take(responseDataSize));
+                    responseData.Concat(received.Take(responseDataSize));
                 }
             }
 
