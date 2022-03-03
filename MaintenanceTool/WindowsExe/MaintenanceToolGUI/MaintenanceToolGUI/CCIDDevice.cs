@@ -194,9 +194,6 @@ namespace MaintenanceToolGUI
             int pcbRecvLength = RecvBuffer.Length;
             int cbSendLength = sendBuffer.Length;
 
-            string dump = AppCommon.DumpMessage(sendBuffer, sendBuffer.Length);
-            AppCommon.OutputLogDebug(string.Format("CCID Sent frame: length={0}\r\n{1}", sendBuffer.Length, dump));
-
             IntPtr handle = LoadLibrary(WINSCARD_DLL);
             IntPtr pci = GetProcAddress(handle, "g_rgSCardT1Pci");
             FreeLibrary(handle);
@@ -207,9 +204,6 @@ namespace MaintenanceToolGUI
                 RecvLength = 0;
                 return false;
             }
-
-            dump = AppCommon.DumpMessage(RecvBuffer, pcbRecvLength);
-            AppCommon.OutputLogDebug(string.Format("CCID Recv frame: length={0}\r\n{1}", pcbRecvLength, dump));
 
             // 受信データ長を保持
             RecvLength = pcbRecvLength;

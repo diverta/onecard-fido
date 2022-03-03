@@ -92,7 +92,6 @@ namespace MaintenanceToolGUI
                 if (responseDataSize > 0) {
                     responseData.Concat(received.Take(responseDataSize));
                 }
-                AppCommon.OutputLogDebug(string.Format("CCID response: Data({0} bytes) SW(0x{1,0:x4})", responseDataSize, responseSW));
 
                 // 送信済みサイズを更新
                 sizeAlreadySent += thisSendSize;
