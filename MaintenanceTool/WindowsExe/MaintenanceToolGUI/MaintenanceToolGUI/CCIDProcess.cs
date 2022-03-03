@@ -18,6 +18,10 @@ namespace MaintenanceToolGUI
         // CCIDデバイスの参照を保持
         private CCIDDevice Device = null;
 
+        // CCID I/Fからデータ受信時のイベント
+        public delegate void DataReceivedEvent(byte[] responseData, UInt16 responseSW);
+        public event DataReceivedEvent OnDataReceived;
+
         public CCIDProcess()
         {
         }
@@ -36,11 +40,12 @@ namespace MaintenanceToolGUI
             Device = null;
         }
 
-        public bool SendIns(byte sendIns, byte sendP1, byte sendP2, byte[] sendData, byte sendLe)
+        public void SendIns(byte sendIns, byte sendP1, byte sendP2, byte[] sendData, byte sendLe)
         {
             // 例外回避
-            if (Device == null) {
-                return false;
+            if (Device == null || sendData == null) {
+                OnDataReceived(null, CCIDConst.SW_UNABLE_TO_PROCESS);
+                return;
             }
 
             // リクエスト送信-->レスポンス受信
@@ -76,7 +81,8 @@ namespace MaintenanceToolGUI
 
                 if (Device.Transmit(frameToSend) == false) {
                     // 送信エラーが発生した場合
-                    return false;
+                    OnDataReceived(null, CCIDConst.SW_UNABLE_TO_PROCESS);
+                    return;
                 }
 
                 // 受信データがある場合は連結
@@ -106,7 +112,8 @@ namespace MaintenanceToolGUI
 
                 if (Device.Transmit(FrameToSend) == false) {
                     // 送信エラーが発生した場合
-                    return false;
+                    OnDataReceived(null, CCIDConst.SW_UNABLE_TO_PROCESS);
+                    return;
                 }
 
                 byte[] received = Device.GetReceivedBytes();
@@ -114,7 +121,8 @@ namespace MaintenanceToolGUI
                 responseSW = AppCommon.ToUInt16(received, responseDataSize, true);
                 if (responseSW != CCIDConst.SW_SUCCESS && responseSW >> 8 != 0x61) {
                     // ステータスワードが不正の場合は制御を戻す
-                    return false;
+                    OnDataReceived(null, responseSW);
+                    return;
                 }
 
                 // 受信データがある場合は連結
@@ -123,7 +131,8 @@ namespace MaintenanceToolGUI
                 }
             }
 
-            return true;
+            // コマンドに制御を戻す
+            OnDataReceived(responseData, responseSW);
         }
     }
 }
