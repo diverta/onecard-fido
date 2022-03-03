@@ -6,9 +6,6 @@ namespace MaintenanceToolGUI
 {
     public class ToolPGPCcid
     {
-        // 上位クラスの参照を保持
-        ToolPGP ToolPGPRef;
-
         // CCID処理クラスの参照を保持
         CCIDProcess Process;
 
@@ -19,11 +16,15 @@ namespace MaintenanceToolGUI
         // リクエストパラメーターを保持
         private ToolPGPParameter Parameter = null;
 
-        public ToolPGPCcid(ToolPGP toolPGPRef)
-        {
-            // 上位クラスの参照を保持
-            ToolPGPRef = toolPGPRef;
+        // CCID I/Fからデータ受信時のイベント
+        public delegate void CcidCommandTerminatedEvent(bool success);
+        public event CcidCommandTerminatedEvent OnCcidCommandTerminated;
 
+        public delegate void CcidCommandNotifyErrorMessageEvent(string errorMessage);
+        public event CcidCommandNotifyErrorMessageEvent OnCcidCommandNotifyErrorMessage;
+
+        public ToolPGPCcid()
+        {
             // CCID処理クラスを生成
             Process = new CCIDProcess();
             Process.OnDataReceived += OnDataReceived;
@@ -41,7 +42,7 @@ namespace MaintenanceToolGUI
             // CCIDインタフェース経由で認証器に接続
             if (StartCCIDConnection() == false) {
                 // 上位クラスに制御を戻す
-                ToolPGPRef.NotifyProcessTerminatedFromCcid(false);
+                OnCcidCommandTerminated(false);
                 return;
             }
 
@@ -86,7 +87,7 @@ namespace MaintenanceToolGUI
 
             } else {
                 // OpenPGP機能を認識できなかった旨のエラーメッセージを設定
-                ToolPGPRef.NotifyErrorMessageFromCcid(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                OnCcidCommandNotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 return false;
             }
         }
@@ -95,7 +96,7 @@ namespace MaintenanceToolGUI
         {
             // CCIDデバイスから切断し、上位クラスに制御を戻す
             Process.Disconnect();
-            ToolPGPRef.NotifyProcessTerminatedFromCcid(success);
+            OnCcidCommandTerminated(success);
         }
 
         //
@@ -113,7 +114,7 @@ namespace MaintenanceToolGUI
         {
             // 不明なエラーが発生時は以降の処理を行わない
             if (responseSW != CCIDConst.SW_SUCCESS) {
-                ToolPGPRef.NotifyErrorMessageFromCcid(ToolGUICommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
+                OnCcidCommandNotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
                 NotifyCommandTerminated(false);
                 return;
             }
@@ -145,7 +146,7 @@ namespace MaintenanceToolGUI
                     errMsg = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
                 }
 
-                ToolPGPRef.NotifyErrorMessageFromCcid(errMsg);
+                OnCcidCommandNotifyErrorMessage(errMsg);
                 NotifyCommandTerminated(false);
                 return;
             }
