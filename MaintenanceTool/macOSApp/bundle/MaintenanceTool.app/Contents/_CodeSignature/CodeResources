@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		KNIm55mHAcZjUrdGDcjGKWrVoKs=
+		+CwM6MTza04+gTYmglAxjeC8S+Q=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -76,9 +76,9 @@
 		<data>
 		RsqlGTJBKY0KYFwYxvxE6lXDzBc=
 		</data>
-		<key>Resources/app_update.PCA10095.0.4.2.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.3.bin</key>
 		<data>
-		ag+y8OP4av0RHppNLaVOLCpIAX4=
+		4oLGXqNOvzEmCsWets9LRmi8sZs=
 		</data>
 		<key>Resources/appkg.PCA10059_01.0.3.4.zip</key>
 		<data>
@@ -164,7 +164,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			N8MpxIGW3/DA/MYyDDP+7kLOKCGiMapSvVVYr9WtlFU=
+			2LiW+e6sXg4ARm1aDLXrIphJaKTAmNXDfbnGHDA+Ltc=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -279,11 +279,11 @@
 			MvXLJt12u/aCuerb+Uj7kd/e3OGo7nz/aM3MMLvjYM0=
 			</data>
 		</dict>
-		<key>Resources/app_update.PCA10095.0.4.2.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.3.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			iPdHsK5duOPwH7z9Xj8QpSAyNlNMHJKlP7Sd/G4YwtM=
+			hB7A3LHuSPmeV5xEX9FuJvLdzsLYcXwLzHHeZjA2glg=
 			</data>
 		</dict>
 		<key>Resources/appkg.PCA10059_01.0.3.4.zip</key>
