@@ -251,6 +251,7 @@
 #define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（%@）"
 #define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（%@）"
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
+#define MSG_CCID_DEVICE_DISCONNECTED            @"FIDO認証器から切断しました（CCIDデバイス名: %@）"
 #define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（%@）"
 #define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
 #define MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED     @"PIV管理機能認証（往路）が失敗しました。"
@@ -313,6 +314,7 @@
 #define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
 
 #pragma mark - OpenPGP関連
+#define MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED  @"OpenPGP機能を使用することができません。"
 #define MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL   @"バージョン「2021.1」以降のGPG Suiteをインストールしてから実行してください。"
 #define MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL   @"作業用フォルダーを生成出来ませんでした。"
 #define MSG_ERROR_OPENPGP_READ_PARAM_TEMPL_FAIL @"パラメーターテンプレートをファイルから読込むことが出来ませんでした。"
@@ -339,10 +341,12 @@
 #define MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM     @"%@（確認用）"
 #define MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR @"%@時、不明なエラーが発生しました。"
 #define MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG  @"入力した%@が間違っている可能性があります。"
+#define MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR       @"入力した%@が間違っています。\n（あと%u回リトライ可能です）"
 #define MSG_OPENPGP_ADDED_SUB_KEYS              @"PGP秘密鍵（副鍵）を新規に生成しました。"
 #define MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE  @"生成したPGP秘密鍵（副鍵）を認証器に移動しました。"
 #define MSG_OPENPGP_REMOVED_TEMPDIR             @"作業用フォルダーを消去しました。"
 #define MSG_OPENPGP_INSTALL_PGP_KEY             @"PGP秘密鍵を認証器にインストールします。"
+#define MSG_OPENPGP_ADMIN_PIN_VERIFIED          @"管理用PIN番号を検証しました。"
 #define MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER     @"PGP公開鍵ファイルの出力先フォルダーを選択してください"
 #define MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER     @"バックアップファイルの出力先フォルダーを選択してください"
 #define MSG_PROMPT_INPUT_PGP_MUST_ENTRY         @"%@は必ず入力してください"
@@ -379,5 +383,6 @@
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN       @"PIN番号リセット"
 #define MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE    @"リセットコード変更"
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードによるPIN番号リセット"
+#define MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY  @"管理用PIN番号の検証"
 
 #endif /* ToolCommonMessage_h */

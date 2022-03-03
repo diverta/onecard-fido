@@ -7,7 +7,9 @@
 #import "PGPPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
+#import "ToolPGPCcidCommand.h"
 #import "ToolPGPCommand.h"
+#import "ToolPGPCommon.h"
 #import "ToolLogFile.h"
 
 #define GenerateMainKeyScriptName               @"generate_main_key.sh"
@@ -50,8 +52,10 @@ typedef enum : NSInteger {
 
 @end
 
-@interface ToolPGPCommand ()
+@interface ToolPGPCommand () <ToolPGPCcidCommandDelegate>
 
+    // CCIDインターフェース処理の参照を保持
+    @property (nonatomic) ToolPGPCcidCommand           *toolPGPCcidCommand;
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
     // 画面の参照を保持
@@ -94,6 +98,8 @@ typedef enum : NSInteger {
             // 上位クラスの参照を保持
             [self setToolAppCommand:(ToolAppCommand *)delegate];
             [self clearCommandParameters];
+            // ToolPGPCcidCommandのインスタンスを生成
+            [self setToolPGPCcidCommand:[[ToolPGPCcidCommand alloc] initWithDelegate:self]];
             // OpenPGP設定画面のインスタンスを生成
             [self setPgpPreferenceWindow:[[PGPPreferenceWindow alloc] initWithWindowNibName:@"PGPPreferenceWindow"]];
         }
@@ -105,6 +111,29 @@ typedef enum : NSInteger {
         [self setCommand:COMMAND_NONE];
         [self setGpgCommand:COMMAND_GPG_NONE];
         [self setCommandParameter:nil];
+    }
+
+#pragma mark - For CCID command interface
+
+    - (void)ccidCommandWillProcess:(Command)command {
+        // CCID経由で指定コマンドを実行
+        [[self toolPGPCcidCommand] ccidCommandWillProcess:command withCommandParameter:[self commandParameter]];
+    }
+
+    - (void)ccidCommandDidNotifyErrorMessage:(NSString *)message {
+        [self notifyErrorMessage:message];
+    }
+
+    - (void)ccidCommandDidProcess:(bool)success {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_OPENPGP_INSTALL_KEYS:
+                [self doResponseAdminPinVerify:success];
+                break;
+            default:
+                [self notifyProcessTerminated:false];
+                break;
+        }
     }
 
 #pragma mark - For reset firmware
@@ -144,6 +173,9 @@ typedef enum : NSInteger {
                 [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
                 break;
             case COMMAND_OPENPGP_INSTALL_KEYS:
+                // 事前に、管理用PIN番号の検証を試行
+                [self doRequestAdminPinVerify:command];
+                break;
             case COMMAND_OPENPGP_STATUS:
             case COMMAND_OPENPGP_RESET:
             case COMMAND_OPENPGP_CHANGE_PIN:
@@ -235,6 +267,22 @@ typedef enum : NSInteger {
     }
 
 #pragma mark - Command functions
+
+    - (void)doRequestAdminPinVerify:(Command)command {
+        // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
+        [self ccidCommandWillProcess:command];
+    }
+
+    - (void)doResponseAdminPinVerify:(bool)success {
+        if (success) {
+            // バージョン照会から開始
+            [[ToolLogFile defaultLogger] debug:MSG_OPENPGP_ADMIN_PIN_VERIFIED];
+            [self doRequestGPGVersion];
+        } else {
+            // 画面に制御を戻す
+            [self notifyProcessTerminated:false];
+        }
+    }
 
     - (void)doRequestGPGVersion {
         // MacGPGコマンドが存在するかチェック
