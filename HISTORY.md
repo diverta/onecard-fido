@@ -2,6 +2,31 @@
 
 ## プログラム更新履歴
 
+#### 2021/12/09
+
+FIDO認証器管理ツール（Windows版）を修正しました。<br>
+詳細につきましては、ドキュメント<b>[「Release 202104」](https://github.com/diverta/onecard-fido/releases/tag/Release_202104)</b>をご参照願います。
+
+#### 2021/11/24
+
+FIDO認証器管理ツール（macOS版）を修正しました。<br>
+詳細につきましては、ドキュメント<b>[「Release 202103」](https://github.com/diverta/onecard-fido/releases/tag/Release_202103)</b>をご参照願います。
+
+#### 2021/04/29
+
+MDBT50Q Dongle Miniを試作いたしました。
+
+- <b>[MDBT50Q Dongle Mini（Rev1）](https://github.com/diverta/onecard-fido/blob/doc-20210429/FIDO2Device/MDBT50Q_Dongle_mini/README.md)</b>
+
+※[ファームウェア](https://github.com/diverta/onecard-fido/blob/doc-20210429/nRF52840_app/firmwares/README.md)は、[MDBT50Q Dongle（Rev2.1.2）](https://github.com/diverta/onecard-fido/blob/doc-20210429/FIDO2Device/MDBT50Q_Dongle/README.md)と同一です。
+
+#### 2021/03/15
+
+nRF52840アプリケーションに、OpenPGPカードエミュレーション機能（ベータ）を新規搭載しました。<br>
+（まだ開発途上です）<br>
+これに伴い、ファームウェアを修正しました。<br>
+詳細につきましては、ドキュメント<b>[「OpenPGPカードエミュレーション対応」](https://github.com/diverta/onecard-fido/blob/doc-20210311/CCID/OpenPGP/README.md)</b>をご参照願います。
+
 #### 2021/02/05
 
 nRF52840アプリケーションを、nRF5 SDK v17.0.2に移行しました。<br>
