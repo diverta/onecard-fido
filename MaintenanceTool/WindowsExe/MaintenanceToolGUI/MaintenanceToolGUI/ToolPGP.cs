@@ -12,8 +12,8 @@ namespace MaintenanceToolGUI
 {
     public class ToolPGPConst
     {
-        public const uint OPENPGP_INS_SELECT = 0xA4;
-        public const uint OPENPGP_INS_VERIFY = 0x20;
+        public const byte OPENPGP_INS_SELECT = 0xA4;
+        public const byte OPENPGP_INS_VERIFY = 0x20;
     }
 
     public class ToolPGPParameter
@@ -42,6 +42,7 @@ namespace MaintenanceToolGUI
 
         // 処理クラスの参照を保持
         private HIDMain HidMainRef;
+        private ToolPGPCcid PGPCcid;
 
         // 処理機能を保持
         private AppCommon.RequestType RequestType;
@@ -94,6 +95,11 @@ namespace MaintenanceToolGUI
 
             // OpenPGP機能設定画面を生成
             PreferenceForm = new PGPPreferenceForm(this);
+
+            // CCID処理クラスを生成
+            PGPCcid = new ToolPGPCcid();
+            PGPCcid.OnCcidCommandTerminated += OnCcidCommandTerminated;
+            PGPCcid.OnCcidCommandNotifyErrorMessage += OnCcidCommandNotifyErrorMessage;
         }
 
         public void ShowDialog()
@@ -142,13 +148,42 @@ namespace MaintenanceToolGUI
             // コマンド開始処理
             NotifyProcessStarted(requestType);
 
-            // コマンドを別スレッドで起動（バージョン照会から開始）
+            // コマンドを別スレッドで起動
             Task task = Task.Run(() => {
-                DoRequestGPGVersion();
+                if (requestType == AppCommon.RequestType.OpenPGPInstallKeys) {
+                    // 管理用PIN番号検証から開始
+                    DoRequestAdminPinVerify();
+
+                } else {
+                    // バージョン照会から開始
+                    DoRequestGPGVersion();
+                }
             });
 
             // 進捗画面を表示
             CommonProcessingForm.OpenForm(PreferenceForm);
+        }
+
+        //
+        // CCID I/Fコマンド実行関数
+        //
+        private void DoRequestAdminPinVerify()
+        {
+            // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
+            PGPCcid.DoOpenPGPCcidCommand(RequestType, Parameter);
+        }
+
+        private void DoResponseAdminPinVerify(bool success)
+        {
+            if (success) {
+                // バージョン照会から開始
+                AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
+                DoRequestGPGVersion();
+
+            } else {
+                // 画面に制御を戻す
+                NotifyProcessTerminated(false);
+            }
         }
 
         //
@@ -1147,6 +1182,28 @@ namespace MaintenanceToolGUI
 
             // 画面に制御を戻す
             PreferenceForm.OnCommandProcessTerminated(RequestType, success, ErrorMessageOfCommand);
+        }
+
+        //
+        // ToolPGPCcidクラスからのコールバック
+        //
+        private void OnCcidCommandNotifyErrorMessage(string errorMessage)
+        {
+            NotifyErrorMessage(errorMessage);
+        }
+
+        private void OnCcidCommandTerminated(bool success)
+        {
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+                case AppCommon.RequestType.OpenPGPInstallKeys:
+                    DoResponseAdminPinVerify(success);
+                    break;
+
+                default:
+                    NotifyProcessTerminated(false);
+                    break;
+            }
         }
     }
 }
