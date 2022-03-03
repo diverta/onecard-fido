@@ -115,7 +115,7 @@ typedef enum : NSInteger {
 
 #pragma mark - For CCID command interface
 
-    - (void)ccidHelperWillProcess:(Command)command {
+    - (void)ccidCommandWillProcess:(Command)command {
         // CCID経由で指定コマンドを実行
         [[self toolPGPCcidCommand] ccidCommandWillProcess:command withCommandParameter:[self commandParameter]];
     }
@@ -270,7 +270,7 @@ typedef enum : NSInteger {
 
     - (void)doRequestAdminPinVerify:(Command)command {
         // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
-        [self ccidHelperWillProcess:command];
+        [self ccidCommandWillProcess:command];
     }
 
     - (void)doResponseAdminPinVerify:(bool)success {
