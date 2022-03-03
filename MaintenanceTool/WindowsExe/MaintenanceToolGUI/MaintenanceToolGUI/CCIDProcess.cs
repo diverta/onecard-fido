@@ -4,6 +4,15 @@ using System.Linq;
 
 namespace MaintenanceToolGUI
 {
+    class CCIDConst
+    {
+        public const UInt16 SW_PIN_RETRIES = 0x63C0;
+        public const UInt16 SW_UNABLE_TO_PROCESS = 0x6900;
+        public const UInt16 SW_SEC_STATUS_NOT_SATISFIED = 0x6982;
+        public const UInt16 SW_ERR_AUTH_BLOCKED = 0x6983;
+        public const UInt16 SW_SUCCESS = 0x9000;
+    }
+
     class CCIDProcess
     {
         // CCIDデバイスの参照を保持
@@ -107,7 +116,7 @@ namespace MaintenanceToolGUI
                 byte[] received = Device.GetReceivedBytes();
                 int responseDataSize = received.Length - 2;
                 ResponseSW = AppCommon.ToUInt16(received, responseDataSize, true);
-                if (ResponseSW != 0x9000 && ResponseSW >> 8 != 0x61) {
+                if (ResponseSW != CCIDConst.SW_SUCCESS && ResponseSW >> 8 != 0x61) {
                     // ステータスワードが不正の場合は制御を戻す
                     return false;
                 }

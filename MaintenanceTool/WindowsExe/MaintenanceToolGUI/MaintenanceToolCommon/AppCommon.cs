@@ -243,7 +243,7 @@ namespace MaintenanceToolCommon
             return BitConverter.ToInt16(sub, 0);
         }
 
-        public static uint ToUInt16(byte[] value, int startIndex, bool changeEndian = false)
+        public static UInt16 ToUInt16(byte[] value, int startIndex, bool changeEndian = false)
         {
             byte[] sub = GetSubArray(value, startIndex, 2);
             if (changeEndian == true) {
