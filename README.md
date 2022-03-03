@@ -33,6 +33,12 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 
 ## What's new
 
+#### 2022/03/03
+
+管理ツールに、OpenPGP機能で使用するPIN番号等の設定メニューを新設しました。<br>
+これに伴い、FIDO認証器管理ツール（macOS版／Windows版）、ファームウェアを修正しております。<br>
+詳細につきましては、ドキュメント<b>[「Release 202202」](https://github.com/diverta/onecard-fido/releases/tag/Release_202202)</b>をご参照願います。
+
 #### 2022/01/24
 
 管理ツールに、OpenPGP機能設定メニューを新設しました。<br>
