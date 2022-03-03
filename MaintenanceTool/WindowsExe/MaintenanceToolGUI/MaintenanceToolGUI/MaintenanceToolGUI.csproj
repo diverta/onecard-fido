@@ -157,6 +157,7 @@
     <Compile Include="ToolDFUImage.cs" />
     <Compile Include="ToolDFUProcess.cs" />
     <Compile Include="ToolDFUUtil.cs" />
+    <Compile Include="ToolPGPCcid.cs" />
     <Compile Include="ToolPGP.cs" />
     <Compile Include="ToolPreference.cs" />
     <Compile Include="ToolPreferenceForm.cs">
