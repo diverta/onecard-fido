@@ -560,6 +560,56 @@ sudo systemctl status
 
 以上で、Wi-Fi APのセットアップは完了です。
 
+## Threadネットワークのセットアップ
+
+OpenThread Border Routerをインストールしただけでは、OpenThread RCP Dongleは機能しません。<br>
+OpenThread RCP Dongleを装着したOpenThread Border Routerが`Leader`となっているThreadネットワークを、新規に生成する必要があります。
+
+#### 手順
+
+Webブラウザーを起動し、`http://<ラズパイのIPアドレス>/`を実行します。<br>
+下図のような管理画面が表示されますので、左側の「Form」メニューをクリックします。
+
+<img src="assets05/0011.jpg" width=500>
+
+「Form Thread Networks」というタイトルの画面に遷移します。<br>
+全項目、デフォルトのまま「FORM」ボタンをクリックします。
+
+<img src="assets05/0012.jpg" width=500>
+
+下図のようなポップアップが表示されるので「OKAY」をクリックします。
+
+<img src="assets05/0013.jpg" width=500>
+
+Threadネットワーク生成処理が開始されます。
+
+<img src="assets05/0014.jpg" width=500>
+
+Threadネットワーク生成処理が完了すると、下図のようなポップアップが表示されます。
+
+<img src="assets05/0015.jpg" width=500>
+
+Threadネットワーク生成が完了したら、適宜管理画面を閉じます。
+
+#### 設定確認
+
+ラズパイにログインし、コマンド`sudo ot-ctl netdata show`を実行します。<br>
+下記のような状態になっていればOKです。
+
+```
+pi@raspberrypi:~ $ sudo ot-ctl netdata show
+Prefixes:
+fd11:22:0:0::/64 paros med 5000
+Routes:
+2001:268:c246:3003::/64 s med 5000
+Services:
+44970 01 3604b000000e10 s 5000
+44970 5d fda1c37b951f7d96e4e7a0fe833f65dad11f s 5000
+Done
+pi@raspberrypi:~ $
+```
+
+これで、Threadネットワークのセットアップは完了です。
 
 ## ご参考
 
