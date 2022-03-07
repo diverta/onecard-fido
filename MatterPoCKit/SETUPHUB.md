@@ -39,11 +39,11 @@ OTBRをインターネットに接続するために必要となります。
 
 まず最初に、RCPドングル構築 --> OTBR構築の順に構築作業を進めます。
 
-#### [OpenThread Dongle導入手順](../Research/Matter/OTDONGLE.md)
+#### [OpenThread Dongle導入手順](../MatterPoCKit/OTRCPDONGLE.md)
 
 MDBT50Q Dongleを、RCPドングルとして使用する手順について記載しています。
 
-#### [OpenThread Border Router導入手順](../Research/Matter/OTBRSETUP.md)
+#### [OpenThread Border Router導入手順](../MatterPoCKit/OTBRSETUP.md)
 
 ラズパイにOTBRを構築する手順について記載しています。
 

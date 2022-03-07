@@ -1,0 +1,123 @@
+pi@raspberrypi:~ $ sudo systemctl status
+● raspberrypi
+    State: running
+     Jobs: 0 queued
+   Failed: 0 units
+    Since: Thu 1970-01-01 01:00:03 BST; 52 years 2 months ago
+   CGroup: /
+           ├─user.slice 
+           │ └─user-1000.slice 
+           │   ├─session-3.scope 
+           │   │ ├─819 /bin/login -f
+           │   │ └─923 -bash
+           │   ├─user@1000.service …
+           │   │ ├─init.scope 
+           │   │ │ ├─826 /lib/systemd/systemd --user
+           │   │ │ └─849 (sd-pam)
+           │   │ └─app.slice 
+           │   │   ├─pipewire.service 
+           │   │   │ ├─897 /usr/bin/pipewire
+           │   │   │ └─920 /usr/bin/pipewire-media-session
+           │   │   ├─pulseaudio.service 
+           │   │   │ └─898 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+           │   │   ├─gvfs-gphoto2-volume-monitor.service 
+           │   │   │ └─1194 /usr/libexec/gvfs-gphoto2-volume-monitor
+           │   │   ├─dbus.service 
+           │   │   │ └─911 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation >
+           │   │   ├─gvfs-udisks2-volume-monitor.service 
+           │   │   │ └─1177 /usr/libexec/gvfs-udisks2-volume-monitor
+           │   │   ├─gvfs-mtp-volume-monitor.service 
+           │   │   │ └─1198 /usr/libexec/gvfs-mtp-volume-monitor
+           │   │   ├─gvfs-goa-volume-monitor.service 
+           │   │   │ └─1202 /usr/libexec/gvfs-goa-volume-monitor
+           │   │   ├─gvfs-afc-volume-monitor.service 
+           │   │   │ └─1189 /usr/libexec/gvfs-afc-volume-monitor
+           │   │   └─gvfs-daemon.service 
+           │   │     ├─ 997 /usr/libexec/gvfsd
+           │   │     ├─1002 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
+           │   │     └─1207 /usr/libexec/gvfsd-trash --spawner :1.7 /org/gtk/gvfs/exec_spaw/0
+           │   ├─session-1.scope 
+           │   │ ├─ 753 lightdm --session-child 14 17
+           │   │ ├─ 907 /usr/bin/lxsession -s LXDE-pi -e LXDE -w openbox-lxde-pi
+           │   │ ├─ 976 /usr/bin/ssh-agent x-session-manager
+           │   │ ├─1007 openbox --config-file /home/pi/.config/openbox/lxde-pi-rc.xml
+           │   │ ├─1009 lxpolkit
+           │   │ ├─1016 lxpanel --profile LXDE-pi
+           │   │ ├─1018 pcmanfm --desktop --profile LXDE-pi
+           │   │ ├─1025 sudo -AE piwiz
+           │   │ ├─1029 /usr/bin/python3 /usr/share/system-config-printer/applet.py
+           │   │ ├─1030 /usr/bin/ssh-agent -s
+           │   │ ├─1033 piwiz
+           │   │ ├─1037 sh /etc/xdg/lxsession/LXDE-pi/sshpwd.sh
+           │   │ ├─1040 xcompmgr -a
+           │   │ ├─1048 zenity --warning --width=400 --text=SSH is enabled and the default password for the 'pi' user h>
+           │   │ └─1183 /usr/lib/menu-cache/menu-cached /run/user/1000/menu-cached-:0
+           │   └─session-4.scope 
+           │     ├─1067 sshd: pi [priv]
+           │     ├─1297 sshd: pi@pts/0
+           │     ├─1298 -bash
+           │     ├─1324 sudo systemctl status
+           │     ├─1325 systemctl status
+           │     └─1326 less
+           ├─init.scope 
+           │ └─1 /sbin/init splash
+           └─system.slice 
+             ├─lightdm.service 
+             │ ├─635 /usr/sbin/lightdm
+             │ └─682 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+             ├─systemd-timesyncd.service 
+             │ └─844 /lib/systemd/systemd-timesyncd
+             ├─tayga.service 
+             │ └─699 /usr/sbin/tayga --pidfile /var/run/tayga.pid
+             ├─hostapd.service 
+             │ └─552 /usr/sbin/hostapd -B /etc/hostapd/hostapd.conf -P /var/run/hostapd.pid
+             ├─dbus.service 
+             │ └─412 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslo>
+             ├─hciuart.service 
+             │ └─566 /usr/bin/hciattach /dev/serial1 bcm43xx 921600 noflow - b8:27:eb:dc:c8:26
+             ├─udisks2.service 
+             │ └─518 /usr/libexec/udisks2/udisksd
+             ├─ssh.service 
+             │ └─653 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+             ├─dnsmasq.service 
+             │ └─692 /usr/sbin/dnsmasq -x /run/dnsmasq/dnsmasq.pid -u dnsmasq -r /run/dnsmasq/resolv.conf -7 /etc/dnsma>
+             ├─avahi-daemon.service 
+             │ ├─409 avahi-daemon: running [raspberrypi-15.local]
+             │ └─420 avahi-daemon: chroot helper
+             ├─otbr-web.service 
+             │ └─824 /usr/sbin/otbr-web
+             ├─wpa_supplicant.service 
+             │ └─519 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+             ├─triggerhappy.service 
+             │ └─508 /usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket --user nobody --de>
+             ├─systemd-logind.service 
+             │ └─502 /lib/systemd/systemd-logind
+             ├─rtkit-daemon.service 
+             │ └─901 /usr/libexec/rtkit-daemon
+             ├─cups.service 
+             │ └─586 /usr/sbin/cupsd -l
+             ├─polkit.service 
+             │ └─593 /usr/libexec/polkitd --no-debug
+             ├─otbr-agent.service 
+             │ └─808 /usr/sbin/otbr-agent -I wpan0 -B eth0 spinel+hdlc+uart:///dev/ttyACM0 trel://eth0
+             ├─cron.service 
+             │ └─410 /usr/sbin/cron -f
+             ├─named.service 
+             │ └─590 /usr/sbin/named -f -u bind
+             ├─systemd-udevd.service 
+             │ └─159 /lib/systemd/systemd-udevd
+             ├─rsyslog.service 
+             │ └─455 /usr/sbin/rsyslogd -n -iNONE
+             ├─bluetooth.service 
+             │ └─634 /usr/libexec/bluetooth/bluetoothd
+             ├─mdns.service 
+             │ └─806 /usr/sbin/mdnsd
+             ├─systemd-journald.service 
+             │ └─127 /lib/systemd/systemd-journald
+             ├─dhcpcd.service 
+             │ └─553 /usr/sbin/dhcpcd -b -q
+             ├─rng-tools-debian.service 
+             │ └─579 /usr/sbin/rngd -r /dev/hwrng
+             └─cups-browsed.service 
+               └─768 /usr/sbin/cups-browsed
+pi@raspberrypi:~ $ 

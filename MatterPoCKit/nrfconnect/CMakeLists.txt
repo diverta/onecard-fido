@@ -73,7 +73,7 @@ target_sources(app PRIVATE
 
 chip_configure_data_model(app
     INCLUDE_SERVER
-    ZAP_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../lock-common/lock-app.zap
+    ZAP_FILE ${CHIP_ROOT}/examples/lock-app/lock-common/lock-app.zap
 )
 
 if(BUILD_WITH_DFU)
