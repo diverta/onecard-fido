@@ -1,6 +1,6 @@
 # OpenThread RCP Dongle導入手順
 
-[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)を`OpenThread RCP Dongle`として使用する手順について記載しています。
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle)を`OpenThread RCP Dongle`として使用する手順について記載しています。
 
 ## 概要
 
@@ -9,7 +9,7 @@
 
 <img src="../Research/Matter/assets01/0015.jpg" width=500>
 
-下図は`OpenThread RCP Dongle`として[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../../Research/Matter/OTBRSETUP.md)を使用する構成例です。
+下図は`OpenThread RCP Dongle`として[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../MatterPoCKit/OTBRSETUP.md)を使用する構成例です。
 
 <img src="../Research/Matter/assets01/0014.jpg" width=500>
 
@@ -27,7 +27,7 @@ MDBT50Q Dongle（nRF52840）を`OpenThread RCP Dongle`として利用するた�
 
 <img src="assets05/0001.jpg" width=600>
 
-次に、上のページからOpenThreadライブラリーのリンク（上図では`openthread @ 6bb9631`とあるリンク）をクリックし、GitHubのリポジトリー[`openthread`](https://github.com/openthread/ot-nrf528xx)に遷移します。<br>
+次に、上のページからOpenThreadライブラリーのリンク（上図では`openthread @ 6bb9631`とあるリンク）をクリックし、GitHubのリポジトリー[`openthread`](https://github.com/openthread/openthread)に遷移します。<br>
 必ず、所定のバージョン（下図では`6bb9631e80`）がプルダウン上に表示されていることを確認してから、ソースコードをダウンロードします。
 
 <img src="assets05/0002.jpg" width=600>
@@ -64,9 +64,18 @@ arm-none-eabi-objcopy -O ihex build/bin/ot-rcp ot-rcp.hex
 
 <img src="assets05/0004.jpg" width=500>
 
+#### MDBT50Q Dongleの準備
+
+書込みに使用するNordic開発ボード（[nRF5340 DK](https://www.nordicsemi.com/Products/Development-hardware/nRF5340-DK)、または[nRF52840 DK](https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dk)）を、MDBT50Q Dongleに接続します。
+
+機器配線方法などは「[USBブートローダー書込み手順書](../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」を参考にしてください。<br>
+（nRF5340 DK、nRF52840 DKは、いずれも配線方法は同じになります）
+
+<img src="../nRF52840_app/firmwares/assets03/0001.jpg" width="500">
+
 #### ファームウェアの書込み
 
-前述のファームウェアイメージ（`ot-rcp.hex`）を、それぞれMDBT50Q Dongleに書込みます。<br>
+前述のファームウェアイメージ（`ot-rcp.hex`）を、MDBT50Q Dongleに書込みます。<br>
 [nRF Connectツール](../nRF52840_app/NRFCONNECTINST.md)を使用して書込みすると便利です。
 
 nRF Connectツールのアプリ「Programmer」を起動します。
@@ -99,7 +108,3 @@ nRF Connectツールのアプリ「Programmer」を起動します。
 <img src="assets05/0010.jpg" width=500>
 
 以上で、ファームウェアの書込みは完了です。
-
-nRF Connectツール・nRF52840 DKを使用した、MDBT50Q Dongleへのファームウェア書込みについての詳細（機器配線方法、etc）は「[USBブートローダー書込み手順書](../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」[注1]を参考にしてください。
-
-[注1]`ot-rcp.hex`書き込みの際は、ソフトデバイス`s140_nrf52_7.2.0_softdevice.hex`の追加指定は不要です。
