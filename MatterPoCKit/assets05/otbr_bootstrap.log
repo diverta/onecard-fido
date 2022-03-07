@@ -1,0 +1,2951 @@
+pi@raspberrypi:~ $ cd ot-br-posix
+pi@raspberrypi:~/ot-br-posix $ 
+pi@raspberrypi:~/ot-br-posix $ ./script/bootstrap
++++ dirname ./script/bootstrap
+++ cd ./script/..
+++ [[ ! -n '' ]]
+++ grep -s 'BeagleBone Black' /sys/firmware/devicetree/base/model
+++ case "${OSTYPE}" in
+++ have_or_die lsb_release
+++ have lsb_release
+++ command -v lsb_release
++++ lsb_release -i
++++ cut -c17-
++++ tr '[:upper:]' '[:lower:]'
+++ PLATFORM=raspbian
+++ echo 'Current platform is raspbian'
+Current platform is raspbian
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with DHCPV6_PD
+++ local value
++++ printenv DHCPV6_PD
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${DHCPV6_PD-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with NETWORK_MANAGER
+++ local value
++++ printenv NETWORK_MANAGER
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${NETWORK_MANAGER-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ STAGE_DIR=/home/pi/ot-br-posix/stage
+++ BUILD_DIR=/home/pi/ot-br-posix/build
+++ [[ -d /home/pi/ot-br-posix/stage ]]
+++ mkdir -v -p /home/pi/ot-br-posix/stage
+mkdir: created directory '/home/pi/ot-br-posix/stage'
+++ [[ -d /home/pi/ot-br-posix/build ]]
+++ mkdir -v -p /home/pi/ot-br-posix/build
+mkdir: created directory '/home/pi/ot-br-posix/build'
+++ export PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+++ PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
++++ basename ./script/bootstrap
+++ TASKNAME=bootstrap
+++ BEFORE_HOOK=examples/platforms/raspbian/before_bootstrap
+++ AFTER_HOOK=examples/platforms/raspbian/after_bootstrap
+++ [[ ! -f examples/platforms/raspbian/before_bootstrap ]]
+++ BEFORE_HOOK=/dev/null
+++ [[ ! -f examples/platforms/raspbian/after_bootstrap ]]
++ main
++ . /dev/null
++ git submodule update --init --recursive --depth 1
+Submodule 'third_party/cJSON/repo' (https://github.com/DaveGamble/cJSON.git) registered for path 'third_party/cJSON/repo'
+Submodule 'third_party/http-parser/repo' (https://github.com/nodejs/http-parser.git) registered for path 'third_party/http-parser/repo'
+Submodule 'third_party/openthread/repo' (https://github.com/openthread/openthread.git) registered for path 'third_party/openthread/repo'
+Cloning into '/home/pi/ot-br-posix/third_party/cJSON/repo'...
+Cloning into '/home/pi/ot-br-posix/third_party/http-parser/repo'...
+Cloning into '/home/pi/ot-br-posix/third_party/openthread/repo'...
+remote: Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: Enumerating objects: 35, done.
+remote: Counting objects: 100% (35/35), done.
+remote: Compressing objects: 100% (17/17), done.
+remote: Total 18 (delta 15), reused 2 (delta 0), pack-reused 0
+Unpacking objects: 100% (18/18), 2.79 KiB | 38.00 KiB/s, done.
+From https://github.com/DaveGamble/cJSON
+ * branch            cf97c6f066d81fdbba4ef722cfd327bbbba2365c -> FETCH_HEAD
+Submodule path 'third_party/cJSON/repo': checked out 'cf97c6f066d81fdbba4ef722cfd327bbbba2365c'
+remote: Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 1 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), 434 bytes | 14.00 KiB/s, done.
+From https://github.com/nodejs/http-parser
+ * branch            4f15b7d510dc7c6361a26a7c6d2f7c3a17f8d878 -> FETCH_HEAD
+Submodule path 'third_party/http-parser/repo': checked out '4f15b7d510dc7c6361a26a7c6d2f7c3a17f8d878'
+remote: Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 6 (delta 5), reused 1 (delta 0), pack-reused 0
+Unpacking objects: 100% (6/6), 887 bytes | 110.00 KiB/s, done.
+From https://github.com/openthread/openthread
+ * branch            417b5645beac21f1b4b32f338e01b9a6fd303d63 -> FETCH_HEAD
+Submodule path 'third_party/openthread/repo': checked out '417b5645beac21f1b4b32f338e01b9a6fd303d63'
++ install_packages
++ have apt-get
++ command -v apt-get
++ install_packages_apt
++ sudo apt-get update
+Get:1 http://raspbian.raspberrypi.org/raspbian bullseye InRelease [15.0 kB]                                            
+Get:2 http://archive.raspberrypi.org/debian bullseye InRelease [23.6 kB]
+Get:3 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf Packages [13.2 MB]
+Get:4 http://archive.raspberrypi.org/debian bullseye/main armhf Packages [257 kB]
+Fetched 13.5 MB in 19s (707 kB/s)                                                                                      
+Reading package lists... Done
++ sudo apt-get install --no-install-recommends -y wget iproute2 iputils-ping libreadline-dev libncurses-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+iproute2 is already the newest version (5.10.0-4).
+iputils-ping is already the newest version (3:20210202-1).
+wget is already the newest version (1.21-1+deb11u1).
+wget set to manually installed.
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+Suggested packages:
+  ncurses-doc readline-doc
+The following NEW packages will be installed:
+  libncurses-dev libreadline-dev
+0 upgraded, 2 newly installed, 0 to remove and 32 not upgraded.
+Need to get 409 kB of archives.
+After this operation, 2,331 kB of additional disk space will be used.
+Get:1 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libncurses-dev armhf 6.2+20201114-2 [288 kB]
+Get:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libreadline-dev armhf 8.1-1 [121 kB]
+Fetched 409 kB in 3s (158 kB/s)          
+Selecting previously unselected package libncurses-dev:armhf.
+(Reading database ... 100346 files and directories currently installed.)
+Preparing to unpack .../libncurses-dev_6.2+20201114-2_armhf.deb ...
+Unpacking libncurses-dev:armhf (6.2+20201114-2) ...
+Selecting previously unselected package libreadline-dev:armhf.
+Preparing to unpack .../libreadline-dev_8.1-1_armhf.deb ...
+Unpacking libreadline-dev:armhf (8.1-1) ...
+Setting up libncurses-dev:armhf (6.2+20201114-2) ...
+Setting up libreadline-dev:armhf (8.1-1) ...
+Processing triggers for install-info (6.7.0.dfsg.2-6) ...
+Processing triggers for man-db (2.9.4-2) ...
++ sudo apt-get install --no-install-recommends -y build-essential ninja-build cmake
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+build-essential is already the newest version (12.9).
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  cmake-data libjsoncpp24 librhash0
+Suggested packages:
+  cmake-doc
+The following NEW packages will be installed:
+  cmake cmake-data libjsoncpp24 librhash0 ninja-build
+0 upgraded, 5 newly installed, 0 to remove and 32 not upgraded.
+Need to get 5,133 kB of archives.
+After this operation, 28.2 MB of additional disk space will be used.
+Get:1 http://archive.raspberrypi.org/debian bullseye/main armhf cmake-data all 3.18.4-2+rpt1+rpi1 [1,726 kB]
+Get:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libjsoncpp24 armhf 1.9.4-4 [67.0 kB]
+Get:3 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf librhash0 armhf 1.4.1-2 [141 kB]  
+Get:4 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf ninja-build armhf 1.10.1-1 [92.5 kB]
+Get:5 http://archive.raspberrypi.org/debian bullseye/main armhf cmake armhf 3.18.4-2+rpt1+rpi1 [3,108 kB]
+Fetched 5,133 kB in 4s (1,391 kB/s)
+Selecting previously unselected package cmake-data.
+(Reading database ... 100450 files and directories currently installed.)
+Preparing to unpack .../cmake-data_3.18.4-2+rpt1+rpi1_all.deb ...
+Unpacking cmake-data (3.18.4-2+rpt1+rpi1) ...
+Selecting previously unselected package libjsoncpp24:armhf.
+Preparing to unpack .../libjsoncpp24_1.9.4-4_armhf.deb ...
+Unpacking libjsoncpp24:armhf (1.9.4-4) ...
+Selecting previously unselected package librhash0:armhf.
+Preparing to unpack .../librhash0_1.4.1-2_armhf.deb ...
+Unpacking librhash0:armhf (1.4.1-2) ...
+Selecting previously unselected package cmake.
+Preparing to unpack .../cmake_3.18.4-2+rpt1+rpi1_armhf.deb ...
+Unpacking cmake (3.18.4-2+rpt1+rpi1) ...
+Selecting previously unselected package ninja-build.
+Preparing to unpack .../ninja-build_1.10.1-1_armhf.deb ...
+Unpacking ninja-build (1.10.1-1) ...
+Setting up ninja-build (1.10.1-1) ...
+Setting up libjsoncpp24:armhf (1.9.4-4) ...
+Setting up librhash0:armhf (1.4.1-2) ...
+Setting up cmake-data (3.18.4-2+rpt1+rpi1) ...
+Setting up cmake (3.18.4-2+rpt1+rpi1) ...
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ with RELEASE
++ local value
+++ printenv RELEASE
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${RELEASE-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ sudo apt-get install --no-install-recommends -y libcpputest-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following NEW packages will be installed:
+  libcpputest-dev
+0 upgraded, 1 newly installed, 0 to remove and 32 not upgraded.
+Need to get 172 kB of archives.
+After this operation, 1,254 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libcpputest-dev armhf 4.0-2 [172 kB]
+Fetched 172 kB in 1s (155 kB/s)         
+Selecting previously unselected package libcpputest-dev:armhf.
+(Reading database ... 103341 files and directories currently installed.)
+Preparing to unpack .../libcpputest-dev_4.0-2_armhf.deb ...
+Unpacking libcpputest-dev:armhf (4.0-2) ...
+Setting up libcpputest-dev:armhf (4.0-2) ...
++ sudo apt-get install --no-install-recommends -y rsyslog
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+rsyslog is already the newest version (8.2102.0-2).
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+0 upgraded, 0 newly installed, 0 to remove and 32 not upgraded.
++ sudo apt-get install --no-install-recommends -y libdbus-1-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following NEW packages will be installed:
+  libdbus-1-dev
+0 upgraded, 1 newly installed, 0 to remove and 32 not upgraded.
+Need to get 224 kB of archives.
+After this operation, 740 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libdbus-1-dev armhf 1.12.20-2 [224 kB]
+Fetched 224 kB in 1s (174 kB/s)       
+Selecting previously unselected package libdbus-1-dev:armhf.
+(Reading database ... 103408 files and directories currently installed.)
+Preparing to unpack .../libdbus-1-dev_1.12.20-2_armhf.deb ...
+Unpacking libdbus-1-dev:armhf (1.12.20-2) ...
+Setting up libdbus-1-dev:armhf (1.12.20-2) ...
+Processing triggers for sgml-base (1.30) ...
++ sudo apt-get install --no-install-recommends -y libavahi-client3 libavahi-common-dev libavahi-client-dev avahi-daemon
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+avahi-daemon is already the newest version (0.8-5).
+libavahi-client3 is already the newest version (0.8-5).
+libavahi-client3 set to manually installed.
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following NEW packages will be installed:
+  libavahi-client-dev libavahi-common-dev
+0 upgraded, 2 newly installed, 0 to remove and 32 not upgraded.
+Need to get 135 kB of archives.
+After this operation, 372 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libavahi-common-dev armhf 0.8-5 [69.1 kB]
+Get:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libavahi-client-dev armhf 0.8-5 [65.9 kB]
+Fetched 135 kB in 1s (90.1 kB/s)          
+Selecting previously unselected package libavahi-common-dev:armhf.
+(Reading database ... 103449 files and directories currently installed.)
+Preparing to unpack .../libavahi-common-dev_0.8-5_armhf.deb ...
+Unpacking libavahi-common-dev:armhf (0.8-5) ...
+Selecting previously unselected package libavahi-client-dev:armhf.
+Preparing to unpack .../libavahi-client-dev_0.8-5_armhf.deb ...
+Unpacking libavahi-client-dev:armhf (0.8-5) ...
+Setting up libavahi-common-dev:armhf (0.8-5) ...
+Setting up libavahi-client-dev:armhf (0.8-5) ...
++ MDNS_RESPONDER_SOURCE_NAME=mDNSResponder-878.30.4
++ cd /tmp
++ wget -4 --no-check-certificate https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz
+--2022-03-03 08:34:07--  https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.30.4.tar.gz
+Resolving opensource.apple.com (opensource.apple.com)... 17.253.69.206, 17.253.71.202
+Connecting to opensource.apple.com (opensource.apple.com)|17.253.69.206|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2490030 (2.4M) [application/x-gzip]
+Saving to: ‘mDNSResponder-878.30.4.tar.gz’
+
+mDNSResponder-878.30.4.tar.gz 100%[=================================================>]   2.37M  2.49MB/s    in 1.0s    
+
+2022-03-03 08:34:10 (2.49 MB/s) - ‘mDNSResponder-878.30.4.tar.gz’ saved [2490030/2490030]
+
++ tar xvf mDNSResponder-878.30.4.tar.gz
+mDNSResponder-878.30.4/
+mDNSResponder-878.30.4/mDNSMacOSX/
+mDNSResponder-878.30.4/mDNSMacOSX/helper-stubs.c
+mDNSResponder-878.30.4/mDNSMacOSX/helper.h
+mDNSResponder-878.30.4/mDNSMacOSX/P2PPacketFilter.c
+mDNSResponder-878.30.4/mDNSMacOSX/BLE.h
+mDNSResponder-878.30.4/mDNSMacOSX/helpermsg-types.h
+mDNSResponder-878.30.4/mDNSMacOSX/dnsctl-entitlements.plist
+mDNSResponder-878.30.4/mDNSMacOSX/pfkey.c
+mDNSResponder-878.30.4/mDNSMacOSX/DNS64.c
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponderHelper.plist
+mDNSResponder-878.30.4/mDNSMacOSX/com.apple.dnsextd.plist
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponderHelper.8
+mDNSResponder-878.30.4/mDNSMacOSX/DNS64State.h
+mDNSResponder-878.30.4/mDNSMacOSX/DNSServiceDiscovery.c
+mDNSResponder-878.30.4/mDNSMacOSX/com.apple.mDNSResponderHelper.plist
+mDNSResponder-878.30.4/mDNSMacOSX/ipsec_strerror.h
+mDNSResponder-878.30.4/mDNSMacOSX/D2D.h
+mDNSResponder-878.30.4/mDNSMacOSX/Metrics.m
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSMacOSX.h
+mDNSResponder-878.30.4/mDNSMacOSX/CryptoSupport.c
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.order
+mDNSResponder-878.30.4/mDNSMacOSX/helper-entitlements.plist
+mDNSResponder-878.30.4/mDNSMacOSX/README.privsep
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/ConfigurationRights.h
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/DNSServiceDiscoveryPref.h
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/BonjourPrefTool.h
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/entitlements.plist
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/BonjourPrefTool-Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/main.m
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/BonjourPrefTool.m
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPrefTool/BonjourPrefToolProtocol.h
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/English.lproj/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/English.lproj/InfoPlist.strings
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Artwork/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Artwork/success.tiff
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Artwork/inprogress.tiff
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Artwork/failure.tiff
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPref.icns
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/BonjourPrefRemoteViewService.h
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/entitlements.plist
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/BonjourPrefRemoteViewService-Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/InfoPlist.strings
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/main.m
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/RemoteViewService/BonjourPrefRemoteViewService.m
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Info-PreferencePane.plist
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Base.lproj/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Base.lproj/DNSServiceDiscoveryPref.nib/
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Base.lproj/DNSServiceDiscoveryPref.nib/keyedobjects.nib
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/Base.lproj/DNSServiceDiscoveryPref.nib/designable.nib
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/BonjourPref.tiff
+mDNSResponder-878.30.4/mDNSMacOSX/PreferencePane/DNSServiceDiscoveryPref.m
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSNetMonitor/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSNetMonitor/mDNSNetMonitor.8
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.plist
+mDNSResponder-878.30.4/mDNSMacOSX/coreBLE.h
+mDNSResponder-878.30.4/mDNSMacOSX/helper-server.h
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/project.pbxproj
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/xcshareddata/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/xcshareddata/xcschemes/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/xcshareddata/xcschemes/Build All.xcscheme
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.xcodeproj/xcshareddata/xcschemes/mDNSResponder.xcscheme
+mDNSResponder-878.30.4/mDNSMacOSX/DNSProxySupport.c
+mDNSResponder-878.30.4/mDNSMacOSX/DNSSECSupport.h
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/Resources/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/Resources/English.lproj/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/Resources/English.lproj/Localizable.strings
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/Resources/French.lproj/
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-bundle/Resources/French.lproj/Localizable.strings
+mDNSResponder-878.30.4/mDNSMacOSX/SymptomReporter.c
+mDNSResponder-878.30.4/mDNSMacOSX/com.apple.mDNSResponder.plist
+mDNSResponder-878.30.4/mDNSMacOSX/BLE.c
+mDNSResponder-878.30.4/mDNSMacOSX/P2PPacketFilter.h
+mDNSResponder-878.30.4/mDNSMacOSX/helper.c
+mDNSResponder-878.30.4/mDNSMacOSX/Private/
+mDNSResponder-878.30.4/mDNSMacOSX/Private/xpc_services.h
+mDNSResponder-878.30.4/mDNSMacOSX/Private/dns_services.c
+mDNSResponder-878.30.4/mDNSMacOSX/Private/dnsctl_server.c
+mDNSResponder-878.30.4/mDNSMacOSX/Private/dns_xpc.h
+mDNSResponder-878.30.4/mDNSMacOSX/Private/com.apple.mDNSResponder.plist
+mDNSResponder-878.30.4/mDNSMacOSX/Private/xpc_services.c
+mDNSResponder-878.30.4/mDNSMacOSX/Private/dns_services.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/CNBrowseDomainsController.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/Contents.json
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/UIPreferencesBlueCheck.imageset/
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/UIPreferencesBlueCheck.imageset/UIPreferencesBlueCheck@2x.png
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/UIPreferencesBlueCheck.imageset/Contents.json
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Assets.xcassets/UIPreferencesBlueCheck.imageset/UIPreferencesBlueCheck.png
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/BonjourSCStore.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/HostnameController.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/BonjourSettingsController.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Localizable.strings
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/CNBrowseDomainsController.m
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/BonjourConstants.h
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/BonjourSCStore.m
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/BonjourSettingsController.m
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/HostnameController.m
+mDNSResponder-878.30.4/mDNSMacOSX/SettingsBundle/Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/daemon.c
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourEvents.c
+mDNSResponder-878.30.4/mDNSMacOSX/DNS64.h
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.txt
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourEvents-Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/uDNSPathEvalulation.c
+mDNSResponder-878.30.4/mDNSMacOSX/Metrics.h
+mDNSResponder-878.30.4/mDNSMacOSX/CryptoSupport.h
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSMacOSX.c
+mDNSResponder-878.30.4/mDNSMacOSX/D2D.c
+mDNSResponder-878.30.4/mDNSMacOSX/LegacyNATTraversal.c
+mDNSResponder-878.30.4/mDNSMacOSX/DNSServiceDiscoveryDefines.h
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-xcodeproj-explanation.txt
+mDNSResponder-878.30.4/mDNSMacOSX/DNSServiceDiscovery.h
+mDNSResponder-878.30.4/mDNSMacOSX/DNSSECSupport.c
+mDNSResponder-878.30.4/mDNSMacOSX/libpfkey.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjsocket.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/CaptureFile.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/Frame.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjstring.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjIPAddr.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjsocket.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjMACAddr.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/LLRBTree.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/Frame.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjstring.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjMACAddr.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/CollectBy.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjtypes.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/CaptureFile.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/LLRBTree.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/CollectBy.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/BonjourTop.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/BonjourTop.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/BonjourTop.1
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjStringtoStringMap.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjIPAddr.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/DNSFrame.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/DNSFrame.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/main.cpp
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/source/bjStringtoStringMap.h
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/BonjourTop.xcodeproj/
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/BonjourTop.xcodeproj/project.pbxproj
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/BonjourTop.xcodeproj/project.xcworkspace/
+mDNSResponder-878.30.4/mDNSMacOSX/BonjourTop/BonjourTop.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+mDNSResponder-878.30.4/mDNSMacOSX/coreBLE.m
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/macOS/
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/macOS/DomainBrowser.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/macOS/CNDomainBrowserView.m
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/macOS/CNDomainBrowserView.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/macOS/Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/Shared/
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/Shared/_CNDomainBrowser.m
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/Shared/CNDomainBrowserPathUtils.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/Shared/_CNDomainBrowser.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/Shared/CNDomainBrowserPathUtils.m
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/DomainBrowser.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/CNDomainBrowserViewController.m
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/CNDomainBrowserViewController.h
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/DomainBrowser.strings
+mDNSResponder-878.30.4/mDNSMacOSX/DomainBrowser/iOS/Info.plist
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder.sb
+mDNSResponder-878.30.4/mDNSMacOSX/mDNSResponder-entitlements.plist
+mDNSResponder-878.30.4/mDNSMacOSX/helper-main.c
+mDNSResponder-878.30.4/mDNSVxWorks/
+mDNSResponder-878.30.4/mDNSVxWorks/mDNSVxWorks.c
+mDNSResponder-878.30.4/mDNSVxWorks/mDNSVxWorksIPv4Only.c
+mDNSResponder-878.30.4/mDNSVxWorks/mDNSVxWorks.h
+mDNSResponder-878.30.4/mDNSVxWorks/README.txt
+mDNSResponder-878.30.4/mDNSVxWorks/mDNSVxWorksIPv4Only.h
+mDNSResponder-878.30.4/Clients/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/DNSSDService.sln
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/chrome.manifest
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin/overlay.css
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin/_internal_toobar-button.png
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin-darwin/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin-darwin/overlay.css
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/skin-darwin/_internal_toobar-button.png
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/locale/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/locale/en-US/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/locale/en-US/bonjour4firefox.dtd
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/locale/en-US/bonjour4firefox.properties
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/overlay.js
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/_internal_listImage.png
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/bonjour4firefox.xul
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/bonjour4firefox.css
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/_internal_bonjour4firefox.png
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/content/browserOverlay.xul
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/defaults/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/defaults/preferences/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/defaults/preferences/bonjour4firefox.js
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/components/
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/components/IDNSSDService.xpt
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/install.rdf
+mDNSResponder-878.30.4/Clients/FirefoxExtension/extension/readme.txt
+mDNSResponder-878.30.4/Clients/FirefoxExtension/FirefoxExtension.vcxproj
+mDNSResponder-878.30.4/Clients/FirefoxExtension/CDNSSDService.h
+mDNSResponder-878.30.4/Clients/FirefoxExtension/resource.h
+mDNSResponder-878.30.4/Clients/FirefoxExtension/CDNSSDService.cpp
+mDNSResponder-878.30.4/Clients/FirefoxExtension/CDNSSDServiceModule.cpp
+mDNSResponder-878.30.4/Clients/FirefoxExtension/readme.txt
+mDNSResponder-878.30.4/Clients/FirefoxExtension/FirefoxExtension.vcproj
+mDNSResponder-878.30.4/Clients/FirefoxExtension/IDNSSDService.h
+mDNSResponder-878.30.4/Clients/FirefoxExtension/FirefoxExtension.vcxproj.filters
+mDNSResponder-878.30.4/Clients/FirefoxExtension/FirefoxExtension.rc
+mDNSResponder-878.30.4/Clients/FirefoxExtension/IDNSSDService.idl
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/DNSServiceBrowser.Designer.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/DNSServiceBrowser.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/DNSServiceBrowser.VB.vbproj
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Application.myapp
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Application.Designer.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Resources.Designer.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Resources.resx
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Settings.settings
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/Settings.Designer.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/My Project/AssemblyInfo.vb
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.VB/DNSServiceBrowser.resx
+mDNSResponder-878.30.4/Clients/DNS-SD.xcodeproj/
+mDNSResponder-878.30.4/Clients/DNS-SD.xcodeproj/project.pbxproj
+mDNSResponder-878.30.4/Clients/DNSServiceReg.m
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/mDNSNetMonitor.vcxproj
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/mDNSNetMonitor.rc
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/resource.h
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/mDNSNetMonitor.manifest
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/mDNSNetMonitor.vcproj
+mDNSResponder-878.30.4/Clients/mDNSNetMonitor.VisualStudio/mDNSNetMonitor.vcxproj.filters
+mDNSResponder-878.30.4/Clients/DNSServiceReg.nib/
+mDNSResponder-878.30.4/Clients/DNSServiceReg.nib/classes.nib
+mDNSResponder-878.30.4/Clients/DNSServiceReg.nib/info.nib
+mDNSResponder-878.30.4/Clients/DNSServiceReg.nib/objects.nib
+mDNSResponder-878.30.4/Clients/Makefile
+mDNSResponder-878.30.4/Clients/dnssdutil.c
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.nib/
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.nib/classes.nib
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.nib/info.nib
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.nib/objects.nib
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/AssemblyInfo.cs
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/DNSServiceBrowser.NET.csproj
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/DNSServiceBrowser.resx
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/App.ico
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.NET/DNSServiceBrowser.cs
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/resource_dll.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/LoginDialog.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/About.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ClassFactory.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/About.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/cold.ico
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/logo.bmp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/ExplorerPlugin64.manifest
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/hot.ico
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/about.bmp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/button-xp.ico
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/ExplorerPlugin.manifest
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/res/button-2k.ico
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerBarWindow.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ClassFactory.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginLocRes.vcxproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/StdAfx.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginRes.vcxproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.vcproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginRes.vcxproj.filters
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerBar.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/resource_loc_res.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerBar.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginRes.vcproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.rc
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginLocRes.rc
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/Resource.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginRes.rc
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.vcxproj.filters
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ReadMe.txt
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginLocRes.vcxproj.filters
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/LoginDialog.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/resource_res.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/StdAfx.cpp
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerBarWindow.h
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPluginLocRes.vcproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.vcxproj
+mDNSResponder-878.30.4/Clients/ExplorerPlugin/ExplorerPlugin.def
+mDNSResponder-878.30.4/Clients/dnsctl.c
+mDNSResponder-878.30.4/Clients/Java/
+mDNSResponder-878.30.4/Clients/Java/SwingQueryListener.java
+mDNSResponder-878.30.4/Clients/Java/nmakefile
+mDNSResponder-878.30.4/Clients/Java/SimpleChat.java
+mDNSResponder-878.30.4/Clients/Java/JavaSamples.vcxproj
+mDNSResponder-878.30.4/Clients/Java/BrowserApp.java
+mDNSResponder-878.30.4/Clients/Java/JavaSamples.vcproj
+mDNSResponder-878.30.4/Clients/Java/SwingDomainListener.java
+mDNSResponder-878.30.4/Clients/Java/DNSSDUnitTest.java
+mDNSResponder-878.30.4/Clients/Java/BrowserApp.manifest
+mDNSResponder-878.30.4/Clients/Java/SwingBrowseListener.java
+mDNSResponder-878.30.4/Clients/Java/SimpleChat.manifest
+mDNSResponder-878.30.4/Clients/DNSServiceReg-Info.plist
+mDNSResponder-878.30.4/Clients/ClientCommon.c
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/SimpleChat.cs
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/AssemblyInfo.cs
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/SimpleChat.resx
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/App.ico
+mDNSResponder-878.30.4/Clients/SimpleChat.NET/SimpleChat.NET.csproj
+mDNSResponder-878.30.4/Clients/BonjourExample/
+mDNSResponder-878.30.4/Clients/BonjourExample/BonjourExample.cpp
+mDNSResponder-878.30.4/Clients/BonjourExample/stdafx.h
+mDNSResponder-878.30.4/Clients/BonjourExample/BonjourExample.sln
+mDNSResponder-878.30.4/Clients/BonjourExample/BonjourExample.vcproj
+mDNSResponder-878.30.4/Clients/BonjourExample/stdafx.cpp
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser.m
+mDNSResponder-878.30.4/Clients/ReadMe.txt
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/SimpleChat.resx
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Application.myapp
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Application.Designer.vb
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Resources.Designer.vb
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Resources.resx
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Settings.settings
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/Settings.Designer.vb
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/My Project/AssemblyInfo.vb
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/SimpleChat.VB.vbproj
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/SimpleChat.vb
+mDNSResponder-878.30.4/Clients/SimpleChat.VB/SimpleChat.Designer.vb
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/About.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/ThirdPage.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/About.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/FirstPage.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/Thumbs.db
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/Print.ico
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizardRes.rc2
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/about.bmp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizard.rc2
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizard.manifest
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/Info.ico
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizardLocRes.rc2
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizard.ico
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/watermark.bmp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/NetworkPrinter.ico
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/banner_icon.bmp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/res/PrinterSetupWizard64.manifest
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/SecondPage.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/FirstPage.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/stdafx.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizard.vcxproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizard.vcxproj.filters
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardApp.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardRes.rc
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardLocRes.vcxproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizard.ncb
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizard.vcproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardSheet.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizard.rc
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardLocRes.vcxproj.filters
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/SecondPage.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardRes.vcxproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/resource_loc_res.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardRes.vcxproj.filters
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardRes.vcproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/resource.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/FourthPage.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/UtilTypes.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/ReadMe.txt
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardSheet.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardLocRes.vcproj
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/FourthPage.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/resource_exe.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/Logger.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/resource_res.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/stdafx.cpp
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/Logger.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/ThirdPage.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardApp.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/tcpxcv.h
+mDNSResponder-878.30.4/Clients/PrinterSetupWizard/PrinterSetupWizardLocRes.rc
+mDNSResponder-878.30.4/Clients/ClientCommon.h
+mDNSResponder-878.30.4/Clients/DNSServiceBrowser-Info.plist
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.sdk.vcproj
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.rc
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.sdk.rc
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/DNS-SD64.manifest
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/resource.h
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj.filters
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/DNS-SD.manifest
+mDNSResponder-878.30.4/Clients/DNS-SD.VisualStudio/dns-sd.vcproj
+mDNSResponder-878.30.4/Clients/dns-sd.c
+mDNSResponder-878.30.4/LICENSE
+mDNSResponder-878.30.4/Makefile
+mDNSResponder-878.30.4/mDNSResponder.sln
+mDNSResponder-878.30.4/unittests/
+mDNSResponder-878.30.4/unittests/uds_daemon_ut.c
+mDNSResponder-878.30.4/unittests/DNSMessageTest.h
+mDNSResponder-878.30.4/unittests/mDNSCoreReceiveTest.h
+mDNSResponder-878.30.4/unittests/InterfaceTest.c
+mDNSResponder-878.30.4/unittests/LocalOnlyTimeoutTests.h
+mDNSResponder-878.30.4/unittests/CNameRecordTests.h
+mDNSResponder-878.30.4/unittests/unittest_common.h
+mDNSResponder-878.30.4/unittests/unittest.h
+mDNSResponder-878.30.4/unittests/daemon_ut.c
+mDNSResponder-878.30.4/unittests/DomainNameTest.h
+mDNSResponder-878.30.4/unittests/ResourceRecordTest.h
+mDNSResponder-878.30.4/unittests/mDNSCoreReceiveTest.c
+mDNSResponder-878.30.4/unittests/InterfaceTest.h
+mDNSResponder-878.30.4/unittests/main.c
+mDNSResponder-878.30.4/unittests/DNSMessageTest.c
+mDNSResponder-878.30.4/unittests/LocalOnlyTimeoutTests.c
+mDNSResponder-878.30.4/unittests/unittest_common.c
+mDNSResponder-878.30.4/unittests/CNameRecordTests.c
+mDNSResponder-878.30.4/unittests/unittest.c
+mDNSResponder-878.30.4/unittests/ResourceRecordTest.c
+mDNSResponder-878.30.4/unittests/mdns_ut.c
+mDNSResponder-878.30.4/unittests/DomainNameTest.c
+mDNSResponder-878.30.4/unittests/mdns_macosx_ut.c
+mDNSResponder-878.30.4/mDNSCore/
+mDNSResponder-878.30.4/mDNSCore/dnsproxy.h
+mDNSResponder-878.30.4/mDNSCore/uDNS.h
+mDNSResponder-878.30.4/mDNSCore/nsec.h
+mDNSResponder-878.30.4/mDNSCore/DNSCommon.c
+mDNSResponder-878.30.4/mDNSCore/mDNSDebug.h
+mDNSResponder-878.30.4/mDNSCore/dnssec.c
+mDNSResponder-878.30.4/mDNSCore/CryptoAlg.h
+mDNSResponder-878.30.4/mDNSCore/anonymous.h
+mDNSResponder-878.30.4/mDNSCore/nsec3.h
+mDNSResponder-878.30.4/mDNSCore/Implementer Notes.txt
+mDNSResponder-878.30.4/mDNSCore/nsec.c
+mDNSResponder-878.30.4/mDNSCore/uDNS.c
+mDNSResponder-878.30.4/mDNSCore/dnsproxy.c
+mDNSResponder-878.30.4/mDNSCore/dnssec.h
+mDNSResponder-878.30.4/mDNSCore/mDNS.c
+mDNSResponder-878.30.4/mDNSCore/DNSCommon.h
+mDNSResponder-878.30.4/mDNSCore/anonymous.c
+mDNSResponder-878.30.4/mDNSCore/CryptoAlg.c
+mDNSResponder-878.30.4/mDNSCore/mDNSEmbeddedAPI.h
+mDNSResponder-878.30.4/mDNSCore/nsec3.c
+mDNSResponder-878.30.4/mDNSCore/DNSDigest.c
+mDNSResponder-878.30.4/.gitignore
+mDNSResponder-878.30.4/mDNSPosix/
+mDNSResponder-878.30.4/mDNSPosix/mDNSPosix.c
+mDNSResponder-878.30.4/mDNSPosix/Services.txt
+mDNSResponder-878.30.4/mDNSPosix/ExampleClientApp.c
+mDNSResponder-878.30.4/mDNSPosix/mDNSUNP.h
+mDNSResponder-878.30.4/mDNSPosix/PosixDaemon.c
+mDNSResponder-878.30.4/mDNSPosix/mdnsd.sh
+mDNSResponder-878.30.4/mDNSPosix/Identify.c
+mDNSResponder-878.30.4/mDNSPosix/Makefile
+mDNSResponder-878.30.4/mDNSPosix/nss_mdns.conf.5
+mDNSResponder-878.30.4/mDNSPosix/Responder.c
+mDNSResponder-878.30.4/mDNSPosix/Client.c
+mDNSResponder-878.30.4/mDNSPosix/ExampleClientApp.h
+mDNSResponder-878.30.4/mDNSPosix/mDNSUNP.c
+mDNSResponder-878.30.4/mDNSPosix/nss_mdns.conf
+mDNSResponder-878.30.4/mDNSPosix/mDNSPosix.h
+mDNSResponder-878.30.4/mDNSPosix/parselog.py
+mDNSResponder-878.30.4/mDNSPosix/ReadMe.txt
+mDNSResponder-878.30.4/mDNSPosix/nss_ReadMe.txt
+mDNSResponder-878.30.4/mDNSPosix/nss_mdns.c
+mDNSResponder-878.30.4/mDNSPosix/ProxyResponder.c
+mDNSResponder-878.30.4/mDNSPosix/NetMonitor.c
+mDNSResponder-878.30.4/mDNSPosix/libnss_mdns.8
+mDNSResponder-878.30.4/PrivateDNS.txt
+mDNSResponder-878.30.4/README.txt
+mDNSResponder-878.30.4/Documents/
+mDNSResponder-878.30.4/Documents/Start mDNSResponder in Xcode.rtfd/
+mDNSResponder-878.30.4/Documents/Start mDNSResponder in Xcode.rtfd/Screen Shot 2015-09-16 at 4.22.37 PM.png
+mDNSResponder-878.30.4/Documents/Start mDNSResponder in Xcode.rtfd/TXT.rtf
+mDNSResponder-878.30.4/Documents/Start mDNSResponder in Xcode.rtfd/A944EB40-AEFD-4CA1-BF10-E8F52835CA8C.png
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/TXT.rtf
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/unknown.png
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/Screen Shot 2015-09-16 at 3.36.23 PM.png
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/Screen Shot 2015-09-16 at 3.46.14 PM.png
+mDNSResponder-878.30.4/Documents/Attach mDNSResponder to Xcode.rtfd/52D711AF-4055-4867-A494-7E31552BB9E1.png
+mDNSResponder-878.30.4/mDNSShared/
+mDNSResponder-878.30.4/mDNSShared/dns_sd.h
+mDNSResponder-878.30.4/mDNSShared/DebugServices.h
+mDNSResponder-878.30.4/mDNSShared/dnsextd.conf
+mDNSResponder-878.30.4/mDNSShared/dnsextd.8
+mDNSResponder-878.30.4/mDNSShared/uds_daemon.c
+mDNSResponder-878.30.4/mDNSShared/dnsextd.h
+mDNSResponder-878.30.4/mDNSShared/dnssd_clientlib.c
+mDNSResponder-878.30.4/mDNSShared/dns_sd_internal.h
+mDNSResponder-878.30.4/mDNSShared/dnssd_ipc.h
+mDNSResponder-878.30.4/mDNSShared/CommonServices.h
+mDNSResponder-878.30.4/mDNSShared/dns_sd_private.h
+mDNSResponder-878.30.4/mDNSShared/GenLinkedList.c
+mDNSResponder-878.30.4/mDNSShared/PlatformCommon.h
+mDNSResponder-878.30.4/mDNSShared/dns-sd.1
+mDNSResponder-878.30.4/mDNSShared/Java/
+mDNSResponder-878.30.4/mDNSShared/Java/DNSRecord.java
+mDNSResponder-878.30.4/mDNSShared/Java/ResolveListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/QueryListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/DNSSDException.java
+mDNSResponder-878.30.4/mDNSShared/Java/RegisterListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/BaseListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/DomainListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/DNSSDService.java
+mDNSResponder-878.30.4/mDNSShared/Java/JNISupport.c
+mDNSResponder-878.30.4/mDNSShared/Java/DNSSDRecordRegistrar.java
+mDNSResponder-878.30.4/mDNSShared/Java/DNSSDRegistration.java
+mDNSResponder-878.30.4/mDNSShared/Java/BrowseListener.java
+mDNSResponder-878.30.4/mDNSShared/Java/DNSSD.java
+mDNSResponder-878.30.4/mDNSShared/Java/TXTRecord.java
+mDNSResponder-878.30.4/mDNSShared/Java/RegisterRecordListener.java
+mDNSResponder-878.30.4/mDNSShared/dnsextd_lexer.l
+mDNSResponder-878.30.4/mDNSShared/uds_daemon.h
+mDNSResponder-878.30.4/mDNSShared/dnsextd.c
+mDNSResponder-878.30.4/mDNSShared/DebugServices.c
+mDNSResponder-878.30.4/mDNSShared/mDNSDebug.c
+mDNSResponder-878.30.4/mDNSShared/dnsextd_parser.y
+mDNSResponder-878.30.4/mDNSShared/dnssd_ipc.c
+mDNSResponder-878.30.4/mDNSShared/dnssd_clientshim.c
+mDNSResponder-878.30.4/mDNSShared/mDNSResponder.8
+mDNSResponder-878.30.4/mDNSShared/dnssd_clientstub.c
+mDNSResponder-878.30.4/mDNSShared/GenLinkedList.h
+mDNSResponder-878.30.4/mDNSShared/PlatformCommon.c
+mDNSResponder-878.30.4/mDNSWindows/
+mDNSResponder-878.30.4/mDNSWindows/BonjourQuickLooks.sln
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ConfigDialog.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelLocRes.rc
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelRes.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/success.ico
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/ControlPanel.rc2
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/EnergySaver.ico
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/failure.ico
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/ControlPanel.manifest
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/ControlPanel64.manifest
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/ControlPanel.dll.manifest
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/controlpanel.ico
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/res/ControlPanel.exe.manifest
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.def
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/BrowsingPage.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelLocRes.vcproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/SecondPage.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/stdafx.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelExe.vcproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelDll.rc
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelExe.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ConfigDialog.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/BrowsingPage.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ServicesPage.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/SecondPage.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ServicesPage.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ConfigPropertySheet.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.vcproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/RegistrationPage.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/resource.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelRes.vcproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ConfigPropertySheet.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelExe.rc
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/FourthPage.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelLocRes.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelRes.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/FourthPage.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanel.rc
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/stdafx.cpp
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/RegistrationPage.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelExe.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/SharedSecret.h
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelLocRes.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/ControlPanelRes.rc
+mDNSResponder-878.30.4/mDNSWindows/ControlPanel/SharedSecret.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/newres.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/Application.rc
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/Application.rc2
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/Application.ico
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Resources/resource.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Application.vcp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Application.vcw
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Application.vcc
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/StdAfx.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/Application.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/BrowserDialog.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/Application.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/StdAfx.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/WindowsCE/Sources/BrowserDialog.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/ApplicationVS2003.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Resources/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Resources/Application.rc
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Resources/Application.rc2
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Resources/Application.ico
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Resources/Resource.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/ApplicationVS2002.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/LoginDialog.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/StdAfx.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/AboutDialog.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/Application.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/ChooserDialog.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/ChooserDialog.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/AboutDialog.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/LoginDialog.h
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/Application.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/Sources/StdAfx.cpp
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/ApplicationVS2003.sln
+mDNSResponder-878.30.4/mDNSWindows/DNSServiceBrowser/Windows/ApplicationVS2002.sln
+mDNSResponder-878.30.4/mDNSWindows/VPCDetect.cpp
+mDNSResponder-878.30.4/mDNSWindows/WinServices.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DLLX/TXTRecord.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/stdafx.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDService.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/StringServices.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDRecord.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDService.rgs
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.rgs
+mDNSResponder-878.30.4/mDNSWindows/DLLX/TXTRecord.rgs
+mDNSResponder-878.30.4/mDNSWindows/DLLX/dlldatax.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDRecord.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDService.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDRecord.rgs
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.def
+mDNSResponder-878.30.4/mDNSWindows/DLLX/TXTRecord.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDEventManager.rgs
+mDNSResponder-878.30.4/mDNSWindows/DLLX/resource.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/StringServices.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/_IDNSSDEvents_CP.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.idl
+mDNSResponder-878.30.4/mDNSWindows/DLLX/dlldatax.c
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDEventManager.h
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSD.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DNSSDEventManager.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLX/DLLX.rc
+mDNSResponder-878.30.4/mDNSWindows/PosixCompat.h
+mDNSResponder-878.30.4/mDNSWindows/isocode.h
+mDNSResponder-878.30.4/mDNSWindows/Secret.c
+mDNSResponder-878.30.4/mDNSWindows/mDNSWin32.h
+mDNSResponder-878.30.4/mDNSWindows/Poll.c
+mDNSResponder-878.30.4/mDNSWindows/loclibrary.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/
+mDNSResponder-878.30.4/mDNSWindows/SystemService/res/
+mDNSResponder-878.30.4/mDNSWindows/SystemService/res/mDNSResponder64.manifest
+mDNSResponder-878.30.4/mDNSWindows/SystemService/res/mDNSResponder.manifest
+mDNSResponder-878.30.4/mDNSWindows/SystemService/EventLogMessages.bin
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.mcp
+mDNSResponder-878.30.4/mDNSWindows/SystemService/resrc1.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/main.c
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Firewall.cpp
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.aps
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.c
+mDNSResponder-878.30.4/mDNSWindows/SystemService/resource.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.vcproj
+mDNSResponder-878.30.4/mDNSWindows/SystemService/EventLog.mc
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Prefix.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Firewall.h
+mDNSResponder-878.30.4/mDNSWindows/SystemService/Service.rc
+mDNSResponder-878.30.4/mDNSWindows/WinVersRes.h
+mDNSResponder-878.30.4/mDNSWindows/Java/
+mDNSResponder-878.30.4/mDNSWindows/Java/makefile
+mDNSResponder-878.30.4/mDNSWindows/Java/jdns_sd.rc
+mDNSResponder-878.30.4/mDNSWindows/Java/Java.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/Java/Java.vcproj
+mDNSResponder-878.30.4/mDNSWindows/Java/makefile64
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/Stdafx.h
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/dnssd_NET.h
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/dnssd_NET.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/AssemblyInfo.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/dnssd_NET.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/resource.h
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/dnssd_NET.ico
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/dnssd_NET.rc
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/Stdafx.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLL.NET/PString.h
+mDNSResponder-878.30.4/mDNSWindows/WinServices.cpp
+mDNSResponder-878.30.4/mDNSWindows/BonjourQuickLooksInstaller/
+mDNSResponder-878.30.4/mDNSWindows/BonjourQuickLooksInstaller/Product.wxs
+mDNSResponder-878.30.4/mDNSWindows/BonjourQuickLooksInstaller/BonjourQuickLooksInstaller.wixproj
+mDNSResponder-878.30.4/mDNSWindows/PosixCompat.c
+mDNSResponder-878.30.4/mDNSWindows/README.txt
+mDNSResponder-878.30.4/mDNSWindows/DLL/
+mDNSResponder-878.30.4/mDNSWindows/DLL/dnssd.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DLL/dll.rc
+mDNSResponder-878.30.4/mDNSWindows/DLL/dnssd.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/DLL/dnssd.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/DLL/dnssd.def
+mDNSResponder-878.30.4/mDNSWindows/DLL/resource.h
+mDNSResponder-878.30.4/mDNSWindows/DLL/dllmain.c
+mDNSResponder-878.30.4/mDNSWindows/DLL/dll.aps
+mDNSResponder-878.30.4/mDNSWindows/Poll.h
+mDNSResponder-878.30.4/mDNSWindows/loclibrary.c
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/DLLStub.vcproj
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/DLLStub.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/DLLStub.h
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/DLLStub.cpp
+mDNSResponder-878.30.4/mDNSWindows/DLLStub/DLLStub.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.rc
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.aps
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.c
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/NSPTool.vcproj
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/resource.h
+mDNSResponder-878.30.4/mDNSWindows/NSPTool/Prefix.h
+mDNSResponder-878.30.4/mDNSWindows/mDNSWin32.c
+mDNSResponder-878.30.4/mDNSWindows/Secret.h
+mDNSResponder-878.30.4/mDNSWindows/RegNames.h
+mDNSResponder-878.30.4/mDNSWindows/VPCDetect.h
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.def
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.rc
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.vcxproj.filters
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.c
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.aps
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.vcxproj
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/resource.h
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/ReadMe.txt
+mDNSResponder-878.30.4/mDNSWindows/mdnsNSP/mdnsNSP.vcproj
++ cd mDNSResponder-878.30.4/mDNSPosix
++ make os=linux
+mDNSUNP.c: In function ‘get_ifi_info_linuxv6’:
+mDNSUNP.c:88:16: warning: variable ‘myflags’ set but not used [-Wunused-but-set-variable]
+   88 |     int flags, myflags, index, plen, scope;
+      |                ^~~~~~~
+mDNSUNP.c: In function ‘plen_to_mask’:
+mDNSUNP.c:77:45: warning: ‘sprintf’ argument 3 overlaps destination object ‘addr’ [-Wrestrict]
+   77 |         i==0 ? sprintf(addr, "%x", block) : sprintf(addr, "%s:%x", addr, block);
+      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mDNSUNP.c:68:35: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+   68 | void plen_to_mask(int plen, char *addr) {
+      |                             ~~~~~~^~~~
+mDNSUNP.c: In function ‘get_ifi_info_linuxv6’:
+mDNSUNP.c:118:13: warning: ‘memcpy’ forming offset [9, 15] is out of the bounds [0, 9] of object ‘ifname’ with type ‘char[9]’ [-Warray-bounds]
+  118 |             memcpy(lastname, ifname, IFNAMSIZ);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mDNSUNP.c:89:10: note: ‘ifname’ declared here
+   89 |     char ifname[9], lastname[IFNAMSIZ];
+      |          ^~~~~~
+mDNSUNP.c:160:13: warning: ‘memcpy’ forming offset [9, 15] is out of the bounds [0, 9] of object ‘ifname’ with type ‘char[9]’ [-Warray-bounds]
+  160 |             memcpy(ifi->ifi_name, ifname, IFI_NAME);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mDNSUNP.c:89:10: note: ‘ifname’ declared here
+   89 |     char ifname[9], lastname[IFNAMSIZ];
+      |          ^~~~~~
+mDNSUNP.c:166:13: warning: ‘memcpy’ forming offset [9, 15] is out of the bounds [0, 9] of object ‘ifname’ with type ‘char[9]’ [-Warray-bounds]
+  166 |             memcpy(ifr.ifr_name, ifname, IFNAMSIZ);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mDNSUNP.c:89:10: note: ‘ifname’ declared here
+   89 |     char ifname[9], lastname[IFNAMSIZ];
+      |          ^~~~~~
+../mDNSCore/mDNS.c: In function ‘CompleteDeregistration’:
+../mDNSCore/mDNS.c:2179:81: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 2179 |     if (rr->AnsweredLocalQ) { AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse); rr->AnsweredLocalQ = mDNSfalse; }
+      |                                                                                 ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerQuestionWithLORecord’:
+../mDNSCore/mDNS.c:4777:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 4777 |                     AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerNewLocalOnlyQuestion’:
+../mDNSCore/mDNS.c:5033:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5033 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c:5050:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5050 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘CheckRmvEventsForLocalRecords’:
+../mDNSCore/mDNS.c:5273:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5273 |             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse);
+      |                                                               ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_Execute’:
+../mDNSCore/mDNS.c:5484:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5484 |                 AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c:5541:79: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5541 |                             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                               ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_StopQueryWithRemoves’:
+../mDNSCore/mDNS.c:12345:74: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12345 |                     question->QuestionCallback(m, question, &rr->resrec, mDNSfalse);
+      |                                                                          ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_DeactivateNetWake_internal’:
+../mDNSCore/mDNS.c:12886:68: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12886 |             m->SPSBrowseCallback(m, &set->NetWakeBrowse, mDNSNULL, mDNSfalse);
+      |                                                                    ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNSCoreReceiveRawARP’:
+../mDNSCore/mDNS.c:13856:53: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                     ^~~
+../mDNSCore/mDNS.c:13856:90: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                                                          ^~~
+../mDNSCore/DNSDigest.c: In function ‘MD5_Update’:
+../mDNSCore/DNSDigest.c:611:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  611 |         case 0: l =((unsigned long)(*((c)++)));     \
+      |                   ^
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:9: note: here
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:9: note: here
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:614:9: note: here
+  614 |         case 3: l|=((unsigned long)(*((c)++)))<<24; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:669:22: note: in expansion of macro ‘HOST_p_c2l’
+  669 |             l=p[sw]; HOST_p_c2l(data,l,sc); p[sw++]=l;
+      |                      ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:619:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  619 |             if (--len == 0) break;                                                 \
+      |                ^
+../mDNSCore/DNSDigest.c:684:26: note: in expansion of macro ‘HOST_p_c2l_p’
+  684 |                 l=p[sw]; HOST_p_c2l_p(data,l,sc,len); p[sw]=l;
+      |                          ^~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:620:9: note: here
+  620 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:684:26: note: in expansion of macro ‘HOST_p_c2l_p’
+  684 |                 l=p[sw]; HOST_p_c2l_p(data,l,sc,len); p[sw]=l;
+      |                          ^~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:621:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  621 |             if (--len == 0) break;                                                 \
+      |                ^
+../mDNSCore/DNSDigest.c:684:26: note: in expansion of macro ‘HOST_p_c2l_p’
+  684 |                 l=p[sw]; HOST_p_c2l_p(data,l,sc,len); p[sw]=l;
+      |                          ^~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:622:9: note: here
+  622 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:684:26: note: in expansion of macro ‘HOST_p_c2l_p’
+  684 |                 l=p[sw]; HOST_p_c2l_p(data,l,sc,len); p[sw]=l;
+      |                          ^~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:611:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  611 |         case 0: l =((unsigned long)(*((c)++)));     \
+      |                   ^
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:9: note: here
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:9: note: here
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:614:9: note: here
+  614 |         case 3: l|=((unsigned long)(*((c)++)))<<24; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:692:17: note: in expansion of macro ‘HOST_p_c2l’
+  692 |                 HOST_p_c2l(data,l,sc);
+      |                 ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:628:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  628 |         case 3: l =((unsigned long)(*(--(c))))<<16; \
+      |                   ^
+../mDNSCore/DNSDigest.c:700:21: note: in expansion of macro ‘HOST_c2l_p’
+  700 |                     HOST_c2l_p(data,l,ec); p[sw]=l;
+      |                     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:629:9: note: here
+  629 |         case 2: l|=((unsigned long)(*(--(c))))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:700:21: note: in expansion of macro ‘HOST_c2l_p’
+  700 |                     HOST_c2l_p(data,l,ec); p[sw]=l;
+      |                     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:629:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  629 |         case 2: l|=((unsigned long)(*(--(c))))<< 8; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:700:21: note: in expansion of macro ‘HOST_c2l_p’
+  700 |                     HOST_c2l_p(data,l,ec); p[sw]=l;
+      |                     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:630:9: note: here
+  630 |         case 1: l|=((unsigned long)(*(--(c))));     \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:700:21: note: in expansion of macro ‘HOST_c2l_p’
+  700 |                     HOST_c2l_p(data,l,ec); p[sw]=l;
+      |                     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:628:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  628 |         case 3: l =((unsigned long)(*(--(c))))<<16; \
+      |                   ^
+../mDNSCore/DNSDigest.c:754:9: note: in expansion of macro ‘HOST_c2l_p’
+  754 |         HOST_c2l_p(data,l,ec);
+      |         ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:629:9: note: here
+  629 |         case 2: l|=((unsigned long)(*(--(c))))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:754:9: note: in expansion of macro ‘HOST_c2l_p’
+  754 |         HOST_c2l_p(data,l,ec);
+      |         ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:629:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  629 |         case 2: l|=((unsigned long)(*(--(c))))<< 8; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:754:9: note: in expansion of macro ‘HOST_c2l_p’
+  754 |         HOST_c2l_p(data,l,ec);
+      |         ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:630:9: note: here
+  630 |         case 1: l|=((unsigned long)(*(--(c))));     \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:754:9: note: in expansion of macro ‘HOST_c2l_p’
+  754 |         HOST_c2l_p(data,l,ec);
+      |         ^~~~~~~~~~
+../mDNSCore/DNSDigest.c: In function ‘MD5_Final’:
+../mDNSCore/DNSDigest.c:611:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  611 |         case 0: l =((unsigned long)(*((c)++)));     \
+      |                   ^
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:9: note: here
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:612:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  612 |         case 1: l|=((unsigned long)(*((c)++)))<< 8; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:9: note: here
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:613:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  613 |         case 2: l|=((unsigned long)(*((c)++)))<<16; \
+      |                  ^~
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+../mDNSCore/DNSDigest.c:614:9: note: here
+  614 |         case 3: l|=((unsigned long)(*((c)++)))<<24; \
+      |         ^~~~
+../mDNSCore/DNSDigest.c:811:5: note: in expansion of macro ‘HOST_p_c2l’
+  811 |     HOST_p_c2l(cp,l,j); p[i++]=l; /* i is the next 'undefined word' */
+      |     ^~~~~~~~~~
+In file included from ../mDNSCore/DNSDigest.c:22:
+../mDNSCore/DNSDigest.c: In function ‘DNSDigest_SignMessage’:
+../mDNSCore/mDNSEmbeddedAPI.h:2869:32: warning: array subscript 256 is outside array bounds of ‘char[26]’ [-Warray-bounds]
+ 2869 | #define DomainNameLength(name) DomainNameLengthLimit((name), (name)->c + MAX_DOMAIN_NAME)
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../mDNSCore/mDNSEmbeddedAPI.h:2847:57: note: in expansion of macro ‘DomainNameLength’
+ 2847 | #define AssignDomainName(DST, SRC) do { mDNSu16 len__ = DomainNameLength((SRC)); \
+      |                                                         ^~~~~~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:1356:5: note: in expansion of macro ‘AssignDomainName’
+ 1356 |     AssignDomainName(&tsig.resrec.rdata->u.name, &HMAC_MD5_AlgName);
+      |     ^~~~~~~~~~~~~~~~
+../mDNSCore/mDNSEmbeddedAPI.h:2869:32: warning: array subscript 256 is outside array bounds of ‘char[26]’ [-Warray-bounds]
+ 2869 | #define DomainNameLength(name) DomainNameLengthLimit((name), (name)->c + MAX_DOMAIN_NAME)
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../mDNSCore/DNSDigest.c:1357:11: note: in expansion of macro ‘DomainNameLength’
+ 1357 |     len = DomainNameLength(&HMAC_MD5_AlgName);
+      |           ^~~~~~~~~~~~~~~~
+../mDNSCore/uDNS.c: In function ‘UpdateOneSRVRecord’:
+../mDNSCore/uDNS.c:2321:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ 2321 |         if (!NATChanged) return;
+      |            ^
+../mDNSCore/uDNS.c:2324:5: note: here
+ 2324 |     case regState_NoTarget:
+      |     ^~~~
+../mDNSCore/DNSCommon.c: In function ‘RDataHashValue’:
+../mDNSCore/DNSCommon.c:1534:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ 1534 |         len -= dlen;
+      |         ~~~~^~~~~~~
+../mDNSCore/DNSCommon.c:1538:5: note: here
+ 1538 |     default:
+      |     ^~~~~~~
+../mDNSCore/DNSCommon.c: In function ‘mDNS_vsnprintf’:
+../mDNSCore/DNSCommon.c:4204:29: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ 4204 |                 F.precision = sizeof(void*) * 2;                // 8 characters on 32-bit; 16 characters on 64-bit
+      |                 ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+../mDNSCore/DNSCommon.c:4205:13: note: here
+ 4205 |             case 'X':  digits = "0123456789ABCDEF";
+      |             ^~~~
+../mDNSCore/DNSCommon.c:4297:21: warning: this statement may fall through [-Wimplicit-fallthrough=]
+ 4297 |                 i = mDNS_snprintf(mDNS_VACB, sizeof(mDNS_VACB), "<<UNKNOWN FORMAT CONVERSION CODE %%%c>>", c);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../mDNSCore/DNSCommon.c:4299:13: note: here
+ 4299 |             case '%':  *sbuffer++ = (char)c;
+      |             ^~~~
+../mDNSCore/DNSCommon.c: In function ‘NSEC3HashName’:
+cc1: warning: function may return address of local variable [-Wreturn-local-addr]
+../mDNSCore/DNSCommon.c:1169:16: note: declared here
+ 1169 |     domainname lname;
+      |                ^~~~~
+../mDNSShared/uds_daemon.c: In function ‘set_peer_pid’:
+../mDNSShared/uds_daemon.c:1013:21: warning: variable ‘len’ set but not used [-Wunused-but-set-variable]
+ 1013 |     socklen_t       len  = sizeof(p);
+      |                     ^~~
+Responder daemon done
+../mDNSShared/dnssd_clientstub.c: In function ‘FreeDNSServiceOp’:
+../mDNSShared/dnssd_clientstub.c:433:30: warning: variable ‘op_were_not_going_to_free_but_we_need_to_fool_the_analyzer’ set but not used [-Wunused-but-set-variable]
+  433 |         static DNSServiceOp *op_were_not_going_to_free_but_we_need_to_fool_the_analyzer;
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Client library done
+make[1]: Entering directory '/tmp/mDNSResponder-878.30.4/Clients'
+mkdir build
+cc dns-sd.c ClientCommon.c -L../mDNSPosix/build/prod/ -ldns_sd -I../mDNSShared -Wall -o build/dns-sd
+dns-sd.c: In function ‘addrinfo_reply’:
+dns-sd.c:1225:9: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+ 1225 |         if (!if_indextoname(s6->sin6_scope_id, if_name))
+      |         ^~
+dns-sd.c:1227:13: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+ 1227 |             snprintf(addr, sizeof(addr), "%02X%02X:%02X%02X:%02X%02X:%02X%02X:%02X%02X:%02X%02X:%02X%02X:%02X%02X%%%s",
+      |             ^~~~~~~~
+make[1]: Leaving directory '/tmp/mDNSResponder-878.30.4/Clients'
+Clients done
+Embedded Standalone Client done
+Responder.c: In function ‘DeregisterOurServices’:
+Responder.c:634:9: warning: variable ‘thisServID’ set but not used [-Wunused-but-set-variable]
+  634 |     int thisServID;
+      |         ^~~~~~~~~~
+Embedded Standalone Responder done
+Embedded Standalone ProxyResponder done
+In file included from Identify.c:25:
+../mDNSCore/mDNS.c: In function ‘CompleteDeregistration’:
+../mDNSCore/mDNS.c:2179:81: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 2179 |     if (rr->AnsweredLocalQ) { AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse); rr->AnsweredLocalQ = mDNSfalse; }
+      |                                                                                 ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerQuestionWithLORecord’:
+../mDNSCore/mDNS.c:4777:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 4777 |                     AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerNewLocalOnlyQuestion’:
+../mDNSCore/mDNS.c:5033:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5033 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c:5050:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5050 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘CheckRmvEventsForLocalRecords’:
+../mDNSCore/mDNS.c:5273:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5273 |             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse);
+      |                                                               ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_Execute’:
+../mDNSCore/mDNS.c:5484:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5484 |                 AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c:5541:79: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5541 |                             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                               ^~~~~~~~
+In file included from Identify.c:25:
+../mDNSCore/mDNS.c: In function ‘mDNS_StopQueryWithRemoves’:
+../mDNSCore/mDNS.c:12345:74: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12345 |                     question->QuestionCallback(m, question, &rr->resrec, mDNSfalse);
+      |                                                                          ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_DeactivateNetWake_internal’:
+../mDNSCore/mDNS.c:12886:68: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12886 |             m->SPSBrowseCallback(m, &set->NetWakeBrowse, mDNSNULL, mDNSfalse);
+      |                                                                    ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNSCoreReceiveRawARP’:
+../mDNSCore/mDNS.c:13856:53: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                     ^~~
+../mDNSCore/mDNS.c:13856:90: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                                                          ^~~
+Identify done
+In file included from NetMonitor.c:25:
+../mDNSCore/mDNS.c: In function ‘CompleteDeregistration’:
+../mDNSCore/mDNS.c:2179:81: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 2179 |     if (rr->AnsweredLocalQ) { AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse); rr->AnsweredLocalQ = mDNSfalse; }
+      |                                                                                 ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerQuestionWithLORecord’:
+../mDNSCore/mDNS.c:4777:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 4777 |                     AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘AnswerNewLocalOnlyQuestion’:
+../mDNSCore/mDNS.c:5033:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5033 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c:5050:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5050 |                 AnswerLocalQuestionWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                               ^~~~~~~~
+../mDNSCore/mDNS.c: In function ‘CheckRmvEventsForLocalRecords’:
+../mDNSCore/mDNS.c:5273:63: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5273 |             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNSfalse);
+      |                                                               ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_Execute’:
+../mDNSCore/mDNS.c:5484:67: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5484 |                 AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                   ^~~~~~~~
+../mDNSCore/mDNS.c:5541:79: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+ 5541 |                             AnswerAllLocalQuestionsWithLocalAuthRecord(m, rr, mDNStrue);
+      |                                                                               ^~~~~~~~
+In file included from NetMonitor.c:25:
+../mDNSCore/mDNS.c: In function ‘mDNS_StopQueryWithRemoves’:
+../mDNSCore/mDNS.c:12345:74: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12345 |                     question->QuestionCallback(m, question, &rr->resrec, mDNSfalse);
+      |                                                                          ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNS_DeactivateNetWake_internal’:
+../mDNSCore/mDNS.c:12886:68: warning: implicit conversion from ‘enum <anonymous>’ to ‘QC_result’ [-Wenum-conversion]
+12886 |             m->SPSBrowseCallback(m, &set->NetWakeBrowse, mDNSNULL, mDNSfalse);
+      |                                                                    ^~~~~~~~~
+../mDNSCore/mDNS.c: In function ‘mDNSCoreReceiveRawARP’:
+../mDNSCore/mDNS.c:13856:53: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                     ^~~
+../mDNSCore/mDNS.c:13856:90: warning: taking address of packed member of ‘struct <anonymous>’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+13856 |                     SendARP(m, 2, rr, (mDNSv4Addr *)arp->tpa.b, &arp->sha, (mDNSv4Addr *)arp->spa.b, &arp->sha);
+      |                                                                                          ^~~
+NetMonitor done
+Name Service Switch module done
++ sudo make install os=linux
+cp mdnsd.sh /etc/init.d/mdns
+chmod ugo+x /etc/init.d/mdns
+ln -s -f /etc/init.d/mdns /etc/rc2.d/S52mdns
+ln -s -f /etc/init.d/mdns /etc/rc3.d/S52mdns
+ln -s -f /etc/init.d/mdns /etc/rc4.d/S52mdns
+ln -s -f /etc/init.d/mdns /etc/rc5.d/S52mdns
+ln -s -f /etc/init.d/mdns /etc/rc0.d/K16mdns
+ln -s -f /etc/init.d/mdns /etc/rc6.d/K16mdns
+/etc/init.d/mdns  installed
+cp build/prod/mdnsd /usr/sbin/mdnsd
+Starting Apple Darwin Multicast DNS / DNS Service Discovery daemon: mdnsd.
+/usr/sbin/mdnsd  installed
+cp build/prod/libdns_sd.so /usr/lib/libdns_sd.so.1
+ln -s -f /usr/lib/libdns_sd.so.1 /usr/lib/libdns_sd.so
+cp ../mDNSShared/dns_sd.h /usr/include/dns_sd.h
+/usr/lib/libdns_sd.so.1 /usr/include/dns_sd.h  installed
+cp ../mDNSShared/mDNSResponder.8 /usr/share/man/man8/mdnsd.8
+chmod 444 /usr/share/man/man8/mdnsd.8
+/usr/share/man/man8/mdnsd.8  installed
+cp ../Clients/build/dns-sd /usr/bin/dns-sd
+/usr/bin/dns-sd  installed
+cp build/prod/libnss_mdns-0.2.so /lib/libnss_mdns-0.2.so
+chmod 444 /lib/libnss_mdns-0.2.so
+ln -s -f /lib/libnss_mdns-0.2.so /lib/libnss_mdns.so.2
+ldconfig
+cp nss_mdns.conf /etc/nss_mdns.conf
+chmod 444 /etc/nss_mdns.conf
+# Check the nsswitch.conf file.
+# If 'mdns' does not already appear on the "hosts:" line, then add it right before 'dns'
+cp -f /etc/nsswitch.conf /etc/nsswitch.conf.pre-mdns
+sed -e '/mdns/!s/^\(hosts:.*\)dns\(.*\)/\1mdns dns\2/' /etc/nsswitch.conf.pre-mdns > /etc/nsswitch.conf
+cp nss_mdns.conf.5 /usr/share/man/man5/nss_mdns.conf.5
+chmod 444 /usr/share/man/man5/nss_mdns.conf.5
+cp libnss_mdns.8 /usr/share/man/man8/libnss_mdns.8
+chmod 444 /usr/share/man/man8/libnss_mdns.8
+/lib/libnss_mdns.so.2 /etc/nss_mdns.conf /usr/share/man/man5/nss_mdns.conf.5 /usr/share/man/man8/libnss_mdns.8  installed
++ sudo apt-get install --no-install-recommends -y libboost-dev libboost-filesystem-dev libboost-system-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  libboost-filesystem1.74-dev libboost-system1.74-dev libboost-system1.74.0 libboost1.74-dev
+Suggested packages:
+  libboost-doc libboost1.74-doc libboost-atomic1.74-dev libboost-chrono1.74-dev libboost-container1.74-dev
+  libboost-context1.74-dev libboost-contract1.74-dev libboost-coroutine1.74-dev libboost-date-time1.74-dev
+  libboost-exception1.74-dev libboost-fiber1.74-dev libboost-graph1.74-dev libboost-graph-parallel1.74-dev
+  libboost-iostreams1.74-dev libboost-locale1.74-dev libboost-log1.74-dev libboost-math1.74-dev libboost-mpi1.74-dev
+  libboost-mpi-python1.74-dev libboost-numpy1.74-dev libboost-program-options1.74-dev libboost-python1.74-dev
+  libboost-random1.74-dev libboost-regex1.74-dev libboost-serialization1.74-dev libboost-stacktrace1.74-dev
+  libboost-test1.74-dev libboost-thread1.74-dev libboost-timer1.74-dev libboost-type-erasure1.74-dev
+  libboost-wave1.74-dev libboost1.74-tools-dev libmpfrc++-dev libntl-dev libboost-nowide1.74-dev
+The following NEW packages will be installed:
+  libboost-dev libboost-filesystem-dev libboost-filesystem1.74-dev libboost-system-dev libboost-system1.74-dev
+  libboost-system1.74.0 libboost1.74-dev
+0 upgraded, 7 newly installed, 0 to remove and 32 not upgraded.
+Need to get 10.3 MB of archives.
+After this operation, 148 MB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libboost1.74-dev armhf 1.74.0-9 [9,534 kB]
+Get:2 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libboost-dev armhf 1.74.0.3+b1 [4,820 B]            
+Get:3 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libboost-system1.74.0 armhf 1.74.0-9 [242 kB]
+Get:4 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libboost-system1.74-dev armhf 1.74.0-9 [243 kB]
+Get:5 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libboost-filesystem1.74-dev armhf 1.74.0-9 [285 kB]
+Get:6 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libboost-filesystem-dev armhf 1.74.0.3+b1 [4,636 B] 
+Get:7 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libboost-system-dev armhf 1.74.0.3+b1 [4,744 B]     
+Fetched 10.3 MB in 10s (984 kB/s)                                                                                      
+Selecting previously unselected package libboost1.74-dev:armhf.
+(Reading database ... 103487 files and directories currently installed.)
+Preparing to unpack .../0-libboost1.74-dev_1.74.0-9_armhf.deb ...
+Unpacking libboost1.74-dev:armhf (1.74.0-9) ...
+Selecting previously unselected package libboost-dev:armhf.
+Preparing to unpack .../1-libboost-dev_1.74.0.3+b1_armhf.deb ...
+Unpacking libboost-dev:armhf (1.74.0.3+b1) ...
+Selecting previously unselected package libboost-system1.74.0:armhf.
+Preparing to unpack .../2-libboost-system1.74.0_1.74.0-9_armhf.deb ...
+Unpacking libboost-system1.74.0:armhf (1.74.0-9) ...
+Selecting previously unselected package libboost-system1.74-dev:armhf.
+Preparing to unpack .../3-libboost-system1.74-dev_1.74.0-9_armhf.deb ...
+Unpacking libboost-system1.74-dev:armhf (1.74.0-9) ...
+Selecting previously unselected package libboost-filesystem1.74-dev:armhf.
+Preparing to unpack .../4-libboost-filesystem1.74-dev_1.74.0-9_armhf.deb ...
+Unpacking libboost-filesystem1.74-dev:armhf (1.74.0-9) ...
+Selecting previously unselected package libboost-filesystem-dev:armhf.
+Preparing to unpack .../5-libboost-filesystem-dev_1.74.0.3+b1_armhf.deb ...
+Unpacking libboost-filesystem-dev:armhf (1.74.0.3+b1) ...
+Selecting previously unselected package libboost-system-dev:armhf.
+Preparing to unpack .../6-libboost-system-dev_1.74.0.3+b1_armhf.deb ...
+Unpacking libboost-system-dev:armhf (1.74.0.3+b1) ...
+Setting up libboost-system1.74.0:armhf (1.74.0-9) ...
+Setting up libboost1.74-dev:armhf (1.74.0-9) ...
+Setting up libboost-system1.74-dev:armhf (1.74.0-9) ...
+Setting up libboost-dev:armhf (1.74.0.3+b1) ...
+Setting up libboost-filesystem1.74-dev:armhf (1.74.0-9) ...
+Setting up libboost-filesystem-dev:armhf (1.74.0.3+b1) ...
+Setting up libboost-system-dev:armhf (1.74.0.3+b1) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ without NAT64
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo apt-get install --no-install-recommends -y tayga iptables
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  libip6tc2 libnetfilter-conntrack3 libnfnetlink0
+Suggested packages:
+  firewalld
+The following NEW packages will be installed:
+  iptables libip6tc2 libnetfilter-conntrack3 libnfnetlink0 tayga
+0 upgraded, 5 newly installed, 0 to remove and 32 not upgraded.
+Need to get 438 kB of archives.
+After this operation, 1,880 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf tayga armhf 0.9.2-8 [31.4 kB]
+Get:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libip6tc2 armhf 1.8.7-1 [33.0 kB]
+Get:3 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libnfnetlink0 armhf 1.0.1-3+b1 [12.4 kB]
+Get:4 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libnetfilter-conntrack3 armhf 1.0.8-3 [32.5 kB]
+Get:5 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf iptables armhf 1.8.7-1 [328 kB]   
+Fetched 438 kB in 4s (115 kB/s)   
+Selecting previously unselected package tayga.
+(Reading database ... 119035 files and directories currently installed.)
+Preparing to unpack .../tayga_0.9.2-8_armhf.deb ...
+Unpacking tayga (0.9.2-8) ...
+Selecting previously unselected package libip6tc2:armhf.
+Preparing to unpack .../libip6tc2_1.8.7-1_armhf.deb ...
+Unpacking libip6tc2:armhf (1.8.7-1) ...
+Selecting previously unselected package libnfnetlink0:armhf.
+Preparing to unpack .../libnfnetlink0_1.0.1-3+b1_armhf.deb ...
+Unpacking libnfnetlink0:armhf (1.0.1-3+b1) ...
+Selecting previously unselected package libnetfilter-conntrack3:armhf.
+Preparing to unpack .../libnetfilter-conntrack3_1.0.8-3_armhf.deb ...
+Unpacking libnetfilter-conntrack3:armhf (1.0.8-3) ...
+Selecting previously unselected package iptables.
+Preparing to unpack .../iptables_1.8.7-1_armhf.deb ...
+Unpacking iptables (1.8.7-1) ...
+Setting up libip6tc2:armhf (1.8.7-1) ...
+Setting up libnfnetlink0:armhf (1.0.1-3+b1) ...
+Setting up tayga (0.9.2-8) ...
+Setting up libnetfilter-conntrack3:armhf (1.0.8-3) ...
+Setting up iptables (1.8.7-1) ...
+update-alternatives: using /usr/sbin/iptables-legacy to provide /usr/sbin/iptables (iptables) in auto mode
+update-alternatives: using /usr/sbin/ip6tables-legacy to provide /usr/sbin/ip6tables (ip6tables) in auto mode
+update-alternatives: using /usr/sbin/iptables-nft to provide /usr/sbin/iptables (iptables) in auto mode
+update-alternatives: using /usr/sbin/ip6tables-nft to provide /usr/sbin/ip6tables (ip6tables) in auto mode
+update-alternatives: using /usr/sbin/arptables-nft to provide /usr/sbin/arptables (arptables) in auto mode
+update-alternatives: using /usr/sbin/ebtables-nft to provide /usr/sbin/ebtables (ebtables) in auto mode
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ without DNS64
++ with DNS64
++ local value
+++ printenv DNS64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DNS64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ '[' raspbian = beagleboneblack ']'
++ sudo apt-get install --no-install-recommends -y bind9
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  bind9-utils dns-root-data python3-ply
+Suggested packages:
+  bind-doc dnsutils ufw python-ply-doc
+The following NEW packages will be installed:
+  bind9 bind9-utils dns-root-data python3-ply
+0 upgraded, 4 newly installed, 0 to remove and 32 not upgraded.
+Need to get 977 kB of archives.
+After this operation, 2,133 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf python3-ply all 3.11-4 [65.5 kB]
+Get:2 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf bind9-utils armhf 1:9.16.22-1~deb11u1 [424 kB]
+Get:3 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf dns-root-data all 2021011101 [5,524 B]
+Get:4 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf bind9 armhf 1:9.16.22-1~deb11u1 [481 kB]     
+Fetched 977 kB in 3s (282 kB/s)
+Selecting previously unselected package python3-ply.
+(Reading database ... 119266 files and directories currently installed.)
+Preparing to unpack .../python3-ply_3.11-4_all.deb ...
+Unpacking python3-ply (3.11-4) ...
+Selecting previously unselected package bind9-utils.
+Preparing to unpack .../bind9-utils_1%3a9.16.22-1~deb11u1_armhf.deb ...
+Unpacking bind9-utils (1:9.16.22-1~deb11u1) ...
+Selecting previously unselected package dns-root-data.
+Preparing to unpack .../dns-root-data_2021011101_all.deb ...
+Unpacking dns-root-data (2021011101) ...
+Selecting previously unselected package bind9.
+Preparing to unpack .../bind9_1%3a9.16.22-1~deb11u1_armhf.deb ...
+Unpacking bind9 (1:9.16.22-1~deb11u1) ...
+Setting up python3-ply (3.11-4) ...
+Setting up dns-root-data (2021011101) ...
+Setting up bind9-utils (1:9.16.22-1~deb11u1) ...
+Setting up bind9 (1:9.16.22-1~deb11u1) ...
+Adding group `bind' (GID 124) ...
+Done.
+Adding system user `bind' (UID 115) ...
+Adding new user `bind' (UID 115) with group `bind' ...
+Not creating home directory `/var/cache/bind'.
+wrote key file "/etc/bind/rndc.key"
+named-resolvconf.service is a disabled or a static unit, not starting it.
+Created symlink /etc/systemd/system/bind9.service → /lib/systemd/system/named.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/named.service → /lib/systemd/system/named.service.
+Processing triggers for man-db (2.9.4-2) ...
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ sudo apt-get install --no-install-recommends -y resolvconf
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following packages will be REMOVED:
+  openresolv
+The following NEW packages will be installed:
+  resolvconf
+0 upgraded, 1 newly installed, 1 to remove and 32 not upgraded.
+Need to get 72.7 kB of archives.
+After this operation, 98.3 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf resolvconf all 1.87 [72.7 kB]
+Fetched 72.7 kB in 2s (48.0 kB/s)   
+Preconfiguring packages ...
+(Reading database ... 119401 files and directories currently installed.)
+Removing openresolv (3.12.0-1) ...
+Selecting previously unselected package resolvconf.
+(Reading database ... 119383 files and directories currently installed.)
+Preparing to unpack .../resolvconf_1.87_all.deb ...
+Unpacking resolvconf (1.87) ...
+Setting up resolvconf (1.87) ...
+Installing new version of config file /etc/dhcp/dhclient-enter-hooks.d/resolvconf ...
+Installing new version of config file /etc/network/if-down.d/resolvconf ...
+Installing new version of config file /etc/network/if-up.d/000resolvconf ...
+Installing new version of config file /etc/ppp/ip-down.d/000resolvconf ...
+Installing new version of config file /etc/ppp/ip-up.d/000resolvconf ...
+Created symlink /etc/systemd/system/sysinit.target.wants/resolvconf.service → /lib/systemd/system/resolvconf.service.
+Created symlink /etc/systemd/system/systemd-resolved.service.wants/resolvconf-pull-resolved.path → /lib/systemd/system/resolvconf-pull-resolved.path.
+Created symlink /etc/systemd/system/systemd-resolved.service.wants/resolvconf-pull-resolved.service → /lib/systemd/system/resolvconf-pull-resolved.service.
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for resolvconf (1.87) ...
++ without NETWORK_MANAGER
++ with NETWORK_MANAGER
++ local value
+++ printenv NETWORK_MANAGER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NETWORK_MANAGER-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ without DHCPV6_PD
++ with DHCPV6_PD
++ local value
+++ printenv DHCPV6_PD
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DHCPV6_PD-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ sudo apt-get install --no-install-recommends -y libjsoncpp-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following NEW packages will be installed:
+  libjsoncpp-dev
+0 upgraded, 1 newly installed, 0 to remove and 32 not upgraded.
+Need to get 25.4 kB of archives.
+After this operation, 108 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libjsoncpp-dev armhf 1.9.4-4 [25.4 kB]
+Fetched 25.4 kB in 6s (4,308 B/s)       
+Selecting previously unselected package libjsoncpp-dev:armhf.
+(Reading database ... 119410 files and directories currently installed.)
+Preparing to unpack .../libjsoncpp-dev_1.9.4-4_armhf.deb ...
+Unpacking libjsoncpp-dev:armhf (1.9.4-4) ...
+Setting up libjsoncpp-dev:armhf (1.9.4-4) ...
++ without REFERENCE_DEVICE
++ with REFERENCE_DEVICE
++ local value
+++ printenv REFERENCE_DEVICE
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${REFERENCE_DEVICE-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ without BACKBONE_ROUTER
++ with BACKBONE_ROUTER
++ local value
+++ printenv BACKBONE_ROUTER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BACKBONE_ROUTER-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo apt-get install --no-install-recommends -y libnetfilter-queue1 libnetfilter-queue-dev
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  libnfnetlink-dev
+Suggested packages:
+  libnetfilter-queue-doc
+The following NEW packages will be installed:
+  libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev
+0 upgraded, 3 newly installed, 0 to remove and 32 not upgraded.
+Need to get 36.3 kB of archives.
+After this operation, 139 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libnetfilter-queue1 armhf 1.0.5-2 [12.1 kB]
+Get:2 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libnfnetlink-dev armhf 1.0.1-3+b1 [8,256 B]
+Get:3 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf libnetfilter-queue-dev armhf 1.0.5-2 [15.9 kB]
+Fetched 36.3 kB in 3s (11.7 kB/s)            
+Selecting previously unselected package libnetfilter-queue1:armhf.
+(Reading database ... 119431 files and directories currently installed.)
+Preparing to unpack .../libnetfilter-queue1_1.0.5-2_armhf.deb ...
+Unpacking libnetfilter-queue1:armhf (1.0.5-2) ...
+Selecting previously unselected package libnfnetlink-dev.
+Preparing to unpack .../libnfnetlink-dev_1.0.1-3+b1_armhf.deb ...
+Unpacking libnfnetlink-dev (1.0.1-3+b1) ...
+Selecting previously unselected package libnetfilter-queue-dev:armhf.
+Preparing to unpack .../libnetfilter-queue-dev_1.0.5-2_armhf.deb ...
+Unpacking libnetfilter-queue-dev:armhf (1.0.5-2) ...
+Setting up libnfnetlink-dev (1.0.1-3+b1) ...
+Setting up libnetfilter-queue1:armhf (1.0.5-2) ...
+Setting up libnetfilter-queue-dev:armhf (1.0.5-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ without WEB_GUI
++ with WEB_GUI
++ local value
+++ printenv WEB_GUI
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${WEB_GUI-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ command -v npm
++ sudo apt-get install --no-install-recommends -y nodejs npm
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  gyp libc-ares2 libjs-inherits libjs-is-typedarray libjs-psl libjs-typedarray-to-buffer libnode-dev libnode72
+  libssl-dev libssl1.1 libuv1-dev node-abbrev node-agent-base node-ajv node-ansi node-ansi-regex node-ansi-styles
+  node-ansistyles node-aproba node-archy node-are-we-there-yet node-asap node-asn1 node-assert-plus node-asynckit
+  node-aws-sign2 node-aws4 node-balanced-match node-bcrypt-pbkdf node-brace-expansion node-builtins node-cacache
+  node-caseless node-chalk node-chownr node-clone node-color-convert node-color-name node-colors node-columnify
+  node-combined-stream node-concat-map node-console-control-strings node-copy-concurrently node-core-util-is
+  node-dashdash node-debug node-defaults node-delayed-stream node-delegates node-depd node-ecc-jsbn node-encoding
+  node-err-code node-escape-string-regexp node-extend node-extsprintf node-fast-deep-equal node-forever-agent
+  node-form-data node-fs-write-stream-atomic node-fs.realpath node-function-bind node-gauge node-getpass node-glob
+  node-graceful-fs node-gyp node-har-schema node-har-validator node-has-flag node-has-unicode node-hosted-git-info
+  node-http-signature node-https-proxy-agent node-iconv-lite node-iferr node-imurmurhash node-indent-string
+  node-inflight node-inherits node-ini node-ip node-ip-regex node-is-typedarray node-isarray node-isexe node-isstream
+  node-jsbn node-json-parse-better-errors node-json-schema node-json-schema-traverse node-json-stable-stringify
+  node-json-stringify-safe node-jsonify node-jsonparse node-jsonstream node-jsprim node-leven node-lockfile
+  node-lru-cache node-mime node-mime-types node-minimatch node-mkdirp node-move-concurrently node-ms node-mute-stream
+  node-nopt node-normalize-package-data node-npm-bundled node-npm-package-arg node-npmlog node-number-is-nan
+  node-oauth-sign node-object-assign node-once node-opener node-osenv node-p-map node-path-is-absolute
+  node-performance-now node-process-nextick-args node-promise-inflight node-promise-retry node-promzard node-psl
+  node-puka node-punycode node-qs node-read node-read-package-json node-readable-stream node-resolve node-resolve-from
+  node-retry node-rimraf node-run-queue node-safe-buffer node-semver node-set-blocking node-signal-exit node-slash
+  node-spdx-correct node-spdx-exceptions node-spdx-expression-parse node-spdx-license-ids node-sshpk node-ssri
+  node-string-decoder node-string-width node-strip-ansi node-supports-color node-tar node-text-table node-through
+  node-tunnel-agent node-tweetnacl node-typedarray-to-buffer node-unique-filename node-uri-js node-util-deprecate
+  node-uuid node-validate-npm-package-license node-validate-npm-package-name node-verror node-wcwidth.js node-which
+  node-wide-align node-wrappy node-write-file-atomic node-yallist
+Suggested packages:
+  libssl-doc
+Recommended packages:
+  node-request nodejs-doc
+The following NEW packages will be installed:
+  gyp libc-ares2 libjs-inherits libjs-is-typedarray libjs-psl libjs-typedarray-to-buffer libnode-dev libnode72
+  libssl-dev libuv1-dev node-abbrev node-agent-base node-ajv node-ansi node-ansi-regex node-ansi-styles
+  node-ansistyles node-aproba node-archy node-are-we-there-yet node-asap node-asn1 node-assert-plus node-asynckit
+  node-aws-sign2 node-aws4 node-balanced-match node-bcrypt-pbkdf node-brace-expansion node-builtins node-cacache
+  node-caseless node-chalk node-chownr node-clone node-color-convert node-color-name node-colors node-columnify
+  node-combined-stream node-concat-map node-console-control-strings node-copy-concurrently node-core-util-is
+  node-dashdash node-debug node-defaults node-delayed-stream node-delegates node-depd node-ecc-jsbn node-encoding
+  node-err-code node-escape-string-regexp node-extend node-extsprintf node-fast-deep-equal node-forever-agent
+  node-form-data node-fs-write-stream-atomic node-fs.realpath node-function-bind node-gauge node-getpass node-glob
+  node-graceful-fs node-gyp node-har-schema node-har-validator node-has-flag node-has-unicode node-hosted-git-info
+  node-http-signature node-https-proxy-agent node-iconv-lite node-iferr node-imurmurhash node-indent-string
+  node-inflight node-inherits node-ini node-ip node-ip-regex node-is-typedarray node-isarray node-isexe node-isstream
+  node-jsbn node-json-parse-better-errors node-json-schema node-json-schema-traverse node-json-stable-stringify
+  node-json-stringify-safe node-jsonify node-jsonparse node-jsonstream node-jsprim node-leven node-lockfile
+  node-lru-cache node-mime node-mime-types node-minimatch node-mkdirp node-move-concurrently node-ms node-mute-stream
+  node-nopt node-normalize-package-data node-npm-bundled node-npm-package-arg node-npmlog node-number-is-nan
+  node-oauth-sign node-object-assign node-once node-opener node-osenv node-p-map node-path-is-absolute
+  node-performance-now node-process-nextick-args node-promise-inflight node-promise-retry node-promzard node-psl
+  node-puka node-punycode node-qs node-read node-read-package-json node-readable-stream node-resolve node-resolve-from
+  node-retry node-rimraf node-run-queue node-safe-buffer node-semver node-set-blocking node-signal-exit node-slash
+  node-spdx-correct node-spdx-exceptions node-spdx-expression-parse node-spdx-license-ids node-sshpk node-ssri
+  node-string-decoder node-string-width node-strip-ansi node-supports-color node-tar node-text-table node-through
+  node-tunnel-agent node-tweetnacl node-typedarray-to-buffer node-unique-filename node-uri-js node-util-deprecate
+  node-uuid node-validate-npm-package-license node-validate-npm-package-name node-verror node-wcwidth.js node-which
+  node-wide-align node-wrappy node-write-file-atomic node-yallist nodejs npm
+The following packages will be upgraded:
+  libssl1.1
+1 upgraded, 173 newly installed, 0 to remove and 31 not upgraded.
+Need to get 14.0 MB of archives.
+After this operation, 53.7 MB of additional disk space will be used.
+Get:1 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf gyp all 0.1+20200513gitcaa6002-2 [236 kB]
+Get:2 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libc-ares2 armhf 1.17.1-1+deb11u1 [96.0 kB]         
+Get:3 http://archive.raspberrypi.org/debian bullseye/main armhf libssl1.1 armhf 1.1.1k-1+deb11u1+rpt1 [1,289 kB]       
+Get:4 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libjs-inherits all 2.0.4-1 [3,228 B]
+Get:5 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libjs-is-typedarray all 1.0.0-3 [3,692 B]
+Get:6 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libjs-psl all 1.8.0+ds-4 [67.4 kB]                  
+Get:7 http://archive.raspberrypi.org/debian bullseye/main armhf libssl-dev armhf 1.1.1k-1+deb11u1+rpt1 [1,592 kB]      
+Get:8 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libjs-typedarray-to-buffer all 4.0.0-1 [4,536 B]
+Get:9 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libuv1-dev armhf 1.40.0-1 [150 kB]
+Get:10 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libnode72 armhf 12.22.5~dfsg-2~11u1 [7,261 kB]
+Get:11 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf libnode-dev armhf 12.22.5~dfsg-2~11u1 [411 kB]     
+Get:15 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-debug all 4.3.1+~cs4.1.5-1 [17.3 kB]          
+Get:12 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf nodejs armhf 12.22.5~dfsg-2~11u1 [147 kB]          
+Get:13 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-abbrev all 1.1.1-2 [4,812 B]
+Get:14 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-ms all 2.1.3+~cs0.7.31-1 [5,612 B]            
+Get:16 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-yallist all 4.0.0-1 [6,576 B]
+Get:17 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-lru-cache all 5.1.1-5 [8,356 B]
+Get:18 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-semver all 7.3.4-1 [42.1 kB]
+Get:19 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-agent-base all 6.0.2-2 [16.3 kB]
+Get:20 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-fast-deep-equal all 3.1.3-1 [5,640 B]
+Get:21 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-json-schema-traverse all 1.0.0-2 [6,228 B]
+Get:22 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-jsonify all 0.0.0-1.1 [5,632 B]
+Get:23 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-json-stable-stringify all 1.0.1+~cs5.1.32-1 [6,612 B]
+Get:24 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-punycode all 2.1.1-3 [9,396 B]
+Get:25 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-uri-js all 4.4.0+dfsg-5 [46.9 kB]             
+Get:26 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ajv all 6.12.6-2 [74.0 kB]  
+Get:27 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ansi all 0.3.1-1 [9,464 B]  
+Get:28 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-ansi-regex all 5.0.1-1~deb11u1 [4,704 B]      
+Get:29 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-color-name all 1.1.4+~1.1.1-1 [5,788 B]       
+Get:30 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-color-convert all 1.9.3-1 [10.2 kB]
+Get:31 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ansi-styles all 4.2.1-1 [7,600 B]
+Get:32 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ansistyles all 0.1.3-2 [4,280 B]
+Get:33 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-aproba all 2.0.0-1 [5,628 B]
+Get:34 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-archy all 1.0.0-3 [4,444 B] 
+Get:35 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-delegates all 1.0.0-2 [4,336 B]
+Get:36 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf node-inherits all 2.0.4-1 [4,204 B]   
+Get:37 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-core-util-is all 1.0.2-2 [3,860 B]
+Get:38 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-safe-buffer all 5.2.1+~cs2.1.2-1 [15.5 kB]    
+Get:39 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-string-decoder all 1.3.0-2 [6,900 B]
+Get:40 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-process-nextick-args all 2.0.0-1 [3,388 B]
+Get:41 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-util-deprecate all 1.0.2-1 [3,866 B]
+Get:42 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-isarray all 2.0.5-1 [3,748 B]
+Get:43 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-readable-stream all 3.6.0-2 [30.1 kB]
+Get:44 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-are-we-there-yet all 1.1.5-1 [7,640 B]
+Get:45 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-asap all 2.0.6-2 [14.4 kB]  
+Get:46 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-asn1 all 0.2.3-2 [7,348 B]  
+Get:47 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-assert-plus all 1.0.0-2 [9,192 B]
+Get:48 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-asynckit all 0.4.0-3 [10.2 kB]
+Get:49 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-aws-sign2 all 0.7.1-2 [4,136 B]
+Get:50 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-aws4 all 1.11.0-1 [10.3 kB] 
+Get:51 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-balanced-match all 1.0.0-1 [4,528 B]
+Get:52 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-tweetnacl all 1.0.3+dfsg-1 [34.8 kB]          
+Get:53 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-bcrypt-pbkdf all 1.0.2-1 [10.8 kB]
+Get:54 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-brace-expansion all 2.0.0-1 [7,184 B]
+Get:55 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-builtins all 1.0.3-2 [3,396 B]
+Get:56 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-chownr all 1.1.3-5 [4,128 B]
+Get:57 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-fs.realpath all 1.0.0-1.1 [5,780 B]
+Get:58 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-wrappy all 1.0.2-1.1 [3,352 B]
+Get:59 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-once all 1.4.0-3 [4,344 B]  
+Get:60 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf node-inflight all 1.0.6-1.1 [3,568 B] 
+Get:61 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-minimatch all 3.0.4+~3.0.3-1 [15.9 kB]        
+Get:62 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-path-is-absolute all 2.0.0-1 [3,864 B]
+Get:63 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-glob all 7.1.6+~7.1.3-1 [129 kB]              
+Get:64 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-graceful-fs all 4.2.4+repack-1 [13.1 kB]      
+Get:65 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-mkdirp all 1.0.4+~1.0.1-1 [11.7 kB]           
+Get:66 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-run-queue all 2.0.0-1 [4,984 B]
+Get:67 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-rimraf all 3.0.2-1 [10.9 kB]
+Get:68 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-imurmurhash all 0.1.4-1.1 [8,372 B]
+Get:69 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-iferr all 1.0.2-1 [3,496 B] 
+Get:70 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-fs-write-stream-atomic all 1.0.10-4 [4,820 B]
+Get:71 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-copy-concurrently all 1.0.5-7 [6,844 B]
+Get:72 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-move-concurrently all 1.0.1-2 [4,644 B]
+Get:73 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-escape-string-regexp all 4.0.0-1 [4,116 B]
+Get:74 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-indent-string all 4.0.0-1 [4,052 B]
+Get:75 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-p-map all 4.0.0-1 [7,716 B] 
+Get:76 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-promise-inflight all 1.0.1-1.1 [3,328 B]
+Get:77 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ssri all 8.0.1-2 [23.0 kB]  
+Get:78 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-unique-filename all 1.1.1+ds-1 [3,796 B]      
+Get:79 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-cacache all 15.0.5+~cs13.9.21-1 [42.6 kB]     
+Get:80 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-caseless all 0.12.1-1 [3,804 B]
+Get:81 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-has-flag all 4.0.0-1 [4,076 B]
+Get:82 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-supports-color all 8.1.0+~7.2.0-1 [6,736 B]   
+Get:83 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-chalk all 4.1.0-1 [15.0 kB] 
+Get:84 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-clone all 2.1.2-2 [8,132 B] 
+Get:85 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-colors all 1.4.0-1 [11.7 kB]
+Get:86 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-strip-ansi all 6.0.0-2 [4,044 B]
+Get:87 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-defaults all 1.0.3-2 [3,612 B]
+Get:88 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-wcwidth.js all 1.0.0-1.1 [6,652 B]
+Get:89 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf node-columnify all 1.5.4-3 [11.5 kB]  
+Get:90 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-delayed-stream all 1.0.0-4 [5,236 B]
+Get:91 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-combined-stream all 1.0.8-1 [6,020 B]
+Get:92 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-concat-map all 0.0.1-2 [3,968 B]
+Get:93 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-console-control-strings all 1.1.0-2 [5,388 B]
+Get:94 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-dashdash all 2.0.0-1 [30.2 kB]
+Get:95 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf node-depd all 2.0.0-1 [11.0 kB]       
+Get:96 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-jsbn all 1.1.0-1.1 [13.8 kB]
+Get:97 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ecc-jsbn all 0.2.0-2 [9,396 B]
+Get:98 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-iconv-lite all 0.5.1-3 [128 kB]
+Get:99 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-encoding all 0.1.13-1 [4,316 B]
+Get:100 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-err-code all 2.0.3+dfsg-1 [4,584 B]          
+Get:101 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-extend all 3.0.2-1 [6,744 B]
+Get:102 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-extsprintf all 1.4.0-1 [6,268 B]
+Get:103 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-forever-agent all 0.6.1-2 [4,200 B]
+Get:104 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-mime all 2.5.0+dfsg+~cs3.90.0-1 [39.4 kB]    
+Get:105 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-mime-types all 2.1.28-1 [8,948 B]
+Get:106 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-form-data all 3.0.0-2 [12.8 kB]
+Get:107 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-function-bind all 1.1.1+repack-1 [5,000 B]   
+Get:108 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-string-width all 4.2.0-1 [9,716 B]
+Get:109 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-object-assign all 4.1.1-3 [4,460 B]
+Get:110 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-has-unicode all 2.0.1-2 [3,442 B]
+Get:111 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-wide-align all 1.1.3-1 [3,896 B]
+Get:112 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-signal-exit all 3.0.3-1 [6,172 B]
+Get:113 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-gauge all 2.7.4-1.1 [25.3 kB]
+Get:114 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-getpass all 0.1.7-1.1 [4,368 B]
+Get:115 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-nopt all 5.0.0-1 [12.3 kB] 
+Get:116 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-set-blocking all 2.0.0-1.1 [4,036 B]
+Get:117 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-npmlog all 4.1.2-2 [8,980 B]
+Get:118 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-osenv all 0.1.5-1 [4,332 B]
+Get:119 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-tar all 6.0.5+ds1+~cs11.3.9-1+deb11u2 [44.7 kB]
+Get:120 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-isexe all 2.0.0-5 [4,632 B]
+Get:121 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-which all 2.0.2+~cs1.3.2-1 [8,436 B]         
+Get:122 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-gyp all 7.1.2-4 [50.0 kB]  
+Get:123 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-har-schema all 2.0.0-4 [5,896 B]
+Get:124 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-har-validator all 5.1.5-1 [7,184 B]
+Get:125 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-hosted-git-info all 3.0.8-1 [10.4 kB]
+Get:126 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-json-schema all 0.3.0+~7.0.6-1+deb11u1 [13.1 kB]
+Get:127 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-verror all 1.10.0-1.1 [14.2 kB]
+Get:128 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-jsprim all 2.0.0-1 [13.7 kB]
+Get:129 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-sshpk all 1.16.1+dfsg-2 [54.7 kB]            
+Get:130 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-http-signature all 1.3.5-1 [13.0 kB]
+Get:131 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-https-proxy-agent all 5.0.0-3 [11.1 kB]
+Get:132 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ini all 2.0.0-1 [6,288 B]  
+Get:133 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ip all 1.1.5-5 [6,608 B]   
+Get:134 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-ip-regex all 4.3.0-1 [4,824 B]
+Get:135 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-is-typedarray all 1.0.0-3 [3,180 B]
+Get:136 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-isstream all 0.1.2+dfsg-1.1 [3,784 B]        
+Get:137 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-json-parse-better-errors all 1.0.2+~2.3.1-1 [6,956 B]
+Get:138 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-json-stringify-safe all 5.0.1+repack-3 [21.1 kB]
+Get:139 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-jsonparse all 1.3.1-7 [6,980 B]
+Get:140 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-through all 2.3.8+~cs0.0.30-1 [5,452 B]      
+Get:141 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-jsonstream all 1.3.5-1 [8,428 B]
+Get:142 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-leven all 3.1.0+~cs1.1.1-1 [5,588 B]         
+Get:143 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-lockfile all 1.0.4-3 [8,152 B]
+Get:144 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-mute-stream all 0.0.8-2 [5,136 B]
+Get:145 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-resolve all 1.19.0+~cs5.20.8-2 [17.8 kB]     
+Get:146 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-spdx-license-ids all 3.0.7-1 [6,764 B]
+Get:147 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-spdx-exceptions all 2.3.0-1 [3,864 B]
+Get:148 http://ftp.tsukuba.wide.ad.jp/Linux/raspbian/raspbian bullseye/main armhf node-spdx-expression-parse all 3.0.1-1 [6,608 B]
+Get:149 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-spdx-correct all 3.1.1-1 [5,296 B]
+Get:150 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-validate-npm-package-license all 3.0.4-1 [4,124 B]
+Get:151 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-normalize-package-data all 3.0.0+~2.4.0-1 [12.2 kB]
+Get:152 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-npm-bundled all 1.1.1-1 [6,052 B]
+Get:153 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-validate-npm-package-name all 3.0.0-1.1 [4,584 B]
+Get:154 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-npm-package-arg all 8.1.0-1 [8,064 B]
+Get:155 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-number-is-nan all 2.0.0-1 [3,388 B]
+Get:156 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-oauth-sign all 0.9.0-2 [4,264 B]
+Get:157 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-opener all 1.5.2-1 [5,000 B]
+Get:158 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-performance-now all 2.1.0+debian-1.1 [4,672 B]
+Get:159 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-retry all 0.12.0-1 [10.4 kB]
+Get:160 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-promise-retry all 2.0.1-1 [4,924 B]
+Get:161 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-read all 1.0.7-2 [5,264 B] 
+Get:162 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-promzard all 0.3.0-1.1 [9,096 B]
+Get:163 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-psl all 1.8.0+ds-4 [37.6 kB]                 
+Get:164 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-puka all 1.0.1+dfsg-2 [29.1 kB]              
+Get:165 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-qs all 6.9.4+ds-1 [22.6 kB]                  
+Get:166 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-slash all 3.0.0-1 [3,704 B]
+Get:167 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-read-package-json all 3.0.0-1 [10.1 kB]
+Get:168 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-resolve-from all 5.0.0+~3.1.0+~3.3.0+~2.0.0-1 [7,292 B]
+Get:169 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-text-table all 0.2.0-2 [4,308 B]
+Get:170 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-tunnel-agent all 0.6.1-2 [4,952 B]
+Get:171 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf node-typedarray-to-buffer all 4.0.0-1 [3,256 B]
+Get:172 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-uuid all 8.3.2+~8.3.0-4 [43.9 kB]            
+Get:173 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf node-write-file-atomic all 3.0.3+~3.0.1-1 [8,048 B]
+Get:174 http://raspbian.raspberrypi.org/raspbian bullseye/main armhf npm all 7.5.2+ds-2 [801 kB]                       
+Fetched 14.0 MB in 1min 59s (117 kB/s)                                                                                 
+apt-listchanges: Reading changelogs...
+Extracting templates from packages: 100%
+Preconfiguring packages ...
+(Reading database ... 119463 files and directories currently installed.)
+Preparing to unpack .../libssl1.1_1.1.1k-1+deb11u1+rpt1_armhf.deb ...
+Unpacking libssl1.1:armhf (1.1.1k-1+deb11u1+rpt1) over (1.1.1k-1+deb11u1) ...
+Setting up libssl1.1:armhf (1.1.1k-1+deb11u1+rpt1) ...
+Selecting previously unselected package gyp.
+(Reading database ... 119463 files and directories currently installed.)
+Preparing to unpack .../000-gyp_0.1+20200513gitcaa6002-2_all.deb ...
+Unpacking gyp (0.1+20200513gitcaa6002-2) ...
+Selecting previously unselected package libc-ares2:armhf.
+Preparing to unpack .../001-libc-ares2_1.17.1-1+deb11u1_armhf.deb ...
+Unpacking libc-ares2:armhf (1.17.1-1+deb11u1) ...
+Selecting previously unselected package libjs-inherits.
+Preparing to unpack .../002-libjs-inherits_2.0.4-1_all.deb ...
+Unpacking libjs-inherits (2.0.4-1) ...
+Selecting previously unselected package libjs-is-typedarray.
+Preparing to unpack .../003-libjs-is-typedarray_1.0.0-3_all.deb ...
+Unpacking libjs-is-typedarray (1.0.0-3) ...
+Selecting previously unselected package libjs-psl.
+Preparing to unpack .../004-libjs-psl_1.8.0+ds-4_all.deb ...
+Unpacking libjs-psl (1.8.0+ds-4) ...
+Selecting previously unselected package libjs-typedarray-to-buffer.
+Preparing to unpack .../005-libjs-typedarray-to-buffer_4.0.0-1_all.deb ...
+Unpacking libjs-typedarray-to-buffer (4.0.0-1) ...
+Selecting previously unselected package libssl-dev:armhf.
+Preparing to unpack .../006-libssl-dev_1.1.1k-1+deb11u1+rpt1_armhf.deb ...
+Unpacking libssl-dev:armhf (1.1.1k-1+deb11u1+rpt1) ...
+Selecting previously unselected package libuv1-dev:armhf.
+Preparing to unpack .../007-libuv1-dev_1.40.0-1_armhf.deb ...
+Unpacking libuv1-dev:armhf (1.40.0-1) ...
+Selecting previously unselected package libnode72:armhf.
+Preparing to unpack .../008-libnode72_12.22.5~dfsg-2~11u1_armhf.deb ...
+Unpacking libnode72:armhf (12.22.5~dfsg-2~11u1) ...
+Selecting previously unselected package libnode-dev.
+Preparing to unpack .../009-libnode-dev_12.22.5~dfsg-2~11u1_armhf.deb ...
+Unpacking libnode-dev (12.22.5~dfsg-2~11u1) ...
+Selecting previously unselected package nodejs.
+Preparing to unpack .../010-nodejs_12.22.5~dfsg-2~11u1_armhf.deb ...
+Unpacking nodejs (12.22.5~dfsg-2~11u1) ...
+Selecting previously unselected package node-abbrev.
+Preparing to unpack .../011-node-abbrev_1.1.1-2_all.deb ...
+Unpacking node-abbrev (1.1.1-2) ...
+Selecting previously unselected package node-ms.
+Preparing to unpack .../012-node-ms_2.1.3+~cs0.7.31-1_all.deb ...
+Unpacking node-ms (2.1.3+~cs0.7.31-1) ...
+Selecting previously unselected package node-debug.
+Preparing to unpack .../013-node-debug_4.3.1+~cs4.1.5-1_all.deb ...
+Unpacking node-debug (4.3.1+~cs4.1.5-1) ...
+Selecting previously unselected package node-yallist.
+Preparing to unpack .../014-node-yallist_4.0.0-1_all.deb ...
+Unpacking node-yallist (4.0.0-1) ...
+Selecting previously unselected package node-lru-cache.
+Preparing to unpack .../015-node-lru-cache_5.1.1-5_all.deb ...
+Unpacking node-lru-cache (5.1.1-5) ...
+Selecting previously unselected package node-semver.
+Preparing to unpack .../016-node-semver_7.3.4-1_all.deb ...
+Unpacking node-semver (7.3.4-1) ...
+Selecting previously unselected package node-agent-base.
+Preparing to unpack .../017-node-agent-base_6.0.2-2_all.deb ...
+Unpacking node-agent-base (6.0.2-2) ...
+Selecting previously unselected package node-fast-deep-equal.
+Preparing to unpack .../018-node-fast-deep-equal_3.1.3-1_all.deb ...
+Unpacking node-fast-deep-equal (3.1.3-1) ...
+Selecting previously unselected package node-json-schema-traverse.
+Preparing to unpack .../019-node-json-schema-traverse_1.0.0-2_all.deb ...
+Unpacking node-json-schema-traverse (1.0.0-2) ...
+Selecting previously unselected package node-jsonify.
+Preparing to unpack .../020-node-jsonify_0.0.0-1.1_all.deb ...
+Unpacking node-jsonify (0.0.0-1.1) ...
+Selecting previously unselected package node-json-stable-stringify.
+Preparing to unpack .../021-node-json-stable-stringify_1.0.1+~cs5.1.32-1_all.deb ...
+Unpacking node-json-stable-stringify (1.0.1+~cs5.1.32-1) ...
+Selecting previously unselected package node-punycode.
+Preparing to unpack .../022-node-punycode_2.1.1-3_all.deb ...
+Unpacking node-punycode (2.1.1-3) ...
+Selecting previously unselected package node-uri-js.
+Preparing to unpack .../023-node-uri-js_4.4.0+dfsg-5_all.deb ...
+Unpacking node-uri-js (4.4.0+dfsg-5) ...
+Selecting previously unselected package node-ajv.
+Preparing to unpack .../024-node-ajv_6.12.6-2_all.deb ...
+Unpacking node-ajv (6.12.6-2) ...
+Selecting previously unselected package node-ansi.
+Preparing to unpack .../025-node-ansi_0.3.1-1_all.deb ...
+Unpacking node-ansi (0.3.1-1) ...
+Selecting previously unselected package node-ansi-regex.
+Preparing to unpack .../026-node-ansi-regex_5.0.1-1~deb11u1_all.deb ...
+Unpacking node-ansi-regex (5.0.1-1~deb11u1) ...
+Selecting previously unselected package node-color-name.
+Preparing to unpack .../027-node-color-name_1.1.4+~1.1.1-1_all.deb ...
+Unpacking node-color-name (1.1.4+~1.1.1-1) ...
+Selecting previously unselected package node-color-convert.
+Preparing to unpack .../028-node-color-convert_1.9.3-1_all.deb ...
+Unpacking node-color-convert (1.9.3-1) ...
+Selecting previously unselected package node-ansi-styles.
+Preparing to unpack .../029-node-ansi-styles_4.2.1-1_all.deb ...
+Unpacking node-ansi-styles (4.2.1-1) ...
+Selecting previously unselected package node-ansistyles.
+Preparing to unpack .../030-node-ansistyles_0.1.3-2_all.deb ...
+Unpacking node-ansistyles (0.1.3-2) ...
+Selecting previously unselected package node-aproba.
+Preparing to unpack .../031-node-aproba_2.0.0-1_all.deb ...
+Unpacking node-aproba (2.0.0-1) ...
+Selecting previously unselected package node-archy.
+Preparing to unpack .../032-node-archy_1.0.0-3_all.deb ...
+Unpacking node-archy (1.0.0-3) ...
+Selecting previously unselected package node-delegates.
+Preparing to unpack .../033-node-delegates_1.0.0-2_all.deb ...
+Unpacking node-delegates (1.0.0-2) ...
+Selecting previously unselected package node-inherits.
+Preparing to unpack .../034-node-inherits_2.0.4-1_all.deb ...
+Unpacking node-inherits (2.0.4-1) ...
+Selecting previously unselected package node-core-util-is.
+Preparing to unpack .../035-node-core-util-is_1.0.2-2_all.deb ...
+Unpacking node-core-util-is (1.0.2-2) ...
+Selecting previously unselected package node-safe-buffer.
+Preparing to unpack .../036-node-safe-buffer_5.2.1+~cs2.1.2-1_all.deb ...
+Unpacking node-safe-buffer (5.2.1+~cs2.1.2-1) ...
+Selecting previously unselected package node-string-decoder.
+Preparing to unpack .../037-node-string-decoder_1.3.0-2_all.deb ...
+Unpacking node-string-decoder (1.3.0-2) ...
+Selecting previously unselected package node-process-nextick-args.
+Preparing to unpack .../038-node-process-nextick-args_2.0.0-1_all.deb ...
+Unpacking node-process-nextick-args (2.0.0-1) ...
+Selecting previously unselected package node-util-deprecate.
+Preparing to unpack .../039-node-util-deprecate_1.0.2-1_all.deb ...
+Unpacking node-util-deprecate (1.0.2-1) ...
+Selecting previously unselected package node-isarray.
+Preparing to unpack .../040-node-isarray_2.0.5-1_all.deb ...
+Unpacking node-isarray (2.0.5-1) ...
+Selecting previously unselected package node-readable-stream.
+Preparing to unpack .../041-node-readable-stream_3.6.0-2_all.deb ...
+Unpacking node-readable-stream (3.6.0-2) ...
+Selecting previously unselected package node-are-we-there-yet.
+Preparing to unpack .../042-node-are-we-there-yet_1.1.5-1_all.deb ...
+Unpacking node-are-we-there-yet (1.1.5-1) ...
+Selecting previously unselected package node-asap.
+Preparing to unpack .../043-node-asap_2.0.6-2_all.deb ...
+Unpacking node-asap (2.0.6-2) ...
+Selecting previously unselected package node-asn1.
+Preparing to unpack .../044-node-asn1_0.2.3-2_all.deb ...
+Unpacking node-asn1 (0.2.3-2) ...
+Selecting previously unselected package node-assert-plus.
+Preparing to unpack .../045-node-assert-plus_1.0.0-2_all.deb ...
+Unpacking node-assert-plus (1.0.0-2) ...
+Selecting previously unselected package node-asynckit.
+Preparing to unpack .../046-node-asynckit_0.4.0-3_all.deb ...
+Unpacking node-asynckit (0.4.0-3) ...
+Selecting previously unselected package node-aws-sign2.
+Preparing to unpack .../047-node-aws-sign2_0.7.1-2_all.deb ...
+Unpacking node-aws-sign2 (0.7.1-2) ...
+Selecting previously unselected package node-aws4.
+Preparing to unpack .../048-node-aws4_1.11.0-1_all.deb ...
+Unpacking node-aws4 (1.11.0-1) ...
+Selecting previously unselected package node-balanced-match.
+Preparing to unpack .../049-node-balanced-match_1.0.0-1_all.deb ...
+Unpacking node-balanced-match (1.0.0-1) ...
+Selecting previously unselected package node-tweetnacl.
+Preparing to unpack .../050-node-tweetnacl_1.0.3+dfsg-1_all.deb ...
+Unpacking node-tweetnacl (1.0.3+dfsg-1) ...
+Selecting previously unselected package node-bcrypt-pbkdf.
+Preparing to unpack .../051-node-bcrypt-pbkdf_1.0.2-1_all.deb ...
+Unpacking node-bcrypt-pbkdf (1.0.2-1) ...
+Selecting previously unselected package node-brace-expansion.
+Preparing to unpack .../052-node-brace-expansion_2.0.0-1_all.deb ...
+Unpacking node-brace-expansion (2.0.0-1) ...
+Selecting previously unselected package node-builtins.
+Preparing to unpack .../053-node-builtins_1.0.3-2_all.deb ...
+Unpacking node-builtins (1.0.3-2) ...
+Selecting previously unselected package node-chownr.
+Preparing to unpack .../054-node-chownr_1.1.3-5_all.deb ...
+Unpacking node-chownr (1.1.3-5) ...
+Selecting previously unselected package node-fs.realpath.
+Preparing to unpack .../055-node-fs.realpath_1.0.0-1.1_all.deb ...
+Unpacking node-fs.realpath (1.0.0-1.1) ...
+Selecting previously unselected package node-wrappy.
+Preparing to unpack .../056-node-wrappy_1.0.2-1.1_all.deb ...
+Unpacking node-wrappy (1.0.2-1.1) ...
+Selecting previously unselected package node-once.
+Preparing to unpack .../057-node-once_1.4.0-3_all.deb ...
+Unpacking node-once (1.4.0-3) ...
+Selecting previously unselected package node-inflight.
+Preparing to unpack .../058-node-inflight_1.0.6-1.1_all.deb ...
+Unpacking node-inflight (1.0.6-1.1) ...
+Selecting previously unselected package node-minimatch.
+Preparing to unpack .../059-node-minimatch_3.0.4+~3.0.3-1_all.deb ...
+Unpacking node-minimatch (3.0.4+~3.0.3-1) ...
+Selecting previously unselected package node-path-is-absolute.
+Preparing to unpack .../060-node-path-is-absolute_2.0.0-1_all.deb ...
+Unpacking node-path-is-absolute (2.0.0-1) ...
+Selecting previously unselected package node-glob.
+Preparing to unpack .../061-node-glob_7.1.6+~7.1.3-1_all.deb ...
+Unpacking node-glob (7.1.6+~7.1.3-1) ...
+Selecting previously unselected package node-graceful-fs.
+Preparing to unpack .../062-node-graceful-fs_4.2.4+repack-1_all.deb ...
+Unpacking node-graceful-fs (4.2.4+repack-1) ...
+Selecting previously unselected package node-mkdirp.
+Preparing to unpack .../063-node-mkdirp_1.0.4+~1.0.1-1_all.deb ...
+Unpacking node-mkdirp (1.0.4+~1.0.1-1) ...
+Selecting previously unselected package node-run-queue.
+Preparing to unpack .../064-node-run-queue_2.0.0-1_all.deb ...
+Unpacking node-run-queue (2.0.0-1) ...
+Selecting previously unselected package node-rimraf.
+Preparing to unpack .../065-node-rimraf_3.0.2-1_all.deb ...
+Unpacking node-rimraf (3.0.2-1) ...
+Selecting previously unselected package node-imurmurhash.
+Preparing to unpack .../066-node-imurmurhash_0.1.4-1.1_all.deb ...
+Unpacking node-imurmurhash (0.1.4-1.1) ...
+Selecting previously unselected package node-iferr.
+Preparing to unpack .../067-node-iferr_1.0.2-1_all.deb ...
+Unpacking node-iferr (1.0.2-1) ...
+Selecting previously unselected package node-fs-write-stream-atomic.
+Preparing to unpack .../068-node-fs-write-stream-atomic_1.0.10-4_all.deb ...
+Unpacking node-fs-write-stream-atomic (1.0.10-4) ...
+Selecting previously unselected package node-copy-concurrently.
+Preparing to unpack .../069-node-copy-concurrently_1.0.5-7_all.deb ...
+Unpacking node-copy-concurrently (1.0.5-7) ...
+Selecting previously unselected package node-move-concurrently.
+Preparing to unpack .../070-node-move-concurrently_1.0.1-2_all.deb ...
+Unpacking node-move-concurrently (1.0.1-2) ...
+Selecting previously unselected package node-escape-string-regexp.
+Preparing to unpack .../071-node-escape-string-regexp_4.0.0-1_all.deb ...
+Unpacking node-escape-string-regexp (4.0.0-1) ...
+Selecting previously unselected package node-indent-string.
+Preparing to unpack .../072-node-indent-string_4.0.0-1_all.deb ...
+Unpacking node-indent-string (4.0.0-1) ...
+Selecting previously unselected package node-p-map.
+Preparing to unpack .../073-node-p-map_4.0.0-1_all.deb ...
+Unpacking node-p-map (4.0.0-1) ...
+Selecting previously unselected package node-promise-inflight.
+Preparing to unpack .../074-node-promise-inflight_1.0.1-1.1_all.deb ...
+Unpacking node-promise-inflight (1.0.1-1.1) ...
+Selecting previously unselected package node-ssri.
+Preparing to unpack .../075-node-ssri_8.0.1-2_all.deb ...
+Unpacking node-ssri (8.0.1-2) ...
+Selecting previously unselected package node-unique-filename.
+Preparing to unpack .../076-node-unique-filename_1.1.1+ds-1_all.deb ...
+Unpacking node-unique-filename (1.1.1+ds-1) ...
+Selecting previously unselected package node-cacache.
+Preparing to unpack .../077-node-cacache_15.0.5+~cs13.9.21-1_all.deb ...
+Unpacking node-cacache (15.0.5+~cs13.9.21-1) ...
+Selecting previously unselected package node-caseless.
+Preparing to unpack .../078-node-caseless_0.12.1-1_all.deb ...
+Unpacking node-caseless (0.12.1-1) ...
+Selecting previously unselected package node-has-flag.
+Preparing to unpack .../079-node-has-flag_4.0.0-1_all.deb ...
+Unpacking node-has-flag (4.0.0-1) ...
+Selecting previously unselected package node-supports-color.
+Preparing to unpack .../080-node-supports-color_8.1.0+~7.2.0-1_all.deb ...
+Unpacking node-supports-color (8.1.0+~7.2.0-1) ...
+Selecting previously unselected package node-chalk.
+Preparing to unpack .../081-node-chalk_4.1.0-1_all.deb ...
+Unpacking node-chalk (4.1.0-1) ...
+Selecting previously unselected package node-clone.
+Preparing to unpack .../082-node-clone_2.1.2-2_all.deb ...
+Unpacking node-clone (2.1.2-2) ...
+Selecting previously unselected package node-colors.
+Preparing to unpack .../083-node-colors_1.4.0-1_all.deb ...
+Unpacking node-colors (1.4.0-1) ...
+Selecting previously unselected package node-strip-ansi.
+Preparing to unpack .../084-node-strip-ansi_6.0.0-2_all.deb ...
+Unpacking node-strip-ansi (6.0.0-2) ...
+Selecting previously unselected package node-defaults.
+Preparing to unpack .../085-node-defaults_1.0.3-2_all.deb ...
+Unpacking node-defaults (1.0.3-2) ...
+Selecting previously unselected package node-wcwidth.js.
+Preparing to unpack .../086-node-wcwidth.js_1.0.0-1.1_all.deb ...
+Unpacking node-wcwidth.js (1.0.0-1.1) ...
+Selecting previously unselected package node-columnify.
+Preparing to unpack .../087-node-columnify_1.5.4-3_all.deb ...
+Unpacking node-columnify (1.5.4-3) ...
+Selecting previously unselected package node-delayed-stream.
+Preparing to unpack .../088-node-delayed-stream_1.0.0-4_all.deb ...
+Unpacking node-delayed-stream (1.0.0-4) ...
+Selecting previously unselected package node-combined-stream.
+Preparing to unpack .../089-node-combined-stream_1.0.8-1_all.deb ...
+Unpacking node-combined-stream (1.0.8-1) ...
+Selecting previously unselected package node-concat-map.
+Preparing to unpack .../090-node-concat-map_0.0.1-2_all.deb ...
+Unpacking node-concat-map (0.0.1-2) ...
+Selecting previously unselected package node-console-control-strings.
+Preparing to unpack .../091-node-console-control-strings_1.1.0-2_all.deb ...
+Unpacking node-console-control-strings (1.1.0-2) ...
+Selecting previously unselected package node-dashdash.
+Preparing to unpack .../092-node-dashdash_2.0.0-1_all.deb ...
+Unpacking node-dashdash (2.0.0-1) ...
+Selecting previously unselected package node-depd.
+Preparing to unpack .../093-node-depd_2.0.0-1_all.deb ...
+Unpacking node-depd (2.0.0-1) ...
+Selecting previously unselected package node-jsbn.
+Preparing to unpack .../094-node-jsbn_1.1.0-1.1_all.deb ...
+Unpacking node-jsbn (1.1.0-1.1) ...
+Selecting previously unselected package node-ecc-jsbn.
+Preparing to unpack .../095-node-ecc-jsbn_0.2.0-2_all.deb ...
+Unpacking node-ecc-jsbn (0.2.0-2) ...
+Selecting previously unselected package node-iconv-lite.
+Preparing to unpack .../096-node-iconv-lite_0.5.1-3_all.deb ...
+Unpacking node-iconv-lite (0.5.1-3) ...
+Selecting previously unselected package node-encoding.
+Preparing to unpack .../097-node-encoding_0.1.13-1_all.deb ...
+Unpacking node-encoding (0.1.13-1) ...
+Selecting previously unselected package node-err-code.
+Preparing to unpack .../098-node-err-code_2.0.3+dfsg-1_all.deb ...
+Unpacking node-err-code (2.0.3+dfsg-1) ...
+Selecting previously unselected package node-extend.
+Preparing to unpack .../099-node-extend_3.0.2-1_all.deb ...
+Unpacking node-extend (3.0.2-1) ...
+Selecting previously unselected package node-extsprintf.
+Preparing to unpack .../100-node-extsprintf_1.4.0-1_all.deb ...
+Unpacking node-extsprintf (1.4.0-1) ...
+Selecting previously unselected package node-forever-agent.
+Preparing to unpack .../101-node-forever-agent_0.6.1-2_all.deb ...
+Unpacking node-forever-agent (0.6.1-2) ...
+Selecting previously unselected package node-mime.
+Preparing to unpack .../102-node-mime_2.5.0+dfsg+~cs3.90.0-1_all.deb ...
+Unpacking node-mime (2.5.0+dfsg+~cs3.90.0-1) ...
+Selecting previously unselected package node-mime-types.
+Preparing to unpack .../103-node-mime-types_2.1.28-1_all.deb ...
+Unpacking node-mime-types (2.1.28-1) ...
+Selecting previously unselected package node-form-data.
+Preparing to unpack .../104-node-form-data_3.0.0-2_all.deb ...
+Unpacking node-form-data (3.0.0-2) ...
+Selecting previously unselected package node-function-bind.
+Preparing to unpack .../105-node-function-bind_1.1.1+repack-1_all.deb ...
+Unpacking node-function-bind (1.1.1+repack-1) ...
+Selecting previously unselected package node-string-width.
+Preparing to unpack .../106-node-string-width_4.2.0-1_all.deb ...
+Unpacking node-string-width (4.2.0-1) ...
+Selecting previously unselected package node-object-assign.
+Preparing to unpack .../107-node-object-assign_4.1.1-3_all.deb ...
+Unpacking node-object-assign (4.1.1-3) ...
+Selecting previously unselected package node-has-unicode.
+Preparing to unpack .../108-node-has-unicode_2.0.1-2_all.deb ...
+Unpacking node-has-unicode (2.0.1-2) ...
+Selecting previously unselected package node-wide-align.
+Preparing to unpack .../109-node-wide-align_1.1.3-1_all.deb ...
+Unpacking node-wide-align (1.1.3-1) ...
+Selecting previously unselected package node-signal-exit.
+Preparing to unpack .../110-node-signal-exit_3.0.3-1_all.deb ...
+Unpacking node-signal-exit (3.0.3-1) ...
+Selecting previously unselected package node-gauge.
+Preparing to unpack .../111-node-gauge_2.7.4-1.1_all.deb ...
+Unpacking node-gauge (2.7.4-1.1) ...
+Selecting previously unselected package node-getpass.
+Preparing to unpack .../112-node-getpass_0.1.7-1.1_all.deb ...
+Unpacking node-getpass (0.1.7-1.1) ...
+Selecting previously unselected package node-nopt.
+Preparing to unpack .../113-node-nopt_5.0.0-1_all.deb ...
+Unpacking node-nopt (5.0.0-1) ...
+Selecting previously unselected package node-set-blocking.
+Preparing to unpack .../114-node-set-blocking_2.0.0-1.1_all.deb ...
+Unpacking node-set-blocking (2.0.0-1.1) ...
+Selecting previously unselected package node-npmlog.
+Preparing to unpack .../115-node-npmlog_4.1.2-2_all.deb ...
+Unpacking node-npmlog (4.1.2-2) ...
+Selecting previously unselected package node-osenv.
+Preparing to unpack .../116-node-osenv_0.1.5-1_all.deb ...
+Unpacking node-osenv (0.1.5-1) ...
+Selecting previously unselected package node-tar.
+Preparing to unpack .../117-node-tar_6.0.5+ds1+~cs11.3.9-1+deb11u2_all.deb ...
+Unpacking node-tar (6.0.5+ds1+~cs11.3.9-1+deb11u2) ...
+Selecting previously unselected package node-isexe.
+Preparing to unpack .../118-node-isexe_2.0.0-5_all.deb ...
+Unpacking node-isexe (2.0.0-5) ...
+Selecting previously unselected package node-which.
+Preparing to unpack .../119-node-which_2.0.2+~cs1.3.2-1_all.deb ...
+Unpacking node-which (2.0.2+~cs1.3.2-1) ...
+Selecting previously unselected package node-gyp.
+Preparing to unpack .../120-node-gyp_7.1.2-4_all.deb ...
+Unpacking node-gyp (7.1.2-4) ...
+Selecting previously unselected package node-har-schema.
+Preparing to unpack .../121-node-har-schema_2.0.0-4_all.deb ...
+Unpacking node-har-schema (2.0.0-4) ...
+Selecting previously unselected package node-har-validator.
+Preparing to unpack .../122-node-har-validator_5.1.5-1_all.deb ...
+Unpacking node-har-validator (5.1.5-1) ...
+Selecting previously unselected package node-hosted-git-info.
+Preparing to unpack .../123-node-hosted-git-info_3.0.8-1_all.deb ...
+Unpacking node-hosted-git-info (3.0.8-1) ...
+Selecting previously unselected package node-json-schema.
+Preparing to unpack .../124-node-json-schema_0.3.0+~7.0.6-1+deb11u1_all.deb ...
+Unpacking node-json-schema (0.3.0+~7.0.6-1+deb11u1) ...
+Selecting previously unselected package node-verror.
+Preparing to unpack .../125-node-verror_1.10.0-1.1_all.deb ...
+Unpacking node-verror (1.10.0-1.1) ...
+Selecting previously unselected package node-jsprim.
+Preparing to unpack .../126-node-jsprim_2.0.0-1_all.deb ...
+Unpacking node-jsprim (2.0.0-1) ...
+Selecting previously unselected package node-sshpk.
+Preparing to unpack .../127-node-sshpk_1.16.1+dfsg-2_all.deb ...
+Unpacking node-sshpk (1.16.1+dfsg-2) ...
+Selecting previously unselected package node-http-signature.
+Preparing to unpack .../128-node-http-signature_1.3.5-1_all.deb ...
+Unpacking node-http-signature (1.3.5-1) ...
+Selecting previously unselected package node-https-proxy-agent.
+Preparing to unpack .../129-node-https-proxy-agent_5.0.0-3_all.deb ...
+Unpacking node-https-proxy-agent (5.0.0-3) ...
+Selecting previously unselected package node-ini.
+Preparing to unpack .../130-node-ini_2.0.0-1_all.deb ...
+Unpacking node-ini (2.0.0-1) ...
+Selecting previously unselected package node-ip.
+Preparing to unpack .../131-node-ip_1.1.5-5_all.deb ...
+Unpacking node-ip (1.1.5-5) ...
+Selecting previously unselected package node-ip-regex.
+Preparing to unpack .../132-node-ip-regex_4.3.0-1_all.deb ...
+Unpacking node-ip-regex (4.3.0-1) ...
+Selecting previously unselected package node-is-typedarray.
+Preparing to unpack .../133-node-is-typedarray_1.0.0-3_all.deb ...
+Unpacking node-is-typedarray (1.0.0-3) ...
+Selecting previously unselected package node-isstream.
+Preparing to unpack .../134-node-isstream_0.1.2+dfsg-1.1_all.deb ...
+Unpacking node-isstream (0.1.2+dfsg-1.1) ...
+Selecting previously unselected package node-json-parse-better-errors.
+Preparing to unpack .../135-node-json-parse-better-errors_1.0.2+~2.3.1-1_all.deb ...
+Unpacking node-json-parse-better-errors (1.0.2+~2.3.1-1) ...
+Selecting previously unselected package node-json-stringify-safe.
+Preparing to unpack .../136-node-json-stringify-safe_5.0.1+repack-3_all.deb ...
+Unpacking node-json-stringify-safe (5.0.1+repack-3) ...
+Selecting previously unselected package node-jsonparse.
+Preparing to unpack .../137-node-jsonparse_1.3.1-7_all.deb ...
+Unpacking node-jsonparse (1.3.1-7) ...
+Selecting previously unselected package node-through.
+Preparing to unpack .../138-node-through_2.3.8+~cs0.0.30-1_all.deb ...
+Unpacking node-through (2.3.8+~cs0.0.30-1) ...
+Selecting previously unselected package node-jsonstream.
+Preparing to unpack .../139-node-jsonstream_1.3.5-1_all.deb ...
+Unpacking node-jsonstream (1.3.5-1) ...
+Selecting previously unselected package node-leven.
+Preparing to unpack .../140-node-leven_3.1.0+~cs1.1.1-1_all.deb ...
+Unpacking node-leven (3.1.0+~cs1.1.1-1) ...
+Selecting previously unselected package node-lockfile.
+Preparing to unpack .../141-node-lockfile_1.0.4-3_all.deb ...
+Unpacking node-lockfile (1.0.4-3) ...
+Selecting previously unselected package node-mute-stream.
+Preparing to unpack .../142-node-mute-stream_0.0.8-2_all.deb ...
+Unpacking node-mute-stream (0.0.8-2) ...
+Selecting previously unselected package node-resolve.
+Preparing to unpack .../143-node-resolve_1.19.0+~cs5.20.8-2_all.deb ...
+Unpacking node-resolve (1.19.0+~cs5.20.8-2) ...
+Selecting previously unselected package node-spdx-license-ids.
+Preparing to unpack .../144-node-spdx-license-ids_3.0.7-1_all.deb ...
+Unpacking node-spdx-license-ids (3.0.7-1) ...
+Selecting previously unselected package node-spdx-exceptions.
+Preparing to unpack .../145-node-spdx-exceptions_2.3.0-1_all.deb ...
+Unpacking node-spdx-exceptions (2.3.0-1) ...
+Selecting previously unselected package node-spdx-expression-parse.
+Preparing to unpack .../146-node-spdx-expression-parse_3.0.1-1_all.deb ...
+Unpacking node-spdx-expression-parse (3.0.1-1) ...
+Selecting previously unselected package node-spdx-correct.
+Preparing to unpack .../147-node-spdx-correct_3.1.1-1_all.deb ...
+Unpacking node-spdx-correct (3.1.1-1) ...
+Selecting previously unselected package node-validate-npm-package-license.
+Preparing to unpack .../148-node-validate-npm-package-license_3.0.4-1_all.deb ...
+Unpacking node-validate-npm-package-license (3.0.4-1) ...
+Selecting previously unselected package node-normalize-package-data.
+Preparing to unpack .../149-node-normalize-package-data_3.0.0+~2.4.0-1_all.deb ...
+Unpacking node-normalize-package-data (3.0.0+~2.4.0-1) ...
+Selecting previously unselected package node-npm-bundled.
+Preparing to unpack .../150-node-npm-bundled_1.1.1-1_all.deb ...
+Unpacking node-npm-bundled (1.1.1-1) ...
+Selecting previously unselected package node-validate-npm-package-name.
+Preparing to unpack .../151-node-validate-npm-package-name_3.0.0-1.1_all.deb ...
+Unpacking node-validate-npm-package-name (3.0.0-1.1) ...
+Selecting previously unselected package node-npm-package-arg.
+Preparing to unpack .../152-node-npm-package-arg_8.1.0-1_all.deb ...
+Unpacking node-npm-package-arg (8.1.0-1) ...
+Selecting previously unselected package node-number-is-nan.
+Preparing to unpack .../153-node-number-is-nan_2.0.0-1_all.deb ...
+Unpacking node-number-is-nan (2.0.0-1) ...
+Selecting previously unselected package node-oauth-sign.
+Preparing to unpack .../154-node-oauth-sign_0.9.0-2_all.deb ...
+Unpacking node-oauth-sign (0.9.0-2) ...
+Selecting previously unselected package node-opener.
+Preparing to unpack .../155-node-opener_1.5.2-1_all.deb ...
+Unpacking node-opener (1.5.2-1) ...
+Selecting previously unselected package node-performance-now.
+Preparing to unpack .../156-node-performance-now_2.1.0+debian-1.1_all.deb ...
+Unpacking node-performance-now (2.1.0+debian-1.1) ...
+Selecting previously unselected package node-retry.
+Preparing to unpack .../157-node-retry_0.12.0-1_all.deb ...
+Unpacking node-retry (0.12.0-1) ...
+Selecting previously unselected package node-promise-retry.
+Preparing to unpack .../158-node-promise-retry_2.0.1-1_all.deb ...
+Unpacking node-promise-retry (2.0.1-1) ...
+Selecting previously unselected package node-read.
+Preparing to unpack .../159-node-read_1.0.7-2_all.deb ...
+Unpacking node-read (1.0.7-2) ...
+Selecting previously unselected package node-promzard.
+Preparing to unpack .../160-node-promzard_0.3.0-1.1_all.deb ...
+Unpacking node-promzard (0.3.0-1.1) ...
+Selecting previously unselected package node-psl.
+Preparing to unpack .../161-node-psl_1.8.0+ds-4_all.deb ...
+Unpacking node-psl (1.8.0+ds-4) ...
+Selecting previously unselected package node-puka.
+Preparing to unpack .../162-node-puka_1.0.1+dfsg-2_all.deb ...
+Unpacking node-puka (1.0.1+dfsg-2) ...
+Selecting previously unselected package node-qs.
+Preparing to unpack .../163-node-qs_6.9.4+ds-1_all.deb ...
+Unpacking node-qs (6.9.4+ds-1) ...
+Selecting previously unselected package node-slash.
+Preparing to unpack .../164-node-slash_3.0.0-1_all.deb ...
+Unpacking node-slash (3.0.0-1) ...
+Selecting previously unselected package node-read-package-json.
+Preparing to unpack .../165-node-read-package-json_3.0.0-1_all.deb ...
+Unpacking node-read-package-json (3.0.0-1) ...
+Selecting previously unselected package node-resolve-from.
+Preparing to unpack .../166-node-resolve-from_5.0.0+~3.1.0+~3.3.0+~2.0.0-1_all.deb ...
+Unpacking node-resolve-from (5.0.0+~3.1.0+~3.3.0+~2.0.0-1) ...
+Selecting previously unselected package node-text-table.
+Preparing to unpack .../167-node-text-table_0.2.0-2_all.deb ...
+Unpacking node-text-table (0.2.0-2) ...
+Selecting previously unselected package node-tunnel-agent.
+Preparing to unpack .../168-node-tunnel-agent_0.6.1-2_all.deb ...
+Unpacking node-tunnel-agent (0.6.1-2) ...
+Selecting previously unselected package node-typedarray-to-buffer.
+Preparing to unpack .../169-node-typedarray-to-buffer_4.0.0-1_all.deb ...
+Unpacking node-typedarray-to-buffer (4.0.0-1) ...
+Selecting previously unselected package node-uuid.
+Preparing to unpack .../170-node-uuid_8.3.2+~8.3.0-4_all.deb ...
+Unpacking node-uuid (8.3.2+~8.3.0-4) ...
+Selecting previously unselected package node-write-file-atomic.
+Preparing to unpack .../171-node-write-file-atomic_3.0.3+~3.0.1-1_all.deb ...
+Unpacking node-write-file-atomic (3.0.3+~3.0.1-1) ...
+Selecting previously unselected package npm.
+Preparing to unpack .../172-npm_7.5.2+ds-2_all.deb ...
+Unpacking npm (7.5.2+ds-2) ...
+Setting up node-qs (6.9.4+ds-1) ...
+Setting up libuv1-dev:armhf (1.40.0-1) ...
+Setting up node-extsprintf (1.4.0-1) ...
+Setting up libjs-inherits (2.0.4-1) ...
+Setting up node-through (2.3.8+~cs0.0.30-1) ...
+Setting up node-color-name (1.1.4+~1.1.1-1) ...
+Setting up libc-ares2:armhf (1.17.1-1+deb11u1) ...
+Setting up node-uuid (8.3.2+~8.3.0-4) ...
+Setting up node-indent-string (4.0.0-1) ...
+Setting up libnode72:armhf (12.22.5~dfsg-2~11u1) ...
+Setting up node-chownr (1.1.3-5) ...
+Setting up libjs-psl (1.8.0+ds-4) ...
+Setting up node-json-schema-traverse (1.0.0-2) ...
+Setting up node-ini (2.0.0-1) ...
+Setting up node-json-parse-better-errors (1.0.2+~2.3.1-1) ...
+Setting up node-fast-deep-equal (3.1.3-1) ...
+Setting up node-err-code (2.0.3+dfsg-1) ...
+Setting up node-resolve-from (5.0.0+~3.1.0+~3.3.0+~2.0.0-1) ...
+Setting up libssl-dev:armhf (1.1.1k-1+deb11u1+rpt1) ...
+Setting up libjs-typedarray-to-buffer (4.0.0-1) ...
+Setting up node-json-schema (0.3.0+~7.0.6-1+deb11u1) ...
+Setting up libjs-is-typedarray (1.0.0-3) ...
+Setting up gyp (0.1+20200513gitcaa6002-2) ...
+Setting up libnode-dev (12.22.5~dfsg-2~11u1) ...
+Setting up nodejs (12.22.5~dfsg-2~11u1) ...
+update-alternatives: using /usr/bin/nodejs to provide /usr/bin/js (js) in auto mode
+Setting up node-aws4 (1.11.0-1) ...
+Setting up node-function-bind (1.1.1+repack-1) ...
+Setting up node-clone (2.1.2-2) ...
+Setting up node-iferr (1.0.2-1) ...
+Setting up node-has-flag (4.0.0-1) ...
+Setting up node-asap (2.0.6-2) ...
+Setting up node-mime (2.5.0+dfsg+~cs3.90.0-1) ...
+Setting up node-inherits (2.0.4-1) ...
+Setting up node-path-is-absolute (2.0.0-1) ...
+Setting up node-iconv-lite (0.5.1-3) ...
+Setting up node-safe-buffer (5.2.1+~cs2.1.2-1) ...
+Setting up node-promise-inflight (1.0.1-1.1) ...
+Setting up node-json-stringify-safe (5.0.1+repack-3) ...
+Setting up node-har-schema (2.0.0-4) ...
+Setting up node-mime-types (2.1.28-1) ...
+Setting up node-performance-now (2.1.0+debian-1.1) ...
+Setting up node-balanced-match (1.0.0-1) ...
+Setting up node-ansi (0.3.1-1) ...
+Setting up node-brace-expansion (2.0.0-1) ...
+Setting up node-spdx-exceptions (2.3.0-1) ...
+Setting up node-set-blocking (2.0.0-1.1) ...
+Setting up node-tunnel-agent (0.6.1-2) ...
+Setting up node-npm-bundled (1.1.1-1) ...
+Setting up node-signal-exit (3.0.3-1) ...
+Setting up node-wrappy (1.0.2-1.1) ...
+Setting up node-text-table (0.2.0-2) ...
+Setting up node-asynckit (0.4.0-3) ...
+Setting up node-ip (1.1.5-5) ...
+Setting up node-punycode (2.1.1-3) ...
+Setting up node-defaults (1.0.3-2) ...
+Setting up node-is-typedarray (1.0.0-3) ...
+Setting up node-mute-stream (0.0.8-2) ...
+Setting up node-number-is-nan (2.0.0-1) ...
+Setting up node-graceful-fs (4.2.4+repack-1) ...
+Setting up node-jsonify (0.0.0-1.1) ...
+Setting up node-json-stable-stringify (1.0.1+~cs5.1.32-1) ...
+Setting up node-aproba (2.0.0-1) ...
+Setting up node-ip-regex (4.3.0-1) ...
+Setting up node-spdx-license-ids (3.0.7-1) ...
+Setting up node-string-decoder (1.3.0-2) ...
+Setting up node-mkdirp (1.0.4+~1.0.1-1) ...
+Setting up node-run-queue (2.0.0-1) ...
+Setting up node-core-util-is (1.0.2-2) ...
+Setting up node-uri-js (4.4.0+dfsg-5) ...
+Setting up node-minimatch (3.0.4+~3.0.3-1) ...
+Setting up node-opener (1.5.2-1) ...
+Setting up node-archy (1.0.0-3) ...
+Setting up node-caseless (0.12.1-1) ...
+Setting up node-imurmurhash (0.1.4-1.1) ...
+Setting up node-encoding (0.1.13-1) ...
+Setting up node-read (1.0.7-2) ...
+Setting up node-asn1 (0.2.3-2) ...
+Setting up node-color-convert (1.9.3-1) ...
+Setting up node-isarray (2.0.5-1) ...
+Setting up node-osenv (0.1.5-1) ...
+Setting up node-ms (2.1.3+~cs0.7.31-1) ...
+Setting up node-process-nextick-args (2.0.0-1) ...
+Setting up node-has-unicode (2.0.1-2) ...
+Setting up node-fs-write-stream-atomic (1.0.10-4) ...
+Setting up node-forever-agent (0.6.1-2) ...
+Setting up node-delayed-stream (1.0.0-4) ...
+Setting up node-isstream (0.1.2+dfsg-1.1) ...
+Setting up node-builtins (1.0.3-2) ...
+Setting up node-colors (1.4.0-1) ...
+Setting up node-fs.realpath (1.0.0-1.1) ...
+Setting up node-oauth-sign (0.9.0-2) ...
+Setting up node-jsbn (1.1.0-1.1) ...
+Setting up node-object-assign (4.1.1-3) ...
+Setting up node-leven (3.1.0+~cs1.1.1-1) ...
+Setting up node-abbrev (1.1.1-2) ...
+Setting up node-puka (1.0.1+dfsg-2) ...
+Setting up node-supports-color (8.1.0+~7.2.0-1) ...
+Setting up node-yallist (4.0.0-1) ...
+Setting up node-ansi-regex (5.0.1-1~deb11u1) ...
+Setting up node-once (1.4.0-3) ...
+Setting up node-psl (1.8.0+ds-4) ...
+Setting up node-slash (3.0.0-1) ...
+Setting up node-util-deprecate (1.0.2-1) ...
+Setting up node-retry (0.12.0-1) ...
+Setting up node-concat-map (0.0.1-2) ...
+Setting up node-assert-plus (1.0.0-2) ...
+Setting up node-ansistyles (0.1.3-2) ...
+Setting up node-delegates (1.0.0-2) ...
+Setting up node-depd (2.0.0-1) ...
+Setting up node-isexe (2.0.0-5) ...
+Setting up node-resolve (1.19.0+~cs5.20.8-2) ...
+Setting up node-jsonparse (1.3.1-7) ...
+Setting up node-ajv (6.12.6-2) ...
+Setting up node-tweetnacl (1.0.3+dfsg-1) ...
+Setting up node-escape-string-regexp (4.0.0-1) ...
+Setting up node-aws-sign2 (0.7.1-2) ...
+Setting up node-console-control-strings (1.1.0-2) ...
+Setting up node-debug (4.3.1+~cs4.1.5-1) ...
+Setting up node-extend (3.0.2-1) ...
+Setting up node-jsonstream (1.3.5-1) ...
+Setting up node-dashdash (2.0.0-1) ...
+Setting up node-p-map (4.0.0-1) ...
+Setting up node-validate-npm-package-name (3.0.0-1.1) ...
+Setting up node-promzard (0.3.0-1.1) ...
+Setting up node-wcwidth.js (1.0.0-1.1) ...
+Setting up node-ecc-jsbn (0.2.0-2) ...
+Setting up node-combined-stream (1.0.8-1) ...
+Setting up node-unique-filename (1.1.1+ds-1) ...
+Setting up node-ansi-styles (4.2.1-1) ...
+Setting up node-form-data (3.0.0-2) ...
+Setting up node-strip-ansi (6.0.0-2) ...
+Setting up node-lockfile (1.0.4-3) ...
+Setting up node-chalk (4.1.0-1) ...
+Setting up node-spdx-expression-parse (3.0.1-1) ...
+Setting up node-which (2.0.2+~cs1.3.2-1) ...
+Setting up node-typedarray-to-buffer (4.0.0-1) ...
+Setting up node-tar (6.0.5+ds1+~cs11.3.9-1+deb11u2) ...
+Setting up node-inflight (1.0.6-1.1) ...
+Setting up node-verror (1.10.0-1.1) ...
+Setting up node-getpass (0.1.7-1.1) ...
+Setting up node-nopt (5.0.0-1) ...
+Setting up node-string-width (4.2.0-1) ...
+Setting up node-har-validator (5.1.5-1) ...
+Setting up node-readable-stream (3.6.0-2) ...
+Setting up node-ssri (8.0.1-2) ...
+Setting up node-lru-cache (5.1.1-5) ...
+Setting up node-bcrypt-pbkdf (1.0.2-1) ...
+Setting up node-promise-retry (2.0.1-1) ...
+Setting up node-write-file-atomic (3.0.3+~3.0.1-1) ...
+Setting up node-columnify (1.5.4-3) ...
+Setting up node-jsprim (2.0.0-1) ...
+Setting up node-are-we-there-yet (1.1.5-1) ...
+Setting up node-spdx-correct (3.1.1-1) ...
+Setting up node-glob (7.1.6+~7.1.3-1) ...
+Setting up node-hosted-git-info (3.0.8-1) ...
+Setting up node-wide-align (1.1.3-1) ...
+Setting up node-rimraf (3.0.2-1) ...
+Setting up node-sshpk (1.16.1+dfsg-2) ...
+Setting up node-semver (7.3.4-1) ...
+Setting up node-validate-npm-package-license (3.0.4-1) ...
+Setting up node-copy-concurrently (1.0.5-7) ...
+Setting up node-move-concurrently (1.0.1-2) ...
+Setting up node-agent-base (6.0.2-2) ...
+Setting up node-http-signature (1.3.5-1) ...
+Setting up node-gauge (2.7.4-1.1) ...
+Setting up node-normalize-package-data (3.0.0+~2.4.0-1) ...
+Setting up node-npm-package-arg (8.1.0-1) ...
+Setting up node-npmlog (4.1.2-2) ...
+Setting up node-https-proxy-agent (5.0.0-3) ...
+Setting up node-cacache (15.0.5+~cs13.9.21-1) ...
+Setting up node-read-package-json (3.0.0-1) ...
+Setting up node-gyp (7.1.2-4) ...
+Setting up npm (7.5.2+ds-2) ...
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ sudo apt-get install -y iptables ipset
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+iptables is already the newest version (1.8.7-1).
+The following package was automatically installed and is no longer required:
+  libfuse2
+Use 'sudo apt autoremove' to remove it.
+The following NEW packages will be installed:
+  ipset libipset13
+0 upgraded, 2 newly installed, 0 to remove and 31 not upgraded.
+Need to get 110 kB of archives.
+After this operation, 353 kB of additional disk space will be used.
+Get:1 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf libipset13 armhf 7.10-1 [62.3 kB]
+Get:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian bullseye/main armhf ipset armhf 7.10-1 [47.6 kB]
+Fetched 110 kB in 2s (65.0 kB/s)
+Selecting previously unselected package libipset13:armhf.
+(Reading database ... 122985 files and directories currently installed.)
+Preparing to unpack .../libipset13_7.10-1_armhf.deb ...
+Unpacking libipset13:armhf (7.10-1) ...
+Selecting previously unselected package ipset.
+Preparing to unpack .../ipset_7.10-1_armhf.deb ...
+Unpacking ipset (7.10-1) ...
+Setting up libipset13:armhf (7.10-1) ...
+Setting up ipset (7.10-1) ...
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
++ . examples/platforms/raspbian/after_bootstrap
+++ . /etc/os-release
++++ PRETTY_NAME='Raspbian GNU/Linux 11 (bullseye)'
++++ NAME='Raspbian GNU/Linux'
++++ VERSION_ID=11
++++ VERSION='11 (bullseye)'
++++ VERSION_CODENAME=bullseye
++++ ID=raspbian
++++ ID_LIKE=debian
++++ HOME_URL=http://www.raspbian.org/
++++ SUPPORT_URL=http://www.raspbian.org/RaspbianForums
++++ BUG_REPORT_URL=http://www.raspbian.org/RaspbianBugs
+++ [[ 11 -ge 10 ]]
+pi@raspberrypi:~/ot-br-posix $ echo $?
+0
+pi@raspberrypi:~/ot-br-posix $ 

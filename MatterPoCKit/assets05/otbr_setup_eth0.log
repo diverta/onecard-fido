@@ -1,0 +1,2381 @@
+pi@raspberrypi:~/ot-br-posix $ 
+pi@raspberrypi:~/ot-br-posix $ INFRA_IF_NAME=eth0 ./script/setup
++++ dirname ./script/setup
+++ cd ./script/..
+++ [[ ! -n '' ]]
+++ grep -s 'BeagleBone Black' /sys/firmware/devicetree/base/model
+++ case "${OSTYPE}" in
+++ have_or_die lsb_release
+++ have lsb_release
+++ command -v lsb_release
++++ lsb_release -i
++++ cut -c17-
++++ tr '[:upper:]' '[:lower:]'
+++ PLATFORM=raspbian
+++ echo 'Current platform is raspbian'
+Current platform is raspbian
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with DHCPV6_PD
+++ local value
++++ printenv DHCPV6_PD
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${DHCPV6_PD-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with NETWORK_MANAGER
+++ local value
++++ printenv NETWORK_MANAGER
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${NETWORK_MANAGER-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ STAGE_DIR=/home/pi/ot-br-posix/stage
+++ BUILD_DIR=/home/pi/ot-br-posix/build
+++ [[ -d /home/pi/ot-br-posix/stage ]]
+++ [[ -d /home/pi/ot-br-posix/build ]]
+++ export PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+++ PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
++++ basename ./script/setup
+++ TASKNAME=setup
+++ BEFORE_HOOK=examples/platforms/raspbian/before_setup
+++ AFTER_HOOK=examples/platforms/raspbian/after_setup
+++ [[ ! -f examples/platforms/raspbian/before_setup ]]
+++ BEFORE_HOOK=/dev/null
+++ [[ ! -f examples/platforms/raspbian/after_setup ]]
+++ AFTER_HOOK=/dev/null
++ . script/_border_routing
+++ readonly INFRA_IF_NAME=eth0
+++ INFRA_IF_NAME=eth0
+++ readonly SYSCTL_ACCEPT_RA_FILE=/etc/sysctl.d/60-otbr-accept-ra.conf
+++ SYSCTL_ACCEPT_RA_FILE=/etc/sysctl.d/60-otbr-accept-ra.conf
+++ readonly DHCPCD_CONF_FILE=/etc/dhcpcd.conf
+++ DHCPCD_CONF_FILE=/etc/dhcpcd.conf
+++ readonly DHCPCD_CONF_BACKUP_FILE=/etc/dhcpcd.conf.orig
+++ DHCPCD_CONF_BACKUP_FILE=/etc/dhcpcd.conf.orig
++ . script/_otbr
+++ readonly OTBR_TOP_BUILDDIR=/home/pi/ot-br-posix/build/otbr
+++ OTBR_TOP_BUILDDIR=/home/pi/ot-br-posix/build/otbr
+++ readonly OTBR_OPTIONS=
+++ OTBR_OPTIONS=
+++ readonly REFERENCE_DEVICE=0
+++ REFERENCE_DEVICE=0
++ . script/_ipforward
+++ SYSCTL_IP_FORWARD=/etc/sysctl.d/60-otbr-ip-forward.conf
++ . script/_nat64
+++ TAYGA_DEFAULT=/etc/default/tayga
+++ TAYGA_CONF=/etc/tayga.conf
+++ TAYGA_IPV4_ADDR=192.168.255.1
+++ TAYGA_IPV6_ADDR=fdaa:bb:1::1
+++ TAYGA_TUN_V6_ADDR=fdaa:bb:1::2
+++ NAT44_SERVICE=/etc/init.d/otbr-nat44
+++ WLAN_IFNAMES=eth0
++ . script/_dns64
+++ BIND_CONF_OPTIONS=/etc/bind/named.conf.options
+++ NAT64_PREFIX=64:ff9b::/96
+++ DNS64_NAMESERVER_ADDR=127.0.0.1
++++ echo 64:ff9b::/96
++++ tr '"/"' '"/"'
+++ DNS64_CONF='dns64 64:ff9b::/96 { clients { thread; }; recursive-only yes; };'
+++ without NAT64
+++ with NAT64
+++ local value
++++ printenv NAT64
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${NAT64-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ test raspbian = ubuntu
+++ test raspbian = beagleboneblack
+++ test raspbian = raspbian
+++ '[' raspbian = raspbian ']'
+++ RESOLV_CONF_HEAD=/etc/resolv.conf.head
++ . script/_dhcpv6_pd
+++ '[' raspbian = ubuntu ']'
+++ WAN_INTERFACE=eth0
+++ WLAN_INTERFACE=wlan0
+++ WPAN_INTERFACE=wpan0
+++ DHCPCD_CONF=/etc/dhcpcd.conf
+++ DHCPCD_CONF_BACKUP=/etc/dhcpcd.conf.orig
+++ NCP_STATE_NOTIFIER=/usr/sbin/ncp_state_notifier
+++ NCP_STATE_DISPATCHER=/etc/ncp_state_notifier/dispatcher.d
+++ NCP_STATE_NOTIFIER_SERVICE_NAME=ncp_state_notifier.service
+++ NCP_STATE_NOTIFIER_SERVICE=/etc/systemd/system/ncp_state_notifier.service
+++ DHCPCD_RELOADER=/etc/ncp_state_notifier/dispatcher.d/dhcpcd_reloader
+++ without DHCPV6_PD
+++ with DHCPV6_PD
+++ local value
++++ printenv DHCPV6_PD
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${DHCPV6_PD-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
++ . script/_network_manager
+++ AP_CONN=BorderRouter-AP
+++ ETH_CONN=BorderRouter-Eth
+++ AP_HELPER_SCRIPT=/etc/NetworkManager/dispatcher.d/ap-helper
+++ DHCPV6_HELPER_SCRIPT=/etc/NetworkManager/dispatcher.d/dhcpv6-helper
++ . script/_rt_tables
++ . script/_swapfile
+++ SWAP_REQUIRED=false
+++ SWAP_FILENAME=/swapfile
+++ SWAP_BLOCK_SIZE=1M
+++ SWAP_BLOCK_CNT=1024
++ . script/_sudo_extend
+++ ETC_SUDOERS=/etc/sudoers
+++ SUDO_EXTEND_TIME=false
+++ SUDO_EXTEND_TIME_AMOUNT=120
++ . script/_disable_services
++ . script/_firewall
+++ FIREWALL_SERVICE=/etc/init.d/otbr-firewall
+++ sudo modprobe ip6table_filter
++ main
++ . /dev/null
++ extend_sudo_timeout
++ local _why
++ _why=Disabled
++ false
++ false
++ echo 'sudo-timeout: Not extending, Disabled'
+sudo-timeout: Not extending, Disabled
++ setup_swapfile
++ false
++ echo 'Swapfile: not required'
+Swapfile: not required
++ disable_services
++ case $PLATFORM in
++ echo 'Nothing to disable'
++ otbr_uninstall
++ have systemctl
++ command -v systemctl
++ sudo systemctl stop otbr-web
+Failed to stop otbr-web.service: Unit otbr-web.service not loaded.
++ true
++ sudo systemctl stop otbr-agent
+Failed to stop otbr-agent.service: Unit otbr-agent.service not loaded.
++ true
++ sudo systemctl disable otbr-web
+Failed to disable unit: Unit file otbr-web.service does not exist.
++ true
++ sudo systemctl disable otbr-agent
+Failed to disable unit: Unit file otbr-agent.service does not exist.
++ true
++ sudo systemctl is-enabled otbr-web
+Failed to get unit file state for otbr-web.service: No such file or directory
++ sudo systemctl is-enabled otbr-agent
+Failed to get unit file state for otbr-agent.service: No such file or directory
++ sudo killall otbr-web otbr-agent
+otbr-web: no process found
+otbr-agent: no process found
++ true
++ cd /home/pi/ot-br-posix/build/otbr
+script/_otbr: line 47: cd: /home/pi/ot-br-posix/build/otbr: No such file or directory
++ have systemctl
++ command -v systemctl
++ sudo systemctl daemon-reload
++ border_routing_uninstall
++ with BORDER_ROUTING
++ local value
+++ printenv BORDER_ROUTING
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BORDER_ROUTING-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ accept_ra_uninstall
++ test '!' -f /etc/sysctl.d/60-otbr-accept-ra.conf
++ dhcpcd_enable_ipv6
++ '[' -f /etc/dhcpcd.conf.orig ']'
++ network_manager_uninstall
++ with NETWORK_MANAGER
++ local value
+++ printenv NETWORK_MANAGER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NETWORK_MANAGER-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ return 0
++ dhcpv6_pd_uninstall
++ with DHCPV6_PD
++ local value
+++ printenv DHCPV6_PD
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DHCPV6_PD-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ return 0
++ nat64_uninstall
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ nat64_stop
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ have systemctl
++ command -v systemctl
++ sudo systemctl stop tayga
++ sudo systemctl stop otbr-nat44
+Failed to stop otbr-nat44.service: Unit otbr-nat44.service not loaded.
++ true
++ sudo sed -i 's/^RUN="yes"/RUN="no"/' /etc/default/tayga
++ sudo sed -i 's/^IPV4_TUN_ADDR="192.168.255.1"/IPV4_TUN_ADDR=""/' /etc/default/tayga
++ sudo sed -i 's/^prefix 64:ff9b::\/96/# prefix 64:ff9b::\/96/' /etc/tayga.conf
++ sudo sed -i 's/^##prefix /prefix /' /etc/tayga.conf
++ sudo sed -i '/^ipv6-addr fdaa:bb:1::1/d' /etc/tayga.conf
++ have systemctl
++ command -v systemctl
++ sudo systemctl disable otbr-nat44
+Failed to disable unit: Unit file otbr-nat44.service does not exist.
++ true
++ have update-rc.d
++ command -v update-rc.d
++ sudo update-rc.d otbr-nat44 remove
++ test '!' -f /etc/init.d/otbr-nat44
++ dns64_uninstall
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ with DNS64
++ local value
+++ printenv DNS64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DNS64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
+++ _detect_service_name
+++ dpkg -L bind9
+++ grep /etc/init.d/
+++ cut -d/ -f4
++ service_name=named
++ dns64_stop
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ with DNS64
++ local value
+++ printenv DNS64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DNS64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
+++ _detect_service_name
+++ dpkg -L bind9
+++ grep /etc/init.d/
+++ cut -d/ -f4
++ service_name=named
++ have systemctl
++ command -v systemctl
++ sudo systemctl stop named
++ sudo sed -i '/^\tlisten-on-v6/d' /etc/bind/named.conf.options
++ sudo sed -i '/^\tallow-query/d' /etc/bind/named.conf.options
++ sudo sed -i '/^\tallow-recursion/d' /etc/bind/named.conf.options
++ sudo sed -i '/^\tforward/d' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tlisten-on-v6 { any; };' /etc/bind/named.conf.options
++ sudo sed -i '/^\tdns64/d' /etc/bind/named.conf.options
++ sudo sed -i '/^acl/,/^options/{/^options/!d}' /etc/bind/named.conf.options
++ sudo sed -i '/^nameserver 127.0.0.1/d' /etc/resolv.conf.head
+sed: can't read /etc/resolv.conf.head: No such file or directory
++ true
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ dns64_update_resolvconf
++ '[' raspbian = ubuntu ']'
++ '[' raspbian = beagleboneblack ']'
++ '[' raspbian = raspbian ']'
++ systemctl is-enabled NetworkManager
+Failed to get unit file state for NetworkManager.service: No such file or directory
++ systemctl is-enabled dhcpcd
+enabled
++ sudo systemctl restart dhcpcd
++ have systemctl
++ command -v systemctl
++ sudo systemctl stop named
++ sudo systemctl disable named
+Synchronizing state of named.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install disable named
+Removed /etc/systemd/system/multi-user.target.wants/named.service.
+Removed /etc/systemd/system/bind9.service.
++ rt_tables_uninstall
++ with BACKBONE_ROUTER
++ local value
+++ printenv BACKBONE_ROUTER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BACKBONE_ROUTER-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo sed -i.bak '/88\s\+openthread/d' /etc/iproute2/rt_tables
++ ipforward_uninstall
++ test '!' -f /etc/sysctl.d/60-otbr-ip-forward.conf
++ firewall_uninstall
++ have systemctl
++ command -v systemctl
++ sudo systemctl disable otbr-firewall
+Failed to disable unit: Unit file otbr-firewall.service does not exist.
++ true
++ have update-rc.d
++ command -v update-rc.d
++ sudo update-rc.d otbr-firewall remove
++ test '!' -f /etc/init.d/otbr-firewall
++ firewall_install
++ sudo cp script/otbr-firewall /etc/init.d/otbr-firewall
++ sudo chmod a+x /etc/init.d/otbr-firewall
++ have systemctl
++ command -v systemctl
++ sudo systemctl enable otbr-firewall
+otbr-firewall.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable otbr-firewall
++ sudo systemctl start otbr-firewall
++ ipforward_install
++ sudo tee /etc/sysctl.d/60-otbr-ip-forward.conf
+net.ipv6.conf.all.forwarding = 1
+net.ipv4.ip_forward = 1
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ ipforward_enable
++ echo 1
++ sudo tee /proc/sys/net/ipv6/conf/all/forwarding
+1
++ echo 1
++ sudo tee /proc/sys/net/ipv4/ip_forward
+1
++ rt_tables_install
++ with BACKBONE_ROUTER
++ local value
+++ printenv BACKBONE_ROUTER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BACKBONE_ROUTER-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ rt_tables_uninstall
++ with BACKBONE_ROUTER
++ local value
+++ printenv BACKBONE_ROUTER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BACKBONE_ROUTER-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo sed -i.bak '/88\s\+openthread/d' /etc/iproute2/rt_tables
++ sudo sh -c 'echo "88 openthread" >>/etc/iproute2/rt_tables'
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ sudo sh -c 'echo "" >>/etc/sysctl.conf'
++ sudo sh -c 'echo "# OpenThread configuration" >>/etc/sysctl.conf'
++ sudo sh -c 'echo "net.core.optmem_max=65536" >>/etc/sysctl.conf'
++ sudo sh -c 'sysctl -p /etc/sysctl.conf'
+net.core.optmem_max = 65536
++ nat64_install
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ test -f /etc/default/tayga -a -f /etc/tayga.conf
++ sudo sed -i 's/^RUN="no"/RUN="yes"/' /etc/default/tayga
++ sudo sed -i 's/^IPV4_TUN_ADDR=""/IPV4_TUN_ADDR="192.168.255.1"/' /etc/default/tayga
++ sudo sed -i 's/^IPV6_TUN_ADDR=""/IPV6_TUN_ADDR="fdaa:bb:1::2"/' /etc/default/tayga
++ sudo sed -i 's/^prefix /##prefix /' /etc/tayga.conf
++ sudo sed -i 's/^# prefix 64:ff9b::\/96/prefix 64:ff9b::\/96/' /etc/tayga.conf
++ sudo sed -i '/^#ipv6-addr/a ipv6-addr fdaa:bb:1::1' /etc/tayga.conf
++ sudo tee /etc/init.d/otbr-nat44
+#! /bin/sh
+#
+#  Copyright (c) 2017, The OpenThread Authors.
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions are met:
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#  3. Neither the name of the copyright holder nor the
+#     names of its contributors may be used to endorse or promote products
+#     derived from this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+### BEGIN INIT INFO
+# Provides:          otbr-nat44
+# Required-Start:    tayga
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: iptables NAT44
+# Description:       NAT44 is require for OpenThread border router
+#                    to connect to arbitrary IPv4 endpoints.
+### END INIT INFO
+
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+case "$1" in
+    start)
++ for IFNAME in $WLAN_IFNAMES
++ echo '      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE'
++ sudo tee -a /etc/init.d/otbr-nat44
+      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
++ sudo tee -a /etc/init.d/otbr-nat44
+        ;;
+    restart|reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+    stop|status)
+        # No-op
+        ;;
+    *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
++ sudo chmod a+x /etc/init.d/otbr-nat44
++ have systemctl
++ command -v systemctl
++ sudo systemctl restart tayga
++ sudo systemctl enable tayga
+tayga.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable tayga
++ sudo systemctl enable otbr-nat44
+otbr-nat44.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable otbr-nat44
++ dns64_install
++ with NAT64
++ local value
+++ printenv NAT64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NAT64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ with DNS64
++ local value
+++ printenv DNS64
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DNS64-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ test -f /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tlisten-on-v6 { thread; };' /etc/bind/named.conf.options
++ sudo sed -i '/^\tlisten-on-v6 { a/d' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tallow-query { any; };' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tallow-recursion { thread; };' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tforwarders { 8.8.8.8; 8.8.8.4; };' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tforward only;' /etc/bind/named.conf.options
++ sudo sed -i '/^};/i\\tdns64 64:ff9b::/96 { clients { thread; }; recursive-only yes; };' /etc/bind/named.conf.options
++ sudo sed -i '1s/^/acl thread {\n\tfe80::\/16;\n\tfc00::\/7;\n\t127.0.0.1;\n};\n\n/' /etc/bind/named.conf.options
+++ _detect_service_name
+++ dpkg -L bind9
+++ grep /etc/init.d/
+++ cut -d/ -f4
++ service_name=named
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ sudo sh -c 'echo "nameserver 127.0.0.1" >> /etc/resolv.conf.head'
++ have systemctl
++ command -v systemctl
++ sudo systemctl stop dnsmasq
+Failed to stop dnsmasq.service: Unit dnsmasq.service not loaded.
++ true
++ sudo systemctl disable dnsmasq
+Failed to disable unit: Unit file dnsmasq.service does not exist.
++ true
++ sudo systemctl enable named
+Synchronizing state of named.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable named
+Created symlink /etc/systemd/system/bind9.service → /lib/systemd/system/named.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/named.service → /lib/systemd/system/named.service.
++ sudo systemctl is-enabled named
+enabled
++ sudo systemctl start named
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ dns64_update_resolvconf
++ '[' raspbian = ubuntu ']'
++ '[' raspbian = beagleboneblack ']'
++ '[' raspbian = raspbian ']'
++ systemctl is-enabled NetworkManager
+Failed to get unit file state for NetworkManager.service: No such file or directory
++ systemctl is-enabled dhcpcd
+enabled
++ sudo systemctl restart dhcpcd
++ network_manager_install
++ with NETWORK_MANAGER
++ local value
+++ printenv NETWORK_MANAGER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${NETWORK_MANAGER-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ return 0
++ dhcpv6_pd_install
++ with DHCPV6_PD
++ local value
+++ printenv DHCPV6_PD
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DHCPV6_PD-}'
++++ echo 0
++ value=0
++ [[ 0 == 1 ]]
++ return 0
++ border_routing_install
++ with BORDER_ROUTING
++ local value
+++ printenv BORDER_ROUTING
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BORDER_ROUTING-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ dhcpcd_disable_ipv6
++ '[' -f /etc/dhcpcd.conf ']'
++ sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.orig
++ sudo tee -a /etc/dhcpcd.conf
+noipv6
+noipv6rs
++ accept_ra_install
++ sudo tee /etc/sysctl.d/60-otbr-accept-ra.conf
+net.ipv6.conf.eth0.accept_ra = 2
+net.ipv6.conf.eth0.accept_ra_rt_info_max_plen = 64
++ without DOCKER
++ with DOCKER
++ local value
+++ printenv DOCKER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${DOCKER-}'
++++ echo
++ value=
++ [[ '' == 1 ]]
++ accept_ra_enable
++ with BORDER_ROUTING
++ local value
+++ printenv BORDER_ROUTING
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BORDER_ROUTING-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ '[' -f /proc/sys/net/ipv6/conf/eth0/accept_ra ']'
++ echo 2
++ sudo tee /proc/sys/net/ipv6/conf/eth0/accept_ra
+2
++ '[' -f /proc/sys/net/ipv6/conf/eth0/accept_ra_rt_info_max_plen ']'
++ echo 64
++ sudo tee /proc/sys/net/ipv6/conf/eth0/accept_ra_rt_info_max_plen
+64
++ otbr_install
++ otbr_options=()
++ local otbr_options
++ [[ -n '' ]]
++ otbr_options=("-DBUILD_TESTING=OFF" "-DCMAKE_INSTALL_PREFIX=/usr" "-DOTBR_DBUS=ON" "-DOTBR_DNSSD_DISCOVERY_PROXY=ON" "-DOTBR_SRP_ADVERTISING_PROXY=ON" "-DOTBR_INFRA_IF_NAME=${INFRA_IF_NAME}" "-DOTBR_MDNS=${OTBR_MDNS:=mDNSResponder}" "${otbr_options[@]}")
++ with WEB_GUI
++ local value
+++ printenv WEB_GUI
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${WEB_GUI-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ otbr_options+=("-DOTBR_WEB=ON")
++ with BORDER_ROUTING
++ local value
+++ printenv BORDER_ROUTING
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BORDER_ROUTING-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ otbr_options+=("-DOTBR_BORDER_ROUTING=ON")
++ with REST_API
++ local value
+++ printenv REST_API
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${REST_API-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ otbr_options+=("-DOTBR_REST=ON")
++ with BACKBONE_ROUTER
++ local value
+++ printenv BACKBONE_ROUTER
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${BACKBONE_ROUTER-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ otbr_options+=("-DOTBR_BACKBONE_ROUTER=ON")
++ [[ 0 == \1 ]]
++ ./script/cmake-build -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr -DOTBR_DBUS=ON -DOTBR_DNSSD_DISCOVERY_PROXY=ON -DOTBR_SRP_ADVERTISING_PROXY=ON -DOTBR_INFRA_IF_NAME=eth0 -DOTBR_MDNS=mDNSResponder -DOTBR_WEB=ON -DOTBR_BORDER_ROUTING=ON -DOTBR_REST=ON -DOTBR_BACKBONE_ROUTER=ON
++++ dirname ./script/cmake-build
+++ cd ./script/..
+++ [[ ! -n '' ]]
+++ grep -s 'BeagleBone Black' /sys/firmware/devicetree/base/model
+++ case "${OSTYPE}" in
+++ have_or_die lsb_release
+++ have lsb_release
+++ command -v lsb_release
++++ lsb_release -i
++++ cut -c17-
++++ tr '[:upper:]' '[:lower:]'
+++ PLATFORM=raspbian
+++ echo 'Current platform is raspbian'
+Current platform is raspbian
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with DHCPV6_PD
+++ local value
++++ printenv DHCPV6_PD
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${DHCPV6_PD-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ with BORDER_ROUTING
+++ local value
++++ printenv BORDER_ROUTING
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${BORDER_ROUTING-}'
+++++ echo 1
+++ value=1
+++ [[ 1 == 1 ]]
+++ with NETWORK_MANAGER
+++ local value
++++ printenv NETWORK_MANAGER
+++ value=
+++ [[ -z '' ]]
+++ [[ -f examples/platforms/raspbian/default ]]
++++ . examples/platforms/raspbian/default
+++++ NAT64=1
+++++ DNS64=1
+++++ DHCPV6_PD=0
+++++ NETWORK_MANAGER=0
+++++ BACKBONE_ROUTER=1
+++++ BORDER_ROUTING=1
+++++ WEB_GUI=1
+++++ REST_API=1
++++ eval echo '${NETWORK_MANAGER-}'
+++++ echo 0
+++ value=0
+++ [[ 0 == 1 ]]
+++ STAGE_DIR=/home/pi/ot-br-posix/stage
+++ BUILD_DIR=/home/pi/ot-br-posix/build
+++ [[ -d /home/pi/ot-br-posix/stage ]]
+++ [[ -d /home/pi/ot-br-posix/build ]]
+++ export PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+++ PATH=/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/home/pi/ot-br-posix/stage/usr/bin:/home/pi/ot-br-posix/stage/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
++++ basename ./script/cmake-build
+++ TASKNAME=cmake-build
+++ BEFORE_HOOK=examples/platforms/raspbian/before_cmake-build
+++ AFTER_HOOK=examples/platforms/raspbian/after_cmake-build
+++ [[ ! -f examples/platforms/raspbian/before_cmake-build ]]
+++ BEFORE_HOOK=/dev/null
+++ [[ ! -f examples/platforms/raspbian/after_cmake-build ]]
+++ AFTER_HOOK=/dev/null
++ readonly OTBR_TOP_SRCDIR=/home/pi/ot-br-posix
++ OTBR_TOP_SRCDIR=/home/pi/ot-br-posix
++ readonly OTBR_TOP_BUILD_DIR=/home/pi/ot-br-posix/build/otbr
++ OTBR_TOP_BUILD_DIR=/home/pi/ot-br-posix/build/otbr
++ OTBR_TARGET=
++ main -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr -DOTBR_DBUS=ON -DOTBR_DNSSD_DISCOVERY_PROXY=ON -DOTBR_SRP_ADVERTISING_PROXY=ON -DOTBR_INFRA_IF_NAME=eth0 -DOTBR_MDNS=mDNSResponder -DOTBR_WEB=ON -DOTBR_BORDER_ROUTING=ON -DOTBR_REST=ON -DOTBR_BACKBONE_ROUTER=ON
++ local builddir=/home/pi/ot-br-posix/build/otbr
++ mkdir -p /home/pi/ot-br-posix/build/otbr
++ cd /home/pi/ot-br-posix/build/otbr
++ cmake -GNinja /home/pi/ot-br-posix -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr -DOTBR_DBUS=ON -DOTBR_DNSSD_DISCOVERY_PROXY=ON -DOTBR_SRP_ADVERTISING_PROXY=ON -DOTBR_INFRA_IF_NAME=eth0 -DOTBR_MDNS=mDNSResponder -DOTBR_WEB=ON -DOTBR_BORDER_ROUTING=ON -DOTBR_REST=ON -DOTBR_BACKBONE_ROUTER=ON
+-- The C compiler identification is GNU 10.2.1
+-- The CXX compiler identification is GNU 10.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") 
+-- Checking for module 'dbus-1'
+--   Found dbus-1, version 1.12.20
+-- OTBR package name: OpenThread_BorderRouter
+-- Version: 0.3.0-68c69910d0
+-- Checking for module 'systemd'
+--   Found systemd, version 247
+-- OpenThread Source Directory: /home/pi/ot-br-posix/third_party/openthread/repo
+-- Check if the system is big endian
+-- Searching 16 bit integer
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of unsigned short
+-- Check size of unsigned short - done
+-- Searching 16 bit integer - Using unsigned short
+-- Check if the system is big endian - little endian
+-- Package Name: OPENTHREAD
+-- Setting default package version: 417b564
+-- Package Version: 417b564
+-- OpenThread Config File: "openthread-core-posix-config.h"
+-- Readline: readline
+CMake Warning (dev) at third_party/openthread/repo/third_party/mbedtls/repo/CMakeLists.txt:27 (project):
+  Policy CMP0048 is not set: project() command manages VERSION variables.
+  Run "cmake --help-policy CMP0048" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+
+  The following variable(s) would be set to empty:
+
+    PROJECT_VERSION
+    PROJECT_VERSION_MAJOR
+    PROJECT_VERSION_MINOR
+    PROJECT_VERSION_PATCH
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found Python3: /usr/bin/python3.9 (found version "3.9.2") found components: Interpreter 
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+CMake Warning (dev) at third_party/cJSON/repo/CMakeLists.txt:4 (project):
+  Policy CMP0048 is not set: project() command manages VERSION variables.
+  Run "cmake --help-policy CMP0048" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+
+  The following variable(s) would be set to empty:
+
+    PROJECT_VERSION
+    PROJECT_VERSION_MAJOR
+    PROJECT_VERSION_MINOR
+    PROJECT_VERSION_PATCH
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Performing Test FLAG_SUPPORTED_fvisibilityhidden
+-- Performing Test FLAG_SUPPORTED_fvisibilityhidden - Success
+-- Checking for module 'libsystemd'
+--   No package 'libsystemd' found
+-- Checking for module 'jsoncpp'
+--   Found jsoncpp, version 1.9.4
+-- Found Boost: /usr/lib/arm-linux-gnueabihf/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem system 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/pi/ot-br-posix/build/otbr
++ [[ -n '' ]]
++ ninja
+[6/632] cd /home/pi/ot-br-posix/build/otbr/third_party/ope...br-posix/third_party/openthread/repo/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_AGENT_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_COAP_API_ENABLE=1
+OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE=1
+OPENTHREAD_CONFIG_COMMISSIONER_ENABLE=1
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_DNSSD_SERVER_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1
+OPENTHREAD_CONFIG_JOINER_ENABLE=1
+OPENTHREAD_CONFIG_LEGACY_ENABLE=1
+OPENTHREAD_CONFIG_MLE_LINK_METRICS_SUBJECT_ENABLE=1
+OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE=1
+OPENTHREAD_CONFIG_MAC_FILTER_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_NETIF_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_UDP_ENABLE=1
+OPENTHREAD_CONFIG_POSIX_SETTINGS_PATH=/var/lib/thread
+OPENTHREAD_CONFIG_TMF_NETDATA_SERVICE_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_CONFIG_SRP_SERVER_ENABLE=1
+OPENTHREAD_POSIX_CONFIG_FIREWALL_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_LOG_LEVEL=OT_LOG_LEVEL_INFO
+OPENTHREAD_CONFIG_FILE=openthread-core-posix-config.h
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+OPENTHREAD_CONFIG_LOG_CLI=1
+OPENTHREAD_CONFIG_MAX_STATECHANGE_HANDLERS=3
+OPENTHREAD_CONFIG_MLE_STEERING_DATA_SET_OOB_ENABLE=1
+OPENTHREAD_CONFIG_TMF_PROXY_DUA_ENABLE=0
+[570/632] Building CXX object src/common/CMakeFiles/otbr-common.dir/task_runner.cpp.o
+In file included from /usr/include/c++/10/queue:64,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_queue.h: In constructor ‘std::priority_queue<_Tp, _Sequence, _Compare>::priority_queue(const _Compare&, _Sequence&&) [with _Tp = otbr::TaskRunner::DelayedTask; _Sequence = std::vector<otbr::TaskRunner::DelayedTask>; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_queue.h:525:23: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  525 |       { std::make_heap(c.begin(), c.end(), comp); }
+      |         ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_queue.h: In member function ‘void std::priority_queue<_Tp, _Sequence, _Compare>::emplace(_Args&& ...) [with _Args = {std::chrono::duration<long long int, std::ratio<1, 1000> >&, const std::function<void()>}; _Tp = otbr::TaskRunner::DelayedTask; _Sequence = std::vector<otbr::TaskRunner::DelayedTask>; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_queue.h:659:18: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  659 |    std::push_heap(c.begin(), c.end(), comp);
+      |    ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_queue.h: In member function ‘void std::priority_queue<_Tp, _Sequence, _Compare>::pop() [with _Tp = otbr::TaskRunner::DelayedTask; _Sequence = std::vector<otbr::TaskRunner::DelayedTask>; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_queue.h:678:15: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  678 |  std::pop_heap(c.begin(), c.end(), comp);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/queue:62,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::make_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_heap.h:401:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  401 |     make_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+      |     ^~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:401:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_heap.h:412:23: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  412 |       std::__make_heap(__first, __last, __cmp);
+      |       ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from /usr/include/c++/10/queue:61,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::emplace_back(_Args&& ...) [with _Args = {std::chrono::duration<long long int, std::ratio<1, 1000> >&, const std::function<void()>}; _Tp = otbr::TaskRunner::DelayedTask; _Alloc = std::allocator<otbr::TaskRunner::DelayedTask>]’:
+/usr/include/c++/10/bits/vector.tcc:121:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  121 |    _M_realloc_insert(end(), std::forward<_Args>(__args)...);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/queue:62,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::push_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_heap.h:197:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  197 |     push_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+      |     ^~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:197:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::pop_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/stl_heap.h:316:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  316 |     pop_heap(_RandomAccessIterator __first,
+      |     ^~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:316:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_heap.h:332:19: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  332 |    std::__pop_heap(__first, __last, __last, __cmp);
+      |    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::__make_heap(_RandomAccessIterator, _RandomAccessIterator, _Compare&) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = __gnu_cxx::__ops::_Iter_comp_iter<otbr::TaskRunner::DelayedTask::Comparator>]’:
+/usr/include/c++/10/bits/stl_heap.h:339:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  339 |     __make_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+      |     ^~~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:339:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+In file included from /usr/include/c++/10/vector:72,
+                 from /usr/include/c++/10/queue:61,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {std::chrono::duration<long long int, std::ratio<1, 1000> >&, const std::function<void()>}; _Tp = otbr::TaskRunner::DelayedTask; _Alloc = std::allocator<otbr::TaskRunner::DelayedTask>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::TaskRunner::DelayedTask>::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/queue:62,
+                 from ../../src/common/task_runner.hpp:43,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::__push_heap(_RandomAccessIterator, _Distance, _Distance, _Tp, _Compare&) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Distance = int; _Tp = otbr::TaskRunner::DelayedTask; _Compare = __gnu_cxx::__ops::_Iter_comp_val<otbr::TaskRunner::DelayedTask::Comparator>]’:
+/usr/include/c++/10/bits/stl_heap.h:134:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  134 |     __push_heap(_RandomAccessIterator __first,
+      |     ^~~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:139:48: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  139 |       while (__holeIndex > __topIndex && __comp(__first + __parent, __value))
+      |                                          ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::__pop_heap(_RandomAccessIterator, _RandomAccessIterator, _RandomAccessIterator, _Compare&) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = __gnu_cxx::__ops::_Iter_comp_iter<otbr::TaskRunner::DelayedTask::Comparator>]’:
+/usr/include/c++/10/bits/stl_heap.h:253:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  253 |     __pop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+      |     ^~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:253:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_heap.h:253:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_heap.h: In function ‘void std::__adjust_heap(_RandomAccessIterator, _Distance, _Distance, _Tp, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Distance = int; _Tp = otbr::TaskRunner::DelayedTask; _Compare = __gnu_cxx::__ops::_Iter_comp_iter<otbr::TaskRunner::DelayedTask::Comparator>]’:
+/usr/include/c++/10/bits/stl_heap.h:223:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  223 |     __adjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
+      |     ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_heap.h:231:14: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  231 |    if (__comp(__first + __secondChild,
+      |        ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+  232 |        __first + (__secondChild - 1)))
+      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/memory:66,
+                 from /usr/include/c++/10/thread:44,
+                 from /usr/include/c++/10/future:39,
+                 from ../../src/common/task_runner.hpp:41,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::TaskRunner::DelayedTask*; _ForwardIterator = otbr::TaskRunner::DelayedTask*; _Allocator = std::allocator<otbr::TaskRunner::DelayedTask>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/bits/stl_algobase.h:71,
+                 from /usr/include/c++/10/array:40,
+                 from /usr/include/c++/10/tuple:39,
+                 from /usr/include/c++/10/functional:54,
+                 from ../../src/common/task_runner.hpp:40,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/predefined_ops.h: In member function ‘bool __gnu_cxx::__ops::_Iter_comp_val<_Compare>::operator()(_Iterator, _Value&) [with _Iterator = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Value = otbr::TaskRunner::DelayedTask; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/predefined_ops.h:193:2: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  193 |  operator()(_Iterator __it, _Value& __val)
+      |  ^~~~~~~~
+/usr/include/c++/10/bits/predefined_ops.h: In member function ‘bool __gnu_cxx::__ops::_Iter_comp_iter<_Compare>::operator()(_Iterator1, _Iterator2) [with _Iterator1 = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Iterator2 = __gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >; _Compare = otbr::TaskRunner::DelayedTask::Comparator]’:
+/usr/include/c++/10/bits/predefined_ops.h:155:9: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+  155 |         operator()(_Iterator1 __it1, _Iterator2 __it2)
+      |         ^~~~~~~~
+/usr/include/c++/10/bits/predefined_ops.h:155:9: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::TaskRunner::DelayedTask*, std::vector<otbr::TaskRunner::DelayedTask> >’ changed in GCC 7.1
+In file included from /usr/include/c++/10/memory:66,
+                 from /usr/include/c++/10/thread:44,
+                 from /usr/include/c++/10/future:39,
+                 from ../../src/common/task_runner.hpp:41,
+                 from ../../src/common/task_runner.cpp:34:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::TaskRunner::DelayedTask*>; _ForwardIterator = otbr::TaskRunner::DelayedTask*; _Tp = otbr::TaskRunner::DelayedTask]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::TaskRunner::DelayedTask*>; _ForwardIterator = otbr::TaskRunner::DelayedTask*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::TaskRunner::DelayedTask*>; _ForwardIterator = otbr::TaskRunner::DelayedTask*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::TaskRunner::DelayedTask*>’ changed in GCC 7.1
+[585/632] Building CXX object src/dbus/client/CMakeFiles/otbr-dbus-client.dir/thread_api_dbus.cpp.o
+In file included from /usr/include/c++/10/vector:67,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/client/thread_api_dbus.cpp:32:
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ChildInfo*, std::vector<otbr::DBus::ChildInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::NeighborInfo*, std::vector<otbr::DBus::NeighborInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ActiveScanResult*, std::vector<otbr::DBus::ActiveScanResult> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/client/thread_api_dbus.cpp:32:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::ChildInfo&}; _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ChildInfo>::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::NeighborInfo&}; _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::NeighborInfo>::iterator’ changed in GCC 7.1
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::ActiveScanResult&}; _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ActiveScanResult>::iterator’ changed in GCC 7.1
+In file included from /usr/include/c++/10/memory:66,
+                 from ../../src/common/code_utils.hpp:40,
+                 from ../../src/dbus/client/thread_api_dbus.cpp:32:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ChildInfo*; _ForwardIterator = otbr::DBus::ChildInfo*; _Allocator = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::NeighborInfo*; _ForwardIterator = otbr::DBus::NeighborInfo*; _Allocator = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ActiveScanResult*; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Allocator = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*; _Tp = otbr::DBus::ChildInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*; _Tp = otbr::DBus::NeighborInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Tp = otbr::DBus::ActiveScanResult]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+In file included from /usr/include/c++/10/bits/stl_tree.h:63,
+                 from /usr/include/c++/10/map:60,
+                 from ../../src/dbus/client/thread_api_dbus.cpp:29:
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::ChildInfo*>; _OI = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  560 |     copy(_II __first, _II __last, _OI __result)
+      |     ^~~~
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::NeighborInfo*>; _OI = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+In file included from /usr/include/c++/10/bits/stl_algobase.h:67,
+                 from /usr/include/c++/10/bits/stl_tree.h:63,
+                 from /usr/include/c++/10/map:60,
+                 from ../../src/dbus/client/thread_api_dbus.cpp:29:
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+ 2198 |     __miter_base(move_iterator<_Iterator> __it)
+      |     ^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+[601/632] Building CXX object src/mdns/CMakeFiles/otbr-mdns.dir/mdns_mdnssd.cpp.o
+In file included from /usr/include/c++/10/vector:67,
+                 from ../../src/mdns/mdns_mdnssd.hpp:41,
+                 from ../../src/mdns/mdns_mdnssd.cpp:36:
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::Ip6Address; _Alloc = std::allocator<otbr::Ip6Address>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_vector.h: In copy constructor ‘std::vector<_Tp, _Alloc>::vector(const std::vector<_Tp, _Alloc>&) [with _Tp = otbr::Ip6Address; _Alloc = std::allocator<otbr::Ip6Address>]’:
+/usr/include/c++/10/bits/stl_vector.h:558:31: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+  558 |    std::__uninitialized_copy_a(__x.begin(), __x.end(),
+      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+  559 |           this->_M_impl._M_start,
+      |           ~~~~~~~~~~~~~~~~~~~~~~~
+  560 |           _M_get_Tp_allocator());
+      |           ~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/mdns/mdns_mdnssd.hpp:41,
+                 from ../../src/mdns/mdns_mdnssd.cpp:36:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::Ip6Address&}; _Tp = otbr::Ip6Address; _Alloc = std::allocator<otbr::Ip6Address>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::Ip6Address>::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/memory:66,
+                 from ../../src/mdns/mdns_mdnssd.hpp:39,
+                 from ../../src/mdns/mdns_mdnssd.cpp:36:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = __gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >; _ForwardIterator = otbr::Ip6Address*; _Tp = otbr::Ip6Address]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::Ip6Address*; _ForwardIterator = otbr::Ip6Address*; _Allocator = std::allocator<otbr::Ip6Address>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = __gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >; _ForwardIterator = otbr::Ip6Address*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::Ip6Address*>; _ForwardIterator = otbr::Ip6Address*; _Tp = otbr::Ip6Address]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = __gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >; _ForwardIterator = otbr::Ip6Address*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<const otbr::Ip6Address*, std::vector<otbr::Ip6Address> >’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::Ip6Address*>; _ForwardIterator = otbr::Ip6Address*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::Ip6Address*>; _ForwardIterator = otbr::Ip6Address*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::Ip6Address*>’ changed in GCC 7.1
+[605/632] Building CXX object src/dbus/server/CMakeFiles/otbr-dbus-server.dir/dbus_thread_object.cpp.o
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::emplace_back(_Args&& ...) [with _Args = {otbr::DBus::ActiveScanResult&}; _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/vector.tcc:121:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ActiveScanResult*, std::vector<otbr::DBus::ActiveScanResult> >’ changed in GCC 7.1
+  121 |    _M_realloc_insert(end(), std::forward<_Args>(__args)...);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:67,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ChildInfo*, std::vector<otbr::DBus::ChildInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::NeighborInfo*, std::vector<otbr::DBus::NeighborInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {otbr::DBus::ActiveScanResult&}; _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ActiveScanResult>::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::ChildInfo&}; _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ChildInfo>::iterator’ changed in GCC 7.1
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::NeighborInfo&}; _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::NeighborInfo>::iterator’ changed in GCC 7.1
+In file included from /usr/include/c++/10/memory:66,
+                 from ../../src/common/code_utils.hpp:40,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ActiveScanResult*; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Allocator = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ChildInfo*; _ForwardIterator = otbr::DBus::ChildInfo*; _Allocator = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::NeighborInfo*; _ForwardIterator = otbr::DBus::NeighborInfo*; _Allocator = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Tp = otbr::DBus::ActiveScanResult]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*; _Tp = otbr::DBus::ChildInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*; _Tp = otbr::DBus::NeighborInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/array:40,
+                 from /usr/include/c++/10/tuple:39,
+                 from /usr/include/c++/10/functional:54,
+                 from ../../src/dbus/server/dbus_agent.hpp:37,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::ChildInfo*>; _OI = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  560 |     copy(_II __first, _II __last, _OI __result)
+      |     ^~~~
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::NeighborInfo*>; _OI = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+In file included from /usr/include/c++/10/bits/stl_algobase.h:67,
+                 from /usr/include/c++/10/array:40,
+                 from /usr/include/c++/10/tuple:39,
+                 from /usr/include/c++/10/functional:54,
+                 from ../../src/dbus/server/dbus_agent.hpp:37,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+ 2198 |     __miter_base(move_iterator<_Iterator> __it)
+      |     ^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+[617/632] Building CXX object src/rest/CMakeFiles/otbr-rest.dir/resource.cpp.o
+../../src/rest/resource.cpp: In member function ‘void otbr::rest::Resource::DeleteOutDatedDiagnostic()’:
+../../src/rest/resource.cpp:502:45: note: parameter passing for argument of type ‘std::__detail::_Node_iterator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, false, true>’ changed in GCC 7.1
+  502 |             eraseIt = mDiagSet.erase(eraseIt);
+      |                                             ^
+In file included from /usr/include/c++/10/unordered_map:47,
+                 from ../../src/rest/resource.hpp:37,
+                 from ../../src/rest/resource.cpp:31:
+/usr/include/c++/10/bits/unordered_map.h: In member function ‘std::unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>::iterator std::unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>::erase(std::unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>::iterator) [with _Key = std::__cxx11::basic_string<char>; _Tp = otbr::rest::DiagInfo; _Hash = std::hash<std::__cxx11::basic_string<char> >; _Pred = std::equal_to<std::__cxx11::basic_string<char> >; _Alloc = std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >]’:
+/usr/include/c++/10/bits/unordered_map.h:796:7: note: parameter passing for argument of type ‘std::unordered_map<std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>::iterator’ {aka ‘std::__detail::_Hashtable_base<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Hashtable_traits<true, false, true> >::iterator’} changed in GCC 7.1
+  796 |       erase(iterator __position)
+      |       ^~~~~
+/usr/include/c++/10/bits/unordered_map.h:797:26: note: parameter passing for argument of type ‘std::unordered_map<std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>::iterator’ {aka ‘std::__detail::_Hashtable_base<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Hashtable_traits<true, false, true> >::iterator’} changed in GCC 7.1
+  797 |       { return _M_h.erase(__position); }
+      |                ~~~~~~~~~~^~~~~~~~~~~~
+In file included from /usr/include/c++/10/unordered_map:46,
+                 from ../../src/rest/resource.hpp:37,
+                 from ../../src/rest/resource.cpp:31:
+/usr/include/c++/10/bits/hashtable.h: In member function ‘std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::iterator std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::erase(std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::iterator) [with _Key = std::__cxx11::basic_string<char>; _Value = std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>; _Alloc = std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >; _ExtractKey = std::__detail::_Select1st; _Equal = std::equal_to<std::__cxx11::basic_string<char> >; _H1 = std::hash<std::__cxx11::basic_string<char> >; _H2 = std::__detail::_Mod_range_hashing; _Hash = std::__detail::_Default_ranged_hash; _RehashPolicy = std::__detail::_Prime_rehash_policy; _Traits = std::__detail::_Hashtable_traits<true, false, true>]’:
+/usr/include/c++/10/bits/hashtable.h:806:7: note: parameter passing for argument of type ‘std::_Hashtable<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::iterator’ {aka ‘std::__detail::_Hashtable_base<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Hashtable_traits<true, false, true> >::iterator’} changed in GCC 7.1
+  806 |       erase(iterator __it)
+      |       ^~~~~
+/usr/include/c++/10/bits/hashtable.h:807:21: note: parameter passing for argument of type ‘std::_Hashtable<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::const_iterator’ {aka ‘std::__detail::_Hashtable_base<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Hashtable_traits<true, false, true> >::const_iterator’} changed in GCC 7.1
+  807 |       { return erase(const_iterator(__it)); }
+      |                ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/hashtable.h: In member function ‘std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::iterator std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::erase(std::_Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal, _H1, _H2, _Hash, _RehashPolicy, _Traits>::const_iterator) [with _Key = std::__cxx11::basic_string<char>; _Value = std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>; _Alloc = std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >; _ExtractKey = std::__detail::_Select1st; _Equal = std::equal_to<std::__cxx11::basic_string<char> >; _H1 = std::hash<std::__cxx11::basic_string<char> >; _H2 = std::__detail::_Mod_range_hashing; _Hash = std::__detail::_Default_ranged_hash; _RehashPolicy = std::__detail::_Prime_rehash_policy; _Traits = std::__detail::_Hashtable_traits<true, false, true>]’:
+/usr/include/c++/10/bits/hashtable.h:1851:5: note: parameter passing for argument of type ‘std::_Hashtable<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::allocator<std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::const_iterator’ {aka ‘std::__detail::_Hashtable_base<std::__cxx11::basic_string<char>, std::pair<const std::__cxx11::basic_string<char>, otbr::rest::DiagInfo>, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char> >, std::hash<std::__cxx11::basic_string<char> >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Hashtable_traits<true, false, true> >::const_iterator’} changed in GCC 7.1
+ 1851 |     _Hashtable<_Key, _Value, _Alloc, _ExtractKey, _Equal,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1852 |         _H1, _H2, _Hash, _RehashPolicy, _Traits>::
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[627/632] cd /home/pi/ot-br-posix/build/otbr/src/web/web-s...src/web/web-service/frontend/package.json . && npm install
+
+added 7 packages, and audited 8 packages in 1m
+
+found 0 vulnerabilities
+[631/632] Building CXX object src/web/CMakeFiles/otbr-web.dir/web-service/web_server.cpp.o
+In file included from /usr/include/c++/10/vector:67,
+                 from ../../src/web/web-service/web_server.hpp:43,
+                 from ../../src/web/web-service/web_server.cpp:36:
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry; _Alloc = std::allocator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*, std::vector<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry, std::allocator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry> > >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/web/web-service/web_server.hpp:43,
+                 from ../../src/web/web-service/web_server.cpp:36:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry&}; _Tp = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry; _Alloc = std::allocator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry, std::allocator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry> >::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:66,
+                 from ../../src/web/web-service/web_server.hpp:43,
+                 from ../../src/web/web-service/web_server.cpp:36:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*; _ForwardIterator = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*; _Allocator = std::allocator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>; _ForwardIterator = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*; _Tp = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>; _ForwardIterator = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>; _ForwardIterator = boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<boost::asio::detail::timer_queue<boost::asio::detail::forwarding_posix_time_traits>::heap_entry*>’ changed in GCC 7.1
+[632/632] Linking CXX executable src/web/otbr-web
++ cd /home/pi/ot-br-posix/build/otbr
++ ninja
+[2/3] cd /home/pi/ot-br-posix/build/otbr/third_party/opent...br-posix/third_party/openthread/repo/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_AGENT_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_COAP_API_ENABLE=1
+OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE=1
+OPENTHREAD_CONFIG_COMMISSIONER_ENABLE=1
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_DNSSD_SERVER_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1
+OPENTHREAD_CONFIG_JOINER_ENABLE=1
+OPENTHREAD_CONFIG_LEGACY_ENABLE=1
+OPENTHREAD_CONFIG_MLE_LINK_METRICS_SUBJECT_ENABLE=1
+OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE=1
+OPENTHREAD_CONFIG_MAC_FILTER_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_NETIF_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_UDP_ENABLE=1
+OPENTHREAD_CONFIG_POSIX_SETTINGS_PATH=/var/lib/thread
+OPENTHREAD_CONFIG_TMF_NETDATA_SERVICE_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_CONFIG_SRP_SERVER_ENABLE=1
+OPENTHREAD_POSIX_CONFIG_FIREWALL_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_LOG_LEVEL=OT_LOG_LEVEL_INFO
+OPENTHREAD_CONFIG_FILE=openthread-core-posix-config.h
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+OPENTHREAD_CONFIG_LOG_CLI=1
+OPENTHREAD_CONFIG_MAX_STATECHANGE_HANDLERS=3
+OPENTHREAD_CONFIG_MLE_STEERING_DATA_SET_OOB_ENABLE=1
+OPENTHREAD_CONFIG_TMF_PROXY_DUA_ENABLE=0
+[3/3] cd /home/pi/ot-br-posix/build/otbr/src/web/web-servi...src/web/web-service/frontend/package.json . && npm install
+
+up to date, audited 8 packages in 3s
+
+found 0 vulnerabilities
++ sudo ninja install
+[2/7] cd /home/pi/ot-br-posix/build/otbr/third_party/opent...br-posix/third_party/openthread/repo/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_AGENT_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTER_ENABLE=1
+OPENTHREAD_CONFIG_BORDER_ROUTING_ENABLE=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=1
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_COAP_API_ENABLE=1
+OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE=1
+OPENTHREAD_CONFIG_COMMISSIONER_ENABLE=1
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_DNSSD_SERVER_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1
+OPENTHREAD_CONFIG_JOINER_ENABLE=1
+OPENTHREAD_CONFIG_LEGACY_ENABLE=1
+OPENTHREAD_CONFIG_MLE_LINK_METRICS_SUBJECT_ENABLE=1
+OPENTHREAD_CONFIG_LOG_LEVEL_DYNAMIC_ENABLE=1
+OPENTHREAD_CONFIG_MAC_FILTER_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_NETIF_ENABLE=1
+OPENTHREAD_CONFIG_PLATFORM_UDP_ENABLE=1
+OPENTHREAD_CONFIG_POSIX_SETTINGS_PATH=/var/lib/thread
+OPENTHREAD_CONFIG_TMF_NETDATA_SERVICE_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_CONFIG_SRP_SERVER_ENABLE=1
+OPENTHREAD_POSIX_CONFIG_FIREWALL_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_LOG_LEVEL=OT_LOG_LEVEL_INFO
+OPENTHREAD_CONFIG_FILE=openthread-core-posix-config.h
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+OPENTHREAD_CONFIG_LOG_CLI=1
+OPENTHREAD_CONFIG_MAX_STATECHANGE_HANDLERS=3
+OPENTHREAD_CONFIG_MLE_STEERING_DATA_SET_OOB_ENABLE=1
+OPENTHREAD_CONFIG_TMF_PROXY_DUA_ENABLE=0
+[3/7] cd /home/pi/ot-br-posix/build/otbr/src/web/web-servi...src/web/web-service/frontend/package.json . && npm install
+
+up to date, audited 8 packages in 4s
+
+found 0 vulnerabilities
+[4/7] Building CXX object src/dbus/server/CMakeFiles/otbr-dbus-server.dir/dbus_thread_object.cpp.o
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::emplace_back(_Args&& ...) [with _Args = {otbr::DBus::ActiveScanResult&}; _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/vector.tcc:121:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ActiveScanResult*, std::vector<otbr::DBus::ActiveScanResult> >’ changed in GCC 7.1
+  121 |    _M_realloc_insert(end(), std::forward<_Args>(__args)...);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:67,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::ChildInfo*, std::vector<otbr::DBus::ChildInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_vector.h: In member function ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_vector.h:1198:21: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<otbr::DBus::NeighborInfo*, std::vector<otbr::DBus::NeighborInfo> >’ changed in GCC 7.1
+ 1198 |    _M_realloc_insert(end(), __x);
+      |    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /usr/include/c++/10/vector:72,
+                 from ../../src/common/types.hpp:43,
+                 from ../../src/common/logging.hpp:45,
+                 from ../../src/common/code_utils.hpp:43,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {otbr::DBus::ActiveScanResult&}; _Tp = otbr::DBus::ActiveScanResult; _Alloc = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ActiveScanResult>::iterator’ changed in GCC 7.1
+  426 |       vector<_Tp, _Alloc>::
+      |       ^~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::ChildInfo&}; _Tp = otbr::DBus::ChildInfo; _Alloc = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::ChildInfo>::iterator’ changed in GCC 7.1
+/usr/include/c++/10/bits/vector.tcc: In member function ‘void std::vector<_Tp, _Alloc>::_M_realloc_insert(std::vector<_Tp, _Alloc>::iterator, _Args&& ...) [with _Args = {const otbr::DBus::NeighborInfo&}; _Tp = otbr::DBus::NeighborInfo; _Alloc = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/vector.tcc:426:7: note: parameter passing for argument of type ‘std::vector<otbr::DBus::NeighborInfo>::iterator’ changed in GCC 7.1
+In file included from /usr/include/c++/10/memory:66,
+                 from ../../src/common/code_utils.hpp:40,
+                 from ../../src/dbus/server/dbus_agent.hpp:42,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ActiveScanResult*; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Allocator = std::allocator<otbr::DBus::ActiveScanResult>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::ChildInfo*; _ForwardIterator = otbr::DBus::ChildInfo*; _Allocator = std::allocator<otbr::DBus::ChildInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_move_if_noexcept_a(_InputIterator, _InputIterator, _ForwardIterator, _Allocator&) [with _InputIterator = otbr::DBus::NeighborInfo*; _ForwardIterator = otbr::DBus::NeighborInfo*; _Allocator = std::allocator<otbr::DBus::NeighborInfo>]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:347:2: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  346 |       return std::__uninitialized_copy_a
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  347 |  (_GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__first),
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  348 |   _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(__last), __result, __alloc);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; _Tp = otbr::DBus::ActiveScanResult]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*; _Tp = otbr::DBus::ChildInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*; _Tp = otbr::DBus::NeighborInfo]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  323 |     __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:323:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:325:37: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  325 |     { return std::uninitialized_copy(__first, __last, __result); }
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In function ‘_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  125 |     uninitialized_copy(_InputIterator __first, _InputIterator __last,
+      |     ^~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:125:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:150:15: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  147 |       return std::__uninitialized_copy<__is_trivial(_ValueType1)
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  148 |            && __is_trivial(_ValueType2)
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  149 |            && __assignable>::
+      |            ~~~~~~~~~~~~~~~~~~
+  150 |  __uninit_copy(__first, __last, __result);
+      |  ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ActiveScanResult*>; _ForwardIterator = otbr::DBus::ActiveScanResult*; bool _TrivialValueTypes = false]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+   84 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:84:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ActiveScanResult*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::ChildInfo*>; _ForwardIterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h: In static member function ‘static _ForwardIterator std::__uninitialized_copy<true>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = std::move_iterator<otbr::DBus::NeighborInfo*>; _ForwardIterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  107 |         __uninit_copy(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_uninitialized.h:107:9: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_uninitialized.h:109:27: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+  109 |         { return std::copy(__first, __last, __result); }
+      |                  ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/10/array:40,
+                 from /usr/include/c++/10/tuple:39,
+                 from /usr/include/c++/10/functional:54,
+                 from ../../src/dbus/server/dbus_agent.hpp:37,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::ChildInfo*>; _OI = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+  560 |     copy(_II __first, _II __last, _OI __result)
+      |     ^~~~
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h: In function ‘_OI std::copy(_II, _II, _OI) [with _II = std::move_iterator<otbr::DBus::NeighborInfo*>; _OI = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+/usr/include/c++/10/bits/stl_algobase.h:560:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+In file included from /usr/include/c++/10/bits/stl_algobase.h:67,
+                 from /usr/include/c++/10/array:40,
+                 from /usr/include/c++/10/tuple:39,
+                 from /usr/include/c++/10/functional:54,
+                 from ../../src/dbus/server/dbus_agent.hpp:37,
+                 from ../../src/dbus/server/dbus_thread_object.cpp:44:
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::ChildInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::ChildInfo*>’ changed in GCC 7.1
+ 2198 |     __miter_base(move_iterator<_Iterator> __it)
+      |     ^~~~~~~~~~~~
+/usr/include/c++/10/bits/stl_iterator.h: In function ‘decltype (std::__miter_base(__it.base())) std::__miter_base(std::move_iterator<_IteratorL>) [with _Iterator = otbr::DBus::NeighborInfo*]’:
+/usr/include/c++/10/bits/stl_iterator.h:2198:5: note: parameter passing for argument of type ‘std::move_iterator<otbr::DBus::NeighborInfo*>’ changed in GCC 7.1
+[6/7] Install the project...
+-- Install configuration: ""
+-- Installing: /usr/sbin/otbr-agent
+-- Installing: /usr/sbin/ot-ctl
+-- Installing: /etc/dbus-1/system.d/otbr-agent.conf
+-- Installing: /lib/systemd/system/otbr-agent.service
+-- Installing: /etc/default/otbr-agent
+-- Installing: /usr/sbin/otbr-web
+-- Installing: /lib/systemd/system/otbr-web.service
+-- Installing: /usr/share/otbr-web/frontend/index.html
+-- Installing: /usr/share/otbr-web/frontend/join.dialog.html
+-- Installing: /usr/share/otbr-web/frontend/res
+-- Installing: /usr/share/otbr-web/frontend/res/js
+-- Installing: /usr/share/otbr-web/frontend/res/js/app.js
+-- Installing: /usr/share/otbr-web/frontend/res/img
+-- Installing: /usr/share/otbr-web/frontend/res/img/icon-info.png
+-- Installing: /usr/share/otbr-web/frontend/res/img/ios-desktop.png
+-- Installing: /usr/share/otbr-web/frontend/res/img/openthread_logo.png
+-- Installing: /usr/share/otbr-web/frontend/res/img/borderrouter.png
+-- Installing: /usr/share/otbr-web/frontend/res/img/favicon.png
+-- Installing: /usr/share/otbr-web/frontend/res/img/android-desktop.png
+-- Installing: /usr/share/otbr-web/frontend/res/css
+-- Installing: /usr/share/otbr-web/frontend/res/css/styles.css
+-- Installing: /usr/share/otbr-web/frontend/res/js/angular-animate.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/angular-aria.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/angular-material.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/angular-messages.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/angular.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/d3.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/js/material.min.js
+-- Installing: /usr/share/otbr-web/frontend/res/css/angular-material.min.css
+-- Installing: /usr/share/otbr-web/frontend/res/css/material.min.css
++ have systemctl
++ command -v systemctl
++ sudo systemctl reload dbus
++ sudo systemctl daemon-reload
++ without WEB_GUI
++ with WEB_GUI
++ local value
+++ printenv WEB_GUI
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${WEB_GUI-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo systemctl enable otbr-web
+Created symlink /etc/systemd/system/otbr-web.service → /lib/systemd/system/otbr-web.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/otbr-web.service → /lib/systemd/system/otbr-web.service.
++ sudo systemctl enable otbr-agent
+Created symlink /etc/systemd/system/otbr-agent.service → /lib/systemd/system/otbr-agent.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/otbr-agent.service → /lib/systemd/system/otbr-agent.service.
++ sudo systemctl is-enabled otbr-agent
+enabled
++ without WEB_GUI
++ with WEB_GUI
++ local value
+++ printenv WEB_GUI
++ value=
++ [[ -z '' ]]
++ [[ -f examples/platforms/raspbian/default ]]
+++ . examples/platforms/raspbian/default
++++ NAT64=1
++++ DNS64=1
++++ DHCPV6_PD=0
++++ NETWORK_MANAGER=0
++++ BACKBONE_ROUTER=1
++++ BORDER_ROUTING=1
++++ WEB_GUI=1
++++ REST_API=1
+++ eval echo '${WEB_GUI-}'
++++ echo 1
++ value=1
++ [[ 1 == 1 ]]
++ sudo systemctl is-enabled otbr-web
+enabled
++ [[ 0 == \1 ]]
++ . /dev/null
+pi@raspberrypi:~/ot-br-posix $ echo $?
+0
+pi@raspberrypi:~/ot-br-posix $ 
+pi@raspberrypi:~/ot-br-posix $ 
