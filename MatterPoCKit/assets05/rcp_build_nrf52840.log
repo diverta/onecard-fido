@@ -1,0 +1,100 @@
+bash-3.2$ ./script/build nrf52840 USB_trans
++ OT_CMAKE_NINJA_TARGET=
++ NRF_PLATFORMS=(nrf52811 nrf52833 nrf52840)
++ readonly NRF_PLATFORMS
++ NRF_BUILD_TYPES=(UART_trans USB_trans SPI_trans_NCP soft_crypto soft_crypto_threading)
++ readonly NRF_BUILD_TYPES
+++ pwd
++ readonly OT_SRCDIR=/Users/makmorit/GitHub/ot-nrf528xx-main
++ OT_SRCDIR=/Users/makmorit/GitHub/ot-nrf528xx-main
++ OT_OPTIONS=("-DCMAKE_BUILD_TYPE=MinSizeRel" "-DOT_PLATFORM=external" "-DOT_SLAAC=ON")
++ readonly OT_OPTIONS
++ main nrf52840 USB_trans
++ [[ 2 == 0 ]]
++ local platform=nrf52840
++ echo nrf52811 nrf52833 nrf52840
++ grep -wq nrf52840
++ [[ 2 == 1 ]]
++ local nrf_build_type=USB_trans
++ echo UART_trans USB_trans SPI_trans_NCP soft_crypto soft_crypto_threading
++ grep -wq USB_trans
++ shift
++ shift
++ local_options=()
++ local local_options
++ options=("${OT_OPTIONS[@]}")
++ local options
++ case "${platform}" in
++ local_options+=("-DCMAKE_TOOLCHAIN_FILE=src/${platform}/arm-none-eabi.cmake")
++ case "${nrf_build_type}" in
++ options+=("${local_options[@]}" "-DOT_USB=ON" "-DOT_EXTERNAL_MBEDTLS=nordicsemi-mbedtls")
++ options+=("$@")
++ build -DNRF_PLATFORM=nrf52840 -DCMAKE_BUILD_TYPE=MinSizeRel -DOT_PLATFORM=external -DOT_SLAAC=ON -DCMAKE_TOOLCHAIN_FILE=src/nrf52840/arm-none-eabi.cmake -DOT_USB=ON -DOT_EXTERNAL_MBEDTLS=nordicsemi-mbedtls
++ local builddir=build
++ mkdir -p build
++ cd build
++ cmake -GNinja -DOT_COMPILE_WARNING_AS_ERROR=ON -DNRF_PLATFORM=nrf52840 -DCMAKE_BUILD_TYPE=MinSizeRel -DOT_PLATFORM=external -DOT_SLAAC=ON -DCMAKE_TOOLCHAIN_FILE=src/nrf52840/arm-none-eabi.cmake -DOT_USB=ON -DOT_EXTERNAL_MBEDTLS=nordicsemi-mbedtls /Users/makmorit/GitHub/ot-nrf528xx-main
+-- The C compiler identification is GNU 10.3.1
+-- The CXX compiler identification is GNU 10.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/local/bin/arm-none-eabi-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/local/bin/arm-none-eabi-g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- OpenThread Source Directory: /Users/makmorit/GitHub/ot-nrf528xx-main/openthread
+-- OpenThread CMake build type: MinSizeRel
+-- Package Name: OPENTHREAD
+-- Setting default package version: 
+-- Package Version: 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/makmorit/GitHub/ot-nrf528xx-main/build
++ [[ -n '' ]]
++ ninja
+[25/712] cd /Users/makmorit/GitHub/ot-nrf528xx-main/build/...t/GitHub/ot-nrf528xx-main/openthread/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=1
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=0
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+OPENTHREAD_CONFIG_FILE=openthread-core-nrf52840-config.h
+OPENTHREAD_PROJECT_CORE_CONFIG_FILE=openthread-core-nrf52840-config.h
+OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE=openthread-core-nrf52840-config-check.h
+MBEDTLS_USER_CONFIG_FILE=nrf52840-mbedtls-config.h
+USB_CDC_AS_SERIAL_TRANSPORT=1
+OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE=openthread-core-nrf52840-config-check.h
+MBEDTLS_CONFIG_FILE=nrf-config.h
+[712/712] Linking CXX executable bin/ot-cli-ftd
++ cd /Users/makmorit/GitHub/ot-nrf528xx-main
+bash-3.2$ echo $?
+0
+bash-3.2$ 
+bash-3.2$ ls -al build/bin/
+total 5680
+drwxr-xr-x   8 makmorit  staff     256  3  7 10:02 .
+drwxr-xr-x  19 makmorit  staff     608  3  7 10:02 ..
+-rwxr-xr-x   1 makmorit  staff  697788  3  7 10:02 ot-cli-ftd
+-rwxr-xr-x   1 makmorit  staff  532696  3  7 10:02 ot-cli-mtd
+-rwxr-xr-x   1 makmorit  staff  228120  3  7 10:02 ot-cli-radio
+-rwxr-xr-x   1 makmorit  staff  659416  3  7 10:02 ot-ncp-ftd
+-rwxr-xr-x   1 makmorit  staff  532156  3  7 10:02 ot-ncp-mtd
+-rwxr-xr-x   1 makmorit  staff  249620  3  7 10:02 ot-rcp
+bash-3.2$ 
+bash-3.2$ arm-none-eabi-objcopy -O ihex build/bin/ot-rcp ot-rcp.hex
+bash-3.2$ 
+bash-3.2$ ls -al *.hex
+-rw-r--r--  1 makmorit  staff  183999  3  7 10:03 ot-rcp.hex
+bash-3.2$ 
+

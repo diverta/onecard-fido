@@ -1,0 +1,144 @@
+bash-3.2$ cd ${HOME}/GitHub/ot-nrf528xx-main
+bash-3.2$ pwd
+/Users/makmorit/GitHub/ot-nrf528xx-main
+bash-3.2$ ls -al
+total 64
+drwxrwxr-x@ 14 makmorit  staff   448  3  7 09:53 .
+drwxr-xr-x  18 makmorit  staff   576  3  7 09:55 ..
+-rw-r--r--@  1 makmorit  staff  6148  3  7 09:55 .DS_Store
+-rw-rw-r--@  1 makmorit  staff  3186  3  4 01:31 .clang-format
+drwxrwxr-x@  4 makmorit  staff   128  3  4 01:31 .github
+-rw-rw-r--@  1 makmorit  staff   377  3  4 01:31 .gitignore
+-rw-rw-r--@  1 makmorit  staff    96  3  4 01:31 .gitmodules
+-rw-rw-r--@  1 makmorit  staff  2699  3  4 01:31 CMakeLists.txt
+-rw-rw-r--@  1 makmorit  staff  1506  3  4 01:31 LICENSE
+-rw-rw-r--@  1 makmorit  staff  2657  3  4 01:31 README.md
+drwxrwxr-x@ 33 makmorit  staff  1056  3  3 15:30 openthread
+drwxrwxr-x@  6 makmorit  staff   192  3  4 01:31 script
+drwxrwxr-x@  8 makmorit  staff   256  3  4 01:31 src
+drwxrwxr-x@  6 makmorit  staff   192  3  7 09:55 third_party
+bash-3.2$ 
+bash-3.2$ ./script/bootstrap
+++ dirname ./script/bootstrap
++ ./script/../openthread/script/bootstrap
++ main
++ install_packages
++ PM=source
++ command -v apt-get
++ command -v rpm
++ command -v opkg
++ command -v brew
+/usr/local/bin/brew
++ PM=brew
++ install_packages_brew
++ echo 'Installing toolchain dependencies...'
+Installing toolchain dependencies...
++ brew install automake libtool cmake ninja shfmt shellcheck
+Running `brew update --preinstall`...
+==> Auto-updated Homebrew!
+Updated 3 taps (homebrew/core, homebrew/cask and homebrew/services).
+==> New Formulae
+aarch64-elf-binutils    cloudflared             kdoctor                 oh-my-posh              trzsz
+aarch64-elf-gcc         csview                  kopia                   procyon-decompiler      uutils-findutils
+bk                      dpp                     kubescape               quick-lint-js           wordle
+bkt                     dsq                     kyverno                 rospo                   xkcd
+boost@1.76              dynaconf                librasterlite2          sdl12-compat
+brev                    gst-plugins-rs          linux-headers@5.16      terraform-lsp
+checkmake               jless                   litani                  textidote
+==> Updated Formulae
+Updated 1031 formulae.
+==> Deleted Formulae
+advancemenu             go@1.10                 go@1.12                 hornetq                 pdflib-lite
+carina                  go@1.11                 go@1.9                  path-extractor
+==> New Casks
+alpha                   gcc-aarch64-embedded    iptvnator               openshift-client        thinlinc-client
+devtoys                 hackolade               libcblite               playdate-simulator      ujam
+eliot                   hepta                   libcblite-community     poker-copilot           write
+flycast                 heroic                  mysteriumvpn            quit-all                xemu
+==> Updated Casks
+Updated 692 casks.
+==> Deleted Casks
+bitshares               eggplant                knox                    now                     pd-runner
+dusty                   finisher-voodoo         lilypond                optimal-layout          raiderio
+edenmath                jiohome                 macfusion               password-assistant      red
+
+Warning: Treating cmake as a formula. For the cask, use homebrew/cask/cmake
+Warning: automake 1.16.5 is already installed and up-to-date.
+To reinstall 1.16.5, run:
+  brew reinstall automake
+Warning: libtool 2.4.6_4 is already installed and up-to-date.
+To reinstall 2.4.6_4, run:
+  brew reinstall libtool
+cmake 3.22.2 is already installed but outdated (so it will be upgraded).
+Warning: ninja 1.10.2_1 is already installed and up-to-date.
+To reinstall 1.10.2_1, run:
+  brew reinstall ninja
+shfmt 3.4.2 is already installed but outdated (so it will be upgraded).
+Warning: shellcheck 0.8.0 is already installed and up-to-date.
+To reinstall 0.8.0, run:
+  brew reinstall shellcheck
+==> Downloading https://ghcr.io/v2/homebrew/core/cmake/manifests/3.22.3
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/cmake/blobs/sha256:4c02a897c373424db03e17c1f3e15c88aa0581e6a7b0072eb6e6
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:4c02a897c373424db03e17c1f3e15c88aa0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/shfmt/manifests/3.4.3
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/shfmt/blobs/sha256:10d8a6351ec8f7aba3965e153e73bbd099570047de3f134f8b81
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:10d8a6351ec8f7aba3965e153e73bbd0995
+######################################################################## 100.0%
+==> Upgrading cmake
+  3.22.2 -> 3.22.3 
+
+==> Pouring cmake--3.22.3.catalina.bottle.tar.gz
+==> Caveats
+To install the CMake documentation, run:
+  brew install cmake-docs
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/cmake
+==> Summary
+🍺  /usr/local/Cellar/cmake/3.22.3: 2,986 files, 44.8MB
+==> Running `brew cleanup cmake`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+Removing: /usr/local/Cellar/cmake/3.22.2... (2,986 files, 44.8MB)
+Removing: /Users/makmorit/Library/Caches/Homebrew/cmake--3.22.2... (15.3MB)
+==> Upgrading shfmt
+  3.4.2 -> 3.4.3 
+
+==> Pouring shfmt--3.4.3.catalina.bottle.tar.gz
+🍺  /usr/local/Cellar/shfmt/3.4.3: 7 files, 2.8MB
+==> Running `brew cleanup shfmt`...
+Removing: /usr/local/Cellar/shfmt/3.4.2... (7 files, 2.8MB)
+Removing: /Users/makmorit/Library/Caches/Homebrew/shfmt--3.4.2... (1MB)
+==> Caveats
+==> cmake
+To install the CMake documentation, run:
+  brew install cmake-docs
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/cmake
++ echo 'Installing GNU Arm Embedded Toolchain...'
+Installing GNU Arm Embedded Toolchain...
++ brew tap ArmMbed/homebrew-formulae
++ brew install arm-none-eabi-gcc
+Warning: armmbed/formulae/arm-none-eabi-gcc 10.3-2021.07 is already installed and up-to-date.
+To reinstall 10.3-2021.07, run:
+  brew reinstall arm-none-eabi-gcc
++ command -v gcc
+/usr/bin/gcc
++ echo 'Installing pretty tools useful for code contributions...'
+Installing pretty tools useful for code contributions...
++ CLANG_FORMAT_VERSION='clang-format version 9'
++ command -v clang-format-9
+/usr/local/bin/clang-format-9
++ python3 -m pip install yapf
+Requirement already satisfied: yapf in /usr/local/lib/python3.9/site-packages (0.31.0)
+WARNING: You are using pip version 21.1.1; however, version 22.0.3 is available.
+You should consider upgrading via the '/usr/local/opt/python@3.9/bin/python3.9 -m pip install --upgrade pip' command.
++ echo 'bootstrap completed successfully.'
+bootstrap completed successfully.
+bash-3.2$ echo $?
+0
+bash-3.2$ 
