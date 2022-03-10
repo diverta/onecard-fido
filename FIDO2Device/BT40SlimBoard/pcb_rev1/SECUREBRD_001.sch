@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1568,6 +1568,8 @@ CR1216/1225&lt;br&gt;
 <wire x1="4.826" y1="4.572" x2="3.048" y2="4.572" width="0.127" layer="21"/>
 <wire x1="-6.35" y1="-3.048" x2="-2.54" y2="-4.826" width="0.127" layer="21" curve="61.172159"/>
 <wire x1="6.35" y1="-3.048" x2="2.54" y2="-4.826" width="0.127" layer="21" curve="-61.172159"/>
+<text x="9.58" y="3.79" size="0.7" layer="25">&gt;NAME</text>
+<text x="9.83" y="0.79" size="0.7" layer="27">&gt;VALUE</text>
 </package>
 <package name="DF65-3P-1.7V_DEV">
 <description>&lt;b&gt;DF65 Series&lt;/b&gt;&lt;p&gt;
@@ -1793,9 +1795,18 @@ CR1216/1225&lt;br&gt;
 <gate name="G$1" symbol="3V" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="BAT-HLD-012-SMT">
+<device name="'_'" package="BAT-HLD-012-SMT">
 <connects>
 <connect gate="G$1" pin="+" pad="+@1"/>
+<connect gate="G$1" pin="-" pad="-"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="" package="BAT-HLD-012-SMT">
+<connects>
+<connect gate="G$1" pin="+" pad="+@2"/>
 <connect gate="G$1" pin="-" pad="-"/>
 </connects>
 <technologies>
