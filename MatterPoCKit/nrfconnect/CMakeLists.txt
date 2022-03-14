@@ -26,7 +26,7 @@ if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD}.conf)
   list(APPEND CONF_FILE boards/${BOARD}.conf)
 endif()
 
-set(BUILD_WITH_DFU "MATTER" CACHE STRING "Build target with Device Firmware Upgrade support")
+set(BUILD_WITH_DFU "OFF" CACHE STRING "Build target with Device Firmware Upgrade support")
 
 if(NOT BUILD_WITH_DFU STREQUAL "OFF")
     if(BUILD_WITH_DFU STREQUAL "BLE")
