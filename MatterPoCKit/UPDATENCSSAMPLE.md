@@ -57,6 +57,48 @@ Matterリポジトリーのサンプルフォルダー「`connectedhomeip/exampl
 |7 |`CMakeLists.txt`|一部書き換えが必要|
 |8 |`Kconfig`||
 
+### 定義ファイルの書き換え
+
+Matterリポジトリーのデフォルト定義をそのまま使用すると、ビルド失敗／動作不良等の不具合が発生してしまうため、以下のように定義を書き換えます。
+
+#### NFCの無効化
+
+NFCの使用をOffにするため、`MatterPoCKit/nrfconnect/prj.conf`に、下記エントリーを追加します。
+
+```
+CONFIG_CHIP_NFC_COMMISSIONING=n
+```
+
+#### BLE DFUの無効化
+
+BLE DFUの使用をOffにするため、`MatterPoCKit/nrfconnect/CMakeLists.txt`の下記エントリーを修正します。
+
+```
+set(BUILD_WITH_DFU "OFF" CACHE STRING "Build target with Device Firmware Upgrade support")
+```
+
+#### Python仮想環境固有のエラーを回避
+
+`check-nrfconnect-version.cmake`を`find_package(Zephyr ...)`の後で実行されるよう、`MatterPoCKit/nrfconnect/CMakeLists.txt`の下記エントリーを修正します。
+
+```
+find_package(Zephyr HINTS $ENV{ZEPHYR_BASE})
+
+include(${CHIP_ROOT}/config/nrfconnect/app/check-nrfconnect-version.cmake)
+```
+
+#### ディレクトリーの直接指定
+
+`MatterPoCKit/nrfconnect/CMakeLists.txt`の以下の部分を修正します。<br>
+- Matterリポジトリーのルート位置を、シンボリックリンクにより指定している部分<br>
+- Matterリポジトリー内の固有位置を、相対パス指定している部分
+
+```
+get_filename_component(CHIP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../connectedhomeip REALPATH)
+：
+ZAP_FILE ${CHIP_ROOT}/examples/lock-app/lock-common/lock-app.zap
+```
+
 ## ファームウェアのビルド
 
 #### 最新版nCSのインストール
@@ -77,7 +119,7 @@ Matterリポジトリーのサンプルフォルダー「`connectedhomeip/exampl
 
 #### 書込み実行
 
-ビルド用スクリプト[`westbuild.sh -f`](../MatterPoCKit/nrfconnect/westbuild.sh)を使用し、ファームウェアのビルドを実行します。（実行例は<b>[こちら](assets06/westbuild_f.log)</b>）
+ビルド用スクリプト[`westbuild.sh -f`](../MatterPoCKit/nrfconnect/westbuild.sh)を使用し、nRF5340にファームウェアを書込みます。（実行例は<b>[こちら](assets06/westbuild_f.log)</b>）
 
 ## 動作確認
 
