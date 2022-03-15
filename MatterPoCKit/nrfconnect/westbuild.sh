@@ -19,7 +19,7 @@ export PATH=${PATH}:/Applications/CMake.app/Contents/bin
 export PATH=${PATH}:.
 
 # bash completion
-export NCS_HOME=${HOME}/opt/ncs_1.8.99
+export NCS_HOME=${HOME}/opt/ncs_1.9.99
 export ZEPHYR_BASE=${NCS_HOME}/zephyr
 source ${NCS_HOME}/west-completion.bash
 

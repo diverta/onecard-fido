@@ -1,0 +1,308 @@
+bash-3.2$ ./westbuild.sh
+-- west build: generating a build system
+Including boilerplate (Zephyr base): /Users/makmorit/opt/ncs_1.9.99/zephyr/cmake/app/boilerplate.cmake
+-- Application: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect
+-- Zephyr version: 2.7.99 (/Users/makmorit/opt/ncs_1.9.99/zephyr), build: v2.7.99-ncs1-17-gc3208e7ff49d
+-- Found Python3: /Users/makmorit/opt/ncs_1.9.99/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter 
+-- Found west (found suitable version "0.12.0", minimum required is "0.7.1")
+-- Board: nrf5340dk_nrf5340_cpuapp
+-- Cache files will be written to: /Users/makmorit/Library/Caches/zephyr
+-- Found toolchain: gnuarmemb (/Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update)
+-- Found BOARD.dts: /Users/makmorit/opt/ncs_1.9.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpuapp.dts
+-- Generated zephyr.dts: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/zephyr.dts
+-- Generated devicetree_unfixed.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/devicetree_unfixed.h
+-- Generated device_extern.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/device_extern.h
+-- Including generated dts.cmake file: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/dts.cmake
+Parsing /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/Kconfig
+Loaded configuration '/Users/makmorit/opt/ncs_1.9.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpuapp_defconfig'
+Merged configuration '/Users/makmorit/GitHub/connectedhomeip/config/nrfconnect/app/sample-defaults.conf'
+Merged configuration '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/prj.conf'
+Merged configuration '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/boards/nrf5340dk_nrf5340_cpuapp.conf'
+Configuration saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/.config'
+Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/zephyr/include/generated/autoconf.h'
+
+warning: Experimental symbol CHIP is enabled.
+
+-- The C compiler identification is GNU 9.3.1
+-- The CXX compiler identification is GNU 9.3.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+
+=== child image multiprotocol_rpmsg - CPUNET begin ===
+loading initial cache file /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/child_image_preload.cmake
+Including boilerplate (Zephyr base): /Users/makmorit/opt/ncs_1.9.99/zephyr/cmake/app/boilerplate.cmake
+-- Application: /Users/makmorit/opt/ncs_1.9.99/nrf/samples/nrf5340/multiprotocol_rpmsg
+-- Zephyr version: 2.7.99 (/Users/makmorit/opt/ncs_1.9.99/zephyr), build: v2.7.99-ncs1-17-gc3208e7ff49d
+-- Found Python3: /Users/makmorit/opt/ncs_1.9.99/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter 
+-- Found west (found suitable version "0.12.0", minimum required is "0.7.1")
+-- Board: nrf5340dk_nrf5340_cpunet
+-- Cache files will be written to: /Users/makmorit/Library/Caches/zephyr
+-- Found toolchain: gnuarmemb (/Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update)
+-- Found BOARD.dts: /Users/makmorit/opt/ncs_1.9.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpunet.dts
+-- Generated zephyr.dts: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/zephyr.dts
+-- Generated devicetree_unfixed.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/devicetree_unfixed.h
+-- Generated device_extern.h: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/device_extern.h
+-- Including generated dts.cmake file: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/dts.cmake
+Parsing /Users/makmorit/opt/ncs_1.9.99/zephyr/Kconfig
+Loaded configuration '/Users/makmorit/opt/ncs_1.9.99/zephyr/boards/arm/nrf5340dk_nrf5340/nrf5340dk_nrf5340_cpunet_defconfig'
+Merged configuration '/Users/makmorit/opt/ncs_1.9.99/nrf/samples/nrf5340/multiprotocol_rpmsg/prj.conf'
+Merged configuration '/Users/makmorit/opt/ncs_1.9.99/nrf/subsys/partition_manager/partition_manager_enabled.conf'
+Configuration saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/.config'
+Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg/zephyr/include/generated/autoconf.h'
+-- The C compiler identification is GNU 9.3.1
+-- The CXX compiler identification is GNU 9.3.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc
+-- libmetal version: 1.1.0 (/Users/makmorit/opt/ncs_1.9.99/nrf/samples/nrf5340/multiprotocol_rpmsg)
+-- Build type:  
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: arm
+-- Looking for include file stdatomic.h
+-- Looking for include file stdatomic.h - found
+-- open-amp version: 1.1.0 (/Users/makmorit/opt/ncs_1.9.99/modules/lib/open-amp/open-amp)
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: arm
+-- C_FLAGS :  -Wall -Wextra
+-- Looking for include file fcntl.h
+-- Looking for include file fcntl.h - found
+CMake Warning at /Users/makmorit/opt/ncs_1.9.99/zephyr/CMakeLists.txt:764 (message):
+  No SOURCES given to Zephyr library: drivers__console
+
+  Excluding target from build.
+
+
+CMake Warning at /Users/makmorit/opt/ncs_1.9.99/zephyr/CMakeLists.txt:1687 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/multiprotocol_rpmsg
+=== child image multiprotocol_rpmsg - CPUNET end ===
+
+-- OpenThread Source Directory: /Users/makmorit/opt/ncs_1.9.99/modules/lib/openthread
+-- Check if the system is big endian
+-- Searching 16 bit integer
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of unsigned short
+-- Check size of unsigned short - done
+-- Searching 16 bit integer - Using unsigned short
+-- Check if the system is big endian - little endian
+-- Package Name: OPENTHREAD
+-- Setting default package version: thread-reference-20200818-ncs1-rc3-560-g02e61a2ed
+-- Package Version: thread-reference-20200818-ncs1-rc3-560-g02e61a2ed
+-- libmetal version: 1.1.0 (/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect)
+-- Build type:  
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: arm
+-- Looking for include file stdatomic.h
+-- Looking for include file stdatomic.h - found
+-- open-amp version: 1.1.0 (/Users/makmorit/opt/ncs_1.9.99/modules/lib/open-amp/open-amp)
+-- Host:    Darwin/x86_64
+-- Target:  Generic/arm
+-- Machine: arm
+-- C_FLAGS :  -Wall -Wextra
+-- Looking for include file fcntl.h
+-- Looking for include file fcntl.h - found
+-- Found Python3: /Users/makmorit/opt/ncs_1.9.99/bin/python3 (found version "3.7.3") found components: Interpreter 
+CMake Warning at /Users/makmorit/opt/ncs_1.9.99/zephyr/CMakeLists.txt:764 (message):
+  No SOURCES given to Zephyr library: subsys__net__pkt_filter
+
+  Excluding target from build.
+
+
+CMake Warning at /Users/makmorit/opt/ncs_1.9.99/zephyr/CMakeLists.txt:1687 (message):
+  __ASSERT() statements are globally ENABLED
+
+
+-- Found partition manager static configuration: configuration/nrf5340dk_nrf5340_cpuapp/pm_static.yml
+Partition 'settings_storage' is not included in the dynamic resolving since it is statically defined.
+#########################################################################################
+# WARNING: Your current NCS revision (5c112559323b17cdf06cba1c527ba948725a10c5)         #
+# differs from the recommended (ec486dab95df9d142a65000b0412b85e5ca5973c).              #
+#                                                                                       #
+# Please be aware that it may lead to encountering unexpected problems.                 #
+# Consider updating NCS to the recommended revision, by calling:                        #
+# /Users/makmorit/GitHub/connectedhomeip/scripts/setup/nrfconnect/update_ncs.py --update#
+#########################################################################################
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build
+-- west build: building application
+[0/932] cd /Users/makmorit/GitHub/connectedhomeip && /User...tup/nrfconnect/update_ncs.py --check --quiet || ( exit 0 )
+#########################################################################################
+# WARNING: Your current NCS revision (5c112559323b17cdf06cba1c527ba948725a10c5)         #
+# differs from the recommended (ec486dab95df9d142a65000b0412b85e5ca5973c).              #
+#                                                                                       #
+# Please be aware that it may lead to encountering unexpected problems.                 #
+# Consider updating NCS to the recommended revision, by calling:                        #
+# /Users/makmorit/GitHub/connectedhomeip/scripts/setup/nrfconnect/update_ncs.py --update#
+#########################################################################################
+[1/932] Preparing syscall dependency handling
+
+[24/932] Performing build step for 'multiprotocol_rpmsg_subimage'
+[1/278] Preparing syscall dependency handling
+
+[266/278] Linking C executable zephyr/zephyr_pre0.elf
+
+[270/278] Linking C executable zephyr/zephyr_pre1.elf
+
+[276/278] Linking C executable zephyr/zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      233408 B       256 KB     89.04%
+            SRAM:       59116 B        64 KB     90.20%
+           SRAM1:          0 GB        64 KB      0.00%
+        IDT_LIST:          0 GB         2 KB      0.00%
+[278/278] Generating zephyr/merged_CPUNET.hex
+[67/932] cd /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/nrfconnect/build/modules/openthread/build && /usr/local/Cellar/cmake/3.22.3/bin/cmake -DLIST="OPENTHREAD_CONFIG_ASSERT_ENABLE=1;OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0;OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0;OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0;OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0;OPENTHREAD_CONFIG_CHILD_SUPERVISION_ENABLE=1;OPENTHREAD_CONFIG_COAP_API_ENABLE=1;OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE=1;OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=1;OPENTHREAD_CONFIG_DHCP6_CLIENT_ENABLE=1;OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE=1;OPENTHREAD_CONFIG_ECDSA_ENABLE=1;OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE=1;OPENTHREAD_CONFIG_DUA_ENABLE=1;OPENTHREAD_CONFIG_MLR_ENABLE=1;OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1;OPENTHREAD_CONFIG_IP6_FRAGMENTATION_ENABLE=1;OPENTHREAD_CONFIG_JOINER_ENABLE=1;OPENTHREAD_CONFIG_MLE_LINK_METRICS_INITIATOR_ENABLE=1;OPENTHREAD_CONFIG_TMF_NETWORK_DIAG_MTD_ENABLE=1;OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1;OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1;OPENTHREAD_CONFIG_SNTP_CLIENT_ENABLE=1;OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0;PACKAGE_NAME="OPENTHREAD";OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2;OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1;KERNEL;__ZEPHYR__=1;_FORTIFY_SOURCE=2;BUILD_VERSION=v2.7.99-ncs1-17-gc3208e7ff49d;__LINUX_ERRNO_EXTENSIONS__;USE_PARTITION_MANAGER=1;__PROGRAM_START;NRF5340_XXAA_APPLICATION;NRF_SKIP_FICR_NS_COPY_TO_RAM;NRF_802154_USE_RAW_API=1;NRF_802154_PENDING_SHORT_ADDRESSES=;NRF_802154_PENDING_EXTENDED_ADDRESSES=;NRF_802154_RX_BUFFERS=16;NRF_802154_CSMA_CA_ENABLED=1;NRF_802154_TX_STARTED_NOTIFY_ENABLED=1;NRF_802154_ACK_TIMEOUT_ENABLED=1;NRF_802154_ENCRYPTION_ENABLED=1;NRF_802154_SECURITY_WRITER_ENABLED=1;NRF_802154_IE_WRITER_ENABLED=1;NRF_802154_INTERNAL_RADIO_IRQ_HANDLING=0;NRF_802154_ECB_PRIORITY=-1;NRF_802154_SWI_PRIORITY=1;MBEDTLS_CONFIG_FILE="nrf-config.h";MBEDTLS_USER_CONFIG_FILE="nrf-config-user.h"" -P /Users/makmorit/opt/ncs_1.9.99/modules/lib/openthread/etc/cmake/print.cmake
+OPENTHREAD_CONFIG_ASSERT_ENABLE=1
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_DUA_NDPROXYING_ENABLE=0
+OPENTHREAD_CONFIG_BACKBONE_ROUTER_MULTICAST_ROUTING_ENABLE=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS=0
+OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT=0
+OPENTHREAD_CONFIG_CHILD_SUPERVISION_ENABLE=1
+OPENTHREAD_CONFIG_COAP_API_ENABLE=1
+OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE=1
+OPENTHREAD_CONFIG_MAC_CSL_AUTO_SYNC_ENABLE=1
+OPENTHREAD_CONFIG_DHCP6_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_ECDSA_ENABLE=1
+OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE=1
+OPENTHREAD_CONFIG_DUA_ENABLE=1
+OPENTHREAD_CONFIG_MLR_ENABLE=1
+OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1
+OPENTHREAD_CONFIG_IP6_FRAGMENTATION_ENABLE=1
+OPENTHREAD_CONFIG_JOINER_ENABLE=1
+OPENTHREAD_CONFIG_MLE_LINK_METRICS_INITIATOR_ENABLE=1
+OPENTHREAD_CONFIG_TMF_NETWORK_DIAG_MTD_ENABLE=1
+OPENTHREAD_CONFIG_PING_SENDER_ENABLE=1
+OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE=1
+OPENTHREAD_CONFIG_SNTP_CLIENT_ENABLE=1
+OPENTHREAD_SPINEL_CONFIG_RCP_RESTORATION_MAX_COUNT=0
+PACKAGE_NAME=OPENTHREAD
+OPENTHREAD_CONFIG_THREAD_VERSION=OT_THREAD_VERSION_1_2
+OPENTHREAD_CONFIG_NCP_HDLC_ENABLE=1
+KERNEL
+__ZEPHYR__=1
+_FORTIFY_SOURCE=2
+BUILD_VERSION=v2.7.99-ncs1-17-gc3208e7ff49d
+__LINUX_ERRNO_EXTENSIONS__
+USE_PARTITION_MANAGER=1
+__PROGRAM_START
+NRF5340_XXAA_APPLICATION
+NRF_SKIP_FICR_NS_COPY_TO_RAM
+NRF_802154_USE_RAW_API=1
+NRF_802154_PENDING_SHORT_ADDRESSES=
+NRF_802154_PENDING_EXTENDED_ADDRESSES=
+NRF_802154_RX_BUFFERS=16
+NRF_802154_CSMA_CA_ENABLED=1
+NRF_802154_TX_STARTED_NOTIFY_ENABLED=1
+NRF_802154_ACK_TIMEOUT_ENABLED=1
+NRF_802154_ENCRYPTION_ENABLED=1
+NRF_802154_SECURITY_WRITER_ENABLED=1
+NRF_802154_IE_WRITER_ENABLED=1
+NRF_802154_INTERNAL_RADIO_IRQ_HANDLING=0
+NRF_802154_ECB_PRIORITY=-1
+NRF_802154_SWI_PRIORITY=1
+MBEDTLS_CONFIG_FILE=nrf-config.h
+MBEDTLS_USER_CONFIG_FILE=nrf-config-user.h
+[860/932] No configure step for 'chip-gn'
+[861/932] Performing build step for 'chip-gn'
+Generating compile_commands took 8ms
+Done. Made 76 targets from 81 files in 52ms
+[351/351] stamp obj/ABS_PATH/Users/makmorit/GitHub/connectedhomeip/config/nrfconnect/chip-gn/default.stamp
+[876/932] Building CXX object CMakeFiles/app.dir/Users/mak...nostics-server/ethernet-network-diagnostics-server.cpp.obj
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/EventLoggingTypes.h:24,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:28,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/ethernet-network-diagnostics-server/ethernet-network-diagnostics-server.cpp:18:
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/CHIPTLV.h: In member function 'virtual CHIP_ERROR {anonymous}::EthernetDiagosticsAttrAccess::Read(const chip::app::ConcreteReadAttributePath&, chip::app::AttributeValueEncoder&)':
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/CHIPTLV.h:1408:44: warning: '*((void*)& pHYRate +1)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1408 |         return Put(tag, to_underlying(data));
+      |                                            ^
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/ethernet-network-diagnostics-server/ethernet-network-diagnostics-server.cpp:76:41: note: '*((void*)& pHYRate +1)' was declared here
+   76 |     Attributes::PHYRate::TypeInfo::Type pHYRate;
+      |                                         ^~~~~~~
+[881/932] Building CXX object CMakeFiles/app.dir/Users/mak...usters/access-control-server/access-control-server.cpp.obj
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/ConcreteAttributePath.h:23,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/access-control-server/access-control-server.cpp:21:
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/Optional.h: In function 'CHIP_ERROR {anonymous}::LogEntryChangedEvent(const chip::Access::AccessControl::Entry&, const chip::Access::SubjectDescriptor&, chip::app::Clusters::AccessControl::ChangeTypeEnum)':
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/Optional.h:71:13: warning: '*((void*)& adminPasscodeID +2)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   71 |             new (&mValue.mData) T(other.mValue.mData);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/access-control-server/access-control-server.cpp:371:35: note: '*((void*)& adminPasscodeID +2)' was declared here
+  371 |     DataModel::Nullable<uint16_t> adminPasscodeID;
+      |                                   ^~~~~~~~~~~~~~~
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/ConcreteAttributePath.h:23,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/access-control-server/access-control-server.cpp:21:
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/Optional.h:71:13: warning: '*((void*)& adminNodeID +8)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   71 |             new (&mValue.mData) T(other.mValue.mData);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/access-control-server/access-control-server.cpp:370:39: note: '*((void*)& adminNodeID +8)' was declared here
+  370 |     DataModel::Nullable<chip::NodeId> adminNodeID;
+      |                                       ^~~~~~~~~~~
+[907/932] Building CXX object CMakeFiles/app.dir/Users/mak...diagnostics-server/wifi-network-diagnostics-server.cpp.obj
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/data-model/DecodableList.h:22,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:29,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:18:
+/Users/makmorit/GitHub/connectedhomeip/src/app/data-model/Encode.h: In member function 'virtual CHIP_ERROR {anonymous}::WiFiDiagosticsAttrAccess::Read(const chip::app::ConcreteReadAttributePath&, chip::app::AttributeValueEncoder&)':
+/Users/makmorit/GitHub/connectedhomeip/src/app/data-model/Encode.h:42:29: warning: '*((void*)& rssi +1)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   42 |     return writer.Put(tag, x);
+      |                             ^
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:156:38: note: '*((void*)& rssi +1)' was declared here
+  156 |     Attributes::Rssi::TypeInfo::Type rssi;
+      |                                      ^~~~
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/data-model/DecodableList.h:22,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:29,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:18:
+/Users/makmorit/GitHub/connectedhomeip/src/app/data-model/Encode.h:42:29: warning: '*((void*)& channelNumber +2)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   42 |     return writer.Put(tag, x);
+      |                             ^
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:138:47: note: '*((void*)& channelNumber +2)' was declared here
+  138 |     Attributes::ChannelNumber::TypeInfo::Type channelNumber;
+      |                                               ^~~~~~~~~~~~~
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/EventLoggingTypes.h:24,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:28,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:18:
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/CHIPTLV.h:1408:44: warning: '*((void*)& version +1)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1408 |         return Put(tag, to_underlying(data));
+      |                                            ^
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:120:45: note: '*((void*)& version +1)' was declared here
+  120 |     Attributes::WiFiVersion::TypeInfo::Type version;
+      |                                             ^~~~~~~
+In file included from /Users/makmorit/GitHub/connectedhomeip/src/app/EventLoggingTypes.h:24,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h:28,
+                 from /Users/makmorit/GitHub/connectedhomeip/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h:27,
+                 from /Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:18:
+/Users/makmorit/GitHub/connectedhomeip/src/lib/core/CHIPTLV.h:1408:44: warning: '*((void*)& securityType +1)' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1408 |         return Put(tag, to_underlying(data));
+      |                                            ^
+/Users/makmorit/GitHub/connectedhomeip/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp:102:46: note: '*((void*)& securityType +1)' was declared here
+  102 |     Attributes::SecurityType::TypeInfo::Type securityType;
+      |                                              ^~~~~~~~~~~~
+[920/932] Linking CXX executable zephyr/zephyr_pre0.elf
+
+[924/932] Linking CXX executable zephyr/zephyr_pre1.elf
+
+[930/932] Linking CXX executable zephyr/zephyr.elf
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      715476 B      1008 KB     69.32%
+            SRAM:      213070 B       448 KB     46.45%
+        IDT_LIST:          0 GB         2 KB      0.00%
+[932/932] Generating zephyr/merged_domains.hex
+bash-3.2$ echo $?
+0
+bash-3.2$
