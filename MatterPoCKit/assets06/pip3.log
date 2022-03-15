@@ -1,0 +1,355 @@
+(ncs_1.9.99) bash-3.2$ pip3 install -r zephyr/scripts/requirements.txt
+Ignoring windows-curses: markers 'sys_platform == "win32"' don't match your environment
+Collecting pyelftools>=0.26 (from -r zephyr/scripts/requirements-base.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/40/22/6706cc385a099bc5bcb0ea179c2c11863b62c79d37bd47fe464c16f9798d/pyelftools-0.28-py2.py3-none-any.whl
+Requirement already satisfied: PyYAML>=5.1 in ./lib/python3.7/site-packages (from -r zephyr/scripts/requirements-base.txt (line 11)) (6.0)
+Requirement already satisfied: pykwalify in ./lib/python3.7/site-packages (from -r zephyr/scripts/requirements-base.txt (line 14)) (1.8.0)
+Collecting canopen (from -r zephyr/scripts/requirements-base.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/3f/6b/72c01830f5a85d19e4026f84260c3658adecd77f53ec9c2417a19ac29e95/canopen-2.0.0-py3-none-any.whl (59kB)
+    100% |████████████████████████████████| 61kB 1.0MB/s 
+Requirement already satisfied: packaging in ./lib/python3.7/site-packages (from -r zephyr/scripts/requirements-base.txt (line 18)) (21.3)
+Collecting progress (from -r zephyr/scripts/requirements-base.txt (line 19))
+  Using cached https://files.pythonhosted.org/packages/2a/68/d8412d1e0d70edf9791cbac5426dc859f4649afc22f2abbeb0d947cf70fd/progress-1.6.tar.gz
+Collecting psutil (from -r zephyr/scripts/requirements-base.txt (line 20))
+  Using cached https://files.pythonhosted.org/packages/70/40/0a6ca5641f7574b6ea38cdb561c30065659734755a1779db67b56e225f84/psutil-5.9.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting pylink-square (from -r zephyr/scripts/requirements-base.txt (line 21))
+  Using cached https://files.pythonhosted.org/packages/9b/55/5d454c0d4a8edaa69643d8218417f43e38d7b747bc74c098fdb3e9e353e3/pylink_square-0.11.1-py2.py3-none-any.whl
+Collecting anytree (from -r zephyr/scripts/requirements-base.txt (line 24))
+  Using cached https://files.pythonhosted.org/packages/a8/65/be23d8c3ecd68d40541d49812cd94ed0f3ee37eb88669ca15df0e43daed1/anytree-2.8.0-py2.py3-none-any.whl
+Collecting intelhex (from -r zephyr/scripts/requirements-base.txt (line 27))
+  Using cached https://files.pythonhosted.org/packages/97/78/79461288da2b13ed0a13deb65c4ad1428acb674b95278fa9abf1cefe62a2/intelhex-2.3.0-py2.py3-none-any.whl
+Requirement already satisfied: west>=0.10.1 in ./lib/python3.7/site-packages (from -r zephyr/scripts/requirements-base.txt (line 30)) (0.12.0)
+Requirement already satisfied: colorama in ./lib/python3.7/site-packages (from -r zephyr/scripts/requirements-build-test.txt (line 7)) (0.4.4)
+Collecting ply>=3.10 (from -r zephyr/scripts/requirements-build-test.txt (line 10))
+  Using cached https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl
+Collecting gcovr>=4.2 (from -r zephyr/scripts/requirements-build-test.txt (line 13))
+  Using cached https://files.pythonhosted.org/packages/a8/43/3292324f9054d8f3b87c36cb64d9cf63513fe9d1d1a1b95df7b1dc92fb31/gcovr-5.0-py2.py3-none-any.whl
+Collecting coverage (from -r zephyr/scripts/requirements-build-test.txt (line 14))
+  Downloading https://files.pythonhosted.org/packages/70/ff/82ef52268fc7d2c23c72e50b45159aee0eadccde548ab5783a334832ba66/coverage-6.3.2-cp37-cp37m-macosx_10_9_x86_64.whl (182kB)
+    100% |████████████████████████████████| 184kB 1.8MB/s 
+Collecting pytest (from -r zephyr/scripts/requirements-build-test.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/36/e6/dea2b8cd72cf0600f3c2572fb5a48b01aa8e8fd8703c830dab972036c34c/pytest-7.1.0-py3-none-any.whl (297kB)
+    100% |████████████████████████████████| 307kB 2.0MB/s 
+Collecting mypy (from -r zephyr/scripts/requirements-build-test.txt (line 18))
+  Downloading https://files.pythonhosted.org/packages/f7/19/f0c5587e4330479439b76279b806cd64098013cd26663c5af25ad70b8043/mypy-0.941-cp37-cp37m-macosx_10_9_x86_64.whl (10.2MB)
+    100% |████████████████████████████████| 10.2MB 3.2MB/s 
+Collecting mock>=4.0.1 (from -r zephyr/scripts/requirements-build-test.txt (line 21))
+  Using cached https://files.pythonhosted.org/packages/5c/03/b7e605db4a57c0f6fba744b11ef3ddf4ddebcada35022927a2b5fc623fdf/mock-4.0.3-py3-none-any.whl
+Collecting breathe<4.33,>=4.30 (from -r zephyr/scripts/requirements-doc.txt (line 3))
+  Using cached https://files.pythonhosted.org/packages/90/44/d772e38b06366d48b742adcffe78c020f28247799d27b133d4bf2060d149/breathe-4.32.0-py3-none-any.whl
+Collecting sphinx~=4.0 (from -r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/c4/85/978c06c898331b72080242f18ab7a6021f1055285fb1db9e6554c79264cd/Sphinx-4.4.0-py3-none-any.whl
+Collecting sphinx_rtd_theme~=1.0 (from -r zephyr/scripts/requirements-doc.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/e0/d2/3818e4730e314719e27f639c44164419e40eed826d63753dc480262036e8/sphinx_rtd_theme-1.0.0-py2.py3-none-any.whl
+Collecting sphinx-tabs (from -r zephyr/scripts/requirements-doc.txt (line 6))
+  Downloading https://files.pythonhosted.org/packages/fc/5f/d42c76e1816a81d344ea4fa95c9f9c2351538de3c639171178cc4a73eb5d/sphinx_tabs-3.3.0-py3-none-any.whl
+Collecting sphinxcontrib-svg2pdfconverter (from -r zephyr/scripts/requirements-doc.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/09/9b/686ae946dd74b0946ef317638cc040d445c79234c5ad84295dd1de36eec5/sphinxcontrib_svg2pdfconverter-1.2.0-py3-none-any.whl
+Collecting pygments>=2.9 (from -r zephyr/scripts/requirements-doc.txt (line 8))
+  Using cached https://files.pythonhosted.org/packages/1d/17/ed4d2df187995561b28f1073df24137cb750e12f9879d291cc8ab67c65d2/Pygments-2.11.2-py3-none-any.whl
+Collecting sphinx-notfound-page (from -r zephyr/scripts/requirements-doc.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/6d/5f/0fd1927e7f6e5abd576d9b3d5da0c2d32bfc2577e53a2c63fb38c6c3a259/sphinx_notfound_page-0.8-py3-none-any.whl
+Collecting pyserial (from -r zephyr/scripts/requirements-run-test.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/07/bc/587a445451b253b285629263eb51c2d8e9bcea4fc97826266d186f96f558/pyserial-3.5-py2.py3-none-any.whl
+Collecting pyocd>=0.29.0 (from -r zephyr/scripts/requirements-run-test.txt (line 9))
+  Downloading https://files.pythonhosted.org/packages/10/11/24b7aeb674724968942d942ca8d9ad5cecf972bab609b80de576a8eb57e4/pyocd-0.33.1-py3-none-any.whl (12.7MB)
+    100% |████████████████████████████████| 12.7MB 2.6MB/s 
+Collecting tabulate (from -r zephyr/scripts/requirements-run-test.txt (line 12))
+  Using cached https://files.pythonhosted.org/packages/ca/80/7c0cad11bd99985cfe7c09427ee0b4f9bd6b048bd13d4ffb32c6db237dfb/tabulate-0.8.9-py3-none-any.whl
+Collecting cbor>=1.0.0 (from -r zephyr/scripts/requirements-run-test.txt (line 15))
+  Using cached https://files.pythonhosted.org/packages/9b/99/01c6a987c920500189eb74a291bd3a388e6c7cf85736bb6b066d9833315e/cbor-1.0.0.tar.gz
+Collecting gitlint (from -r zephyr/scripts/requirements-extras.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/c8/50/a759ace81525668830a23840e6a8d5d8562f202aef39decca9388f10614f/gitlint-0.17.0-py2.py3-none-any.whl
+Collecting junit2html (from -r zephyr/scripts/requirements-extras.txt (line 10))
+  Using cached https://files.pythonhosted.org/packages/6b/a8/1d1f2927637d05005b20b313e37e4caa47d9d910945bc8439337a9c7015a/junit2html-30.0.6-py3-none-any.whl
+Collecting lpc_checksum (from -r zephyr/scripts/requirements-extras.txt (line 13))
+  Using cached https://files.pythonhosted.org/packages/92/ea/55fe6540369d1ee999f0a8647a04692e003fdf9330dd6b4ee076a4a8bb3d/lpc_checksum-2.2.0-py3-none-any.whl
+Collecting Pillow (from -r zephyr/scripts/requirements-extras.txt (line 16))
+  Using cached https://files.pythonhosted.org/packages/ad/04/c6e1f42066d3ad04bd0b9bd59092d703eee27b8e87bbb0954f69889daca8/Pillow-9.0.1-cp37-cp37m-macosx_10_10_x86_64.whl
+Collecting imgtool>=1.7.1 (from -r zephyr/scripts/requirements-extras.txt (line 19))
+  Downloading https://files.pythonhosted.org/packages/9b/9a/330deb0ba28393828fc88db4e9a3d02ed261aea1c9ac49b5dfe17baff19d/imgtool-1.9.0-py3-none-any.whl
+Collecting protobuf (from -r zephyr/scripts/requirements-extras.txt (line 22))
+  Using cached https://files.pythonhosted.org/packages/17/76/05be12cd81c7c3020acab58c641de975a3bad494d7bb818886c9c3863619/protobuf-3.19.4-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting PyGithub (from -r zephyr/scripts/requirements-extras.txt (line 25))
+  Using cached https://files.pythonhosted.org/packages/c1/1f/9dc4ba315eeea222473cf4c15d3e665f32d52f859d9d6e73219d0a408969/PyGithub-1.55-py3-none-any.whl
+Collecting python-magic (from -r zephyr/scripts/requirements-compliance.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/01/7a/82517d77bf39caac4c8d717d2153c67b9794a01255a5ee596e46e750ae02/python_magic-0.4.25-py2.py3-none-any.whl
+Collecting junitparser<2 (from -r zephyr/scripts/requirements-compliance.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/01/96/e3e973c23fb90eb69163de48040497ae3ed550042b50559736e69ad42274/junitparser-1.6.3-py2.py3-none-any.whl
+Collecting pylint (from -r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/e1/58/3d981536a12ded2daa42b7fbd0892efc987317c5de432fe883ff6daa6bae/pylint-2.12.2-py3-none-any.whl
+Requirement already satisfied: docopt>=0.6.2 in ./lib/python3.7/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.6.2)
+Requirement already satisfied: ruamel.yaml>=0.16.0 in ./lib/python3.7/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.17.21)
+Requirement already satisfied: python-dateutil>=2.8.0 in ./lib/python3.7/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (2.8.2)
+Collecting python-can>=3.0.0 (from canopen->-r zephyr/scripts/requirements-base.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/d5/1f/a045d41783476b72fea0f9db53dbd91bea65abf4dc585086ddb51244741f/python_can-4.0.0-py3-none-any.whl (235kB)
+    100% |████████████████████████████████| 245kB 3.9MB/s 
+Requirement already satisfied: pyparsing!=3.0.5,>=2.0.2 in ./lib/python3.7/site-packages (from packaging->-r zephyr/scripts/requirements-base.txt (line 18)) (3.0.7)
+Collecting future (from pylink-square->-r zephyr/scripts/requirements-base.txt (line 21))
+  Using cached https://files.pythonhosted.org/packages/45/0b/38b06fd9b92dc2b68d58b75f900e97884c45bedd2ff83203d933cf5851c9/future-0.18.2.tar.gz
+Requirement already satisfied: six in ./lib/python3.7/site-packages (from pylink-square->-r zephyr/scripts/requirements-base.txt (line 21)) (1.16.0)
+Requirement already satisfied: setuptools in ./lib/python3.7/site-packages (from west>=0.10.1->-r zephyr/scripts/requirements-base.txt (line 30)) (40.8.0)
+Collecting lxml (from gcovr>=4.2->-r zephyr/scripts/requirements-build-test.txt (line 13))
+  Downloading https://files.pythonhosted.org/packages/5e/de/9013397b8b3565da7866b8c38daff3cb61359d1c50d0b5b8ca08f6db99d2/lxml-4.8.0-cp37-cp37m-macosx_10_14_x86_64.whl (4.5MB)
+    100% |████████████████████████████████| 4.5MB 6.0MB/s 
+Collecting jinja2 (from gcovr>=4.2->-r zephyr/scripts/requirements-build-test.txt (line 13))
+  Using cached https://files.pythonhosted.org/packages/20/9a/e5d9ec41927401e41aea8af6d16e78b5e612bca4699d417f646a9610a076/Jinja2-3.0.3-py3-none-any.whl
+Collecting pluggy<2.0,>=0.12 (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Using cached https://files.pythonhosted.org/packages/9e/01/f38e2ff29715251cf25532b9082a1589ab7e4f571ced434f98d0139336dc/pluggy-1.0.0-py2.py3-none-any.whl
+Collecting importlib-metadata>=0.12; python_version < "3.8" (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/92/f2/c48787ca7d1e20daa185e1b6b2d4e16acd2fb5e0320bc50ffc89b91fa4d7/importlib_metadata-4.11.3-py3-none-any.whl
+Collecting tomli>=1.0.0 (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/97/75/10a9ebee3fd790d20926a90a2547f0bf78f371b2f13aa822c759680ca7b9/tomli-2.0.1-py3-none-any.whl
+Collecting py>=1.8.2 (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Using cached https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl
+Collecting attrs>=19.2.0 (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Using cached https://files.pythonhosted.org/packages/be/be/7abce643bfdf8ca01c48afa2ddf8308c2308b0c3b239a44e57d020afa0ef/attrs-21.4.0-py2.py3-none-any.whl
+Collecting iniconfig (from pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Using cached https://files.pythonhosted.org/packages/9b/dd/b3c12c6d707058fa947864b67f0c4e0c39ef8610988d7baea9578f3c48f3/iniconfig-1.1.1-py2.py3-none-any.whl
+Collecting typed-ast<2,>=1.4.0; python_version < "3.8" (from mypy->-r zephyr/scripts/requirements-build-test.txt (line 18))
+  Using cached https://files.pythonhosted.org/packages/e2/af/a1e69cf4697434d05349d2cbc841a1bebd70d52de8391e390c9f9ab83cf1/typed_ast-1.5.2-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting typing-extensions>=3.10 (from mypy->-r zephyr/scripts/requirements-build-test.txt (line 18))
+  Downloading https://files.pythonhosted.org/packages/45/6b/44f7f8f1e110027cf88956b59f2fad776cca7e1704396d043f89effd3a0e/typing_extensions-4.1.1-py3-none-any.whl
+Collecting mypy-extensions>=0.4.3 (from mypy->-r zephyr/scripts/requirements-build-test.txt (line 18))
+  Using cached https://files.pythonhosted.org/packages/5c/eb/975c7c080f3223a5cdaff09612f3a5221e4ba534f7039db34c35d95fa6a5/mypy_extensions-0.4.3-py2.py3-none-any.whl
+Collecting docutils>=0.12 (from breathe<4.33,>=4.30->-r zephyr/scripts/requirements-doc.txt (line 3))
+  Using cached https://files.pythonhosted.org/packages/8d/14/69b4bad34e3f250afe29a854da03acb6747711f3df06c359fa053fae4e76/docutils-0.18.1-py2.py3-none-any.whl
+Collecting sphinxcontrib-applehelp (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/dc/47/86022665a9433d89a66f5911b558ddff69861766807ba685de2e324bd6ed/sphinxcontrib_applehelp-1.0.2-py2.py3-none-any.whl
+Collecting sphinxcontrib-serializinghtml>=1.1.5 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/c6/77/5464ec50dd0f1c1037e3c93249b040c8fc8078fdda97530eeb02424b6eea/sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl
+Collecting snowballstemmer>=1.1 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/ed/dc/c02e01294f7265e63a7315fe086dd1df7dacb9f840a804da846b96d01b96/snowballstemmer-2.2.0-py2.py3-none-any.whl
+Collecting sphinxcontrib-qthelp (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/2b/14/05f9206cf4e9cfca1afb5fd224c7cd434dcc3a433d6d9e4e0264d29c6cdb/sphinxcontrib_qthelp-1.0.3-py2.py3-none-any.whl
+Collecting babel>=1.3 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/aa/96/4ba93c5f40459dc850d25f9ba93f869a623e77aaecc7a9344e19c01942cf/Babel-2.9.1-py2.py3-none-any.whl
+Collecting requests>=2.5.0 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/2d/61/08076519c80041bc0ffa1a8af0cbd3bf3e2b62af10435d269a9d0f40564d/requests-2.27.1-py2.py3-none-any.whl
+Collecting sphinxcontrib-jsmath (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/c2/42/4c8646762ee83602e3fb3fbe774c2fac12f317deb0b5dbeeedd2d3ba4b77/sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl
+Collecting imagesize (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/60/d6/5e803b17f4d42e085c365b44fda34deb0d8675a1a910635930b831c43f07/imagesize-1.3.0-py2.py3-none-any.whl
+Collecting sphinxcontrib-devhelp (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/c5/09/5de5ed43a521387f18bdf5f5af31d099605c992fd25372b2b9b825ce48ee/sphinxcontrib_devhelp-1.0.2-py2.py3-none-any.whl
+Collecting sphinxcontrib-htmlhelp>=2.0.0 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/63/40/c854ef09500e25f6432dcbad0f37df87fd7046d376272292d8654cc71c95/sphinxcontrib_htmlhelp-2.0.0-py2.py3-none-any.whl
+Collecting alabaster<0.8,>=0.7 (from sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/10/ad/00b090d23a222943eb0eda509720a404f531a439e803f6538f35136cae9e/alabaster-0.7.12-py2.py3-none-any.whl
+Collecting libusb-package<2.0,>=1.0 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/d6/ad/a3be42feba30ab8b1e4c6829b284a3190f8760ec74fbd2560058978f2de4/libusb_package-1.0.25.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting prettytable<3.0,>=2.0 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/9e/6d/40a24eaa03ea4418129708fd3f0f17eda73d568f16d4d4fd412566168b4c/prettytable-2.5.0-py3-none-any.whl
+Collecting pyocd-pemicro>=1.0.6 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/9f/13/55428d43a5e8071d528faeabc021a74d44e620c18e69fabb10b878bbffac/pyocd_pemicro-1.1.3-py3-none-any.whl
+Collecting hidapi<1.0,>=0.10.1; platform_system != "Linux" (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/7f/2e/c7e1dfd4733ca833210ab1752fa277585e04c4aead57eaf2e9a34d246915/hidapi-0.11.0.post2-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting cmsis-pack-manager<1.0,>=0.4.0 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/24/bb/53673317c861f8dea808cbd11644ba88862b0d0e2477830f4396ad9b4cb9/cmsis_pack_manager-0.4.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting intervaltree<4.0,>=3.0.2 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/50/fb/396d568039d21344639db96d940d40eb62befe704ef849b27949ded5c3bb/intervaltree-3.1.0.tar.gz
+Collecting pyusb<2.0,>=1.2.1 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/15/a8/4982498b2ab44d1fcd5c49f07ea3795eab01601dc143b009d333fcace3b9/pyusb-1.2.1-py3-none-any.whl
+Collecting capstone<5.0,>=4.0 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/f2/ae/21dbb3ccc30d5cc9e8cdd8febfbf5d16d93b8c10e595280d2aa4631a0d1f/capstone-4.0.2.tar.gz
+Collecting natsort<9.0,>=8.0.0 (from pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/a9/76/0f624b7326f4458a249580c55e5654756084ec4572ce37a05f799b96bc24/natsort-8.1.0-py3-none-any.whl
+Collecting gitlint-core[trusted-deps]==0.17.0 (from gitlint->-r zephyr/scripts/requirements-extras.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/64/dd/d8f1226885b107bda6b97b63566381a37d61187562f32eae77e71e8fa261/gitlint_core-0.17.0-py2.py3-none-any.whl
+Collecting cryptography>=2.4.2 (from imgtool>=1.7.1->-r zephyr/scripts/requirements-extras.txt (line 19))
+  Using cached https://files.pythonhosted.org/packages/fe/c0/f2527015e03da5ed6c8eeeccb8b135eb833d59aa21d37214a69f9a620950/cryptography-36.0.1-cp36-abi3-macosx_10_10_x86_64.whl
+Collecting click (from imgtool>=1.7.1->-r zephyr/scripts/requirements-extras.txt (line 19))
+  Downloading https://files.pythonhosted.org/packages/4a/a8/0b2ced25639fb20cc1c9784de90a8c25f9504a7f18cd8b5397bd61696d7d/click-8.0.4-py3-none-any.whl (97kB)
+    100% |████████████████████████████████| 102kB 7.5MB/s 
+Collecting cbor2 (from imgtool>=1.7.1->-r zephyr/scripts/requirements-extras.txt (line 19))
+  Using cached https://files.pythonhosted.org/packages/4b/9a/7d24ad59613c193e8aca9337345b7d5595c45a5e42b108bbb354d409c786/cbor2-5.4.2.post1-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting pynacl>=1.4.0 (from PyGithub->-r zephyr/scripts/requirements-extras.txt (line 25))
+Collecting pyjwt>=2.0 (from PyGithub->-r zephyr/scripts/requirements-extras.txt (line 25))
+  Using cached https://files.pythonhosted.org/packages/2a/4d/67cc66a0c49003dc216fc73db2d05a3b80c7193167fd113da1f2c678ac2a/PyJWT-2.3.0-py3-none-any.whl
+Collecting deprecated (from PyGithub->-r zephyr/scripts/requirements-extras.txt (line 25))
+  Using cached https://files.pythonhosted.org/packages/51/6a/c3a0408646408f7283b7bc550c30a32cc791181ec4618592eec13e066ce3/Deprecated-1.2.13-py2.py3-none-any.whl
+Collecting astroid<2.10,>=2.9.0 (from pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/1e/9f/b62617634a9b1c5992ecfb4d63190b9e37582d7dd6510ad9421b84eb9268/astroid-2.9.3-py3-none-any.whl
+Collecting mccabe<0.7,>=0.6 (from pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/87/89/479dc97e18549e21354893e4ee4ef36db1d237534982482c3681ee6e7b57/mccabe-0.6.1-py2.py3-none-any.whl
+Collecting platformdirs>=2.2.0 (from pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Downloading https://files.pythonhosted.org/packages/de/de/d8b9da351517c3dece273224522d4714cfdb9a89e2e6f7f7f054a340cc2b/platformdirs-2.5.1-py3-none-any.whl
+Collecting toml>=0.9.2 (from pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl
+Collecting isort<6,>=4.2.5 (from pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/b8/5b/f18e227df38b94b4ee30d2502fd531bebac23946a2497e5595067a561274/isort-5.10.1-py3-none-any.whl
+Requirement already satisfied: ruamel.yaml.clib>=0.2.6; platform_python_implementation == "CPython" and python_version < "3.11" in ./lib/python3.7/site-packages (from ruamel.yaml>=0.16.0->pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.2.6)
+Collecting wrapt~=1.10 (from python-can>=3.0.0->canopen->-r zephyr/scripts/requirements-base.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/1d/35/8c33cbe3e4ec15e26d75876c112c3b941fafde1e43f05481de6d4eefd265/wrapt-1.14.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting msgpack~=1.0.0; platform_system != "Windows" (from python-can>=3.0.0->canopen->-r zephyr/scripts/requirements-base.txt (line 17))
+  Downloading https://files.pythonhosted.org/packages/8f/24/8ce349174e03cbb6e78efbec5db579c6eaf9fef0d9292262f785168973e2/msgpack-1.0.3-cp37-cp37m-macosx_10_9_x86_64.whl (72kB)
+    100% |████████████████████████████████| 81kB 6.5MB/s 
+Collecting MarkupSafe>=2.0 (from jinja2->gcovr>=4.2->-r zephyr/scripts/requirements-build-test.txt (line 13))
+  Downloading https://files.pythonhosted.org/packages/04/4c/4c08415c3b7e9f04d5084f3bda6869f4114eb5ec8a169edabfda2a178f95/MarkupSafe-2.1.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting zipp>=0.5 (from importlib-metadata>=0.12; python_version < "3.8"->pytest->-r zephyr/scripts/requirements-build-test.txt (line 17))
+  Using cached https://files.pythonhosted.org/packages/52/c5/df7953fe6065185af5956265e3b16f13c2826c2b1ba23d43154f3af453bc/zipp-3.7.0-py3-none-any.whl
+Collecting pytz>=2015.7 (from babel>=1.3->sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/d3/e3/d9f046b5d1c94a3aeab15f1f867aa414f8ee9d196fae6865f1d6a0ee1a0b/pytz-2021.3-py2.py3-none-any.whl
+Collecting charset-normalizer~=2.0.0; python_version >= "3" (from requests>=2.5.0->sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Downloading https://files.pythonhosted.org/packages/06/b3/24afc8868eba069a7f03650ac750a778862dc34941a4bebeb58706715726/charset_normalizer-2.0.12-py3-none-any.whl
+Collecting certifi>=2017.4.17 (from requests>=2.5.0->sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/37/45/946c02767aabb873146011e665728b680884cd8fe70dde973c640e45b775/certifi-2021.10.8-py2.py3-none-any.whl
+Collecting urllib3<1.27,>=1.21.1 (from requests>=2.5.0->sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/4e/b8/f5a25b22e803f0578e668daa33ba3701bb37858ec80e08a150bd7d2cf1b1/urllib3-1.26.8-py2.py3-none-any.whl
+Collecting idna<4,>=2.5; python_version >= "3" (from requests>=2.5.0->sphinx~=4.0->-r zephyr/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/04/a2/d918dcd22354d8958fe113e1a3630137e0fc8b44859ade3063982eacd2a4/idna-3.3-py3-none-any.whl
+Collecting wcwidth (from prettytable<3.0,>=2.0->pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/59/7c/e39aca596badaf1b78e8f547c807b04dae603a433d3e7a7e04d67f2ef3e5/wcwidth-0.2.5-py2.py3-none-any.whl
+Collecting pypemicro==0.1.9 (from pyocd-pemicro>=1.0.6->pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/39/75/189c9107fd5b50b7e3e7883383891c01af10685deb33e2dd1143add2f64f/pypemicro-0.1.9-py3-none-any.whl
+Collecting milksnake<1.0,>=0.1.5 (from cmsis-pack-manager<1.0,>=0.4.0->pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/27/be/e10e73f857ac98ef43587fa8db37a3ef6de56e728037a7b9728de26711c7/milksnake-0.1.5-py2.py3-none-any.whl
+Collecting appdirs<2.0,>=1.4 (from cmsis-pack-manager<1.0,>=0.4.0->pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/3b/00/2344469e2084fb287c2e0b57b72910309874c3245463acd6cf5e3db69324/appdirs-1.4.4-py2.py3-none-any.whl
+Collecting sortedcontainers<3.0,>=2.0 (from intervaltree<4.0,>=3.0.2->pyocd>=0.29.0->-r zephyr/scripts/requirements-run-test.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/32/46/9cb0e58b2deb7f82b84065f37f3bffeb12413f947f9388e4cac22c4621ce/sortedcontainers-2.4.0-py2.py3-none-any.whl
+Collecting arrow>=1 (from gitlint-core[trusted-deps]==0.17.0->gitlint->-r zephyr/scripts/requirements-extras.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/36/e7/3043959c8e3e3d6e346b69417e85daa591f9c018b99c383cc3f316bbf269/arrow-1.2.2-py3-none-any.whl
+Collecting sh>=1.13.0; sys_platform != "win32" (from gitlint-core[trusted-deps]==0.17.0->gitlint->-r zephyr/scripts/requirements-extras.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/7a/c3/0836b7b975d09428d90f926dc1f86e2d76d721cf79bd6659838761c35f85/sh-1.14.2-py2.py3-none-any.whl
+Collecting cffi>=1.12 (from cryptography>=2.4.2->imgtool>=1.7.1->-r zephyr/scripts/requirements-extras.txt (line 19))
+  Using cached https://files.pythonhosted.org/packages/8b/d0/da0ccff5dc535194e0d910df42a6c1a9598dd5589220f3c1a99d67249acf/cffi-1.15.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting lazy-object-proxy>=1.4.0 (from astroid<2.10,>=2.9.0->pylint->-r zephyr/scripts/requirements-compliance.txt (line 6))
+  Using cached https://files.pythonhosted.org/packages/eb/37/7c8366d4cf80e1da5664d1e593bbf1ec7b2730c72a4d4cac4ec2d1e292c2/lazy_object_proxy-1.7.1-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting pycparser (from cffi>=1.12->cryptography>=2.4.2->imgtool>=1.7.1->-r zephyr/scripts/requirements-extras.txt (line 19))
+  Using cached https://files.pythonhosted.org/packages/62/d5/5f610ebe421e85889f2e55e33b7f9a6795bd982198517d912eb1c76e1a53/pycparser-2.21-py2.py3-none-any.whl
+sphinx 4.4.0 has requirement docutils<0.18,>=0.14, but you'll have docutils 0.18.1 which is incompatible.
+sphinx-rtd-theme 1.0.0 has requirement docutils<0.18, but you'll have docutils 0.18.1 which is incompatible.
+sphinx-tabs 3.3.0 has requirement docutils~=0.17.0, but you'll have docutils 0.18.1 which is incompatible.
+astroid 2.9.3 has requirement wrapt<1.14,>=1.11, but you'll have wrapt 1.14.0 which is incompatible.
+Installing collected packages: pyelftools, wrapt, typing-extensions, msgpack, python-can, canopen, progress, psutil, future, pylink-square, anytree, intelhex, ply, lxml, MarkupSafe, jinja2, pygments, gcovr, coverage, zipp, importlib-metadata, pluggy, tomli, py, attrs, iniconfig, pytest, typed-ast, mypy-extensions, mypy, mock, docutils, sphinxcontrib-applehelp, sphinxcontrib-serializinghtml, snowballstemmer, sphinxcontrib-qthelp, pytz, babel, charset-normalizer, certifi, urllib3, idna, requests, sphinxcontrib-jsmath, imagesize, sphinxcontrib-devhelp, sphinxcontrib-htmlhelp, alabaster, sphinx, breathe, sphinx-rtd-theme, sphinx-tabs, sphinxcontrib-svg2pdfconverter, sphinx-notfound-page, pyserial, libusb-package, wcwidth, prettytable, pypemicro, pyocd-pemicro, hidapi, pycparser, cffi, milksnake, appdirs, cmsis-pack-manager, sortedcontainers, intervaltree, pyusb, capstone, natsort, pyocd, tabulate, cbor, arrow, sh, click, gitlint-core, gitlint, junit2html, lpc-checksum, Pillow, cryptography, cbor2, imgtool, protobuf, pynacl, pyjwt, deprecated, PyGithub, python-magic, junitparser, lazy-object-proxy, astroid, mccabe, platformdirs, toml, isort, pylint
+  Running setup.py install for progress ... done
+  Running setup.py install for future ... done
+  Running setup.py install for intervaltree ... done
+  Running setup.py install for capstone ... done
+  Running setup.py install for cbor ... done
+Successfully installed MarkupSafe-2.1.0 Pillow-9.0.1 PyGithub-1.55 alabaster-0.7.12 anytree-2.8.0 appdirs-1.4.4 arrow-1.2.2 astroid-2.9.3 attrs-21.4.0 babel-2.9.1 breathe-4.32.0 canopen-2.0.0 capstone-4.0.2 cbor-1.0.0 cbor2-5.4.2.post1 certifi-2021.10.8 cffi-1.15.0 charset-normalizer-2.0.12 click-8.0.4 cmsis-pack-manager-0.4.0 coverage-6.3.2 cryptography-36.0.1 deprecated-1.2.13 docutils-0.18.1 future-0.18.2 gcovr-5.0 gitlint-0.17.0 gitlint-core-0.17.0 hidapi-0.11.0.post2 idna-3.3 imagesize-1.3.0 imgtool-1.9.0 importlib-metadata-4.11.3 iniconfig-1.1.1 intelhex-2.3.0 intervaltree-3.1.0 isort-5.10.1 jinja2-3.0.3 junit2html-30.0.6 junitparser-1.6.3 lazy-object-proxy-1.7.1 libusb-package-1.0.25.0 lpc-checksum-2.2.0 lxml-4.8.0 mccabe-0.6.1 milksnake-0.1.5 mock-4.0.3 msgpack-1.0.3 mypy-0.941 mypy-extensions-0.4.3 natsort-8.1.0 platformdirs-2.5.1 pluggy-1.0.0 ply-3.11 prettytable-2.5.0 progress-1.6 protobuf-3.19.4 psutil-5.9.0 py-1.11.0 pycparser-2.21 pyelftools-0.28 pygments-2.11.2 pyjwt-2.3.0 pylink-square-0.11.1 pylint-2.12.2 pynacl-1.5.0 pyocd-0.33.1 pyocd-pemicro-1.1.3 pypemicro-0.1.9 pyserial-3.5 pytest-7.1.0 python-can-4.0.0 python-magic-0.4.25 pytz-2021.3 pyusb-1.2.1 requests-2.27.1 sh-1.14.2 snowballstemmer-2.2.0 sortedcontainers-2.4.0 sphinx-4.4.0 sphinx-notfound-page-0.8 sphinx-rtd-theme-1.0.0 sphinx-tabs-3.3.0 sphinxcontrib-applehelp-1.0.2 sphinxcontrib-devhelp-1.0.2 sphinxcontrib-htmlhelp-2.0.0 sphinxcontrib-jsmath-1.0.1 sphinxcontrib-qthelp-1.0.3 sphinxcontrib-serializinghtml-1.1.5 sphinxcontrib-svg2pdfconverter-1.2.0 tabulate-0.8.9 toml-0.10.2 tomli-2.0.1 typed-ast-1.5.2 typing-extensions-4.1.1 urllib3-1.26.8 wcwidth-0.2.5 wrapt-1.14.0 zipp-3.7.0
+You are using pip version 19.0.3, however version 22.0.4 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+(ncs_1.9.99) bash-3.2$ pip3 install -r nrf/scripts/requirements.txt
+Requirement already satisfied: west>=0.12.0 in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-base.txt (line 1)) (0.12.0)
+Collecting ecdsa (from -r nrf/scripts/requirements-build.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/4a/b6/b678b080967b2696e9a201c096dc076ad756fb35c87dca4e1d1a13496ff7/ecdsa-0.17.0-py2.py3-none-any.whl
+Requirement already satisfied: imagesize>=1.2.0 in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-build.txt (line 2)) (1.3.0)
+Requirement already satisfied: intelhex in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-build.txt (line 3)) (2.3.0)
+Requirement already satisfied: pylint in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-build.txt (line 4)) (2.12.2)
+Collecting cddl-gen==0.3.0 (from -r nrf/scripts/requirements-build.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/19/73/c1b0498ca43315ff1b7f9f039d632dc7853549f90b44b569a055886e2a0d/cddl_gen-0.3.0-py3-none-any.whl
+Collecting recommonmark==0.6.0 (from -r nrf/scripts/requirements-doc.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/94/de/334aaf73df8c0e77fb07f883d1e274344526196c137ef3479cb5e5aef086/recommonmark-0.6.0-py2.py3-none-any.whl
+Collecting CommonMark>=0.9.1 (from -r nrf/scripts/requirements-doc.txt (line 2))
+  Using cached https://files.pythonhosted.org/packages/b1/92/dfd892312d822f36c55366118b95d914e5f16de11044a27cf10a7d71bbbf/commonmark-0.9.1-py2.py3-none-any.whl
+Collecting sphinxcontrib-mscgen>=0.6 (from -r nrf/scripts/requirements-doc.txt (line 3))
+  Using cached https://files.pythonhosted.org/packages/49/8d/a732f5c7e22a0140a6261f9b3b158bef1e407da8ecc6de6364bf971c6dd0/sphinxcontrib-mscgen-0.6.tar.gz
+Collecting sphinx-ncs-theme>=0.7.0 (from -r nrf/scripts/requirements-doc.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/cb/85/d43621d4d8c9ec1b8aa32b08c02a80e08f6a3151bb540ff6a3f1ac4aaa1d/sphinx_ncs_theme-0.7.0-py3-none-any.whl
+Collecting m2r2 (from -r nrf/scripts/requirements-doc.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/85/e8/37dc688537d59cea15e7b4ca10cdbdd0fa7b81da055e8f6ce91eed6c493f/m2r2-0.3.2-py3-none-any.whl
+Collecting sphinxcontrib-plantuml (from -r nrf/scripts/requirements-doc.txt (line 6))
+  Downloading https://files.pythonhosted.org/packages/db/32/e224f540b4a813d93718b633b7b6fa8298047c120122a75d6f98880bf7be/sphinxcontrib-plantuml-0.23.tar.gz
+Collecting pygit2 (from -r nrf/scripts/requirements-doc.txt (line 7))
+  Downloading https://files.pythonhosted.org/packages/53/83/00b3ad4eb736830f69a1158d10bf5932fa77462234001d71f59a949c7362/pygit2-1.9.0-cp37-cp37m-macosx_10_9_x86_64.whl (5.4MB)
+    100% |████████████████████████████████| 5.4MB 3.5MB/s 
+Requirement already satisfied: pyyaml in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-doc.txt (line 8)) (6.0)
+Collecting azure-storage-blob (from -r nrf/scripts/requirements-doc.txt (line 9))
+  Downloading https://files.pythonhosted.org/packages/64/e4/dcd968e113786fb946007dd76c6fb459a511ac63984dfa09737cfb3b7d69/azure_storage_blob-12.10.0-py3-none-any.whl (346kB)
+    100% |████████████████████████████████| 348kB 7.4MB/s 
+Collecting sphinx_markdown_tables (from -r nrf/scripts/requirements-doc.txt (line 10))
+  Using cached https://files.pythonhosted.org/packages/29/a3/9ddaa7f4d391068a68def381ab0b9f6535a364fa26b09d40d40a60d0957c/sphinx_markdown_tables-0.0.15-py3-none-any.whl
+Collecting markdown<3.3.5 (from -r nrf/scripts/requirements-doc.txt (line 11))
+  Using cached https://files.pythonhosted.org/packages/6e/33/1ae0f71395e618d6140fbbc9587cc3156591f748226075e0f7d6f9176522/Markdown-3.3.4-py3-none-any.whl
+Collecting mistune<2.0 (from -r nrf/scripts/requirements-doc.txt (line 12))
+  Using cached https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl
+Requirement already satisfied: breathe<4.33 in ./lib/python3.7/site-packages (from -r nrf/scripts/requirements-doc.txt (line 13)) (4.32.0)
+Requirement already satisfied: packaging in ./lib/python3.7/site-packages (from west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (21.3)
+Requirement already satisfied: pykwalify in ./lib/python3.7/site-packages (from west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (1.8.0)
+Requirement already satisfied: setuptools in ./lib/python3.7/site-packages (from west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (40.8.0)
+Requirement already satisfied: colorama in ./lib/python3.7/site-packages (from west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.4.4)
+Requirement already satisfied: six>=1.9.0 in ./lib/python3.7/site-packages (from ecdsa->-r nrf/scripts/requirements-build.txt (line 1)) (1.16.0)
+Requirement already satisfied: astroid<2.10,>=2.9.0 in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (2.9.3)
+Requirement already satisfied: typing-extensions>=3.10.0; python_version < "3.10" in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (4.1.1)
+Requirement already satisfied: isort<6,>=4.2.5 in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (5.10.1)
+Requirement already satisfied: mccabe<0.7,>=0.6 in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (0.6.1)
+Requirement already satisfied: platformdirs>=2.2.0 in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (2.5.1)
+Requirement already satisfied: toml>=0.9.2 in ./lib/python3.7/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 4)) (0.10.2)
+Requirement already satisfied: cbor2>=5.4.0 in ./lib/python3.7/site-packages (from cddl-gen==0.3.0->-r nrf/scripts/requirements-build.txt (line 5)) (5.4.2.post1)
+Collecting regex>=2020.11.13 (from cddl-gen==0.3.0->-r nrf/scripts/requirements-build.txt (line 5))
+  Downloading https://files.pythonhosted.org/packages/9e/14/2f982126153fa2ed1439797c56d704e54bc87612d274ac407f85835bfc02/regex-2022.3.2-cp37-cp37m-macosx_10_9_x86_64.whl (289kB)
+    100% |████████████████████████████████| 296kB 32.9MB/s 
+Requirement already satisfied: sphinx>=1.3.1 in ./lib/python3.7/site-packages (from recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (4.4.0)
+Requirement already satisfied: docutils>=0.11 in ./lib/python3.7/site-packages (from recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (0.18.1)
+Requirement already satisfied: sphinx-rtd-theme~=1.0 in ./lib/python3.7/site-packages (from sphinx-ncs-theme>=0.7.0->-r nrf/scripts/requirements-doc.txt (line 4)) (1.0.0)
+Collecting cached-property (from pygit2->-r nrf/scripts/requirements-doc.txt (line 7))
+  Using cached https://files.pythonhosted.org/packages/48/19/f2090f7dad41e225c7f2326e4cfe6fff49e57dedb5b53636c9551f86b069/cached_property-1.5.2-py2.py3-none-any.whl
+Requirement already satisfied: cffi>=1.9.1 in ./lib/python3.7/site-packages (from pygit2->-r nrf/scripts/requirements-doc.txt (line 7)) (1.15.0)
+Collecting azure-core<2.0.0,>=1.15.0 (from azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9))
+  Downloading https://files.pythonhosted.org/packages/6d/f8/cb504cfee3b09875eb5c7d2e0e418f4db0acdee2a5965b6dd5fcf12ebc8a/azure_core-1.23.0-py3-none-any.whl (179kB)
+    100% |████████████████████████████████| 184kB 12.8MB/s 
+Requirement already satisfied: cryptography>=2.1.4 in ./lib/python3.7/site-packages (from azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (36.0.1)
+Collecting msrest>=0.6.21 (from azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/e8/cc/6c96bfb3d3cf4c3bdedfa6b46503223f4c2a4fa388377697e0f8082a4fed/msrest-0.6.21-py2.py3-none-any.whl
+Requirement already satisfied: importlib-metadata; python_version < "3.8" in ./lib/python3.7/site-packages (from markdown<3.3.5->-r nrf/scripts/requirements-doc.txt (line 11)) (4.11.3)
+Requirement already satisfied: pyparsing!=3.0.5,>=2.0.2 in ./lib/python3.7/site-packages (from packaging->west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (3.0.7)
+Requirement already satisfied: ruamel.yaml>=0.16.0 in ./lib/python3.7/site-packages (from pykwalify->west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.17.21)
+Requirement already satisfied: docopt>=0.6.2 in ./lib/python3.7/site-packages (from pykwalify->west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.6.2)
+Requirement already satisfied: python-dateutil>=2.8.0 in ./lib/python3.7/site-packages (from pykwalify->west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (2.8.2)
+Requirement already satisfied: lazy-object-proxy>=1.4.0 in ./lib/python3.7/site-packages (from astroid<2.10,>=2.9.0->pylint->-r nrf/scripts/requirements-build.txt (line 4)) (1.7.1)
+Requirement already satisfied: typed-ast<2.0,>=1.4.0; implementation_name == "cpython" and python_version < "3.8" in ./lib/python3.7/site-packages (from astroid<2.10,>=2.9.0->pylint->-r nrf/scripts/requirements-build.txt (line 4)) (1.5.2)
+Collecting wrapt<1.14,>=1.11 (from astroid<2.10,>=2.9.0->pylint->-r nrf/scripts/requirements-build.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/06/13/138dbe2f1226083b4612ee2e1c054c0d1d8d77b15d3fe7fb8767300ea6fc/wrapt-1.13.3-cp37-cp37m-macosx_10_9_x86_64.whl
+Requirement already satisfied: snowballstemmer>=1.1 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.2.0)
+Requirement already satisfied: sphinxcontrib-serializinghtml>=1.1.5 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.1.5)
+Requirement already satisfied: requests>=2.5.0 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.27.1)
+Requirement already satisfied: sphinxcontrib-devhelp in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.2)
+Requirement already satisfied: Jinja2>=2.3 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (3.0.3)
+Requirement already satisfied: sphinxcontrib-jsmath in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.1)
+Requirement already satisfied: alabaster<0.8,>=0.7 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (0.7.12)
+Requirement already satisfied: Pygments>=2.0 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.11.2)
+Requirement already satisfied: sphinxcontrib-applehelp in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.2)
+Requirement already satisfied: sphinxcontrib-qthelp in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.3)
+Requirement already satisfied: sphinxcontrib-htmlhelp>=2.0.0 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.0.0)
+Requirement already satisfied: babel>=1.3 in ./lib/python3.7/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.9.1)
+Requirement already satisfied: pycparser in ./lib/python3.7/site-packages (from cffi>=1.9.1->pygit2->-r nrf/scripts/requirements-doc.txt (line 7)) (2.21)
+Requirement already satisfied: certifi>=2017.4.17 in ./lib/python3.7/site-packages (from msrest>=0.6.21->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (2021.10.8)
+Collecting requests-oauthlib>=0.5.0 (from msrest>=0.6.21->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/6f/bb/5deac77a9af870143c684ab46a7934038a53eb4aa975bc0687ed6ca2c610/requests_oauthlib-1.3.1-py2.py3-none-any.whl
+Collecting isodate>=0.6.0 (from msrest>=0.6.21->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/b6/85/7882d311924cbcfc70b1890780763e36ff0b140c7e51c110fc59a532f087/isodate-0.6.1-py2.py3-none-any.whl
+Requirement already satisfied: zipp>=0.5 in ./lib/python3.7/site-packages (from importlib-metadata; python_version < "3.8"->markdown<3.3.5->-r nrf/scripts/requirements-doc.txt (line 11)) (3.7.0)
+Requirement already satisfied: ruamel.yaml.clib>=0.2.6; platform_python_implementation == "CPython" and python_version < "3.11" in ./lib/python3.7/site-packages (from ruamel.yaml>=0.16.0->pykwalify->west>=0.12.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.2.6)
+Requirement already satisfied: charset-normalizer~=2.0.0; python_version >= "3" in ./lib/python3.7/site-packages (from requests>=2.5.0->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.0.12)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in ./lib/python3.7/site-packages (from requests>=2.5.0->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.26.8)
+Requirement already satisfied: idna<4,>=2.5; python_version >= "3" in ./lib/python3.7/site-packages (from requests>=2.5.0->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (3.3)
+Requirement already satisfied: MarkupSafe>=2.0 in ./lib/python3.7/site-packages (from Jinja2>=2.3->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.1.0)
+Requirement already satisfied: pytz>=2015.7 in ./lib/python3.7/site-packages (from babel>=1.3->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2021.3)
+Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.5.0->msrest>=0.6.21->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9))
+  Using cached https://files.pythonhosted.org/packages/1d/46/5ee2475e1b46a26ca0fa10d3c1d479577fde6ee289f8c6aa6d7ec33e31fd/oauthlib-3.2.0-py3-none-any.whl
+cddl-gen 0.3.0 has requirement pyyaml~=5.4.1, but you'll have pyyaml 6.0 which is incompatible.
+Installing collected packages: ecdsa, regex, cddl-gen, CommonMark, recommonmark, sphinxcontrib-mscgen, sphinx-ncs-theme, mistune, m2r2, sphinxcontrib-plantuml, cached-property, pygit2, azure-core, oauthlib, requests-oauthlib, isodate, msrest, azure-storage-blob, markdown, sphinx-markdown-tables, wrapt
+  Running setup.py install for sphinxcontrib-mscgen ... done
+  Running setup.py install for sphinxcontrib-plantuml ... done
+  Found existing installation: wrapt 1.14.0
+    Uninstalling wrapt-1.14.0:
+      Successfully uninstalled wrapt-1.14.0
+Successfully installed CommonMark-0.9.1 azure-core-1.23.0 azure-storage-blob-12.10.0 cached-property-1.5.2 cddl-gen-0.3.0 ecdsa-0.17.0 isodate-0.6.1 m2r2-0.3.2 markdown-3.3.4 mistune-0.8.4 msrest-0.6.21 oauthlib-3.2.0 pygit2-1.9.0 recommonmark-0.6.0 regex-2022.3.2 requests-oauthlib-1.3.1 sphinx-markdown-tables-0.0.15 sphinx-ncs-theme-0.7.0 sphinxcontrib-mscgen-0.6 sphinxcontrib-plantuml-0.23 wrapt-1.13.3
+You are using pip version 19.0.3, however version 22.0.4 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+(ncs_1.9.99) bash-3.2$ 
+(ncs_1.9.99) bash-3.2$ pip3 install -r bootloader/mcuboot/scripts/requirements.txt
+Requirement already satisfied: cryptography>=2.6 in ./lib/python3.7/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 1)) (36.0.1)
+Requirement already satisfied: intelhex in ./lib/python3.7/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: click in ./lib/python3.7/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 3)) (8.0.4)
+Requirement already satisfied: cbor2 in ./lib/python3.7/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 4)) (5.4.2.post1)
+Requirement already satisfied: cffi>=1.12 in ./lib/python3.7/site-packages (from cryptography>=2.6->-r bootloader/mcuboot/scripts/requirements.txt (line 1)) (1.15.0)
+Requirement already satisfied: importlib-metadata; python_version < "3.8" in ./lib/python3.7/site-packages (from click->-r bootloader/mcuboot/scripts/requirements.txt (line 3)) (4.11.3)
+Requirement already satisfied: pycparser in ./lib/python3.7/site-packages (from cffi>=1.12->cryptography>=2.6->-r bootloader/mcuboot/scripts/requirements.txt (line 1)) (2.21)
+Requirement already satisfied: zipp>=0.5 in ./lib/python3.7/site-packages (from importlib-metadata; python_version < "3.8"->click->-r bootloader/mcuboot/scripts/requirements.txt (line 3)) (3.7.0)
+Requirement already satisfied: typing-extensions>=3.6.4; python_version < "3.8" in ./lib/python3.7/site-packages (from importlib-metadata; python_version < "3.8"->click->-r bootloader/mcuboot/scripts/requirements.txt (line 3)) (4.1.1)
+You are using pip version 19.0.3, however version 22.0.4 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+(ncs_1.9.99) bash-3.2$ 
