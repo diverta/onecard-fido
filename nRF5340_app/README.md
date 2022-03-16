@@ -1,11 +1,11 @@
 # nRF5340アプリケーション
 
-最終更新日：2022/02/04
+最終更新日：2022/3/15
 
 ## 概要
 
-現在開発計画中のnRF5340 Dongle（仮称）上で稼働するアプリケーションです。<br>
-[nRF Connect SDK v1.8.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.8.0/nrf/)を使用し、開発しています。
+現在開発中の[BT40 Slim Board](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/BT40SlimBoard)上で稼働するアプリケーションです。<br>
+[nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)を使用し、開発しています。
 
 ## 搭載機能
 

@@ -1,0 +1,37 @@
+bash-3.2$ cd ${HOME}/opt
+bash-3.2$ /usr/bin/python3 -m venv ncs_1.9.1
+bash-3.2$ 
+bash-3.2$ cd ncs_1.9.1
+bash-3.2$ source bin/activate
+(ncs_1.9.1) bash-3.2$ 
+(ncs_1.9.1) bash-3.2$ pip3 install west
+Collecting west
+  Using cached https://files.pythonhosted.org/packages/8e/0c/9f8ee26eb8b27b3aae9e2a2b6ec7cd72ba119c234548ceee184c2df700a2/west-0.12.0-py3-none-any.whl
+Collecting pykwalify (from west)
+  Using cached https://files.pythonhosted.org/packages/1f/fd/ac2161cce19fd67a18c269073f8e86292b5511acec6f8ef6eab88615d032/pykwalify-1.8.0-py2.py3-none-any.whl
+Requirement already satisfied: setuptools in ./lib/python3.7/site-packages (from west) (40.8.0)
+Collecting colorama (from west)
+  Using cached https://files.pythonhosted.org/packages/44/98/5b86278fbbf250d239ae0ecb724f8572af1c91f4a11edf4d36a206189440/colorama-0.4.4-py2.py3-none-any.whl
+Collecting PyYAML>=5.1 (from west)
+  Using cached https://files.pythonhosted.org/packages/9d/f6/7e91fbb58c9ee528759aea5892e062cccb426720c5830ddcce92eba00ff1/PyYAML-6.0-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting packaging (from west)
+  Using cached https://files.pythonhosted.org/packages/05/8e/8de486cbd03baba4deef4142bd643a3e7bbe954a784dc1bb17142572d127/packaging-21.3-py3-none-any.whl
+Collecting docopt>=0.6.2 (from pykwalify->west)
+  Using cached https://files.pythonhosted.org/packages/a2/55/8f8cab2afd404cf578136ef2cc5dfb50baa1761b68c9da1fb1e4eed343c9/docopt-0.6.2.tar.gz
+Collecting ruamel.yaml>=0.16.0 (from pykwalify->west)
+  Using cached https://files.pythonhosted.org/packages/9e/cb/938214ac358fbef7058343b3765c79a1b7ed0c366f7f992ce7ff38335652/ruamel.yaml-0.17.21-py3-none-any.whl
+Collecting python-dateutil>=2.8.0 (from pykwalify->west)
+  Using cached https://files.pythonhosted.org/packages/36/7a/87837f39d0296e723bb9b62bbb257d0355c7f6128853c78955f57342a56d/python_dateutil-2.8.2-py2.py3-none-any.whl
+Collecting pyparsing!=3.0.5,>=2.0.2 (from packaging->west)
+  Using cached https://files.pythonhosted.org/packages/80/c1/23fd82ad3121656b585351aba6c19761926bb0db2ebed9e4ff09a43a3fcc/pyparsing-3.0.7-py3-none-any.whl
+Collecting ruamel.yaml.clib>=0.2.6; platform_python_implementation == "CPython" and python_version < "3.11" (from ruamel.yaml>=0.16.0->pykwalify->west)
+  Using cached https://files.pythonhosted.org/packages/d1/17/630d1d28e0fc442115280f3928b8a2b78a47b5c75bb619d16bfc4d046a69/ruamel.yaml.clib-0.2.6-cp37-cp37m-macosx_10_9_x86_64.whl
+Collecting six>=1.5 (from python-dateutil>=2.8.0->pykwalify->west)
+  Using cached https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl
+Installing collected packages: docopt, ruamel.yaml.clib, ruamel.yaml, six, python-dateutil, pykwalify, colorama, PyYAML, pyparsing, packaging, west
+  Running setup.py install for docopt ... done
+Successfully installed PyYAML-6.0 colorama-0.4.4 docopt-0.6.2 packaging-21.3 pykwalify-1.8.0 pyparsing-3.0.7 python-dateutil-2.8.2 ruamel.yaml-0.17.21 ruamel.yaml.clib-0.2.6 six-1.16.0 west-0.12.0
+You are using pip version 19.0.3, however version 22.0.4 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+(ncs_1.9.1) bash-3.2$ 
+(ncs_1.9.1) bash-3.2$ 
