@@ -115,12 +115,15 @@ pip3 install -r bootloader/mcuboot/scripts/requirements.txt
 (ncs_1.9.1) bash-3.2$ cd ..
 (ncs_1.9.1) bash-3.2$ ls -al
 total 120
-drwxr-xr-x  17 makmorit  staff    544  3 15 09:46 .
-drwxr-xr-x  14 makmorit  staff    448  3 15 09:36 ..
-:
--rw-r--r--   1 makmorit  staff  17789  3 15 09:46 west-completion.bash
-drwxr-xr-x  47 makmorit  staff   1504  3 15 09:39 zephyr
+drwxr-xr-x  17 makmorit  staff    544  3 16 09:58 .
+drwxr-xr-x  15 makmorit  staff    480  3 16 09:47 ..
+drwxr-xr-x   3 makmorit  staff     96  3 16 09:49 .west
+：
+-rw-r--r--   1 makmorit  staff  17789  3 16 09:58 west-completion.bash
+drwxr-xr-x  47 makmorit  staff   1504  3 16 09:50 zephyr
 (ncs_1.9.1) bash-3.2$
+(ncs_1.9.1) bash-3.2$ deactivate
+bash-3.2$
 ```
 
 以上で、nRF Connect SDKのインストールは完了です。
