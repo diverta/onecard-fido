@@ -11,6 +11,7 @@ endif()
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
+    $ENV{NCS_HOME}/mbedtls/library/ctr_drbg.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c
