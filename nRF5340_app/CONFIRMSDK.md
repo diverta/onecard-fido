@@ -1,6 +1,6 @@
 # nRF Connect SDK動作確認手順書
 
-macOSにインストールされた「[nRF Connect SDK v1.8.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.8.0/nrf/)」の動作確認手順について掲載します。
+macOSにインストールされた「[nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)」の動作確認手順について掲載します。
 
 ## 手順の概要
 
@@ -8,7 +8,7 @@ macOSにインストールされた「[nRF Connect SDK v1.8.0](https://developer
 本手順書で必要となる各種ソフトウェアを、macOSにインストールします。
 
 - <b>サンプルアプリのビルド／書込み</b><br>
-Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.8.0/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
+Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
 
 - <b>サンプルアプリの動作確認</b><br>
 Androidアプリ「nRF Connect」を使用し、nRF5340に書き込んだ「Peripheral UART」が正常に動作することを確認します。
@@ -20,7 +20,7 @@ Androidアプリ「nRF Connect」を使用し、nRF5340に書き込んだ「Peri
 
 ## サンプルアプリのビルド／書込み
 
-Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.8.0/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
+Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
 
 ### サンプルアプリのコピー
 
