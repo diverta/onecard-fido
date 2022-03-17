@@ -243,7 +243,7 @@ void app_board_prepare_for_deep_sleep(void)
     nrf_gpio_cfg_sense_set(sw0_pin_number, NRF_GPIO_PIN_SENSE_LOW);
 
     printk("Entering system off; press BUTTON to restart... \n\n\r");
-    pm_power_state_force((struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
+    pm_power_state_force(0, (struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
     k_sleep(K_MSEC(100));
 }
 
