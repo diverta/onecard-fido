@@ -64,14 +64,14 @@ bool app_crypto_ec_dsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest,
 {
     // Initialize ECDSA context
     mbedtls_ecdsa_init(&ecdsa_context);
-    int ret = mbedtls_ecp_group_load(&ecdsa_context.grp, MBEDTLS_ECP_DP_SECP256R1);
+    int ret = mbedtls_ecp_group_load(&ecdsa_context.MBEDTLS_PRIVATE(grp), MBEDTLS_ECP_DP_SECP256R1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_group_load returns %d", ret);
         return dsa_sign_terminate(false);
     }
 
     // 署名に使用する秘密鍵（32バイト）を取得
-    ret = mbedtls_mpi_read_binary(&ecdsa_context.d, private_key_be, EC_RAW_PRIVKEY_SIZE);
+    ret = mbedtls_mpi_read_binary(&ecdsa_context.MBEDTLS_PRIVATE(d), private_key_be, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_read_binary returns %d", ret);
         return dsa_sign_terminate(false);
@@ -82,7 +82,7 @@ bool app_crypto_ec_dsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest,
     mbedtls_mpi_init(&s);
 
     // 署名実行
-    ret = mbedtls_ecdsa_sign(&ecdsa_context.grp, &r, &s, &ecdsa_context.d, hash_digest, digest_size, &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context());
+    ret = mbedtls_ecdsa_sign(&ecdsa_context.MBEDTLS_PRIVATE(grp), &r, &s, &ecdsa_context.MBEDTLS_PRIVATE(d), hash_digest, digest_size, &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context());
     if (ret != 0) {
         LOG_ERR("mbedtls_ecdsa_sign returns %d", ret);
         return dsa_sign_terminate(false);
@@ -107,7 +107,7 @@ bool app_crypto_ec_dsa_verify(uint8_t *public_key_be, uint8_t const *hash_digest
 {
     // Initialize ECDSA context
     mbedtls_ecdsa_init(&ecdsa_context);
-    int ret = mbedtls_ecp_group_load(&ecdsa_context.grp, MBEDTLS_ECP_DP_SECP256R1);
+    int ret = mbedtls_ecp_group_load(&ecdsa_context.MBEDTLS_PRIVATE(grp), MBEDTLS_ECP_DP_SECP256R1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_group_load returns %d", ret);
         return dsa_sign_terminate(false);
@@ -118,7 +118,7 @@ bool app_crypto_ec_dsa_verify(uint8_t *public_key_be, uint8_t const *hash_digest
 
     // 公開鍵のバイナリーを読込み
     // （最初の１バイトが 0x04 で始まることが前提）
-    ret = mbedtls_ecp_point_read_binary(&ecdsa_context.grp, &ecdsa_context.Q, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
+    ret = mbedtls_ecp_point_read_binary(&ecdsa_context.MBEDTLS_PRIVATE(grp), &ecdsa_context.MBEDTLS_PRIVATE(Q), public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_read_binary returns %d", ret);
         return dsa_sign_terminate(false);
@@ -141,7 +141,7 @@ bool app_crypto_ec_dsa_verify(uint8_t *public_key_be, uint8_t const *hash_digest
     }
 
     // 署名の検証
-    ret = mbedtls_ecdsa_verify(&ecdsa_context.grp, hash_digest, digest_size, &ecdsa_context.Q, &r, &s);
+    ret = mbedtls_ecdsa_verify(&ecdsa_context.MBEDTLS_PRIVATE(grp), hash_digest, digest_size, &ecdsa_context.MBEDTLS_PRIVATE(Q), &r, &s);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecdsa_verify returns %d", ret);
         return dsa_sign_terminate(false);
@@ -173,13 +173,13 @@ bool app_crypto_ec_keypair_generate(uint8_t *private_key_raw_data, uint8_t *publ
     }
 
     // 生成されたキーペアをビッグエンディアンでバッファにコピー
-    ret = mbedtls_mpi_write_binary(&ecp_keypair.d, private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
+    ret = mbedtls_mpi_write_binary(&ecp_keypair.MBEDTLS_PRIVATE(d), private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_write_binary returns %d", ret);
         return keypair_generate_terminate(false);
     }
     size_t size;
-    ret = mbedtls_ecp_point_write_binary(&ecp_keypair.grp, &ecp_keypair.Q, MBEDTLS_ECP_PF_UNCOMPRESSED, &size, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
+    ret = mbedtls_ecp_point_write_binary(&ecp_keypair.MBEDTLS_PRIVATE(grp), &ecp_keypair.MBEDTLS_PRIVATE(Q), MBEDTLS_ECP_PF_UNCOMPRESSED, &size, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_write_binary returns %d", ret);
         return keypair_generate_terminate(false);
@@ -214,7 +214,7 @@ bool app_crypto_ec_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *public
     }
 
     // 秘密鍵（32バイト）のバイナリーを読込み
-    ret = mbedtls_mpi_read_binary(&ecdh_context.d, private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
+    ret = mbedtls_mpi_read_binary(&ecdh_context.MBEDTLS_PRIVATE(d), private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_read_binary returns %d", ret);
         return calculate_ecdh_terminate(false);
@@ -225,21 +225,21 @@ bool app_crypto_ec_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *public
 
     // 公開鍵のバイナリーを読込み
     // （最初の１バイトが 0x04 で始まることが前提）
-    ret = mbedtls_ecp_point_read_binary(&ecdh_context.grp, &ecdh_context.Q, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
+    ret = mbedtls_ecp_point_read_binary(&ecdh_context.MBEDTLS_PRIVATE(grp), &ecdh_context.MBEDTLS_PRIVATE(Q), public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_read_binary returns %d", ret);
         return calculate_ecdh_terminate(false);
     }
 
     // ECDH共通鍵を生成
-    ret = mbedtls_ecdh_compute_shared(&ecdh_context.grp, &ecdh_context.z, &ecdh_context.Q, &ecdh_context.d, &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context());
+    ret = mbedtls_ecdh_compute_shared(&ecdh_context.MBEDTLS_PRIVATE(grp), &ecdh_context.MBEDTLS_PRIVATE(z), &ecdh_context.MBEDTLS_PRIVATE(Q), &ecdh_context.MBEDTLS_PRIVATE(d), &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context());
     if (ret != 0) {
         LOG_ERR("mbedtls_ecdh_compute_shared returns %d", ret);
         return calculate_ecdh_terminate(false);
     }
 
     // ECDH共通鍵をビッグエンディアンでバッファにコピー
-    ret = mbedtls_mpi_write_binary(&ecdh_context.z, shared_sec_raw_data, shared_sec_raw_data_size);
+    ret = mbedtls_mpi_write_binary(&ecdh_context.MBEDTLS_PRIVATE(z), shared_sec_raw_data, shared_sec_raw_data_size);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_write_binary returns %d", ret);
         return calculate_ecdh_terminate(false);
