@@ -41,6 +41,13 @@ uint8_t app_crypto_rsa_e_size(void)
 //
 static mbedtls_rsa_context rsa_context;
 
+static void app_crypto_rsa_init(mbedtls_rsa_context *ctx, int padding, int hash_id) 
+{
+    // 変数初期化
+    mbedtls_rsa_init(ctx);
+    mbedtls_rsa_set_padding(ctx, MBEDTLS_RSA_PKCS_V15, 0);
+}
+
 static bool app_crypto_rsa_private_terminate(bool success)
 {
     // リソースを解放
@@ -77,7 +84,7 @@ static bool import_private_key_raw(uint8_t *rsa_private_key_raw)
 bool app_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output)
 {
     // 変数初期化
-    mbedtls_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
+    app_crypto_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
 
     // 引数領域の秘密鍵をインポート
     // （P、Q が連続して格納されている想定）
@@ -105,7 +112,7 @@ bool app_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_
 bool app_crypto_rsa_public(uint8_t *rsa_public_key_raw, uint8_t *input, uint8_t *output)
 {
     // 変数初期化
-    mbedtls_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
+    app_crypto_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
 
     //
     // mbedtls_rsa_import_raw を実行
@@ -138,7 +145,7 @@ bool app_crypto_rsa_public(uint8_t *rsa_public_key_raw, uint8_t *input, uint8_t 
 bool app_crypto_rsa_import_pubkey_from_prvkey(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw)
 {
     // 変数初期化
-    mbedtls_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
+    app_crypto_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
 
     // 引数領域の秘密鍵をインポート
     // （P、Q が連続して格納されている想定）
