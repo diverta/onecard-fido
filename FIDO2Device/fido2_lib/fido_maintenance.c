@@ -180,6 +180,7 @@ static void command_preference_parameter_maintenance(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
+#ifndef FIDO_ZEPHYR
 static void command_bootloader_mode(void)
 {
     // 最初にレスポンスを送信
@@ -198,6 +199,7 @@ static void jump_to_bootloader_mode(void)
         usbd_service_stop_for_bootloader();
     }
 }
+#endif
 
 static void command_erase_bonding_data(void)
 {
@@ -245,15 +247,17 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_PREFERENCE_PARAM:
             command_preference_parameter_maintenance();
             break;
-        case MNT_COMMAND_BOOTLOADER_MODE:
-            command_bootloader_mode();
-            break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
             break;
         case MNT_COMMAND_SYSTEM_RESET:
             command_system_reset();
             break;
+#ifndef FIDO_ZEPHYR
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            command_bootloader_mode();
+            break;
+#endif
         default:
             break;
     }
@@ -279,9 +283,6 @@ void fido_maintenance_command_report_sent(void)
         case MNT_COMMAND_PREFERENCE_PARAM:
             fido_log_info("Preference parameter maintenance end");
             break;
-        case MNT_COMMAND_BOOTLOADER_MODE:
-            jump_to_bootloader_mode();
-            break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
             break;
@@ -289,6 +290,11 @@ void fido_maintenance_command_report_sent(void)
             // nRF52840のシステムリセットを実行
             NVIC_SystemReset();
             break;
+#ifndef FIDO_ZEPHYR
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            jump_to_bootloader_mode();
+            break;
+#endif
         default:
             break;
     }

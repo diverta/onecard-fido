@@ -9,7 +9,6 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
-#include "app_dfu.h"
 #include "app_event.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -148,6 +147,6 @@ void app_main_button_pressed_short(void)
 
 void app_main_button_1_pressed(void)
 {
-    // DFUによる変更内容のコミットを指示
-    app_dfu_commit();
+    // 現在未割り当て
+    LOG_INF("Button 2 pressed");
 }
