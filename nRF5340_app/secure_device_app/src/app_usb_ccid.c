@@ -111,7 +111,7 @@ static void on_ep_data_out(uint8_t ep)
 #endif
 
     // データ処理スレッドに引き渡し
-    app_event_notify_for_data(DATEVT_CCID_DATA_RECEIVED, m_rx_buf, m_rx_buf_size);
+    app_event_notify_for_data(DATEVT_CCID_DATA_FRAME_RECEIVED, m_rx_buf, m_rx_buf_size);
 }
 
 static void on_ep_data_in(uint8_t ep)

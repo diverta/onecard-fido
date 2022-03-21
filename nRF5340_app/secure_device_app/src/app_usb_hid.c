@@ -80,7 +80,7 @@ static void int_out_ready_cb(const struct device *dev)
     LOG_HEXDUMP_DBG(m_report, ret_bytes, "Output report");
 #endif
     // データ処理スレッドに引き渡し
-    app_event_notify_for_data(DATEVT_HID_REPORT_RECEIVED, m_report, sizeof(m_report));
+    app_event_notify_for_data(DATEVT_HID_DATA_FRAME_RECEIVED, m_report, sizeof(m_report));
 }
 
 static void on_idle_cb(const struct device *dev, uint16_t report_id)
