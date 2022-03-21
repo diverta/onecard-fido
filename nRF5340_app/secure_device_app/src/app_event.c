@@ -146,9 +146,5 @@ static void app_data_thread(void)
 //
 // スレッド本体
 //
-// STACKSIZE: size of stack area used by thread
-// PRIORITY:  scheduling priority used by thread
-#define STACKSIZE   8192
-#define PRIORITY    7
-K_THREAD_DEFINE(app_main_thread_id, STACKSIZE, app_main_thread, NULL, NULL, NULL, PRIORITY, 0, 0);
-K_THREAD_DEFINE(app_data_thread_id, STACKSIZE, app_data_thread, NULL, NULL, NULL, PRIORITY, 0, 0);
+K_THREAD_DEFINE(app_main_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_main_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);
+K_THREAD_DEFINE(app_data_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_data_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);
