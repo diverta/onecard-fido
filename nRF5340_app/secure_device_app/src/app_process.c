@@ -320,6 +320,12 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_LED_BLINK:
             led_blink();
             break;
+        case APEVT_HID_REQUEST_RECEIVED:
+            app_main_hid_request_received();
+            break;
+        case APEVT_BLE_REQUEST_RECEIVED:
+            app_main_ble_request_received();
+            break;
         default:
             break;
     }
@@ -332,17 +338,17 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
 {
     // イベントに対応する処理を実行
     switch (event) {
-        case DATEVT_HID_REPORT_RECEIVED:
-            app_main_hid_report_received(data, size);
+        case DATEVT_HID_DATA_FRAME_RECEIVED:
+            app_main_hid_data_frame_received(data, size);
             break;
         case DATEVT_HID_REPORT_SENT:
             app_main_hid_report_sent();
             break;
-        case DATEVT_CCID_DATA_RECEIVED:
-            app_main_ccid_data_received(data, size);
+        case DATEVT_CCID_DATA_FRAME_RECEIVED:
+            app_main_ccid_data_frame_received(data, size);
             break;
-        case DATEVT_BLE_REQUEST_RECEIVED:
-            app_main_ble_request_received(data, size);
+        case DATEVT_BLE_DATA_FRAME_RECEIVED:
+            app_main_ble_data_frame_received(data, size);
             break;
         case DATEVT_BLE_RESPONSE_SENT:
             app_main_ble_response_sent();

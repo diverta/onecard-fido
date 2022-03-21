@@ -165,9 +165,9 @@ bool app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size)
 //
 bool app_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest)
 {
-    int ret = mbedtls_sha256_ret(data, data_size, hash_digest, false);
+    int ret = mbedtls_sha256(data, data_size, hash_digest, false);
     if (ret != 0) {
-        LOG_ERR("mbedtls_sha256_ret returns %d", ret);
+        LOG_ERR("mbedtls_sha256 returns %d", ret);
         return false;
     }
 

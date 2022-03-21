@@ -6,7 +6,7 @@
             <name>secure_device_app_proj</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions>cpp</cpp-extensions>
-            <header-extensions>h</header-extensions>
+            <header-extensions>h,inc</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>

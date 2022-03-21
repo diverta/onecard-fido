@@ -93,6 +93,18 @@ config APP_SETTINGS_BUFFER_SIZE
 	help
 	  Size of buffer for reading data from NVS
 
+config APP_SETTINGS_THREAD_STACK_SIZE
+	int "Stack size for application thread"
+	default 2048
+	help
+	  Size of stack area used by application thread
+
+config APP_SETTINGS_THREAD_PRIORITY
+	int "Priority for application thread"
+	default 7
+	help
+	  Number of scheduling priority used by application thread
+
 #
 # Enable ATECC608A
 #

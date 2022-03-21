@@ -9,7 +9,6 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
-#include "app_dfu.h"
 #include "app_event.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -18,9 +17,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_main);
 
-#define LOG_DEBUG_HID_REPORT        false
-#define LOG_DEBUG_CCID_DATA         false
-#define LOG_DEBUG_BLE_DATA          false
+#define LOG_DEBUG_HID_DATA_FRAME    false
+#define LOG_DEBUG_CCID_DATA_FRAME   false
+#define LOG_DEBUG_BLE_DATA_FRAME    false
 
 //
 // 業務処理関連
@@ -94,15 +93,20 @@ void app_main_hid_configured(void)
     fido_hid_channel_initialize_cid();
 }
 
-void app_main_hid_report_received(uint8_t *data, size_t size)
+void app_main_hid_data_frame_received(uint8_t *data, size_t size)
 {
     if (fido_hid_receive_request_frame(data, size)) {
-        fido_hid_receive_on_request_received();
+        app_event_notify(APEVT_HID_REQUEST_RECEIVED);
     }
-#if LOG_DEBUG_HID_REPORT
+#if LOG_DEBUG_HID_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "HID report");
 #endif
+}
+
+void app_main_hid_request_received(void)
+{
+    fido_hid_receive_on_request_received();
 }
 
 void app_main_hid_report_sent(void)
@@ -110,29 +114,34 @@ void app_main_hid_report_sent(void)
     fido_hid_send_input_report_complete();
 }
 
-void app_main_ccid_data_received(uint8_t *data, size_t size)
+void app_main_ccid_data_frame_received(uint8_t *data, size_t size)
 {
-#if LOG_DEBUG_CCID_DATA
+#if LOG_DEBUG_CCID_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "CCID data");
 #endif
 }
 
-void app_main_ble_request_received(uint8_t *data, size_t size)
+void app_main_ble_data_frame_received(uint8_t *data, size_t size)
 {
     if (fido_ble_receive_control_point(data, size)) {
-        fido_ble_receive_on_request_received();
+        app_event_notify(APEVT_BLE_REQUEST_RECEIVED);
     }
-#if LOG_DEBUG_BLE_DATA
+#if LOG_DEBUG_BLE_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "BLE data");
 #endif
 }
 
+void app_main_ble_request_received(void)
+{
+    fido_ble_receive_on_request_received();
+}
+
 void app_main_ble_response_sent(void)
 {
     fido_ble_send_on_tx_complete();
-#if LOG_DEBUG_BLE_DATA
+#if LOG_DEBUG_BLE_DATA_FRAME
     LOG_DBG("BLE data sent");
 #endif
 }
@@ -148,6 +157,6 @@ void app_main_button_pressed_short(void)
 
 void app_main_button_1_pressed(void)
 {
-    // DFUによる変更内容のコミットを指示
-    app_dfu_commit();
+    // 現在未割り当て
+    LOG_INF("Button 2 pressed");
 }
