@@ -96,12 +96,17 @@ void app_main_hid_configured(void)
 void app_main_hid_data_frame_received(uint8_t *data, size_t size)
 {
     if (fido_hid_receive_request_frame(data, size)) {
-        fido_hid_receive_on_request_received();
+        app_event_notify(APEVT_HID_REQUEST_RECEIVED);
     }
 #if LOG_DEBUG_HID_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "HID report");
 #endif
+}
+
+void app_main_hid_request_received(void)
+{
+    fido_hid_receive_on_request_received();
 }
 
 void app_main_hid_report_sent(void)
@@ -120,12 +125,17 @@ void app_main_ccid_data_frame_received(uint8_t *data, size_t size)
 void app_main_ble_data_frame_received(uint8_t *data, size_t size)
 {
     if (fido_ble_receive_control_point(data, size)) {
-        fido_ble_receive_on_request_received();
+        app_event_notify(APEVT_BLE_REQUEST_RECEIVED);
     }
 #if LOG_DEBUG_BLE_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "BLE data");
 #endif
+}
+
+void app_main_ble_request_received(void)
+{
+    fido_ble_receive_on_request_received();
 }
 
 void app_main_ble_response_sent(void)

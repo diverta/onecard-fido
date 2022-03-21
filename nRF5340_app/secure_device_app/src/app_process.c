@@ -320,6 +320,12 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_LED_BLINK:
             led_blink();
             break;
+        case APEVT_HID_REQUEST_RECEIVED:
+            app_main_hid_request_received();
+            break;
+        case APEVT_BLE_REQUEST_RECEIVED:
+            app_main_ble_request_received();
+            break;
         default:
             break;
     }
