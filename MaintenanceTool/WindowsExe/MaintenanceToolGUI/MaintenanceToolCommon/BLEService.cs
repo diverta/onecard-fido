@@ -23,8 +23,11 @@ namespace MaintenanceToolCommon
         private BluetoothLEAdvertisementWatcher watcher;
         private ulong BluetoothAddress;
 
-        public delegate void dataReceivedEvent(byte[] message, int length);
-        public event dataReceivedEvent DataReceived;
+        public delegate void DataReceivedEvent(byte[] receivedData);
+        public event DataReceivedEvent OnDataReceived;
+
+        public delegate void TransactionFailedEvent();
+        public event TransactionFailedEvent OnTransactionFailed;
 
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
         public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
@@ -52,34 +55,32 @@ namespace MaintenanceToolCommon
             AppCommon.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
         }
 
-        public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
+        public async void Send(byte[] requestData)
         {
             if (BLEservice == null) {
                 AppCommon.OutputLogError(string.Format("BLEService.Send: service is null"));
                 critical = true;
-                return false;
+                OnTransactionFailed();
             }
 
             critical = false;
             try {
                 // リクエストデータを生成
                 DataWriter writer = new DataWriter();
-                for (int i = 0; i < frameLen; i++) {
-                    writer.WriteByte(u2fRequestFrameData[i]);
+                for (int i = 0; i < requestData.Length; i++) {
+                    writer.WriteByte(requestData[i]);
                 }
 
                 // リクエストを実行（U2F Control Pointに書込）
                 GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
                 if (result != GattCommunicationStatus.Success) {
                     AppCommon.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                    return false;
+                    OnTransactionFailed();
                 }
-
-                return true;
 
             } catch (Exception e) {
                 AppCommon.OutputLogError(string.Format("BLEService.Send: {0}", e.Message));
-                return false;
+                OnTransactionFailed();
             }
         }
 
@@ -299,10 +300,11 @@ namespace MaintenanceToolCommon
                 DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
 
                 // レスポンスを転送
-                DataReceived(responseBytes, (int)len);
+                OnDataReceived(responseBytes);
 
             } catch (Exception e) {
                 AppCommon.OutputLogError(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
+                OnTransactionFailed();
             }
         }
 
