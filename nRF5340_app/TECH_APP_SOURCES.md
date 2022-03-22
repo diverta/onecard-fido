@@ -1,6 +1,6 @@
 # nRF5340アプリケーションについて
 
-最終更新日：2022/02/07
+最終更新日：2022/3/22
 
 ## 概要
 
@@ -20,7 +20,6 @@ nRF5340やZephyrプラットフォームに依存する処理は、以下のコ�
 |`app_crypto_ec`|暗号化関連（EC）|ECDSA署名処理<br>EC鍵ペア生成<br>ECDH共通鍵生成|
 |`app_crypto_rsa`|暗号化関連（RSA）|定数E管理<br>RSA-2048関連処理<br>（暗号化・公開鍵生成・鍵インポート）|
 |`app_crypto`|暗号化関連メイン|CTR-DRBG共有情報<br>AES-256暗号化処理<br>ランダムベクター生成<br>SHA256ハッシュ生成<br>HMAC SHA256ハッシュ生成<br>3DES-ECB暗号化処理<br>初期設定|
-|`app_dfu`|USB DFU関連[注2]|ブートローダーモード遷移処理<br>DFU変更内容コミット処理|
 |`app_event`|イベント関連|イベント待ち行列の管理<br>スレッドのイベント処理<br>データ関連イベント処理<br>スレッド本体の定義・生成|
 |`app_flash`|Flash ROM関連|Flash ROM領域の空き容量取得|
 |`app_main`|業務処理メイン|アプリケーション初期化処理<br>データ処理イベント関連<br>ボタン押下時の処理|
@@ -34,8 +33,7 @@ nRF5340やZephyrプラットフォームに依存する処理は、以下のコ�
 |`app_usb`|USBデバイス関連|USBデバイスのステータスを管理<br>USBデバイス初期処理<br>USBデバイス停止処理|
 |`main`|ベースとなったBLE DISサンプル|コードはほぼ全てコメントアウト|
 
-[注1] USB DFUで使用する予定でしたが、本プロジェクトでは採用を見送ったので、最終更新日現在、ブートローダーモード遷移機能を実行することは出来ません。<br>
-[注2] USB DFUは、本プロジェクトでは採用を見送ったので、最終更新日現在、このモジュールは機能しておりません。
+[注1] USB DFUで使用する予定でしたが、本プロジェクトでは採用を見送ったので、最終更新日現在、ブートローダーモード遷移機能を実行することは出来ません。
 
 ## ハードウェア非依存コード
 
@@ -120,10 +118,13 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_USB_DEVICE_MANUFACTURER`|`"Diverta Inc."`||
 |`CONFIG_USB_DEVICE_PRODUCT`|`"Secure Dongle"`||
 |`CONFIG_USB_DEVICE_SN`|`"000000000000"`|変更不可 [注1]|
+|`CONFIG_USB_DRIVER_LOG_LEVEL_OFF`|`y`||
+|`CONFIG_USB_DEVICE_LOG_LEVEL_OFF`|`y`||
 |`CONFIG_ENABLE_HID_INT_OUT_EP`|`y`||
 |`CONFIG_HID_INTERRUPT_EP_MPS`|`64`||
 |`CONFIG_USB_HID_POLL_INTERVAL_MS`|`10`||
 |`CONFIG_USB_HID_BOOT_PROTOCOL`|`n`||
+|`CONFIG_USB_HID_LOG_LEVEL_OFF`|`y`||
 
 [注1] [USB-IF](https://www.usb.org)でいまだ割り当てられていないとされるベンダーIDですが、製品化の際は割り当てを検討する必要があります。<br>
 [注2] Zephyrでは、USBデバイスのシリアル番号を、ハードウェアIDから自動的に取得して生成しています。詳細については[技術情報補足](../nRF5340_app/TECHNICAL.md)ご参照
@@ -135,8 +136,9 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_FLASH`|`y`||
 |`CONFIG_FLASH_MAP`|`y`||
 |`CONFIG_FLASH_PAGE_LAYOUT`|`y`||
-|`CONFIG_FLASH_LOG_LEVEL_DBG`|`n`||
+|`CONFIG_FLASH_LOG_LEVEL_OFF`|`y`||
 |`CONFIG_NVS`|`y`||
+|`CONFIG_NVS_LOG_LEVEL_OFF`|`y`||
 |`CONFIG_SETTINGS`|`y`||
 |`CONFIG_APP_SETTINGS_BUFFER_SIZE`|`1024`|永続化項目１件あたりの最大バイト数。<br>これを超える長さのデータは、Flash ROMに保存できません。|
 
@@ -152,6 +154,7 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_MBEDTLS_ENABLE_HEAP`|`y`||
 |`CONFIG_MBEDTLS_HEAP_SIZE`|`65536`||
 |`CONFIG_MBEDTLS_INSTALL_PATH`|`"DUMMY"`||
+|`CONFIG_MBEDTLS_CTR_DRBG_C`|`y`||
 
 #### その他
 |定義名|設定値|内容|
@@ -195,7 +198,10 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_MCUMGR_SMP_BT_CUSTOM`|`y`|カスタマイズしています [注1]|
 |`CONFIG_MCUMGR_SMP_BT`|`n`|カスタマイズしています [注1]|
 |`CONFIG_MCUMGR_SMP_BT_AUTHEN`|`n`||
+|`CONFIG_MCUMGR_SMP_BT_CONN_PARAM_CONTROL`|`y`||
 |`CONFIG_MCUMGR_SMP_SHELL`|`n`||
+|`CONFIG_FILE_SYSTEM`|`n`||
+|`CONFIG_FILE_SYSTEM_LITTLEFS`|`n`||
 |`CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE`|`2304`||
 |`CONFIG_MCUMGR_CMD_FS_MGMT`|`n`||
 
