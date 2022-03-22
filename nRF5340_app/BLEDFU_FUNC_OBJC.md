@@ -1,12 +1,14 @@
 # ファームウェア更新機能（BLE）
 
+最終更新日：2022/3/22
+
 ## 概要
 ブートローダー「[MCUboot](https://www.mcuboot.com/documentation/readme-zephyr/)」を導入したFIDO認証器に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
-ZephyrアプリケーションのBLE DFU機能（[BLE SMPサービス](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.1.0/nrf/include/bluetooth/services/dfu_smp_c.html)）を使用して実装されています。
+nRF Connect SDKのBLE DFU機能（[GATT DFU SMP Service Client](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/libraries/bluetooth_services/services/dfu_smp.html)）を使用して実装されています。
 
 ## 前提
 
-FIDO認証器に、<b>BLE SMPサービスを組み込んだ[Zephyrアプリケーション](../nRF5340_app/secure_device_app)</b>が導入されていることが前提となります。
+FIDO認証器に、<b>ブートローダーを組み込んだ[nRF5340アプリケーション](../nRF5340_app/secure_device_app)</b>が導入されていることが前提となります。
 
 ## プログラムの実装
 
@@ -125,7 +127,6 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
 ```
 @implementation ToolBLEDFUCommand
     - (void)invokeDFUProcess {
-        :
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         :
@@ -143,11 +144,13 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
 ファームウェア更新イメージは、BLE SMPサービスを使用して送信します。
 
 `startDFUProcess`では、まずBLE SMPサービスに接続する処理を実行します。<br>
-同時にタイムアウト監視（300秒）を開始します。
+同時にタイムアウト監視（150秒）を開始します。
 
 ```
 @implementation ToolBLEDFUCommand
     - (void)startDFUProcess {
+        // 処理ステータスを更新
+        [self setBleDfuStatus:BLEDFU_ST_UPLOAD_PROCESS];
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
         // BLE DFU処理を開始
@@ -155,8 +158,6 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
         :
 
     - (void)doConnect {
-        // リセット要求済みフラグをクリア
-        [self setResetApplicationRequested:false];
         // BLE SMPサービスに接続 --> doRequestGetSlotInfoが呼び出される
         [[self toolBLESMPCommand] commandWillConnect];
     }
@@ -266,6 +267,8 @@ BLE SMPサービスに接続すると、最初にスロット照会を実行し�
 
     - (void)doResponseResetApplication:(bool)success response:(NSData *)response {
         ：
+        // ステータスを更新（リセット要求済み）
+        [self setBleDfuStatus:BLEDFU_ST_RESET_DONE];
         // nRF側が自動的にリセット --> 切断検知によりDFU反映待ち処理に移行
         [[ToolLogFile defaultLogger] debug:@"Requested to reset application"];
     }
@@ -278,9 +281,10 @@ BLE切断検知時は`bleSmpCommandDidDisconnectWithError`が実行されます�
 @implementation ToolBLEDFUCommand
     - (void)bleSmpCommandDidDisconnectWithError:(NSError *)error {
         // リセット要求中に接続断が検知された場合
-        if (error && [self resetApplicationRequested]) {
-            // リセット要求済みフラグをクリア
-            [self setResetApplicationRequested:false];
+        if (error && [self bleDfuStatus] == BLEDFU_ST_RESET_DONE) {
+            ：
+            // ステータスを更新（DFU反映待ち）
+            [self setBleDfuStatus:BLEDFU_ST_WAIT_FOR_BOOT];
             // DFU反映待ち処理に移行
             dispatch_async([self subQueue], ^{
                 [self performDFUUpdateMonitor];
@@ -317,6 +321,8 @@ DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報
             [NSThread sleepForTimeInterval:1.0];
         }
         :
+        // ステータスを更新（バージョン更新判定）
+        [self setBleDfuStatus:BLEDFU_ST_CHECK_UPDATE_VERSION];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
@@ -367,7 +373,7 @@ DFU機能は、以下の流れで行われます。
 
 | # |項目 |処理内容 |
 |:-:|:-|:-|
-|1|処理タイムアウト監視開始|300秒経過でタイムアウトと判定します。<br>（DFUの所要時間は240秒前後です）|
+|1|処理タイムアウト監視開始|150秒経過でタイムアウトと判定します。<br>（DFUの所要時間は75秒前後です）|
 |2|DFU処理開始指示|サブスレッド上で行われます。|
 |3|DFUイメージ抽出|ファームウェア更新イメージファイルを読込み、DFUイメージを抽出します。<br>また、イメージファイル名から更新バージョン文字列を取得します。<br>ファイル名は`app_update.<基板名>.<バージョン文字列>.bin`になります。|
 |4|DFU対象デバイスに接続|認証器に、BLE経由で接続します。|
