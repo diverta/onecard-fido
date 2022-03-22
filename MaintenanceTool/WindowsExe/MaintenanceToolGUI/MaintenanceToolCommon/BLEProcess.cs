@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MaintenanceToolCommon
@@ -36,7 +37,8 @@ namespace MaintenanceToolCommon
         public BLEProcess()
         {
             // BLEデバイスのイベントを登録
-            bleService.DataReceived += new BLEService.dataReceivedEvent(BLEDeviceDataReceived);
+            bleService.OnDataReceived += new BLEService.DataReceivedEvent(OnDataReceived);
+            bleService.OnTransactionFailed += new BLEService.TransactionFailedEvent(OnTransactionFailed);
             bleService.FIDOPeripheralFound += new BLEService.FIDOPeripheralFoundEvent(OnFIDOPeripheralFound);
             bleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
         }
@@ -76,18 +78,13 @@ namespace MaintenanceToolCommon
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
-            if (await SendBLEMessageFrames(message, length) == false) {
-                // 送信失敗時
-                MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
-                ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
-                return;
-            }
+            SendBLEMessageFrames(message, length);
 
             // リクエスト送信完了メッセージを出力
             AppCommon.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
         }
 
-        private async Task<bool> SendBLEMessageFrames(byte[] message, int length)
+        private void SendBLEMessageFrames(byte[] message, int length)
         {
             // 正しいAPDUの長さをメッセージ・ヘッダーから取得
             int transferMessageLen = message[1] * 256 + message[2];
@@ -159,12 +156,8 @@ namespace MaintenanceToolCommon
                 }
 
                 // BLEデバイスにフレームを送信
-                if (await bleService.Send(frameData, frameLen) == false) {
-                    return false;
-                }
+                bleService.Send(frameData.Take(frameLen).ToArray());
             }
-
-            return true;
         }
 
         // 受信データを保持
@@ -172,10 +165,10 @@ namespace MaintenanceToolCommon
         private int receivedMessageLen = 0;
         private int received = 0;
 
-        private void BLEDeviceDataReceived(byte[] message, int length)
+        private void OnDataReceived(byte[] message)
         {
             // メッセージがない場合は終了
-            if (message == null || length == 0) {
+            if (message == null || message.Length == 0) {
                 return;
             }
 
@@ -249,6 +242,13 @@ namespace MaintenanceToolCommon
                 AppCommon.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
                 ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
+        }
+
+        private void OnTransactionFailed()
+        {
+            // 送信失敗時
+            MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
+            ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
         }
 
         public void DisconnectBLE()
