@@ -51,7 +51,7 @@ nRF5340アプリケーションを搭載する基板についての技術情報�
 - <b>[データの永続化について](../nRF5340_app/TECH_ZEP_SETTINGS.md)</b><br>
 Zephyrプラットフォームにおけるデータの永続化に関する技術情報を、補足的に掲載しています。
 
-- <b>ファームウェア更新機能（BLE）</b>
+- <b>ファームウェア更新機能（BLE）</b><br>
 nRF5340アプリケーションのBLE DFU機能についての技術情報を掲載しています。<br>
 ・[macOS版](../nRF5340_app/BLEDFU_FUNC_OBJC.md)<br>
 ・[Windows版](../nRF5340_app/BLEDFU_FUNC_CSHARP.md)
