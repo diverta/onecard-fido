@@ -1,6 +1,6 @@
 # ファームウェア更新機能（BLE）
 
-最終更新日：2022/3/22
+最終更新日：2022/3/23
 
 ## 概要
 ブートローダー「[MCUboot](https://www.mcuboot.com/documentation/readme-zephyr/)」を導入したFIDO認証器に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
@@ -20,13 +20,13 @@ macOS版管理ツールの関連モジュールは以下になります。
 
 |# |モジュール名 |内容 |備考|
 |:-:|:-|:-|:-|
-|1|BLEDFUDefine|各種定義を収容||
-|2|BLEDFUProcessingWindow|処理進捗画面||
-|3|BLEDFUStartWindow|処理開始画面||
-|4|ToolBLEDFUCommand|DFUコマンドクラス||
-|5|ToolBLESMPCommand|DFUトランザクションクラス||
-|6|mcumgr_app_image|ファームウェア更新イメージを扱うモジュール||
-|7|mcumgr_cbor_decode|DFUレスポンス（CBOR形式）を解析するモジュール||
+|1|`BLEDFUDefine`|各種定義を収容||
+|2|`BLEDFUProcessingWindow`|処理進捗画面||
+|3|`BLEDFUStartWindow`|処理開始画面||
+|4|`ToolBLEDFUCommand`|DFUコマンドクラス||
+|5|`ToolBLESMPCommand`|DFUトランザクションクラス||
+|6|`mcumgr_app_image`|ファームウェア更新イメージを扱うモジュール||
+|7|`mcumgr_cbor_decode`|DFUレスポンス（CBOR形式）を解析するモジュール||
 
 #### メニュー選択〜処理開始画面の表示
 
@@ -42,6 +42,7 @@ macOS版管理ツールの関連モジュールは以下になります。
     :
 
 @implementation ToolAppCommand
+    :
     - (id)initWithDelegate:(id<ToolAppCommandDelegate>)delegate {
         self = [super init];
         if (self) {
@@ -51,11 +52,11 @@ macOS版管理ツールの関連モジュールは以下になります。
             :
 ```
 
-メイン画面のメニュー選択により、メソッド`bleDfuProcessWillStart`を呼び出すと、DFU処理実行が開始されます。<br>
-事前に、`checkUSBHIDConnection`により、FIDO認証器がPCのUSBポートに装着されているかチェックします。
+メイン画面のメニュー選択により、メソッド`bleDfuProcessWillStart`を呼び出すと、DFU処理実行が開始されます。
 
 ```
 @implementation ToolAppCommand
+    :
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ファームウェア更新処理を実行するため、DFU開始画面を表示
         [[self delegate] disableUserInterface];
@@ -70,6 +71,7 @@ macOS版管理ツールの関連モジュールは以下になります。
 // MaintenanceTool/macOSApp/BLEDFU/ToolBLEDFUCommand.m
 //
 @implementation ToolBLEDFUCommand
+    :
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
         :
         // 事前にBLE経由でバージョン情報を取得
@@ -83,6 +85,7 @@ macOS版管理ツールの関連モジュールは以下になります。
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)notifyFirmwareVersionForStart:(NSData *)response {
         :
         // 戻りメッセージからバージョン情報を抽出し内部保持
@@ -109,10 +112,11 @@ macOS版管理ツールの関連モジュールは以下になります。
 
 #### 処理開始画面〜処理進捗画面の表示
 
-処理開始画面上でOKボタンをクリックすると、処理開始画面が自動的に閉じられたのち、DFU処理クラスのメソッド`commandWillChangeToBootloaderMode`が呼び出されます。
+処理開始画面上でOKボタンをクリックすると、処理開始画面が自動的に閉じられたのち、DFU処理クラスのメソッド`invokeDFUProcess`が呼び出されます。
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)dfuStartWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self bleDfuStartWindow] close];
@@ -126,6 +130,7 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)invokeDFUProcess {
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
@@ -144,10 +149,11 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
 ファームウェア更新イメージは、BLE SMPサービスを使用して送信します。
 
 `startDFUProcess`では、まずBLE SMPサービスに接続する処理を実行します。<br>
-同時にタイムアウト監視（150秒）を開始します。
+同時にタイムアウト監視（`150`秒）を開始します。
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)startDFUProcess {
         // 処理ステータスを更新
         [self setBleDfuStatus:BLEDFU_ST_UPLOAD_PROCESS];
@@ -168,6 +174,7 @@ BLE SMPサービスに接続すると、最初にスロット照会を実行し�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)doRequestGetSlotInfo {
         ：
         // BLE経由でスロット照会を実行
@@ -195,6 +202,7 @@ BLE SMPサービスに接続すると、最初にスロット照会を実行し�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)doRequestUploadImage {
         // BLE経由でイメージ転送を実行
         [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_UPLOAD_IMAGE request:[self imageToUpload] forCommand:self];
@@ -240,6 +248,7 @@ BLE SMPサービスに接続すると、最初にスロット照会を実行し�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)doRequestChangeImageUpdateMode {
         ：
         // BLE経由で反映要求を実行
@@ -260,6 +269,7 @@ BLE SMPサービスに接続すると、最初にスロット照会を実行し�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)doRequestResetApplication {
         // BLE経由でリセット要求を実行
         [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_RESET_APPLICATION request:nil forCommand:self];
@@ -279,6 +289,7 @@ BLE切断検知時は`bleSmpCommandDidDisconnectWithError`が実行されます�
 
 ```
 @implementation ToolBLEDFUCommand
+    :
     - (void)bleSmpCommandDidDisconnectWithError:(NSError *)error {
         // リセット要求中に接続断が検知された場合
         if (error && [self bleDfuStatus] == BLEDFU_ST_RESET_DONE) {
@@ -314,6 +325,8 @@ BLE切断検知時は`bleSmpCommandDidDisconnectWithError`が実行されます�
 DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報照会を実行し、現在バージョン（FIDO認証器上に反映されているバージョン）を問い合わせます。
 
 ```
+@implementation ToolBLEDFUCommand
+    :
     - (void) performDFUUpdateMonitor {
         // 反映待ち（リセットによるファームウェア再始動完了まで待機）
         for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
@@ -331,6 +344,8 @@ DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報
 FIDO認証器からバージョン情報が応答されると、FIDO認証器に転送したファームウェアのバージョンと、現在バージョンを比較します。
 
 ```
+@implementation ToolBLEDFUCommand
+    :
     - (void)notifyFirmwareVersionForComplete:(NSData *)response {
         :
         // 戻りメッセージからバージョン情報を抽出し内部保持
@@ -367,31 +382,43 @@ FIDO認証器からバージョン情報が応答されると、FIDO認証器に
 
 プログラムの仕様に関する情報を掲載いたします。
 
+#### 処理性能について
+
+処理条件<br>
+・転送先基板＝nRF5340 DK（`PCA10095`）<br>
+・転送ファームウェア＝`Version 0.4.4`
+
+| # |項目 |内容 |
+|:-:|:-|:-|
+|1|所要時間|転送前処理＝約`10`秒、転送＝約`50`秒、反映＝約`25`秒|
+|2|転送速度|約`4,888 bytes/sec`|
+|3|転送許容サイズ|約`245,500 bytes`|
+
 #### DFUの流れについて
 
 DFU機能は、以下の流れで行われます。
 
 | # |項目 |処理内容 |
 |:-:|:-|:-|
-|1|処理タイムアウト監視開始|150秒経過でタイムアウトと判定します。<br>（DFUの所要時間は75秒前後です）|
+|1|処理タイムアウト監視開始|`150`秒経過でタイムアウトと判定します。<br>（DFUの所要時間は`85`秒前後です）|
 |2|DFU処理開始指示|サブスレッド上で行われます。|
-|3|DFUイメージ抽出|ファームウェア更新イメージファイルを読込み、DFUイメージを抽出します。<br>また、イメージファイル名から更新バージョン文字列を取得します。<br>ファイル名は`app_update.<基板名>.<バージョン文字列>.bin`になります。|
+|3|DFUイメージ抽出|ファームウェア更新イメージファイルを読込み、転送DFUイメージを<br>抽出します。<br>また、更新イメージファイルのバージョンをファイル名から取得します。<br>（ファイル名＝`app_update.<基板名>.<バージョン文字列>.bin`）|
 |4|DFU対象デバイスに接続|認証器に、BLE経由で接続します。|
 |5|DFUトランザクション実行|認証器に、前述のファームウェア更新イメージを転送します。|
-|6|DFU対象デバイスから切断|Zephyrアプリケーション側のリセットにより、自動的に切断されます|
-|7|反映待機|DFUイメージ転送完了後、Zephyrアプリケーションが自動起動し、<br>再度BLE接続が可能になるまで、25秒間待機します。|
+|6|DFU対象デバイスから切断|認証器ファームウェア側のリセットにより、自動的に切断されます|
+|7|反映待機|DFUイメージ転送完了後、認証器ファームウェアが自動起動し、<br>再度BLE接続が可能になるまで、`25`秒間待機します。|
 |8|バージョン情報照会|認証器と再度BLE接続し、BLE経由でバージョン情報照会を実行します。|
 |9|バージョンチェック|バージョン情報照会で取得したバージョン文字列をチェックし、<br>イメージファイル名から取得した更新バージョン文字列と等しければ、<br>DFU処理は完了となります。|
 
 
 前述の `5`「DFUトランザクション実行」は、以下の流れで行われます。
 
-| # |項目 |処理内容 |
+| # |コマンド |処理内容 |
 |:-:|:-|:-|
 |1|スロット情報照会|スロット（認証器のFlash ROM領域）の情報を取得します。|
 |2|ファームウェア更新イメージ転送|Flash ROMに配置されるプログラムイメージを転送します。|
-|3|反映要求|転送されたファームウェアをリセット後に反映させるよう、<br>BLE SMPサービスに指示します。|
-|4|リセット要求|転送されたファームウェアを反映させるために、Zephyr<br>アプリケーションをリセット（再始動）させます。|
+|3|反映要求|転送されたファームウェアをリセット後に反映させるよう、<br>BLE SMPサービスを経由し、認証器ファームウェアに指示<br>します。|
+|4|リセット要求|転送されたファームウェアを反映させるために、リセット<br>（再始動）を認証器ファームウェアに指示します。|
 
 #### [DFUトランザクションの内容](../nRF5340_app/BLEDFU_TRANSACTION.md)
 
