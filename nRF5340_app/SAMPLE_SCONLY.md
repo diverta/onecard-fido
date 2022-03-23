@@ -103,3 +103,44 @@ Advertising successfully started
 [00:00:00.468,170] <inf> bt_hci_core: HCI: version 5.2 (0x0b) revision 0x22fe, manufacturer 0x0059
 [00:00:00.468,170] <inf> bt_hci_core: LMP: version 5.2 (0x0b) subver 0x22fe
 ```
+
+## サンプルアプリの動作確認
+
+Androidアプリ「nRF Connect」を使用し、<b>PIN番号を使用したBLEペアリング</b>が正常に動作することを確認します。
+
+### 接続
+
+Androidアプリ「nRF Connect」を起動します。<br>
+デバイス一覧に「SC only peripheral」がリストされていることを確認します。
+
+その後、右横の「CONNECT」ボタンをタップします。
+
+<img width="160" src="assets01/0018.jpg">
+
+「Bluetoothペア設定要求」というポップアップ画面が表示されます。<br>
+画面下部のボタン「ペアリング」をタップします。
+
+<img width="160" src="assets01/0019.jpg">
+
+「Bluetoothペア設定要求」画面の表示が下図のように変わります。<br>
+「通常は0000または1234です」と記されたテキストボックスをタップします。
+
+<img width="160" src="assets01/0020.jpg">
+
+screenコマンドが実行中のターミナル画面上を参照し、<b>６桁のPIN番号が表示</b>されていることを確認します。
+
+<img width="480" src="assets01/0021.jpg">
+
+テキストボックスに、前述のPIN番号を入力し、画面下部のボタン「OK」をタップします。
+
+<img width="160" src="assets01/0022.jpg">
+
+「CONNECTED」「BONDED」と表示されれば、ペアリングは成功です。
+
+<img width="160" src="assets01/0023.jpg">
+
+screenコマンドが実行中のターミナル画面上では「`Pairing Complete`」と表示されたことを確認します。
+
+<img width="480" src="assets01/0024.jpg">
+
+以上で、BLEペアリングサンプルの動作確認は完了です。
