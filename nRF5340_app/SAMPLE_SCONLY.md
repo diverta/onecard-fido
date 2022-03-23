@@ -164,13 +164,13 @@ screenコマンドが実行中のターミナル画面上では「`Pairing Compl
 void main(void)
 {
     :
-	printk("Bluetooth initialized\n");
+    printk("Bluetooth initialized\n");
 
     // 固定のPIN番号（123456）を設定
     unsigned int passkey = 123456;
     bt_passkey_set(passkey);
     :
-	err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ARRAY_SIZE(ad), NULL, 0);
+    err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ARRAY_SIZE(ad), NULL, 0);
     :
 }
 ```

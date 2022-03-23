@@ -58,3 +58,8 @@ nRF5340アプリケーションのBLE DFU機能についての技術情報を掲
 
 - <b>[技術情報補足](../nRF5340_app/TECHNICAL.md)</b><br>
 nRF5340や、Zephyrプラットフォームに関する技術情報を、補足的に掲載しています。
+
+## サンプルによる調査
+
+- <b>[BLEペアリングサンプル動作確認手順書](../nRF5340_app/SAMPLE_SCONLY.md)</b><br>
+Nordic社から公開されている、BLEペアリングのサンプルアプリ「Bluetooth: Peripheral SC-only」の動作確認手順について掲載しています。
