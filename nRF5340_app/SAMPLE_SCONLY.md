@@ -144,3 +144,70 @@ screenコマンドが実行中のターミナル画面上では「`Pairing Compl
 <img width="480" src="assets01/0024.jpg">
 
 以上で、BLEペアリングサンプルの動作確認は完了です。
+
+## 固定PIN番号によるBLEペアリング
+
+本書で使用したサンプルアプリ「Bluetooth: Peripheral SC-only」を、あらかじめ決めておいたPIN番号でペアリングさせるよう、作り替えることができます。
+
+### ファームウェアの修正
+
+コード／定義ファイルを修正し、ファームウェアを再書込みします。
+
+#### コード修正
+
+アドバタイズ開始前に固定PIN番号を設定しておくよう、`main`関数を修正します。
+
+```
+//
+// peripheral_sc_only/src/main.c
+//
+void main(void)
+{
+    :
+	printk("Bluetooth initialized\n");
+
+    // 固定のPIN番号（123456）を設定
+    unsigned int passkey = 123456;
+    bt_passkey_set(passkey);
+    :
+	err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ARRAY_SIZE(ad), NULL, 0);
+    :
+}
+```
+
+#### 定義ファイル修正
+
+固定PIN番号を使用するよう、`prj.conf`に下記の定義を追加します。
+
+```
+#
+# peripheral_sc_only/prj.conf
+#
+CONFIG_BT_FIXED_PASSKEY=y
+```
+
+#### ビルドと書込み
+
+前述の手順で、修正したプロジェクトをビルドし、生成されたファームウェアをnRF5340に書込みます。
+
+### 動作確認
+
+まだペアリングされていない任意の端末（PC or スマートフォン）を用意します。<br>
+今回の例では、macOS環境にインストールされた「LightBlue」というソフトウェアを使用しました。
+
+#### 接続
+
+デバイス一覧にリストされた「SC only peripheral」を選択し、接続を実行します。
+
+<img width="480" src="assets01/0025.jpg">
+
+ほどなく、PIN番号を入力させるためのポップアップ画面が表示されます。<br>
+パスコード欄に、先ほど指定した「`123456`」を入力し「接続」ボタンをクリックします。
+
+<img width="250" src="assets01/0026.jpg">
+
+screenコマンドが実行中のターミナル画面上で「`Pairing Complete`」と表示されたことを確認します。
+
+<img width="480" src="assets01/0027.jpg">
+
+以上で、固定PIN番号によるBLEペアリングの動作確認は完了です。
