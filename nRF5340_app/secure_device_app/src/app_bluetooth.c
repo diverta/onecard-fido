@@ -20,6 +20,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
 
+// Work for BT address string
+static char addr_str_buf_1[BT_ADDR_LE_STR_LEN];
+
 //
 // アドバタイズ関連
 //
@@ -131,22 +134,22 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 
 static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
 {
-    char addr[BT_ADDR_LE_STR_LEN];
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    (void)conn;
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf_1, sizeof(addr_str_buf_1));
 
     if (err == BT_SECURITY_ERR_SUCCESS) {
         if (level < BT_SECURITY_L2) {
-            LOG_WRN("Security change failed: %s level %u", log_strdup(addr), level);
+            LOG_WRN("Security change failed: %s level %u", log_strdup(addr_str_buf_1), level);
 
         } else {
             // セキュリティーレベル変更が成功したら、
             // BLE接続イベントを業務処理スレッドに引き渡す
-            LOG_INF("Connected %s with security level %u", log_strdup(addr), level);
+            LOG_INF("Connected %s with security level %u", log_strdup(addr_str_buf_1), level);
             app_event_notify(APEVT_BLE_CONNECTED);
         }
 
     } else {
-        LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr), level, err);
+        LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr_str_buf_1), level, err);
     }
 }
 
