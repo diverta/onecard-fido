@@ -15,6 +15,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
+// Work for BT address string
+static char addr_str_buf[BT_ADDR_LE_STR_LEN];
+
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
@@ -55,9 +58,8 @@ static void pairing_cancel(struct bt_conn *conn)
 static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 {
     (void)id;
-    const uint8_t *data = addr->a.val;
-    LOG_INF("Bonding information deleted: address=%02x%02x%02x%02x%02x%02x",
-            data[5], data[4], data[3], data[2], data[1], data[0]);
+    bt_addr_le_to_str(addr, addr_str_buf, sizeof(addr_str_buf));
+    LOG_INF("Bonding information deleted: address=%s", log_strdup(addr_str_buf));
 }
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
