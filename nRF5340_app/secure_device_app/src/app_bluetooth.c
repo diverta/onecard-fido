@@ -22,6 +22,7 @@ LOG_MODULE_REGISTER(app_bluetooth);
 
 // Work for BT address string
 static char addr_str_buf_1[BT_ADDR_LE_STR_LEN];
+static char addr_str_buf_2[BT_ADDR_LE_STR_LEN];
 
 //
 // アドバタイズ関連
@@ -132,6 +133,15 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
+static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
+{
+    (void)conn;
+
+    bt_addr_le_to_str(identity, addr_str_buf_1, sizeof(addr_str_buf_1));
+    bt_addr_le_to_str(rpa, addr_str_buf_2, sizeof(addr_str_buf_2));
+    LOG_DBG("Identity resolved %s -> %s", log_strdup(addr_str_buf_2), log_strdup(addr_str_buf_1));
+}
+
 static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
 {
     (void)conn;
@@ -157,6 +167,7 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
 BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected = connected,
     .disconnected = disconnected,
+    .identity_resolved = identity_resolved,
     .security_changed = security_changed,
 };
 
