@@ -15,6 +15,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
+// Work for BT address string
+static char addr_str_buf[BT_ADDR_LE_STR_LEN];
+
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
@@ -28,12 +31,6 @@ static void pairing_confirm(struct bt_conn *conn)
     } else {
         LOG_DBG("Pairing refused");
     }
-}
-
-static void pairing_complete(struct bt_conn *conn, bool bonded)
-{
-    (void)conn;
-    LOG_INF("Pairing completed %s", bonded ? "(bonded)" : "(not bonded)");
 }
 
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
@@ -55,9 +52,8 @@ static void pairing_cancel(struct bt_conn *conn)
 static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 {
     (void)id;
-    const uint8_t *data = addr->a.val;
-    LOG_INF("Bonding information deleted: address=%02x%02x%02x%02x%02x%02x",
-            data[5], data[4], data[3], data[2], data[1], data[0]);
+    bt_addr_le_to_str(addr, addr_str_buf, sizeof(addr_str_buf));
+    LOG_INF("Bonding information deleted: address=%s", log_strdup(addr_str_buf));
 }
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
@@ -67,9 +63,38 @@ static const struct bt_conn_auth_cb cb_for_non_pair = {
     .bond_deleted = bond_deleted,
 };
 
+static void auth_passkey_display(struct bt_conn *conn, unsigned int passkey)
+{
+    (void)conn;
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
+    LOG_INF("Passkey for %s: %06u", log_strdup(addr_str_buf), passkey);
+}
+
+static void auth_cancel(struct bt_conn *conn)
+{
+    (void)conn;
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
+    LOG_WRN("Pairing with authentication cancelled: %s", log_strdup(addr_str_buf));
+}
+
+static void auth_pairing_complete(struct bt_conn *conn, bool bonded)
+{
+    (void)conn;
+    LOG_INF("Pairing with authentication completed %s", bonded ? "(bonded)" : "(not bonded)");
+}
+
+static void auth_pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
+{
+    (void)conn;
+    LOG_ERR("Pairing with authentication failed (reason=%d)", reason);
+}
+
 static const struct bt_conn_auth_cb cb_for_pair = {
-    .pairing_complete = pairing_complete,
-    .pairing_failed = pairing_failed,
+    .passkey_display = auth_passkey_display,
+    .passkey_entry = NULL,
+    .cancel = auth_cancel,
+    .pairing_complete = auth_pairing_complete,
+    .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
 };
 
