@@ -63,6 +63,20 @@ static const struct bt_conn_auth_cb cb_for_non_pair = {
     .bond_deleted = bond_deleted,
 };
 
+static void auth_passkey_display(struct bt_conn *conn, unsigned int passkey)
+{
+    (void)conn;
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
+    LOG_INF("Passkey for %s: %06u", log_strdup(addr_str_buf), passkey);
+}
+
+static void auth_cancel(struct bt_conn *conn)
+{
+    (void)conn;
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
+    LOG_WRN("Pairing with authentication cancelled: %s", log_strdup(addr_str_buf));
+}
+
 static void auth_pairing_complete(struct bt_conn *conn, bool bonded)
 {
     (void)conn;
@@ -76,6 +90,9 @@ static void auth_pairing_failed(struct bt_conn *conn, enum bt_security_err reaso
 }
 
 static const struct bt_conn_auth_cb cb_for_pair = {
+    .passkey_display = auth_passkey_display,
+    .passkey_entry = NULL,
+    .cancel = auth_cancel,
     .pairing_complete = auth_pairing_complete,
     .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
