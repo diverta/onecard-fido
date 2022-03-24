@@ -33,12 +33,6 @@ static void pairing_confirm(struct bt_conn *conn)
     }
 }
 
-static void pairing_complete(struct bt_conn *conn, bool bonded)
-{
-    (void)conn;
-    LOG_INF("Pairing completed %s", bonded ? "(bonded)" : "(not bonded)");
-}
-
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
 {
     (void)conn;
@@ -69,9 +63,21 @@ static const struct bt_conn_auth_cb cb_for_non_pair = {
     .bond_deleted = bond_deleted,
 };
 
+static void auth_pairing_complete(struct bt_conn *conn, bool bonded)
+{
+    (void)conn;
+    LOG_INF("Pairing with authentication completed %s", bonded ? "(bonded)" : "(not bonded)");
+}
+
+static void auth_pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
+{
+    (void)conn;
+    LOG_ERR("Pairing with authentication failed (reason=%d)", reason);
+}
+
 static const struct bt_conn_auth_cb cb_for_pair = {
-    .pairing_complete = pairing_complete,
-    .pairing_failed = pairing_failed,
+    .pairing_complete = auth_pairing_complete,
+    .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
 };
 
