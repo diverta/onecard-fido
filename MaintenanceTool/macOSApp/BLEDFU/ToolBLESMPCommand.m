@@ -13,6 +13,8 @@
 #define SmpServiceUUID          @"8D53DC1D-1DB7-4CD3-868B-8A527460AA84"
 #define SmpCharacteristicUUID   @"DA2E7828-FBCE-4E01-AE9E-261174997C48"
 
+#define SmpSubscrCharTimeoutSec 10.0
+
 #define OP_READ_REQ             0
 #define OP_READ_RES             1
 #define OP_WRITE_REQ            2
@@ -232,6 +234,11 @@
     }
 
     - (void)helperDidDiscoverCharacteristics {
+        // データ受信監視を開始
+        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:SmpSubscrCharTimeoutSec];
+    }
+
+    - (void)helperDidSubscribeCharacteristic {
         // 接続を通知
         [[ToolLogFile defaultLogger] info:@"SMP service connected"];
         [[self delegate] bleSmpCommandDidConnect];

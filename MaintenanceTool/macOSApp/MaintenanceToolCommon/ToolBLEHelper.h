@@ -37,6 +37,7 @@ typedef enum : NSInteger {
     - (void)helperWillConnectPeripheral:(id)peripheralRef;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
     - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids;
+    - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec;
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
 
@@ -50,6 +51,7 @@ typedef enum : NSInteger {
     - (void)helperDidDisconnectWithError:(NSError *)error;
     - (void)helperDidDiscoverService;
     - (void)helperDidDiscoverCharacteristics;
+    - (void)helperDidSubscribeCharacteristic;
     - (void)helperDidWriteForCharacteristics;
     - (void)helperDidReadForCharacteristic:(NSData *)responseMessage;
 

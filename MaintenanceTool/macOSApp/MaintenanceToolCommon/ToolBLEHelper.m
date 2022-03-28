@@ -215,8 +215,8 @@
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_CHARACT_NOT_DISCOVERED];
             return;
         }
-        // Notifyキャラクタリスティックに対する監視を開始
-        [self subscribeCharacteristic:service];
+        // ディスカバー完了を通知
+        [[self delegate] helperDidDiscoverCharacteristics];
     }
 
     - (void)discoverCharacteristicsDidTimeout {
@@ -226,9 +226,10 @@
 
 #pragma mark - Subscribe characteristic
 
-    - (void)subscribeCharacteristic:(CBService *)service {
+    - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec {
         // サービスにキャラクタリスティックがない場合は通知
-        if ([[service characteristics] count] < 1) {
+        CBService *service = [self connectedService];
+        if (service == nil || [[service characteristics] count] < 1) {
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
             return;
         }
@@ -252,7 +253,7 @@
             [[self connectedPeripheral] setNotifyValue:YES forCharacteristic:[self characteristicForNotify]];
         }
         // 監視ステータス更新のタイムアウト監視を開始
-        [self startSubscribeCharacteristicTimeoutMonitor:[self characteristicForNotify]];
+        [self startSubscribeCharacteristicTimeoutMonitor:[self characteristicForNotify] withTimeoutSec:timeoutSec];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
@@ -265,8 +266,8 @@
             return;
         }
         if ([characteristic isNotifying]) {
-            // 監視開始の場合は、ディスカバー完了を通知
-            [[self delegate] helperDidDiscoverCharacteristics];
+            // 監視開始を通知
+            [[self delegate] helperDidSubscribeCharacteristic];
         } else {
             // 監視が停止している場合は通知
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_NOTIFICATION_STOP];
@@ -432,10 +433,10 @@
 
 #pragma mark - Subscribe Characteristic Timeout Monitor
 
-    - (void)startSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic {
-        // 監視ステータス更新タイムアウト監視を開始（10秒後にタイムアウト）
+    - (void)startSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic withTimeoutSec:(NSTimeInterval)timeoutSec {
+        // 監視ステータス更新タイムアウト監視を開始（指定秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(subscribeCharacteristicTimeoutMonitorDidTimeout)
-                                  withObject:characteristic afterDelay:10.0];
+                                  withObject:characteristic afterDelay:timeoutSec];
     }
 
     - (void)cancelSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic {
