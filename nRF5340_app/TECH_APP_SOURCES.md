@@ -1,6 +1,6 @@
 # nRF5340アプリケーションについて
 
-最終更新日：2022/3/22
+最終更新日：2022/3/28
 
 ## 概要
 
@@ -173,18 +173,18 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 ### BLE DFUに関する定義
 
 #### 基本設定
-サンプル`smp_svr/prj.conf`から転記した内容です。
+サンプル`smp_svr/prj.conf`から転記した内容です（一部変更あり）。
 
 |定義名|設定値|内容|
 |:--|:-|:-|
 |`CONFIG_MCUMGR`|`y`||
 |`CONFIG_BOOTLOADER_MCUBOOT`|`y`||
 |`CONFIG_THREAD_MONITOR`|`y`||
-|`CONFIG_STATS`|`n`||
-|`CONFIG_STATS_NAMES`|`n`||
+|`CONFIG_STATS`|`n`|サンプル（`y`）から修正|
+|`CONFIG_STATS_NAMES`|`n`|サンプル（`y`）から修正|
 |`CONFIG_MCUMGR_CMD_IMG_MGMT`|`y`||
 |`CONFIG_MCUMGR_CMD_OS_MGMT`|`y`||
-|`CONFIG_MCUMGR_CMD_STAT_MGMT`|`n`||
+|`CONFIG_MCUMGR_CMD_STAT_MGMT`|`n`|サンプル（`y`）から修正|
 |`CONFIG_LOG`|`y`||
 |`CONFIG_MCUBOOT_UTIL_LOG_LEVEL_WRN`|`y`||
 
@@ -195,14 +195,11 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |:--|:-|:-|
 |`CONFIG_BT_L2CAP_TX_MTU`|`252`||
 |`CONFIG_BT_BUF_ACL_RX_SIZE`|`256`||
-|`CONFIG_MCUMGR_SMP_BT_CUSTOM`|`y`|カスタマイズしています [注1]|
-|`CONFIG_MCUMGR_SMP_BT`|`n`|カスタマイズしています [注1]|
-|`CONFIG_MCUMGR_SMP_BT_AUTHEN`|`n`||
+|`CONFIG_MCUMGR_SMP_BT`|`y`||
+|`CONFIG_MCUMGR_SMP_BT_AUTHEN`|`y`|転送内容は暗号化されます。<br>サンプル（`n`）から修正|
 |`CONFIG_MCUMGR_SMP_BT_CONN_PARAM_CONTROL`|`y`||
-|`CONFIG_MCUMGR_SMP_SHELL`|`n`||
-|`CONFIG_FILE_SYSTEM`|`n`||
-|`CONFIG_FILE_SYSTEM_LITTLEFS`|`n`||
+|`CONFIG_MCUMGR_SMP_SHELL`|`n`|サンプル（`y`）から修正|
+|`CONFIG_FILE_SYSTEM`|`n`|サンプル（`y`）から修正|
+|`CONFIG_FILE_SYSTEM_LITTLEFS`|`n`|サンプル（`y`）から修正|
 |`CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE`|`2304`||
-|`CONFIG_MCUMGR_CMD_FS_MGMT`|`n`||
-
-[注1] サンプルで使用していた`smp_bt.c`から[一部変更したコード](../nRF5340_app/secure_device_app/zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c)をリンク対象とするための定義です。
+|`CONFIG_MCUMGR_CMD_FS_MGMT`|`n`|サンプル（`y`）から修正|
