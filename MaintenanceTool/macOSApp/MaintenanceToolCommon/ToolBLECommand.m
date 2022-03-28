@@ -18,6 +18,9 @@
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
 #define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
 
+#define U2FSubscrCharTimeoutSec         10.0
+#define U2FSubscrCharTimeoutSecOnPair   60.0
+
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
@@ -380,6 +383,17 @@
     }
 
     - (void)helperDidDiscoverCharacteristics {
+        // データ受信監視開始までのタイムアウトを設定
+        NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
+        if ([self command] == COMMAND_PAIRING) {
+            // ペアリング時はタイムアウトを延長
+            timeoutSec = U2FSubscrCharTimeoutSecOnPair;
+        }
+        // データ受信監視を開始
+        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:timeoutSec];
+    }
+
+    - (void)helperDidSubscribeCharacteristic {
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
         // 送信済フレーム数をクリア
