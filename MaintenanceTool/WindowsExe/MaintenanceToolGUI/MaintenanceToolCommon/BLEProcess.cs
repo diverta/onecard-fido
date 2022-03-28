@@ -43,9 +43,9 @@ namespace MaintenanceToolCommon
             bleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
         }
 
-        public void PairWithFIDOPeripheral()
+        public void PairWithFIDOPeripheral(string passkey)
         {
-            bleService.Pair();
+            bleService.Pair(passkey);
         }
 
         private void OnFIDOPeripheralFound()

@@ -41,6 +41,9 @@ namespace MaintenanceToolCommon
         // サービスをディスカバーできたデバイスを保持
         private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
 
+        // ペアリングに使用するパスキー（PIN）を保持
+        private string Passkey = null;
+
         public BLEService()
         {
             watcher = new BluetoothLEAdvertisementWatcher();
@@ -84,8 +87,11 @@ namespace MaintenanceToolCommon
             }
         }
 
-        public async void Pair()
+        public async void Pair(string passkey)
         {
+            // ペアリングに使用するパスキー（PIN）を保持
+            Passkey = passkey;
+
             // Bluetoothがオンになっていることを確認
             bool bton = false;
             try {
