@@ -53,6 +53,7 @@ NRF_BLE_GATT_DEF(m_gatt);                               /**< GATT module instanc
 static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     ret_code_t err_code;
+    char       passkey[BLE_GAP_PASSKEY_LEN + 1];
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
@@ -91,6 +92,14 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gatts_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             APP_ERROR_CHECK(err_code);
+            break;
+
+        case BLE_GAP_EVT_PASSKEY_DISPLAY:
+            memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, BLE_GAP_PASSKEY_LEN);
+            passkey[BLE_GAP_PASSKEY_LEN] = 0x00;
+            NRF_LOG_INFO("BLE_GAP_EVT_PASSKEY_DISPLAY: passkey=%s match_req=%d",
+                         nrf_log_push(passkey),
+                         p_ble_evt->evt.gap_evt.params.passkey_display.match_request);
             break;
     
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -210,10 +219,10 @@ static void perform_erase_bonding_data_response_func(bool success)
 // 初期化関連処理（Peer Manager）
 // 
 #define SEC_PARAM_BOND                      1                                       /**< Perform bonding. */
-#define SEC_PARAM_MITM                      0                                       /**< Man In The Middle protection not required. */
+#define SEC_PARAM_MITM                      1                                       /**< Man In The Middle protection required. */
 #define SEC_PARAM_LESC                      1                                       /**< LE Secure Connections enabled. */
 #define SEC_PARAM_KEYPRESS                  0                                       /**< Keypress notifications not enabled. */
-#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
+#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_DISPLAY_ONLY            /**< Display Only. */
 #define SEC_PARAM_OOB                       0                                       /**< Out Of Band data not available. */
 #define SEC_PARAM_MIN_KEY_SIZE              7                                       /**< Minimum encryption key size. */
 #define SEC_PARAM_MAX_KEY_SIZE              16                                      /**< Maximum encryption key size. */
