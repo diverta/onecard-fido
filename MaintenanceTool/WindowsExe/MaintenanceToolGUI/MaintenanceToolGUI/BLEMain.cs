@@ -58,9 +58,8 @@ namespace MaintenanceToolGUI
             mainForm.OnPrintMessageText(message);
         }
 
-        public void doPairing()
+        public void doPairing(string passkey)
         {
-            string passkey = null;
             bleProcess.PairWithFIDOPeripheral(passkey);
         }
 

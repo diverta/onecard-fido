@@ -149,9 +149,10 @@ namespace MaintenanceToolGUI
 
             // ボタンに対応する処理を実行
             if (sender.Equals(buttonPairing)) {
+                string passkey = null;
                 commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
-                ble.doPairing();
+                ble.doPairing(passkey);
                 return;
             }
 
