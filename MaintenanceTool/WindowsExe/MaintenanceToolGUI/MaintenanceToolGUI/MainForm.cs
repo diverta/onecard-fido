@@ -27,6 +27,9 @@ namespace MaintenanceToolGUI
         // パラメーター入力画面
         private PinCodeParamForm PinCodeParamFormRef;
 
+        // ペアリング開始画面
+        private PairingStartForm PairingStartFormRef;
+
         public MainForm()
         {
             InitializeComponent();
@@ -62,6 +65,9 @@ namespace MaintenanceToolGUI
             // DFU処理クラスを生成
             toolBLEDFU = new ToolBLEDFU(this, ble);
             toolDFU = new ToolDFU(this, hid);
+
+            // ペアリング開始画面を生成
+            PairingStartFormRef = new PairingStartForm();
         }
 
         public static string GetMaintenanceToolTitle()
@@ -149,7 +155,8 @@ namespace MaintenanceToolGUI
 
             // ボタンに対応する処理を実行
             if (sender.Equals(buttonPairing)) {
-                string passkey = null;
+                // 画面入力したパスキーを使用し、BLEペアリング処理を実行
+                string passkey = PairingStartFormRef.GetPasskey();
                 commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
                 ble.doPairing(passkey);
@@ -405,8 +412,12 @@ namespace MaintenanceToolGUI
 
         private void buttonPairing_Click(object sender, EventArgs e)
         {
-            // ペアリング実行
-            doCommand(sender);
+            // ペアリング開始画面を表示
+            if (PairingStartFormRef.OpenForm(this)) {
+                // ペアリング開始画面でOKクリックの場合、
+                // ペアリング実行
+                doCommand(sender);
+            }
         }
 
         private void buttonSetPinParam_Click(object sender, EventArgs e)
