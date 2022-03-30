@@ -30,6 +30,9 @@ NRF_LOG_MODULE_REGISTER();
 // for Device name
 #include "fido_board.h"
 
+// BLEペアリング時にパスコード入力を要求する場合 true
+#define USE_MITM false
+
 // BLEペリフェラルモードかどうかを保持
 static bool ble_peripheral_mode = false;
 
@@ -219,13 +222,19 @@ static void perform_erase_bonding_data_response_func(bool success)
 // 初期化関連処理（Peer Manager）
 // 
 #define SEC_PARAM_BOND                      1                                       /**< Perform bonding. */
-#define SEC_PARAM_MITM                      1                                       /**< Man In The Middle protection required. */
 #define SEC_PARAM_LESC                      1                                       /**< LE Secure Connections enabled. */
 #define SEC_PARAM_KEYPRESS                  0                                       /**< Keypress notifications not enabled. */
-#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_DISPLAY_ONLY            /**< Display Only. */
 #define SEC_PARAM_OOB                       0                                       /**< Out Of Band data not available. */
 #define SEC_PARAM_MIN_KEY_SIZE              7                                       /**< Minimum encryption key size. */
 #define SEC_PARAM_MAX_KEY_SIZE              16                                      /**< Maximum encryption key size. */
+
+#if USE_MITM
+#define SEC_PARAM_MITM                      1                                       /**< Man In The Middle protection required. */
+#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_DISPLAY_ONLY            /**< Display Only. */
+#else
+#define SEC_PARAM_MITM                      0                                       /**< Man In The Middle protection not required. */
+#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
+#endif
 
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
@@ -297,6 +306,7 @@ static void peer_manager_init(void)
 #define SLAVE_LATENCY                       0                                       /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                    MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
 
+#if USE_MITM
 // Work area for passkey
 static ble_opt_t m_static_pin_option;
 static uint8_t   m_passkey_buf[8];
@@ -321,6 +331,7 @@ void set_passkey_for_pairing(void)
 
     NRF_LOG_INFO("Passkey for BLE pairing: %06lu", m_passkey);
 }
+#endif
 
 static void gap_params_init(void)
 {
@@ -348,6 +359,7 @@ static void gap_params_init(void)
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
 
+#if USE_MITM
     // BLEパスコードをハードウェアIDから抽出
     set_passkey_for_pairing();
 
@@ -355,6 +367,7 @@ static void gap_params_init(void)
     m_static_pin_option.gap_opt.passkey.p_passkey = &m_passkey_buf[0];
     err_code = sd_ble_opt_set(BLE_GAP_OPT_PASSKEY, &m_static_pin_option);
     APP_ERROR_CHECK(err_code);
+#endif
 }
 
 void ble_service_common_init(void)
