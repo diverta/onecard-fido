@@ -297,6 +297,10 @@ static void peer_manager_init(void)
 #define SLAVE_LATENCY                       0                                       /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                    MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
 
+// Work area for passkey
+static ble_opt_t m_static_pin_option;
+static uint8_t   m_passkey_buf[] = {0x31, 0x31, 0x31, 0x31, 0x31, 0x31};
+
 static void gap_params_init(void)
 {
     ret_code_t              err_code;
@@ -321,6 +325,11 @@ static void gap_params_init(void)
     gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
+    APP_ERROR_CHECK(err_code);
+
+    // BLEパスコードを設定
+    m_static_pin_option.gap_opt.passkey.p_passkey = m_passkey_buf;
+    err_code = sd_ble_opt_set(BLE_GAP_OPT_PASSKEY, &m_static_pin_option);
     APP_ERROR_CHECK(err_code);
 }
 
