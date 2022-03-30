@@ -40,6 +40,8 @@ uint8_t app_usbd_strings_product[]      = USBD_STRINGS_PRODUCT;
 uint8_t app_usbd_strings_serial[16];
 
 // Work area for update app_usbd_strings_serial
+static uint32_t hwid_0;
+static uint32_t hwid_1;
 static char work_buf[20];
 
 //
@@ -161,8 +163,8 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
 void usbd_service_init(void)
 {
     // ハードウェアIDを抽出
-    uint32_t hwid_0 = NRF_FICR->DEVICEID[0];
-    uint32_t hwid_1 = NRF_FICR->DEVICEID[1];
+    hwid_0 = NRF_FICR->DEVICEID[0];
+    hwid_1 = NRF_FICR->DEVICEID[1];
     snprintf(work_buf, sizeof(work_buf), "%08lX%08lX", __bswap32(hwid_0), __bswap32(hwid_1));
 
     // ハードウェアIDのうち、
