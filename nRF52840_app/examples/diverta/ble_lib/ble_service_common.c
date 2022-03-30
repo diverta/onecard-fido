@@ -299,7 +299,28 @@ static void peer_manager_init(void)
 
 // Work area for passkey
 static ble_opt_t m_static_pin_option;
-static uint8_t   m_passkey_buf[] = {0x31, 0x31, 0x31, 0x31, 0x31, 0x31};
+static uint8_t   m_passkey_buf[8];
+static uint32_t  m_passkey;
+static uint32_t  m_hwid_1;
+
+void set_passkey_for_pairing(void)
+{
+    // BLEペアリング用のパスコードを設定
+    uint8_t *p = (uint8_t *)&m_passkey;
+
+    // ハードウェアIDの下位４バイト分を抽出
+    m_hwid_1 = NRF_FICR->DEVICEID[1];
+    uint8_t *p1 = (uint8_t *)&m_hwid_1;
+    for (int i = 0; i < 4; i++) {
+        p[3 - i] = p1[i];
+    }
+
+    // 抽出されたハードウェアID（１０進）の下６桁をパスコードに設定
+    m_passkey %= 1000000;
+    snprintf((char *)m_passkey_buf, sizeof(m_passkey_buf), "%06lu", m_passkey);
+
+    NRF_LOG_INFO("Passkey for BLE pairing: %06lu", m_passkey);
+}
 
 static void gap_params_init(void)
 {
@@ -327,8 +348,11 @@ static void gap_params_init(void)
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
 
+    // BLEパスコードをハードウェアIDから抽出
+    set_passkey_for_pairing();
+
     // BLEパスコードを設定
-    m_static_pin_option.gap_opt.passkey.p_passkey = m_passkey_buf;
+    m_static_pin_option.gap_opt.passkey.p_passkey = &m_passkey_buf[0];
     err_code = sd_ble_opt_set(BLE_GAP_OPT_PASSKEY, &m_static_pin_option);
     APP_ERROR_CHECK(err_code);
 }
