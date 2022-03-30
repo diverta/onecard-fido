@@ -30,6 +30,14 @@ namespace MaintenanceToolGUI
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
+            // パスキーなしでペアリング実行
+            Passkey = null;
+            DialogResult = DialogResult.OK;
+            TerminateWindow();
+        }
+
+        private void ButtonOK_2_Click(object sender, EventArgs e)
+        {
             // 入力チェックがNGの場合は中断
             if (CheckEntries() == false) {
                 return;
