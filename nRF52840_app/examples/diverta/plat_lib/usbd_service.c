@@ -8,6 +8,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+// for __bswap32()
+#include <machine/endian.h>
+
 #include "nrf_drv_usbd.h"
 #include "nrf_drv_clock.h"
 #include "nrf_drv_power.h"
@@ -34,7 +37,10 @@ NRF_LOG_MODULE_REGISTER();
 //
 uint8_t app_usbd_strings_manufacturer[] = USBD_STRINGS_MANUFACTURER;
 uint8_t app_usbd_strings_product[]      = USBD_STRINGS_PRODUCT;
-uint8_t app_usbd_strings_serial[]       = USBD_STRINGS_SERIAL;
+uint8_t app_usbd_strings_serial[16];
+
+// Work area for update app_usbd_strings_serial
+static char work_buf[20];
 
 //
 // USB共通処理
@@ -154,6 +160,18 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
 
 void usbd_service_init(void)
 {
+    // ハードウェアIDを抽出
+    uint32_t hwid_0 = NRF_FICR->DEVICEID[0];
+    uint32_t hwid_1 = NRF_FICR->DEVICEID[1];
+    snprintf(work_buf, sizeof(work_buf), "%08lX%08lX", __bswap32(hwid_0), __bswap32(hwid_1));
+
+    // ハードウェアIDのうち、
+    // USBD_STRINGS_SERIALで定義した文字列の長さ分を
+    // シリアル番号として設定
+    size_t len = strlen(USBD_STRINGS_SERIAL);
+    size_t offset = 16 - len;
+    memcpy(app_usbd_strings_serial, work_buf + offset, len);
+
     ret_code_t ret = nrf_drv_clock_init();
     APP_ERROR_CHECK(ret);
 
