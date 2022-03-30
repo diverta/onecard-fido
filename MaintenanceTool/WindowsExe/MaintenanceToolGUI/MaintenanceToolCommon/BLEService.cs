@@ -41,6 +41,9 @@ namespace MaintenanceToolCommon
         // サービスをディスカバーできたデバイスを保持
         private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
 
+        // ペアリングに使用するパスキー（PIN）を保持
+        private string Passkey = null;
+
         public BLEService()
         {
             watcher = new BluetoothLEAdvertisementWatcher();
@@ -84,8 +87,11 @@ namespace MaintenanceToolCommon
             }
         }
 
-        public async void Pair()
+        public async void Pair(string passkey)
         {
+            // ペアリングに使用するパスキー（PIN）を保持
+            Passkey = passkey;
+
             // Bluetoothがオンになっていることを確認
             bool bton = false;
             try {
@@ -153,8 +159,14 @@ namespace MaintenanceToolCommon
 
         private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
         {
-            AppCommon.OutputLogInfo("FIDO認証器とのペアリングが自動的に実行されます。");
-            args.Accept();
+            if (args.PairingKind == DevicePairingKinds.ProvidePin) {
+                AppCommon.OutputLogInfo("指定のパスキーを使用し、FIDO認証器とのペアリングを実行します。");
+                args.Accept(Passkey);
+
+            } else {
+                AppCommon.OutputLogInfo("FIDO認証器とのペアリングが自動的に実行されます。");
+                args.Accept();
+            }
         }
 
         public async void PairWithFIDOPeripheral()
@@ -168,9 +180,17 @@ namespace MaintenanceToolCommon
 
                 // ペアリング実行
                 deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
-                DevicePairingResult result = await deviceInfoForPair.Pairing.Custom.PairAsync(
-                                DevicePairingKinds.ConfirmOnly, 
-                                DevicePairingProtectionLevel.Encryption);
+                DevicePairingResult result;
+                if (Passkey == null || Passkey.Length == 0) {
+                    // パスキーが指定されていない場合
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ConfirmOnly, DevicePairingProtectionLevel.Encryption);
+
+                } else {
+                    // パスキーが指定されている場合は、パスキーを使用
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ProvidePin, DevicePairingProtectionLevel.EncryptionAndAuthentication);
+                }
                 deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
 
                 // ペアリングが正常終了したら処理完了

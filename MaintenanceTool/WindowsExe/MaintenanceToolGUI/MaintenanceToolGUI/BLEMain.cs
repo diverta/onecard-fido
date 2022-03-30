@@ -58,9 +58,9 @@ namespace MaintenanceToolGUI
             mainForm.OnPrintMessageText(message);
         }
 
-        public void doPairing()
+        public void doPairing(string passkey)
         {
-            bleProcess.PairWithFIDOPeripheral();
+            bleProcess.PairWithFIDOPeripheral(passkey);
         }
 
         public void OnPairedDevice(bool success, string messageOnFail)
