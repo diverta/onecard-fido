@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		+CwM6MTza04+gTYmglAxjeC8S+Q=
+		8h6Do5OBScg4mDB+c9SAzJb+L/U=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -76,17 +76,17 @@
 		<data>
 		RsqlGTJBKY0KYFwYxvxE6lXDzBc=
 		</data>
-		<key>Resources/app_update.PCA10095.0.4.3.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.5.bin</key>
 		<data>
-		4oLGXqNOvzEmCsWets9LRmi8sZs=
+		o1lAkp8OVxDMLrvr7Pf3Vm5cBL4=
 		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.4.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.5.zip</key>
 		<data>
-		ZJYbQEZy8DEqR+SdB5hrtDJLuP0=
+		HX+dsNtL0JNngO1Z1H+F2hlxcdc=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.4.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.5.zip</key>
 		<data>
-		e0BPyOWevWGxACKa9Aul4ypSXe8=
+		9FLExrAcW0Xw2jPMDyQyS1grIPY=
 		</data>
 		<key>Resources/card_edit_passwd.param</key>
 		<data>
@@ -164,7 +164,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2LiW+e6sXg4ARm1aDLXrIphJaKTAmNXDfbnGHDA+Ltc=
+			OgJn+52qg+o8oSVjIhhrcXaIeMooblPWOxBxi5lc6E4=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -279,25 +279,25 @@
 			MvXLJt12u/aCuerb+Uj7kd/e3OGo7nz/aM3MMLvjYM0=
 			</data>
 		</dict>
-		<key>Resources/app_update.PCA10095.0.4.3.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.5.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			hB7A3LHuSPmeV5xEX9FuJvLdzsLYcXwLzHHeZjA2glg=
+			QbSZQOy2YQx2B3f3UHYm4KIRXCSw8vJSSAPggYftU18=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.4.zip</key>
+		<key>Resources/appkg.PCA10059_01.0.3.5.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			CdvE7XjhqNqhXiAmhBI6jwVh9U8EtdXYYsyoDx6kmz0=
+			OrSxieW6TNLAQIhesytupD+T3k+v8B9NPvb8VewFxiw=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.4.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.3.5.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Gj6cA8Z4K++m1kNDSDnWp2gzMQzlw4dvkPgtrufY920=
+			MEWrUzImCE3PnRddy0Xho5YFFM+xRrIxbT0bbxr8PuY=
 			</data>
 		</dict>
 		<key>Resources/card_edit_passwd.param</key>
