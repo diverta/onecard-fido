@@ -20,6 +20,9 @@
 		7A1F778A2744994800B3B1A8 /* ToolFIDOAttestationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F77892744994800B3B1A8 /* ToolFIDOAttestationCommand.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
+		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
+		7A2D7DD627F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */; };
+		7A2D7DD727F570A80036E35F /* app_update.PCA10095.0.4.5.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */; };
 		7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
 		7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */; };
 		7A3A1B20271E6F7E006864A1 /* PinCodeParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */; };
@@ -29,15 +32,12 @@
 		7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3A1B25271E6F8D006864A1 /* ToolPreferenceWindow.xib */; };
 		7A3A1B2A271E6F8D006864A1 /* ToolPreferenceCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B26271E6F8D006864A1 /* ToolPreferenceCommand.m */; };
 		7A3A1B2B271E6F8D006864A1 /* ToolPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B28271E6F8D006864A1 /* ToolPreferenceWindow.m */; };
-		7A3D872E27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A3D872C27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip */; };
-		7A3D872F27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A3D872D27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
 		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
 		7A4B02C8274B3C4C00BF44C2 /* ToolDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4B02C7274B3C4C00BF44C2 /* ToolDFUCommand.m */; };
 		7A4B02CC274B3C8B00BF44C2 /* ToolDFUWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4B02C9274B3C8B00BF44C2 /* ToolDFUWindow.m */; };
 		7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4B02CB274B3C8B00BF44C2 /* ToolDFUWindow.xib */; };
-		7A4B6F6627E8656D006AB24B /* app_update.PCA10095.0.4.4.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A4B6F6527E8656C006AB24B /* app_update.PCA10095.0.4.4.bin */; };
 		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
 		7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1178271E6A740095C29E /* usb_cdc_util.c */; };
@@ -132,6 +132,9 @@
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
+		7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.5.zip; sourceTree = "<group>"; };
+		7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.5.zip; sourceTree = "<group>"; };
+		7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.5.bin; sourceTree = "<group>"; };
 		7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = export_pubkey_and_backup.sh; sourceTree = "<group>"; };
 		7A314AC827CF1399009B4F77 /* ToolPGPCcidCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCcidCommand.h; sourceTree = "<group>"; };
 		7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPGPCcidCommand.m; sourceTree = "<group>"; };
@@ -147,8 +150,6 @@
 		7A3A1B26271E6F8D006864A1 /* ToolPreferenceCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceCommand.m; sourceTree = "<group>"; };
 		7A3A1B27271E6F8D006864A1 /* ToolPreferenceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPreferenceWindow.h; sourceTree = "<group>"; };
 		7A3A1B28271E6F8D006864A1 /* ToolPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceWindow.m; sourceTree = "<group>"; };
-		7A3D872C27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.4.zip; sourceTree = "<group>"; };
-		7A3D872D27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.4.zip; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVImporter.h; sourceTree = "<group>"; };
@@ -160,7 +161,6 @@
 		7A4B02C9274B3C8B00BF44C2 /* ToolDFUWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolDFUWindow.m; sourceTree = "<group>"; };
 		7A4B02CA274B3C8B00BF44C2 /* ToolDFUWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolDFUWindow.h; sourceTree = "<group>"; };
 		7A4B02CB274B3C8B00BF44C2 /* ToolDFUWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToolDFUWindow.xib; sourceTree = "<group>"; };
-		7A4B6F6527E8656C006AB24B /* app_update.PCA10095.0.4.4.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.4.bin; sourceTree = "<group>"; };
 		7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUStartWindow.h; sourceTree = "<group>"; };
 		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
@@ -538,9 +538,9 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A4B6F6527E8656C006AB24B /* app_update.PCA10095.0.4.4.bin */,
-				7A3D872D27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip */,
-				7A3D872C27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip */,
+				7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */,
+				7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */,
+				7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
 				7A8528FE277176F10096F41D /* add_sub_key.sh */,
@@ -672,23 +672,23 @@
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
+				7A2D7DD727F570A80036E35F /* app_update.PCA10095.0.4.5.bin in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
 				7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */,
 				7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */,
+				7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */,
 				7A3A1B22271E6F7E006864A1 /* PinCodeParamWindow.xib in Resources */,
 				7A4D1189271E6A750095C29E /* DFUStartWindow.xib in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
 				7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */,
+				7A2D7DD627F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip in Resources */,
 				7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */,
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
-				7A3D872F27C337F100AC8DAD /* appkg.PCA10059_01.0.3.4.zip in Resources */,
-				7A4B6F6627E8656D006AB24B /* app_update.PCA10095.0.4.4.bin in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
-				7A3D872E27C337F100AC8DAD /* appkg.PCA10059_02.0.3.4.zip in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,
@@ -888,7 +888,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 56;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -901,7 +901,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.1.39;
+				MARKETING_VERSION = 0.1.40;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -915,7 +915,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 56;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -929,7 +929,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.1.39;
+				MARKETING_VERSION = 0.1.40;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
