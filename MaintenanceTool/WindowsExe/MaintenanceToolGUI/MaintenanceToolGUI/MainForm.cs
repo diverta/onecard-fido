@@ -404,7 +404,7 @@ namespace MaintenanceToolGUI
         public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
-                FormUtil.ShowWarningMessage(MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
+                FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 return true;
             }
             return false;

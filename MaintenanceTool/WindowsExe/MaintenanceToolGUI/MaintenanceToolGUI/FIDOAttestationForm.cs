@@ -56,7 +56,7 @@ namespace MaintenanceToolGUI
 
             // 未入力の場合はポップアップメッセージを表示して
             // テキストボックスにフォーカスを移す
-            FormUtil.ShowWarningMessage(MainForm.GetMaintenanceToolTitle(), errorMessage);
+            FormUtil.ShowWarningMessage(this, MainForm.GetMaintenanceToolTitle(), errorMessage);
             textBox.Focus();
 
             return false;
