@@ -10,11 +10,6 @@ namespace MaintenanceToolGUI
             MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public static void ShowWarningMessage(string captionText, string messageText)
-        {
-            MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
         public static void ShowErrorMessage(IWin32Window owner, string captionText, string messageText)
         {
             MessageBox.Show(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -85,7 +80,7 @@ namespace MaintenanceToolGUI
         public static bool checkIsNumeric(TextBox textBox, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
-                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -97,7 +92,7 @@ namespace MaintenanceToolGUI
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
             }
-            ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
+            ShowWarningMessage(destText.Parent, MainForm.MaintenanceToolTitle, informativeText);
             destText.Focus();
             return false;
         }
@@ -106,7 +101,7 @@ namespace MaintenanceToolGUI
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
-                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -117,7 +112,7 @@ namespace MaintenanceToolGUI
         {
             int value = int.Parse(textBox.Text);
             if (value < minValue || value > maxValue) {
-                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -127,7 +122,7 @@ namespace MaintenanceToolGUI
         public static bool checkValueWithPattern(TextBox textBox, string pattern, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
-                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
