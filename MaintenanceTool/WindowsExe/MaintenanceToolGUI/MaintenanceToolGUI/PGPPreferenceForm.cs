@@ -635,9 +635,9 @@ namespace MaintenanceToolGUI
                 name,
                 success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             if (success) {
-                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FormUtil.ShowInfoMessage(this, MainForm.MaintenanceToolTitle, formatted);
             } else {
-                MessageBox.Show(this, errMessage, formatted, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FormUtil.ShowWarningMessage(this, formatted, errMessage);
             }
         }
 

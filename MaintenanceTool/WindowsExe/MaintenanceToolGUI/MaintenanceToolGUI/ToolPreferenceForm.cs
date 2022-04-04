@@ -256,12 +256,12 @@ namespace MaintenanceToolGUI
                 SetupFieldAndButton();
                 // 読込成功時はポップアップ表示を省略
                 if (funcName != ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET) {
-                    MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+                    FormUtil.ShowInfoMessage(this, MainForm.MaintenanceToolTitle, formatted);
                 }
 
             } else {
                 // 処理失敗時はメッセージをポップアップ表示
-                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+                FormUtil.ShowWarningMessage(this, formatted, errMessage);
             }
         }
     }
