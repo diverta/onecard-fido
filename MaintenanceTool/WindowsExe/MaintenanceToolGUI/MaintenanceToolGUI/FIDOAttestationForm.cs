@@ -64,7 +64,7 @@ namespace MaintenanceToolGUI
 
         private void buttonSelectKeyPath_Click(object sender, EventArgs e)
         {
-            FormUtil.selectFilePath(openFileDialog1,
+            FormUtil.SelectFilePath(openFileDialog1,
                 ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH,
                 ToolGUICommon.FILTER_SELECT_PEM_PATH,
                 textKeyPath);
@@ -72,7 +72,7 @@ namespace MaintenanceToolGUI
 
         private void buttonSelectCertPath_Click(object sender, EventArgs e)
         {
-            FormUtil.selectFilePath(openFileDialog1,
+            FormUtil.SelectFilePath(openFileDialog1,
                 ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH,
                 ToolGUICommon.FILTER_SELECT_CRT_PATH,
                 textCertPath);

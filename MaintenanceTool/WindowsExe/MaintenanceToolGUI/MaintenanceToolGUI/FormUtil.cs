@@ -146,7 +146,7 @@ namespace MaintenanceToolGUI
             return (dialogResult == DialogResult.Yes);
         }
 
-        public static void selectFilePath(
+        public static void SelectFilePath(
             OpenFileDialog dialog, string title, string filter, TextBox textBox)
         {
             // ファイル選択ダイアログで選択されたパスを
@@ -178,7 +178,7 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public static bool checkIsNumeric(TextBox textBox, string informativeText)
+        public static bool CheckIsNumeric(TextBox textBox, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
                 ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
@@ -188,7 +188,7 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool compareEntry(TextBox destText, TextBox srcText, string informativeText)
+        public static bool CompareEntry(TextBox destText, TextBox srcText, string informativeText)
         {
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
@@ -198,7 +198,7 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        public static bool checkEntrySize(TextBox textBox, int minSize, int maxSize, string informativeText)
+        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string informativeText)
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
@@ -209,7 +209,7 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool checkValueInRange(TextBox textBox, int minValue, int maxValue, string informativeText)
+        public static bool CheckValueInRange(TextBox textBox, int minValue, int maxValue, string informativeText)
         {
             int value = int.Parse(textBox.Text);
             if (value < minValue || value > maxValue) {
@@ -220,7 +220,7 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool checkValueWithPattern(TextBox textBox, string pattern, string informativeText)
+        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
                 ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
