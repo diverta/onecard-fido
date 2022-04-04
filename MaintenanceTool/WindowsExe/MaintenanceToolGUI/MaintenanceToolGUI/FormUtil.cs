@@ -1,10 +1,111 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
 {
     class FormUtil
     {
+        //
+        // メッセージボックス中央表示対応のための処理群
+        //
+        private const int HCBT_ACTIVATE = 5;
+        private const int GWL_HINSTANCE = -6;
+        private const int WH_CBT = 5;
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOZORDER = 0x0004;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
+        private delegate IntPtr HOOKPROC(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetWindowsHookEx(int idHook, HOOKPROC lpfn, IntPtr hInstance, IntPtr threadId);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnhookWindowsHookEx(IntPtr hHook);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr CallNextHookEx(IntPtr hHook, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+
+        private static IntPtr hOwner = (IntPtr)0;
+        private static IntPtr hHook = (IntPtr)0;
+
+        private static DialogResult MessageBoxShow(IWin32Window owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            // 呼出元ウィンドウのインスタンスハンドルを取得
+            hOwner = owner.Handle;
+            IntPtr hInstance = GetWindowLong(owner.Handle, GWL_HINSTANCE);
+
+            // スレッド識別子を取得
+            IntPtr threadId = GetCurrentThreadId();
+
+            // フック設定 --> HookProcが呼び出される
+            hHook = SetWindowsHookEx(WH_CBT, new HOOKPROC(HookProc), hInstance, threadId);
+
+            // メッセージボックスを表示
+            return MessageBox.Show(owner, text, caption, buttons, icon);
+        }
+
+        private static IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            // システムがウィンドウをアクティブ化しようとした場合
+            if (nCode == HCBT_ACTIVATE) {
+                // オーナーウィンドウの領域を取得
+                RECT rcOwner = GetWindowRect(hOwner);
+
+                // メッセージボックスの領域を取得
+                RECT rcMsgBox = GetWindowRect(wParam);
+
+                // メッセージボックスをオーナーウィンドウの中央位置に移動
+                int x = rcOwner.Left + (rcOwner.Width - rcMsgBox.Width) / 2;
+                int y = rcOwner.Top + (rcOwner.Height - rcMsgBox.Height) / 2;
+                SetWindowPos(wParam, x, y);
+
+                // フックを解除
+                UnhookWindowsHookEx(hHook);
+                hHook = (IntPtr)0;
+            }
+
+            // 次のフックを処理
+            return CallNextHookEx(hHook, nCode, wParam, lParam);
+        }
+
+        private struct RECT
+        {
+            public int Left, Top, Right, Bottom;
+            public int Width => Right - Left;
+            public int Height => Bottom - Top;
+        }
+
+        private static RECT GetWindowRect(IntPtr hWnd)
+        {
+            RECT rc;
+            GetWindowRect(hWnd, out rc);
+            return rc;
+        }
+
+        private static bool SetWindowPos(IntPtr hWnd, int x, int y)
+        {
+            var flags = SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE;
+            return SetWindowPos(hWnd, 0, x, y, 0, 0, flags);
+        }
+
+        //
+        // メッセージボックス関数群
+        //
         public static void ShowErrorMessage(string captionText, string messageText)
         {
             MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
