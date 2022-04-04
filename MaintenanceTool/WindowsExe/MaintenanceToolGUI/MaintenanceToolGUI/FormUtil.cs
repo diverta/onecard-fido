@@ -113,22 +113,22 @@ namespace MaintenanceToolGUI
 
         public static void ShowErrorMessage(IWin32Window owner, string captionText, string messageText)
         {
-            MessageBox.Show(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxShow(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static void ShowWarningMessage(IWin32Window owner, string captionText, string messageText)
         {
-            MessageBox.Show(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBoxShow(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public static void ShowInfoMessage(IWin32Window owner, string captionText, string messageText)
         {
-            MessageBox.Show(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxShow(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static bool DisplayPromptPopup(IWin32Window owner, string message)
         {
-            DialogResult dialogResult = MessageBox.Show(owner,
+            DialogResult dialogResult = MessageBoxShow(owner,
                 message, MainForm.MaintenanceToolTitle,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -138,7 +138,7 @@ namespace MaintenanceToolGUI
 
         public static bool DisplayPromptPopup(IWin32Window owner, string title, string message)
         {
-            DialogResult dialogResult = MessageBox.Show(owner,
+            DialogResult dialogResult = MessageBoxShow(owner,
                 message, title,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
