@@ -155,11 +155,11 @@
 <wire x1="30" y1="0" x2="30" y2="30" width="0" layer="20"/>
 <wire x1="30" y1="30" x2="0" y2="30" width="0" layer="20"/>
 <wire x1="0" y1="30" x2="0" y2="0" width="0" layer="20"/>
-<text x="13" y="16.1" size="0.6" layer="21" rot="R270" align="bottom-center">GND</text>
-<text x="13" y="18.6" size="0.6" layer="21" rot="R270" align="bottom-center">VTG</text>
-<text x="13" y="21.2" size="0.6" layer="21" rot="R270" align="bottom-center">PIO</text>
-<text x="13" y="23.7" size="0.6" layer="21" rot="R270" align="bottom-center">PCLK</text>
-<text x="13" y="26.2" size="0.6" layer="21" rot="R270" align="bottom-center">RST</text>
+<text x="13" y="16.1" size="0.5" layer="21" rot="R270" align="bottom-center">GND</text>
+<text x="13" y="18.6" size="0.5" layer="21" rot="R270" align="bottom-center">VTG</text>
+<text x="13" y="21.2" size="0.5" layer="21" rot="R270" align="bottom-center">PIO</text>
+<text x="13" y="23.7" size="0.5" layer="21" rot="R270" align="bottom-center">PCLK</text>
+<text x="13" y="26.2" size="0.5" layer="21" rot="R270" align="bottom-center">RST</text>
 <text x="15.8" y="23.7" size="0.6" layer="22" rot="MR270" align="bottom-center">AIN1</text>
 <text x="15.8" y="21.2" size="0.6" layer="22" rot="MR270" align="bottom-center">AIN0</text>
 <text x="15.8" y="18.6" size="0.6" layer="22" rot="MR270" align="bottom-center">TXD</text>
