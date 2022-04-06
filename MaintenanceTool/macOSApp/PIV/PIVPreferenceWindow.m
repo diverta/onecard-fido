@@ -167,12 +167,20 @@
     }
 
     - (IBAction)buttonPivStatusDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // PIV設定情報取得
         [self enableButtons:false];
         [self commandWillStatus];
     }
 
     - (IBAction)buttonInitialSettingDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_INITIAL_SETTING];
         if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING] == false) {
@@ -184,6 +192,10 @@
     }
 
     - (IBAction)buttonClearSettingDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_CLEAR_SETTING];
         if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING] == false) {
@@ -199,9 +211,22 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
         [self commandWillResetFirmware];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if ([[self toolPIVCommand] checkUSBHIDConnection]) {
+            return true;
+        }
+        // TODO: アラートを表示
+        return false;
     }
 
 #pragma mark - For PIVPreferenceWindow open/close
@@ -364,6 +389,10 @@
     }
 
     - (IBAction)buttonInstallPkeyCertDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // ラジオボタンから鍵種別を取得
         uint8_t slotId = [self selectedPkeySlotId];
         // 入力欄の内容をチェック
@@ -423,6 +452,10 @@
     }
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // ラジオボタンから実行コマンド種別を取得
         Command command = [self selectedPinCommand];
         // 入力欄の内容をチェック

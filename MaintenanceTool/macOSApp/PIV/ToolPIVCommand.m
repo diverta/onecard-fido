@@ -878,4 +878,9 @@
         [self notifyErrorMessage:errorMsg];
     }
 
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolAppCommand] checkForHIDCommand];
+    }
+
 @end

@@ -25,6 +25,7 @@
     - (void)commandWillStatus:(Command)command;
 
     - (NSString *)getPIVSettingDescriptionString;
+    - (bool)checkUSBHIDConnection;
 
 @end
 
