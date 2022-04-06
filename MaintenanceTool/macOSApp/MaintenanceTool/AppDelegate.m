@@ -86,7 +86,9 @@
 
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond];
+        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS]) {
+            [[self toolAppCommand] doCommandEraseBond];
+        }
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
@@ -194,6 +196,18 @@
     - (void)pinCodeParamWindowWillOpenForHID {
         // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
         [[self toolAppCommand] pinCodeParamWindowWillOpenForHID:self parentWindow:[self window]];
+    }
+
+    - (void)promptForResumeHealthCheckCommand {
+        // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
+        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
+                         informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH]) {
+            // メッセージダイアログでYESをクリックした場合は、ヘルスチェック処理を実行
+            [[self toolAppCommand] resumeHealthCheckCommand];
+        } else {
+            // メッセージダイアログでNOをクリックした場合は終了
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        }
     }
 
 #pragma mark - Common method called by callback
