@@ -16,7 +16,6 @@
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
-#import "ToolPopupWindow.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolDFUCommand.h"
 
@@ -91,27 +90,21 @@
     }
 
     - (void)doCommandTestCtapHidPing {
-        if ([self checkForHIDCommand]) {
-            // PINGテスト実行
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-        }
+        // PINGテスト実行
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
     }
 
     - (void)doCommandHidGetFlashStat {
-        if ([self checkForHIDCommand]) {
-            // Flash ROM情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
-        }
+        // Flash ROM情報取得
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
     }
 
     - (void)doCommandHidGetVersionInfo {
-        if ([self checkForHIDCommand]) {
-            // バージョン情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
-        }
+        // バージョン情報取得
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
     }
 
     - (void)doCommandTestRegister {
@@ -127,49 +120,33 @@
     }
 
     - (void)doCommandHidCtap2HealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID CTAP2ヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
-        }
+        // HID CTAP2ヘルスチェック実行
+        [[self delegate] disableUserInterface];
+        [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
     - (void)doCommandHidU2fHealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID U2Fヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
-        }
+        // HID U2Fヘルスチェック実行
+        [[self delegate] disableUserInterface];
+        [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
     }
 
     - (void)doCommandEraseBond {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
-                             informativeText:MSG_PROMPT_ERASE_BONDS]) {
-                // ペアリング情報削除
-                [[self delegate] disableUserInterface];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
-            }
-        }
+        // ペアリング情報削除
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
     }
 
     - (void)doCommandBLMode {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
-                             informativeText:MSG_PROMPT_BOOT_LOADER_MODE]) {
-                // ブートローダーモード遷移
-                [[self delegate] disableUserInterface];
-                [self changeToBootloaderMode];
-            }
-        }
+        // ブートローダーモード遷移
+        [[self delegate] disableUserInterface];
+        [self changeToBootloaderMode];
     }
 
     - (void)doCommandFirmwareResetForCommandRef:(id)ref {
-        if ([self checkForHIDCommand]) {
-            // 認証器にファームウェアリセットを要求
-            [[self delegate] disableUserInterface];
-            [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
-        }
+        // 認証器にファームウェアリセットを要求
+        [[self delegate] disableUserInterface];
+        [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
     }
 
     - (bool)checkForHIDCommand {
@@ -180,19 +157,15 @@
 #pragma mark - For opening other window
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // FIDO鍵・証明書設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // FIDO鍵・証明書設定画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
     }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // PINコード設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // PINコード設定画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
     }
 
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -213,11 +186,9 @@
     }
 
     - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent {
-        if ([self checkForHIDCommand]) {
-            // PIV機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
-        }
+        // PIV機能設定画面を表示
+        [[self delegate] disableUserInterface];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
     }
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -243,11 +214,9 @@
     }
 
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // OpenPGP機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
-        }
+        // OpenPGP機能設定画面を表示
+        [[self delegate] disableUserInterface];
+        [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
     }
 
 #pragma mark - Perform health check
@@ -269,12 +238,8 @@
         [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
         if ([[ToolContext instance] bleScanAuthEnabled]) {
             // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
-            if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
-                             informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH] == false) {
-                // メッセージダイアログでNOをクリックした場合は終了
-                [self commandDidProcess:COMMAND_NONE result:true message:nil];
-                return;
-            }
+            [[self delegate] promptForResumeHealthCheckCommand];
+            return;
         }
         // ヘルスチェック処理を実行
         [self resumeHealthCheckCommand];

@@ -45,6 +45,7 @@
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
     - (void)toolPreferenceInquiryDidProcess:(bool)result;
+    - (void)resumeHealthCheckCommand;
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type;
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
@@ -58,6 +59,7 @@
     - (void)disableUserInterface;
     - (void)notifyAppCommandMessage:(NSString *)message;
     - (void)pinCodeParamWindowWillOpenForHID;
+    - (void)promptForResumeHealthCheckCommand;
 
 @end
 
