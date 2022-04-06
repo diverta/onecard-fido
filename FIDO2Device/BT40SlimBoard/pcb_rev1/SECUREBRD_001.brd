@@ -155,11 +155,11 @@
 <wire x1="30" y1="0" x2="30" y2="30" width="0" layer="20"/>
 <wire x1="30" y1="30" x2="0" y2="30" width="0" layer="20"/>
 <wire x1="0" y1="30" x2="0" y2="0" width="0" layer="20"/>
-<text x="13" y="16.1" size="0.6" layer="22" rot="R270" align="bottom-center">GND</text>
-<text x="13" y="18.6" size="0.6" layer="22" rot="R270" align="bottom-center">VTG</text>
-<text x="13" y="21.2" size="0.6" layer="22" rot="R270" align="bottom-center">PIO</text>
-<text x="13" y="23.7" size="0.6" layer="22" rot="R270" align="bottom-center">PCLK</text>
-<text x="13" y="26.2" size="0.6" layer="22" rot="R270" align="bottom-center">RST</text>
+<text x="13" y="16.1" size="0.6" layer="21" rot="R270" align="bottom-center">GND</text>
+<text x="13" y="18.6" size="0.6" layer="21" rot="R270" align="bottom-center">VTG</text>
+<text x="13" y="21.2" size="0.6" layer="21" rot="R270" align="bottom-center">PIO</text>
+<text x="13" y="23.7" size="0.6" layer="21" rot="R270" align="bottom-center">PCLK</text>
+<text x="13" y="26.2" size="0.6" layer="21" rot="R270" align="bottom-center">RST</text>
 <text x="15.8" y="23.7" size="0.6" layer="22" rot="MR270" align="bottom-center">AIN1</text>
 <text x="15.8" y="21.2" size="0.6" layer="22" rot="MR270" align="bottom-center">AIN0</text>
 <text x="15.8" y="18.6" size="0.6" layer="22" rot="MR270" align="bottom-center">TXD</text>
@@ -798,7 +798,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="9.10625" y="0.895" size="0.7112" layer="27"/>
 </element>
 <element name="LD2" library="Parts" package="APTD1608" value="APHD1608LSURCK" x="10.6" y="3.9" smashed="yes">
-<attribute name="NAME" x="9" y="4.1" size="0.7" layer="25" rot="R180"/>
+<attribute name="NAME" x="9" y="4.2" size="0.7" layer="25" rot="R180"/>
 <attribute name="VALUE" x="9.10625" y="2.295" size="0.7112" layer="27"/>
 </element>
 <element name="LD4" library="Parts" package="APTD1608" value="APTD1608LVBC/D" x="10.6" y="1.1" smashed="yes">
@@ -822,7 +822,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="15.96125" y="11.04625" size="0.7112" layer="27" rot="R180" align="top-left"/>
 </element>
 <element name="BAT1" library="Connectors" package="BAT-HLD-012-SMT" value="BAT-HLD-012-SMT" x="5.5" y="16.7" smashed="yes" rot="R270">
-<attribute name="NAME" x="2.5" y="23.4" size="0.9" layer="25" rot="R90"/>
+<attribute name="NAME" x="1.8" y="23.1" size="0.9" layer="25" rot="R90"/>
 <attribute name="VALUE" x="6.29" y="6.87" size="0.7" layer="27" rot="R270"/>
 </element>
 <element name="CN1" library="Connectors" package="2137160001" value="2137160001" x="23.2178" y="7.1688" smashed="yes">
@@ -1223,20 +1223,21 @@ design rules under a new name.</description>
 <signal name="LED3">
 <contactref element="R4" pad="1"/>
 <contactref element="U1" pad="13"/>
-<via x="14.7" y="2.5" extent="1-16" drill="0.3048"/>
+<via x="14.7" y="3" extent="1-16" drill="0.3048"/>
 <via x="25.9" y="16.3" extent="1-16" drill="0.3048"/>
 <wire x1="28.6" y1="19.2" x2="26.6" y2="19.2" width="0.1524" layer="1"/>
 <wire x1="26.6" y1="19.2" x2="25.9" y2="18.5" width="0.1524" layer="1"/>
 <wire x1="21.5" y1="13.3" x2="20.6" y2="13.3" width="0.1524" layer="16"/>
-<wire x1="16.1" y1="8.8" x2="16.1" y2="3.8" width="0.1524" layer="16"/>
-<wire x1="14.7" y1="2.5" x2="16.1" y2="3.8" width="0.1524" layer="16"/>
-<wire x1="13.85" y1="2.5" x2="14.7" y2="2.5" width="0.1524" layer="1"/>
+<wire x1="16.1" y1="8.8" x2="16.1" y2="4.4" width="0.1524" layer="16"/>
 <wire x1="16.1" y1="8.8" x2="20.6" y2="13.3" width="0.1524" layer="16"/>
 <wire x1="21.5" y1="13.3" x2="22.9" y2="14.7" width="0.1524" layer="16"/>
 <wire x1="22.9" y1="14.7" x2="24.7" y2="14.7" width="0.1524" layer="16"/>
 <wire x1="24.7" y1="14.7" x2="25.9" y2="15.9" width="0.1524" layer="16"/>
 <wire x1="25.9" y1="16.3" x2="25.9" y2="15.9" width="0.1524" layer="16"/>
 <wire x1="25.9" y1="18.5" x2="25.9" y2="16.3" width="0.1524" layer="1"/>
+<wire x1="13.85" y1="2.5" x2="14.2" y2="2.5" width="0.1524" layer="1"/>
+<wire x1="14.2" y1="2.5" x2="14.7" y2="3" width="0.1524" layer="1"/>
+<wire x1="16.1" y1="4.4" x2="14.7" y2="3" width="0.1524" layer="16"/>
 </signal>
 <signal name="LED4">
 <contactref element="R5" pad="1"/>
