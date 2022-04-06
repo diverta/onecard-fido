@@ -649,11 +649,7 @@
 
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
-        if (![[self toolHIDHelper] isDeviceConnected]) {
-            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
-            return false;
-        }
-        return true;
+        return [[self toolHIDHelper] isDeviceConnected];
     }
 
 #pragma mark - Interface for SetPinParamWindow
