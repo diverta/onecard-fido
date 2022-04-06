@@ -61,6 +61,15 @@
         }
     }
 
+    - (bool)checkForHIDCommand {
+        // USBポートに接続されていない場合はfalse
+        if ([[self toolAppCommand] checkForHIDCommand]) {
+            return true;
+        }
+        // TODO: アラートを表示
+        return false;
+    }
+
 #pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
@@ -86,24 +95,32 @@
 
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
-        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS]) {
-            [[self toolAppCommand] doCommandEraseBond];
+        if ([self checkForHIDCommand]) {
+            if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS]) {
+                [[self toolAppCommand] doCommandEraseBond];
+            }
         }
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
         // FIDO鍵・証明書設定画面を開く
-        [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
+        }
     }
 
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
         // PINコード設定画面を開く
-        [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+        }
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+        }
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
@@ -113,7 +130,9 @@
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
         // OpenPGP機能設定画面を表示
-        [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
+        }
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -128,27 +147,37 @@
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
         // HID CTAP2ヘルスチェック実行
-        [[self toolAppCommand] doCommandHidCtap2HealthCheck];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] doCommandHidCtap2HealthCheck];
+        }
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandHidU2fHealthCheck];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] doCommandHidU2fHealthCheck];
+        }
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
         // PINGテスト実行
-        [[self toolAppCommand] doCommandTestCtapHidPing];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] doCommandTestCtapHidPing];
+        }
     }
 
     - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         // Flash ROM情報取得
-        [[self toolAppCommand] doCommandHidGetFlashStat];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] doCommandHidGetFlashStat];
+        }
     }
 
     - (IBAction)menuItemTestHID5DidSelect:(id)sender {
         // バージョン情報取得
-        [[self toolAppCommand] doCommandHidGetVersionInfo];
+        if ([self checkForHIDCommand]) {
+            [[self toolAppCommand] doCommandHidGetVersionInfo];
+        }
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {

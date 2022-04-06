@@ -188,12 +188,21 @@
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
         [self commandWillPerformPGPProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if ([[self toolPGPCommand] checkUSBHIDConnection]) {
+            return true;
+        }
+        // TODO: アラートを表示
+        return false;
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -243,7 +252,7 @@
 
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 入力欄の内容をチェック
@@ -265,7 +274,7 @@
 
     - (IBAction)buttonPGPStatusDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // PGPステータス照会処理を実行
@@ -275,7 +284,7 @@
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 事前に確認ダイアログを表示
@@ -316,7 +325,7 @@
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 入力欄の内容をチェック
