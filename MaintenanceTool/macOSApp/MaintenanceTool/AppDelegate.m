@@ -46,6 +46,9 @@
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // 共通ポップアップ画面の初期化
+        [[ToolPopupWindow defaultWindow] setApplicationWindow:[self window]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {

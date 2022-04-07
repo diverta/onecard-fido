@@ -8,11 +8,55 @@
 
 #import "ToolPopupWindow.h"
 
+// このウィンドウクラスのインスタンスを保持
+static ToolPopupWindow *sharedInstance;
+
 @interface ToolPopupWindow ()
+
+    // アプリケーションウィンドウの参照を保持
+    @property (nonatomic, weak) NSWindow        *parentWindow;
 
 @end
 
 @implementation ToolPopupWindow
+
+#pragma mark - Methods for singleton
+
+    + (ToolPopupWindow *)defaultWindow {
+        // このクラスのインスタンス化を１度だけ行う
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [[self alloc] init];
+        });
+        // インスタンスの参照を戻す
+        return sharedInstance;
+    }
+
+    + (id)allocWithZone:(NSZone *)zone {
+        // このクラスのインスタンス化を１度だけ行う
+        __block id ret = nil;
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [super allocWithZone:zone];
+            ret = sharedInstance;
+        });
+        
+        // インスタンスの参照を戻す（２回目以降の呼び出しではnilが戻る）
+        return ret;
+    }
+
+    - (id)copyWithZone:(NSZone *)zone{
+        return self;
+    }
+
+#pragma mark - Methods of this instance
+
+    - (void)setApplicationWindow:(NSWindow *)window {
+        // アプリケーションウィンドウの参照を保持
+        [self setParentWindow:window];
+    }
+
+#pragma mark - Static methods
 
     + (void)critical:(NSString *)message informativeText:(NSString *)subMessage {
         if (!message) {

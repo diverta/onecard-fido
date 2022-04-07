@@ -9,6 +9,9 @@
 
 @interface ToolPopupWindow : NSObject
 
+    + (ToolPopupWindow *)defaultWindow;
+    - (void)setApplicationWindow:(NSWindow *)window;
+
     + (void)critical:     (NSString *)message informativeText:(NSString *)subMessage;
     + (void)warning:      (NSString *)message informativeText:(NSString *)subMessage;
     + (void)informational:(NSString *)message informativeText:(NSString *)subMessage;
