@@ -61,15 +61,6 @@
         }
     }
 
-    - (bool)checkForHIDCommand {
-        // USBポートに接続されていない場合はfalse
-        if ([[self toolAppCommand] checkForHIDCommand]) {
-            return true;
-        }
-        // TODO: アラートを表示
-        return false;
-    }
-
 #pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
@@ -95,32 +86,22 @@
 
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS]) {
-                [[self toolAppCommand] doCommandEraseBond];
-            }
-        }
+        [[self toolAppCommand] doCommandEraseBond];
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
         // FIDO鍵・証明書設定画面を開く
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
-        }
+        [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
         // PINコード設定画面を開く
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
-        }
+        [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
-        }
+        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
@@ -130,9 +111,7 @@
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
         // OpenPGP機能設定画面を表示
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
-        }
+        [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -147,37 +126,27 @@
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
         // HID CTAP2ヘルスチェック実行
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] doCommandHidCtap2HealthCheck];
-        }
+        [[self toolAppCommand] doCommandHidCtap2HealthCheck];
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] doCommandHidU2fHealthCheck];
-        }
+        [[self toolAppCommand] doCommandHidU2fHealthCheck];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
         // PINGテスト実行
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] doCommandTestCtapHidPing];
-        }
+        [[self toolAppCommand] doCommandTestCtapHidPing];
     }
 
     - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         // Flash ROM情報取得
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] doCommandHidGetFlashStat];
-        }
+        [[self toolAppCommand] doCommandHidGetFlashStat];
     }
 
     - (IBAction)menuItemTestHID5DidSelect:(id)sender {
         // バージョン情報取得
-        if ([self checkForHIDCommand]) {
-            [[self toolAppCommand] doCommandHidGetVersionInfo];
-        }
+        [[self toolAppCommand] doCommandHidGetVersionInfo];
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
@@ -225,18 +194,6 @@
     - (void)pinCodeParamWindowWillOpenForHID {
         // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
         [[self toolAppCommand] pinCodeParamWindowWillOpenForHID:self parentWindow:[self window]];
-    }
-
-    - (void)promptForResumeHealthCheckCommand {
-        // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
-                         informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH]) {
-            // メッセージダイアログでYESをクリックした場合は、ヘルスチェック処理を実行
-            [[self toolAppCommand] resumeHealthCheckCommand];
-        } else {
-            // メッセージダイアログでNOをクリックした場合は終了
-            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
-        }
     }
 
 #pragma mark - Common method called by callback
