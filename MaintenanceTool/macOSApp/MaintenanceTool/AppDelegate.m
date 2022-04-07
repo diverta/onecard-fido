@@ -187,6 +187,11 @@
         [self enableButtons:false];
     }
 
+    - (void)enableUserInterface {
+        // メニュー、ボタンを活性化
+        [self enableButtons:true];
+    }
+
     - (void)notifyAppCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         if (message) {

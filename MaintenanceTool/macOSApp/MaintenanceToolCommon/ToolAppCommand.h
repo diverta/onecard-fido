@@ -56,6 +56,7 @@
     - (void)commandStartedProcess:(NSString *)processNameOfCommand;
     - (void)commandDidProcess:(bool)result message:(NSString *)message processNameOfCommand:(NSString *)name;
     - (void)disableUserInterface;
+    - (void)enableUserInterface;
     - (void)notifyAppCommandMessage:(NSString *)message;
     - (void)pinCodeParamWindowWillOpenForHID;
 
