@@ -98,7 +98,8 @@
 
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType {
         // USBポートに装着されているかどうかチェック
-        if (![[self toolAppCommand] checkForHIDCommand]) {
+        if (![[self toolAppCommand] checkUSBHIDConnection]) {
+            // TODO: アラートを表示
             return;
         }
 

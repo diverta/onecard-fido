@@ -87,6 +87,8 @@
                 // この画面を閉じ、鍵・証明書インストール処理を開始
                 [self terminateWindow:NSModalResponseOK withCommand:COMMAND_INSTALL_SKEY_CERT];
             }
+        } else {
+            // TODO: アラートを表示
         }
     }
 
@@ -98,6 +100,8 @@
                 // この画面を閉じ、鍵・証明書削除処理を開始
                 [self terminateWindow:NSModalResponseOK withCommand:COMMAND_ERASE_SKEY_CERT];
             }
+        } else {
+            // TODO: アラートを表示
         }
     }
 

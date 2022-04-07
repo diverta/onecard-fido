@@ -172,6 +172,11 @@
         }
     }
 
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolHIDCommand] checkUSBHIDConnection];
+    }
+
     - (bool)checkForHIDCommand {
         // USBポートに接続されていない場合はfalse
         return [[self toolHIDCommand] checkUSBHIDConnection];

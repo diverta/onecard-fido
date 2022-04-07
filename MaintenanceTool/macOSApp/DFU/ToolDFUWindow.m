@@ -45,6 +45,8 @@
         if ([[self toolDFUCommand] checkUSBHIDConnection]) {
             // このウィンドウを終了
             [self terminateWindow:NSModalResponseOK withCommand:COMMAND_USB_DFU];
+        } else {
+            // TODO: アラートを表示
         }
     }
 

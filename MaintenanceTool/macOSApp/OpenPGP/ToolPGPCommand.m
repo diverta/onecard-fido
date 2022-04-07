@@ -1029,7 +1029,7 @@ typedef enum : NSInteger {
 
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
-        return [[self toolAppCommand] checkForHIDCommand];
+        return [[self toolAppCommand] checkUSBHIDConnection];
     }
 
 @end

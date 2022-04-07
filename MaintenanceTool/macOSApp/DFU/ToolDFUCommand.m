@@ -52,7 +52,7 @@
 
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
-        return [[self toolAppCommand] checkForHIDCommand];
+        return [[self toolAppCommand] checkUSBHIDConnection];
     }
 
 #pragma mark - Perform DFU

@@ -30,7 +30,7 @@
     - (void)doCommandEraseBond;
     - (void)doCommandBLMode;
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
-    - (bool)checkForHIDCommand;
+    - (bool)checkUSBHIDConnection;
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
