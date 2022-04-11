@@ -309,12 +309,9 @@
         [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
         if ([[ToolContext instance] bleScanAuthEnabled]) {
             // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
-            if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
-                             informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH] == false) {
-                // メッセージダイアログでNOをクリックした場合は終了
-                [self commandDidProcess:COMMAND_NONE result:true message:nil];
-                return;
-            }
+            [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_HCHK_BLE_AUTH informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH
+                                                      withObject:self forSelector:@selector(healthCheckCommandPromptDone)];
+            return;
         }
         // ヘルスチェック処理を実行
         [self resumeHealthCheckCommand];
@@ -333,6 +330,16 @@
             default:
                 break;
         }
+    }
+
+    - (void)healthCheckCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+            [self commandDidProcess:COMMAND_NONE result:true message:nil];
+            return;
+        }
+        // ヘルスチェック処理を実行
+        [self resumeHealthCheckCommand];
     }
 
 #pragma mark - Perform bootloader mode
