@@ -22,6 +22,9 @@
 
 @interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLECommandDelegate>
 
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow              *parentWindow;
+    // 下位クラスの参照を保持
     @property (nonatomic) ToolBLECommand        *toolBLECommand;
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
@@ -105,7 +108,13 @@
         [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO];
     }
 
-    - (void)doCommandBleU2fHealthCheck {
+    - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
+        // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolBLECommand] pinCodeParamWindowWillOpen:self parentWindow:parentWindow];
+    }
+
+    - (void)doCommandBleU2fHealthCheck:(NSWindow *)parentWindow {
         // BLE U2Fヘルスチェック実行
         [[self delegate] disableUserInterface];
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_REGISTER];
@@ -117,12 +126,16 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
-    - (void)doCommandHidCtap2HealthCheck {
+    - (void)doCommandHidCtap2HealthCheck:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // HID CTAP2ヘルスチェック実行
         [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
-    - (void)doCommandHidU2fHealthCheck {
+    - (void)doCommandHidU2fHealthCheck:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // HID U2Fヘルスチェック実行
         [self doHIDCommand:COMMAND_TEST_REGISTER];
     }
@@ -243,17 +256,6 @@
         [[self toolDFUCommand] toolDFUWindowWillOpen:sender parentWindow:parentWindow];
     }
 
-    - (void)pinCodeParamWindowWillOpenForHID:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-        [[self toolHIDCommand] pinCodeParamWindowWillOpen:sender parentWindow:parentWindow];
-    }
-
-    - (void)pinCodeParamWindowWillOpenForBLE:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] pinCodeParamWindowWillOpen:sender parentWindow:parentWindow];
-    }
-
     - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示
         [[self delegate] disableUserInterface];
@@ -321,8 +323,8 @@
     - (void)resumeHealthCheckCommand {
         switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
-                // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開くため、いったんホーム画面に制御を戻す）
-                [[self delegate] pinCodeParamWindowWillOpenForHID];
+                // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
+                [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self parentWindow]];
                 break;
             case COMMAND_TEST_REGISTER:
                 // HID U2Fヘルスチェック処理を実行

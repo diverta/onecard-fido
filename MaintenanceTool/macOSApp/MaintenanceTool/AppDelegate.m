@@ -129,12 +129,12 @@
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
         // HID CTAP2ヘルスチェック実行
-        [[self toolAppCommand] doCommandHidCtap2HealthCheck];
+        [[self toolAppCommand] doCommandHidCtap2HealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandHidU2fHealthCheck];
+        [[self toolAppCommand] doCommandHidU2fHealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
@@ -154,12 +154,12 @@
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
-        [[self toolAppCommand] pinCodeParamWindowWillOpenForBLE:self parentWindow:[self window]];
+        [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
         // BLE U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandBleU2fHealthCheck];
+        [[self toolAppCommand] doCommandBleU2fHealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
@@ -197,11 +197,6 @@
         if (message) {
             [self appendLogMessage:message];
         }
-    }
-
-    - (void)pinCodeParamWindowWillOpenForHID {
-        // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
-        [[self toolAppCommand] pinCodeParamWindowWillOpenForHID:self parentWindow:[self window]];
     }
 
 #pragma mark - Common method called by callback
