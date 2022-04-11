@@ -105,7 +105,7 @@
         [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO];
     }
 
-    - (void)doCommandTestRegister {
+    - (void)doCommandBleU2fHealthCheck {
         // BLE U2Fヘルスチェック実行
         [[self delegate] disableUserInterface];
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_REGISTER];

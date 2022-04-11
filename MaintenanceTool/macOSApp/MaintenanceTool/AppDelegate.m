@@ -159,7 +159,7 @@
 
     - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
         // BLE U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandTestRegister];
+        [[self toolAppCommand] doCommandBleU2fHealthCheck];
     }
 
     - (IBAction)menuItemTestBLE3DidSelect:(id)sender {

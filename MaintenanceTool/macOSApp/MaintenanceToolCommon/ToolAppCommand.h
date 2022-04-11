@@ -23,7 +23,7 @@
     - (void)doCommandTestCtapHidPing;
     - (void)doCommandHidGetFlashStat;
     - (void)doCommandHidGetVersionInfo;
-    - (void)doCommandTestRegister;
+    - (void)doCommandBleU2fHealthCheck;
     - (void)doCommandTestBlePing;
     - (void)doCommandHidCtap2HealthCheck;
     - (void)doCommandHidU2fHealthCheck;
