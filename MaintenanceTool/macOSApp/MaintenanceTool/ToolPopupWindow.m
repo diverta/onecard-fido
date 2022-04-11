@@ -15,6 +15,8 @@ static ToolPopupWindow *sharedInstance;
 
     // アプリケーションウィンドウの参照を保持
     @property (nonatomic, weak) NSWindow        *parentWindow;
+    // ポップアップでクリックされたボタンの種類を保持
+    @property (nonatomic) NSModalResponse        modalResponse;
 
 @end
 
@@ -56,65 +58,48 @@ static ToolPopupWindow *sharedInstance;
         [self setParentWindow:window];
     }
 
-#pragma mark - Static methods
-
-    + (void)critical:(NSString *)message informativeText:(NSString *)subMessage {
-        if (!message) {
-            return;
-        }
-        // ダイアログを作成して表示
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleCritical];
-        [alert setMessageText:message];
-        if (subMessage) {
-            [alert setInformativeText:subMessage];
-        }
-        [alert runModal];
+    - (NSModalResponse)modalResponseOfWindow {
+        return [self modalResponse];
     }
 
-    + (void)warning:(NSString *)message informativeText:(NSString *)subMessage {
-        if (!message) {
-            return;
-        }
-        // ダイアログを作成して表示
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleWarning];
-        [alert setMessageText:message];
-        if (subMessage) {
-            [alert setInformativeText:subMessage];
-        }
-        [alert runModal];
+    - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:false];
     }
 
-    + (void)informational:(NSString *)message informativeText:(NSString *)subMessage {
-        if (!message) {
-            return;
-        }
-        // ダイアログを作成して表示
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleInformational];
-        [alert setMessageText:message];
-        if (subMessage) {
-            [alert setInformativeText:subMessage];
-        }
-        [alert runModal];
+    - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:true];
     }
 
-    + (bool)promptYesNo:(NSString *)message informativeText:(NSString *)subMessage {
-        if (!message) {
-            return false;
-        }
-        // ダイアログを作成
+    - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:false];
+    }
+
+    - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:true];
+    }
+
+    - (void)windowWillOpenWithStyle:(NSAlertStyle)style messageText:(NSString *)message informativeText:(NSString *)subMessage
+                         withObject:(id)object forSelector:(SEL)selector isPrompt:(bool)prompt {
+        // ダイアログを作成して表示
         NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleInformational];
+        [alert setAlertStyle:style];
         [alert setMessageText:message];
         if (subMessage) {
             [alert setInformativeText:subMessage];
         }
-        [alert addButtonWithTitle:@"Yes"];
-        [alert addButtonWithTitle:@"No"];
-        // ダイアログを表示しYesボタンクリックを判定
-        return ([alert runModal] == NSAlertFirstButtonReturn);
+        if (prompt) {
+            // Noボタンをデフォルトとする
+            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:@"Yes"];
+        }
+        ToolPopupWindow * __weak weakSelf = self;
+        [alert beginSheetModalForWindow:[self parentWindow] completionHandler:^(NSModalResponse response){
+            [weakSelf setModalResponse:response];
+            if (object == nil || selector == nil) {
+                return;
+            }
+            [object performSelector:selector withObject:nil afterDelay:0.0];
+        }];
     }
 
 @end

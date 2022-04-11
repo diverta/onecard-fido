@@ -222,21 +222,32 @@
             [self notifyAppCommandMessage:message];
         }
         // コマンド名称を取得
-        if (processNameOfCommand) {
-            // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                             processNameOfCommand, result? MSG_SUCCESS:MSG_FAILURE];
-            // メッセージを画面のテキストエリアに表示
-            [self notifyAppCommandMessage:str];
-            // メッセージをログファイルに出力してから、ポップアップを表示
-            if (result) {
-                [[ToolLogFile defaultLogger] info:str];
-                [ToolPopupWindow informational:str informativeText:nil];
-            } else {
-                [[ToolLogFile defaultLogger] error:str];
-                [ToolPopupWindow critical:str informativeText:nil];
-            }
+        if (processNameOfCommand == nil) {
+            // ボタンを活性化
+            [self enableButtons:true];
+            return;
         }
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         processNameOfCommand, result? MSG_SUCCESS:MSG_FAILURE];
+        // メッセージを画面のテキストエリアに表示
+        [self notifyAppCommandMessage:str];
+        // メッセージをログファイルに出力してから、ポップアップを表示
+        [self displayCommandResult:result withMessage:str];
+    }
+
+    - (void)displayCommandResult:(bool)result withMessage:(NSString *)str{
+        // メッセージをログファイルに出力してから、ポップアップを表示-->ボタンを活性化
+        if (result) {
+            [[ToolLogFile defaultLogger] info:str];
+            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+        } else {
+            [[ToolLogFile defaultLogger] error:str];
+            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+        }
+    }
+
+    - (void)displayCommandResultDone {
         // ボタンを活性化
         [self enableButtons:true];
     }

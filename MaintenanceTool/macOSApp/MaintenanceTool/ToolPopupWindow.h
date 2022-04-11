@@ -11,11 +11,12 @@
 
     + (ToolPopupWindow *)defaultWindow;
     - (void)setApplicationWindow:(NSWindow *)window;
+    - (NSModalResponse)modalResponseOfWindow;
 
-    + (void)critical:     (NSString *)message informativeText:(NSString *)subMessage;
-    + (void)warning:      (NSString *)message informativeText:(NSString *)subMessage;
-    + (void)informational:(NSString *)message informativeText:(NSString *)subMessage;
-    + (bool)promptYesNo:  (NSString *)message informativeText:(NSString *)subMessage;
+    - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
 
 @end
 
