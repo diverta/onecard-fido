@@ -63,23 +63,43 @@ static ToolPopupWindow *sharedInstance;
     }
 
     - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
-        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:false];
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:false parentWindow:[self parentWindow]];
     }
 
     - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
-        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:true];
+        // メイン画面からプロンプト表示したい場合に使用（AppDelegate.windowを親画面とするため）
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:true parentWindow:[self parentWindow]];
+    }
+
+    - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+              parentWindow:(NSWindow *)parentWindow {
+        // モーダル画面からプロンプト表示したい場合に使用（引数のparentWindowを親画面とするため）
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:true parentWindow:parentWindow];
     }
 
     - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
-        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:false];
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:false parentWindow:[self parentWindow]];
     }
 
     - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
-        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector isPrompt:true];
+        // メイン画面からプロンプト表示したい場合に使用（AppDelegate.windowを親画面とするため）
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:true parentWindow:[self parentWindow]];
+    }
+
+    - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+                   parentWindow:(NSWindow *)parentWindow {
+        // モーダル画面からプロンプト表示したい場合に使用（引数のparentWindowを親画面とするため）
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:true parentWindow:parentWindow];
     }
 
     - (void)windowWillOpenWithStyle:(NSAlertStyle)style messageText:(NSString *)message informativeText:(NSString *)subMessage
-                         withObject:(id)object forSelector:(SEL)selector isPrompt:(bool)prompt {
+                         withObject:(id)object forSelector:(SEL)selector isPrompt:(bool)prompt parentWindow:(NSWindow *)parentWindow {
         // ダイアログを作成して表示
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setAlertStyle:style];
@@ -93,7 +113,7 @@ static ToolPopupWindow *sharedInstance;
             [alert addButtonWithTitle:@"Yes"];
         }
         ToolPopupWindow * __weak weakSelf = self;
-        [alert beginSheetModalForWindow:[self parentWindow] completionHandler:^(NSModalResponse response){
+        [alert beginSheetModalForWindow:parentWindow completionHandler:^(NSModalResponse response){
             [weakSelf setModalResponse:response];
             if (object == nil || selector == nil) {
                 return;
