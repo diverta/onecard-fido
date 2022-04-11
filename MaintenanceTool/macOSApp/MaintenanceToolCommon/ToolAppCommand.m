@@ -256,7 +256,7 @@
         [[self toolDFUCommand] toolDFUWindowWillOpen:sender parentWindow:parentWindow];
     }
 
-    - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent {
+    - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示
         [[self delegate] disableUserInterface];
         [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];

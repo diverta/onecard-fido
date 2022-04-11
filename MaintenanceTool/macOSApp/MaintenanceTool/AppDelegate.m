@@ -104,7 +104,7 @@
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+        [[self toolAppCommand] pivParamWindowWillOpenWithParent:[self window]];
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
