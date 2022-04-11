@@ -165,11 +165,8 @@
     }
 
     - (void)doCommandFirmwareResetForCommandRef:(id)ref {
-        if ([self checkForHIDCommand]) {
-            // 認証器にファームウェアリセットを要求
-            [[self delegate] disableUserInterface];
-            [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
-        }
+        // 認証器にファームウェアリセットを要求
+        [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
     }
 
     - (bool)checkUSBHIDConnection {
