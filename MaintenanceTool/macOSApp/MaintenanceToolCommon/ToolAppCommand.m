@@ -185,19 +185,15 @@
 #pragma mark - For opening other window
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // FIDO鍵・証明書設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // FIDO鍵・証明書設定画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
     }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // PINコード設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // PINコード設定画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
     }
 
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -218,11 +214,9 @@
     }
 
     - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent {
-        if ([self checkForHIDCommand]) {
-            // PIV機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
-        }
+        // PIV機能設定画面を表示
+        [[self delegate] disableUserInterface];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
     }
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -248,11 +242,9 @@
     }
 
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // OpenPGP機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
-        }
+        // OpenPGP機能設定画面を表示
+        [[self delegate] disableUserInterface];
+        [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
     }
 
 #pragma mark - Perform health check
