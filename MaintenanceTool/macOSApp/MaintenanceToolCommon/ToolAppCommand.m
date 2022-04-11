@@ -33,8 +33,8 @@
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
-    // 実行するヘルスチェックの種別を保持
-    @property (nonatomic) Command   healthCheckCommand;
+    // 実行するコマンドの種別を保持
+    @property (nonatomic) Command   command;
 
 @end
 
@@ -150,6 +150,8 @@
 #pragma mark - For HID connection check
 
     - (void)doHIDCommand:(Command)command {
+        // 実行コマンドを退避
+        [self setCommand:command];
         // ボタン／メニューを非活性化
         [[self delegate] disableUserInterface];
         // HID接続状態をチェック
@@ -184,12 +186,12 @@
             case COMMAND_ERASE_BONDS:
                 // ペアリング情報削除
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
-                                                     withObject:self forSelector:@selector(resumeCommandEraseBonds)];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 // ブートローダーモード遷移
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
-                                                     withObject:self forSelector:@selector(changeToBootloaderMode)];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
                 break;
             default:
                 break;
@@ -201,9 +203,24 @@
         [[self delegate] enableUserInterface];
     }
 
-    - (void)resumeCommandEraseBonds {
-        // ペアリング情報削除
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
+    - (void)resumeHIDCommand {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、ボタンを活性化し以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+            [self enableUserInterface];
+            return;
+        }
+        switch ([self command]) {
+            case COMMAND_ERASE_BONDS:
+                // ペアリング情報削除
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // ブートローダーモード遷移
+                [self changeToBootloaderMode];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - For opening other window
@@ -275,7 +292,7 @@
 
     - (void)performHealthCheckCommand:(Command)command {
         // 事前にツール設定照会を実行
-        [self setHealthCheckCommand:command];
+        [self setCommand:command];
         [[self toolPreferenceCommand] toolPreferenceInquiryWillProcess];
     }
 
@@ -302,7 +319,7 @@
     }
 
     - (void)resumeHealthCheckCommand {
-        switch ([self healthCheckCommand]) {
+        switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開くため、いったんホーム画面に制御を戻す）
                 [[self delegate] pinCodeParamWindowWillOpenForHID];
