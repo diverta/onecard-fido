@@ -46,17 +46,15 @@
             // このウィンドウを終了
             [self terminateWindow:NSModalResponseOK withCommand:COMMAND_USB_DFU];
         } else {
-            // TODO: アラートを表示
+            // エラーメッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
         }
     }
 
     - (IBAction)buttonBLEDFUDidPress:(id)sender {
         // DFU処理を開始するかどうかのプロンプトを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_BLE_DFU_PROCESS
-                         informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS]) {
-            // このウィンドウを終了
-            [self terminateWindow:NSModalResponseOK withCommand:COMMAND_BLE_DFU];
-        }
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_BLE_DFU_PROCESS informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS
+                                                  withObject:self forSelector:@selector(bleDfuCommandPromptDone) parentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -69,6 +67,15 @@
         [self setCommand:command];
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (void)bleDfuCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+            return;
+        }
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_BLE_DFU];
     }
 
 #pragma mark - Interface for parameters

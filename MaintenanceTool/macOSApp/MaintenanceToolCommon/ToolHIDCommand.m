@@ -480,8 +480,7 @@
                 break;
             default:
                 // エラーメッセージを表示
-                [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
-                [self commandDidProcess:[self command] result:false message:nil];
+                [self commandDidProcess:[self command] result:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];
                 break;
         }
     }
