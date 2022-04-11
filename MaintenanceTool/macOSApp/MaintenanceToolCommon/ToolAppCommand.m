@@ -91,27 +91,18 @@
     }
 
     - (void)doCommandTestCtapHidPing {
-        if ([self checkForHIDCommand]) {
-            // PINGテスト実行
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-        }
+        // PINGテスト実行
+        [self doHIDCommand:COMMAND_TEST_CTAPHID_PING];
     }
 
     - (void)doCommandHidGetFlashStat {
-        if ([self checkForHIDCommand]) {
-            // Flash ROM情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
-        }
+        // Flash ROM情報取得
+        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT];
     }
 
     - (void)doCommandHidGetVersionInfo {
-        if ([self checkForHIDCommand]) {
-            // バージョン情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
-        }
+        // バージョン情報取得
+        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO];
     }
 
     - (void)doCommandTestRegister {
@@ -127,41 +118,23 @@
     }
 
     - (void)doCommandHidCtap2HealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID CTAP2ヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
-        }
+        // HID CTAP2ヘルスチェック実行
+        [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
     - (void)doCommandHidU2fHealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID U2Fヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
-        }
+        // HID U2Fヘルスチェック実行
+        [self doHIDCommand:COMMAND_TEST_REGISTER];
     }
 
     - (void)doCommandEraseBond {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
-                             informativeText:MSG_PROMPT_ERASE_BONDS]) {
-                // ペアリング情報削除
-                [[self delegate] disableUserInterface];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
-            }
-        }
+        // ペアリング情報削除
+        [self doHIDCommand:COMMAND_ERASE_BONDS];
     }
 
     - (void)doCommandBLMode {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
-                             informativeText:MSG_PROMPT_BOOT_LOADER_MODE]) {
-                // ブートローダーモード遷移
-                [[self delegate] disableUserInterface];
-                [self changeToBootloaderMode];
-            }
-        }
+        // ブートローダーモード遷移
+        [self doHIDCommand:COMMAND_HID_BOOTLOADER_MODE];
     }
 
     - (void)doCommandFirmwareResetForCommandRef:(id)ref {
@@ -174,9 +147,63 @@
         return [[self toolHIDCommand] checkUSBHIDConnection];
     }
 
-    - (bool)checkForHIDCommand {
-        // USBポートに接続されていない場合はfalse
-        return [[self toolHIDCommand] checkUSBHIDConnection];
+#pragma mark - For HID connection check
+
+    - (void)doHIDCommand:(Command)command {
+        // ボタン／メニューを非活性化
+        [[self delegate] disableUserInterface];
+        // HID接続状態をチェック
+        if ([self checkUSBHIDConnection] == false) {
+            // エラーメッセージをポップアップ表示-->ボタンを活性化
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil
+                                           withObject:self forSelector:@selector(enableUserInterface)];
+            return;
+        }
+        // コマンドごとの後続処理
+        switch (command) {
+            case COMMAND_TEST_CTAPHID_PING:
+                // PINGテスト実行
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
+                break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                // Flash ROM情報取得
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                // バージョン情報取得
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // HID CTAP2ヘルスチェック実行
+                [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
+                break;
+            case COMMAND_TEST_REGISTER:
+                // HID U2Fヘルスチェック実行
+                [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
+                break;
+            case COMMAND_ERASE_BONDS:
+                // ペアリング情報削除
+                [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
+                                                     withObject:self forSelector:@selector(resumeCommandEraseBonds)];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // ブートローダーモード遷移
+                [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
+                                                     withObject:self forSelector:@selector(changeToBootloaderMode)];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)enableUserInterface {
+        // ボタンを活性化
+        [[self delegate] enableUserInterface];
+    }
+
+    - (void)resumeCommandEraseBonds {
+        // ペアリング情報削除
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
     }
 
 #pragma mark - For opening other window
