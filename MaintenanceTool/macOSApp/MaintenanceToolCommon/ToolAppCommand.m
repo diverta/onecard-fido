@@ -163,6 +163,10 @@
 #pragma mark - For HID connection check
 
     - (void)doHIDCommand:(Command)command {
+        [self doHIDCommand:command sender:nil parentWindow:nil];
+    }
+
+    - (void)doHIDCommand:(Command)command sender:(id)sender parentWindow:(NSWindow *)parentWindow  {
         // 実行コマンドを退避
         [self setCommand:command];
         // ボタン／メニューを非活性化
@@ -206,6 +210,22 @@
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
                                                      withObject:self forSelector:@selector(resumeHIDCommand)];
                 break;
+            case COMMAND_OPEN_WINDOW_FIDOATTEST:
+                // FIDO鍵・証明書設定画面を開く
+                [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PINPARAM:
+                // PINコード設定画面を開く
+                [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PIVPARAM:
+                // PIV機能設定画面を表示
+                [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PGPPARAM:
+                // OpenPGP機能設定画面を表示
+                [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+                break;
             default:
                 break;
         }
@@ -240,14 +260,12 @@
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // FIDO鍵・証明書設定画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_FIDOATTEST sender:sender parentWindow:parentWindow];
     }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // PINコード設定画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PINPARAM sender:sender parentWindow:parentWindow];
     }
 
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -258,8 +276,7 @@
 
     - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示
-        [[self delegate] disableUserInterface];
-        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PIVPARAM sender:nil parentWindow:parent];
     }
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -286,8 +303,7 @@
 
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // OpenPGP機能設定画面を表示
-        [[self delegate] disableUserInterface];
-        [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PGPPARAM sender:sender parentWindow:parentWindow];
     }
 
 #pragma mark - Perform health check
