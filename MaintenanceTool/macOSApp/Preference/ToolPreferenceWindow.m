@@ -177,8 +177,13 @@
         // 処理続行確認ダイアログを開く
         NSString *text = ([[self buttonCheck] state] == NSControlStateValueOff) ?
             MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0 : MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1;
-        if ([ToolPopupWindow promptYesNo:MSG_WRITE_UUID_SCAN_PARAM
-                         informativeText:text] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_WRITE_UUID_SCAN_PARAM informativeText:text
+                                                  withObject:self forSelector:@selector(authParamSetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)authParamSetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
@@ -193,8 +198,13 @@
 
     - (void) doAuthParamReset:(id)sender {
         // 処理続行確認ダイアログを開く
-        if ([ToolPopupWindow promptYesNo:MSG_CLEAR_UUID_SCAN_PARAM
-                         informativeText:MSG_PROMPT_CLEAR_UUID_SCAN_PARAM] == false) {
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_CLEAR_UUID_SCAN_PARAM informativeText:MSG_PROMPT_CLEAR_UUID_SCAN_PARAM
+                                             withObject:self forSelector:@selector(authParamResetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)authParamResetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 自動認証用パラメーター解除コマンドを実行
