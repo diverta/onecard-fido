@@ -134,7 +134,7 @@ typedef enum : NSInteger {
         if (success == false || response == nil || [response length] < 2) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [ToolPopupWindow critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:nil forSelector:nil];
             [self notifyProcessCanceled];
             return;
         }
@@ -257,7 +257,7 @@ typedef enum : NSInteger {
                 break;
             case NSModalResponseCancel:
                 // メッセージをポップアップ表示したのち、画面に制御を戻す
-                [ToolPopupWindow critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil];
+                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:nil forSelector:nil];
                 [self notifyProcessCanceled];
                 break;
             default:
@@ -525,7 +525,7 @@ typedef enum : NSInteger {
         NSString *binFileNamePrefix = [NSString stringWithFormat:@"app_update.%@.", [self currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:binFileNamePrefix] == false) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil];
             return false;
         }
         return true;
@@ -560,8 +560,7 @@ typedef enum : NSInteger {
         NSString *update = [[NSString alloc] initWithUTF8String:mcumgr_app_image_bin_version()];
         // バージョンが取得できなかった場合は利用不可
         if ([update length] == 0) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil];
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
@@ -570,14 +569,13 @@ typedef enum : NSInteger {
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:informative];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
             return false;
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, update];
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
             return false;
         }
         // 更新バージョンを保持

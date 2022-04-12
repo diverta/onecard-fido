@@ -237,7 +237,8 @@
         if ([[self toolPIVCommand] checkUSBHIDConnection]) {
             return true;
         }
-        // TODO: アラートを表示
+        // エラーメッセージをポップアップ表示
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
         return false;
     }
 
@@ -299,18 +300,18 @@
     - (bool)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
         ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
         if ([importer readPrivateKeyPemFrom:pkey] == false) {
-            [ToolPopupWindow critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil withObject:nil forSelector:nil];
             return false;
         }
         if ([importer readCertificatePemFrom:cert] == false) {
-            [ToolPopupWindow critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil withObject:nil forSelector:nil];
             return false;
         }
         // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
         if ([importer keyAlgorithm] != [importer certAlgorithm]) {
             NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
                               [importer keyAlgorithm], [importer certAlgorithm]];
-            [ToolPopupWindow critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info];
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info withObject:nil forSelector:nil];
             return false;
         }
         [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
@@ -344,7 +345,7 @@
                                           infoString:[command getPIVSettingDescriptionString]];
         } else {
             // 異常終了メッセージをポップアップ表示
-            [ToolPopupWindow critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage];
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage withObject:nil forSelector:nil];
         }
     }
 
