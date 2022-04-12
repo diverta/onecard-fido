@@ -259,6 +259,16 @@
         if ([self checkForInstallPGPKey:sender] == false) {
             return;
         }
+        // 事前に確認ダイアログを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_OPENPGP_INSTALL_PGP_KEY informativeText:MSG_PROMPT_INSTALL_PGP_KEY
+                                                  withObject:self forSelector:@selector(installPGPKeyCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)installPGPKeyCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
         // 画面入力内容をパラメーターに格納
         ToolPGPParameter *parameter = [[ToolPGPParameter alloc] init];
         [parameter setRealName:[[self textRealName] stringValue]];
@@ -289,11 +299,18 @@
         }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_LABEL_COMMAND_OPENPGP_RESET];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
-            // PGPリセット処理を実行
-            [self enableButtons:false];
-            [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:MSG_PROMPT_OPENPGP_RESET
+                                             withObject:self forSelector:@selector(PGPResetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)PGPResetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
         }
+        // PGPリセット処理を実行
+        [self enableButtons:false];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
     }
 
     - (void)panelWillSelectPath:(id)sender withPrompt:(NSString *)prompt {
@@ -330,6 +347,17 @@
         }
         // 入力欄の内容をチェック
         if ([self checkForPerformPinCommand:sender] == false) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:caption informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND
+                                             withObject:self forSelector:@selector(performPinCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)performPinCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 画面入力内容をパラメーターに格納
@@ -429,11 +457,6 @@
         // 確認用PINコードのチェック
         if ([self checkPinConfirmFor:[self textPinConfirm] withSource:[self textPin]
                             withName:MSG_LABEL_PGP_ADMIN_PIN_CONFIRM] == false) {
-            return false;
-        }
-        // 事前に確認ダイアログを表示
-        if ([ToolPopupWindow promptYesNo:MSG_OPENPGP_INSTALL_PGP_KEY
-                         informativeText:MSG_PROMPT_INSTALL_PGP_KEY] == false) {
             return false;
         }
         return true;
@@ -565,12 +588,6 @@
         NSString *msgNewPinConf = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin];
         // 確認用PINコードのチェック
         if ([self checkPinConfirmFor:[self textNewPinConf] withSource:[self textNewPin] withName:msgNewPinConf] == false) {
-            return false;
-        }
-        // 事前に確認ダイアログを表示
-        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
-        if ([ToolPopupWindow promptYesNo:caption
-                         informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND] == false) {
             return false;
         }
         return true;

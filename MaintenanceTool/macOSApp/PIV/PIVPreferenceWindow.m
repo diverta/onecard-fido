@@ -183,7 +183,13 @@
         }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_INITIAL_SETTING];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING
+                                                  withObject:self forSelector:@selector(initialSettingCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)initialSettingCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // CHUID設定機能を実行
@@ -198,7 +204,13 @@
         }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_CLEAR_SETTING];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING] == false) {
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING
+                                             withObject:self forSelector:@selector(clearSettingCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)clearSettingCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // PIVリセット機能を実行
@@ -399,6 +411,18 @@
         if ([self checkForInstallPkeyCert:sender toKeySlot:slotId] == false) {
             return;
         }
+        // 事前に確認ダイアログを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_INSTALL_PIV_PKEY_CERT informativeText:MSG_PROMPT_INSTL_SKEY_CERT
+                                                  withObject:self forSelector:@selector(installPkeyCertCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)installPkeyCertCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // ラジオボタンから鍵種別を取得
+        uint8_t slotId = [self selectedPkeySlotId];
         // PIV認証用の鍵・証明書インストール（ラジオボタンから鍵種別を取得）
         NSString *pkeyPemPath = [[self fieldPath1] stringValue];
         NSString *certPemPath = [[self fieldPath2] stringValue];
@@ -462,6 +486,23 @@
         if ([self checkForPerformPinCommand:sender withCommand:command] == false) {
             return;
         }
+        // 処理名称、詳細を設定
+        NSString *name = [self functionNameOfCommand:command];
+        NSString *desc = [self descriptionOfCommand:command];
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
+        NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:informative
+                                             withObject:self forSelector:@selector(performPinCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)performPinCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // ラジオボタンから実行コマンド種別を取得
+        Command command = [self selectedPinCommand];
         // PIN番号管理コマンドを実行（ラジオボタンから実行コマンドを取得）
         NSString *curPin = [[self fieldCurPin] stringValue];
         NSString *newPin = [[self fieldNewPinConf] stringValue];
@@ -517,11 +558,6 @@
                             withName:MSG_LABEL_CURRENT_PIN_FOR_CONFIRM] == false) {
             return false;
         }
-        // 事前に確認ダイアログを表示
-        if ([ToolPopupWindow promptYesNo:MSG_INSTALL_PIV_PKEY_CERT
-                         informativeText:MSG_PROMPT_INSTL_SKEY_CERT] == false) {
-            return false;
-        }
         return true;
     }
 
@@ -560,15 +596,6 @@
     - (bool)checkForPerformPinCommand:(id)sender withCommand:(Command)command {
         // 入力欄のチェック
         if ([self checkPinNumbersForPinCommand:command] == false) {
-            return false;
-        }
-        // 処理名称、詳細を設定
-        NSString *name = [self functionNameOfCommand:command];
-        NSString *desc = [self descriptionOfCommand:command];
-        // 事前に確認ダイアログを表示
-        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
-        NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:informative] == false) {
             return false;
         }
         return true;
