@@ -101,13 +101,13 @@
             [self setupAuthParamFieldsAndButtons];
             // 読込成功時はポップアップ表示を省略
             if (commandType != COMMAND_AUTH_PARAM_GET) {
-                [[ToolPopupWindow defaultWindow] informational:strShort informativeText:message withObject:nil forSelector:nil];
+                [ToolPopupWindow informational:strShort informativeText:message];
             }
 
         } else {
             // 処理失敗時はメッセージをログファイルに出力してから、ポップアップを表示
             [[ToolLogFile defaultLogger] error:strLong];
-            [[ToolPopupWindow defaultWindow] critical:strShort informativeText:message withObject:nil forSelector:nil];
+            [ToolPopupWindow critical:strShort informativeText:message];
         }
     }
 
