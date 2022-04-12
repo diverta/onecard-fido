@@ -82,26 +82,22 @@
         [self setFilePaths:paths];
         // 処理開始前に確認
         if ([[self toolFIDOAttestationCommand] checkUSBHIDConnection]) {
-            if ([ToolPopupWindow promptYesNo:MSG_INSTALL_SKEY_CERT
-                             informativeText:MSG_PROMPT_INSTL_SKEY_CERT]) {
-                // この画面を閉じ、鍵・証明書インストール処理を開始
-                [self terminateWindow:NSModalResponseOK withCommand:COMMAND_INSTALL_SKEY_CERT];
-            }
+            [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_INSTALL_SKEY_CERT informativeText:MSG_PROMPT_INSTL_SKEY_CERT
+                                                      withObject:self forSelector:@selector(installCommandPromptDone) parentWindow:[self window]];
         } else {
-            // TODO: アラートを表示
+            // エラーメッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
         }
     }
 
     - (IBAction)buttonDeleteDidPress:(id)sender {
         // 処理開始前に確認
         if ([[self toolFIDOAttestationCommand] checkUSBHIDConnection]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_SKEY_CERT
-                             informativeText:MSG_PROMPT_ERASE_SKEY_CERT]) {
-                // この画面を閉じ、鍵・証明書削除処理を開始
-                [self terminateWindow:NSModalResponseOK withCommand:COMMAND_ERASE_SKEY_CERT];
-            }
+            [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_SKEY_CERT informativeText:MSG_PROMPT_ERASE_SKEY_CERT
+                                                 withObject:self forSelector:@selector(deleteCommandPromptDone) parentWindow:[self window]];
         } else {
-            // TODO: アラートを表示
+            // エラーメッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
         }
     }
 
@@ -115,6 +111,24 @@
         [self setCommand:command];
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (void)installCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // この画面を閉じ、鍵・証明書インストール処理を開始
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_INSTALL_SKEY_CERT];
+    }
+
+    - (void)deleteCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // この画面を閉じ、鍵・証明書削除処理を開始
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_ERASE_SKEY_CERT];
     }
 
 #pragma mark - Interface for parameters

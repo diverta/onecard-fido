@@ -346,8 +346,13 @@
             return;
         }
         // DFU処理を開始するかどうかのプロンプトを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
-                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_DFU_PROCESS informativeText:MSG_COMMENT_START_DFU_PROCESS
+                                                  withObject:self forSelector:@selector(dfuNewProcessStartPromptDone) parentWindow:parentWindow];
+    }
+
+    - (void)dfuNewProcessStartPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             [self notifyCancel];
             return;
         }
@@ -361,12 +366,15 @@
                     [self invokeDFUProcess];
                 } else {
                     // エラーメッセージを表示して終了
-                    [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE
-                              informativeText:MSG_DFU_TARGET_CONNECTION_FAILED];
-                    [self notifyCancel];
+                    [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_CONNECTION_FAILED
+                                                   withObject:self forSelector:@selector(notifyDFUTargetConnectionFailedDone)];
                 }
             });
         });
+    }
+
+    - (void)notifyDFUTargetConnectionFailedDone {
+        [self notifyCancel];
     }
 
 #pragma mark - Interface for DFUStartWindow
