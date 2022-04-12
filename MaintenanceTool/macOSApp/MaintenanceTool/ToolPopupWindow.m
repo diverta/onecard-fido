@@ -58,8 +58,9 @@ static ToolPopupWindow *sharedInstance;
         [self setParentWindow:window];
     }
 
-    - (NSModalResponse)modalResponseOfWindow {
-        return [self modalResponse];
+    - (bool)isButtonNoClicked {
+        // プロンプト表示時、一番目のボタン（すなわちNoボタン）がクリックされたかどうかを戻す
+        return [self modalResponse] == NSAlertFirstButtonReturn;
     }
 
     - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {

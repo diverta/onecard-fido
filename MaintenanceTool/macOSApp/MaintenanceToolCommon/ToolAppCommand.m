@@ -218,7 +218,7 @@
 
     - (void)resumeHIDCommand {
         // ポップアップでデフォルトのNoボタンがクリックされた場合は、ボタンを活性化し以降の処理を行わない
-        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             [self enableUserInterface];
             return;
         }
@@ -334,7 +334,7 @@
 
     - (void)healthCheckCommandPromptDone {
         // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
-        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             [self commandDidProcess:COMMAND_NONE result:true message:nil];
             return;
         }

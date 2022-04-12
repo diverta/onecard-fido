@@ -11,7 +11,7 @@
 
     + (ToolPopupWindow *)defaultWindow;
     - (void)setApplicationWindow:(NSWindow *)window;
-    - (NSModalResponse)modalResponseOfWindow;
+    - (bool)isButtonNoClicked;
 
     - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
     - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;

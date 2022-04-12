@@ -71,7 +71,7 @@
 
     - (void)bleDfuCommandPromptDone {
         // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
-        if ([[ToolPopupWindow defaultWindow] modalResponseOfWindow] == NSAlertFirstButtonReturn) {
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // このウィンドウを終了
