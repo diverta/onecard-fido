@@ -134,8 +134,7 @@ typedef enum : NSInteger {
         if (success == false || response == nil || [response length] < 2) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:nil forSelector:nil];
-            [self notifyProcessCanceled];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
             return;
         }
         // 戻りメッセージからバージョン情報を抽出し内部保持
@@ -257,8 +256,7 @@ typedef enum : NSInteger {
                 break;
             case NSModalResponseCancel:
                 // メッセージをポップアップ表示したのち、画面に制御を戻す
-                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:nil forSelector:nil];
-                [self notifyProcessCanceled];
+                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
                 break;
             default:
                 break;
