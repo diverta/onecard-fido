@@ -101,7 +101,7 @@
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
         // 入力項目が正しく指定されていない場合はfalseを戻す
         if ([[textField stringValue] length] == 0) {
-            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
@@ -111,7 +111,7 @@
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText {
         // 入力されたファイルパスが存在しない場合はfalseを戻す
         if ([[NSFileManager defaultManager] fileExistsAtPath:[textField stringValue]] == false) {
-            [ToolPopupWindow warning:MSG_INVALID_FILE_PATH informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FILE_PATH informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
@@ -123,7 +123,7 @@
         NSString *string = [textField stringValue];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
         if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
-            [ToolPopupWindow warning:MSG_NOT_NUMERIC informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_NOT_NUMERIC informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
@@ -134,7 +134,7 @@
           informativeText:(NSString *)informativeText {
         // 入力項目が等しくない場合はfalseを戻す
         if ([[destField stringValue] isEqualToString:[srcField stringValue]] == false) {
-            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil];
             [destField becomeFirstResponder];
             return false;
         }
@@ -147,7 +147,7 @@
         // 入力項目が正しく指定されていない場合はfalseを戻す
         size_t size = [[textField stringValue] length];
         if (size < minSize || size > maxSize) {
-            [ToolPopupWindow warning:MSG_INVALID_FIELD_SIZE informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD_SIZE informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
@@ -160,7 +160,7 @@
         // 入力項目が正しく指定されていない場合はfalseを戻す
         int value = [textField intValue];
         if (value < minValue || value > maxValue) {
-            [ToolPopupWindow warning:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
@@ -181,7 +181,7 @@
         [regex firstMatchInString:value options:0 range:NSMakeRange(0, value.length)];
         
         if (match == nil) {
-            [ToolPopupWindow warning:MSG_INVALID_PATTERN informativeText:informativeText];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_PATTERN informativeText:informativeText withObject:nil forSelector:nil];
             [textField becomeFirstResponder];
             return false;
         }
