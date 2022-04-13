@@ -277,115 +277,6 @@
         }
     }
 
-#pragma mark - For ToolPIVCommand functions
-
-    - (void)commandWillResetFirmware {
-        [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
-    }
-
-    - (void)commandWillStatus {
-        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
-    }
-
-    - (void)commandWillSetCHUIDAndCCC {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
-        [importer generateChuidAndCcc];
-        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporterRef:importer];
-    }
-
-    - (void)commandWillReset {
-        [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
-    }
-
-    - (void)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
-        if ([importer readPrivateKeyPemFrom:pkey] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil withObject:nil forSelector:nil];
-            return;
-        }
-        if ([importer readCertificatePemFrom:cert] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil withObject:nil forSelector:nil];
-            return;
-        }
-        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
-        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
-            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
-                              [importer keyAlgorithm], [importer certAlgorithm]];
-            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info withObject:nil forSelector:nil];
-            return;
-        }
-        [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
-    }
-
-    - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
-        [[self toolPIVCommand] commandWillChangePin:command withNewPinCode:newPin withAuthPinCode:authPin];
-    }
-
-    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_CCID_PIV_STATUS) {
-            // PIV設定情報を、情報表示画面に表示
-            [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
-            [self enableButtons:true];
-            return;
-        }
-        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
-        [self clearEntry:command withResult:result];
-        [self enableButtons:true];
-    }
-
-    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (result) {
-            // PIV設定情報を、情報表示画面に表示
-            ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
-            ToolPIVCommand *command = [self toolPIVCommand];
-            [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
-                                         titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                          infoString:[command getPIVSettingDescriptionString]];
-        } else {
-            // 異常終了メッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage withObject:nil forSelector:nil];
-        }
-    }
-
-    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        // 処理名称を設定
-        NSString *name = [self functionNameOfCommand:command];
-        // メッセージをポップアップ表示
-        if (name) {
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                             result ? MSG_SUCCESS:MSG_FAILURE];
-            if (result) {
-                [ToolPopupWindow informational:str informativeText:nil];
-            } else {
-                [ToolPopupWindow critical:str informativeText:errorMessage];
-            }
-        }
-    }
-
-    - (void)clearEntry:(Command)command withResult:(bool)result {
-        // 全ての入力欄をクリア
-        switch (command) {
-            case COMMAND_CCID_PIV_IMPORT_KEY:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPkeyCertPathFields];
-                    [self initTabPkeyCertPinFields];
-                }
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PIN:
-            case COMMAND_CCID_PIV_CHANGE_PUK:
-            case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPinManagementPinFields];
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
 #pragma mark - 鍵・証明書管理タブ関連
 
     - (IBAction)buttonPkeySlotIdSelected:(id)sender {
@@ -690,6 +581,115 @@
                 break;
         }
         return name;
+    }
+
+#pragma mark - For ToolPIVCommand functions
+
+    - (void)commandWillResetFirmware {
+        [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
+    }
+
+    - (void)commandWillStatus {
+        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+    }
+
+    - (void)commandWillSetCHUIDAndCCC {
+        ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
+        [importer generateChuidAndCcc];
+        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporterRef:importer];
+    }
+
+    - (void)commandWillReset {
+        [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
+    }
+
+    - (void)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
+        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
+        if ([importer readPrivateKeyPemFrom:pkey] == false) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil withObject:nil forSelector:nil];
+            return;
+        }
+        if ([importer readCertificatePemFrom:cert] == false) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil withObject:nil forSelector:nil];
+            return;
+        }
+        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
+            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                              [importer keyAlgorithm], [importer certAlgorithm]];
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info withObject:nil forSelector:nil];
+            return;
+        }
+        [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
+    }
+
+    - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
+        [[self toolPIVCommand] commandWillChangePin:command withNewPinCode:newPin withAuthPinCode:authPin];
+    }
+
+    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        if (command == COMMAND_CCID_PIV_STATUS) {
+            // PIV設定情報を、情報表示画面に表示
+            [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
+            [self enableButtons:true];
+            return;
+        }
+        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
+        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        [self clearEntry:command withResult:result];
+        [self enableButtons:true];
+    }
+
+    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        if (result) {
+            // PIV設定情報を、情報表示画面に表示
+            ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
+            ToolPIVCommand *command = [self toolPIVCommand];
+            [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
+                                         titleString:PROCESS_NAME_CCID_PIV_STATUS
+                                          infoString:[command getPIVSettingDescriptionString]];
+        } else {
+            // 異常終了メッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage withObject:nil forSelector:nil];
+        }
+    }
+
+    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        // 処理名称を設定
+        NSString *name = [self functionNameOfCommand:command];
+        // メッセージをポップアップ表示
+        if (name) {
+            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+            if (result) {
+                [ToolPopupWindow informational:str informativeText:nil];
+            } else {
+                [ToolPopupWindow critical:str informativeText:errorMessage];
+            }
+        }
+    }
+
+    - (void)clearEntry:(Command)command withResult:(bool)result {
+        // 全ての入力欄をクリア
+        switch (command) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPkeyCertPathFields];
+                    [self initTabPkeyCertPinFields];
+                }
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPinManagementPinFields];
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 @end
