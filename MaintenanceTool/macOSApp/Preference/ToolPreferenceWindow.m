@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2019/10/25.
 //
 #import "ToolPreferenceWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
@@ -228,6 +229,8 @@
 #pragma mark - For ToolPreferenceCommand functions
 
     - (void)toolPreferenceCommandDidStart {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // コマンド開始メッセージをログファイルに出力
         NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
                               [self processNameOfCommand]];
@@ -244,6 +247,7 @@
                              [self processNameOfCommand],
                              success ? MSG_SUCCESS : MSG_FAILURE];
 
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
         if (success) {
             // メッセージをログファイルに出力
             [[ToolLogFile defaultLogger] info:strLong];
@@ -251,13 +255,15 @@
             [self setupAuthParamFieldsAndButtons];
             // 読込成功時はポップアップ表示を省略
             if (commandType != COMMAND_AUTH_PARAM_GET) {
-                [ToolPopupWindow informational:strShort informativeText:message];
+                [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:strShort withInformative:message];
+            } else {
+                [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
             }
 
         } else {
             // 処理失敗時はメッセージをログファイルに出力してから、ポップアップを表示
             [[ToolLogFile defaultLogger] error:strLong];
-            [ToolPopupWindow critical:strShort informativeText:message];
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:strShort withInformative:message];
         }
     }
 
