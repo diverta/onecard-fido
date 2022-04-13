@@ -618,15 +618,32 @@
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        // 進捗画面を閉じる
-        [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK];
-        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        if (command == COMMAND_OPENPGP_STATUS && result) {
+            // 進捗画面を閉じる
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+            // OpenPGP設定情報を、情報表示画面に表示
+            [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
+                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
+                infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
+            // 画面項目を使用可とする
+            [self enableButtons:true];
+            return;
+        }
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand:command],
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        if (result) {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        } else {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+        }
+        // 画面項目を使用可とする
         [self clearEntry:command withResult:result];
         [self enableButtons:true];
     }
 
-    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+    - (NSString *)processNameOfCommand:(Command)command {
         // 処理名称を設定
         NSString *name = nil;
         switch (command) {
@@ -637,13 +654,6 @@
                 name = MSG_LABEL_COMMAND_OPENPGP_RESET;
                 break;
             case COMMAND_OPENPGP_STATUS:
-                if (result) {
-                    // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
-                    [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
-                        withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
-                        infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
-                    return;
-                }
                 name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
@@ -657,16 +667,9 @@
                 name = [self selectedPinCommandName];
                 break;
             default:
-                return;
+                break;
         }
-        // メッセージをポップアップ表示
-        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                         result ? MSG_SUCCESS:MSG_FAILURE];
-        if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:str informativeText:errorMessage];
-        }
+        return name;
     }
 
     - (void)clearEntry:(Command)command withResult:(bool)result {
