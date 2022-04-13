@@ -311,7 +311,7 @@
 #define MSG_DESC_PIV_CHANGE_PIN_NUMBER          @"現在のPIN番号を、入力した新しいPIN番号に変更します。"
 #define MSG_DESC_PIV_CHANGE_PUK_NUMBER          @"現在のPUK番号を、入力した新しいPUK番号に変更します。"
 #define MSG_DESC_PIV_RESET_PIN_NUMBER           @"現在のPIN番号をリセットし、入力した新しいPIN番号に変更します。"
-#define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
+#define MSG_PIV_STATUS                          @"設定情報の取得"
 
 #pragma mark - OpenPGP関連
 #define MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED  @"OpenPGP機能を使用することができません。"

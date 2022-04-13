@@ -10,6 +10,7 @@
 #import "ToolPIVCommand.h"
 #import "ToolPIVImporter.h"
 #import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
@@ -537,6 +538,9 @@
         // 処理名称を設定
         NSString *name = nil;
         switch (command) {
+            case COMMAND_CCID_PIV_STATUS:
+                name = MSG_PIV_STATUS;
+                break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 name = MSG_PIV_INITIAL_SETTING;
                 break;
@@ -586,20 +590,28 @@
 #pragma mark - For ToolPIVCommand functions
 
     - (void)commandWillResetFirmware {
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
     }
 
     - (void)commandWillStatus {
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
     }
 
     - (void)commandWillSetCHUIDAndCCC {
         ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
         [importer generateChuidAndCcc];
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporterRef:importer];
     }
 
     - (void)commandWillReset {
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
     }
 
@@ -620,53 +632,41 @@
             [[ToolPopupWindow defaultWindow] critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info withObject:nil forSelector:nil];
             return;
         }
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
     }
 
     - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
+        // 進捗画面を表示し、コマンドを実行
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         [[self toolPIVCommand] commandWillChangePin:command withNewPinCode:newPin withAuthPinCode:authPin];
     }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_CCID_PIV_STATUS) {
+        if (command == COMMAND_CCID_PIV_STATUS && result) {
+            // 進捗画面を閉じる
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
             // PIV設定情報を、情報表示画面に表示
-            [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
+            [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPIVCommand]
+                withParentWindow:[self window] titleString:PROCESS_NAME_CCID_PIV_STATUS
+                infoString:[[self toolPIVCommand] getPIVSettingDescriptionString]];
+            // 画面項目を使用可とする
             [self enableButtons:true];
             return;
         }
-        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:command],
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        if (result) {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        } else {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+        }
+        // 画面項目を使用可とする
         [self clearEntry:command withResult:result];
         [self enableButtons:true];
-    }
-
-    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (result) {
-            // PIV設定情報を、情報表示画面に表示
-            ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
-            ToolPIVCommand *command = [self toolPIVCommand];
-            [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
-                                         titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                          infoString:[command getPIVSettingDescriptionString]];
-        } else {
-            // 異常終了メッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage withObject:nil forSelector:nil];
-        }
-    }
-
-    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        // 処理名称を設定
-        NSString *name = [self functionNameOfCommand:command];
-        // メッセージをポップアップ表示
-        if (name) {
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                             result ? MSG_SUCCESS:MSG_FAILURE];
-            if (result) {
-                [ToolPopupWindow informational:str informativeText:nil];
-            } else {
-                [ToolPopupWindow critical:str informativeText:errorMessage];
-            }
-        }
     }
 
     - (void)clearEntry:(Command)command withResult:(bool)result {
