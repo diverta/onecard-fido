@@ -68,6 +68,12 @@ static ToolPopupWindow *sharedInstance;
                              isPrompt:false parentWindow:[self parentWindow]];
     }
 
+    - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+        parentWindow:(NSWindow *)parentWindow {
+        [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:false parentWindow:parentWindow];
+    }
+
     - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
         // メイン画面からプロンプト表示したい場合に使用（AppDelegate.windowを親画面とするため）
         [self windowWillOpenWithStyle:NSAlertStyleCritical messageText:message informativeText:subMessage withObject:object forSelector:selector
@@ -84,6 +90,12 @@ static ToolPopupWindow *sharedInstance;
     - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
         [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector
                              isPrompt:false parentWindow:[self parentWindow]];
+    }
+
+    - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+        parentWindow:(NSWindow *)parentWindow {
+        [self windowWillOpenWithStyle:NSAlertStyleInformational messageText:message informativeText:subMessage withObject:object forSelector:selector
+                             isPrompt:false parentWindow:parentWindow];
     }
 
     - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector {
