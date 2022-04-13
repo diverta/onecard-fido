@@ -297,25 +297,24 @@
         [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
     }
 
-    - (bool)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
+    - (void)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
         ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
         if ([importer readPrivateKeyPemFrom:pkey] == false) {
             [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil withObject:nil forSelector:nil];
-            return false;
+            return;
         }
         if ([importer readCertificatePemFrom:cert] == false) {
             [[ToolPopupWindow defaultWindow] critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil withObject:nil forSelector:nil];
-            return false;
+            return;
         }
         // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
         if ([importer keyAlgorithm] != [importer certAlgorithm]) {
             NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
                               [importer keyAlgorithm], [importer certAlgorithm]];
             [[ToolPopupWindow defaultWindow] critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info withObject:nil forSelector:nil];
-            return false;
+            return;
         }
         [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
-        return true;
     }
 
     - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
