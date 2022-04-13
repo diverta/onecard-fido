@@ -9,20 +9,27 @@
 
 #import "ToolCommon.h"
 
+@interface ToolPIVParameter : NSObject
+
+    // 鍵作成用パラメーターを保持
+    @property (nonatomic) uint8_t                       keySlotId;
+    @property (nonatomic) NSString                     *pkeyPemPath;
+    @property (nonatomic) NSString                     *certPemPath;
+    @property (nonatomic) NSString                     *authPin;
+    // PIN番号管理用パラメーターを保持
+    @property (nonatomic) NSString                     *currentPin;
+    @property (nonatomic) NSString                     *renewalPin;
+
+@end
+
 @interface ToolPIVCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
     - (void)commandDidClosePreferenceWindow;
 
-    - (void)commandWillResetFirmware:(Command)command;
+    - (void)commandWillPerformPIVProcess:(Command)command withParameter:(ToolPIVParameter *)parameter;
     - (void)commandDidResetFirmware:(bool)success;
-
-    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporterRef:(id)importer;
-    - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
-    - (void)commandWillReset:(Command)command;
-    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporterRef:(id)importer;
-    - (void)commandWillStatus:(Command)command;
 
     - (NSString *)getPIVSettingDescriptionString;
     - (bool)checkUSBHIDConnection;
