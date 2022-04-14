@@ -1,6 +1,9 @@
 # Matter評価キット
 
-最終更新日：2021/08/03
+最終更新日：2022/04/14
+
+注：最終更新日現在のMatterは状況が混沌としており、仕様が確定しない様子です。<br>
+この影響で過去（`2021/08/03`）に一旦制作したサンプルアプリは動作しなくなってしまった為、本リポジトリーからは削除しております。
 
 ## 概要
 新しいスマートホーム共通規格「[Matter](https://buildwithmatter.com)」についての評価用ハードウェア／ソフトウェアです。
@@ -37,23 +40,8 @@ Raspberry Pi 3 Model Bを使用しています。
 
 ## 手順書
 
-- <b>[Matterコントローラーアプリ導入手順](../MatterPoCKit/INSTALLPRG.md)</b><br>
-Matterコントローラーアプリを、Android環境にインストールする手順について掲載します。
-
-- <b>[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)</b><br>
-Matterデバイスアプリ（ファームウェア）をnRF52840環境にインストールする手順について掲載します。
-
 - <b>[Matterハブ構築手順](../MatterPoCKit/SETUPHUB.md)</b><br>
 Matterハブを構築する手順について掲載します。
-
-- <b>[Matterコマンド実行手順](../MatterPoCKit/DOCOMMAND.md)</b><br>
-コントローラーアプリを使用し、デバイスにMatterコマンドを送信する手順について掲載します。
-
-## 参考実装
-
-- <b>[Matterコントローラーアプリ（iOS版）](../MatterPoCKit/iOS/README.md)</b><br>
-最終更新日現在、開発者がApple Developer Programメンバーシップを保有していないため、アプリをダウンロード-->インストールしていただく手段を用意できません。<br>
-従いまして、現状は参考実装扱いとしております（実機動作確認済み）。
 
 ## Wi-Fi版Matterデバイス（ご参考）
 
