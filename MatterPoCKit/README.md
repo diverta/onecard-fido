@@ -1,6 +1,9 @@
 # Matter評価キット
 
-最終更新日：2021/08/03
+最終更新日：2022/04/14
+
+注：最終更新日現在のMatterは状況が混沌としており、仕様が確定しない様子です。<br>
+この影響で過去（`2021/08/03`）に一旦制作したサンプルアプリは動作しなくなってしまった為、本リポジトリーからは削除しております。
 
 ## 概要
 新しいスマートホーム共通規格「[Matter](https://buildwithmatter.com)」についての評価用ハードウェア／ソフトウェアです。
@@ -10,17 +13,6 @@
 本キットは、Matterコントローラー／デバイス／ハブの３点から構成されます。
 
 <img src="assets01/0000.jpg" width="700">
-
-#### Matterコントローラー
-Matterコマンドを実行させる側の、Androidスマートフォン用のアプリです。
-
-<img src="assets01/0001.jpg" width="160">
-
-#### Matterデバイス
-Matterコマンドを実行する側となる、nRF52840を組み込んだデバイスです。<br>
-以前製作した「[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)」を、当面使用する想定です。
-
-<img src="assets01/0002.jpg" width="320">
 
 #### Matterハブ
 Matterコントローラー〜Matterデバイス間の中継役（ハブ）となるデバイスです。<br>
@@ -37,28 +29,21 @@ Raspberry Pi 3 Model Bを使用しています。
 
 ## 手順書
 
-- <b>[Matterコントローラーアプリ導入手順](../MatterPoCKit/INSTALLPRG.md)</b><br>
-Matterコントローラーアプリを、Android環境にインストールする手順について掲載します。
+[Matterアライアンス](https://buildwithmatter.com)が提供するサンプルについての手順書になります。
 
-- <b>[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)</b><br>
-Matterデバイスアプリ（ファームウェア）をnRF52840環境にインストールする手順について掲載します。
+- <b>[Matterコントローラーサンプルアプリ更新手順](../MatterPoCKit/UPDATE_ANDROID_SAMPLE.md)</b><br>
+Matterコントローラーサンプルアプリ（Androidアプリ）をAndroid環境にインストールする手順について掲載しています。
+
+- <b>[Matterデバイスサンプルアプリ更新手順](../MatterPoCKit/UPDATENCSSAMPLE.md)</b><br>
+Matterデバイスサンプルアプリ（ファームウェア）をnRF5340環境にインストールする手順について掲載しています。
 
 - <b>[Matterハブ構築手順](../MatterPoCKit/SETUPHUB.md)</b><br>
 Matterハブを構築する手順について掲載します。
 
-- <b>[Matterコマンド実行手順](../MatterPoCKit/DOCOMMAND.md)</b><br>
-コントローラーアプリを使用し、デバイスにMatterコマンドを送信する手順について掲載します。
-
-## 参考実装
-
-- <b>[Matterコントローラーアプリ（iOS版）](../MatterPoCKit/iOS/README.md)</b><br>
-最終更新日現在、開発者がApple Developer Programメンバーシップを保有していないため、アプリをダウンロード-->インストールしていただく手段を用意できません。<br>
-従いまして、現状は参考実装扱いとしております（実機動作確認済み）。
-
 ## Wi-Fi版Matterデバイス（ご参考）
 
 開発ボード「ESP32-DevKitC」上に[ESP32版サンプルアプリ](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32)を導入し、Wi-Fi版Matterデバイスの動作確認を行いました。<br>
-結論としてはThread版Matterデバイスと等価の動作をします。
+結論としては前述のnRF5340サンプル（Thread版Matterデバイス）と等価の動作をします。
 
 - <b>[ESP32版サンプルアプリのビルド手順](../MatterPoCKit/ESP32SAMPLE.md)</b><br>
 ESP32版サンプルアプリをビルドし、開発ボード「ESP32-DevKitC」に書き込む手順について掲載します。

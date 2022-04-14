@@ -1,0 +1,671 @@
+2022-04-14 14:15:01.653 17463-17463/com.google.chip.chiptool I/hwaps: JNI_OnLoad
+2022-04-14 14:15:01.660 17463-17463/com.google.chip.chiptool W/Settings: mValues not put! needsGenerationTracker: true currentGeneration: -1 name: enable_navbar value: null
+2022-04-14 14:15:01.745 17463-17463/com.google.chip.chiptool V/AudioManager: playSoundEffect   effectType: 0
+2022-04-14 14:15:01.893 17463-17463/com.google.chip.chiptool W/DynamiteModule: Local module descriptor class for com.google.android.gms.vision.dynamite.barcode not found.
+2022-04-14 14:15:01.902 17463-17463/com.google.chip.chiptool I/DynamiteModule: Considering local module com.google.android.gms.vision.dynamite.barcode:0 and remote module com.google.android.gms.vision.dynamite.barcode:0
+2022-04-14 14:15:01.903 17463-17463/com.google.chip.chiptool D/BarcodeNativeHandle: Cannot load feature, fall back to load dynamite module.
+2022-04-14 14:15:01.914 17463-17463/com.google.chip.chiptool W/zygote64: Skipping duplicate class check due to unrecognized classloader
+2022-04-14 14:15:01.917 17463-17463/com.google.chip.chiptool I/DynamiteModule: Considering local module com.google.android.gms.vision.barcode:0 and remote module com.google.android.gms.vision.barcode:1
+2022-04-14 14:15:01.917 17463-17463/com.google.chip.chiptool I/DynamiteModule: Selected remote version of com.google.android.gms.vision.barcode, version >= 1
+2022-04-14 14:15:01.917 17463-17463/com.google.chip.chiptool V/DynamiteModule: Dynamite loader version >= 2, using loadModule2NoCrashUtils
+2022-04-14 14:15:01.934 17463-17463/com.google.chip.chiptool W/ResourceType: ResTable_typeSpec entry count inconsistent: given 75, previously 77
+2022-04-14 14:15:01.971 17463-17463/com.google.chip.chiptool W/zygote64: Skipping duplicate class check due to unrecognized classloader
+2022-04-14 14:15:02.066 17463-17468/com.google.chip.chiptool I/zygote64: Do full code cache collection, code=123KB, data=88KB
+2022-04-14 14:15:02.066 17463-17468/com.google.chip.chiptool I/zygote64: After code cache collection, code=123KB, data=69KB
+2022-04-14 14:15:02.147 17463-17468/com.google.chip.chiptool I/zygote64: Do partial code cache collection, code=125KB, data=73KB
+2022-04-14 14:15:02.147 17463-17468/com.google.chip.chiptool I/zygote64: After code cache collection, code=125KB, data=73KB
+2022-04-14 14:15:02.147 17463-17468/com.google.chip.chiptool I/zygote64: Increasing code cache capacity to 512KB
+2022-04-14 14:15:02.169 1160-8526/? W/AutofillSession: failed to request autofill data for Token{6e44b1e ActivityRecord{22bd359 u0 com.google.chip.chiptool/.CHIPToolActivity t15}}
+2022-04-14 14:15:02.192 1160-8526/? D/WindowManager: finishDrawingWindow: Window{5c1f239 u0 com.google.chip.chiptool/com.google.chip.chiptool.CHIPToolActivity} mDrawState=HAS_DRAWN
+2022-04-14 14:15:02.230 1160-8526/? V/WindowManager: findFocusedWindow: AppWindowToken{54b4fff token=Token{6e44b1e ActivityRecord{22bd359 u0 com.google.chip.chiptool/.CHIPToolActivity t15}}} below Reached focused app=AppWindowToken{fac6838 token=Token{fa02c9b ActivityRecord{59e88aa u0 com.google.android.packageinstaller/com.android.packageinstaller.permission.ui.GrantPermissionsActivity t15}}}
+2022-04-14 14:15:02.231 1709-1863/? D/ScenarioService: new above launcher front pkgs: [com.android.documentsui, com.android.providers.downloads.ui, com.google.android.packageinstaller, com.google.chip.chiptool, com.google.android.packageinstaller]
+2022-04-14 14:15:02.231 1709-1863/? I/AppsUsage: scnOff:false FgAPP:com.google.android.packageinstaller BgAPP:com.google.chip.chiptool
+2022-04-14 14:15:02.234 1709-2005/? I/GpsController: com.google.chip.chiptool is above launcher app, just return...
+2022-04-14 14:15:02.245 1709-2020/? I/PGServer: report state:10000 event type:2 pid:0 uid:0 pkg:com.google.chip.chiptool to pid: 1160
+2022-04-14 14:15:02.245 1709-2020/? I/PGServer: report state:10000 event type:2 pid:0 uid:0 pkg:com.google.chip.chiptool to pid: 1709
+2022-04-14 14:15:02.245 1709-2020/? I/SceneReceiver: state type: 10000 eventType:2 pid:0 uid:0 pkg:com.google.chip.chiptool
+2022-04-14 14:15:02.264 17463-17463/com.google.chip.chiptool W/InputMethodManager: startInputReason = 4
+2022-04-14 14:15:02.343 1160-8526/? D/ActivityManager: Skipping intent:act=android.intent.action.DELETE dat=package:com.google.chip.chiptool flg=0x10800000 cmp=com.google.android.packageinstaller/com.android.packageinstaller.UninstallerActivity
+2022-04-14 14:15:03.779 1160-1748/? V/WindowManager: No longer Stopped: AppWindowToken{54b4fff token=Token{6e44b1e ActivityRecord{22bd359 u0 com.google.chip.chiptool/.CHIPToolActivity t15}}}
+2022-04-14 14:15:03.784 1709-1863/? D/ScenarioService: front pkg : com.google.chip.chiptool launcher: false
+2022-04-14 14:15:03.784 1709-1863/? I/ScenarioService: old above launcher pkgs: [com.android.documentsui, com.android.providers.downloads.ui, com.google.android.packageinstaller, com.google.chip.chiptool, com.google.android.packageinstaller] new front:com.google.chip.chiptool
+2022-04-14 14:15:03.784 1709-1863/? D/ScenarioService: new above launcher front pkgs: [com.android.documentsui, com.android.providers.downloads.ui, com.google.android.packageinstaller, com.google.chip.chiptool]
+2022-04-14 14:15:03.784 1709-1863/? I/AppsUsage: scnOff:false FgAPP:com.google.chip.chiptool BgAPP:com.google.android.packageinstaller
+2022-04-14 14:15:03.785 1709-2005/? I/ash: front pkg : com.google.chip.chiptool launcher: false
+2022-04-14 14:15:03.785 1709-2005/? I/ash: above launcher front pkgs: [com.android.documentsui, com.android.providers.downloads.ui, com.google.android.packageinstaller, com.google.chip.chiptool]
+2022-04-14 14:15:03.787 2893-5889/? D/[HwRecSys]HwRecSysService: onEvent actionID: 10000 msg:com.google.chip.chiptool		
+2022-04-14 14:15:03.790 1160-1365/? D/EmcomManagerService: forePackage name is com.google.chip.chiptool
+2022-04-14 14:15:03.790 1709-2020/? I/PGServer: report state:10000 event type:1 pid:0 uid:0 pkg:com.google.chip.chiptool to pid: 1160
+2022-04-14 14:15:03.790 1709-2020/? I/PGServer: report state:10000 event type:1 pid:0 uid:0 pkg:com.google.chip.chiptool to pid: 1709
+2022-04-14 14:15:03.790 1709-2020/? I/SceneReceiver: state type: 10000 eventType:1 pid:0 uid:0 pkg:com.google.chip.chiptool
+2022-04-14 14:15:03.791 1709-2434/? D/HwThermalStateManager: current foreapp pkg : com.google.chip.chiptool
+2022-04-14 14:15:03.795 1160-1748/? V/WindowManager: notifyAppResumed: wasStopped=false AppWindowToken{54b4fff token=Token{6e44b1e ActivityRecord{22bd359 u0 com.google.chip.chiptool/.CHIPToolActivity t15}}}
+2022-04-14 14:15:03.808 1160-1748/? V/WindowManager: Check opening app=AppWindowToken{54b4fff token=Token{6e44b1e ActivityRecord{22bd359 u0 com.google.chip.chiptool/.CHIPToolActivity t15}}}: allDrawn=true startingDisplayed=false startingMoved=false isRelaunching()=false
+2022-04-14 14:15:03.828 17463-17463/com.google.chip.chiptool W/InputMethodManager: startInputReason = 1
+2022-04-14 14:15:03.854 17463-17463/com.google.chip.chiptool I/Camera: camera number: 2
+2022-04-14 14:15:03.867 17463-17463/com.google.chip.chiptool I/PermissionManager: camera remind result:true
+2022-04-14 14:15:03.855 17463-17463/com.google.chip.chiptool I/chatty: uid=10138(u0_a138) com.google.chip.chiptool identical 1 line
+2022-04-14 14:15:03.857 17463-17463/com.google.chip.chiptool I/Camera: camera number: 2
+2022-04-14 14:15:03.869 1160-8526/? D/ActivityManager: Skipping intent:act=android.intent.action.DELETE dat=package:com.google.chip.chiptool flg=0x10800000 cmp=com.google.android.packageinstaller/com.android.packageinstaller.UninstallerActivity
+2022-04-14 14:15:03.873 720-720/? I/CameraService: CameraService::connect E (pid 17463 "com.google.chip.chiptool", id 0)
+2022-04-14 14:15:03.873 720-720/? I/CameraService: CameraService::connect call (PID -1 "com.google.chip.chiptool", camera ID 0) for HAL version default and Camera API version 1
+2022-04-14 14:15:03.874 720-720/? I/CameraService: updateEvictedList(), evicted size: 0, incomming package name: 'com.google.chip.chiptool'.
+2022-04-14 14:15:03.947 720-720/? I/Camera2ClientBase: Camera 0: Opened. Client: com.google.chip.chiptool (PID 17463, UID 10138)
+2022-04-14 14:15:03.947 720-720/? I/CameraService: connectHelper(), make client for 'com.google.chip.chiptool'.
+2022-04-14 14:15:03.979 720-720/? I/Camera2Client: initializeImpl: set package name: com.google.chip.chiptool
+2022-04-14 14:15:03.984 1709-1863/? D/ScenarioService: camera start : com.google.chip.chiptool, cameraId: 0, pid: 17463, mFrontPkg: com.google.chip.chiptool, pkgs: {com.google.chip.chiptool=8784851}, uptime: 8784851
+2022-04-14 14:15:04.000 17463-17463/com.google.chip.chiptool I/Camera: camera number: 2
+2022-04-14 14:15:04.018 17463-17463/com.google.chip.chiptool I/PermissionManager: camera remind result:true
+2022-04-14 14:15:04.049 17463-17463/com.google.chip.chiptool W/View: dispatchProvideAutofillStructure(): not laid out, ignoring
+2022-04-14 14:15:04.054 17463-17463/com.google.chip.chiptool I/AssistStructure: Flattened final assist data: 2828 bytes, containing 1 windows, 11 views
+2022-04-14 14:15:04.924 14541-14651/? W/our: Infinite Data has no result for com.google.chip.chiptool [CONTEXT service_id=177 ]
+2022-04-14 14:15:04.951 14541-14644/? W/our: Infinite Data has no result for com.google.chip.chiptool [CONTEXT service_id=177 ]
+2022-04-14 14:15:04.961 14541-14626/? W/our: Infinite Data has no result for com.google.chip.chiptool [CONTEXT service_id=177 ]
+2022-04-14 14:15:04.972 14541-14626/? W/our: Infinite Data has no result for com.google.chip.chiptool [CONTEXT service_id=177 ]
+2022-04-14 14:15:05.141 17463-17463/com.google.chip.chiptool I/PermissionManager: camera remind result:true
+2022-04-14 14:15:05.141 17463-17463/com.google.chip.chiptool D/Camera: app passed NULL surface
+2022-04-14 14:15:05.193 1709-1863/? D/ScenarioService: camera end : com.google.chip.chiptool, last: com.google.chip.chiptool, pkgs: {com.google.chip.chiptool=8784851}
+2022-04-14 14:15:05.201 17463-17463/com.google.chip.chiptool D/SPL: JNI_OnLoad() called
+2022-04-14 14:15:05.220 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.23, mControlPoint1y = 0.06, mControlPoint2x = 0.09, mControlPoint2y = 0.97
+2022-04-14 14:15:05.221 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.6, mControlPoint1y = 0.9, mControlPoint2x = 0.8, mControlPoint2y = 1.0
+2022-04-14 14:15:05.223 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.23, mControlPoint1y = 0.06, mControlPoint2x = 0.09, mControlPoint2y = 0.97
+2022-04-14 14:15:05.223 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.6, mControlPoint1y = 0.9, mControlPoint2x = 0.8, mControlPoint2y = 1.0
+2022-04-14 14:15:05.248 720-13468/? I/Camera2ClientBase: Closed Camera 0. Client was: com.google.chip.chiptool (PID 17463, UID 10138)
+2022-04-14 14:15:05.271 1709-1863/? D/ScenarioService: camera end : com.google.chip.chiptool, last: com.google.chip.chiptool, pkgs: {}
+2022-04-14 14:15:05.353 639-2747/? E/SurfaceFlinger: Failed to find layer (SurfaceView - com.google.chip.chiptool/com.google.chip.chiptool.CHIPToolActivity#0) in layer parent (no-parent).
+2022-04-14 14:15:05.353 639-1293/? E/SurfaceFlinger: Failed to find layer (Background for - SurfaceView - com.google.chip.chiptool/com.google.chip.chiptool.CHIPToolActivity#0) in layer parent (no-parent).
+2022-04-14 14:15:05.373 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.23, mControlPoint1y = 0.06, mControlPoint2x = 0.09, mControlPoint2y = 0.97
+2022-04-14 14:15:05.374 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.6, mControlPoint1y = 0.9, mControlPoint2x = 0.8, mControlPoint2y = 1.0
+2022-04-14 14:15:05.375 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.23, mControlPoint1y = 0.06, mControlPoint2x = 0.09, mControlPoint2y = 0.97
+2022-04-14 14:15:05.375 17463-17463/com.google.chip.chiptool D/CubicBezierInterpolator: CubicBezierInterpolator  mControlPoint1x = 0.6, mControlPoint1y = 0.9, mControlPoint2x = 0.8, mControlPoint2y = 1.0
+2022-04-14 14:15:05.481 17463-17468/com.google.chip.chiptool I/zygote64: Compiler allocated 5MB to compile void android.view.View.<init>(android.content.Context, android.util.AttributeSet, int, int)
+2022-04-14 14:15:17.408 17463-17463/com.google.chip.chiptool V/AudioManager: playSoundEffect   effectType: 0
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool D/CTL: JNI_OnLoad() called
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool D/CTL: Loading Java class references.
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool D/CTL: Java class references loaded.
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool D/DL: AndroidChipPlatform JNI_OnLoad() called
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool E/SPT: JavaVM is already set
+2022-04-14 14:15:17.467 17463-17463/com.google.chip.chiptool D/DL: Loading Java class references.
+2022-04-14 14:15:17.468 17463-17463/com.google.chip.chiptool D/DL: Java class references loaded.
+2022-04-14 14:15:17.724 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'chip-config:fail-safe-armed' not found in shared preferences
+2022-04-14 14:15:17.725 17463-17463/com.google.chip.chiptool E/DL: Java exception in AndroidConfig::readConfigValueLong
+2022-04-14 14:15:17.725 17463-17463/com.google.chip.chiptool W/System.err: chip.platform.AndroidChipPlatformException
+2022-04-14 14:15:17.727 17463-17463/com.google.chip.chiptool W/System.err:     at chip.platform.PreferencesConfigurationManager.readConfigValueLong(PreferencesConfigurationManager.java:95)
+2022-04-14 14:15:17.727 17463-17463/com.google.chip.chiptool W/System.err:     at chip.platform.AndroidChipPlatform.initChipStack(Native Method)
+2022-04-14 14:15:17.728 17463-17463/com.google.chip.chiptool W/System.err:     at chip.platform.AndroidChipPlatform.<init>(AndroidChipPlatform.java:37)
+2022-04-14 14:15:17.728 17463-17463/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.ChipClient.getAndroidChipPlatform(ChipClient.kt:54)
+2022-04-14 14:15:17.728 17463-17463/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.ChipClient.getDeviceController(ChipClient.kt:42)
+2022-04-14 14:15:17.728 17463-17463/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.provisioning.DeviceProvisioningFragment$startConnectingToDevice$1.invokeSuspend(DeviceProvisioningFragment.kt:100)
+2022-04-14 14:15:17.729 17463-17463/com.google.chip.chiptool W/System.err:     at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+2022-04-14 14:15:17.729 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.DispatchedKt.resumeCancellable(Dispatched.kt:457)
+2022-04-14 14:15:17.729 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.intrinsics.CancellableKt.startCoroutineCancellable(Cancellable.kt:26)
+2022-04-14 14:15:17.730 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.CoroutineStart.invoke(CoroutineStart.kt:109)
+2022-04-14 14:15:17.730 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.AbstractCoroutine.start(AbstractCoroutine.kt:154)
+2022-04-14 14:15:17.730 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.BuildersKt__Builders_commonKt.launch(Builders.common.kt:54)
+2022-04-14 14:15:17.731 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.BuildersKt.launch(Unknown Source:1)
+2022-04-14 14:15:17.731 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.BuildersKt__Builders_commonKt.launch$default(Builders.common.kt:47)
+2022-04-14 14:15:17.731 17463-17463/com.google.chip.chiptool W/System.err:     at kotlinx.coroutines.BuildersKt.launch$default(Unknown Source:1)
+2022-04-14 14:15:17.732 17463-17463/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.provisioning.DeviceProvisioningFragment.startConnectingToDevice(DeviceProvisioningFragment.kt:99)
+2022-04-14 14:15:17.732 17463-17463/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.provisioning.DeviceProvisioningFragment.onCreateView(DeviceProvisioningFragment.kt:66)
+2022-04-14 14:15:17.733 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.Fragment.performCreateView(Fragment.java:2950)
+2022-04-14 14:15:17.733 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentStateManager.createView(FragmentStateManager.java:518)
+2022-04-14 14:15:17.733 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentStateManager.moveToExpectedState(FragmentStateManager.java:277)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentManager.executeOpsTogether(FragmentManager.java:2177)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentManager.removeRedundantOperationsAndExecute(FragmentManager.java:2088)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentManager.execPendingActions(FragmentManager.java:1990)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at androidx.fragment.app.FragmentManager$5.run(FragmentManager.java:524)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at android.os.Handler.handleCallback(Handler.java:808)
+2022-04-14 14:15:17.734 17463-17463/com.google.chip.chiptool W/System.err:     at android.os.Handler.dispatchMessage(Handler.java:101)
+2022-04-14 14:15:17.735 17463-17463/com.google.chip.chiptool W/System.err:     at android.os.Looper.loop(Looper.java:166)
+2022-04-14 14:15:17.735 17463-17463/com.google.chip.chiptool W/System.err:     at android.app.ActivityThread.main(ActivityThread.java:7425)
+2022-04-14 14:15:17.735 17463-17463/com.google.chip.chiptool W/System.err:     at java.lang.reflect.Method.invoke(Native Method)
+2022-04-14 14:15:17.735 17463-17463/com.google.chip.chiptool W/System.err:     at com.android.internal.os.Zygote$MethodAndArgsCaller.run(Zygote.java:245)
+2022-04-14 14:15:17.735 17463-17463/com.google.chip.chiptool W/System.err:     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:921)
+2022-04-14 14:15:17.736 17463-17463/com.google.chip.chiptool D/CTL: newDeviceController() called
+2022-04-14 14:15:17.737 17463-17463/com.google.chip.chiptool D/CTL: Setting attestation nonce to random value
+2022-04-14 14:15:17.737 17463-17463/com.google.chip.chiptool D/CTL: Setting CSR nonce to random value
+2022-04-14 14:15:17.737 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key AndroidDeviceControllerKey
+2022-04-14 14:15:17.737 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'AndroidDeviceControllerKey' not found in shared preferences
+2022-04-14 14:15:17.767 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key AndroidDeviceControllerKey
+2022-04-14 14:15:17.793 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key AndroidCARootCert1
+2022-04-14 14:15:17.793 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'AndroidCARootCert1' not found in shared preferences
+2022-04-14 14:15:17.793 17463-17463/com.google.chip.chiptool D/CTL: Generating RCAC
+2022-04-14 14:15:17.821 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key AndroidCARootCert1
+2022-04-14 14:15:17.822 17463-17463/com.google.chip.chiptool D/CTL: Generating NOC
+2022-04-14 14:15:17.847 17463-17463/com.google.chip.chiptool D/IN: UDP::Init bind&listen port=5541
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/IN: UDP::Init bound to port=5541
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/IN: UDP::Init bind&listen port=5541
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/IN: UDP::Init bound to port=5541
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/IN: BLEBase::Init - setting/overriding transport
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/IN: TransportMgr initialized
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/DIS: Init fabric pairing table with server storage
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key g/fidx
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'g/fidx' not found in shared preferences
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/DIS: Add fabric pairing table delegate
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key g/gcc
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'g/gcc' not found in shared preferences
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key g/gdc
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'g/gdc' not found in shared preferences
+2022-04-14 14:15:17.848 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key g/gcc
+2022-04-14 14:15:17.849 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key g/gdc
+2022-04-14 14:15:17.849 17463-17463/com.google.chip.chiptool D/ZCL: Using ZAP configuration...
+2022-04-14 14:15:17.849 17463-17463/com.google.chip.chiptool D/CTL: System State Initialized...
+2022-04-14 14:15:17.850 17463-17463/com.google.chip.chiptool D/CTL: Intermediate CA is not needed
+2022-04-14 14:15:17.850 17463-17463/com.google.chip.chiptool D/DIS: Verifying the received credentials
+2022-04-14 14:15:17.883 17463-17463/com.google.chip.chiptool D/DIS: Added new fabric at index: 1, Initialized: 1
+2022-04-14 14:15:17.883 17463-17463/com.google.chip.chiptool D/DIS: Assigned compressed fabric ID: 0x9505F55F7BE132C1, node ID: 0x000000000001B669
+2022-04-14 14:15:17.883 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/r
+2022-04-14 14:15:17.884 17463-17463/com.google.chip.chiptool D/TOO: KVS: Deleting key f/1/i
+2022-04-14 14:15:17.884 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/n
+2022-04-14 14:15:17.884 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/o
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/m
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/DIS: Fabric (1) persisted to storage. Calling OnFabricPersistedToStorage
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key g/fidx
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/CTL: Joined the fabric at index 1. Compressed fabric ID is: 0x9505F55F7BE132C1
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/SPT: Setting up group data for Fabric Index 1 with Compressed Fabric ID:
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/SPT: 0x95, 0x05, 0xf5, 0x5f, 0x7b, 0xe1, 0x32, 0xc1, 
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key f/1/g
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'f/1/g' not found in shared preferences
+2022-04-14 14:15:17.885 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/k/0
+2022-04-14 14:15:17.886 17463-17463/com.google.chip.chiptool D/TOO: KVS: Getting key g/gfl
+2022-04-14 14:15:17.886 17463-17463/com.google.chip.chiptool D/KeyValueStoreManager: Key 'g/gfl' not found in shared preferences
+2022-04-14 14:15:17.886 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key g/gfl
+2022-04-14 14:15:17.886 17463-17463/com.google.chip.chiptool D/TOO: KVS: Setting key f/1/g
+2022-04-14 14:15:17.887 17463-17655/com.google.chip.chiptool D/CTL: IO thread starting
+2022-04-14 14:15:17.887 17463-17655/com.google.chip.chiptool D/DL: _OnPlatformEvent
+2022-04-14 14:15:17.891 17463-17463/com.google.chip.chiptool I/DeviceProvisioningFragment: showMessage:Scanning for BLE device 3840
+2022-04-14 14:15:17.895 17463-17463/com.google.chip.chiptool D/HwRTBlurUtils: check blur style for HwToast-Toast, themeResId : 0x7f0f0006, context : com.google.chip.chiptool.CHIPToolActivity@cb5afff, Nhwext : 6, get Blur : disable with , android.graphics.drawable.NinePatchDrawable@639d6cf
+2022-04-14 14:15:17.908 17463-17463/com.google.chip.chiptool I/BluetoothAdapter: getBluetoothLeScanner
+2022-04-14 14:15:17.918 17463-17463/com.google.chip.chiptool I/chip.BluetoothManager: Starting Bluetooth scan
+2022-04-14 14:15:17.919 17463-17463/com.google.chip.chiptool D/BluetoothAdapter: isLeEnabled(): ON
+2022-04-14 14:15:17.929 17463-17476/com.google.chip.chiptool D/BluetoothLeScanner: onScannerRegistered() - status=0 scannerId=6 mScannerId=0
+2022-04-14 14:15:17.950 17463-17463/com.google.chip.chiptool I/Choreographer: Skipped 31 frames!  The application may be doing too much work on its main thread.
+2022-04-14 14:15:17.969 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:17.969 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:17.976 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:17.988 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =false) (mNativeObject  =0)/@0x7e04851,viewVisibility is0
+2022-04-14 14:15:18.008 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0x7e04851,relayoutResult is7
+2022-04-14 14:15:18.009 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0x7e04851
+2022-04-14 14:15:18.011 17463-17484/com.google.chip.chiptool D/mali_winsys: EGLint new_window_surface(egl_winsys_display *, void *, EGLSurface, EGLConfig, egl_winsys_surface **, egl_color_buffer_format *, EGLBoolean) returns 0x3000
+2022-04-14 14:15:18.481 17463-17463/com.google.chip.chiptool I/chip.BluetoothManager: Bluetooth Device Scanned Addr: C2:E0:18:0E:E2:02, Name MatterLock
+2022-04-14 14:15:18.486 17463-17463/com.google.chip.chiptool D/BluetoothAdapter: isLeEnabled(): ON
+2022-04-14 14:15:18.503 17463-17463/com.google.chip.chiptool I/DeviceProvisioningFragment: showMessage:Connecting to MatterLock
+2022-04-14 14:15:18.509 17463-17463/com.google.chip.chiptool D/HwRTBlurUtils: check blur style for HwToast-Toast, themeResId : 0x7f0f0006, context : com.google.chip.chiptool.CHIPToolActivity@cb5afff, Nhwext : 6, get Blur : disable with , android.graphics.drawable.NinePatchDrawable@2da8b6
+2022-04-14 14:15:18.522 17463-17463/com.google.chip.chiptool I/chip.BluetoothManager: Connecting
+2022-04-14 14:15:18.522 17463-17463/com.google.chip.chiptool I/BluetoothDevice: connectGatt
+2022-04-14 14:15:18.524 17463-17463/com.google.chip.chiptool D/BluetoothGatt: connect() - device: C2:E0:18:0E:E2:02, auto: false
+2022-04-14 14:15:18.524 17463-17463/com.google.chip.chiptool D/BluetoothGatt: registerApp()
+2022-04-14 14:15:18.524 17463-17463/com.google.chip.chiptool D/BluetoothGatt: registerApp() - UUID=c0977614-8640-4265-a5cb-32e29479b797
+2022-04-14 14:15:18.533 6609-10778/? D/btdft-BtBLEAppInfoCollector: reportBLEAppInfo enter for ble app:com.google.chip.chiptool
+2022-04-14 14:15:18.542 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onClientRegistered() - status=0 clientIf=6
+2022-04-14 14:15:18.929 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onClientConnectionState() - status=0 clientIf=6 device=C2:E0:18:0E:E2:02
+2022-04-14 14:15:18.935 17463-17476/com.google.chip.chiptool I/chip.BluetoothManager: MatterLock.onConnectionStateChange status = 0, newState=2
+2022-04-14 14:15:18.936 17463-17476/com.google.chip.chiptool I/chip.BluetoothManager|onConnectionStateChange: Discovering Services...
+2022-04-14 14:15:18.936 17463-17476/com.google.chip.chiptool D/BluetoothGatt: discoverServices() - device: C2:E0:18:0E:E2:02
+2022-04-14 14:15:19.316 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onConnectionUpdated() - Device=C2:E0:18:0E:E2:02 interval=6 latency=0 timeout=500 status=0
+2022-04-14 14:15:19.596 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onSearchComplete() = Device=C2:E0:18:0E:E2:02 Status=0
+2022-04-14 14:15:19.601 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onServicesDiscovered status = 0
+2022-04-14 14:15:19.602 17463-17476/com.google.chip.chiptool I/chip.BluetoothManager|onServicesDiscovered: Services Discovered
+2022-04-14 14:15:19.602 17463-17476/com.google.chip.chiptool D/BluetoothGatt: configureMTU() - device: C2:E0:18:0E:E2:02 mtu: 247
+2022-04-14 14:15:19.626 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onConfigureMTU() - Device=C2:E0:18:0E:E2:02 mtu=247 status=0
+2022-04-14 14:15:19.631 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onMtuChanged: connecting to CHIP device
+2022-04-14 14:15:19.634 17463-17463/com.google.chip.chiptool I/DeviceProvisioningFragment: showMessage:Pairing
+2022-04-14 14:15:19.640 17463-17463/com.google.chip.chiptool D/HwRTBlurUtils: check blur style for HwToast-Toast, themeResId : 0x7f0f0006, context : com.google.chip.chiptool.CHIPToolActivity@cb5afff, Nhwext : 6, get Blur : disable with , android.graphics.drawable.NinePatchDrawable@f9c79b7
+2022-04-14 14:15:19.668 17463-17463/com.google.chip.chiptool D/ChipDeviceController: Bluetooth connection added with ID: 1
+2022-04-14 14:15:19.668 17463-17463/com.google.chip.chiptool D/ChipDeviceController: Pairing device with ID: 1
+2022-04-14 14:15:19.669 17463-17463/com.google.chip.chiptool D/CTL: pairDevice() called with device ID, connection object, and pincode
+2022-04-14 14:15:19.669 17463-17463/com.google.chip.chiptool D/IN: BleConnectionComplete: endPoint 0x6f9137a0f0
+2022-04-14 14:15:19.669 17463-17463/com.google.chip.chiptool D/DL: Received GetMTU
+2022-04-14 14:15:19.669 17463-17463/com.google.chip.chiptool D/AndroidBleManager: Android Manufacturer: (HUAWEI)
+2022-04-14 14:15:19.669 17463-17463/com.google.chip.chiptool D/AndroidBleManager: Android Model: (FIG-LA1)
+2022-04-14 14:15:19.670 17463-17463/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:19.673 17463-17463/com.google.chip.chiptool D/SC: Assigned local session key ID 34401
+2022-04-14 14:15:19.673 17463-17463/com.google.chip.chiptool D/SC: Including MRP parameters in PBKDF param request
+2022-04-14 14:15:19.673 17463-17463/com.google.chip.chiptool D/IN: Prepared unauthenticated message 0x7fe0151f80 to 0x0000000000000000 (0)  of type 0x20 and protocolId (0, 0) on exchange 51078i with MessageCounter:958080559.
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/IN: Sending unauthenticated msg 0x7fe0151f80 with MessageCounter:958080559 to 0x0000000000000000 at monotonic time: 000000000086491D msec
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/IN: Message appended to BLE send queue
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/SC: Sent PBKDF param request
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/CTL: Setting thread operational dataset from parameters
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/CTL: Setting attestation nonce to random value
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/CTL: Setting CSR nonce to random value
+2022-04-14 14:15:19.674 17463-17463/com.google.chip.chiptool D/CTL: Commission called for node ID 0x0000000000000001
+2022-04-14 14:15:19.685 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onConnectionUpdated() - Device=C2:E0:18:0E:E2:02 interval=40 latency=0 timeout=500 status=0
+2022-04-14 14:15:19.685 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onConnectionUpdated() - Device=C2:E0:18:0E:E2:02 interval=40 latency=0 timeout=500 status=0
+2022-04-14 14:15:19.737 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:19.737 17463-17476/com.google.chip.chiptool D/DL: Received SubscribeCharacteristic
+2022-04-14 14:15:19.738 17463-17476/com.google.chip.chiptool D/BluetoothGatt: setCharacteristicNotification() - uuid: 18ee2ef5-263d-4559-959f-4f9c429f9d12 enable: true
+2022-04-14 14:15:19.838 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onDescriptorWrite: 00002902-0000-1000-8000-00805f9b34fb -> 0
+2022-04-14 14:15:19.838 17463-17476/com.google.chip.chiptool D/BLE: subscribe complete, ep = 0x6f9137a0f0
+2022-04-14 14:15:19.842 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:19.843 17463-17476/com.google.chip.chiptool D/BLE: peripheral chose BTP version 4; central expected between 4 and 4
+2022-04-14 14:15:19.843 17463-17476/com.google.chip.chiptool D/BLE: using BTP fragment sizes rx 244 / tx 244.
+2022-04-14 14:15:19.843 17463-17476/com.google.chip.chiptool D/BLE: local and remote recv window size = 5
+2022-04-14 14:15:19.843 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:19.846 17463-17476/com.google.chip.chiptool D/IN: BLE EndPoint 0x6f9137a0f0 Connection Complete
+2022-04-14 14:15:19.913 17463-17484/com.google.chip.chiptool W/libEGL: EGLNativeWindowType 0x6fa7513010 disconnect failed
+2022-04-14 14:15:19.941 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:19.946 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:19.953 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =false) (mNativeObject  =0)/@0xc74fa53,viewVisibility is0
+2022-04-14 14:15:19.970 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0xc74fa53,relayoutResult is7
+2022-04-14 14:15:19.971 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0xc74fa53
+2022-04-14 14:15:19.975 17463-17484/com.google.chip.chiptool D/mali_winsys: EGLint new_window_surface(egl_winsys_display *, void *, EGLSurface, EGLConfig, egl_winsys_surface **, egl_color_buffer_format *, EGLBoolean) returns 0x3000
+2022-04-14 14:15:19.985 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x21 with protocolId (0, 0) and MessageCounter:89464085 on exchange 51078i
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51078i, Delegate: 0x6fa56f9d68
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/SC: Received PBKDF param response
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/SC: Peer assigned session ID 41622
+2022-04-14 14:15:20.138 17463-17476/com.google.chip.chiptool D/SC: Found MRP parameters in the message
+2022-04-14 14:15:20.317 17463-17476/com.google.chip.chiptool D/IN: Prepared unauthenticated message 0x6f97500e00 to 0x0000000000000000 (0)  of type 0x22 and protocolId (0, 0) on exchange 51078i with MessageCounter:958080560.
+2022-04-14 14:15:20.317 17463-17476/com.google.chip.chiptool D/IN: Sending unauthenticated msg 0x6f97500e00 with MessageCounter:958080560 to 0x0000000000000000 at monotonic time: 0000000000864BA0 msec
+2022-04-14 14:15:20.317 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:20.319 17463-17476/com.google.chip.chiptool D/SC: Sent spake2p msg1
+2022-04-14 14:15:20.438 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:21.937 17463-17484/com.google.chip.chiptool W/libEGL: EGLNativeWindowType 0x6fa7513010 disconnect failed
+2022-04-14 14:15:21.975 17463-17484/com.google.chip.chiptool D/OpenGLRenderer:   HWUI Binary is  enabled
+2022-04-14 14:15:21.989 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =false) (mNativeObject  =0)/@0xa4ae8af,viewVisibility is0
+2022-04-14 14:15:22.010 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug relayoutWindow Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0xa4ae8af,relayoutResult is7
+2022-04-14 14:15:22.011 17463-17463/com.google.chip.chiptool W/ViewRootImpl[Toast]: EGLdebug Surface isSurface(name=null)  (appName =com.google.chip.chiptool) ( mSurfaceControllerIsValid =true) (mNativeObject  =6fa7513000)/@0xa4ae8af
+2022-04-14 14:15:22.013 17463-17484/com.google.chip.chiptool D/mali_winsys: EGLint new_window_surface(egl_winsys_display *, void *, EGLSurface, EGLConfig, egl_winsys_surface **, egl_color_buffer_format *, EGLBoolean) returns 0x3000
+2022-04-14 14:15:22.131 17463-17468/com.google.chip.chiptool I/zygote64: Do full code cache collection, code=248KB, data=192KB
+2022-04-14 14:15:22.132 17463-17468/com.google.chip.chiptool I/zygote64: After code cache collection, code=244KB, data=150KB
+2022-04-14 14:15:22.136 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:22.137 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x23 with protocolId (0, 0) and MessageCounter:89464086 on exchange 51078i
+2022-04-14 14:15:22.137 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51078i, Delegate: 0x6fa56f9d68
+2022-04-14 14:15:22.137 17463-17476/com.google.chip.chiptool D/SC: Received spake2p msg2
+2022-04-14 14:15:22.219 17463-17476/com.google.chip.chiptool D/IN: Prepared unauthenticated message 0x6f97501300 to 0x0000000000000000 (0)  of type 0x24 and protocolId (0, 0) on exchange 51078i with MessageCounter:958080561.
+2022-04-14 14:15:22.220 17463-17476/com.google.chip.chiptool D/IN: Sending unauthenticated msg 0x6f97501300 with MessageCounter:958080561 to 0x0000000000000000 at monotonic time: 000000000086530F msec
+2022-04-14 14:15:22.220 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:22.222 17463-17476/com.google.chip.chiptool D/SC: Sent spake2p msg3
+2022-04-14 14:15:22.286 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:22.341 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:22.343 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x40 with protocolId (0, 0) and MessageCounter:89464087 on exchange 51078i
+2022-04-14 14:15:22.343 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51078i, Delegate: 0x6fa56f9d68
+2022-04-14 14:15:22.343 17463-17476/com.google.chip.chiptool D/IN: New secure session created for device 0x0000000000000001, LSID:34401 PSID:41622!
+2022-04-14 14:15:22.344 17463-17476/com.google.chip.chiptool D/CTL: Remote device completed SPAKE2+ handshake
+2022-04-14 14:15:22.344 17463-17476/com.google.chip.chiptool D/DeviceProvisioningFragment: onPairingComplete: 0
+2022-04-14 14:15:22.345 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SecurePairing' -> 'ReadCommissioningInfo'
+2022-04-14 14:15:22.345 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ReadCommissioningInfo'
+2022-04-14 14:15:22.345 17463-17476/com.google.chip.chiptool D/CTL: Sending request for commissioning information
+2022-04-14 14:15:22.345 17463-17476/com.google.chip.chiptool D/DMG: SendReadRequest ReadClient[0x6fad0fea00]: Sending Read Request
+2022-04-14 14:15:22.346 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974ff190 to 0x0000000000000001 (1)  of type 0x2 and protocolId (0, 1) on exchange 51079i with MessageCounter:1188687.
+2022-04-14 14:15:22.346 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974ff190 with MessageCounter:1188687 to 0x0000000000000001 (1) at monotonic time: 000000000086538D msec
+2022-04-14 14:15:22.346 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:22.352 17463-17476/com.google.chip.chiptool D/DMG: MoveToState ReadClient[0x6fad0fea00]: Moving to [AwaitingIn]
+2022-04-14 14:15:22.489 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:22.940 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:23.039 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:23.040 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x5 with protocolId (0, 1) and MessageCounter:393510 on exchange 51079i
+2022-04-14 14:15:23.040 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51079i, Delegate: 0x6fad0fea00
+2022-04-14 14:15:23.045 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ReadCommissioningInfo'
+2022-04-14 14:15:23.045 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ReadCommissioningInfo' -> 'ArmFailSafe'
+2022-04-14 14:15:23.045 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ArmFailSafe'
+2022-04-14 14:15:23.045 17463-17476/com.google.chip.chiptool D/CTL: Arming failsafe (60 seconds)
+2022-04-14 14:15:23.046 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:23.046 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:23.046 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fed20 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51080i with MessageCounter:1188688.
+2022-04-14 14:15:23.046 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fed20 with MessageCounter:1188688 to 0x0000000000000001 (1) at monotonic time: 000000000086564A msec
+2022-04-14 14:15:23.047 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:23.050 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:23.135 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:23.290 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:23.292 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393511 on exchange 51080i
+2022-04-14 14:15:23.292 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51080i, Delegate: 0x6fad019280
+2022-04-14 14:15:23.293 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:23.294 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_0030 Command=0x0000_0001
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Received ArmFailSafe response
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ArmFailSafe'
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ArmFailSafe' -> 'ConfigRegulatory'
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ConfigRegulatory'
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Setting Regulatory Config
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/CTL: Device does not support configurable regulatory location
+2022-04-14 14:15:23.295 17463-17476/com.google.chip.chiptool D/KeyValueStoreManager: Key 'chip-config:country-code' not found in shared preferences
+2022-04-14 14:15:23.296 17463-17476/com.google.chip.chiptool E/DL: Java exception in AndroidConfig::ReadConfigValueStr
+2022-04-14 14:15:23.297 17463-17476/com.google.chip.chiptool W/System.err: chip.platform.AndroidChipPlatformException
+2022-04-14 14:15:23.298 17463-17476/com.google.chip.chiptool W/System.err:     at chip.platform.PreferencesConfigurationManager.readConfigValueStr(PreferencesConfigurationManager.java:181)
+2022-04-14 14:15:23.298 17463-17476/com.google.chip.chiptool W/System.err:     at chip.platform.AndroidChipPlatform.handleIndicationReceived(Native Method)
+2022-04-14 14:15:23.299 17463-17476/com.google.chip.chiptool W/System.err:     at chip.platform.AndroidBleManager$1.onCharacteristicChanged(AndroidBleManager.java:126)
+2022-04-14 14:15:23.299 17463-17476/com.google.chip.chiptool W/System.err:     at com.google.chip.chiptool.bluetooth.BluetoothManager$getBluetoothGattCallback$1.onCharacteristicChanged(BluetoothManager.kt:156)
+2022-04-14 14:15:23.299 17463-17476/com.google.chip.chiptool W/System.err:     at android.bluetooth.BluetoothGatt$1$8.run(BluetoothGatt.java:441)
+2022-04-14 14:15:23.300 17463-17476/com.google.chip.chiptool W/System.err:     at android.bluetooth.BluetoothGatt.runOrQueueCallback(BluetoothGatt.java:716)
+2022-04-14 14:15:23.300 17463-17476/com.google.chip.chiptool W/System.err:     at android.bluetooth.BluetoothGatt.-wrap0(Unknown Source:0)
+2022-04-14 14:15:23.300 17463-17476/com.google.chip.chiptool W/System.err:     at android.bluetooth.BluetoothGatt$1.onNotify(BluetoothGatt.java:437)
+2022-04-14 14:15:23.300 17463-17476/com.google.chip.chiptool W/System.err:     at android.bluetooth.IBluetoothGattCallback$Stub.onTransact(IBluetoothGattCallback.java:184)
+2022-04-14 14:15:23.301 17463-17476/com.google.chip.chiptool W/System.err:     at android.os.Binder.execTransact(Binder.java:675)
+2022-04-14 14:15:23.301 17463-17476/com.google.chip.chiptool E/CTL: Unable to find country code, defaulting to XX
+2022-04-14 14:15:23.302 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:23.302 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:23.303 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe470 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51081i with MessageCounter:1188689.
+2022-04-14 14:15:23.303 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe470 with MessageCounter:1188689 to 0x0000000000000001 (1) at monotonic time: 000000000086574A msec
+2022-04-14 14:15:23.303 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:23.308 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:23.308 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:23.439 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:23.589 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:23.590 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393512 on exchange 51081i
+2022-04-14 14:15:23.590 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51081i, Delegate: 0x6fad01ce80
+2022-04-14 14:15:23.590 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:23.590 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_0030 Command=0x0000_0003
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Received SetRegulatoryConfig response
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ConfigRegulatory'
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ConfigRegulatory' -> 'SendPAICertificateRequest'
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendPAICertificateRequest'
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Sending request for PAI certificate
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/CTL: Sending Certificate Chain request to 0x6fa56f9d10 device
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:23.591 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe3b0 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51082i with MessageCounter:1188690.
+2022-04-14 14:15:23.592 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe3b0 with MessageCounter:1188690 to 0x0000000000000001 (1) at monotonic time: 000000000086586B msec
+2022-04-14 14:15:23.592 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:23.597 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:23.597 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:23.690 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:23.968 17463-17484/com.google.chip.chiptool W/libEGL: EGLNativeWindowType 0x6fa7513010 disconnect failed
+2022-04-14 14:15:24.038 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:24.196 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onConnectionUpdated() - Device=C2:E0:18:0E:E2:02 interval=36 latency=0 timeout=450 status=0
+2022-04-14 14:15:24.334 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:24.512 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:24.512 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393513 on exchange 51082i
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51082i, Delegate: 0x6fad019280
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_003E Command=0x0000_0003
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Received certificate chain from the device
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendPAICertificateRequest'
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendPAICertificateRequest' -> 'SendDACCertificateRequest'
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendDACCertificateRequest'
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Sending request for DAC certificate
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/CTL: Sending Certificate Chain request to 0x6fa56f9d10 device
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:24.513 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe330 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51083i with MessageCounter:1188691.
+2022-04-14 14:15:24.514 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe330 with MessageCounter:1188691 to 0x0000000000000001 (1) at monotonic time: 0000000000865C05 msec
+2022-04-14 14:15:24.514 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:24.517 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:24.517 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:24.604 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:24.877 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:25.145 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:25.324 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:25.324 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393514 on exchange 51083i
+2022-04-14 14:15:25.324 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51083i, Delegate: 0x6fad01ce80
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_003E Command=0x0000_0003
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Received certificate chain from the device
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendDACCertificateRequest'
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendDACCertificateRequest' -> 'SendAttestationRequest'
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendAttestationRequest'
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Sending Attestation Request to the device.
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/CTL: Sending Attestation request to 0x6fa56f9d10 device
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe300 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51084i with MessageCounter:1188692.
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe300 with MessageCounter:1188692 to 0x0000000000000001 (1) at monotonic time: 0000000000865F31 msec
+2022-04-14 14:15:25.325 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:25.327 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:25.327 17463-17476/com.google.chip.chiptool D/CTL: Sent Attestation request, waiting for the Attestation Information
+2022-04-14 14:15:25.327 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:25.504 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:25.776 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:26.044 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:26.317 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:26.319 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393515 on exchange 51084i
+2022-04-14 14:15:26.319 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51084i, Delegate: 0x6fad019280
+2022-04-14 14:15:26.319 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:26.319 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_003E Command=0x0000_0001
+2022-04-14 14:15:26.319 17463-17476/com.google.chip.chiptool D/CTL: Received Attestation Information from the device
+2022-04-14 14:15:26.320 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendAttestationRequest'
+2022-04-14 14:15:26.320 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendAttestationRequest' -> 'AttestationVerification'
+2022-04-14 14:15:26.320 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'AttestationVerification'
+2022-04-14 14:15:26.320 17463-17476/com.google.chip.chiptool D/CTL: Verifying attestation
+2022-04-14 14:15:26.389 17463-17476/com.google.chip.chiptool E/CR: mbedTLS error: ERROR - Generic error
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/CTL: Successfully validated 'Attestation Information' command received from the device.
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'AttestationVerification'
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'AttestationVerification' -> 'SendOpCertSigningRequest'
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendOpCertSigningRequest'
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/CTL: Sending CSR request to 0x6fa56f9d10 device
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fb730 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51085i with MessageCounter:1188693.
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fb730 with MessageCounter:1188693 to 0x0000000000000001 (1) at monotonic time: 00000000008663CB msec
+2022-04-14 14:15:26.503 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:26.506 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:26.507 17463-17476/com.google.chip.chiptool D/CTL: Sent CSR request, waiting for the CSR
+2022-04-14 14:15:26.507 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:26.629 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:27.262 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:27.442 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:27.443 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393516 on exchange 51085i
+2022-04-14 14:15:27.443 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51085i, Delegate: 0x6fad01ce80
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_003E Command=0x0000_0005
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/CTL: Received certificate signing request from the device
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendOpCertSigningRequest'
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendOpCertSigningRequest' -> 'ValidateCSR'
+2022-04-14 14:15:27.444 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ValidateCSR'
+2022-04-14 14:15:27.512 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ValidateCSR'
+2022-04-14 14:15:27.512 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ValidateCSR' -> 'GenerateNOCChain'
+2022-04-14 14:15:27.512 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'GenerateNOCChain'
+2022-04-14 14:15:27.512 17463-17476/com.google.chip.chiptool D/CTL: Getting certificate chain for the device from the issuer
+2022-04-14 14:15:27.565 17463-17476/com.google.chip.chiptool D/TOO: VerifyCertificateSigningRequest
+2022-04-14 14:15:27.565 17463-17476/com.google.chip.chiptool D/TOO: KVS: Getting key AndroidCARootCert1
+2022-04-14 14:15:27.565 17463-17476/com.google.chip.chiptool D/CTL: Generating NOC
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/CTL: Received callback from the CA for NOC Chain generation. Status ../../src/controller/java/AndroidOperationalCredentialsIssuer.cpp:202: Success
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'GenerateNOCChain'
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendTrustedRootCert'
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/CTL: Sending root certificate to the device
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:27.585 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:27.586 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974f9320 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51086i with MessageCounter:1188694.
+2022-04-14 14:15:27.586 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974f9320 with MessageCounter:1188694 to 0x0000000000000001 (1) at monotonic time: 0000000000866805 msec
+2022-04-14 14:15:27.586 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:27.588 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:27.588 17463-17476/com.google.chip.chiptool D/CTL: Sent root certificate to the device
+2022-04-14 14:15:27.589 17463-17476/com.google.chip.chiptool D/DeviceProvisioningFragment: 0�0��0p��010
+    U
+    CSR0Y0*�H�=*�H�=B���kL�e�$�'Q��s�$�w�sgq�H����_�	���L3��Db&���hӼ���5)����0*�H�=��H��0E o���Ӻ��·��Ӡ(������m��	!���>(t��J�R�4� W�#	�+0qk�C��u0 >��L�up?��e�d�grc#
+    �7i�1�uF
+2022-04-14 14:15:27.589 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:27.800 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:27.801 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:27.935 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:28.025 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:28.027 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393517 on exchange 51086i
+2022-04-14 14:15:28.027 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51086i, Delegate: 0x6fad019280
+2022-04-14 14:15:28.027 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Status for Endpoint=0 Cluster=0x0000_003E Command=0x0000_000B Status=0x0
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/CTL: Device confirmed that it has received the root certificate
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendTrustedRootCert'
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendTrustedRootCert' -> 'SendNOC'
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'SendNOC'
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:28.028 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:28.029 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe410 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51087i with MessageCounter:1188695.
+2022-04-14 14:15:28.029 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe410 with MessageCounter:1188695 to 0x0000000000000001 (1) at monotonic time: 00000000008669C1 msec
+2022-04-14 14:15:28.030 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:28.034 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:28.035 17463-17476/com.google.chip.chiptool D/CTL: Sent operational certificate to the device
+2022-04-14 14:15:28.037 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:28.250 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:28.251 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:28.385 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:29.060 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:29.062 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393518 on exchange 51087i
+2022-04-14 14:15:29.062 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51087i, Delegate: 0x6fad01ce80
+2022-04-14 14:15:29.062 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:29.063 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_003E Command=0x0000_0008
+2022-04-14 14:15:29.063 17463-17476/com.google.chip.chiptool D/CTL: Device returned status 0 on receiving the NOC
+2022-04-14 14:15:29.063 17463-17476/com.google.chip.chiptool D/CTL: Operational credentials provisioned on device 0x6fa56f9d10
+2022-04-14 14:15:29.063 17463-17476/com.google.chip.chiptool D/DeviceProvisioningFragment: Pairing status update: 0
+2022-04-14 14:15:29.064 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'SendNOC'
+2022-04-14 14:15:29.064 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'SendNOC' -> 'ThreadNetworkSetup'
+2022-04-14 14:15:29.064 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ThreadNetworkSetup'
+2022-04-14 14:15:29.064 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:29.064 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:29.065 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe290 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51088i with MessageCounter:1188696.
+2022-04-14 14:15:29.065 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe290 with MessageCounter:1188696 to 0x0000000000000001 (1) at monotonic time: 0000000000866DCD msec
+2022-04-14 14:15:29.065 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:29.069 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:29.070 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:29.196 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:29.331 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:29.332 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393519 on exchange 51088i
+2022-04-14 14:15:29.333 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51088i, Delegate: 0x6fad019280
+2022-04-14 14:15:29.333 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:29.333 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_0031 Command=0x0000_0005
+2022-04-14 14:15:29.333 17463-17476/com.google.chip.chiptool D/CTL: Received NetworkConfig response
+2022-04-14 14:15:29.333 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ThreadNetworkSetup'
+2022-04-14 14:15:29.334 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ThreadNetworkSetup' -> 'ThreadNetworkEnable'
+2022-04-14 14:15:29.334 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'ThreadNetworkEnable'
+2022-04-14 14:15:29.334 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddingComm]
+2022-04-14 14:15:29.334 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AddedComma]
+2022-04-14 14:15:29.335 17463-17476/com.google.chip.chiptool D/IN: Prepared secure message 0x6f974fe460 to 0x0000000000000001 (1)  of type 0x8 and protocolId (0, 1) on exchange 51089i with MessageCounter:1188697.
+2022-04-14 14:15:29.335 17463-17476/com.google.chip.chiptool D/IN: Sending encrypted msg 0x6f974fe460 with MessageCounter:1188697 to 0x0000000000000001 (1) at monotonic time: 0000000000866EDA msec
+2022-04-14 14:15:29.335 17463-17476/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:29.340 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [CommandSen]
+2022-04-14 14:15:29.340 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:29.461 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:31.131 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:31.132 17463-17476/com.google.chip.chiptool D/EM: Received message of type 0x9 with protocolId (0, 1) and MessageCounter:393520 on exchange 51089i
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/EM: Found matching exchange: 51089i, Delegate: 0x6fad01ce80
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [ResponseRe]
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/DMG: Received Command Response Data, Endpoint=0 Cluster=0x0000_0031 Command=0x0000_0007
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/CTL: Received ConnectNetwork response
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/CTL: Successfully finished commissioning step 'ThreadNetworkEnable'
+2022-04-14 14:15:31.133 17463-17476/com.google.chip.chiptool D/CTL: Commissioning stage next step: 'ThreadNetworkEnable' -> 'FindOperational'
+2022-04-14 14:15:31.134 17463-17476/com.google.chip.chiptool D/CTL: Performing next commissioning step 'FindOperational'
+2022-04-14 14:15:31.134 17463-17476/com.google.chip.chiptool D/CSM: FindOrEstablishSession: PeerId = 9505F55F7BE132C1:0000000000000001
+2022-04-14 14:15:31.134 17463-17476/com.google.chip.chiptool D/CSM: FindOrEstablishSession: No existing session found
+2022-04-14 14:15:31.134 17463-17476/com.google.chip.chiptool D/DIS: Resolving 9505F55F7BE132C1:0000000000000001 ...
+2022-04-14 14:15:31.149 17463-17476/com.google.chip.chiptool D/NsdManagerServiceResolver: Starting service resolution for '9505F55F7BE132C1-0000000000000001'
+2022-04-14 14:15:31.153 17463-17476/com.google.chip.chiptool D/DIS: Operational node lookup already in progress. Will NOT start a new one.
+2022-04-14 14:15:31.154 17463-17476/com.google.chip.chiptool D/DMG: ICR moving to [AwaitingDe]
+2022-04-14 14:15:31.336 17463-17655/com.google.chip.chiptool D/DIS: Checking node lookup status after 202 ms
+2022-04-14 14:15:32.510 17463-17652/com.google.chip.chiptool I/NsdManagerServiceResolver: Resolved service '9505F55F7BE132C1-0000000000000001' to /fd11:22::c79:a8bb:3cf0:9895
+2022-04-14 14:15:32.511 17463-17652/com.google.chip.chiptool D/DIS: Node ID resolved for 9505F55F7BE132C1:0000000000000001
+2022-04-14 14:15:32.511 17463-17652/com.google.chip.chiptool D/DIS:     Addr 0: [fd11:22::c79:a8bb:3cf0:9895]:5540
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/DIS: Lookup clearing interface for non LL address
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/DIS: UDP:[fd11:22::c79:a8bb:3cf0:9895]:5540: new best score: 4
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/DIS: Checking node lookup status after 1378 ms
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/CTL: Updating device address to UDP:[fd11:22::c79:a8bb:3cf0:9895]:5540 while in state 1
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/CTL: OperationalDeviceProxy[9505F55F7BE132C1:0000000000000001]: State change 1 --> 2
+2022-04-14 14:15:32.513 17463-17652/com.google.chip.chiptool D/SC: Establishing CASE session to UDP:[fd11:22::c79:a8bb:3cf0:9895]:5540
+2022-04-14 14:15:32.540 17463-17652/com.google.chip.chiptool D/TOO: KVS: Getting key f/1/g
+2022-04-14 14:15:32.540 17463-17652/com.google.chip.chiptool D/TOO: KVS: Getting key f/1/k/0
+2022-04-14 14:15:32.541 17463-17652/com.google.chip.chiptool D/SC: RecoverInitiatorIpk: GroupDataProvider 0x6fa752b720, Got IPK for FabricIndex 1
+2022-04-14 14:15:32.541 17463-17652/com.google.chip.chiptool D/SC: 0xe4, 0x2e, 0x29, 0xda, 0x4a, 0xa3, 0x23, 0x2c, 
+2022-04-14 14:15:32.541 17463-17652/com.google.chip.chiptool D/SC: 0x7c, 0x4f, 0x71, 0xa7, 0x77, 0xb2, 0x64, 0x43, 
+2022-04-14 14:15:32.541 17463-17652/com.google.chip.chiptool D/SC: Including MRP parameters
+2022-04-14 14:15:32.542 17463-17652/com.google.chip.chiptool D/IN: Prepared unauthenticated message 0x6fa56be068 to 0x0000000000000000 (0)  of type 0x30 and protocolId (0, 0) on exchange 51090i with MessageCounter:958080562.
+2022-04-14 14:15:32.542 17463-17652/com.google.chip.chiptool D/IN: Sending unauthenticated msg 0x6fa56be068 with MessageCounter:958080562 to 0x0000000000000000 at monotonic time: 0000000000867B61 msec
+2022-04-14 14:15:32.542 17463-17652/com.google.chip.chiptool D/DIS: Discovery does not require any more timeouts
+2022-04-14 14:15:33.633 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:33.741 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:36.216 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:38.718 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:38.826 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:41.300 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:43.802 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:43.866 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:46.340 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:48.842 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:48.905 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:51.380 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:53.882 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:53.945 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:15:56.422 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:15:58.924 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:15:58.985 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:16:01.457 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:16:03.960 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:16:04.025 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:16:06.501 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:16:09.002 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:16:09.066 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:16:11.540 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:16:14.042 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:16:14.104 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:16:16.580 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:16:19.084 17463-17655/com.google.chip.chiptool D/DL: Received SendWriteRequest
+2022-04-14 14:16:19.189 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicWrite: 18ee2ef5-263d-4559-959f-4f9c429f9d11 -> 0
+2022-04-14 14:16:21.666 17463-17476/com.google.chip.chiptool D/chip.BluetoothManager: MatterLock.onCharacteristicChanged: 18ee2ef5-263d-4559-959f-4f9c429f9d12
+2022-04-14 14:16:23.240 17463-17476/com.google.chip.chiptool D/BluetoothGatt: onClientConnectionState() - status=19 clientIf=6 device=C2:E0:18:0E:E2:02
+2022-04-14 14:16:23.246 17463-17476/com.google.chip.chiptool I/chip.BluetoothManager: MatterLock.onConnectionStateChange status = 19, newState=0
+2022-04-14 14:16:23.246 17463-17476/com.google.chip.chiptool D/AndroidBleManager: onConnectionStateChange Disconnected
+2022-04-14 14:16:23.247 17463-17476/com.google.chip.chiptool D/IN: Clearing BLE pending packets.
+2022-04-14 14:18:27.326 2893-2893/? D/[HwRecSys]DataServiceController: MyHander SEND_EVENT:Bundle[{time=2022-04-14 14:18:27, eventItem=hardware_keys, eventOperator=sysScreenShot, parameter=com.google.chip.chiptool.CHIPToolActivity}]
+2022-04-14 14:18:27.446 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.626 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.632 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.728 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.729 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.729 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.739 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.739 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.740 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.824 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.824 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.829 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.839 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.844 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.844 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.844 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.844 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.845 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.845 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.845 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.878 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.884 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.884 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.884 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.884 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.885 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.885 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.885 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.885 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.885 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.889 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.889 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.889 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.889 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.890 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.890 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.909 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.910 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.910 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.910 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.910 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:27.910 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.358 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.384 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.398 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.398 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.398 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.399 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.399 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.399 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.399 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.436 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.443 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.443 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.443 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.443 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.444 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.444 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.444 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.446 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.450 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.507 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.508 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.515 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.520 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: beginBatchEdit on inactive InputConnection
+2022-04-14 14:18:47.531 17463-17463/com.google.chip.chiptool W/IInputConnectionWrapper: endBatchEdit on inactive InputConnection
