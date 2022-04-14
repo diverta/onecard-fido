@@ -285,8 +285,7 @@
         NSString *zipFileNamePrefix = [NSString stringWithFormat:@"appkg.%@.", [self currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:zipFileNamePrefix] == false) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil];
             return false;
         }
         return true;
@@ -297,8 +296,7 @@
         NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
         // バージョンが取得できなかった場合は利用不可
         if ([update length] == 0) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil];
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
@@ -307,14 +305,13 @@
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:informative];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
             return false;
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
             return false;
         }
         // 更新バージョンを保持
@@ -325,8 +322,7 @@
     - (bool)versionCheckForDFU {
         // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
         if ([[self currentVersion] length] == 0) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
-                      informativeText:MSG_DFU_CURRENT_VERSION_UNKNOWN];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_CURRENT_VERSION_UNKNOWN withObject:nil forSelector:nil];
             return false;
         }
         return true;
@@ -346,8 +342,13 @@
             return;
         }
         // DFU処理を開始するかどうかのプロンプトを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
-                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_DFU_PROCESS informativeText:MSG_COMMENT_START_DFU_PROCESS
+                                                  withObject:self forSelector:@selector(dfuNewProcessStartPromptDone) parentWindow:parentWindow];
+    }
+
+    - (void)dfuNewProcessStartPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             [self notifyCancel];
             return;
         }
@@ -361,12 +362,15 @@
                     [self invokeDFUProcess];
                 } else {
                     // エラーメッセージを表示して終了
-                    [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE
-                              informativeText:MSG_DFU_TARGET_CONNECTION_FAILED];
-                    [self notifyCancel];
+                    [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_CONNECTION_FAILED
+                                                   withObject:self forSelector:@selector(notifyDFUTargetConnectionFailedDone)];
                 }
             });
         });
+    }
+
+    - (void)notifyDFUTargetConnectionFailedDone {
+        [self notifyCancel];
     }
 
 #pragma mark - Interface for DFUStartWindow
@@ -423,7 +427,7 @@
         if (softDeviceVersion < DFU_NEW_TARGET_SOFTDEVICE_VER) {
             // ソフトデバイスのバージョンが所定バージョンより前であればエラーメッセージを表示
             [[self toolCDCHelper] disconnectDevice];
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER withObject:nil forSelector:nil];
             return false;
         }
         return true;

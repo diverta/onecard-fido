@@ -9,10 +9,22 @@
 
 @interface ToolPopupWindow : NSObject
 
-    + (void)critical:     (NSString *)message informativeText:(NSString *)subMessage;
-    + (void)warning:      (NSString *)message informativeText:(NSString *)subMessage;
-    + (void)informational:(NSString *)message informativeText:(NSString *)subMessage;
-    + (bool)promptYesNo:  (NSString *)message informativeText:(NSString *)subMessage;
+    + (ToolPopupWindow *)defaultWindow;
+    - (void)setApplicationWindow:(NSWindow *)window;
+    - (bool)isButtonNoClicked;
+
+    - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)critical:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+        parentWindow:(NSWindow *)parentWindow;
+    - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)criticalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+              parentWindow:(NSWindow *)parentWindow;
+    - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)informational:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+             parentWindow:(NSWindow *)parentWindow;
+    - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector;
+    - (void)informationalPrompt:(NSString *)message informativeText:(NSString *)subMessage withObject:(id)object forSelector:(SEL)selector
+                   parentWindow:(NSWindow *)parentWindow;
 
 @end
 

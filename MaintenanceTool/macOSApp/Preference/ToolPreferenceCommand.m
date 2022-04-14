@@ -9,6 +9,8 @@
 #import "ToolPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolHIDCommand.h"
+#import "ToolCommonMessage.h"
+#import "ToolPopupWindow.h"
 
 @interface ToolPreferenceCommand ()
 
@@ -98,7 +100,9 @@
 
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType {
         // USBポートに装着されているかどうかチェック
-        if (![[self toolAppCommand] checkForHIDCommand]) {
+        if (![[self toolAppCommand] checkUSBHIDConnection]) {
+            // エラーメッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
             return;
         }
 

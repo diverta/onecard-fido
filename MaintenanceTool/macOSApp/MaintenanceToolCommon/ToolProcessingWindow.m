@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2022/01/24.
 //
 #import "ToolProcessingWindow.h"
+#import "ToolPopupWindow.h"
 
 // このウィンドウクラスのインスタンスを保持
 static ToolProcessingWindow *sharedInstance;
@@ -13,6 +14,9 @@ static ToolProcessingWindow *sharedInstance;
 
     // 親ウィンドウの参照を保持
     @property (nonatomic, weak) NSWindow        *parentWindow;
+    // 処理終了メッセージを保持
+    @property (nonatomic) NSString              *messageText;
+    @property (nonatomic) NSString              *informativeText;
 
 @end
 
@@ -74,9 +78,21 @@ static ToolProcessingWindow *sharedInstance;
     - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
+        // 処理終了メッセージをポップアップ表示
+        if (modalResponse == NSModalResponseOK) {
+            [[ToolPopupWindow defaultWindow] informational:[self messageText] informativeText:[self informativeText] withObject:nil forSelector:nil
+                                              parentWindow:[self parentWindow]];
+        }
+        if (modalResponse == NSModalResponseAbort) {
+            [[ToolPopupWindow defaultWindow] critical:[self messageText] informativeText:[self informativeText] withObject:nil forSelector:nil
+                                         parentWindow:[self parentWindow]];
+        }
     }
 
-    - (void)windowWillClose:(NSModalResponse)response {
+    - (void)windowWillClose:(NSModalResponse)response withMessage:(NSString *)message withInformative:(NSString *)informative {
+        // 処理終了メッセージを退避
+        [self setMessageText:message];
+        [self setInformativeText:informative];
         // この画面を閉じる
         if ([self parentWindow] && [[[self parentWindow] sheets] count] > 0) {
             [[self parentWindow] endSheet:[self window] returnCode:response];
