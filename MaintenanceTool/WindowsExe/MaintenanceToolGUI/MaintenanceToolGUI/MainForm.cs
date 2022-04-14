@@ -196,7 +196,7 @@ namespace MaintenanceToolGUI
             }
             else {
                 // エラーメッセージを画面表示し、ボタンを押下可能とする
-                MessageBox.Show(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, MaintenanceToolTitle);
+                FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
                 commandTitle = "";
                 OnAppMainProcessExited(false);
             }
@@ -404,7 +404,7 @@ namespace MaintenanceToolGUI
         public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
-                FormUtil.ShowWarningMessage(MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
+                FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 return true;
             }
             return false;
@@ -469,13 +469,14 @@ namespace MaintenanceToolGUI
             // 画面およびメッセージボックスダイアログに表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            textBox1.AppendText(formatted + "\r\n");
             if (success) {
                 AppCommon.OutputLogInfo(formatted);
+                FormUtil.ShowInfoMessage(this, MaintenanceToolTitle, formatted);
             } else {
                 AppCommon.OutputLogError(formatted);
+                FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
             }
-            textBox1.AppendText(formatted + "\r\n");
-            MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
 
         private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
