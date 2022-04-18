@@ -62,15 +62,6 @@
         <in>app_usb_hid.c</in>
         <in>main.c</in>
       </df>
-      <df name="zephyr_custom">
-        <df name="subsys">
-          <df name="mgmt">
-            <df name="mcumgr">
-              <in>smp_bt.c</in>
-            </df>
-          </df>
-        </df>
-      </df>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -646,13 +637,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../secure_device_app/zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="1">
-        </cTool>
-      </item>
       <folder path="0/build_signed">
         <cTool>
           <incDir>
@@ -683,33 +667,6 @@
             <pElem>../secure_device_app/build_signed/zephyr/misc/generated</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
-        </cTool>
-      </folder>
-      <folder path="0/zephyr_custom">
-        <cTool>
-          <incDir>
-            <pElem>../secure_device_app/zephyr_custom/subsys/mgmt/mcumgr</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/net</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/sys</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/bluetooth</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/kernel</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/lib/libc/minimal/include/sys</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/mgmt/mcumgr</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/lib/tinycbor/include/tinycbor</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/lib/tinycbor/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>APP_TEST</Elem>
-            <Elem>FIDO_ZEPHYR</Elem>
-          </preprocessorList>
         </cTool>
       </folder>
     </conf>
