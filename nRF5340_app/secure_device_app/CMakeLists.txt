@@ -39,6 +39,10 @@ target_sources(app PRIVATE
     ../../FIDO2Device/u2f_lib/u2f_keyhandle.c
     ../../FIDO2Device/u2f_lib/u2f_register.c
     ../../FIDO2Device/u2f_lib/u2f_signature.c
+    ../../CCID/ccid_lib/ccid_apdu.c
+    ../../CCID/ccid_lib/ccid_main.c
+    ../../CCID/ccid_lib/ccid_piv.c
+    ../../CCID/openpgp_lib/ccid_openpgp.c
 )
 target_include_directories(app PRIVATE 
     include
@@ -46,4 +50,6 @@ target_include_directories(app PRIVATE
     ../../FIDO2Device/ctap2_lib
     ../../FIDO2Device/fido2_lib
     ../../FIDO2Device/u2f_lib
+    ../../CCID/ccid_lib
+    ../../CCID/openpgp_lib
 )
