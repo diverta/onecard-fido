@@ -17,6 +17,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp);
+#endif
+
 //
 // Specification of the OpenPGP application
 // see: https://gnupg.org/ftp/specs/OpenPGP-smart-card-application-3.4.1.pdf

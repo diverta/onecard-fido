@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_piv_pin);
+#endif
+
 // PIN関連情報を内部保持
 static bool    pin_is_validated;
 

@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_attr);
+#endif
+
 #define MAX_PIN_LENGTH              64
 #define DIGITAL_SIG_COUNTER_LENGTH  3
 

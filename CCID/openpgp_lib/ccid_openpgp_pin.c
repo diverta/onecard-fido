@@ -12,6 +12,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_pin);
+#endif
+
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 
