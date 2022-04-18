@@ -32,6 +32,9 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 #include "ctap2_client_pin.h"
 
+// TODO: 仮の実装です。
+// #include "ccid.h"
+
 //
 // アプリケーション初期化処理
 //
@@ -116,9 +119,25 @@ void app_main_hid_report_sent(void)
 
 void app_main_ccid_data_frame_received(uint8_t *data, size_t size)
 {
+    // TODO: 仮の実装です。
+    // if (ccid_data_frame_received(data, size)) {
+    //     app_event_notify(APEVT_CCID_REQUEST_RECEIVED);
+    // }
+    app_event_notify(APEVT_CCID_REQUEST_RECEIVED);
+
 #if LOG_DEBUG_CCID_DATA_FRAME
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "CCID data");
+#endif
+}
+
+void app_main_ccid_request_received(void)
+{
+    // TODO: 仮の実装です。
+    // ccid_request_apdu_received();
+
+#if LOG_DEBUG_CCID_DATA_FRAME
+    LOG_DBG("CCID request received");
 #endif
 }
 
