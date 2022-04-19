@@ -11,6 +11,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_piv_object_import);
+#endif
+
 // APDU格納領域の参照を待避
 static command_apdu_t  *m_capdu;
 static response_apdu_t *m_rapdu;

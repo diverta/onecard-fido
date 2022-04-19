@@ -26,6 +26,7 @@ void        app_main_hid_data_frame_received(uint8_t *data, size_t size);
 void        app_main_hid_request_received(void);
 void        app_main_hid_report_sent(void);
 void        app_main_ccid_data_frame_received(uint8_t *data, size_t size);
+void        app_main_ccid_request_received(void);
 void        app_main_ble_data_frame_received(uint8_t *data, size_t size);
 void        app_main_ble_request_received(void);
 void        app_main_ble_response_sent(void);

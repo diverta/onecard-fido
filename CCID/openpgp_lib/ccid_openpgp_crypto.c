@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_crypto);
+#endif
+
 // テスト用
 #define LOG_DEBUG_PSO_DEC_REQ_BUFF      false
 #define LOG_DEBUG_PSO_DEC_RES_BUFF      false

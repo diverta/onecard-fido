@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_key);
+#endif
+
 // 本アプリケーション内で鍵生成を行う場合 true
 //   性能面で問題があるため、現在機能を閉塞しています
 #define SUPPORT_GENKEY              false

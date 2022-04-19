@@ -16,6 +16,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_piv_object);
+#endif
+
 // テスト用
 #define CCID_PIV_OBJECT_TEST false
 #define LOG_DEBUG_PIN_BUFFER false
