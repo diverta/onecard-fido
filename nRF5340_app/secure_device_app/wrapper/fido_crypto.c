@@ -198,3 +198,13 @@ size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, siz
 
     return encrypted_size;
 }
+
+bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_public_key_raw_data, uint8_t *sskey_raw_data, size_t *sskey_raw_data_size)
+{
+    return false;
+}
+
+bool fido_crypto_tdes_enc(uint8_t *in, uint8_t *out, uint8_t *key)
+{
+    return false;
+}
