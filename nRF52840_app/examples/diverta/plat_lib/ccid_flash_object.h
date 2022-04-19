@@ -7,8 +7,6 @@
 #ifndef CCID_FLASH_OBJECT_H
 #define CCID_FLASH_OBJECT_H
 
-#include "ccid_apdu.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
