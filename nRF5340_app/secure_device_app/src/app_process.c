@@ -332,6 +332,9 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_APP_SETTINGS_SAVED:
             app_main_app_settings_saved();
             break;
+        case APEVT_APP_SETTINGS_DELETED:
+            app_main_app_settings_deleted();
+            break;
         default:
             break;
     }

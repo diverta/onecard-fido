@@ -171,6 +171,11 @@ void app_main_app_settings_saved(void)
     ccid_flash_object_record_updated();
 }
 
+void app_main_app_settings_deleted(void)
+{
+    ccid_flash_object_record_deleted();
+}
+
 //
 // ボタン押下時の処理
 //

@@ -7,6 +7,7 @@
 //
 // プラットフォーム非依存コード
 //
+#include "ccid_flash_piv_object.h"
 #include "fido_flash_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -59,9 +60,12 @@ void ccid_flash_object_gc_done(void)
 
 void ccid_flash_object_record_updated(void)
 {
+    // CCID関連処理を実行
     ccid_flash_piv_object_record_updated();
 }
 
 void ccid_flash_object_record_deleted(void)
 {
+    // CCID関連処理を実行
+    ccid_flash_piv_object_record_deleted();
 }
