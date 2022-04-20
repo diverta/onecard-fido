@@ -33,6 +33,9 @@ LOG_MODULE_REGISTER(app_main);
 #include "ctap2_client_pin.h"
 #include "ccid.h"
 
+// for ccid_flash_object_record_updated
+#include "ccid_flash_object.h"
+
 //
 // アプリケーション初期化処理
 //
@@ -158,6 +161,14 @@ void app_main_ble_response_sent(void)
 #if LOG_DEBUG_BLE_DATA_FRAME
     LOG_DBG("BLE data sent");
 #endif
+}
+
+//
+// Flash ROM更新時の処理
+//
+void app_main_app_settings_saved(void)
+{
+    ccid_flash_object_record_updated();
 }
 
 //

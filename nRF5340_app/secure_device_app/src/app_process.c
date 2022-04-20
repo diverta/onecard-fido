@@ -329,6 +329,9 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_CCID_REQUEST_RECEIVED:
             app_main_ccid_request_received();
             break;
+        case APEVT_APP_SETTINGS_SAVED:
+            app_main_app_settings_saved();
+            break;
         default:
             break;
     }
