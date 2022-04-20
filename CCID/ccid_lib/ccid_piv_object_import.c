@@ -27,11 +27,6 @@ static void apdu_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
     // APDU格納領域の参照を待避
     m_capdu = capdu;
     m_rapdu = rapdu;
-
-#ifdef FIDO_ZEPHYR
-    // 後続処理を実行
-    ccid_flash_piv_object_record_updated();
-#endif
 }
 
 static void apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t sw)
