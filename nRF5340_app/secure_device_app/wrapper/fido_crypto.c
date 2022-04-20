@@ -201,10 +201,10 @@ size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, siz
 
 bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_public_key_raw_data, uint8_t *sskey_raw_data, size_t *sskey_raw_data_size)
 {
-    return false;
+    return app_crypto_ec_calculate_ecdh(private_key_raw_data, client_public_key_raw_data, sskey_raw_data, *sskey_raw_data_size);
 }
 
 bool fido_crypto_tdes_enc(uint8_t *in, uint8_t *out, uint8_t *key)
 {
-    return false;
+    return app_crypto_des3_ecb(in, out, key);
 }
