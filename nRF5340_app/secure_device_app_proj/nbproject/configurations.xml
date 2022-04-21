@@ -48,7 +48,6 @@
         <in>app_crypto.c</in>
         <in>app_crypto_ec.c</in>
         <in>app_crypto_rsa.c</in>
-        <in>app_dfu.c</in>
         <in>app_event.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
@@ -343,27 +342,6 @@
             <pElem>../../../../opt/ncs_1.9.1/mbedtls/include/mbedtls</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../../../../opt/ncs_1.9.1/mbedtls/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../secure_device_app/src/app_dfu.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../secure_device_app/src</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/logging</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/sys</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/kernel</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/dfu</pElem>
-            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
