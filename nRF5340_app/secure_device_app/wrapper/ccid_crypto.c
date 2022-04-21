@@ -38,5 +38,8 @@ bool ccid_crypto_rsa_import(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_ke
 
 bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits)
 {
-    return false;
+    if (nbits != 2048) {
+        return false;
+    }
+    return app_crypto_rsa_generate_key(rsa_private_key_raw, rsa_public_key_raw);
 }

@@ -167,3 +167,10 @@ bool app_crypto_rsa_import_pubkey_from_prvkey(uint8_t *rsa_private_key_raw, uint
     // 正常終了
     return app_crypto_rsa_private_terminate(true);
 }
+
+bool app_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw)
+{
+    (void)rsa_private_key_raw;
+    (void)rsa_public_key_raw;
+    return false;
+}
