@@ -6,6 +6,7 @@
  */
 #include <zephyr/types.h>
 #include <zephyr.h>
+#include <sys/byteorder.h>
 
 // for Mbed TLS
 #include <mbedtls/ctr_drbg.h>
@@ -168,10 +169,53 @@ bool app_crypto_rsa_import_pubkey_from_prvkey(uint8_t *rsa_private_key_raw, uint
     return app_crypto_rsa_private_terminate(true);
 }
 
+//
+// RSA-2048 鍵ペア新規生成
+// 性能面で問題があるため、現在機能を閉塞しています
+// 有効化するためには、prj.confに以下のエントリーを追加します。
+//   CONFIG_APP_SETTINGS_GENERATE_RSA2048_KEYPAIR=y
+//
 bool app_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits)
 {
+#ifdef CONFIG_APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
+    // 変数初期化
+    app_crypto_rsa_init(&rsa_context, MBEDTLS_RSA_PKCS_V15, 0);
+
+    //
+    // mbedtls_rsa_gen_key を実行
+    //   exponent = 65537 (0x00010001)
+    //
+    int int_e = (int)sys_get_be32(E);
+    int ret = mbedtls_rsa_gen_key(&rsa_context, &mbedtls_ctr_drbg_random, NULL, nbits, int_e);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_rsa_gen_key returns %d", ret);
+        return app_crypto_rsa_private_terminate(false);
+    }
+
+    //
+    // mbedtls_rsa_export_raw を実行
+    // （N, P, Q のエクスポート）
+    // offset of rsa_private_key_raw
+    //    0: P
+    //  128: Q
+    //
+    size_t pq_size = nbits / 16;
+    uint8_t *n = rsa_public_key_raw;
+    uint8_t *p = rsa_private_key_raw;
+    uint8_t *q = p + pq_size;
+    ret = mbedtls_rsa_export_raw(&rsa_context, n, pq_size * 2, p, pq_size, q, pq_size, NULL, 0, NULL, 0);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_rsa_export_raw returns %d", ret);
+        return app_crypto_rsa_private_terminate(false);
+    }
+
+    // 正常終了
+    return app_crypto_rsa_private_terminate(true);
+
+#else
     (void)rsa_private_key_raw;
     (void)rsa_public_key_raw;
     (void)nbits;
     return false;
+#endif
 }
