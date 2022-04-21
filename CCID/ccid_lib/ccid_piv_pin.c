@@ -311,8 +311,7 @@ static void ccid_piv_pin_auth_resume(command_apdu_t *capdu, response_apdu_t *rap
 //
 void ccid_piv_pin_retry(void)
 {
-    ASSERT(m_capdu);
-    ASSERT(m_rapdu);
+    ccid_assert_apdu(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -350,8 +349,7 @@ void ccid_piv_pin_retry(void)
 
 void ccid_piv_pin_resume(bool success)
 {
-    ASSERT(m_capdu);
-    ASSERT(m_rapdu);
+    ccid_assert_apdu(m_capdu, m_rapdu);
 
     if (success == false) {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
