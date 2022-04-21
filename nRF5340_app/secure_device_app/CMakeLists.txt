@@ -42,7 +42,24 @@ target_sources(app PRIVATE
     ../../CCID/ccid_lib/ccid_apdu.c
     ../../CCID/ccid_lib/ccid_main.c
     ../../CCID/ccid_lib/ccid_piv.c
+    ../../CCID/ccid_lib/ccid_piv_authenticate.c
+    ../../CCID/ccid_lib/ccid_piv_general_auth.c
+    ../../CCID/ccid_lib/ccid_piv_object.c
+    ../../CCID/ccid_lib/ccid_piv_object_import.c
+    ../../CCID/ccid_lib/ccid_piv_pin.c
+    ../../CCID/ccid_lib/ccid_piv_pin_auth.c
+    ../../CCID/ccid_lib/ccid_piv_pin_update.c
+    ../../CCID/ccid_lib/ccid_ykpiv.c
+    ../../CCID/ccid_lib/ccid_ykpiv_import_key.c
     ../../CCID/openpgp_lib/ccid_openpgp.c
+    ../../CCID/openpgp_lib/ccid_openpgp_attr.c
+    ../../CCID/openpgp_lib/ccid_openpgp_crypto.c
+    ../../CCID/openpgp_lib/ccid_openpgp_data.c
+    ../../CCID/openpgp_lib/ccid_openpgp_key.c
+    ../../CCID/openpgp_lib/ccid_openpgp_key_rsa.c
+    ../../CCID/openpgp_lib/ccid_openpgp_object.c
+    ../../CCID/openpgp_lib/ccid_openpgp_pin.c
+    ../../CCID/openpgp_lib/ccid_pin_auth.c
 )
 target_include_directories(app PRIVATE 
     include

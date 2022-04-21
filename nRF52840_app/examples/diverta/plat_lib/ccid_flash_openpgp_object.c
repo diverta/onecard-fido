@@ -30,7 +30,7 @@ static void *m_flash_func = NULL;
 //
 // オブジェクトのRead／Write
 //
-static bool get_file_id(CCID_APPLET applet_id, uint16_t *file_id)
+static bool get_file_id(uint8_t applet_id, uint16_t *file_id)
 {
     switch (applet_id) {
         case APPLET_OPENPGP:
@@ -42,7 +42,7 @@ static bool get_file_id(CCID_APPLET applet_id, uint16_t *file_id)
     return true;
 }
 
-static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint16_t *file_id, uint16_t *record_key)
+static bool get_record_key_by_tag(uint8_t applet_id, uint16_t obj_tag, uint16_t *file_id, uint16_t *record_key)
 {
     if (get_file_id(applet_id, file_id) == false) {
         return false;
@@ -122,7 +122,7 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
     return true;
 }
 
-bool ccid_flash_openpgp_object_read(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *obj_buff, size_t *obj_size)
+bool ccid_flash_openpgp_object_read(uint8_t applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *obj_buff, size_t *obj_size)
 {
     // 引数からファイル名、レコードキーを取得
     uint16_t file_id;

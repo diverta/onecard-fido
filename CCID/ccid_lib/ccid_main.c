@@ -422,3 +422,10 @@ uint16_t ccid_get_tlv_element_size(uint8_t elem_no, uint8_t *data, size_t size, 
 
     return SW_NO_ERROR;
 }
+
+void ccid_assert_apdu(void *p_capdu, void *p_rapdu)
+{
+    if (p_capdu == NULL || p_rapdu == NULL) {
+        while(true);
+    }
+}

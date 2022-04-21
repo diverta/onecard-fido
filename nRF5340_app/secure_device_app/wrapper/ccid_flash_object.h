@@ -2,10 +2,14 @@
  * File:   ccid_flash_object.h
  * Author: makmorit
  *
- * Created on 2021/02/15, 11:58
+ * Created on 2022/04/19, 10:12
  */
 #ifndef CCID_FLASH_OBJECT_H
 #define CCID_FLASH_OBJECT_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
