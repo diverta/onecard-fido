@@ -18,10 +18,6 @@
 fido_log_module_register(ccid_openpgp_key);
 #endif
 
-// 本アプリケーション内で鍵生成を行う場合 true
-//   性能面で問題があるため、現在機能を閉塞しています
-#define SUPPORT_GENKEY              false
-
 // テスト用
 #define LOG_DEBUG_KEY_ATTR_DESC     false
 #define LOG_DEBUG_KEY_IMP_REQ_BUFF  false
@@ -307,8 +303,11 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     }
 
     if (capdu->p1 == 0x80) {
-#if SUPPORT_GENKEY
+#ifdef CONFIG_APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
+        //
         // RSA-2048キーペアを生成
+        //  性能面で問題があるため、現在機能を閉塞しています
+        //
         sw = ccid_openpgp_key_rsa_generate(m_key_attr);
         if (sw != SW_NO_ERROR) {
             return sw;
