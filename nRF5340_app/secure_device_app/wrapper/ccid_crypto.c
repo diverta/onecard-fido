@@ -6,14 +6,26 @@
  */
 #include "ccid_crypto.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_crypto);
+#endif
+
+//
+// E は定数として、このモジュール内で管理
+//
+static uint8_t E[] = {0, 1, 0, 1};
+
 uint8_t *ccid_crypto_rsa_e_bytes(void)
 {
-    return 0;
+    return E;
 }
 
 uint8_t ccid_crypto_rsa_e_size(void)
 {
-    return 0;
+    return sizeof(E);
 }
 
 bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output)
