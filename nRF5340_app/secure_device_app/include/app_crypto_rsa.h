@@ -23,7 +23,7 @@ uint8_t     app_crypto_rsa_e_size(void);
 bool        app_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output);
 bool        app_crypto_rsa_public(uint8_t *rsa_public_key_raw, uint8_t *input, uint8_t *output);
 bool        app_crypto_rsa_import_pubkey_from_prvkey(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw);
-bool        app_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw);
+bool        app_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits);
 
 #ifdef __cplusplus
 }
