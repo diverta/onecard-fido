@@ -117,7 +117,7 @@ static bool get_record_key_by_tag(uint8_t applet_id, uint16_t obj_tag, uint16_t 
     return true;
 }
 
-bool ccid_flash_openpgp_object_read(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *buff, size_t *size)
+bool ccid_flash_openpgp_object_read(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *obj_buff, size_t *obj_size)
 {
     // 引数からファイル名、レコードキーを取得
     uint16_t file_id;
@@ -153,11 +153,11 @@ bool ccid_flash_openpgp_object_read(CCID_APPLET applet_id, uint16_t obj_tag, boo
     size_t total_size = read_buffer[0];
 
     // 読み込んだデータを、引数の領域にコピー
-    if (size != NULL) {
-        *size = total_size;
+    if (obj_size != NULL) {
+        *obj_size = total_size;
     }
-    if (buff != NULL) {
-        memcpy(buff, ccid_flash_object_read_buffer() + 4, total_size);
+    if (obj_buff != NULL) {
+        memcpy(obj_buff, ccid_flash_object_read_buffer() + 4, total_size);
     }
     return true;
 }
