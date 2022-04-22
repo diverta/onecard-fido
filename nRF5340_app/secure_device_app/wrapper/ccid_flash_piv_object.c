@@ -145,29 +145,88 @@ static void copy_object_data_from_buffer(uint8_t *obj_alg, uint8_t *obj_data_buf
     *obj_data_size = size32_t;
 }
 
+//
+// 管理用パスワード関連
+//
 bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, uint8_t *key_alg, bool *is_exist)
 {
-    return false;
+    // Flash ROMから既存データを読込み、
+    // 既存データがあれば、データをバッファに読込む
+    uint8_t key_tag = TAG_KEY_CAADM;
+    if (read_piv_object_data_from_app_settings(key_tag, is_exist) == false) {
+        return false;
+    }
+    // 既存データがなければここで終了
+    if (*is_exist == false) {
+        return true;
+    }
+    // データを引数の領域にコピー
+    copy_object_data_from_buffer(key_alg, key, key_size);
+    return true;
 }
 
 bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, uint8_t key_alg)
 {
-    return false;
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)ccid_flash_piv_object_card_admin_key_write;
+
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
+    uint8_t key_tag = TAG_KEY_CAADM;
+    return write_piv_object_data_to_app_settings(key_tag, key_alg, key, key_size);
 }
 
+//
+// PIV秘密鍵関連
+//
 bool ccid_flash_piv_object_private_key_read(uint8_t key_tag, uint8_t key_alg, uint8_t *key, size_t *key_size, bool *is_exist)
 {
-    return false;
+    // Flash ROMから既存データを読込み、
+    // 既存データがあれば、データをバッファに読込む
+    if (read_piv_object_data_from_app_settings(key_tag, is_exist) == false) {
+        return false;
+    }
+
+    // 既存データがなければここで終了
+    if (*is_exist == false) {
+        return true;
+    }
+
+    // データを引数の領域にコピー
+    uint8_t key_alg_;
+    copy_object_data_from_buffer(&key_alg_, key, key_size);
+
+    // アルゴリズムが登録されているものと異なる場合は、
+    // 既存データ無しと扱う
+    if (key_alg != key_alg_) {
+        *is_exist = false;
+    }
+
+    return true;
 }
 
 bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg, uint8_t *key, size_t key_size)
 {
-    return false;
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)ccid_flash_piv_object_private_key_write;
+
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
+    return write_piv_object_data_to_app_settings(key_tag, key_alg, key, key_size);
 }
 
+//
+// PIV PIN／リトライカウンター関連
+//
 bool ccid_flash_piv_object_pin_write(uint8_t obj_tag, uint8_t *obj_data, size_t obj_size)
 {
-    return false;
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)ccid_flash_piv_object_pin_write;
+
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
+    uint8_t obj_alg = 0xff;
+    return write_piv_object_data_to_app_settings(obj_tag, obj_alg, obj_data, obj_size);
 }
 
 //
