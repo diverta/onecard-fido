@@ -305,7 +305,7 @@ static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
     // appletを選択できなかった場合
     rapdu->len = 0;
     rapdu->sw = SW_FILE_NOT_FOUND;
-    fido_log_error("select_applet: applet not found");
+    fido_log_debug("select_applet: applet not found");
     return false;
 }
 

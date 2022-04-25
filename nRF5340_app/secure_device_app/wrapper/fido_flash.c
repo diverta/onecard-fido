@@ -170,7 +170,7 @@ static bool read_random_vector(uint32_t *p_random_vector)
 
     // レコードが存在しない場合は false を戻す
     if (exist == false) {
-        LOG_ERR("AES password not exist");
+        LOG_DBG("AES password not exist");
         return false;
     }
     
