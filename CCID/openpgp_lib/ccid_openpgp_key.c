@@ -180,7 +180,6 @@ uint16_t ccid_openpgp_key_is_present(uint16_t key_tag)
     }
     // If key not present
     if (status == KEY_NOT_PRESENT) {
-        fido_log_error("OpenPGP private key not found (0x%04x)", key_tag);
         return SW_REFERENCE_DATA_NOT_FOUND;
     } else {
         return SW_NO_ERROR;
@@ -325,7 +324,7 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
 #endif
 
     } else if (capdu->p1 == 0x81) {
-        // 鍵ステータスを参照し、鍵がない場合はエラー
+        // 鍵ステータスを参照し、鍵がない場合はここで終了
         sw = ccid_openpgp_key_is_present(key_tag);
         if (sw != SW_NO_ERROR) {
             return sw;

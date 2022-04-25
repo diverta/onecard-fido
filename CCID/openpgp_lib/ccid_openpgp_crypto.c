@@ -60,6 +60,7 @@ static uint16_t compute_digital_signature(command_apdu_t *capdu, response_apdu_t
     // 鍵ステータスを参照し、鍵がない場合はエラー
     sw = ccid_openpgp_key_is_present(TAG_KEY_SIG);
     if (sw != SW_NO_ERROR) {
+        fido_log_error("OpenPGP private key for sign not found");
         return sw;
     }
 
@@ -92,6 +93,7 @@ static uint16_t decipher(command_apdu_t *capdu, response_apdu_t *rapdu)
     // 鍵ステータスを参照し、鍵がない場合はエラー
     uint16_t sw = ccid_openpgp_key_is_present(TAG_KEY_DEC);
     if (sw != SW_NO_ERROR) {
+        fido_log_error("OpenPGP private key for decipher not found");
         return sw;
     }
 
