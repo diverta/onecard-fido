@@ -383,12 +383,14 @@ bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counte
 #if LOG_DEBUG_TOKEN_COUNTER
     LOG_INF("Token counter record %s (serial=%d, counter=%d)", found ? "updated" : "created", key.serial, token_counter);
 #endif
-    
+
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)fido_flash_token_counter_write;
+
     // Flash ROMに書込
     if (app_settings_save(&key, (void *)m_token_counter_record_buffer, size)) {
         // 書込み成功の場合は、U2F／CTAP2コマンドの処理を継続
-        fido_u2f_command_token_counter_record_updated();
-        fido_ctap2_command_token_counter_record_updated();
+        app_event_notify(APEVT_APP_SETTINGS_SAVED);
         return true;
 
     } else {
@@ -482,9 +484,13 @@ bool fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t r
     // Flash ROMに書込むキー／サイズを設定
     APP_SETTINGS_KEY key = {FIDO_PIN_RETRY_COUNTER_FILE_ID, FIDO_PIN_RETRY_COUNTER_RECORD_KEY, false, 0};
     size_t size = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * sizeof(uint32_t);
+
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)fido_flash_client_pin_store_hash_write;
+
     if (app_settings_save(&key, (void *)m_pin_store_hash_record, size)) {
         // 書込み成功の場合は、CTAP2コマンドの処理を継続
-        fido_ctap2_command_retry_counter_record_updated();
+        app_event_notify(APEVT_APP_SETTINGS_SAVED);
         return true;
 
     } else {
@@ -539,6 +545,13 @@ void fido_flash_object_record_updated(void)
     }
     if (flash_func == write_random_vector) {
         fido_maintenance_command_aes_password_record_updated();
+    }
+    if (flash_func == fido_flash_token_counter_write) {
+        fido_u2f_command_token_counter_record_updated();
+        fido_ctap2_command_token_counter_record_updated();
+    }
+    if (flash_func == fido_flash_client_pin_store_hash_write) {
+        fido_ctap2_command_retry_counter_record_updated();
     }
 }
 
