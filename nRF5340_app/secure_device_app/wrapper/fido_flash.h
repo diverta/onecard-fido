@@ -39,6 +39,14 @@ uint32_t    fido_flash_client_pin_store_retry_counter(void);
 bool        fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter);
 bool        fido_flash_client_pin_store_pin_code_exist(void);
 
+//
+// コールバック関数群
+//
+void        fido_flash_object_failed(void);
+void        fido_flash_object_gc_done(void);
+void        fido_flash_object_record_updated(void);
+void        fido_flash_object_record_deleted(void);
+
 #ifdef __cplusplus
 }
 #endif

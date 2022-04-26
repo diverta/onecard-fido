@@ -33,7 +33,8 @@ LOG_MODULE_REGISTER(app_main);
 #include "ctap2_client_pin.h"
 #include "ccid.h"
 
-// for ccid_flash_object_record_updated
+// for resume after Flash ROM object updated/deleted
+#include "fido_flash.h"
 #include "ccid_flash_object.h"
 
 //
@@ -168,11 +169,13 @@ void app_main_ble_response_sent(void)
 //
 void app_main_app_settings_saved(void)
 {
+    fido_flash_object_record_updated();
     ccid_flash_object_record_updated();
 }
 
 void app_main_app_settings_deleted(void)
 {
+    fido_flash_object_record_deleted();
     ccid_flash_object_record_deleted();
 }
 
