@@ -25,6 +25,9 @@ fido_log_module_register(fido_flash);
 #define LOG_DEBUG_TOKEN_COUNTER         false
 #define LOG_HEXDUMP_PIN_CODE_HASH       false
 
+// Flash ROM書込み時に実行した関数の参照を保持
+static void *m_flash_func = NULL;
+
 //
 //  鍵・証明書関連
 //
@@ -125,9 +128,12 @@ bool fido_flash_skey_cert_write(void)
     APP_SETTINGS_KEY key = {FIDO_SKEY_CERT_FILE_ID, FIDO_SKEY_CERT_RECORD_KEY, false, 0};
     size_t size = SKEY_CERT_WORD_NUM * sizeof(uint32_t);
 
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)fido_flash_skey_cert_write;
+
     if (app_settings_save(&key, (void *)skey_cert_data, size)) {
         // 書込み成功の場合は、管理用コマンドの処理を継続
-        fido_maintenance_command_skey_cert_record_updated();
+        app_event_notify(APEVT_APP_SETTINGS_SAVED);
         return true;
 
     } else {
@@ -138,11 +144,14 @@ bool fido_flash_skey_cert_write(void)
 
 bool fido_flash_skey_cert_delete(void)
 {
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)fido_flash_skey_cert_delete;
+
     // 秘密鍵／証明書をFlash ROM領域から削除
     APP_SETTINGS_KEY key = {FIDO_SKEY_CERT_FILE_ID, 0, false, 0};
     if (app_settings_delete_multi(&key)) {
         // 削除成功の場合は、管理用コマンドの処理を継続
-        fido_maintenance_command_skey_cert_file_deleted();
+        app_event_notify(APEVT_APP_SETTINGS_DELETED);
         return true;
 
     } else {
@@ -196,9 +205,12 @@ static bool write_random_vector(uint32_t *p_random_vector)
     APP_SETTINGS_KEY key = {FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, false, 0};
     size_t size = 8 * sizeof(uint32_t);
 
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)write_random_vector;
+
     if (app_settings_save(&key, (void *)p_random_vector, size)) {
         // 書込み成功の場合は、管理用コマンドの処理を継続
-        fido_maintenance_command_aes_password_record_updated();
+        app_event_notify(APEVT_APP_SETTINGS_SAVED);
         return true;
 
     } else {
@@ -388,14 +400,14 @@ bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counte
 
 bool fido_flash_token_counter_delete(void)
 {
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)fido_flash_token_counter_delete;
+
     // トークンカウンターをFlash ROM領域から削除
     APP_SETTINGS_KEY key = {FIDO_TOKEN_COUNTER_FILE_ID, 0, false, 0};
     if (app_settings_delete_multi(&key)) {
-        // 削除成功の場合
-        // CTAP2コマンドの処理を実行
-        fido_ctap2_command_token_counter_file_deleted();
-        // 管理用コマンドの処理を実行
-        fido_maintenance_command_token_counter_file_deleted();
+        // 削除成功の場合は、管理用コマンドの処理を継続
+        app_event_notify(APEVT_APP_SETTINGS_DELETED);
         return true;
 
     } else {
@@ -513,8 +525,41 @@ void fido_flash_object_gc_done(void)
 
 void fido_flash_object_record_updated(void)
 {
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
+    if (flash_func == fido_flash_skey_cert_write) {
+        fido_maintenance_command_skey_cert_record_updated();
+    }
+    if (flash_func == write_random_vector) {
+        fido_maintenance_command_aes_password_record_updated();
+    }
 }
 
 void fido_flash_object_record_deleted(void)
 {
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
+    if (flash_func == fido_flash_skey_cert_delete) {
+        fido_maintenance_command_skey_cert_file_deleted();
+    }
+    if (flash_func == fido_flash_token_counter_delete) {
+        // CTAP2コマンドの処理を実行
+        fido_ctap2_command_token_counter_file_deleted();
+        // 管理用コマンドの処理を実行
+        fido_maintenance_command_token_counter_file_deleted();
+    }
 }
