@@ -175,7 +175,7 @@ void app_main_app_settings_saved(void)
 
 void app_main_app_settings_deleted(void)
 {
-    fido_flash_object_record_updated();
+    fido_flash_object_record_deleted();
     ccid_flash_object_record_deleted();
 }
 
