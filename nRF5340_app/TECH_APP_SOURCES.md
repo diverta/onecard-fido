@@ -1,6 +1,6 @@
 # nRF5340アプリケーションについて
 
-最終更新日：2022/3/28
+最終更新日：2022/4/27
 
 ## 概要
 
@@ -33,6 +33,19 @@ nRF5340やZephyrプラットフォームに依存する処理は、以下のコ�
 |`app_usb`|USBデバイス関連|USBデバイスのステータスを管理<br>USBデバイス初期処理<br>USBデバイス停止処理|
 |`main`|ベースとなったBLE DISサンプル|コードはほぼ全てコメントアウト|
 
+以下は主として、nRF52840での実装を、同じ関数名・引数を用いてnRF5340用に移植したモジュールです。<br>
+一部、ラッピング関数を含んでいます。
+
+|モジュール名|内容|
+|:--|:-|
+|`ccid_crypto`|PIV／OpenPGP機能で使用されるRSA関連処理|
+|`ccid_flash_object`|PIV／OpenPGP機能で共通使用される永続化関連処理|
+|`ccid_flash_openpgp_object`|OpenPGP機能で使用される永続化関連処理|
+|`ccid_flash_piv_object`|PIV機能で使用される永続化関連処理|
+|`fido_crypto`|FIDO機能で使用される暗号化／署名関連処理|
+|`fido_flash`|FIDO機能で使用される永続化関連処理|
+|`fido_timer`|FIDO機能で使用されるタイマー関連処理|
+
 [注1] USB DFUで使用する予定でしたが、本プロジェクトでは採用を見送ったので、最終更新日現在、ブートローダーモード遷移機能を実行することは出来ません。
 
 ## ハードウェア非依存コード
@@ -41,13 +54,11 @@ nRF5340やZephyrプラットフォームに依存する処理は、以下のコ�
 
 |モジュール名|内容|詳細|
 |:--|:-|:-|
-|`CCID/ccid_lib`|CCID共通／PIV関連|[注1]|
-|`CCID/openpgp_lib`|OpenPGP関連|[注1]|
+|`CCID/ccid_lib`|CCID共通／PIV関連|CCIDトランスポート関連処理<br>各種認証処理<br>永続化関連処理<br>管理機能処理|
+|`CCID/openpgp_lib`|OpenPGP関連|暗号化／署名関連処理<br>永続化関連処理<br>管理機能処理|
 |`FIDO2Device/ctap2_lib`|CTAP2関連|CBOR生成／解析処理<br>PIN管理機能処理<br>WebAuthn認証処理|
-|`FIDO2Device/fido2_lib`|FIDO2関連|トランスポート関連処理<br>暗号化／署名関連処理<br>永続化関連処理<br>管理機能処理<br>その他共通処理|
+|`FIDO2Device/fido2_lib`|FIDO2関連|HID／BLEトランスポート関連処理<br>暗号化／署名関連処理<br>永続化関連処理<br>管理機能処理<br>その他共通処理|
 |`FIDO2Device/u2f_lib`|U2F関連|U2F認証処理<br>キーハンドル関連<br>ECDSA署名処理|
-
-[注1] 最終更新日現在、リンクされていません。将来的にnRF5340アプリケーションにPIV／OpenPGP機能を移植する際、リンク予定です。
 
 ## 各種定義体
 
@@ -63,11 +74,12 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |:--|:-|:-|
 |`CONFIG_BT_DIS_FW_REV`|`y`||
 |`CONFIG_BT_DIS_HW_REV`|`y`||
-|`CONFIG_BT_DIS_FW_REV_STR`|`"0.4.2"`|ファームウェアのバージョンは、このエントリーで管理します。|
-|`CONFIG_BT_DIS_HW_REV_STR`|`"PCA10095"`|基板名|
+|`CONFIG_BT_DIS_FW_REV_STR`|`"0.4.6"`|ファームウェアのバージョンは、このエントリーで管理します。|
+|`CONFIG_BT_DIS_HW_REV_STR`|`"PCA10095_01"`|基板名[注1]|
 |`CONFIG_BT_DEVICE_NAME`|`"Secure device 53"`|デバイス名|
 |`CONFIG_HEAP_MEM_POOL_SIZE`|`4096`||
 
+[注1] `PCA10095`＝nRF5340 DK、`PCA10095_01`＝BT40 Slim Board
 
 ### nRF5340アプリケーションに関する定義
 
@@ -78,14 +90,19 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_BT`|`y`||
 |`CONFIG_BT_PERIPHERAL`|`y`||
 |`CONFIG_BT_GATT_DYNAMIC_DB`|`y`||
+|`CONFIG_BT_LIM_ADV_TIMEOUT`|`90`|アドバタイズ停止までのタイムアウト秒数|
 |`CONFIG_BT_L2CAP_TX_MTU`|`126`||
 |`CONFIG_BT_BUF_ACL_RX_SIZE`|`128`||
-|`CONFIG_BT_MAX_CONN`|`1`|最大接続数を`1`とし、複数端末／サービスからの接続を許容しません。|
+|`CONFIG_BT_MAX_CONN`|`1`|最大接続数を`1`とし、複数端末／サービスからの<br>接続を許容しません。|
 |`CONFIG_BT_MAX_PAIRED`|`10`|`10`端末までペアリングできます。|
 |`CONFIG_BT_SETTINGS`|`y`||
 |`CONFIG_BT_SMP`|`y`||
-|`CONFIG_BT_SMP_SC_PAIR_ONLY`|`y`||
+|`CONFIG_BT_SMP_SC_ONLY`|`y`|ペアリング時に６桁のパスコード入力を要求され<br>ます。[注2]|
+|`CONFIG_BT_FIXED_PASSKEY`|`y`|固定のパスコードを使用します。[注2]|
 |`CONFIG_BT_TINYCRYPT_ECC`|`y`||
+
+[注1] ペアリングモードに遷移後、`90`秒以上経過した場合、このタイムアウト設定によりアドバタイズが停止するため、nRF5340アプリケーションでは、自動的に非ペアリングモードに遷移させるようにしています。<br>
+[注2] パスコードは、ハードウェアIDから生成されます。詳細については[技術情報補足](../nRF5340_app/TECHNICAL.md)ご参照
 
 #### デバイス情報関連
 
@@ -140,7 +157,9 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_NVS`|`y`||
 |`CONFIG_NVS_LOG_LEVEL_OFF`|`y`||
 |`CONFIG_SETTINGS`|`y`||
-|`CONFIG_APP_SETTINGS_BUFFER_SIZE`|`1024`|永続化項目１件あたりの最大バイト数。<br>これを超える長さのデータは、Flash ROMに保存できません。|
+|`CONFIG_SETTINGS_LOG_LEVEL_OFF`|`y`||
+|`CONFIG_PM_PARTITION_SIZE_SETTINGS_STORAGE`|`0x4000`|永続化領域全体のバイト数（＝`16,384bytes`）<br>このサイズを超えた場合、データをFlash ROMに<br>保存できなくなります。|
+|`CONFIG_APP_SETTINGS_BUFFER_SIZE`|`1024`|永続化項目１件あたりの最大バイト数。<br>これを超える長さのデータは、Flash ROMに保存<br>できません。|
 
 #### 暗号化関連
 
@@ -155,6 +174,13 @@ nRF5340やZephyrプラットフォームについての各種定義は下記の�
 |`CONFIG_MBEDTLS_HEAP_SIZE`|`65536`||
 |`CONFIG_MBEDTLS_INSTALL_PATH`|`"DUMMY"`||
 |`CONFIG_MBEDTLS_CTR_DRBG_C`|`y`||
+|`CONFIG_MBEDTLS_SHA384_C`|`n`||
+|`CONFIG_MBEDTLS_SHA512_C`|`n`||
+|`CONFIG_MBEDTLS_CIPHER_MODE_XTS`|`n`||
+|`CONFIG_MBEDTLS_CHACHA20_C`|`n`||
+|`CONFIG_MBEDTLS_POLY1305_C`|`n`||
+|`CONFIG_MBEDTLS_CHACHAPOLY_C`|`n`||
+|`CONFIG_MBEDTLS_GCM_C`|`n`||
 
 #### その他
 |定義名|設定値|内容|
