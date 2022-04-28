@@ -62,6 +62,8 @@
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
+		7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80509B2819066A000BF498 /* CoreImage.framework */; };
+		7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A822077281A812F00FDBFA8 /* QRCodeUtil.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A8528FF277176F10096F41D /* add_sub_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FD277176F10096F41D /* add_sub_key.param */; };
 		7A852900277176F10096F41D /* add_sub_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FE277176F10096F41D /* add_sub_key.sh */; };
@@ -204,6 +206,9 @@
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
+		7A80509B2819066A000BF498 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		7A822076281A811500FDBFA8 /* QRCodeUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QRCodeUtil.h; sourceTree = "<group>"; };
+		7A822077281A812F00FDBFA8 /* QRCodeUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRCodeUtil.m; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		7A8528FD277176F10096F41D /* add_sub_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = add_sub_key.param; sourceTree = "<group>"; };
 		7A8528FE277176F10096F41D /* add_sub_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = add_sub_key.sh; sourceTree = "<group>"; };
@@ -289,6 +294,7 @@
 			files = (
 				7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */,
 				7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */,
+				7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */,
 				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
@@ -307,6 +313,7 @@
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7A6687902575CCA80054F0DE /* PIV */,
 				7AB3C9B4276B139400DEDD0E /* OpenPGP */,
+				7A822075281A80D400FDBFA8 /* OATH */,
 				7AA7464223C2C400001938A7 /* Resources */,
 				7A4B02C5274B3C1500BF44C2 /* DFU */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
@@ -325,6 +332,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7A80509B2819066A000BF498 /* CoreImage.framework */,
 				7A0EB184258066AA004ED59C /* PCSC.framework */,
 				7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */,
 				7A0D20BE22408E920022EA8E /* IOKit.framework */,
@@ -501,6 +509,15 @@
 				7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */,
 			);
 			path = CCID;
+			sourceTree = "<group>";
+		};
+		7A822075281A80D400FDBFA8 /* OATH */ = {
+			isa = PBXGroup;
+			children = (
+				7A822076281A811500FDBFA8 /* QRCodeUtil.h */,
+				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
+			);
+			path = OATH;
 			sourceTree = "<group>";
 		};
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
@@ -757,6 +774,7 @@
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A4D118E271E6A750095C29E /* usb_dfu_util.c in Sources */,
 				7A4D1187271E6A750095C29E /* ToolUSBDFUCommand.m in Sources */,
+				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
