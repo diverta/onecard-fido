@@ -16,9 +16,11 @@
 @implementation QRCodeUtil
 
     - (bool)scanScreen {
-        // TODO: 動作確認用の仮実装です。
-        NSURL *url = [NSURL fileURLWithPath:@"/Users/makmorit/Downloads/qrcode.png"];
-        CIImage *ciImage = [[CIImage alloc] initWithContentsOfURL:url];
+        // デスクトップのスクリーンショットを取得し、イメージを抽出
+        CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
+        CIImage *ciImage = [[CIImage alloc] initWithCGImage:screenShot];
+        CFRelease(screenShot);
+        
         // イメージからQRコードをキャプチャーし、メッセージを抽出
         NSString *messageString = [self extractQRMessageFrom:ciImage];
         if (messageString == nil) {
