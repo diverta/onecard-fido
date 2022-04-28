@@ -17,6 +17,16 @@
 
     - (bool)scanScreen {
         // TODO: 動作確認用の仮実装です。
+        NSURL *url = [NSURL fileURLWithPath:@"/Users/makmorit/Downloads/qrcode.png"];
+        CIImage *ciImage = [[CIImage alloc] initWithContentsOfURL:url];
+        // イメージからQRコードをキャプチャーし、メッセージを抽出
+        NSString *messageString = [self extractQRMessageFrom:ciImage];
+        if (messageString == nil) {
+            [[ToolLogFile defaultLogger] debug:@"QR code not detected"];
+            return false;
+        }
+        // TODO: 抽出されたメッセージを解析
+        [[ToolLogFile defaultLogger] debugWithFormat:@"QR code detected: %@", messageString];
         return true;
     }
 
