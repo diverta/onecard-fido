@@ -6,6 +6,7 @@
  */
 #include "ccid_apdu.h"
 #include "ccid_piv.h"
+#include "ccid_oath.h"
 #include "ccid_openpgp.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -30,7 +31,7 @@ void ccid_process_stop_applet(void)
             ccid_openpgp_stop_applet();
             break;
         case APPLET_OATH:
-            // TODO: 後日実装
+            ccid_oath_stop_applet();
             break;
         default:
             break;
@@ -61,6 +62,15 @@ static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
         current_applet = APPLET_OPENPGP;
         fido_log_debug("select_applet: applet switched to OpenPGP");
         return true;
+
+    } else if (ccid_oath_aid_is_applet(capdu)) {
+        // OATH
+        if (current_applet != APPLET_OATH) {
+            ccid_process_stop_applet();
+        }
+        current_applet = APPLET_OATH;
+        fido_log_debug("select_applet: applet switched to OATH");
+        return true;
     }
 
     // appletを選択できなかった場合
@@ -83,6 +93,9 @@ void ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case APPLET_OPENPGP:
             ccid_openpgp_apdu_process(capdu, rapdu);
+            break;
+        case APPLET_OATH:
+            ccid_oath_apdu_process(capdu, rapdu);
             break;
         default:
             rapdu->len = 0;
