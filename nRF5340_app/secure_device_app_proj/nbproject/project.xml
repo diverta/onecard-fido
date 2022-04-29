@@ -16,6 +16,7 @@
                 <sourceRootElem>../../FIDO2Device/ctap2_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/ccid_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/openpgp_lib</sourceRootElem>
+                <sourceRootElem>../../CCID/piv_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
