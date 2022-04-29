@@ -16,6 +16,8 @@ extern "C" {
 //
 // 関数群
 //
+void        ccid_process_stop_applet(void);
+void        ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu);
 
 #ifdef __cplusplus
 }
