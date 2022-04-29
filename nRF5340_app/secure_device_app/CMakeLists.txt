@@ -41,16 +41,16 @@ target_sources(app PRIVATE
     ../../FIDO2Device/u2f_lib/u2f_signature.c
     ../../CCID/ccid_lib/ccid_apdu.c
     ../../CCID/ccid_lib/ccid_main.c
-    ../../CCID/ccid_lib/ccid_piv.c
-    ../../CCID/ccid_lib/ccid_piv_authenticate.c
-    ../../CCID/ccid_lib/ccid_piv_general_auth.c
-    ../../CCID/ccid_lib/ccid_piv_object.c
-    ../../CCID/ccid_lib/ccid_piv_object_import.c
-    ../../CCID/ccid_lib/ccid_piv_pin.c
-    ../../CCID/ccid_lib/ccid_piv_pin_auth.c
-    ../../CCID/ccid_lib/ccid_piv_pin_update.c
-    ../../CCID/ccid_lib/ccid_ykpiv.c
-    ../../CCID/ccid_lib/ccid_ykpiv_import_key.c
+    ../../CCID/piv_lib/ccid_piv.c
+    ../../CCID/piv_lib/ccid_piv_authenticate.c
+    ../../CCID/piv_lib/ccid_piv_general_auth.c
+    ../../CCID/piv_lib/ccid_piv_object.c
+    ../../CCID/piv_lib/ccid_piv_object_import.c
+    ../../CCID/piv_lib/ccid_piv_pin.c
+    ../../CCID/piv_lib/ccid_piv_pin_auth.c
+    ../../CCID/piv_lib/ccid_piv_pin_update.c
+    ../../CCID/piv_lib/ccid_ykpiv.c
+    ../../CCID/piv_lib/ccid_ykpiv_import_key.c
     ../../CCID/openpgp_lib/ccid_openpgp.c
     ../../CCID/openpgp_lib/ccid_openpgp_attr.c
     ../../CCID/openpgp_lib/ccid_openpgp_crypto.c
@@ -69,4 +69,5 @@ target_include_directories(app PRIVATE
     ../../FIDO2Device/u2f_lib
     ../../CCID/ccid_lib
     ../../CCID/openpgp_lib
+    ../../CCID/piv_lib
 )
