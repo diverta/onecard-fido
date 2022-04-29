@@ -41,6 +41,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/u2f_lib/u2f_signature.c
     ../../CCID/ccid_lib/ccid_apdu.c
     ../../CCID/ccid_lib/ccid_main.c
+    ../../CCID/ccid_lib/ccid_process.c
     ../../CCID/piv_lib/ccid_piv.c
     ../../CCID/piv_lib/ccid_piv_authenticate.c
     ../../CCID/piv_lib/ccid_piv_general_auth.c
