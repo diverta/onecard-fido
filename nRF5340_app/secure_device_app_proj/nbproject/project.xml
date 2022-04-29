@@ -17,6 +17,7 @@
                 <sourceRootElem>../../CCID/ccid_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/openpgp_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/piv_lib</sourceRootElem>
+                <sourceRootElem>../../CCID/oath_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

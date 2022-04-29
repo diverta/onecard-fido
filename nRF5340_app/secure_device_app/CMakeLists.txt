@@ -61,6 +61,7 @@ target_sources(app PRIVATE
     ../../CCID/openpgp_lib/ccid_openpgp_object.c
     ../../CCID/openpgp_lib/ccid_openpgp_pin.c
     ../../CCID/openpgp_lib/ccid_pin_auth.c
+    ../../CCID/oath_lib/ccid_oath.c
 )
 target_include_directories(app PRIVATE 
     include
@@ -69,6 +70,7 @@ target_include_directories(app PRIVATE
     ../../FIDO2Device/fido2_lib
     ../../FIDO2Device/u2f_lib
     ../../CCID/ccid_lib
+    ../../CCID/oath_lib
     ../../CCID/openpgp_lib
     ../../CCID/piv_lib
 )
