@@ -6,6 +6,7 @@
  */
 #include "ccid.h"
 #include "ccid_apdu.h"
+#include "ccid_process.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -146,7 +147,7 @@ static uint8_t pc_to_reader_icc_power_off(void)
     fido_log_debug("Slot power off");
 
     // Appletを停止
-    ccid_apdu_stop_applet();
+    ccid_process_stop_applet();
 
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_INACTIVE);

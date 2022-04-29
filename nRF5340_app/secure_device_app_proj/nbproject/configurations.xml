@@ -8,26 +8,8 @@
       <itemPath>../../CCID/ccid_lib/ccid_apdu.c</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_apdu.h</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_main.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_authenticate.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_authenticate.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_general_auth.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_general_auth.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_object.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_object.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_object_import.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_object_import.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin_auth.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin_auth.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin_update.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_piv_pin_update.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_ykpiv.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_ykpiv.h</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_ykpiv_import_key.c</itemPath>
-      <itemPath>../../CCID/ccid_lib/ccid_ykpiv_import_key.h</itemPath>
+      <itemPath>../../CCID/ccid_lib/ccid_process.c</itemPath>
+      <itemPath>../../CCID/ccid_lib/ccid_process.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor.c</itemPath>
@@ -92,6 +74,10 @@
       <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="oath_lib" displayName="oath_lib" projectFiles="true">
+      <itemPath>../../CCID/oath_lib/ccid_oath.c</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="openpgp_lib" displayName="openpgp_lib" projectFiles="true">
       <itemPath>../../CCID/openpgp_lib/README.md</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp.c</itemPath>
@@ -113,6 +99,28 @@
       <itemPath>../../CCID/openpgp_lib/ccid_pin.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_pin_auth.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_pin_auth.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="piv_lib" displayName="piv_lib" projectFiles="true">
+      <itemPath>../../CCID/piv_lib/ccid_piv.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_authenticate.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_authenticate.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_general_auth.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_general_auth.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_object.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_object.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_object_import.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_object_import.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin_auth.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin_auth.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin_update.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_pin_update.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_ykpiv.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_ykpiv.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_ykpiv_import_key.c</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_ykpiv_import_key.h</itemPath>
     </logicalFolder>
     <df root="../secure_device_app" name="0">
       <df name="build_signed">
@@ -202,6 +210,8 @@
     <Elem>../../FIDO2Device/ctap2_lib</Elem>
     <Elem>../../CCID/ccid_lib</Elem>
     <Elem>../../CCID/openpgp_lib</Elem>
+    <Elem>../../CCID/piv_lib</Elem>
+    <Elem>../../CCID/oath_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -243,87 +253,13 @@
       </item>
       <item path="../../CCID/ccid_lib/ccid_main.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../../CCID/ccid_lib/ccid_piv.c" ex="false" tool="0" flavor2="0">
+      <item path="../../CCID/ccid_lib/ccid_process.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../../CCID/ccid_lib/ccid_piv.h" ex="false" tool="3" flavor2="0">
+      <item path="../../CCID/ccid_lib/ccid_process.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_authenticate.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
+      <item path="../../CCID/oath_lib/ccid_oath.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_authenticate.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_general_auth.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_general_auth.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_object.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_object.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_object_import.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_object_import.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin_auth.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin_auth.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin_update.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_piv_pin_update.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_ykpiv.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_ykpiv.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_ykpiv_import_key.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../CCID/ccid_lib/ccid_ykpiv_import_key.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../CCID/oath_lib/ccid_oath.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/README.md" ex="false" tool="3" flavor2="0">
       </item>
@@ -415,6 +351,88 @@
             flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/ccid_pin_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_authenticate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_general_auth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_general_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_object_import.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_object_import.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin_auth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin_update.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_pin_update.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_ykpiv.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_ykpiv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_ykpiv_import_key.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_ykpiv_import_key.h"
             ex="false"
             tool="3"
             flavor2="0">

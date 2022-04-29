@@ -70,7 +70,6 @@ typedef struct response_apdu {
 //
 void ccid_apdu_process(void);
 void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu);
-void ccid_apdu_stop_applet(void);
 bool ccid_apdu_response_is_pending(void);
 void ccid_apdu_response_set_pending(bool b);
 
