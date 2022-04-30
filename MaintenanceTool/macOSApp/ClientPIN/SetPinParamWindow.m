@@ -130,8 +130,13 @@
 
     - (void) doClearPin:(id)sender {
         // 処理続行確認ダイアログを開く
-        if ([ToolPopupWindow promptYesNo:MSG_CLEAR_PIN_CODE
-                         informativeText:MSG_PROMPT_CLEAR_PIN_CODE] == false) {
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_CLEAR_PIN_CODE informativeText:MSG_PROMPT_CLEAR_PIN_CODE
+                                             withObject:self forSelector:@selector(clearPinCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)clearPinCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // PINコード、実行コマンドを設定して画面を閉じる

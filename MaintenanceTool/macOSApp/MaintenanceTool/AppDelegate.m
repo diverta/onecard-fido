@@ -46,6 +46,9 @@
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // 共通ポップアップ画面の初期化
+        [[ToolPopupWindow defaultWindow] setApplicationWindow:[self window]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -101,7 +104,7 @@
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+        [[self toolAppCommand] pivParamWindowWillOpenWithParent:[self window]];
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
@@ -126,12 +129,12 @@
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
         // HID CTAP2ヘルスチェック実行
-        [[self toolAppCommand] doCommandHidCtap2HealthCheck];
+        [[self toolAppCommand] doCommandHidCtap2HealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandHidU2fHealthCheck];
+        [[self toolAppCommand] doCommandHidU2fHealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
@@ -151,12 +154,12 @@
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
-        [[self toolAppCommand] pinCodeParamWindowWillOpenForBLE:self parentWindow:[self window]];
+        [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
         // BLE U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandTestRegister];
+        [[self toolAppCommand] doCommandBleU2fHealthCheck:[self window]];
     }
 
     - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
@@ -184,16 +187,16 @@
         [self enableButtons:false];
     }
 
+    - (void)enableUserInterface {
+        // メニュー、ボタンを活性化
+        [self enableButtons:true];
+    }
+
     - (void)notifyAppCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         if (message) {
             [self appendLogMessage:message];
         }
-    }
-
-    - (void)pinCodeParamWindowWillOpenForHID {
-        // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
-        [[self toolAppCommand] pinCodeParamWindowWillOpenForHID:self parentWindow:[self window]];
     }
 
 #pragma mark - Common method called by callback
@@ -214,21 +217,32 @@
             [self notifyAppCommandMessage:message];
         }
         // コマンド名称を取得
-        if (processNameOfCommand) {
-            // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                             processNameOfCommand, result? MSG_SUCCESS:MSG_FAILURE];
-            // メッセージを画面のテキストエリアに表示
-            [self notifyAppCommandMessage:str];
-            // メッセージをログファイルに出力してから、ポップアップを表示
-            if (result) {
-                [[ToolLogFile defaultLogger] info:str];
-                [ToolPopupWindow informational:str informativeText:nil];
-            } else {
-                [[ToolLogFile defaultLogger] error:str];
-                [ToolPopupWindow critical:str informativeText:nil];
-            }
+        if (processNameOfCommand == nil) {
+            // ボタンを活性化
+            [self enableButtons:true];
+            return;
         }
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         processNameOfCommand, result? MSG_SUCCESS:MSG_FAILURE];
+        // メッセージを画面のテキストエリアに表示
+        [self notifyAppCommandMessage:str];
+        // メッセージをログファイルに出力してから、ポップアップを表示
+        [self displayCommandResult:result withMessage:str];
+    }
+
+    - (void)displayCommandResult:(bool)result withMessage:(NSString *)str{
+        // メッセージをログファイルに出力してから、ポップアップを表示-->ボタンを活性化
+        if (result) {
+            [[ToolLogFile defaultLogger] info:str];
+            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+        } else {
+            [[ToolLogFile defaultLogger] error:str];
+            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+        }
+    }
+
+    - (void)displayCommandResultDone {
         // ボタンを活性化
         [self enableButtons:true];
     }

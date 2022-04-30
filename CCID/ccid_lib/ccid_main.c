@@ -6,9 +6,14 @@
  */
 #include "ccid.h"
 #include "ccid_apdu.h"
+#include "ccid_process.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_main);
+#endif
 
 //
 // 送受信データ格納用の一時バッファ
@@ -142,7 +147,7 @@ static uint8_t pc_to_reader_icc_power_off(void)
     fido_log_debug("Slot power off");
 
     // Appletを停止
-    ccid_apdu_stop_applet();
+    ccid_process_stop_applet();
 
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_INACTIVE);
@@ -417,4 +422,11 @@ uint16_t ccid_get_tlv_element_size(uint8_t elem_no, uint8_t *data, size_t size, 
     }
 
     return SW_NO_ERROR;
+}
+
+void ccid_assert_apdu(void *p_capdu, void *p_rapdu)
+{
+    if (p_capdu == NULL || p_rapdu == NULL) {
+        while(true);
+    }
 }

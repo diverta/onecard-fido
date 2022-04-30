@@ -26,9 +26,12 @@ void        app_main_hid_data_frame_received(uint8_t *data, size_t size);
 void        app_main_hid_request_received(void);
 void        app_main_hid_report_sent(void);
 void        app_main_ccid_data_frame_received(uint8_t *data, size_t size);
+void        app_main_ccid_request_received(void);
 void        app_main_ble_data_frame_received(uint8_t *data, size_t size);
 void        app_main_ble_request_received(void);
 void        app_main_ble_response_sent(void);
+void        app_main_app_settings_saved(void);
+void        app_main_app_settings_deleted(void);
 void        app_main_button_pressed_short(void);
 void        app_main_button_1_pressed(void);
 

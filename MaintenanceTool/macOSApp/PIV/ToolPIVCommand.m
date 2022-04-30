@@ -21,6 +21,10 @@
 #import "ToolPIVImporter.h"
 #import "ToolPIVSetting.h"
 
+@implementation ToolPIVParameter
+
+@end
+
 @interface ToolPIVCommand () <ToolCCIDHelperDelegate>
 
     // CCIDインターフェース処理の参照を保持
@@ -83,9 +87,7 @@
 
 #pragma mark - For CCID interface
 
-    - (void)ccidHelperWillProcess:(Command)command {
-        // コマンドを待避
-        [self setCommand:command];
+    - (void)ccidHelperWillProcess {
         // コマンド実行時のエラーテキストをクリア
         [self setErrorMessageOfCommand:nil];
         // コマンドに応じ、以下の処理に分岐
@@ -149,9 +151,7 @@
 
 #pragma mark - For reset firmware
 
-    - (void)commandWillResetFirmware:(Command)command {
-        // コマンドを待避
-        [self setCommand:command];
+    - (void)commandWillResetFirmware {
         // HIDインターフェース経由でファームウェアをリセット
         [self notifyProcessStarted];
         [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
@@ -180,30 +180,64 @@
 
 #pragma mark - Public methods
 
-    - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
-        [self setPinCodeNew:pinCodeNew];
-        [self setPinCodeCur:pinCodeCur];
-        [self ccidHelperWillProcess:command];
+    - (void)commandWillPerformPIVProcess:(Command)command withParameter:(ToolPIVParameter *)parameter {
+        // 実行コマンド／パラメーターを保持
+        [self setCommand:command];
+        // コマンドにより分岐
+        switch (command) {
+            case COMMAND_HID_FIRMWARE_RESET:
+                [self commandWillResetFirmware];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self setToolPIVImporter:[[ToolPIVImporter alloc] init]];
+                [[self toolPIVImporter] generateChuidAndCcc];
+                [self ccidHelperWillProcess];
+                break;
+            case COMMAND_CCID_PIV_RESET:
+            case COMMAND_CCID_PIV_STATUS:
+                [self ccidHelperWillProcess];
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self setPinCodeNew:[parameter renewalPin]];
+                [self setPinCodeCur:[parameter currentPin]];
+                [self ccidHelperWillProcess];
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self commandwillimportKeyWith:parameter];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self notifyProcessTerminated:false];
+                break;
+        }
     }
 
-    - (void)commandWillReset:(Command)command {
-        [self ccidHelperWillProcess:command];
-    }
-
-    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporterRef:(id)importer {
-        [self setPinCodeCur:pinCodeCur];
-        [self setToolPIVImporter:(ToolPIVImporter *)importer];
-        [self ccidHelperWillProcess:command];
-    }
-
-    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporterRef:(id)importer {
-        [self setToolPIVImporter:(ToolPIVImporter *)importer];
-        [self ccidHelperWillProcess:command];
-    }
-
-    - (void)commandWillStatus:(Command)command {
-        // コマンドを実行
-        [self ccidHelperWillProcess:command];
+    - (void)commandwillimportKeyWith:(ToolPIVParameter *)parameter {
+        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:[parameter keySlotId]];
+        if ([importer readPrivateKeyPemFrom:[parameter pkeyPemPath]] == false) {
+            [self notifyErrorMessage:MSG_PIV_LOAD_PKEY_FAILED];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        if ([importer readCertificatePemFrom:[parameter certPemPath]] == false) {
+            [self notifyErrorMessage:MSG_PIV_LOAD_CERT_FAILED];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
+            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                              [importer keyAlgorithm], [importer certAlgorithm]];
+            [self notifyErrorMessage:info];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // コマンド実行
+        [self setPinCodeCur:[parameter authPin]];
+        [self setToolPIVImporter:importer];
+        [self ccidHelperWillProcess];
     }
 
 #pragma mark - Private common methods
@@ -876,6 +910,11 @@
         NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
         NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
         [self notifyErrorMessage:errorMsg];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolAppCommand] checkUSBHIDConnection];
     }
 
 @end

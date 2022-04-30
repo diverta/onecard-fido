@@ -22,6 +22,12 @@ config APP_SETTINGS_THREAD_PRIORITY
 	help
 	  Number of scheduling priority used by application thread
 
+config APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
+	bool "Generate RSA-2048 new keypair"
+	default n
+	help
+	  Enables generating RSA-2048 new keypair
+
 #
 # Enable ATECC608A
 #

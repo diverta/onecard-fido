@@ -13,6 +13,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_object);
+#endif
+
 // テスト用
 #define LOG_DEBUG_PIN_BUFFER    false
 #define LOG_DEBUG_OBJ_BUFFER    false
@@ -228,8 +232,7 @@ bool ccid_openpgp_object_data_delete_all(void)
 //
 void ccid_openpgp_object_write_retry(void)
 {
-    ASSERT(m_capdu);
-    ASSERT(m_rapdu);
+    ccid_assert_apdu(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -246,8 +249,7 @@ void ccid_openpgp_object_write_retry(void)
 
 void ccid_openpgp_object_write_resume(bool success)
 {
-    ASSERT(m_capdu);
-    ASSERT(m_rapdu);
+    ccid_assert_apdu(m_capdu, m_rapdu);
 
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行

@@ -22,7 +22,6 @@
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
 		7A2D7DD627F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */; };
-		7A2D7DD727F570A80036E35F /* app_update.PCA10095.0.4.5.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */; };
 		7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
 		7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */; };
 		7A3A1B20271E6F7E006864A1 /* PinCodeParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3A1B19271E6F7E006864A1 /* PinCodeParamWindow.m */; };
@@ -74,6 +73,7 @@
 		7AAC498E27448E4400AB3E67 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAC498B27448E4400AB3E67 /* FIDOAttestationWindow.m */; };
 		7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAC498C27448E4400AB3E67 /* FIDOAttestationWindow.xib */; };
 		7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */; };
+		7AAD79A72818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7AAD79A62818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
 		7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
@@ -134,7 +134,6 @@
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
 		7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.5.zip; sourceTree = "<group>"; };
 		7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.5.zip; sourceTree = "<group>"; };
-		7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.5.bin; sourceTree = "<group>"; };
 		7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = export_pubkey_and_backup.sh; sourceTree = "<group>"; };
 		7A314AC827CF1399009B4F77 /* ToolPGPCcidCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCcidCommand.h; sourceTree = "<group>"; };
 		7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPGPCcidCommand.m; sourceTree = "<group>"; };
@@ -223,6 +222,7 @@
 		7AAC498D27448E4400AB3E67 /* FIDOAttestationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDOAttestationWindow.h; sourceTree = "<group>"; };
 		7AAD21E52717FD3B00C5CCA4 /* ToolAppCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolAppCommand.h; sourceTree = "<group>"; };
 		7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolAppCommand.m; sourceTree = "<group>"; };
+		7AAD79A62818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095_01.0.4.6.bin; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
 		7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mcumgr_cbor_decode.c; sourceTree = "<group>"; };
@@ -538,7 +538,7 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A2D7DD427F570A80036E35F /* app_update.PCA10095.0.4.5.bin */,
+				7AAD79A62818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin */,
 				7A2D7DD327F570A80036E35F /* appkg.PCA10059_01.0.3.5.zip */,
 				7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
@@ -672,7 +672,6 @@
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7A3A1B29271E6F8D006864A1 /* ToolPreferenceWindow.xib in Resources */,
-				7A2D7DD727F570A80036E35F /* app_update.PCA10095.0.4.5.bin in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
 				7AAC498F27448E4400AB3E67 /* FIDOAttestationWindow.xib in Resources */,
 				7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */,
@@ -689,6 +688,7 @@
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
+				7AAD79A72818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,

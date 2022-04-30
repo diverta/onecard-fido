@@ -37,8 +37,7 @@ else
     rm -rf build
     if [ "${BUILD_TARGET}" == "nrf5340dk_nrf5340_cpuapp" ]; then
         # Build for nRF5340
-        YML_FILE=configuration/${BUILD_TARGET}/pm_static.yml
-        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build -- -DPM_STATIC_YML_FILE="${YML_FILE}"
+        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build
     else
         # Build for nRF52840
         if [ -n "${BOARD_TARGET}" ]; then

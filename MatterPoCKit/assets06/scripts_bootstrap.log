@@ -1,20 +1,22 @@
 bash-3.2$ cd ${HOME}/GitHub/connectedhomeip
-bash-3.2$ 
 bash-3.2$ export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
 bash-3.2$ source scripts/bootstrap.sh
-Submodule 'third_party/p6/p6_sdk/libs/anycloud-ota' (https://github.com/Infineon/anycloud-ota) registered for path 'third_party/p6/p6_sdk/libs/anycloud-ota'
-Submodule 'p6/serial-flash' (https://github.com/Infineon/serial-flash) registered for path 'third_party/p6/p6_sdk/libs/serial-flash'
-Submodule 'perfetto' (https://github.com/google/perfetto) registered for path 'third_party/perfetto/repo'
-Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/anycloud-ota'...
-Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/p6/p6_sdk/libs/serial-flash'...
-Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/perfetto/repo'...
-Submodule path 'third_party/efr32_sdk/repo': checked out '1f6ff3d05c94003899f3599b2e3ca524c5aa5495'
-Submodule path 'third_party/p6/p6_sdk/libs/anycloud-ota': checked out '040f563c5fa34bf64a4ab487b7af35c6e6e9d7c5'
-Submodule path 'third_party/p6/p6_sdk/libs/serial-flash': checked out 'db4a5dd646629ac31d669b4ed943d8ab1fa4a9d7'
-Submodule path 'third_party/perfetto/repo': checked out '57b59d6e2effdc5d3b9dc8da68fa519d9d37f2e0'
-Submodule path 'third_party/pigweed/repo': checked out '79525f59ff502d80346c9cc8e70570786c5fc903'
-Submodule path 'third_party/qpg_sdk/repo': checked out '92655e99e9f98bc3ec9188e8951ef614dc3e5691'
-Submodule path 'third_party/zap/repo': checked out 'a1ddd5d56c4bd9b7ba52c63f13665d96a11134ce'
+Submodule 'third_party/bouffalolab/bl602' (https://github.com/bouffalolab/bl_iot_sdk_matter.git) registered for path 'third_party/bouffalolab/bl602_sdk/repo'
+Submodule 'third_party/efr32_sdk/wiseconnect-wifi-bt-sdk' (https://github.com/SiliconLabs/wiseconnect-wifi-bt-sdk) registered for path 'third_party/efr32_sdk/wiseconnect-wifi-bt-sdk'
+Submodule 'third_party/telink_sdk/repo' (https://github.com/rikorsev/telink_b91_ble_sdk) registered for path 'third_party/telink_sdk/repo'
+Submodule 'ti_simplelink_sdk' (https://github.com/TexasInstruments/cc13xx_cc26xx_sdk.git) registered for path 'third_party/ti_simplelink_sdk/repo_cc13xx_cc26xx'
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/bouffalolab/bl602_sdk/repo'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/efr32_sdk/wiseconnect-wifi-bt-sdk'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/telink_sdk/repo'...
+Cloning into '/Users/makmorit/GitHub/connectedhomeip/third_party/ti_simplelink_sdk/repo_cc13xx_cc26xx'...
+Submodule path 'third_party/bouffalolab/bl602_sdk/repo': checked out '9b3e3f3e9cc1932e2334d755fde864459944e2f9'
+Submodule path 'third_party/efr32_sdk/repo': checked out '175cbe761d2fab133725dab01abb1a149e23eb20'
+Submodule path 'third_party/efr32_sdk/wiseconnect-wifi-bt-sdk': checked out '4491826e48bfaaa6ce4d42ad5769d7f6447b8cbb'
+Submodule path 'third_party/pigweed/repo': checked out '9e7d4a4a0a1e7a341c4122d3ff473be7d23d0030'
+Submodule path 'third_party/qpg_sdk/repo': checked out 'cc756e8c0ee2489d14d7573884eb93b1d51f5009'
+Submodule path 'third_party/telink_sdk/repo': checked out 'acb77b52970a5c0a7f5d81273a2f49c884c880dd'
+Submodule path 'third_party/ti_simplelink_sdk/repo_cc13xx_cc26xx': checked out 'f9db17b6d9c07f9c2d613d297a0fcfaacbea2f06'
+Submodule path 'third_party/zap/repo': checked out '7ab717d08dfe9b0ba9de907fc7c6eb6549c86bf7'
 
   WELCOME TO...
 
@@ -34,8 +36,8 @@ Submodule path 'third_party/zap/repo': checked out 'a1ddd5d56c4bd9b7ba52c63f1366
 
 Downloading and installing packages into local source directory:
 
-  Setting up CIPD package manager...done (2m7.4s)
-  Setting up Python environment.....done (1m47.2s)
+  Setting up CIPD package manager...done (32.5s)
+  Setting up Python environment.....done (1m49.8s)
   Setting up pw packages............skipped (0.1s)
   Setting up Host tools.............done (0.1s)
 
@@ -48,7 +50,7 @@ Activating environment (setting environment variables):
 
 Checking the environment:
 
-20220315 12:24:57 INF Environment passes all checks!
+20220414 14:03:20 INF Environment passes all checks!
 
 Environment looks good, you are ready to go!
 
@@ -61,7 +63,4 @@ To deactivate this environment, run this:
 
   deactivate
 
-bash-3.2$ echo $?
-0
-bash-3.2$ 
 bash-3.2$ 

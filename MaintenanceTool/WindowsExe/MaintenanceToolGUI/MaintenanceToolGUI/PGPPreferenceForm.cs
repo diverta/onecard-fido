@@ -387,7 +387,7 @@ namespace MaintenanceToolGUI
 
             // 長さチェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, sizeMin, sizeMax);
-            if (FormUtil.checkEntrySize(text, sizeMin, sizeMax, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, sizeMin, sizeMax, informativeText) == false) {
                 return false;
             }
 
@@ -398,7 +398,7 @@ namespace MaintenanceToolGUI
         {
             // 入力パターンチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName);
-            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, informativeText) == false) {
                 return false;
             }
             return true;
@@ -408,7 +408,7 @@ namespace MaintenanceToolGUI
         {
             // 入力パターンチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
-            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, informativeText) == false) {
                 return false;
             }
             return true;
@@ -418,7 +418,7 @@ namespace MaintenanceToolGUI
         {
             // 先頭または末尾に半角スペース文字が入っている場合はエラー
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS, fieldName);
-            if (FormUtil.checkValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, informativeText) == false) {
                 return false;
             }
             return true;
@@ -446,13 +446,13 @@ namespace MaintenanceToolGUI
         {
             // 長さチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, fieldName);
-            if (FormUtil.checkEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, informativeText) == false) {
                 return false;
             }
 
             // 数字チェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
-            if (FormUtil.checkIsNumeric(text, informativeText) == false) {
+            if (FormUtil.CheckIsNumeric(text, informativeText) == false) {
                 return false;
             }
 
@@ -463,7 +463,7 @@ namespace MaintenanceToolGUI
         {
             // PIN番号の確認入力内容をチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
-            return FormUtil.compareEntry(textPinConfirm, textPin, informativeText);
+            return FormUtil.CompareEntry(textPinConfirm, textPin, informativeText);
         }
 
         private bool CheckForPerformPinCommand()
@@ -535,13 +535,13 @@ namespace MaintenanceToolGUI
         {
             // 長さチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, fieldName, size_min);
-            if (FormUtil.checkEntrySize(text, size_min, size_min, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, size_min, size_min, informativeText) == false) {
                 return false;
             }
 
             // 数字チェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
-            if (FormUtil.checkIsNumeric(text, informativeText) == false) {
+            if (FormUtil.CheckIsNumeric(text, informativeText) == false) {
                 return false;
             }
 
@@ -635,9 +635,9 @@ namespace MaintenanceToolGUI
                 name,
                 success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             if (success) {
-                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FormUtil.ShowInfoMessage(this, MainForm.MaintenanceToolTitle, formatted);
             } else {
-                MessageBox.Show(this, errMessage, formatted, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FormUtil.ShowWarningMessage(this, formatted, errMessage);
             }
         }
 

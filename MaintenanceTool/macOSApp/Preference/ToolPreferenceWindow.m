@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2019/10/25.
 //
 #import "ToolPreferenceWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
@@ -75,42 +76,6 @@
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
-#pragma mark - Interface for main process
-
-    - (void)toolPreferenceCommandDidStart {
-        // コマンド開始メッセージをログファイルに出力
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              [self processNameOfCommand]];
-        [[ToolLogFile defaultLogger] info:startMsg];
-    }
-
-    - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
-                                    success:(bool)success message:(NSString *)message {
-        // 引数に格納されたエラーメッセージをポップアップ表示
-        NSString *strShort = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                              [self processShortNameOfCommand],
-                              success ? MSG_SUCCESS : MSG_FAILURE];
-        NSString *strLong = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                             [self processNameOfCommand],
-                             success ? MSG_SUCCESS : MSG_FAILURE];
-
-        if (success) {
-            // メッセージをログファイルに出力
-            [[ToolLogFile defaultLogger] info:strLong];
-            // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
-            [self setupAuthParamFieldsAndButtons];
-            // 読込成功時はポップアップ表示を省略
-            if (commandType != COMMAND_AUTH_PARAM_GET) {
-                [ToolPopupWindow informational:strShort informativeText:message];
-            }
-
-        } else {
-            // 処理失敗時はメッセージをログファイルに出力してから、ポップアップを表示
-            [[ToolLogFile defaultLogger] error:strLong];
-            [ToolPopupWindow critical:strShort informativeText:message];
-        }
-    }
-
 #pragma mark - Subroutines
 
     - (void)initAuthParamFieldsAndButtons {
@@ -177,8 +142,13 @@
         // 処理続行確認ダイアログを開く
         NSString *text = ([[self buttonCheck] state] == NSControlStateValueOff) ?
             MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0 : MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1;
-        if ([ToolPopupWindow promptYesNo:MSG_WRITE_UUID_SCAN_PARAM
-                         informativeText:text] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_WRITE_UUID_SCAN_PARAM informativeText:text
+                                                  withObject:self forSelector:@selector(authParamSetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)authParamSetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
@@ -193,8 +163,13 @@
 
     - (void) doAuthParamReset:(id)sender {
         // 処理続行確認ダイアログを開く
-        if ([ToolPopupWindow promptYesNo:MSG_CLEAR_UUID_SCAN_PARAM
-                         informativeText:MSG_PROMPT_CLEAR_UUID_SCAN_PARAM] == false) {
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_CLEAR_UUID_SCAN_PARAM informativeText:MSG_PROMPT_CLEAR_UUID_SCAN_PARAM
+                                             withObject:self forSelector:@selector(authParamResetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)authParamResetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 自動認証用パラメーター解除コマンドを実行
@@ -249,6 +224,47 @@
         }
         // チェックOK
         return true;
+    }
+
+#pragma mark - For ToolPreferenceCommand functions
+
+    - (void)toolPreferenceCommandDidStart {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                              [self processNameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
+    }
+
+    - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
+                                    success:(bool)success message:(NSString *)message {
+        // 引数に格納されたエラーメッセージをポップアップ表示
+        NSString *strShort = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                              [self processShortNameOfCommand],
+                              success ? MSG_SUCCESS : MSG_FAILURE];
+        NSString *strLong = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                             [self processNameOfCommand],
+                             success ? MSG_SUCCESS : MSG_FAILURE];
+
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        if (success) {
+            // メッセージをログファイルに出力
+            [[ToolLogFile defaultLogger] info:strLong];
+            // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
+            [self setupAuthParamFieldsAndButtons];
+            // 読込成功時はポップアップ表示を省略
+            if (commandType != COMMAND_AUTH_PARAM_GET) {
+                [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:strShort withInformative:message];
+            } else {
+                [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+            }
+
+        } else {
+            // 処理失敗時はメッセージをログファイルに出力してから、ポップアップを表示
+            [[ToolLogFile defaultLogger] error:strLong];
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:strShort withInformative:message];
+        }
     }
 
 @end

@@ -5,7 +5,7 @@ Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェク�
 ## プログラム
 
 - <b>[nRF5340アプリケーション](nRF5340_app)</b><br>
-FIDO2認証機能を実装したファームウェアです。<br>
+FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF5340」で動作し、[BT40 Slim Board](FIDO2Device/BT40SlimBoard)（現在開発中）に書き込んで使用します。
 
 - <b>[nRF52840アプリケーション](nRF52840_app)</b><br>
@@ -13,13 +13,18 @@ FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実�
 Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
 
 - <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
-[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に、FIDO2認証機能用の鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
+[FIDO認証器](FIDO2Device)に、FIDO／PIV／OpenPGP各機能用の鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
 [Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
 - <b>[オープンソースコードライセンスについて](OSSL.md)</b><br>
 上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
 
 ## ハードウェア
+
+- <b>[BT40 Slim Board](FIDO2Device/BT40SlimBoard)（現在開発中）</b><br>
+Nordic社のSoC「nRF5340」を使用したFIDO2認証器です。<br>
+日本国内の技適取得済みであるnRF5340搭載モジュール「BT40」を使用し、nRF5340 DKを簡略化した仕様で製作しています。<br>
+PCのUSBポート装着時はUSB HID／CCIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
 - <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
 Nordic社のSoC「nRF52840」を使用したFIDO2認証器です。<br>

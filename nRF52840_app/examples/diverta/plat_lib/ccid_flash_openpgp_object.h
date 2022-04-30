@@ -7,8 +7,6 @@
 #ifndef CCID_FLASH_OPENPGP_OBJECT_H
 #define CCID_FLASH_OPENPGP_OBJECT_H
 
-#include "ccid_apdu.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,9 +14,9 @@ extern "C" {
 //
 // 関数群
 //
-bool        ccid_flash_openpgp_object_read(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *buff, size_t *size);
-bool        ccid_flash_openpgp_object_write(CCID_APPLET applet_id, uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size);
-bool        ccid_flash_openpgp_object_delete_all(CCID_APPLET applet_id);
+bool        ccid_flash_openpgp_object_read(uint8_t applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *buff, size_t *size);
+bool        ccid_flash_openpgp_object_write(uint8_t applet_id, uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size);
+bool        ccid_flash_openpgp_object_delete_all(uint8_t applet_id);
 
 //
 // コールバック関数群

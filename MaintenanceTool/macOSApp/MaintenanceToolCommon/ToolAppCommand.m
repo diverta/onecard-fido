@@ -22,6 +22,9 @@
 
 @interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLECommandDelegate>
 
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow              *parentWindow;
+    // 下位クラスの参照を保持
     @property (nonatomic) ToolBLECommand        *toolBLECommand;
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
@@ -33,8 +36,8 @@
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
-    // 実行するヘルスチェックの種別を保持
-    @property (nonatomic) Command   healthCheckCommand;
+    // 実行するコマンドの種別を保持
+    @property (nonatomic) Command   command;
 
 @end
 
@@ -91,30 +94,27 @@
     }
 
     - (void)doCommandTestCtapHidPing {
-        if ([self checkForHIDCommand]) {
-            // PINGテスト実行
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-        }
+        // PINGテスト実行
+        [self doHIDCommand:COMMAND_TEST_CTAPHID_PING];
     }
 
     - (void)doCommandHidGetFlashStat {
-        if ([self checkForHIDCommand]) {
-            // Flash ROM情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
-        }
+        // Flash ROM情報取得
+        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT];
     }
 
     - (void)doCommandHidGetVersionInfo {
-        if ([self checkForHIDCommand]) {
-            // バージョン情報取得
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
-        }
+        // バージョン情報取得
+        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO];
     }
 
-    - (void)doCommandTestRegister {
+    - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
+        // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolBLECommand] pinCodeParamWindowWillOpen:self parentWindow:parentWindow];
+    }
+
+    - (void)doCommandBleU2fHealthCheck:(NSWindow *)parentWindow {
         // BLE U2Fヘルスチェック実行
         [[self delegate] disableUserInterface];
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_REGISTER];
@@ -126,73 +126,146 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
-    - (void)doCommandHidCtap2HealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID CTAP2ヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
-        }
+    - (void)doCommandHidCtap2HealthCheck:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
+        // HID CTAP2ヘルスチェック実行
+        [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
-    - (void)doCommandHidU2fHealthCheck {
-        if ([self checkForHIDCommand]) {
-            // HID U2Fヘルスチェック実行
-            [[self delegate] disableUserInterface];
-            [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
-        }
+    - (void)doCommandHidU2fHealthCheck:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
+        // HID U2Fヘルスチェック実行
+        [self doHIDCommand:COMMAND_TEST_REGISTER];
     }
 
     - (void)doCommandEraseBond {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
-                             informativeText:MSG_PROMPT_ERASE_BONDS]) {
-                // ペアリング情報削除
-                [[self delegate] disableUserInterface];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
-            }
-        }
+        // ペアリング情報削除
+        [self doHIDCommand:COMMAND_ERASE_BONDS];
     }
 
     - (void)doCommandBLMode {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
-                             informativeText:MSG_PROMPT_BOOT_LOADER_MODE]) {
-                // ブートローダーモード遷移
-                [[self delegate] disableUserInterface];
-                [self changeToBootloaderMode];
-            }
-        }
+        // ブートローダーモード遷移
+        [self doHIDCommand:COMMAND_HID_BOOTLOADER_MODE];
     }
 
     - (void)doCommandFirmwareResetForCommandRef:(id)ref {
-        if ([self checkForHIDCommand]) {
-            // 認証器にファームウェアリセットを要求
-            [[self delegate] disableUserInterface];
-            [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
+        // 認証器にファームウェアリセットを要求
+        [self doRequestForResetFirmware:COMMAND_HID_FIRMWARE_RESET forCommandRef:ref];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolHIDCommand] checkUSBHIDConnection];
+    }
+
+#pragma mark - For HID connection check
+
+    - (void)doHIDCommand:(Command)command {
+        [self doHIDCommand:command sender:nil parentWindow:nil];
+    }
+
+    - (void)doHIDCommand:(Command)command sender:(id)sender parentWindow:(NSWindow *)parentWindow  {
+        // 実行コマンドを退避
+        [self setCommand:command];
+        // ボタン／メニューを非活性化
+        [[self delegate] disableUserInterface];
+        // HID接続状態をチェック
+        if ([self checkUSBHIDConnection] == false) {
+            // エラーメッセージをポップアップ表示-->ボタンを活性化
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil
+                                           withObject:self forSelector:@selector(enableUserInterface)];
+            return;
+        }
+        // コマンドごとの後続処理
+        switch (command) {
+            case COMMAND_TEST_CTAPHID_PING:
+                // PINGテスト実行
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
+                break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                // Flash ROM情報取得
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                // バージョン情報取得
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // HID CTAP2ヘルスチェック実行
+                [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
+                break;
+            case COMMAND_TEST_REGISTER:
+                // HID U2Fヘルスチェック実行
+                [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
+                break;
+            case COMMAND_ERASE_BONDS:
+                // ペアリング情報削除
+                [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
+                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // ブートローダーモード遷移
+                [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
+                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
+                break;
+            case COMMAND_OPEN_WINDOW_FIDOATTEST:
+                // FIDO鍵・証明書設定画面を開く
+                [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PINPARAM:
+                // PINコード設定画面を開く
+                [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PIVPARAM:
+                // PIV機能設定画面を表示
+                [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+                break;
+            case COMMAND_OPEN_WINDOW_PGPPARAM:
+                // OpenPGP機能設定画面を表示
+                [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
+                break;
+            default:
+                break;
         }
     }
 
-    - (bool)checkForHIDCommand {
-        // USBポートに接続されていない場合はfalse
-        return [[self toolHIDCommand] checkUSBHIDConnection];
+    - (void)enableUserInterface {
+        // ボタンを活性化
+        [[self delegate] enableUserInterface];
+    }
+
+    - (void)resumeHIDCommand {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、ボタンを活性化し以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            [self enableUserInterface];
+            return;
+        }
+        switch ([self command]) {
+            case COMMAND_ERASE_BONDS:
+                // ペアリング情報削除
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // ブートローダーモード遷移
+                [self changeToBootloaderMode];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - For opening other window
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // FIDO鍵・証明書設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // FIDO鍵・証明書設定画面を開く
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_FIDOATTEST sender:sender parentWindow:parentWindow];
     }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // PINコード設定画面を開く
-            [[self delegate] disableUserInterface];
-            [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
-        }
+        // PINコード設定画面を開く
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PINPARAM sender:sender parentWindow:parentWindow];
     }
 
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -201,23 +274,9 @@
         [[self toolDFUCommand] toolDFUWindowWillOpen:sender parentWindow:parentWindow];
     }
 
-    - (void)pinCodeParamWindowWillOpenForHID:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-        [[self toolHIDCommand] pinCodeParamWindowWillOpen:sender parentWindow:parentWindow];
-    }
-
-    - (void)pinCodeParamWindowWillOpenForBLE:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] pinCodeParamWindowWillOpen:sender parentWindow:parentWindow];
-    }
-
-    - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent {
-        if ([self checkForHIDCommand]) {
-            // PIV機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parent];
-        }
+    - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent {
+        // PIV機能設定画面を表示
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PIVPARAM sender:nil parentWindow:parent];
     }
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -243,18 +302,15 @@
     }
 
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // OpenPGP機能設定画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
-        }
+        // OpenPGP機能設定画面を表示
+        [self doHIDCommand:COMMAND_OPEN_WINDOW_PGPPARAM sender:sender parentWindow:parentWindow];
     }
 
 #pragma mark - Perform health check
 
     - (void)performHealthCheckCommand:(Command)command {
         // 事前にツール設定照会を実行
-        [self setHealthCheckCommand:command];
+        [self setCommand:command];
         [[self toolPreferenceCommand] toolPreferenceInquiryWillProcess];
     }
 
@@ -269,22 +325,19 @@
         [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
         if ([[ToolContext instance] bleScanAuthEnabled]) {
             // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
-            if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
-                             informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH] == false) {
-                // メッセージダイアログでNOをクリックした場合は終了
-                [self commandDidProcess:COMMAND_NONE result:true message:nil];
-                return;
-            }
+            [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_HCHK_BLE_AUTH informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH
+                                                      withObject:self forSelector:@selector(healthCheckCommandPromptDone)];
+            return;
         }
         // ヘルスチェック処理を実行
         [self resumeHealthCheckCommand];
     }
 
     - (void)resumeHealthCheckCommand {
-        switch ([self healthCheckCommand]) {
+        switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
-                // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開くため、いったんホーム画面に制御を戻す）
-                [[self delegate] pinCodeParamWindowWillOpenForHID];
+                // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
+                [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self parentWindow]];
                 break;
             case COMMAND_TEST_REGISTER:
                 // HID U2Fヘルスチェック処理を実行
@@ -293,6 +346,16 @@
             default:
                 break;
         }
+    }
+
+    - (void)healthCheckCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            [self commandDidProcess:COMMAND_NONE result:true message:nil];
+            return;
+        }
+        // ヘルスチェック処理を実行
+        [self resumeHealthCheckCommand];
     }
 
 #pragma mark - Perform bootloader mode

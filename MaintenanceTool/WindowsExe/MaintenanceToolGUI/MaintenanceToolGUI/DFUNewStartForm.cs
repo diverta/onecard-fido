@@ -61,8 +61,7 @@ namespace MaintenanceToolGUI
                 DialogResult = DialogResult.OK;
             } else {
                 // 接続処理がNGの場合、エラーメッセージをポップアップ表示
-                MessageBox.Show(this, errorMessage, captionMessage,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FormUtil.ShowWarningMessage(this, captionMessage, errorMessage);
             }
             // このウィンドウを終了
             TerminateWindow();

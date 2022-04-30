@@ -14,9 +14,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// 本アプリケーション内で鍵生成を行う場合 true
-//   性能面で問題があるため、現在機能を閉塞しています
-#define SUPPORT_GENKEY              false
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ccid_openpgp_key);
+#endif
 
 // テスト用
 #define LOG_DEBUG_KEY_ATTR_DESC     false
@@ -180,7 +180,6 @@ uint16_t ccid_openpgp_key_is_present(uint16_t key_tag)
     }
     // If key not present
     if (status == KEY_NOT_PRESENT) {
-        fido_log_error("OpenPGP private key not found (0x%04x)", key_tag);
         return SW_REFERENCE_DATA_NOT_FOUND;
     } else {
         return SW_NO_ERROR;
@@ -303,8 +302,11 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     }
 
     if (capdu->p1 == 0x80) {
-#if SUPPORT_GENKEY
+#ifdef CONFIG_APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
+        //
         // RSA-2048キーペアを生成
+        //  性能面で問題があるため、現在機能を閉塞しています
+        //
         sw = ccid_openpgp_key_rsa_generate(m_key_attr);
         if (sw != SW_NO_ERROR) {
             return sw;
@@ -322,7 +324,7 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
 #endif
 
     } else if (capdu->p1 == 0x81) {
-        // 鍵ステータスを参照し、鍵がない場合はエラー
+        // 鍵ステータスを参照し、鍵がない場合はここで終了
         sw = ccid_openpgp_key_is_present(key_tag);
         if (sw != SW_NO_ERROR) {
             return sw;

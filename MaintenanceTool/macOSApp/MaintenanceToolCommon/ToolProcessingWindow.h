@@ -13,7 +13,7 @@
 
     + (ToolProcessingWindow *)defaultWindow;
     - (bool)windowWillOpenWithCommandRef:(id)ref withParentWindow:(NSWindow *)parent;
-    - (void)windowWillClose:(NSModalResponse)response;
+    - (void)windowWillClose:(NSModalResponse)response withMessage:(NSString *)message withInformative:(NSString *)informative;
 
 @end
 

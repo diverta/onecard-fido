@@ -23,21 +23,20 @@
     - (void)doCommandTestCtapHidPing;
     - (void)doCommandHidGetFlashStat;
     - (void)doCommandHidGetVersionInfo;
-    - (void)doCommandTestRegister;
+    - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow;
+    - (void)doCommandBleU2fHealthCheck:(NSWindow *)parentWindow;
     - (void)doCommandTestBlePing;
-    - (void)doCommandHidCtap2HealthCheck;
-    - (void)doCommandHidU2fHealthCheck;
+    - (void)doCommandHidCtap2HealthCheck:(NSWindow *)parentWindow;
+    - (void)doCommandHidU2fHealthCheck:(NSWindow *)parentWindow;
     - (void)doCommandEraseBond;
     - (void)doCommandBLMode;
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
-    - (bool)checkForHIDCommand;
+    - (bool)checkUSBHIDConnection;
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)pinCodeParamWindowWillOpenForHID:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)pinCodeParamWindowWillOpenForBLE:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent;
+    - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
@@ -56,8 +55,8 @@
     - (void)commandStartedProcess:(NSString *)processNameOfCommand;
     - (void)commandDidProcess:(bool)result message:(NSString *)message processNameOfCommand:(NSString *)name;
     - (void)disableUserInterface;
+    - (void)enableUserInterface;
     - (void)notifyAppCommandMessage:(NSString *)message;
-    - (void)pinCodeParamWindowWillOpenForHID;
 
 @end
 

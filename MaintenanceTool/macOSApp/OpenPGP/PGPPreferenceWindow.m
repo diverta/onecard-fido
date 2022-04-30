@@ -188,12 +188,22 @@
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
         [self commandWillPerformPGPProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if ([[self toolPGPCommand] checkUSBHIDConnection]) {
+            return true;
+        }
+        // エラーメッセージをポップアップ表示
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+        return false;
     }
 
 #pragma mark - For PGPPreferenceWindow open/close
@@ -243,11 +253,21 @@
 
     - (IBAction)buttonInstallPGPKeyDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 入力欄の内容をチェック
         if ([self checkForInstallPGPKey:sender] == false) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_OPENPGP_INSTALL_PGP_KEY informativeText:MSG_PROMPT_INSTALL_PGP_KEY
+                                                  withObject:self forSelector:@selector(installPGPKeyCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)installPGPKeyCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 画面入力内容をパラメーターに格納
@@ -265,7 +285,7 @@
 
     - (IBAction)buttonPGPStatusDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // PGPステータス照会処理を実行
@@ -275,16 +295,23 @@
 
     - (IBAction)buttonPGPResetDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_LABEL_COMMAND_OPENPGP_RESET];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_OPENPGP_RESET]) {
-            // PGPリセット処理を実行
-            [self enableButtons:false];
-            [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:MSG_PROMPT_OPENPGP_RESET
+                                             withObject:self forSelector:@selector(PGPResetCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)PGPResetCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
         }
+        // PGPリセット処理を実行
+        [self enableButtons:false];
+        [self commandWillPerformPGPProcess:COMMAND_OPENPGP_RESET withParameter:nil];
     }
 
     - (void)panelWillSelectPath:(id)sender withPrompt:(NSString *)prompt {
@@ -316,11 +343,22 @@
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
         // USBポートに接続されていない場合は終了
-        if ([[self toolPGPCommand] checkUSBHIDConnection] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // 入力欄の内容をチェック
         if ([self checkForPerformPinCommand:sender] == false) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:caption informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND
+                                             withObject:self forSelector:@selector(performPinCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)performPinCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 画面入力内容をパラメーターに格納
@@ -420,11 +458,6 @@
         // 確認用PINコードのチェック
         if ([self checkPinConfirmFor:[self textPinConfirm] withSource:[self textPin]
                             withName:MSG_LABEL_PGP_ADMIN_PIN_CONFIRM] == false) {
-            return false;
-        }
-        // 事前に確認ダイアログを表示
-        if ([ToolPopupWindow promptYesNo:MSG_OPENPGP_INSTALL_PGP_KEY
-                         informativeText:MSG_PROMPT_INSTALL_PGP_KEY] == false) {
             return false;
         }
         return true;
@@ -558,12 +591,6 @@
         if ([self checkPinConfirmFor:[self textNewPinConf] withSource:[self textNewPin] withName:msgNewPinConf] == false) {
             return false;
         }
-        // 事前に確認ダイアログを表示
-        NSString *caption = [[NSString alloc] initWithFormat:MSG_FORMAT_OPENPGP_WILL_PROCESS, [self selectedPinCommandName]];
-        if ([ToolPopupWindow promptYesNo:caption
-                         informativeText:MSG_PROMPT_OPENPGP_PIN_COMMAND] == false) {
-            return false;
-        }
         return true;
     }
 
@@ -591,15 +618,32 @@
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        // 進捗画面を閉じる
-        [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK];
-        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
+        if (command == COMMAND_OPENPGP_STATUS && result) {
+            // 進捗画面を閉じる
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+            // OpenPGP設定情報を、情報表示画面に表示
+            [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
+                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
+                infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
+            // 画面項目を使用可とする
+            [self enableButtons:true];
+            return;
+        }
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand:command],
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        if (result) {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        } else {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+        }
+        // 画面項目を使用可とする
         [self clearEntry:command withResult:result];
         [self enableButtons:true];
     }
 
-    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+    - (NSString *)processNameOfCommand:(Command)command {
         // 処理名称を設定
         NSString *name = nil;
         switch (command) {
@@ -610,13 +654,6 @@
                 name = MSG_LABEL_COMMAND_OPENPGP_RESET;
                 break;
             case COMMAND_OPENPGP_STATUS:
-                if (result) {
-                    // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
-                    [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
-                        withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
-                        infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
-                    return;
-                }
                 name = MSG_LABEL_COMMAND_OPENPGP_STATUS;
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
@@ -630,16 +667,9 @@
                 name = [self selectedPinCommandName];
                 break;
             default:
-                return;
+                break;
         }
-        // メッセージをポップアップ表示
-        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                         result ? MSG_SUCCESS:MSG_FAILURE];
-        if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:str informativeText:errorMessage];
-        }
+        return name;
     }
 
     - (void)clearEntry:(Command)command withResult:(bool)result {

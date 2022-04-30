@@ -8,8 +8,8 @@
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
-#import "ToolPIVImporter.h"
 #import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
@@ -167,31 +167,55 @@
     }
 
     - (IBAction)buttonPivStatusDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // PIV設定情報取得
         [self enableButtons:false];
-        [self commandWillStatus];
+        [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_STATUS withParameter:nil];
     }
 
     - (IBAction)buttonInitialSettingDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_INITIAL_SETTING];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING] == false) {
+        [[ToolPopupWindow defaultWindow] informationalPrompt:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING
+                                                  withObject:self forSelector:@selector(initialSettingCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)initialSettingCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // CHUID設定機能を実行
         [self enableButtons:false];
-        [self commandWillSetCHUIDAndCCC];
+        [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_SET_CHUID withParameter:nil];
     }
 
     - (IBAction)buttonClearSettingDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 事前に確認ダイアログを表示
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_CLEAR_SETTING];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING] == false) {
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING
+                                             withObject:self forSelector:@selector(clearSettingCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)clearSettingCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // PIVリセット機能を実行
         [self enableButtons:false];
-        [self commandWillReset];
+        [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_RESET withParameter:nil];
     }
 
     - (IBAction)buttonCloseDidPress:(id)sender {
@@ -199,9 +223,23 @@
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // 認証器のファームウェアを再起動
         [self enableButtons:false];
-        [self commandWillResetFirmware];
+        [self commandWillPerformPIVProcess:COMMAND_HID_FIRMWARE_RESET withParameter:nil];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if ([[self toolPIVCommand] checkUSBHIDConnection]) {
+            return true;
+        }
+        // エラーメッセージをポップアップ表示
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+        return false;
     }
 
 #pragma mark - For PIVPreferenceWindow open/close
@@ -239,116 +277,6 @@
         }
     }
 
-#pragma mark - For ToolPIVCommand functions
-
-    - (void)commandWillResetFirmware {
-        [[self toolPIVCommand] commandWillResetFirmware:COMMAND_HID_FIRMWARE_RESET];
-    }
-
-    - (void)commandWillStatus {
-        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
-    }
-
-    - (void)commandWillSetCHUIDAndCCC {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
-        [importer generateChuidAndCcc];
-        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporterRef:importer];
-    }
-
-    - (void)commandWillReset {
-        [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
-    }
-
-    - (bool)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
-        if ([importer readPrivateKeyPemFrom:pkey] == false) {
-            [ToolPopupWindow critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil];
-            return false;
-        }
-        if ([importer readCertificatePemFrom:cert] == false) {
-            [ToolPopupWindow critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil];
-            return false;
-        }
-        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
-        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
-            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
-                              [importer keyAlgorithm], [importer certAlgorithm]];
-            [ToolPopupWindow critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info];
-            return false;
-        }
-        [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporterRef:importer];
-        return true;
-    }
-
-    - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
-        [[self toolPIVCommand] commandWillChangePin:command withNewPinCode:newPin withAuthPinCode:authPin];
-    }
-
-    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_CCID_PIV_STATUS) {
-            // PIV設定情報を、情報表示画面に表示
-            [self openToolInfoWindowWithDescriptionWithResult:result withErrorMessage:errorMessage];
-            [self enableButtons:true];
-            return;
-        }
-        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
-        [self displayResultMessage:command withResult:result withErrorMessage:errorMessage];
-        [self clearEntry:command withResult:result];
-        [self enableButtons:true];
-    }
-
-    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (result) {
-            // PIV設定情報を、情報表示画面に表示
-            ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
-            ToolPIVCommand *command = [self toolPIVCommand];
-            [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
-                                         titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                          infoString:[command getPIVSettingDescriptionString]];
-        } else {
-            // 異常終了メッセージをポップアップ表示
-            [ToolPopupWindow critical:MSG_PIV_STATUS_GET_FAILED informativeText:errorMessage];
-        }
-    }
-
-    - (void)displayResultMessage:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        // 処理名称を設定
-        NSString *name = [self functionNameOfCommand:command];
-        // メッセージをポップアップ表示
-        if (name) {
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                             result ? MSG_SUCCESS:MSG_FAILURE];
-            if (result) {
-                [ToolPopupWindow informational:str informativeText:nil];
-            } else {
-                [ToolPopupWindow critical:str informativeText:errorMessage];
-            }
-        }
-    }
-
-    - (void)clearEntry:(Command)command withResult:(bool)result {
-        // 全ての入力欄をクリア
-        switch (command) {
-            case COMMAND_CCID_PIV_IMPORT_KEY:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPkeyCertPathFields];
-                    [self initTabPkeyCertPinFields];
-                }
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PIN:
-            case COMMAND_CCID_PIV_CHANGE_PUK:
-            case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                // 全ての入力欄をクリア
-                if (result) {
-                    [self initTabPinManagementPinFields];
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
 #pragma mark - 鍵・証明書管理タブ関連
 
     - (IBAction)buttonPkeySlotIdSelected:(id)sender {
@@ -364,17 +292,34 @@
     }
 
     - (IBAction)buttonInstallPkeyCertDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // ラジオボタンから鍵種別を取得
         uint8_t slotId = [self selectedPkeySlotId];
         // 入力欄の内容をチェック
         if ([self checkForInstallPkeyCert:sender toKeySlot:slotId] == false) {
             return;
         }
+        // 事前に確認ダイアログを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_INSTALL_PIV_PKEY_CERT informativeText:MSG_PROMPT_INSTL_SKEY_CERT
+                                                  withObject:self forSelector:@selector(installPkeyCertCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)installPkeyCertCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // 画面入力内容をパラメーターに格納
+        ToolPIVParameter *parameter = [[ToolPIVParameter alloc] init];
+        [parameter setKeySlotId:[self selectedPkeySlotId]];
+        [parameter setPkeyPemPath:[[self fieldPath1] stringValue]];
+        [parameter setCertPemPath:[[self fieldPath2] stringValue]];
+        [parameter setAuthPin:[[self fieldPin2] stringValue]];
         // PIV認証用の鍵・証明書インストール（ラジオボタンから鍵種別を取得）
-        NSString *pkeyPemPath = [[self fieldPath1] stringValue];
-        NSString *certPemPath = [[self fieldPath2] stringValue];
-        NSString *authPin = [[self fieldPin2] stringValue];
-        [self commandWillImportPkeyCert:slotId pkeyPemPath:pkeyPemPath certPemPath:certPemPath withAuthPin:authPin];
+        [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_IMPORT_KEY withParameter:parameter];
     }
 
     - (void)initButtonPkeySlotIdsWithDefault:(NSButton *)defaultButton {
@@ -423,16 +368,39 @@
     }
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
         // ラジオボタンから実行コマンド種別を取得
         Command command = [self selectedPinCommand];
         // 入力欄の内容をチェック
         if ([self checkForPerformPinCommand:sender withCommand:command] == false) {
             return;
         }
+        // 処理名称、詳細を設定
+        NSString *name = [self functionNameOfCommand:command];
+        NSString *desc = [self descriptionOfCommand:command];
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
+        NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:msg informativeText:informative
+                                             withObject:self forSelector:@selector(performPinCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)performPinCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // ラジオボタンから実行コマンド種別を取得
+        Command command = [self selectedPinCommand];
+        // 画面入力内容をパラメーターに格納
+        ToolPIVParameter *parameter = [[ToolPIVParameter alloc] init];
+        [parameter setCurrentPin:[[self fieldCurPin] stringValue]];
+        [parameter setRenewalPin:[[self fieldNewPinConf] stringValue]];
         // PIN番号管理コマンドを実行（ラジオボタンから実行コマンドを取得）
-        NSString *curPin = [[self fieldCurPin] stringValue];
-        NSString *newPin = [[self fieldNewPinConf] stringValue];
-        [self commandWillChangePin:command withNewPin:newPin withAuthPin:curPin];
+        [self commandWillPerformPIVProcess:command withParameter:parameter];
     }
 
     - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
@@ -484,11 +452,6 @@
                             withName:MSG_LABEL_CURRENT_PIN_FOR_CONFIRM] == false) {
             return false;
         }
-        // 事前に確認ダイアログを表示
-        if ([ToolPopupWindow promptYesNo:MSG_INSTALL_PIV_PKEY_CERT
-                         informativeText:MSG_PROMPT_INSTL_SKEY_CERT] == false) {
-            return false;
-        }
         return true;
     }
 
@@ -527,15 +490,6 @@
     - (bool)checkForPerformPinCommand:(id)sender withCommand:(Command)command {
         // 入力欄のチェック
         if ([self checkPinNumbersForPinCommand:command] == false) {
-            return false;
-        }
-        // 処理名称、詳細を設定
-        NSString *name = [self functionNameOfCommand:command];
-        NSString *desc = [self descriptionOfCommand:command];
-        // 事前に確認ダイアログを表示
-        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
-        NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
-        if ([ToolPopupWindow promptYesNo:msg informativeText:informative] == false) {
             return false;
         }
         return true;
@@ -586,6 +540,9 @@
         // 処理名称を設定
         NSString *name = nil;
         switch (command) {
+            case COMMAND_CCID_PIV_STATUS:
+                name = MSG_PIV_STATUS;
+                break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 name = MSG_PIV_INITIAL_SETTING;
                 break;
@@ -630,6 +587,64 @@
                 break;
         }
         return name;
+    }
+
+#pragma mark - For ToolPIVCommand functions
+
+    - (void)commandWillPerformPIVProcess:(Command)command withParameter:(ToolPIVParameter *)parameter {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
+        // PIV機能を実行
+        [[self toolPIVCommand] commandWillPerformPIVProcess:command withParameter:parameter];
+    }
+
+    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        if (command == COMMAND_CCID_PIV_STATUS && result) {
+            // 進捗画面を閉じる
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+            // PIV設定情報を、情報表示画面に表示
+            [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPIVCommand]
+                withParentWindow:[self window] titleString:PROCESS_NAME_CCID_PIV_STATUS
+                infoString:[[self toolPIVCommand] getPIVSettingDescriptionString]];
+            // 画面項目を使用可とする
+            [self enableButtons:true];
+            return;
+        }
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:command],
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        if (result) {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        } else {
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+        }
+        // 画面項目を使用可とする
+        [self clearEntry:command withResult:result];
+        [self enableButtons:true];
+    }
+
+    - (void)clearEntry:(Command)command withResult:(bool)result {
+        // 全ての入力欄をクリア
+        switch (command) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPkeyCertPathFields];
+                    [self initTabPkeyCertPinFields];
+                }
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPinManagementPinFields];
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 @end

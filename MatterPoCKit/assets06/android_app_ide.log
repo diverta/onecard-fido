@@ -26,25 +26,30 @@ Activating environment (setting environment variables):
 
 Checking the environment:
 
-20220315 12:32:16 INF Environment passes all checks!
+20220414 14:05:05 INF Environment passes all checks!
 
 Environment looks good, you are ready to go!
 
+bash-3.2$ 
 bash-3.2$ export ANDROID_NDK_HOME=/Applications/AndroidNDK7075529.app/Contents/NDK
 bash-3.2$ export ANDROID_HOME=${HOME}/Library/Android/sdk
 bash-3.2$ export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
+bash-3.2$ 
 bash-3.2$ TARGET_CPU=arm64 ./scripts/examples/android_app_ide.sh
 + env
 SHELL=/bin/zsh
+ZEPHYR_BASE=/Users/makmorit/opt/ncs_1.9.99/zephyr
 XPC_FLAGS=0x0
 TERM_PROGRAM_VERSION=433
 PKG_CONFIG_PATH=:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/:/usr/local/Cellar/openssl@1.1/1.1.1k/lib/pkgconfig/
-SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.SOdZHedpFN/Listeners
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.3Si28BucI1/Listeners
 PW_PROJECT_ROOT=/Users/makmorit/GitHub/connectedhomeip
-TERM_SESSION_ID=5A6C48F3-0AEA-4859-9562-7D4CC5799EB6
+TERM_SESSION_ID=CA626E1D-3B11-4259-A426-290F1DAC797B
+NCS_HOME=/Users/makmorit/opt/ncs_1.9.99
 PWD=/Users/makmorit/GitHub/connectedhomeip
 LOGNAME=makmorit
 PW_ROOT=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo
+PW_BOOTSTRAP_USE_ROSETTA=false
 HOME=/Users/makmorit
 LANG=ja_JP.UTF-8
 VIRTUAL_ENV=/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv
@@ -53,6 +58,7 @@ PW_PYTHON_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/c
 ANDROID_NDK_HOME=/Applications/AndroidNDK7075529.app/Contents/NDK
 ANDROID_HOME=/Users/makmorit/Library/Android/sdk
 TERM=xterm-256color
+ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 USER=makmorit
 TARGET_CPU=arm64
 SHLVL=3
@@ -60,6 +66,7 @@ XPC_SERVICE_NAME=0
 _PW_ENVIRONMENT_CONFIG_FILE=/Users/makmorit/GitHub/connectedhomeip/scripts/environment.json
 _PW_ACTUAL_ENVIRONMENT_ROOT=/Users/makmorit/GitHub/connectedhomeip/.environment
 PW_ARM_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/arm
+GNUARMEMB_TOOLCHAIN_PATH=/Users/makmorit/opt/gcc-arm-none-eabi-9-2020-q2-update
 PATH=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/out/host/host_tools:/Users/makmorit/GitHub/connectedhomeip/.environment/pigweed-venv/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/python/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/python:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/pigweed/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/pigweed:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/arm/bin:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/arm:/Users/makmorit/GitHub/connectedhomeip/.environment/cipd:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin
 PW_PIGWEED_CIPD_INSTALL_DIR=/Users/makmorit/GitHub/connectedhomeip/.environment/cipd/packages/pigweed
 OLDPWD=/Users/makmorit/GitHub/connectedhomeip
@@ -85,7 +92,7 @@ _=/usr/bin/env
            ▓█▓
            ▓█▓                                                     ▒█     ▒█
       ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
-       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▾?█▒░░░▒█▓░   ██▒░░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▓?█▒░░░▒█▓░   ██▒░░
     ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
     ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
      ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
@@ -96,6 +103,7 @@ _=/usr/bin/env
 ++ export PW_PROJECT_ROOT
 ++ PW_ROOT=/Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo
 ++ export PW_ROOT
+++ '[' -z false ']'
 ++ . /Users/makmorit/GitHub/connectedhomeip/third_party/pigweed/repo/pw_env_setup/util.sh
 +++ export PATH
 ++++ cat
@@ -136,7 +144,7 @@ _=/usr/bin/env
            ▓█▓
            ▓█▓                                                     ▒█     ▒█
       ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
-       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▾?█▒░░░▒█▓░   ██▒░░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▓?█▒░░░▒█▓░   ██▒░░
     ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
     ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
      ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
@@ -147,7 +155,7 @@ _=/usr/bin/env
            ▓█▓
            ▓█▓                                                     ▒█     ▒█
       ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
-       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▾?█▒░░░▒█▓░   ██▒░░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▓?█▒░░░▒█▓░   ██▒░░
     ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
     ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
      ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
@@ -158,7 +166,7 @@ _=/usr/bin/env
            ▓█▓
            ▓█▓                                                     ▒█     ▒█
       ▒██▒▒▓██▒███▒                ░▒▓▒░  ░▒▓▒░       ░░▓█▒░ ░█  █████████████░    ░▒█▒░       ░░▒░
-       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▾?█▒░░░▒█▓░   ██▒░░
+       ░▓█████▓██░               ▒█▒░░▒▓██▓▒░░▒█▒   ░█▓▒░░▒████    █▓░    █▓░    ▓?█▒░░░▒█▓░   ██▒░░
     ▒█▒░         ░██▒           ░█░     █▓     ░█░ ░▓▒      ░▓█    █▓     █▓    ▒█░░    ░██  ▒▓
     ░▓██▓░     ░██▓█░           ░█      ▓█      █░ ░█░       ██    █▓     █▓    ▓██████████  ▒█
      ░▓███▒   ▒███▒░            ░█      ▓█      █░  ██░    ░███    █▓     █▓    ░█▒░         ▒█
@@ -310,7 +318,7 @@ Checking the environment:
 
 +++ '[' -z '' ']'
 +++ pw --no-banner --loglevel info doctor
-20220315 12:33:16 INF Environment passes all checks!
+20220414 14:05:22 INF Environment passes all checks!
 +++ '[' 0 -ne 0 ']'
 +++ '[' -z '' ']'
 +++ echo ''
@@ -370,8 +378,6 @@ BUILD SUCCESSFUL in 3s
 + echo 'build ide'
 build ide
 + gn gen --check --fail-on-unused-args out/android_arm64 '--args=target_os="android" target_cpu="arm64" android_ndk_root="/Applications/AndroidNDK7075529.app/Contents/NDK" android_sdk_root="/Users/makmorit/Library/Android/sdk"' --ide=json --json-ide-script=//scripts/examples/gn_to_cmakelists.py
-Generating JSON projects took 1497ms
-Done. Made 2390 targets from 228 files in 2330ms
-bash-3.2$ echo $?
-0
+Generating JSON projects took 1890ms
+Done. Made 2454 targets from 231 files in 2796ms
 bash-3.2$ 

@@ -60,6 +60,9 @@ extern "C" {
 #define BM_COMMAND_STATUS_FAILED    (0x01 << BM_COMMAND_STATUS_OFFSET)
 #define BM_COMMAND_STATUS_TIME_EXTN (0x02 << BM_COMMAND_STATUS_OFFSET)
 
+// コマンド
+#define INS_GET_RESPONSE_APDU       0xC0
+
 //
 // マクロ
 //
@@ -84,6 +87,7 @@ void      ccid_response_time_extension(void);
 // 共通関数
 //
 uint16_t  ccid_get_tlv_element_size(uint8_t elem_no, uint8_t *data, size_t size, size_t *elem_header_size, uint16_t *elem_data_size, uint16_t elem_data_size_max);
+void      ccid_assert_apdu(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

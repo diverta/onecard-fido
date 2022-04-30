@@ -165,17 +165,17 @@ namespace MaintenanceToolGUI
             // スキャン秒数のチェック
             //
             // 長さチェック
-            if (FormUtil.checkEntrySize(textScanSec, 
+            if (FormUtil.CheckEntrySize(textScanSec, 
                 ToolGUICommon.AUTH_PARAM_UUID_SCAN_SEC_SIZE, ToolGUICommon.AUTH_PARAM_UUID_SCAN_SEC_SIZE, 
                 ToolGUICommon.MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN) == false) {
                 return false;
             }
             // 数字チェック
-            if (FormUtil.checkIsNumeric(textScanSec, ToolGUICommon.MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM) == false) {
+            if (FormUtil.CheckIsNumeric(textScanSec, ToolGUICommon.MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM) == false) {
                 return false;
             }
             // 範囲チェック
-            if (FormUtil.checkValueInRange(textScanSec, 1, 9, 
+            if (FormUtil.CheckValueInRange(textScanSec, 1, 9, 
                 ToolGUICommon.MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE) == false) {
                 return false;
             }
@@ -192,14 +192,14 @@ namespace MaintenanceToolGUI
                 }
             }
             // 長さチェック
-            if (FormUtil.checkEntrySize(textScanUUID,
+            if (FormUtil.CheckEntrySize(textScanUUID,
                 ToolGUICommon.AUTH_PARAM_UUID_STRING_SIZE, ToolGUICommon.AUTH_PARAM_UUID_STRING_SIZE,
                 ToolGUICommon.MSG_PROMPT_INPUT_UUID_STRING_LEN) == false) {
                 return false;
             }
             // 入力形式チェック（正規表現チェック）
             string pattern = "([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})";
-            if (FormUtil.checkValueWithPattern(textScanUUID, pattern, 
+            if (FormUtil.CheckValueWithPattern(textScanUUID, pattern, 
                 ToolGUICommon.MSG_PROMPT_INPUT_UUID_STRING_PATTERN) == false) {
                 return false;
             }
@@ -256,12 +256,12 @@ namespace MaintenanceToolGUI
                 SetupFieldAndButton();
                 // 読込成功時はポップアップ表示を省略
                 if (funcName != ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET) {
-                    MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+                    FormUtil.ShowInfoMessage(this, MainForm.MaintenanceToolTitle, formatted);
                 }
 
             } else {
                 // 処理失敗時はメッセージをポップアップ表示
-                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+                FormUtil.ShowWarningMessage(this, formatted, errMessage);
             }
         }
     }

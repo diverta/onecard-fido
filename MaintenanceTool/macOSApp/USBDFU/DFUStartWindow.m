@@ -49,6 +49,9 @@
             // HID接続がある場合は、DFU対象デバイスをブートローダーモードに遷移させる
             [self enableButtons:false];
             [[self toolDFUCommand] commandWillChangeToBootloaderMode];
+        } else {
+            // エラーメッセージをポップアップ表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
         }
     }
 
@@ -74,12 +77,16 @@
                                  informative:(NSString *)informative {
         if (success == false) {
             // ブートローダーモード遷移処理がNGの場合、エラーメッセージをポップアップ表示
-            [ToolPopupWindow critical:errorMessage informativeText:informative];
-            [self terminateWindow:NSModalResponseCancel];
+            [[ToolPopupWindow defaultWindow] critical:errorMessage informativeText:informative withObject:self forSelector:@selector(displayErrorMessageDone)];
             return;
         }
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseOK];
+    }
+
+    - (void)displayErrorMessageDone {
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseCancel];
     }
 
 @end

@@ -1,16 +1,36 @@
 # nRF5340アプリケーション
 
-最終更新日：2022/3/15
+最終更新日：2022/4/26
 
 ## 概要
 
-現在開発中の[BT40 Slim Board](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/BT40SlimBoard)上で稼働するアプリケーションです。<br>
+現在開発中の[BT40 Slim Board](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/BT40SlimBoard)上での稼働を予定しているアプリケーションです。<br>
 [nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)を使用し、開発しています。
 
 ## 搭載機能
 
-### FIDO機能
-[nRF52840アプリケーション](../nRF52840_app/README.md)と等価のFIDO機能（U2F／WebAuthnで使用するFIDO2認証器としての機能）を提供します。
+### FIDO2認証機能
+
+FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケーションです。[注1]
+
+- <b>PCにおけるユーザー登録／ログイン実行時</b> [注2]<br>
+nRF5340アプリケーションをUSBポートに接続すると、USB HIDインターフェースを経由して処理が行われます。
+
+- <b>Androidにおけるログイン実行時</b> [注2]<br>
+nRF5340アプリケーションをUSBポートに接続しない状態で使用すると、FIDO BLEサービスを経由してログイン処理が行われます。
+
+[注1] FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/ <br>
+[注2] U2Fではユーザー登録＝Register、ログイン＝Authenticate、WebAuthnではユーザー登録＝MakeCredential、ログイン＝GetAssertionと、実行されるコマンドが異なります。<br>
+
+### PIVカードエミュレーション機能
+
+PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、別ドキュメント（[PIVカードエミュレーション対応](../CCID/PIVCARDEMUL.md)）をご参照願います。
+
+### OpenPGPカードエミュレーション機能
+
+OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
 
 ### 管理機能
 nRF52840アプリケーションと等価の管理機能を提供します。<br>
@@ -23,10 +43,6 @@ nRF5340アプリケーションでは、BLE経由のファームウェア更新�
 こちらも、管理ツール（[macOS版](../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)／[Windows版](../MaintenanceTool/WindowsExe/UPDATEFW_BLE.md)）により実行可能となっております。
 
 なお、USB経由のDFUもサポート出来るようですが、対応に伴い[Zephyrプラットフォームのカスタマイズ](../nRF5340_app/CUSTOMIZE.md)が必要となってしまうため、本プロジェクトでは採用は見送っております。
-
-### CCIDインターフェース
-nRF52840アプリケーションと等価のCCIDインターフェースを提供します。<br>
-最終更新日現在、CCIDインターフェース上で稼働する業務（PIV／OpenPGP機能）は未搭載です。
 
 ## ファームウェア
 
