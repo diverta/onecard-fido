@@ -21,7 +21,6 @@ extern "C" {
 #define PIV_INS_GENERAL_AUTHENTICATE    0x87
 #define PIV_INS_PUT_DATA                0xDB
 #define PIV_INS_GENERATE_ASYMMETRIC_KEY_PAIR 0x47
-#define PIV_INS_GET_RESPONSE_APDU       0xC0
 
 //
 // 関数群

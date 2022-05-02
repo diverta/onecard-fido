@@ -60,6 +60,9 @@ extern "C" {
 #define BM_COMMAND_STATUS_FAILED    (0x01 << BM_COMMAND_STATUS_OFFSET)
 #define BM_COMMAND_STATUS_TIME_EXTN (0x02 << BM_COMMAND_STATUS_OFFSET)
 
+// コマンド
+#define INS_GET_RESPONSE_APDU       0xC0
+
 //
 // マクロ
 //
