@@ -91,7 +91,6 @@
     }
 
     - (void)extractParameterFrom:(NSString *)parameterString parameterNo:(int)number toDictionary:(NSMutableDictionary *)parameters {
-        NSArray<NSString *> *parameter = nil;
         switch (number) {
             case 0:
                 // protocol
@@ -103,14 +102,34 @@
                 break;
             case 2:
                 // OATH account
-                parameter = [self parameter:parameterString separatedBy:@":"];
-                [parameters setObject:parameterString forKey:@"account"];
+                [self extractAccountParameterFrom:parameterString parameterNo:number toDictionary:parameters];
                 break;
             default:
-                parameter = [self parameter:parameterString separatedBy:@"="];
-                [parameters setObject:parameterString forKey:@"parameter"];
+                // OATH parameter
+                [self extractOathParameterFrom:parameterString parameterNo:number toDictionary:parameters];
                 break;
         }
+    }
+
+    - (void)extractAccountParameterFrom:(NSString *)parameterString parameterNo:(int)number toDictionary:(NSMutableDictionary *)parameters {
+        NSArray<NSString *> *parameter = [self parameter:parameterString separatedBy:@":"];
+        NSString *value;
+        if ([parameter count] > 1) {
+            value = [parameter objectAtIndex:1];
+        } else {
+            value = [parameter objectAtIndex:0];
+        }
+        [parameters setObject:value forKey:@"account"];
+    }
+
+    - (void)extractOathParameterFrom:(NSString *)parameterString parameterNo:(int)number toDictionary:(NSMutableDictionary *)parameters {
+        // キーと値のペアでない場合は何もしない
+        NSArray<NSString *> *parameter = [self parameter:parameterString separatedBy:@"="];
+        if ([parameter count] != 2) {
+            return;
+        }
+        // キーと値のペアを連想配列に設定
+        [parameters setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
     }
 
     - (NSArray<NSString *> *)parameter:(NSString *)parameterString separatedBy:(NSString *)separator {
