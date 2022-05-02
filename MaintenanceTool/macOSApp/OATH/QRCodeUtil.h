@@ -9,6 +9,7 @@
 
 @interface QRCodeUtil : NSObject
 
+    - (bool)hasScreenshotPermission;
     - (bool)scanQRCodeFromScreenShot;
 
 @end

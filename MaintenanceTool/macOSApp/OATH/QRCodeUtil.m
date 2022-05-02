@@ -21,6 +21,11 @@
 
 @implementation QRCodeUtil
 
+    - (bool)hasScreenshotPermission {
+        // 画面収録の許可があるかどうかを問い合わせる
+        return false;
+    }
+
     - (bool)scanQRCodeFromScreenShot {
         // デスクトップのスクリーンショットを取得し、イメージを抽出
         CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
