@@ -21,7 +21,7 @@
 
 @implementation QRCodeUtil
 
-    - (bool)scanScreen {
+    - (bool)scanQRCodeFromScreenShot {
         // デスクトップのスクリーンショットを取得し、イメージを抽出
         CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
         CIImage *ciImage = [[CIImage alloc] initWithCGImage:screenShot];
@@ -79,7 +79,6 @@
             }
             // 部分文字列を抽出し、連想配列に設定
             NSString *substring = [messageString substringWithRange:range];
-            [[ToolLogFile defaultLogger] debugWithFormat:@"Extract parameter from URI: %@", substring];
             [self extractParameterFrom:substring parameterNo:i toDictionary:[self parsedQRCodeInfo]];
             // offsetを検索対象文字列の位置に更新
             [self setOffset:range.location + [substring length] + [string length]];
@@ -147,7 +146,6 @@
             [parameters addObject:key];
             [parameters addObject:value];
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Separated parameter: %@", parameters];
         return parameters;
     }
 
