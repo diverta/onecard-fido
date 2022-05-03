@@ -412,6 +412,8 @@ namespace MaintenanceToolGUI
 
         private void enableButtons(bool enabled)
         {
+            buttonBLE.Enabled = enabled;
+            buttonFIDO.Enabled = enabled;
             buttonSetPinParam.Enabled = enabled;
             buttonDFU.Enabled = enabled;
             ButtonFIDOAttestation.Enabled = enabled;
@@ -545,6 +547,36 @@ namespace MaintenanceToolGUI
             // 管理ツールのログファイルを格納している
             // フォルダーを、Windowsのエクスプローラで参照
             Process.Start(AppCommon.OutputLogFileDirectoryPath());
+        }
+
+        //
+        // BLE設定関連インターフェース
+        //
+        private void buttonBLE_Click(object sender, EventArgs e)
+        {
+            // BLE設定画面を表示
+            BLEForm f = new BLEForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // BLE設定画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
+
+            // ペアリング実行
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_PAIRING)) {
+                DisplayStartMessage(commandTitle);
+                ble.doPairing(f.GetPasskey());
+            }
+
+            // ペアリング解除
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_BONDS)) {
+                // ペアリング情報削除コマンドを実行
+                doCommand(sender);
+            }
         }
 
         //

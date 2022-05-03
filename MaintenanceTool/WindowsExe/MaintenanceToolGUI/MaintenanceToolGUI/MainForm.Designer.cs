@@ -35,29 +35,28 @@
             this.ButtonFIDOAttestation = new System.Windows.Forms.Button();
             this.buttonSetPivParam = new System.Windows.Forms.Button();
             this.buttonDFU = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.buttonPairing = new System.Windows.Forms.Button();
-            this.buttonUnpairing = new System.Windows.Forms.Button();
             this.buttonSetPgpParam = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
+            this.buttonBLE = new System.Windows.Forms.Button();
+            this.buttonFIDO = new System.Windows.Forms.Button();
+            this.buttonOATH = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonQuit
             // 
-            this.buttonQuit.Location = new System.Drawing.Point(462, 27);
+            this.buttonQuit.Location = new System.Drawing.Point(462, 12);
             this.buttonQuit.Name = "buttonQuit";
             this.buttonQuit.Size = new System.Drawing.Size(110, 25);
-            this.buttonQuit.TabIndex = 6;
+            this.buttonQuit.TabIndex = 7;
             this.buttonQuit.Text = "終了";
             this.buttonQuit.UseVisualStyleBackColor = true;
             this.buttonQuit.Click += new System.EventHandler(this.buttonQuit_Click);
             // 
             // buttonSetPinParam
             // 
-            this.buttonSetPinParam.Location = new System.Drawing.Point(238, 27);
+            this.buttonSetPinParam.Location = new System.Drawing.Point(393, 81);
             this.buttonSetPinParam.Name = "buttonSetPinParam";
-            this.buttonSetPinParam.Size = new System.Drawing.Size(150, 25);
-            this.buttonSetPinParam.TabIndex = 3;
+            this.buttonSetPinParam.Size = new System.Drawing.Size(180, 25);
+            this.buttonSetPinParam.TabIndex = 9;
             this.buttonSetPinParam.Text = "PINコード設定";
             this.buttonSetPinParam.UseVisualStyleBackColor = true;
             this.buttonSetPinParam.Click += new System.EventHandler(this.buttonSetPinParam_Click);
@@ -69,14 +68,14 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(560, 254);
-            this.textBox1.TabIndex = 8;
+            this.textBox1.TabIndex = 10;
             // 
             // ButtonFIDOAttestation
             // 
-            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(422, 89);
+            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(394, 46);
             this.ButtonFIDOAttestation.Name = "ButtonFIDOAttestation";
-            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(150, 25);
-            this.ButtonFIDOAttestation.TabIndex = 7;
+            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(179, 25);
+            this.ButtonFIDOAttestation.TabIndex = 8;
             this.ButtonFIDOAttestation.Text = "FIDO鍵・証明書設定";
             this.ButtonFIDOAttestation.UseVisualStyleBackColor = true;
             this.ButtonFIDOAttestation.Click += new System.EventHandler(this.ButtonFIDOAttestation_Click);
@@ -84,71 +83,71 @@
             // buttonSetPivParam
             // 
             this.buttonSetPivParam.Enabled = false;
-            this.buttonSetPivParam.Location = new System.Drawing.Point(238, 58);
+            this.buttonSetPivParam.Location = new System.Drawing.Point(203, 12);
             this.buttonSetPivParam.Name = "buttonSetPivParam";
-            this.buttonSetPivParam.Size = new System.Drawing.Size(150, 25);
+            this.buttonSetPivParam.Size = new System.Drawing.Size(180, 25);
             this.buttonSetPivParam.TabIndex = 4;
-            this.buttonSetPivParam.Text = "PIV機能設定";
+            this.buttonSetPivParam.Text = "PIV設定";
             this.buttonSetPivParam.UseVisualStyleBackColor = true;
             // 
             // buttonDFU
             // 
-            this.buttonDFU.Location = new System.Drawing.Point(238, 89);
+            this.buttonDFU.Location = new System.Drawing.Point(12, 81);
             this.buttonDFU.Name = "buttonDFU";
-            this.buttonDFU.Size = new System.Drawing.Size(150, 25);
-            this.buttonDFU.TabIndex = 5;
+            this.buttonDFU.Size = new System.Drawing.Size(180, 25);
+            this.buttonDFU.TabIndex = 3;
             this.buttonDFU.Text = "ファームウェア更新";
             this.buttonDFU.UseVisualStyleBackColor = true;
             this.buttonDFU.Click += new System.EventHandler(this.buttonDFU_Click);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.buttonPairing);
-            this.groupBox1.Controls.Add(this.buttonUnpairing);
-            this.groupBox1.Location = new System.Drawing.Point(12, 27);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(191, 87);
-            this.groupBox1.TabIndex = 18;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "BLEペアリング";
-            // 
-            // buttonPairing
-            // 
-            this.buttonPairing.Location = new System.Drawing.Point(18, 18);
-            this.buttonPairing.Name = "buttonPairing";
-            this.buttonPairing.Size = new System.Drawing.Size(150, 25);
-            this.buttonPairing.TabIndex = 1;
-            this.buttonPairing.Text = "ペアリング実行";
-            this.buttonPairing.UseVisualStyleBackColor = true;
-            this.buttonPairing.Click += new System.EventHandler(this.buttonPairing_Click);
-            // 
-            // buttonUnpairing
-            // 
-            this.buttonUnpairing.Location = new System.Drawing.Point(18, 49);
-            this.buttonUnpairing.Name = "buttonUnpairing";
-            this.buttonUnpairing.Size = new System.Drawing.Size(150, 25);
-            this.buttonUnpairing.TabIndex = 2;
-            this.buttonUnpairing.Text = "ペアリング解除";
-            this.buttonUnpairing.UseVisualStyleBackColor = true;
-            this.buttonUnpairing.Click += new System.EventHandler(this.buttonUnpairing_Click);
-            // 
             // buttonSetPgpParam
             // 
-            this.buttonSetPgpParam.Location = new System.Drawing.Point(422, 58);
+            this.buttonSetPgpParam.Location = new System.Drawing.Point(203, 46);
             this.buttonSetPgpParam.Name = "buttonSetPgpParam";
-            this.buttonSetPgpParam.Size = new System.Drawing.Size(150, 25);
-            this.buttonSetPgpParam.TabIndex = 19;
-            this.buttonSetPgpParam.Text = "OpenPGP機能設定";
+            this.buttonSetPgpParam.Size = new System.Drawing.Size(180, 25);
+            this.buttonSetPgpParam.TabIndex = 5;
+            this.buttonSetPgpParam.Text = "OpenPGP設定";
             this.buttonSetPgpParam.UseVisualStyleBackColor = true;
             this.buttonSetPgpParam.Click += new System.EventHandler(this.buttonSetPgpParam_Click);
+            // 
+            // buttonBLE
+            // 
+            this.buttonBLE.Location = new System.Drawing.Point(12, 12);
+            this.buttonBLE.Name = "buttonBLE";
+            this.buttonBLE.Size = new System.Drawing.Size(180, 25);
+            this.buttonBLE.TabIndex = 1;
+            this.buttonBLE.Text = "BLE設定";
+            this.buttonBLE.UseVisualStyleBackColor = true;
+            this.buttonBLE.Click += new System.EventHandler(this.buttonBLE_Click);
+            // 
+            // buttonFIDO
+            // 
+            this.buttonFIDO.Location = new System.Drawing.Point(12, 46);
+            this.buttonFIDO.Name = "buttonFIDO";
+            this.buttonFIDO.Size = new System.Drawing.Size(180, 25);
+            this.buttonFIDO.TabIndex = 2;
+            this.buttonFIDO.Text = "FIDO設定";
+            this.buttonFIDO.UseVisualStyleBackColor = true;
+            // 
+            // buttonOATH
+            // 
+            this.buttonOATH.Enabled = false;
+            this.buttonOATH.Location = new System.Drawing.Point(203, 81);
+            this.buttonOATH.Name = "buttonOATH";
+            this.buttonOATH.Size = new System.Drawing.Size(180, 25);
+            this.buttonOATH.TabIndex = 6;
+            this.buttonOATH.Text = "OATH設定";
+            this.buttonOATH.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
+            this.Controls.Add(this.buttonOATH);
+            this.Controls.Add(this.buttonFIDO);
+            this.Controls.Add(this.buttonBLE);
             this.Controls.Add(this.buttonSetPgpParam);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonDFU);
             this.Controls.Add(this.buttonSetPivParam);
             this.Controls.Add(this.ButtonFIDOAttestation);
@@ -162,7 +161,6 @@
             this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,10 +174,10 @@
         private System.Windows.Forms.Button ButtonFIDOAttestation;
         private System.Windows.Forms.Button buttonSetPivParam;
         private System.Windows.Forms.Button buttonDFU;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button buttonPairing;
-        private System.Windows.Forms.Button buttonUnpairing;
         private System.Windows.Forms.Button buttonSetPgpParam;
+        private System.Windows.Forms.Button buttonBLE;
+        private System.Windows.Forms.Button buttonFIDO;
+        private System.Windows.Forms.Button buttonOATH;
     }
 }
 
