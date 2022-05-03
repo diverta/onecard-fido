@@ -30,15 +30,15 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.buttonQuit = new System.Windows.Forms.Button();
-            this.buttonSetPinParam = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.ButtonFIDOAttestation = new System.Windows.Forms.Button();
             this.buttonSetPivParam = new System.Windows.Forms.Button();
             this.buttonDFU = new System.Windows.Forms.Button();
             this.buttonSetPgpParam = new System.Windows.Forms.Button();
             this.buttonBLE = new System.Windows.Forms.Button();
             this.buttonFIDO = new System.Windows.Forms.Button();
             this.buttonOATH = new System.Windows.Forms.Button();
+            this.buttonHealthCheck = new System.Windows.Forms.Button();
+            this.buttonUtility = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonQuit
@@ -51,16 +51,6 @@
             this.buttonQuit.UseVisualStyleBackColor = true;
             this.buttonQuit.Click += new System.EventHandler(this.buttonQuit_Click);
             // 
-            // buttonSetPinParam
-            // 
-            this.buttonSetPinParam.Location = new System.Drawing.Point(393, 81);
-            this.buttonSetPinParam.Name = "buttonSetPinParam";
-            this.buttonSetPinParam.Size = new System.Drawing.Size(180, 25);
-            this.buttonSetPinParam.TabIndex = 9;
-            this.buttonSetPinParam.Text = "PINコード設定";
-            this.buttonSetPinParam.UseVisualStyleBackColor = true;
-            this.buttonSetPinParam.Click += new System.EventHandler(this.buttonSetPinParam_Click);
-            // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(12, 120);
@@ -69,16 +59,6 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(560, 254);
             this.textBox1.TabIndex = 10;
-            // 
-            // ButtonFIDOAttestation
-            // 
-            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(394, 46);
-            this.ButtonFIDOAttestation.Name = "ButtonFIDOAttestation";
-            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(179, 25);
-            this.ButtonFIDOAttestation.TabIndex = 8;
-            this.ButtonFIDOAttestation.Text = "FIDO鍵・証明書設定";
-            this.ButtonFIDOAttestation.UseVisualStyleBackColor = true;
-            this.ButtonFIDOAttestation.Click += new System.EventHandler(this.ButtonFIDOAttestation_Click);
             // 
             // buttonSetPivParam
             // 
@@ -128,6 +108,7 @@
             this.buttonFIDO.TabIndex = 2;
             this.buttonFIDO.Text = "FIDO設定";
             this.buttonFIDO.UseVisualStyleBackColor = true;
+            this.buttonFIDO.Click += new System.EventHandler(this.buttonFIDO_Click);
             // 
             // buttonOATH
             // 
@@ -139,20 +120,40 @@
             this.buttonOATH.Text = "OATH設定";
             this.buttonOATH.UseVisualStyleBackColor = true;
             // 
+            // buttonHealthCheck
+            // 
+            this.buttonHealthCheck.Location = new System.Drawing.Point(392, 46);
+            this.buttonHealthCheck.Name = "buttonHealthCheck";
+            this.buttonHealthCheck.Size = new System.Drawing.Size(180, 25);
+            this.buttonHealthCheck.TabIndex = 8;
+            this.buttonHealthCheck.Text = "ヘルスチェック";
+            this.buttonHealthCheck.UseVisualStyleBackColor = true;
+            this.buttonHealthCheck.Click += new System.EventHandler(this.buttonHealthCheck_Click);
+            // 
+            // buttonUtility
+            // 
+            this.buttonUtility.Location = new System.Drawing.Point(392, 81);
+            this.buttonUtility.Name = "buttonUtility";
+            this.buttonUtility.Size = new System.Drawing.Size(180, 25);
+            this.buttonUtility.TabIndex = 9;
+            this.buttonUtility.Text = "ユーティリティー";
+            this.buttonUtility.UseVisualStyleBackColor = true;
+            this.buttonUtility.Click += new System.EventHandler(this.buttonUtility_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
+            this.Controls.Add(this.buttonUtility);
+            this.Controls.Add(this.buttonHealthCheck);
             this.Controls.Add(this.buttonOATH);
             this.Controls.Add(this.buttonFIDO);
             this.Controls.Add(this.buttonBLE);
             this.Controls.Add(this.buttonSetPgpParam);
             this.Controls.Add(this.buttonDFU);
             this.Controls.Add(this.buttonSetPivParam);
-            this.Controls.Add(this.ButtonFIDOAttestation);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.buttonSetPinParam);
             this.Controls.Add(this.buttonQuit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -169,15 +170,15 @@
         #endregion
 
         private System.Windows.Forms.Button buttonQuit;
-        private System.Windows.Forms.Button buttonSetPinParam;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button ButtonFIDOAttestation;
         private System.Windows.Forms.Button buttonSetPivParam;
         private System.Windows.Forms.Button buttonDFU;
         private System.Windows.Forms.Button buttonSetPgpParam;
         private System.Windows.Forms.Button buttonBLE;
         private System.Windows.Forms.Button buttonFIDO;
         private System.Windows.Forms.Button buttonOATH;
+        private System.Windows.Forms.Button buttonHealthCheck;
+        private System.Windows.Forms.Button buttonUtility;
     }
 }
 

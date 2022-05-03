@@ -194,63 +194,6 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private void DoCommandClientPinSet(object sender, EventArgs e)
-        {
-            // パラメーター入力画面を表示
-            SetPinParamForm f = new SetPinParamForm();
-            if (f.ShowDialog() == DialogResult.Cancel) {
-                // パラメーター入力画面でCancelの場合は終了
-                return;
-            }
-
-            // ボタンを押下不可とする
-            enableButtons(false);
-            // 開始メッセージを表示
-            commandTitle = f.CommandTitle;
-            DisplayStartMessage(commandTitle);
-
-            // コマンドタイムアウト監視開始
-            commandTimer.Start();
-
-            if (f.PinNew == "" && f.PinOld == "") {
-                // パラメーター画面でPINが指定されなかった場合はPIN解除実行と判断
-                hid.DoAuthReset();
-
-            } else {
-                // PINコード設定
-                hid.DoClientPinSet(f.PinNew, f.PinOld);
-            }
-        }
-
-        private void DoCommandFIDOAttestation(object sender, EventArgs e)
-        {
-            // 鍵・証明書設定画面を表示
-            FIDOAttestationForm f = new FIDOAttestationForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel) {
-                // 鍵・証明書設定画面でCancelの場合は終了
-                return;
-            }
-
-            // ボタンを押下不可とする
-            enableButtons(false);
-            // 開始メッセージを取得
-            commandTitle = f.CommandTitle;
-            // コマンドタイムアウト監視開始
-            commandTimer.Start();
-
-            // 鍵・証明書消去
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
-                DisplayStartMessage(commandTitle);
-                hid.DoEraseSkeyCert();
-            }
-
-            // 鍵・証明書インストール
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
-                DisplayStartMessage(commandTitle);
-                hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
-            }
-        }
-
         private void DoCommandCtap2Healthcheck(bool bleHchk)
         {
             // パラメーター入力画面を表示
@@ -392,32 +335,14 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private void buttonSetPinParam_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            DoCommandClientPinSet(sender, e);
-        }
-
-        private void ButtonFIDOAttestation_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            DoCommandFIDOAttestation(sender, e);
-        }
-
         private void enableButtons(bool enabled)
         {
             buttonBLE.Enabled = enabled;
             buttonFIDO.Enabled = enabled;
-            buttonSetPinParam.Enabled = enabled;
             buttonDFU.Enabled = enabled;
-            ButtonFIDOAttestation.Enabled = enabled;
             buttonSetPgpParam.Enabled = enabled;
+            buttonHealthCheck.Enabled = enabled;
+            buttonUtility.Enabled = enabled;
             buttonQuit.Enabled = enabled;
         }
 
@@ -577,6 +502,27 @@ namespace MaintenanceToolGUI
                 // ペアリング情報削除コマンドを実行
                 doCommand(sender);
             }
+        }
+
+        //
+        // FIDO設定関連インターフェース
+        //
+        private void buttonFIDO_Click(object sender, EventArgs e)
+        {
+        }
+
+        //
+        // ヘルスチェック関連インターフェース
+        //
+        private void buttonHealthCheck_Click(object sender, EventArgs e)
+        {
+        }
+
+        //
+        // ユーティリティー関連インターフェース
+        //
+        private void buttonUtility_Click(object sender, EventArgs e)
+        {
         }
 
         //
