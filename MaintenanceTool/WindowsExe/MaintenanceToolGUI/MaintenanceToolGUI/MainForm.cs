@@ -509,6 +509,38 @@ namespace MaintenanceToolGUI
         //
         private void buttonFIDO_Click(object sender, EventArgs e)
         {
+            // FIDO設定画面を表示
+            FIDOForm f = new FIDOForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // FIDO設定画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを表示
+            commandTitle = f.CommandTitle;
+            DisplayStartMessage(commandTitle);
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_AUTH_RESET)) {
+                // FIDO認証情報の消去
+                hid.DoAuthReset();
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_CLIENT_PIN_SET) || 
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_CLIENT_PIN_CHANGE)) {
+                // PIN設定
+                hid.DoClientPinSet(f.PinNew, f.PinOld);
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
+                // 鍵・証明書消去
+                hid.DoEraseSkeyCert();
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
+                // 鍵・証明書インストール
+                hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
+            }
         }
 
         //
