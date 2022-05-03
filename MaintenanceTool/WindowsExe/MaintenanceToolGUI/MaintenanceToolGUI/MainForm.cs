@@ -153,16 +153,6 @@ namespace MaintenanceToolGUI
             // ボタンを押下不可とする
             enableButtons(false);
 
-            // ボタンに対応する処理を実行
-            if (sender.Equals(buttonPairing)) {
-                // 画面入力したパスキーを使用し、BLEペアリング処理を実行
-                string passkey = PairingStartFormRef.GetPasskey();
-                commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
-                DisplayStartMessage(commandTitle);
-                ble.doPairing(passkey);
-                return;
-            }
-
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
@@ -397,7 +387,6 @@ namespace MaintenanceToolGUI
             OnAppMainProcessExited(false);
             OnPrintMessageText(AppCommon.MSG_BLE_ERR_CONN_DISABLED);
             OnPrintMessageText(AppCommon.MSG_BLE_ERR_CONN_DISABLED_SUB1);
-            bLEToolStripMenuItem.Enabled = false;
         }
 
         public bool CheckUSBDeviceDisconnected()
@@ -407,16 +396,6 @@ namespace MaintenanceToolGUI
                 return true;
             }
             return false;
-        }
-
-        private void buttonPairing_Click(object sender, EventArgs e)
-        {
-            // ペアリング開始画面を表示
-            if (PairingStartFormRef.OpenForm(this)) {
-                // ペアリング開始画面でOKクリックの場合、
-                // ペアリング実行
-                doCommand(sender);
-            }
         }
 
         private void buttonSetPinParam_Click(object sender, EventArgs e)
@@ -439,14 +418,11 @@ namespace MaintenanceToolGUI
 
         private void enableButtons(bool enabled)
         {
-            buttonPairing.Enabled = enabled;
-            buttonUnpairing.Enabled = enabled;
             buttonSetPinParam.Enabled = enabled;
             buttonDFU.Enabled = enabled;
             ButtonFIDOAttestation.Enabled = enabled;
             buttonSetPgpParam.Enabled = enabled;
             buttonQuit.Enabled = enabled;
-            menuStrip1.Enabled = enabled;
         }
 
         private void DisplayStartMessage(string message)
@@ -557,23 +533,6 @@ namespace MaintenanceToolGUI
         {
             // BLE PINGテストを実行
             commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
-            doCommand(sender);
-        }
-
-        private void buttonUnpairing_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_ERASE_BONDS,
-                AppCommon.MSG_PROMPT_ERASE_BONDS);
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
-                return;
-            }
-            // ペアリング情報削除コマンドを実行
             doCommand(sender);
         }
 
