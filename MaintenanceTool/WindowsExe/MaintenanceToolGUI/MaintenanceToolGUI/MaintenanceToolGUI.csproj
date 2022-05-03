@@ -93,6 +93,12 @@
     <Compile Include="BLEDFUStartForm.designer.cs">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BLEForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BLEForm.designer.cs">
+      <DependentUpon>BLEForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLESMPCBORDecoder.cs" />
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
@@ -296,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BLEDFUStartForm.resx">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BLEForm.resx">
+      <DependentUpon>BLEForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommonDisplayInfoForm.resx">
       <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
