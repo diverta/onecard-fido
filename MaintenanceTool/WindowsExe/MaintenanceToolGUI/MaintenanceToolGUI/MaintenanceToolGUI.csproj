@@ -148,6 +148,12 @@
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FIDOForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FIDOForm.designer.cs">
+      <DependentUpon>FIDOForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PairingStartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -326,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FIDOAttestationForm.resx">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FIDOForm.resx">
+      <DependentUpon>FIDOForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
