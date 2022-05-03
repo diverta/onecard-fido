@@ -166,35 +166,29 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
-            if (sender.Equals(DoHIDPingTestToolStripMenuItem)) {
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
                 // CTAPHID_INIT --> CTAPHID_PING の順に実行する
-                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
                 DisplayStartMessage(commandTitle);
                 hid.DoTestCtapHidPing();
-            }
-            else if (sender.Equals(DoHIDGetFlashInfoToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoGetFlashStat();
-            }
-            else if (sender.Equals(DoHIDGetVersionInfoToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO;
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoGetVersionInfo();
-            } 
-            else if (sender.Equals(buttonUnpairing)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_BONDS)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoEraseBonds();
 
-            } 
-            else if (sender.Equals(DoBLEPingTestToolStripMenuItem)) {
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_BLE_PING)) {
                 // BLE経由でPINGコマンドを実行する
-                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
                 DisplayStartMessage(commandTitle);
                 ble.DoTestBLEPing();
-            }
-            else {
+
+            } else {
                 // エラーメッセージを画面表示し、ボタンを押下可能とする
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
                 commandTitle = "";
@@ -290,11 +284,9 @@ namespace MaintenanceToolGUI
 
             // 開始メッセージを表示し、CTAP2ヘルスチェック実行
             if (bleHchk) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 ble.DoCtap2Healthcheck(pin);
             } else {
-                commandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 hid.DoCtap2Healthcheck(pin);
             }
@@ -307,11 +299,9 @@ namespace MaintenanceToolGUI
 
             // 開始メッセージを表示し、U2Fヘルスチェック実行
             if (bleHchk) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 ble.DoU2FHealthCheck();
             } else {
-                commandTitle = ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 hid.DoU2FHealthCheck();
             }
@@ -323,12 +313,12 @@ namespace MaintenanceToolGUI
             enableButtons(false);
 
             // BLE経由のヘルスチェックはこの時点で実行
-            if (sender.Equals(DoBLECtap2TestToolStripMenuItem)) {
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK)) {
                 // BLE CTAP2ヘルスチェック
                 DoCommandCtap2Healthcheck(true);
                 return;
-            }
-            else if (sender.Equals(DoBLEU2fTestToolStripMenuItem)) {
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK)) {
                 // BLE U2Fヘルスチェック
                 DoCommandU2FHealthcheck(true);
                 return;
@@ -336,12 +326,21 @@ namespace MaintenanceToolGUI
 
             // 共有情報にヘルスチェック実行種別を設定
             ToolContext context = ToolContext.GetInstance();
-            if (sender.Equals(DoHIDCtap2TestToolStripMenuItem)) {
+
+            // HID経由のヘルスチェックを実行
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK)) {
                 // HID CTAP2ヘルスチェック
                 context.HchkType = ToolContext.HealthCheckType.CTAP2;
-            } else {
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
                 // HID U2Fヘルスチェック
                 context.HchkType = ToolContext.HealthCheckType.U2F;
+
+            } else {
+                // 該当無し
+                commandTitle = "";
+                OnAppMainProcessExited(false);
+                return;
             }
 
             // コマンドタイムアウト監視開始
@@ -492,6 +491,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // ヘルスチェック処理を実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
             DoCommandHealthCheck(sender, e);
         }
 
@@ -502,6 +502,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // ヘルスチェック処理を実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
             DoCommandHealthCheck(sender, e);
         }
 
@@ -512,6 +513,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // PINGテストを実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
             doCommand(sender);
         }
 
@@ -522,6 +524,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // Flash ROM情報取得コマンドを実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
             doCommand(sender);
         }
 
@@ -532,24 +535,28 @@ namespace MaintenanceToolGUI
                 return;
             }
             // バージョン情報取得コマンドを実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO;
             doCommand(sender);
         }
 
         private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CTAP2ヘルスチェック実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
             DoCommandHealthCheck(sender, e);
         }
 
         private void DoBLEU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // U2Fヘルスチェック実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
             DoCommandHealthCheck(sender, e);
         }
 
         private void DoBLEPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // BLE PINGテストを実行
+            commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
             doCommand(sender);
         }
 
