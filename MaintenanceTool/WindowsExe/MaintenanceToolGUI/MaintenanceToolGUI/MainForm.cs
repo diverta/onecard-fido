@@ -27,9 +27,6 @@ namespace MaintenanceToolGUI
         // パラメーター入力画面
         private PinCodeParamForm PinCodeParamFormRef;
 
-        // ペアリング開始画面
-        private PairingStartForm PairingStartFormRef;
-
         public MainForm()
         {
             InitializeComponent();
@@ -65,9 +62,6 @@ namespace MaintenanceToolGUI
             // DFU処理クラスを生成
             toolBLEDFU = new ToolBLEDFU(this, ble);
             toolDFU = new ToolDFU(this, hid);
-
-            // ペアリング開始画面を生成
-            PairingStartFormRef = new PairingStartForm();
         }
 
         public static string GetMaintenanceToolTitle()
