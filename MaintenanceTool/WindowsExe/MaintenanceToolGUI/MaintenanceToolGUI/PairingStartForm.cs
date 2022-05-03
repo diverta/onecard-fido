@@ -58,11 +58,6 @@ namespace MaintenanceToolGUI
 
         private bool CheckEntries()
         {
-            // ブランクは許容します
-            if (textPasskey.Text.Equals("")) {
-                return true;
-            }
-
             // 長さチェックと数字入力チェック
             if (FormUtil.CheckEntrySize(textPasskey, 6, 6, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
