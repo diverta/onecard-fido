@@ -375,12 +375,6 @@ namespace MaintenanceToolGUI
             }
         }
 
-        private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // ツール設定画面を表示
-            toolPreference.ShowDialog();
-        }
-
         private void DoHIDCtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // USB HID接続がない場合はエラーメッセージを表示
@@ -414,28 +408,6 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void DoHIDGetFlashInfoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // Flash ROM情報取得コマンドを実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
-            doCommand(sender);
-        }
-
-        private void DoHIDGetVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // バージョン情報取得コマンドを実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO;
-            doCommand(sender);
-        }
-
         private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CTAP2ヘルスチェック実行
@@ -465,13 +437,6 @@ namespace MaintenanceToolGUI
             }
             // OpenPGP機能設定画面を表示
             toolPGP.ShowDialog();
-        }
-
-        private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // 管理ツールのログファイルを格納している
-            // フォルダーを、Windowsのエクスプローラで参照
-            Process.Start(AppCommon.OutputLogFileDirectoryPath());
         }
 
         //
@@ -555,6 +520,29 @@ namespace MaintenanceToolGUI
         //
         private void buttonUtility_Click(object sender, EventArgs e)
         {
+            // ユーティリティー画面を表示
+            UtilityForm f = new UtilityForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // ユーティリティー画面でCancelの場合は終了
+                return;
+            }
+
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
+
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT) ||
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO)) {
+                // HIDインターフェース経由でコマンドを実行
+                doCommand(sender);
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+                // TODO: バージョン情報フォームを表示
+
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+                // 管理ツールのログファイルを格納している
+                // フォルダーを、Windowsのエクスプローラで参照
+                Process.Start(AppCommon.OutputLogFileDirectoryPath());
+            }
         }
 
         //
