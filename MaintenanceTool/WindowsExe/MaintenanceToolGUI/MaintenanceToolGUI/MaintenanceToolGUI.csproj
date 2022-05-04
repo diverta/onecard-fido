@@ -176,20 +176,12 @@
     <Compile Include="ToolBLEDFUImage.cs" />
     <Compile Include="ToolBLEDFUProcess.cs" />
     <Compile Include="ToolBLESMPService.cs" />
-    <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
     <Compile Include="ToolDFUProcess.cs" />
     <Compile Include="ToolDFUUtil.cs" />
     <Compile Include="ToolPGPCcid.cs" />
     <Compile Include="ToolPGP.cs" />
-    <Compile Include="ToolPreference.cs" />
-    <Compile Include="ToolPreferenceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ToolPreferenceForm.Designer.cs">
-      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="ToolVersionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -382,9 +374,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetPinParamForm.resx">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ToolPreferenceForm.resx">
-      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolVersionForm.resx">
       <DependentUpon>ToolVersionForm.cs</DependentUpon>

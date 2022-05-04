@@ -10,7 +10,6 @@ namespace MaintenanceToolGUI
     {
         private BLEMain ble;
         private HIDMain hid;
-        private ToolPreference toolPreference;
         private ToolPGP toolPGP;
         private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
@@ -47,11 +46,6 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト発生時の処理
             commandTimer = new CommandTimer(Name, 30000);
             commandTimer.CommandTimeoutEvent += CommandTimerElapsed;
-
-            // ツール設定画面を生成
-            // タイトル、バージョンを引き渡し
-            toolPreference = new ToolPreference(this, hid);
-            toolPreference.SetTitleAndVersionText();
 
             // OpenPGP機能設定画面を生成
             toolPGP = new ToolPGP(this, hid);

@@ -35,9 +35,6 @@ namespace MaintenanceToolGUI
         private Ctap2 ctap2;
         private U2f u2f;
 
-        // ツール設定処理
-        private ToolPreference toolPreference;
-
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
 
@@ -139,9 +136,6 @@ namespace MaintenanceToolGUI
             case U2f.Const.BLE_CMD_MSG:
                 u2f.DoResponse(message, length);
                 break;
-            case Const.HID_CMD_TOOL_PREF_PARAM:
-                toolPreference.DoResponseToolPreference(message, length);
-                break;
             case Const.HID_CMD_BOOTLOADER_MODE:
                 if (requestType == AppCommon.RequestType.GotoBootLoaderMode) {
                     // ステータスバイトをチェックし、画面に制御を戻す
@@ -154,10 +148,7 @@ namespace MaintenanceToolGUI
                 DoResponseFirmwareReset(hidProcess.receivedCMD, message);
                 break;
             case Const.HID_CMD_UNKNOWN_ERROR:
-                if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
-                    // ツール設定から呼び出された場合は、ツール設定クラスに制御を戻す
-                    toolPreference.OnHidMainProcessExited(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                } else if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
+                if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
                     // DFU処理から呼び出された場合は、DFU処理クラスに制御を戻す
                     ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
                 } else if (requestType == AppCommon.RequestType.HidFirmwareReset) {
@@ -221,14 +212,6 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
         }
 
-        public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
-        {
-            toolPreference = tp;
-
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.ToolPreferenceCommand);
-        }
-
         private void DoResponseTestCtapHidInit(byte[] message, int length)
         {
             // nonceの一致チェック
@@ -262,10 +245,6 @@ namespace MaintenanceToolGUI
                 break;
             case AppCommon.RequestType.EraseSkeyCert:
                 DoRequestEraseSkeyCert();
-                break;
-            case AppCommon.RequestType.ToolPreferenceCommand:
-            case AppCommon.RequestType.ToolPreferenceParamInquiry:
-                toolPreference.DoResponseHidInit(message, length);
                 break;
             case AppCommon.RequestType.TestCtapHidPing:
                 // PINGコマンドを実行
