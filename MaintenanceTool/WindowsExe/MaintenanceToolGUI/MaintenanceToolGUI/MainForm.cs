@@ -199,6 +199,7 @@ namespace MaintenanceToolGUI
             // パラメーター入力画面を表示
             if (PinCodeParamFormRef.OpenForm(this) == false) {
                 // パラメーター入力画面でCancelの場合は終了
+                commandTitle = "";
                 OnAppMainProcessExited(true);
                 return;
             }
@@ -239,70 +240,27 @@ namespace MaintenanceToolGUI
             // ボタンを押下不可とする
             enableButtons(false);
 
-            // BLE経由のヘルスチェックはこの時点で実行
             if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK)) {
                 // BLE CTAP2ヘルスチェック
                 DoCommandCtap2Healthcheck(true);
-                return;
 
             } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK)) {
                 // BLE U2Fヘルスチェック
                 DoCommandU2FHealthcheck(true);
-                return;
-            }
 
-            // 共有情報にヘルスチェック実行種別を設定
-            ToolContext context = ToolContext.GetInstance();
-
-            // HID経由のヘルスチェックを実行
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK)) {
+            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK)) {
                 // HID CTAP2ヘルスチェック
-                context.HchkType = ToolContext.HealthCheckType.CTAP2;
+                DoCommandCtap2Healthcheck(false);
 
             } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
                 // HID U2Fヘルスチェック
-                context.HchkType = ToolContext.HealthCheckType.U2F;
+                DoCommandU2FHealthcheck(false);
 
             } else {
                 // 該当無し
                 commandTitle = "";
                 OnAppMainProcessExited(false);
                 return;
-            }
-
-            // コマンドタイムアウト監視開始
-            commandTimer.Start();
-
-            // ツール設定情報照会
-            commandTitle = "";
-            toolPreference.DoToolPreferenceParamInquiry();
-        }
-
-        public void DoResponseToolPreferenceParamInquiry()
-        {
-            // コマンドタイムアウト監視終了
-            commandTimer.Stop();
-
-            // 自動認証機能が有効化されている場合
-            ToolContext context = ToolContext.GetInstance();
-            if (context.BleScanAuthEnabled) {
-                // プロンプトで表示されるメッセージ
-                string message = string.Format("{0}\n\n{1}",
-                    AppCommon.MSG_PROMPT_START_HCHK_BLE_AUTH,
-                    AppCommon.MSG_COMMENT_START_HCHK_BLE_AUTH);
-
-                // プロンプトを表示し、Yesの場合だけ処理を続行する
-                if (FormUtil.DisplayPromptPopup(this, message) == false) {
-                    OnAppMainProcessExited(true);
-                    return;
-                }
-            }
-
-            // ヘルスチェック実行種別に対応する処理を継続
-            if (context.HchkType == ToolContext.HealthCheckType.CTAP2) {
-                DoCommandCtap2Healthcheck(false);
-            } else {
-                DoCommandU2FHealthcheck(false);
             }
         }
 
@@ -373,60 +331,6 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(formatted);
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
             }
-        }
-
-        private void DoHIDCtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // ヘルスチェック処理を実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
-            DoCommandHealthCheck(sender, e);
-        }
-
-        private void DoHIDU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // ヘルスチェック処理を実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
-            DoCommandHealthCheck(sender, e);
-        }
-
-        private void DoHIDPingTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // PINGテストを実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
-            doCommand(sender);
-        }
-
-        private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // CTAP2ヘルスチェック実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
-            DoCommandHealthCheck(sender, e);
-        }
-
-        private void DoBLEU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // U2Fヘルスチェック実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
-            DoCommandHealthCheck(sender, e);
-        }
-
-        private void DoBLEPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // BLE PINGテストを実行
-            commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
-            doCommand(sender);
         }
 
         private void buttonSetPgpParam_Click(object sender, EventArgs e)
@@ -513,6 +417,29 @@ namespace MaintenanceToolGUI
         //
         private void buttonHealthCheck_Click(object sender, EventArgs e)
         {
+            // ヘルスチェック実行画面を表示
+            HealthCheckForm f = new HealthCheckForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // ヘルスチェック実行画面でCancelの場合は終了
+                return;
+            }
+
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
+
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_BLE_PING) ||
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
+                // PINGコマンドを実行
+                doCommand(sender);
+
+            } else if (
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK) ||
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK) ||
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK) ||
+                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
+                // ヘルスチェックコマンドを実行
+                DoCommandHealthCheck(sender, e);
+            }
         }
 
         //
