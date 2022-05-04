@@ -184,6 +184,12 @@
     <Compile Include="ToolPreferenceForm.Designer.cs">
       <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolVersionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolVersionForm.designer.cs">
+      <DependentUpon>ToolVersionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
     <Compile Include="HIDDevice.cs" />
@@ -370,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolPreferenceForm.resx">
       <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolVersionForm.resx">
+      <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UtilityForm.resx">
       <DependentUpon>UtilityForm.cs</DependentUpon>

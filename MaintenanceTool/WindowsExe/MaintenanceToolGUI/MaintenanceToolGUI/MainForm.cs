@@ -536,7 +536,12 @@ namespace MaintenanceToolGUI
                 doCommand(sender);
 
             } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
-                // TODO: バージョン情報フォームを表示
+                // バージョン情報フォームを表示
+                ToolVersionForm vf = new ToolVersionForm();
+                vf.ShowToolVersionDialog(
+                    MaintenanceToolTitle, 
+                    MaintenanceToolVersion, 
+                    MaintenanceToolCopyright);
 
             } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_VIEW_LOG_FILE)) {
                 // 管理ツールのログファイルを格納している
