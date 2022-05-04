@@ -70,7 +70,7 @@ nRF5340基板の場合は、パスコード入力が必要です。<br>
 
 BLE PINGを実行し、PCとFIDO認証器がBLE接続できることを確認します。<br>
 
-管理ツールのメニューから「Test > BLE > PINGテスト実行」を選択すると、BLE PING（BLE接続テスト）処理が開始されます。
+管理ツールのヘルスチェックメニューから「BLE > PINGテスト実行」を選択すると、BLE PING（BLE接続テスト）処理が開始されます。
 
 <img src="assets06/0007.jpg" width="400">
 

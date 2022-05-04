@@ -12,7 +12,6 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 * コマンドテスト機能
 * Flash ROM情報取得機能
 * バージョン情報取得機能
-* 自動認証パラメーター設定機能
 * OpenPGP機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
@@ -52,9 +51,6 @@ FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載�
 
 - <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
-
-- <b>[自動認証パラメーター設定手順](BLEAUTHPARAM.md)</b><br>
-[BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
 
 - <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
