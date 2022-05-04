@@ -303,6 +303,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UtilityForm.designer.cs">
+      <DependentUpon>UtilityForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BLEDFUProcessingForm.resx">
       <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -364,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolPreferenceForm.resx">
       <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UtilityForm.resx">
+      <DependentUpon>UtilityForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
