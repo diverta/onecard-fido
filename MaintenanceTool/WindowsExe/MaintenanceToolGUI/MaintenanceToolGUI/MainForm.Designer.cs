@@ -126,7 +126,7 @@
             this.buttonHealthCheck.Name = "buttonHealthCheck";
             this.buttonHealthCheck.Size = new System.Drawing.Size(180, 25);
             this.buttonHealthCheck.TabIndex = 8;
-            this.buttonHealthCheck.Text = "ヘルスチェック";
+            this.buttonHealthCheck.Text = "ヘルスチェック実行";
             this.buttonHealthCheck.UseVisualStyleBackColor = true;
             this.buttonHealthCheck.Click += new System.EventHandler(this.buttonHealthCheck_Click);
             // 
