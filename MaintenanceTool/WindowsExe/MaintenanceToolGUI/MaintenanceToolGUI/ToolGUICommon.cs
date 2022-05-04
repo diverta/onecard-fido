@@ -177,7 +177,7 @@
         public const string PROCESS_NAME_HID_U2F_HEALTHCHECK = "HID U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_CTAPHID_PING = "HID PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
-        public const string PROCESS_NAME_GET_VERSION_INFO = "バージョン情報取得";
+        public const string PROCESS_NAME_GET_VERSION_INFO = "ファームウェアバージョン情報取得";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
@@ -189,6 +189,8 @@
         public const string PROCESS_NAME_OPENPGP_INSTALL_KEYS = "PGP秘密鍵インストール";
         public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報取得";
         public const string PROCESS_NAME_OPENPGP_RESET = "OpenPGP機能リセット";
+        public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
+        public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
