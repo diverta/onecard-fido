@@ -31,8 +31,8 @@
         public const string MSG_PROMPT_INPUT_OLD_PIN_NUM = "変更前のPINコードを数字で入力してください";
         public const string MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT = "確認用のPINコードを正しく入力してください";
 
-        public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定されたPINコードを解除します。";
-        public const string MSG_PROMPT_CLEAR_PIN_CODE = "解除後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nPINコード解除処理を実行しますか？";
+        public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定された認証情報を消去します。";
+        public const string MSG_PROMPT_CLEAR_PIN_CODE = "消去後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nFIDO認証情報の消去処理を実行しますか？";
         public const string MSG_CLEAR_PIN_CODE_COMMENT1 = "  ユーザー確認が必要となりますので、";
         public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上のユーザー確認LEDが高速点滅したら、";
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  MAIN SWを１回押してください.";
@@ -177,10 +177,10 @@
         public const string PROCESS_NAME_HID_U2F_HEALTHCHECK = "HID U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_CTAPHID_PING = "HID PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
-        public const string PROCESS_NAME_GET_VERSION_INFO = "バージョン情報取得";
+        public const string PROCESS_NAME_GET_VERSION_INFO = "ファームウェアバージョン情報取得";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
-        public const string PROCESS_NAME_AUTH_RESET = "PINコード解除";
+        public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新(BLE)";
         public const string PROCESS_NAME_USB_DFU = "FIDO認証器のファームウェア更新(USB)";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
@@ -189,6 +189,8 @@
         public const string PROCESS_NAME_OPENPGP_INSTALL_KEYS = "PGP秘密鍵インストール";
         public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報取得";
         public const string PROCESS_NAME_OPENPGP_RESET = "OpenPGP機能リセット";
+        public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
+        public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";

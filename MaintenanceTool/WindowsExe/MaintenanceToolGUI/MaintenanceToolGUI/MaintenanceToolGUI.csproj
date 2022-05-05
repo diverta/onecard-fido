@@ -93,6 +93,12 @@
     <Compile Include="BLEDFUStartForm.designer.cs">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BLEForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BLEForm.designer.cs">
+      <DependentUpon>BLEForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLESMPCBORDecoder.cs" />
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
@@ -142,6 +148,18 @@
     <Compile Include="FIDOAttestationForm.Designer.cs">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FIDOForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FIDOForm.designer.cs">
+      <DependentUpon>FIDOForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HealthCheckForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HealthCheckForm.designer.cs">
+      <DependentUpon>HealthCheckForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PairingStartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,19 +176,17 @@
     <Compile Include="ToolBLEDFUImage.cs" />
     <Compile Include="ToolBLEDFUProcess.cs" />
     <Compile Include="ToolBLESMPService.cs" />
-    <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
     <Compile Include="ToolDFUProcess.cs" />
     <Compile Include="ToolDFUUtil.cs" />
     <Compile Include="ToolPGPCcid.cs" />
     <Compile Include="ToolPGP.cs" />
-    <Compile Include="ToolPreference.cs" />
-    <Compile Include="ToolPreferenceForm.cs">
+    <Compile Include="ToolVersionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ToolPreferenceForm.Designer.cs">
-      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
+    <Compile Include="ToolVersionForm.designer.cs">
+      <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
@@ -291,11 +307,20 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UtilityForm.designer.cs">
+      <DependentUpon>UtilityForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BLEDFUProcessingForm.resx">
       <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BLEDFUStartForm.resx">
       <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BLEForm.resx">
+      <DependentUpon>BLEForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommonDisplayInfoForm.resx">
       <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
@@ -317,6 +342,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FIDOAttestationForm.resx">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FIDOForm.resx">
+      <DependentUpon>FIDOForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HealthCheckForm.resx">
+      <DependentUpon>HealthCheckForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -344,8 +375,11 @@
     <EmbeddedResource Include="SetPinParamForm.resx">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolPreferenceForm.resx">
-      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
+    <EmbeddedResource Include="ToolVersionForm.resx">
+      <DependentUpon>ToolVersionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UtilityForm.resx">
+      <DependentUpon>UtilityForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
