@@ -19,7 +19,7 @@ MDBT50Q Dongleをご使用の場合は、背面にあるボタン電池ケース
 
 [管理ツール（Windows版）](../../MaintenanceTool/WindowsExe/README.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
 
-<img src="assets06/0012.jpg" width="400">
+<img src="assets02/0004.jpg" width="400">
 
 ファームウェア更新画面が表示されます。<br>
 画面下部のボックス「nRF5340用」の中にあるボタン「ファームウェアを更新（BLE）」をクリックします。
