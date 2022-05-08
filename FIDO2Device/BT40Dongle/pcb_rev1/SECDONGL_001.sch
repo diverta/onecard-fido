@@ -1639,22 +1639,6 @@ CR1216/1225&lt;br&gt;
 <text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
 <text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
 </package>
-<package name="HEADER_4PIN">
-<pad name="1" x="0" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
-<pad name="2" x="2.54" y="0" drill="0.889" diameter="1.651" rot="R90"/>
-<pad name="3" x="5.08" y="0" drill="0.889" diameter="1.651" rot="R90"/>
-<pad name="4" x="7.62" y="0" drill="0.889" diameter="1.651" rot="R90"/>
-<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
-<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
-</package>
-<package name="SOLPAD_4PIN">
-<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
-<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
-<smd name="1" x="0" y="0" dx="1.6" dy="1.6" layer="1" cream="no"/>
-<smd name="2" x="2.54" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
-<smd name="3" x="5.08" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
-<smd name="4" x="7.62" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
-</package>
 <package name="CX60-24S-UNIT">
 <description>&lt;b&gt;USB Type-C(TM) plug&lt;/b&gt;&lt;p&gt;
 Designed for CX60-24S-UNIT (Hirose)</description>
@@ -1782,6 +1766,83 @@ Designed for CX60-24S-UNIT (Hirose)</description>
 <rectangle x1="3.115" y1="-0.925" x2="4.165" y2="0.925" layer="32"/>
 <rectangle x1="3.44" y1="0.35" x2="3.84" y2="0.55" layer="51"/>
 </package>
+<package name="DF61-2P-2.2V">
+<description>&lt;b&gt;DF61 Series&lt;/b&gt;&lt;p&gt;
+2.2mm pitch, Low Profile Wire-to-Board Connectors</description>
+<text x="3.35" y="1.5" size="0.8128" layer="25">&gt;NAME</text>
+<text x="3.35" y="0.4" size="0.8128" layer="27">&gt;VALUE</text>
+<rectangle x1="1.575" y1="3.95" x2="2.925" y2="5.85" layer="29"/>
+<rectangle x1="1.475" y1="0" x2="2.825" y2="1.24" layer="1"/>
+<rectangle x1="-2.825" y1="0" x2="-1.475" y2="1.24" layer="1"/>
+<rectangle x1="1.525" y1="0.05" x2="2.775" y2="1.19" layer="31"/>
+<rectangle x1="-2.875" y1="-0.05" x2="-1.425" y2="1.29" layer="29"/>
+<smd name="2" x="2.25" y="4.9" dx="1.15" dy="1.7" layer="1" stop="no" cream="no"/>
+<smd name="1" x="-2.25" y="4.9" dx="1.15" dy="1.7" layer="1" stop="no" cream="no"/>
+<rectangle x1="1.725" y1="4.1" x2="2.775" y2="5.7" layer="31"/>
+<rectangle x1="-2.925" y1="3.95" x2="-1.575" y2="5.85" layer="29"/>
+<rectangle x1="-2.775" y1="4.1" x2="-1.725" y2="5.7" layer="31"/>
+<rectangle x1="-2.775" y1="0.05" x2="-1.525" y2="1.19" layer="31"/>
+<rectangle x1="1.425" y1="-0.05" x2="2.875" y2="1.29" layer="29"/>
+<wire x1="2.55" y1="0.295" x2="2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0.945" x2="2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0.295" x2="2.55" y2="0.295" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0" x2="1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="1.925" y1="1.4" x2="2.55" y2="1.4" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.8" x2="2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="2.55" y1="3.7" x2="2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.445" x2="2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="2.55" y1="4.325" x2="2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="2.25" y1="4.325" x2="2.55" y2="4.325" width="0.127" layer="51"/>
+<wire x1="-2.25" y1="5.8" x2="-2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="3.7" x2="-2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="1.4" x2="-1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="-1.925" y1="0" x2="-1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.295" x2="-2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.945" x2="-1.925" y2="0.945" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.295" x2="-1.925" y2="0.295" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="4.325" x2="-2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.445" x2="-2.25" y2="5.445" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="4.325" x2="-2.25" y2="4.325" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.8" x2="-2.55" y2="6" width="0.127" layer="51"/>
+<wire x1="2.55" y1="5.8" x2="2.55" y2="6" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.8" x2="-2.25" y2="5.8" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.8" x2="2.55" y2="5.8" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="7.35" x2="2.55" y2="7.35" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="3.7" x2="-2.55" y2="1.5" width="0.127" layer="21"/>
+<wire x1="2.55" y1="3.7" x2="2.55" y2="1.5" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="7.35" x2="-2.55" y2="6" width="0.127" layer="21"/>
+<wire x1="2.55" y1="7.35" x2="2.55" y2="6" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="1.4" x2="-2.55" y2="1.5" width="0.127" layer="51"/>
+<wire x1="2.55" y1="1.4" x2="2.55" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-1.9" y1="0" x2="-1.2" y2="0" width="0.127" layer="51"/>
+<wire x1="1.2" y1="0" x2="1.9" y2="0" width="0.127" layer="51"/>
+<wire x1="-1.2" y1="0" x2="1.2" y2="0" width="0.127" layer="21"/>
+</package>
+<package name="SOLPAD-2P">
+<description>&lt;b&gt;Pads for soldering&lt;/b&gt;&lt;p&gt;</description>
+<smd name="1" x="-2.54" y="0" dx="2.54" dy="5.08" layer="1" roundness="100"/>
+<smd name="2" x="2.54" y="0" dx="2.54" dy="5.08" layer="1" roundness="100"/>
+<text x="-1.96" y="3.23" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.96" y="-4.5" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="HEADER_2PIN">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<wire x1="-1.27" y1="-1.27" x2="-1.27" y2="1.27" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.127" layer="21"/>
+<wire x1="3.81" y1="1.27" x2="3.81" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-1.27" x2="-1.27" y2="-1.27" width="0.127" layer="21"/>
+<pad name="1" x="0" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
+<pad name="2" x="2.54" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<text x="-1.905" y="-1.27" size="0.889" layer="27" ratio="11" rot="R90">&gt;value</text>
+<text x="5.08" y="-1.27" size="0.889" layer="25" ratio="11" rot="R90">&gt;name</text>
+<rectangle x1="-1.27" y1="-1.27" x2="3.81" y2="1.27" layer="39"/>
+</package>
+<package name="SOLPAD_2PIN">
+<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
+<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
+<smd name="1" x="0" y="0" dx="1.6" dy="1.6" layer="1" cream="no"/>
+<smd name="2" x="2.54" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
+</package>
 </packages>
 <symbols>
 <symbol name="3V">
@@ -1815,23 +1876,6 @@ Designed for CX60-24S-UNIT (Hirose)</description>
 <pin name="5" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
 <wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
 <wire x1="3.81" y1="-10.16" x2="5.08" y2="-10.16" width="0.6096" layer="94"/>
-</symbol>
-<symbol name="IF_4PIN">
-<description>&lt;b&gt;4-pin インターフェース&lt;/b&gt;&lt;p&gt;</description>
-<wire x1="15.24" y1="-10.16" x2="3.175" y2="-10.16" width="0.4064" layer="94"/>
-<wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
-<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
-<wire x1="3.175" y1="2.54" x2="3.175" y2="-10.16" width="0.4064" layer="94"/>
-<wire x1="15.24" y1="-10.16" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
-<wire x1="3.175" y1="2.54" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
-<text x="2.54" y="-12.7" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="2" x="0" y="-5.08" length="middle" direction="pas" swaplevel="1"/>
-<pin name="3" x="0" y="-2.54" length="middle" direction="pas" swaplevel="1"/>
-<pin name="1" x="0" y="-7.62" length="middle" direction="pas" swaplevel="1"/>
-<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
-<pin name="4" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
-<wire x1="3.81" y1="-5.08" x2="5.08" y2="-5.08" width="0.6096" layer="94"/>
-<wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
 </symbol>
 <symbol name="USB_CON_MALE_C">
 <description>&lt;b&gt;USB Type-C(TM) plug interface</description>
@@ -1885,6 +1929,19 @@ Designed for CX60-24S-UNIT (Hirose)</description>
 <pin name="SBU1" x="20.32" y="20.32" length="short" direction="pas" rot="R180"/>
 <pin name="RX2P" x="20.32" y="27.94" length="short" rot="R180"/>
 <pin name="GND2_A" x="20.32" y="30.48" length="short" rot="R180"/>
+</symbol>
+<symbol name="IF_2PIN">
+<description>&lt;b&gt;2-pin インターフェース&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="15.24" y1="-5.08" x2="3.175" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="3.175" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="15.24" y1="-5.08" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<text x="2.54" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
+<pin name="1" x="0" y="-2.54" length="middle" direction="pas" swaplevel="1"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -1946,36 +2003,6 @@ Designed for CX60-24S-UNIT (Hirose)</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="IF_4PIN" prefix="CN">
-<description>&lt;b&gt;4-pin インターフェース&lt;/b&gt;</description>
-<gates>
-<gate name="G$1" symbol="IF_4PIN" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="HEADER_4PIN">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="_SOL" package="SOLPAD_4PIN">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="CX60-24S-UNIT" prefix="CN">
 <description>&lt;b&gt;USB Type-C(TM) plug&lt;/b&gt;&lt;p&gt;</description>
 <gates>
@@ -2008,6 +2035,50 @@ Designed for CX60-24S-UNIT (Hirose)</description>
 <connect gate="G$1" pin="VBUS2_A" pad="A9"/>
 <connect gate="G$1" pin="VBUS2_B" pad="B9"/>
 <connect gate="G$1" pin="VCONN" pad="B5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="IF_2PIN" prefix="CN">
+<description>&lt;b&gt;2-pin インターフェース&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="IF_2PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="_" package="DF61-2P-2.2V">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_PAD" package="SOLPAD-2P">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_H" package="HEADER_2PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_SOL" package="SOLPAD_2PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2248,7 +2319,6 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="U2" library="ICs" deviceset="ADP122" device="ACPZ-3.3-R7"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 <part name="GND3" library="Supply" deviceset="0V" device=""/>
-<part name="CN3" library="Connectors" deviceset="IF_4PIN" device="_SOL"/>
 <part name="CN1" library="Connectors" deviceset="CX60-24S-UNIT" device=""/>
 <part name="U3" library="ICs" deviceset="RV-3028-C7" device=""/>
 <part name="GND20" library="Supply" deviceset="0V" device=""/>
@@ -2258,6 +2328,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="C8" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
 <part name="C9" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
 <part name="R9" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
+<part name="CN3" library="Connectors" deviceset="IF_2PIN" device="_SOL"/>
 </parts>
 <sheets>
 <sheet>
@@ -2524,24 +2595,6 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <wire x1="106.68" y1="93.98" x2="106.68" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="66.04" x2="88.9" y2="66.04" width="0.1524" layer="91"/>
 <label x="88.9" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
-<net name="AIN0" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P0.04/AIN0"/>
-<wire x1="30.48" y1="121.92" x2="20.32" y2="121.92" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="121.92" x2="20.32" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="66.04" x2="35.56" y2="66.04" width="0.1524" layer="91"/>
-<label x="35.56" y="66.04" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="AIN1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P0.05/AIN1"/>
-<wire x1="30.48" y1="119.38" x2="22.86" y2="119.38" width="0.1524" layer="91"/>
-<wire x1="22.86" y1="119.38" x2="22.86" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="22.86" y1="71.12" x2="35.56" y2="71.12" width="0.1524" layer="91"/>
-<label x="35.56" y="71.12" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -2909,9 +2962,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <text x="76.2" y="78.74" size="2.54" layer="91">ボタン乾電池ケースは
 基板の表面に実装</text>
 <text x="175.26" y="119.38" size="3.81" layer="91">ユーティリティーI/F部</text>
-<text x="180.34" y="106.68" size="2.1844" layer="91">TXD: UARTデバッグ出力
-AIN0: 基準電圧測定入力
-AIN1: 電池電圧測定入力</text>
+<text x="182.88" y="111.76" size="2.1844" layer="91">TXD: UARTデバッグ出力</text>
 <text x="217.424" y="20.32" size="1.778" layer="91">Secure Dongle rev1</text>
 <text x="172.72" y="8.89" size="3.81" layer="91">BT40 Dongle
     （rev1）</text>
@@ -2933,8 +2984,7 @@ AIN1: 電池電圧測定入力</text>
 <instance part="BAT1" gate="G$1" x="73.66" y="93.98"/>
 <instance part="GND19" gate="1" x="53.34" y="83.82"/>
 <instance part="U2" gate="G$1" x="83.82" y="134.62"/>
-<instance part="GND3" gate="1" x="198.12" y="60.96"/>
-<instance part="CN3" gate="G$1" x="205.74" y="78.74"/>
+<instance part="GND3" gate="1" x="190.5" y="68.58"/>
 <instance part="U3" gate="G$1" x="73.66" y="40.64"/>
 <instance part="GND20" gate="1" x="109.22" y="15.24"/>
 <instance part="R6" gate="G$1" x="53.34" y="40.64" rot="R90"/>
@@ -2943,6 +2993,7 @@ AIN1: 電池電圧測定入力</text>
 <instance part="C8" gate="G$1" x="124.46" y="50.8"/>
 <instance part="C9" gate="G$1" x="132.08" y="33.02"/>
 <instance part="R9" gate="G$1" x="137.16" y="38.1"/>
+<instance part="CN3" gate="G$1" x="195.58" y="81.28"/>
 </instances>
 <busses>
 </busses>
@@ -2971,10 +3022,10 @@ AIN1: 電池電圧測定入力</text>
 <wire x1="78.74" y1="132.08" x2="83.82" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="CN3" gate="G$1" pin="1"/>
 <pinref part="GND3" gate="1" pin="0V"/>
-<wire x1="205.74" y1="71.12" x2="198.12" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="198.12" y1="71.12" x2="198.12" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="78.74" x2="190.5" y2="71.12" width="0.1524" layer="91"/>
+<pinref part="CN3" gate="G$1" pin="1"/>
+<wire x1="195.58" y1="78.74" x2="190.5" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U3" gate="G$1" pin="VSS"/>
@@ -3060,28 +3111,12 @@ AIN1: 電池電圧測定入力</text>
 <pinref part="R9" gate="G$1" pin="2"/>
 </segment>
 </net>
-<net name="AIN0" class="0">
-<segment>
-<wire x1="193.04" y1="76.2" x2="193.04" y2="86.36" width="0.1524" layer="91"/>
-<label x="193.04" y="86.36" size="1.778" layer="95" rot="R90" xref="yes"/>
-<pinref part="CN3" gate="G$1" pin="3"/>
-<wire x1="205.74" y1="76.2" x2="193.04" y2="76.2" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="TXD" class="0">
 <segment>
-<wire x1="187.96" y1="73.66" x2="187.96" y2="86.36" width="0.1524" layer="91"/>
-<label x="187.96" y="86.36" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="190.5" y1="81.28" x2="190.5" y2="88.9" width="0.1524" layer="91"/>
+<label x="190.5" y="88.9" size="1.778" layer="95" rot="R90" xref="yes"/>
 <pinref part="CN3" gate="G$1" pin="2"/>
-<wire x1="205.74" y1="73.66" x2="187.96" y2="73.66" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="AIN1" class="0">
-<segment>
-<label x="198.12" y="86.36" size="1.778" layer="95" rot="R90" xref="yes"/>
-<pinref part="CN3" gate="G$1" pin="4"/>
-<wire x1="205.74" y1="78.74" x2="198.12" y2="78.74" width="0.1524" layer="91"/>
-<wire x1="198.12" y1="78.74" x2="198.12" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="195.58" y1="81.28" x2="190.5" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
