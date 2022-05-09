@@ -103,7 +103,7 @@ namespace MaintenanceToolGUI
             }
 
             // 確認用PINコードのチェック
-            if (FormUtil.CompareEntry(textPinConfirm, textPin, ToolGUICommon.MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT) == false) {
+            if (FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT) == false) {
                 return false;
             }
 

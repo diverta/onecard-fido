@@ -398,7 +398,7 @@ namespace MaintenanceToolGUI
         {
             // 入力パターンチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName);
-            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
             return true;
@@ -408,7 +408,7 @@ namespace MaintenanceToolGUI
         {
             // 入力パターンチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
-            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
             return true;
@@ -418,7 +418,7 @@ namespace MaintenanceToolGUI
         {
             // 先頭または末尾に半角スペース文字が入っている場合はエラー
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS, fieldName);
-            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, informativeText) == false) {
+            if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
             return true;
@@ -463,7 +463,7 @@ namespace MaintenanceToolGUI
         {
             // PIN番号の確認入力内容をチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
-            return FormUtil.CompareEntry(textPinConfirm, textPin, informativeText);
+            return FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, informativeText);
         }
 
         private bool CheckForPerformPinCommand()

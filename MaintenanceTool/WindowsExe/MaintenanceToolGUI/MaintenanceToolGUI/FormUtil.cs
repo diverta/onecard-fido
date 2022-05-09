@@ -178,12 +178,12 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool CompareEntry(TextBox destText, TextBox srcText, string informativeText)
+        public static bool CompareEntry(TextBox destText, TextBox srcText, string title, string informativeText)
         {
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
             }
-            ShowWarningMessage(destText.Parent, MainForm.MaintenanceToolTitle, informativeText);
+            ShowWarningMessage(destText.Parent, title, informativeText);
             destText.Focus();
             return false;
         }
@@ -210,10 +210,10 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string informativeText)
+        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string title, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }
