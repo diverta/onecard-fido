@@ -126,16 +126,6 @@ namespace MaintenanceToolGUI
             MessageBoxShow(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static bool DisplayPromptPopup(IWin32Window owner, string message)
-        {
-            DialogResult dialogResult = MessageBoxShow(owner,
-                message, MainForm.MaintenanceToolTitle,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            // Yesがクリックされた場合 true を戻す
-            return (dialogResult == DialogResult.Yes);
-        }
-
         public static bool DisplayPromptPopup(IWin32Window owner, string title, string message)
         {
             DialogResult dialogResult = MessageBoxShow(owner,

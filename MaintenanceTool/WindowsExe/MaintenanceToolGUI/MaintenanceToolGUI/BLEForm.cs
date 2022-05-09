@@ -79,7 +79,7 @@ namespace MaintenanceToolGUI
             string message = string.Format("{0}\n\n{1}",
                 AppCommon.MSG_ERASE_BONDS,
                 AppCommon.MSG_PROMPT_ERASE_BONDS);
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
                 return;
             }
 

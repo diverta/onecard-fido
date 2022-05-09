@@ -97,7 +97,7 @@ namespace MaintenanceToolGUI
                 ToolGUICommon.MSG_PROMPT_INSTL_SKEY_CERT);
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace MaintenanceToolGUI
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
                 return;
             }
 
