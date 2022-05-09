@@ -199,17 +199,6 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public static bool CheckValueInRange(TextBox textBox, int minValue, int maxValue, string informativeText)
-        {
-            int value = int.Parse(textBox.Text);
-            if (value < minValue || value > maxValue) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
-                textBox.Focus();
-                return false;
-            }
-            return true;
-        }
-
         public static bool CheckValueWithPattern(TextBox textBox, string pattern, string title, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
