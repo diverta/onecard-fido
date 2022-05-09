@@ -169,7 +169,7 @@ namespace MaintenanceToolGUI
             }
 
             // 型をチェック
-            if (value.Type != CBORType.Number) {
+            if (value.Type != CBORType.Integer) {
                 AppCommon.OutputLogError(string.Format("ParseByteValue: {0} is not CBORType.Number", key.AsString()));
                 return false;
             }
@@ -229,7 +229,7 @@ namespace MaintenanceToolGUI
             }
 
             // 型をチェック
-            if (value.Type != CBORType.Number) {
+            if (value.Type != CBORType.Integer) {
                 AppCommon.OutputLogError(string.Format("ParseUInt32Value: {0} is not CBORType.Number", key.AsString()));
                 return false;
             }
