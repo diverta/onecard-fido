@@ -168,10 +168,10 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public static bool CheckIsNumeric(TextBox textBox, string informativeText)
+        public static bool CheckIsNumeric(TextBox textBox, string title, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }

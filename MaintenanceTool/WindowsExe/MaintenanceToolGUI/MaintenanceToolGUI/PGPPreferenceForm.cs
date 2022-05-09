@@ -452,7 +452,7 @@ namespace MaintenanceToolGUI
 
             // 数字チェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
-            if (FormUtil.CheckIsNumeric(text, informativeText) == false) {
+            if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
@@ -541,7 +541,7 @@ namespace MaintenanceToolGUI
 
             // 数字チェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
-            if (FormUtil.CheckIsNumeric(text, informativeText) == false) {
+            if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 

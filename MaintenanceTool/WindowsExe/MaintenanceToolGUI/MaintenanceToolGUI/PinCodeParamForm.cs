@@ -71,7 +71,7 @@ namespace MaintenanceToolGUI
             if (FormUtil.CheckEntrySize(textPin, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
-            if (FormUtil.CheckIsNumeric(textPin, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+            if (FormUtil.CheckIsNumeric(textPin, ToolGUICommon.MSG_INVALID_NUMBER, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
                 return false;
             }
             return true;

@@ -85,10 +85,10 @@ namespace MaintenanceToolGUI
             if (FormUtil.CheckEntrySize(textPinConfirm, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
-            if (FormUtil.CheckIsNumeric(textPin, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+            if (FormUtil.CheckIsNumeric(textPin, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
                 return false;
             }
-            if (FormUtil.CheckIsNumeric(textPinConfirm, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+            if (FormUtil.CheckIsNumeric(textPinConfirm, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
                 return false;
             }
 
@@ -97,7 +97,7 @@ namespace MaintenanceToolGUI
                 if (FormUtil.CheckEntrySize(textPinOld, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
                     return false;
                 }
-                if (FormUtil.CheckIsNumeric(textPinOld, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+                if (FormUtil.CheckIsNumeric(textPinOld, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
                     return false;
                 }
             }
