@@ -1,0 +1,6 @@
+[submodule "MaintenanceTool/WindowsExe/CBOR"]
+	path = MaintenanceTool/WindowsExe/CBOR
+	url = https://github.com/peteroupc/CBOR.git
+[submodule "MaintenanceTool/WindowsExe/Numbers"]
+	path = MaintenanceTool/WindowsExe/Numbers
+	url = https://github.com/peteroupc/Numbers.git
