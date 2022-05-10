@@ -405,7 +405,6 @@
     <Compile Include="SetPinParamForm.Designer.cs">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolGUICommon.cs" />
     <Compile Include="BLEMain.cs" />
     <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
       <Link>ToolGUICommon\FormUtil.cs</Link>
