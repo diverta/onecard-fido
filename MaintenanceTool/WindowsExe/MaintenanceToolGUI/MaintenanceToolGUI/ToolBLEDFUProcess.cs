@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -169,7 +170,7 @@ namespace MaintenanceToolGUI
             // CBORをデコードしてスロット照会情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
@@ -229,7 +230,7 @@ namespace MaintenanceToolGUI
             // 転送比率を計算
             int imageBytesTotal = ToolBLEDFUImageRef.NRF53AppBinSize;
             int percentage = ImageBytesSent * 100 / imageBytesTotal;
-            AppCommon.OutputLogDebug(string.Format("DFU image sent {0} bytes ({1}%)", ImageBytesSent, percentage));
+            AppUtil.OutputLogDebug(string.Format("DFU image sent {0} bytes ({1}%)", ImageBytesSent, percentage));
 
             // 転送状況を画面表示
             string progressMessage = string.Format(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
@@ -286,7 +287,7 @@ namespace MaintenanceToolGUI
             byte[] lenBytes = {
                 0x63, 0x6c, 0x65, 0x6e, 0x1a, 0x00, 0x00, 0x00, 0x00
             };
-            AppCommon.ConvertUint32ToBEBytes(bytesTotal, lenBytes, 5);
+            AppUtil.ConvertUint32ToBEBytes(bytesTotal, lenBytes, 5);
             return lenBytes;
         }
 
@@ -325,12 +326,12 @@ namespace MaintenanceToolGUI
 
             } else if (bytesSent < 0x10000) {
                 offBytes[4] = 0x19;
-                AppCommon.ConvertUint16ToBEBytes((UInt16)bytesSent, offBytes, 5);
+                AppUtil.ConvertUint16ToBEBytes((UInt16)bytesSent, offBytes, 5);
                 len = 7;
 
             } else {
                 offBytes[4] = 0x1a;
-                AppCommon.ConvertUint32ToBEBytes((UInt32)bytesSent, offBytes, 5);
+                AppUtil.ConvertUint32ToBEBytes((UInt32)bytesSent, offBytes, 5);
             }
 
             // 不要な末尾バイトを除去して戻す
@@ -364,14 +365,14 @@ namespace MaintenanceToolGUI
             // CBORをデコードして転送結果情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeUploadResultInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
             // 転送結果情報の rc が設定されている場合はエラー
             byte rc = decoder.ResultInfo.Rc;
             if (rc != 0) {
-                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc));
+                AppUtil.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc));
                 return false;
             }
 
@@ -441,14 +442,14 @@ namespace MaintenanceToolGUI
             // CBORをデコードしてスロット照会情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
             // スロット情報の代わりに rc が設定されている場合はエラー
             byte rc = decoder.ResultInfo.Rc;
             if (rc != 0) {
-                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc));
+                AppUtil.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc));
                 return false;
             }
             return true;
@@ -501,8 +502,8 @@ namespace MaintenanceToolGUI
 
             // ログ出力
             if (Command != BLEDFUCommand.UploadImage) {
-                string dump = AppCommon.DumpMessage(requestData, requestData.Length);
-                AppCommon.OutputLogDebug(string.Format(
+                string dump = AppUtil.DumpMessage(requestData, requestData.Length);
+                AppUtil.OutputLogDebug(string.Format(
                     "Transmit SMP request ({0} bytes)\r\n{1}",
                     requestData.Length, dump));
             }
@@ -523,8 +524,8 @@ namespace MaintenanceToolGUI
 
             // ログ出力
             if (Command != BLEDFUCommand.UploadImage) {
-                string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
-                AppCommon.OutputLogDebug(string.Format(
+                string dump = AppUtil.DumpMessage(receivedData, receivedData.Length);
+                AppUtil.OutputLogDebug(string.Format(
                     "Incoming SMP response ({0} bytes)\r\n{1}",
                     receivedData.Length, dump));
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -39,10 +40,10 @@ namespace MaintenanceToolGUI
             try {
                 // イベントを送出
                 CommandTimeoutEvent(sender, e);
-                AppCommon.OutputLogError(string.Format("CommandTimer({0}) timed out", timerName));
+                AppUtil.OutputLogError(string.Format("CommandTimer({0}) timed out", timerName));
 
             } catch (Exception ex) {
-                AppCommon.OutputLogError(string.Format("CommandTimer({0}): {1}", timerName, ex.Message));
+                AppUtil.OutputLogError(string.Format("CommandTimer({0}): {1}", timerName, ex.Message));
 
             } finally {
                 Stop();

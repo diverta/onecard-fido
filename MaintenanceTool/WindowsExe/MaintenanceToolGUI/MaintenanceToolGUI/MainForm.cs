@@ -34,7 +34,7 @@ namespace MaintenanceToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
-            AppCommon.OutputLogInfo(String.Format(
+            AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
             ble = new BLEMain(this);
@@ -99,7 +99,7 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト発生時
             // その旨を画面・ログファイルに出力
             OnPrintMessageText(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogError(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppUtil.OutputLogError(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
 
             // コマンド固有の後処理を行う
             if (DoCommandTimedOut(sender, e)) {
@@ -128,7 +128,7 @@ namespace MaintenanceToolGUI
             ble.OnFormDestroy();
             hid.OnFormDestroy();
             toolBLEDFU.OnFormDestroy();
-            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
+            AppUtil.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
         public void OnPrintMessageText(string messageText)
@@ -304,7 +304,7 @@ namespace MaintenanceToolGUI
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
             // ログファイルにも出力
-            AppCommon.OutputLogInfo(formatted);
+            AppUtil.OutputLogInfo(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -319,10 +319,10 @@ namespace MaintenanceToolGUI
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             if (success) {
-                AppCommon.OutputLogInfo(formatted);
+                AppUtil.OutputLogInfo(formatted);
                 FormUtil.ShowInfoMessage(this, MaintenanceToolTitle, formatted);
             } else {
-                AppCommon.OutputLogError(formatted);
+                AppUtil.OutputLogError(formatted);
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
             }
         }
@@ -467,7 +467,7 @@ namespace MaintenanceToolGUI
             } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_VIEW_LOG_FILE)) {
                 // 管理ツールのログファイルを格納している
                 // フォルダーを、Windowsのエクスプローラで参照
-                Process.Start(AppCommon.OutputLogFileDirectoryPath());
+                Process.Start(AppUtil.OutputLogFileDirectoryPath());
             }
         }
 

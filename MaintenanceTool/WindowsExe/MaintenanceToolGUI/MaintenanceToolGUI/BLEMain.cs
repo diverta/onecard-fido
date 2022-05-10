@@ -1,4 +1,5 @@
 ﻿using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -181,7 +182,7 @@ namespace MaintenanceToolGUI
             ExtractResponseData(receivedMessage, receivedLen);
 
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(BLEResponseData, BLEResponseLength);
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(BLEResponseData, BLEResponseLength);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
 
             // 情報取得CSVからバージョンに関する情報を抽出

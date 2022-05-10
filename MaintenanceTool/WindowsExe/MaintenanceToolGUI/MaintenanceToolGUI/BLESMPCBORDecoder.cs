@@ -1,5 +1,6 @@
 ﻿using PeterO.Cbor;
 using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -101,13 +102,13 @@ namespace MaintenanceToolGUI
             // Mapから指定キーのエントリーを抽出
             CBORObject imageArray = map[key];
             if (imageArray == null) {
-                AppCommon.OutputLogError(string.Format("ParseImageArray: {0} is null", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseImageArray: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
             if (imageArray.Type != CBORType.Array) {
-                AppCommon.OutputLogError(string.Format("ParseImageArray: {0} is not CBORType.Array", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseImageArray: {0} is not CBORType.Array", key.AsString()));
                 return false;
             }
 
@@ -116,7 +117,7 @@ namespace MaintenanceToolGUI
             foreach (CBORObject imageMap in imageArray.AsList()) {
                 // 型をチェック
                 if (imageMap.Type != CBORType.Map) {
-                    AppCommon.OutputLogError(string.Format("ParseImageArray: idx[{0}] is not CBORType.Map", idx));
+                    AppUtil.OutputLogError(string.Format("ParseImageArray: idx[{0}] is not CBORType.Map", idx));
                     return false;
                 }
 
@@ -163,13 +164,13 @@ namespace MaintenanceToolGUI
             // Mapから指定キーのエントリーを抽出
             CBORObject value = map[key];
             if (value == null) {
-                AppCommon.OutputLogError(string.Format("ParseByteValue: {0} is null", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseByteValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
             if (value.Type != CBORType.Integer) {
-                AppCommon.OutputLogError(string.Format("ParseByteValue: {0} is not CBORType.Number", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseByteValue: {0} is not CBORType.Number", key.AsString()));
                 return false;
             }
 
@@ -183,13 +184,13 @@ namespace MaintenanceToolGUI
             // Mapから指定キーのエントリーを抽出
             CBORObject value = map[key];
             if (value == null) {
-                AppCommon.OutputLogError(string.Format("ParseFixedBytesValue: {0} is null", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseFixedBytesValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
             if (value.Type != CBORType.ByteString) {
-                AppCommon.OutputLogError(string.Format("ParseFixedBytesValue: {0} is not CBORType.ByteString", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseFixedBytesValue: {0} is not CBORType.ByteString", key.AsString()));
                 return false;
             }
 
@@ -203,13 +204,13 @@ namespace MaintenanceToolGUI
             // Mapから指定キーのエントリーを抽出
             CBORObject value = map[key];
             if (value == null) {
-                AppCommon.OutputLogError(string.Format("ParseBooleanValue: {0} is null", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseBooleanValue: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
             if (value.Type != CBORType.Boolean) {
-                AppCommon.OutputLogError(string.Format("ParseBooleanValue: {0} is not CBORType.Boolean", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseBooleanValue: {0} is not CBORType.Boolean", key.AsString()));
                 return false;
             }
 
@@ -223,13 +224,13 @@ namespace MaintenanceToolGUI
             // Mapから指定キーのエントリーを抽出
             CBORObject value = map[key];
             if (value == null) {
-                AppCommon.OutputLogError(string.Format("ParseUInt32Value: {0} is null", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseUInt32Value: {0} is null", key.AsString()));
                 return false;
             }
 
             // 型をチェック
             if (value.Type != CBORType.Integer) {
-                AppCommon.OutputLogError(string.Format("ParseUInt32Value: {0} is not CBORType.Number", key.AsString()));
+                AppUtil.OutputLogError(string.Format("ParseUInt32Value: {0} is not CBORType.Number", key.AsString()));
                 return false;
             }
 

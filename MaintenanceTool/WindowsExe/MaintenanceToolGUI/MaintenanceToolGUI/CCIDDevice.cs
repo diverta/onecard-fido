@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -120,9 +121,9 @@ namespace MaintenanceToolGUI
             uint ret = SCardEstablishContext(CCIDDeviceConst.SCARD_SCOPE_USER, IntPtr.Zero, IntPtr.Zero, out hContext);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
                 if (ret == CCIDDeviceConst.SCARD_E_NO_SERVICE) {
-                    AppCommon.OutputLogError("SCardEstablishContext returns SCARD_E_NO_SERVICE");
+                    AppUtil.OutputLogError("SCardEstablishContext returns SCARD_E_NO_SERVICE");
                 } else {
-                    AppCommon.OutputLogError(string.Format("SCardEstablishContext returns {0}", ret));
+                    AppUtil.OutputLogError(string.Format("SCardEstablishContext returns {0}", ret));
                 }
                 return false;
             }
@@ -137,7 +138,7 @@ namespace MaintenanceToolGUI
             uint ret = SCardListReaders(hContext, null, null, ref pcchReaders);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
                 // 検出失敗
-                AppCommon.OutputLogError("CCIDデバイスを確認できません。");
+                AppUtil.OutputLogError("CCIDデバイスを確認できません。");
                 return false;
             }
 
@@ -146,7 +147,7 @@ namespace MaintenanceToolGUI
             ret = SCardListReaders(hContext, null, mszReaders, ref pcchReaders);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
                 // 検出失敗
-                AppCommon.OutputLogError("CCIDデバイス名称を取得できませんでした。");
+                AppUtil.OutputLogError("CCIDデバイス名称を取得できませんでした。");
                 return false;
             }
 
@@ -156,7 +157,7 @@ namespace MaintenanceToolGUI
             // 認識した最初のCCIDデバイスを使用
             int nullindex = readerNameMultiString.IndexOf((char)0);
             ReaderName = readerNameMultiString.Substring(0, nullindex);
-            AppCommon.OutputLogDebug(string.Format("CCIDデバイス[{0}]を検出しました。", ReaderName));
+            AppUtil.OutputLogDebug(string.Format("CCIDデバイス[{0}]を検出しました。", ReaderName));
             return true;
         }
 
@@ -166,10 +167,10 @@ namespace MaintenanceToolGUI
 
             uint ret = SCardConnect(hContext, ReaderName, CCIDDeviceConst.SCARD_SHARE_SHARED, CCIDDeviceConst.SCARD_PROTOCOL_T1, ref hCard, ref activeProtocol);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
-                AppCommon.OutputLogError(string.Format("CCIDデバイスに接続できませんでした。RC={0}", ret));
+                AppUtil.OutputLogError(string.Format("CCIDデバイスに接続できませんでした。RC={0}", ret));
                 return false;
             }
-            AppCommon.OutputLogDebug(string.Format("CCIDデバイス[{0}]に接続しました。", ReaderName));
+            AppUtil.OutputLogDebug(string.Format("CCIDデバイス[{0}]に接続しました。", ReaderName));
             return true;
         }
 
@@ -199,7 +200,7 @@ namespace MaintenanceToolGUI
 
             uint ret = SCardTransmit(hCard, pci, sendBuffer, cbSendLength, ioRecv, RecvBuffer, ref pcbRecvLength);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
-                AppCommon.OutputLogError(string.Format("CCIDデバイスへの送信処理が失敗しました。RC={0}", ret));
+                AppUtil.OutputLogError(string.Format("CCIDデバイスへの送信処理が失敗しました。RC={0}", ret));
                 RecvLength = 0;
                 return false;
             }
@@ -226,9 +227,9 @@ namespace MaintenanceToolGUI
         {
             uint ret = SCardDisconnect(hCard, CCIDDeviceConst.SCARD_LEAVE_CARD);
             if (ret != CCIDDeviceConst.SCARD_S_SUCCESS) {
-                AppCommon.OutputLogError(string.Format("CCIDデバイス切断処理が失敗しました。RC={0}", ret));
+                AppUtil.OutputLogError(string.Format("CCIDデバイス切断処理が失敗しました。RC={0}", ret));
             } else {
-                AppCommon.OutputLogDebug(string.Format("CCIDデバイス[{0}]から切断しました。", ReaderName));
+                AppUtil.OutputLogDebug(string.Format("CCIDデバイス[{0}]から切断しました。", ReaderName));
             }
 
             // 内部変数を初期化する。

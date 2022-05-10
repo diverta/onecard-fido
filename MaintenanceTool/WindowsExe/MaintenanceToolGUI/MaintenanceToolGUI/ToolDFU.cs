@@ -181,7 +181,7 @@ namespace MaintenanceToolGUI
             }
 
             // 取得できたバージョン番号
-            AppCommon.OutputLogDebug(string.Format(
+            AppUtil.OutputLogDebug(string.Format(
                 "ToolDFUCommand: SoftDevice version: {0}", softDeviceVersion));
             // ソフトデバイスのバージョンが古い場合
             if (softDeviceVersion < DFU_NEW_TARGET_SOFTDEVICE_VER) {
@@ -242,8 +242,8 @@ namespace MaintenanceToolGUI
             }
 
             // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
-            int currentVersionDec = AppCommon.CalculateDecimalVersion(CurrentVersion);
-            int updateVersionDec = AppCommon.CalculateDecimalVersion(UpdateVersion);
+            int currentVersionDec = AppUtil.CalculateDecimalVersion(CurrentVersion);
+            int updateVersionDec = AppUtil.CalculateDecimalVersion(UpdateVersion);
             if (currentVersionDec > updateVersionDec) {
                 string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW, 
                     CurrentVersion, UpdateVersion);
@@ -353,12 +353,12 @@ namespace MaintenanceToolGUI
             bool versionEqual = (CurrentVersion == UpdateVersion);
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
-                AppCommon.OutputLogInfo(string.Format(
+                AppUtil.OutputLogInfo(string.Format(
                     ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
             }
 
             // メイン画面に制御を戻す

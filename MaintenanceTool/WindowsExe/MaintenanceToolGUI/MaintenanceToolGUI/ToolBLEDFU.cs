@@ -167,8 +167,8 @@ namespace MaintenanceToolGUI
             }
 
             // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
-            int currentVersionDec = AppCommon.CalculateDecimalVersion(CurrentVersion);
-            int updateVersionDec = AppCommon.CalculateDecimalVersion(UpdateVersion);
+            int currentVersionDec = AppUtil.CalculateDecimalVersion(CurrentVersion);
+            int updateVersionDec = AppUtil.CalculateDecimalVersion(UpdateVersion);
             if (currentVersionDec > updateVersionDec) {
                 string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                     CurrentVersion, UpdateVersion);
@@ -218,7 +218,7 @@ namespace MaintenanceToolGUI
         public void NotifyFirmwareVersionResponseFailed()
         {
             // メッセージを表示し、メイン画面に制御を戻す
-            AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+            AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             NotifyCancel();
         }
@@ -229,11 +229,11 @@ namespace MaintenanceToolGUI
             bool versionEqual = (CurrentVersion == UpdateVersion);
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
-                AppCommon.OutputLogInfo(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+                AppUtil.OutputLogInfo(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
+                AppUtil.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
             }
 
             // メイン画面に制御を戻す
@@ -303,14 +303,14 @@ namespace MaintenanceToolGUI
         {
             // メッセージ文言を画面とログに出力
             NotifyMessage(message);
-            AppCommon.OutputLogInfo(message);
+            AppUtil.OutputLogInfo(message);
         }
 
         private void OnNotifyDFUErrorMessage(string message)
         {
             // エラーメッセージ文言を画面とログに出力
             NotifyMessage(message);
-            AppCommon.OutputLogError(message);
+            AppUtil.OutputLogError(message);
         }
 
         private void OnNotifyDFUTransfer(bool transferring)

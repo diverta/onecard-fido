@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -176,7 +177,7 @@ namespace MaintenanceToolGUI
         {
             if (success) {
                 // バージョン照会から開始
-                AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
+                AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
                 DoRequestGPGVersion();
 
             } else {
@@ -259,7 +260,7 @@ namespace MaintenanceToolGUI
 
             // 生成された作業用フォルダー名称を保持
             TempFolderPath = createdTempFolderPath;
-            AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, TempFolderPath));
+            AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, TempFolderPath));
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
@@ -320,7 +321,7 @@ namespace MaintenanceToolGUI
                 if (keyid != null) {
                     // チェックOKの場合は鍵IDを保持し、次の処理に移行
                     GeneratedMainKeyId = keyid;
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, GeneratedMainKeyId));
+                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, GeneratedMainKeyId));
                     DoRequestAddSubKey();
                     return;
                 }
@@ -359,7 +360,7 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfSubKeysExistFromResponse(response, false)) {
                     // 副鍵が３点生成された場合は、次の処理に移行
-                    AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADDED_SUB_KEYS);
+                    AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADDED_SUB_KEYS);
                     DoRequestExportPubkeyAndBackup();
                     return;
                 }
@@ -392,8 +393,8 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfPubkeyAndBackupExist()) {
                     // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
-                    AppCommon.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
+                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
+                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
                     DoRequestTransferSubkeyToCard();
                     return;
                 }
@@ -432,7 +433,7 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfSubKeysExistFromResponse(response, true)) {
                     // 副鍵が認証器に移動された場合は、処理成功を通知
-                    AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
+                    AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
                     CommandSuccess = true;
 
                 } else {
@@ -590,7 +591,7 @@ namespace MaintenanceToolGUI
 
             // 生成された作業用フォルダー名称をクリア
             TempFolderPath = null;
-            AppCommon.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_REMOVED_TEMPDIR);
+            AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_REMOVED_TEMPDIR);
 
             // 処理完了を通知
             NotifyProcessTerminated(CommandSuccess);
@@ -641,7 +642,7 @@ namespace MaintenanceToolGUI
                 success = true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.MakeTempFolder exception:\n{0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolPGP.MakeTempFolder exception:\n{0}", e.Message));
             }
 
             // 生成された作業用フォルダーを戻す
@@ -658,7 +659,7 @@ namespace MaintenanceToolGUI
                 success = true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.RemoveTempFolder exception:\n{0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolPGP.RemoveTempFolder exception:\n{0}", e.Message));
             }
 
             // 作業用フォルダー削除の成否を戻す
@@ -675,14 +676,14 @@ namespace MaintenanceToolGUI
                 if (text.StartsWith(keyword)) {
                     // バージョン文字列を抽出
                     string versionStr = text.Replace(keyword, "");
-                    int versionDec = AppCommon.CalculateDecimalVersion(versionStr);
+                    int versionDec = AppUtil.CalculateDecimalVersion(versionStr);
 
                     // PCに導入されているGnuPGのバージョンが2.3.4以上の場合は true
-                    AppCommon.OutputLogDebug(string.Format("Installed GnuPG: version {0}", versionStr));
+                    AppUtil.OutputLogDebug(string.Format("Installed GnuPG: version {0}", versionStr));
                     return (versionDec >= 20304);
                 }
             }
-            AppCommon.OutputLogDebug("GnuPG is not installed yet");
+            AppUtil.OutputLogDebug("GnuPG is not installed yet");
             return false;
         }
 
@@ -753,13 +754,13 @@ namespace MaintenanceToolGUI
             // 揃っていない副鍵についてログを出力
             string str = transferred ? "transferred" : "added";
             if (subKeyS == false) {
-                AppCommon.OutputLogDebug(string.Format("Sub key (for sign) not {0}", str));
+                AppUtil.OutputLogDebug(string.Format("Sub key (for sign) not {0}", str));
             }
             if (subKeyE == false) {
-                AppCommon.OutputLogDebug(string.Format("Sub key (for encrypt) not {0}", str));
+                AppUtil.OutputLogDebug(string.Format("Sub key (for encrypt) not {0}", str));
             }
             if (subKeyA == false) {
-                AppCommon.OutputLogDebug(string.Format("Sub key (for authenticate) not {0}", str));
+                AppUtil.OutputLogDebug(string.Format("Sub key (for authenticate) not {0}", str));
             }
 
             // false を戻す
@@ -770,13 +771,13 @@ namespace MaintenanceToolGUI
         {
             // 公開鍵ファイルがエクスポート先に存在するかチェック
             if (CheckIfFileExist("public_key.pgp", Parameter.PubkeyFolderPath) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
                 return false;
             }
 
             // バックアップファイルがエクスポート先に存在するかチェック
             if (CheckIfFileExist("GNUPGHOME.tgz", Parameter.BackupFolderPath) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
+                AppUtil.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
                 return false;
             }
 
@@ -841,7 +842,7 @@ namespace MaintenanceToolGUI
             foreach (string text in TextArrayOfResponse(response)) {
                 if (text.Contains(keywordNG)) {
                     // 失敗メッセージが出力されている場合は false
-                    AppCommon.OutputLogError(string.Format("GnuPG operation failed: {0}", text));
+                    AppUtil.OutputLogError(string.Format("GnuPG operation failed: {0}", text));
                     return false;
 
                 } else if (text.Contains(keywordOK)) {
@@ -957,12 +958,12 @@ namespace MaintenanceToolGUI
             // スクリプトをリソースから読込み
             string scriptResourceName = GetScriptResourceName(scriptName);
             if (scriptResourceName == null) {
-                AppCommon.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
+                AppUtil.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
                 return null;
             }
             string scriptContent = GetScriptResourceContent(scriptResourceName);
             if (scriptContent == null) {
-                AppCommon.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
+                AppUtil.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
                 return null;
             }
             return scriptContent;
@@ -1008,7 +1009,7 @@ namespace MaintenanceToolGUI
                 stream.Close();
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.GetScriptResourceContent exception:\n{0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolPGP.GetScriptResourceContent exception:\n{0}", e.Message));
                 return null;
             }
 
@@ -1025,7 +1026,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.WriteStringToFile exception:\n{0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolPGP.WriteStringToFile exception:\n{0}", e.Message));
                 return false;
             }
         }
@@ -1074,7 +1075,7 @@ namespace MaintenanceToolGUI
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine exception:\n{0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolPGP.DoRequestCommandLine exception:\n{0}", e.Message));
             }
 
             // コマンドからの応答文字列／エラー出力を戻す
@@ -1152,13 +1153,13 @@ namespace MaintenanceToolGUI
 
             // コマンド開始メッセージをログファイルに出力
             string startMsg = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, NameOfCommand);
-            AppCommon.OutputLogInfo(startMsg);
+            AppUtil.OutputLogInfo(startMsg);
         }
 
         private void NotifyErrorMessage(string message)
         {
             // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
-            AppCommon.OutputLogError(message.Replace("\n", ""));
+            AppUtil.OutputLogError(message.Replace("\n", ""));
 
             // 戻り先画面に表示させるためのエラーメッセージを保持
             ErrorMessageOfCommand = message;
@@ -1171,9 +1172,9 @@ namespace MaintenanceToolGUI
                 NameOfCommand,
                 success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             if (success) {
-                AppCommon.OutputLogInfo(formatted);
+                AppUtil.OutputLogInfo(formatted);
             } else {
-                AppCommon.OutputLogError(formatted);
+                AppUtil.OutputLogError(formatted);
             }
 
             // 進捗画面を閉じる

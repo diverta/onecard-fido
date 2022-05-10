@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -157,7 +158,7 @@ namespace MaintenanceToolGUI
 
             // AES256-CBCで暗号化  
             //   AES256-CBC(sharedSecret, IV=0, LEFT(SHA-256(curPin),16))
-            byte[] pinHashEnc = AppCommon.AES256CBCEncrypt(sharedSecret, pinsha16);
+            byte[] pinHashEnc = AppUtil.AES256CBCEncrypt(sharedSecret, pinsha16);
 
             // for debug
             // AppCommon.OutputLogToFile("pinHashEnc: ", true);
@@ -169,7 +170,7 @@ namespace MaintenanceToolGUI
         private void CreateNewPinEnc(string pinNew)
         {
             byte[] newPinBytes = PaddingPin64(pinNew);
-            NewPinEnc = AppCommon.AES256CBCEncrypt(SharedSecretKey, newPinBytes);
+            NewPinEnc = AppUtil.AES256CBCEncrypt(SharedSecretKey, newPinBytes);
         }
 
         private byte[] PaddingPin64(string pin)
@@ -339,12 +340,12 @@ namespace MaintenanceToolGUI
             CBORDecoder cborDecoder = new CBORDecoder();
             byte[] pinTokenEnc = cborDecoder.GetPinTokenEnc(pinTokenCBOR);
             if (pinTokenEnc == null) {
-                AppCommon.OutputLogError("Extract encrypted pinToken fail");
+                AppUtil.OutputLogError("Extract encrypted pinToken fail");
                 return null;
             }
 
             // pinTokenを共通鍵で復号化
-            return AppCommon.AES256CBCDecrypt(sharedSecretKey, pinTokenEnc);
+            return AppUtil.AES256CBCDecrypt(sharedSecretKey, pinTokenEnc);
         }
 
         private byte[] CreateClientDataHash(byte[] challenge)
@@ -377,7 +378,7 @@ namespace MaintenanceToolGUI
         {
             // AES256-CBCで暗号化  
             //   AES256-CBC(sharedSecret, IV=0, salt)
-            byte[] saltEnc = AppCommon.AES256CBCEncrypt(sharedSecret, salt);
+            byte[] saltEnc = AppUtil.AES256CBCEncrypt(sharedSecret, salt);
             return saltEnc;
         }
 

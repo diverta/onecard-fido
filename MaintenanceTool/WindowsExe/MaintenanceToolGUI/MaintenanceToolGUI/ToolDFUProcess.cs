@@ -1,4 +1,5 @@
 ﻿using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -72,7 +73,7 @@ namespace MaintenanceToolGUI
         private void ReceiveGetMtuRequest(byte[] response)
         {
             // レスポンスからMTUを取得（4〜5バイト目、リトルエンディアン）
-            MTU = AppCommon.ToInt16(response, 3, false);
+            MTU = AppUtil.ToInt16(response, 3, false);
 
             // DATイメージ転送処理の開始
             // １回あたりの送信データ最大長を取得
@@ -111,7 +112,7 @@ namespace MaintenanceToolGUI
         private void ReceiveSelectObjectRequest(byte[] response)
         {
             // レスポンスからMaxCreateSizeを取得（4〜7バイト目、リトルエンディアン）
-            MaxCreateSize = AppCommon.ToInt32(response, 3, false);
+            MaxCreateSize = AppUtil.ToInt32(response, 3, false);
 
             // データサイズを設定
             AlreadySent = 0;
@@ -138,7 +139,7 @@ namespace MaintenanceToolGUI
             if (RemainingToSend < 1) {
                 if (ObjectType == NRFDfuConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
                     // DATイメージ転送完了
-                    AppCommon.OutputLogDebug("ToolDFU: update init command object done");
+                    AppUtil.OutputLogDebug("ToolDFU: update init command object done");
 
                     // BINイメージ転送処理の開始
                     // １回あたりの送信データ最大長を取得
@@ -146,7 +147,7 @@ namespace MaintenanceToolGUI
 
                 } else if (ObjectType == NRFDfuConst.NRF_DFU_BYTE_OBJ_DATA) {
                     // BINイメージ転送完了
-                    AppCommon.OutputLogDebug("ToolDFU: update data object done");
+                    AppUtil.OutputLogDebug("ToolDFU: update data object done");
 
                     // これは仮の処理です。
                     TerminateDFUProcess(true);
@@ -162,7 +163,7 @@ namespace MaintenanceToolGUI
                 NRFDfuConst.NRF_DFU_OP_OBJECT_CREATE, ObjectType, 0x00, 0x00, 0x00, 0x00,
                 NRFDfuConst.NRF_DFU_BYTE_EOM};
             int offset = 2;
-            AppCommon.ConvertUint32ToLEBytes((UInt32)SizeToSend, b, offset);
+            AppUtil.ConvertUint32ToLEBytes((UInt32)SizeToSend, b, offset);
 
             // DFUリクエストを送信
             if (DFUDeviceRef.SendDFURequest(b) == false) {
@@ -219,11 +220,11 @@ namespace MaintenanceToolGUI
             byte[] respUnesc = ToolDFUUtil.UnescapeResponseData(response);
 
             // レスポンスからデータ長を取得（4〜7バイト目、リトルエンディアン）
-            int recvSize = AppCommon.ToInt32(respUnesc, 3, false);
+            int recvSize = AppUtil.ToInt32(respUnesc, 3, false);
 
             // 送信データ長を検証
             if (recvSize != AlreadySent) {
-                AppCommon.OutputLogError(string.Format(
+                AppUtil.OutputLogError(string.Format(
                     "ToolDFUCommand: send object {0} failed (expected {1} bytes, recv {2} bytes)",
                     ObjectType, AlreadySent, recvSize));
                 TerminateDFUProcess(false);
@@ -231,11 +232,11 @@ namespace MaintenanceToolGUI
             }
 
             // レスポンスからチェックサムを取得（8〜11バイト目、リトルエンディアン）
-            UInt32 checksum = (UInt32)AppCommon.ToInt32(respUnesc, 7, false);
+            UInt32 checksum = (UInt32)AppUtil.ToInt32(respUnesc, 7, false);
 
             // チェックサムを検証
             if (checksum != toolDFUUtil.DFUObjectChecksumGet()) {
-                AppCommon.OutputLogError(string.Format(
+                AppUtil.OutputLogError(string.Format(
                     "ToolDFUCommand: send object {0} failed (checksum error)",
                     ObjectType));
                 TerminateDFUProcess(false);
@@ -293,7 +294,7 @@ namespace MaintenanceToolGUI
                 ToolDFURef.SoftDeviceVersionResponseReceived(false, 0);
             } else {
                 // レスポンスからバージョンを取得（5〜8バイト目、リトルエンディアン）
-                int versionNumber = AppCommon.ToInt32(response, 4, false);
+                int versionNumber = AppUtil.ToInt32(response, 4, false);
                 ToolDFURef.SoftDeviceVersionResponseReceived(true, versionNumber);
             }
         }

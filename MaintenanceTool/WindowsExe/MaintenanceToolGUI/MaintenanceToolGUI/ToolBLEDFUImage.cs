@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -95,7 +96,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolBLEDFUImage.ReadDFUImage: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolBLEDFUImage.ReadDFUImage: {0}", e.Message));
                 return false;
             }
         }
@@ -103,11 +104,11 @@ namespace MaintenanceToolGUI
         private bool ExtractImageHashSha256()
         {
             // magicの値を抽出
-            ulong magic = (ulong)AppCommon.ToInt32(NRF53AppBin, 0, false);
+            ulong magic = (ulong)AppUtil.ToInt32(NRF53AppBin, 0, false);
 
             // イメージヘッダー／データ長を抽出
-            int image_header_size = AppCommon.ToInt32(NRF53AppBin, 8, false);
-            int image_data_size = AppCommon.ToInt32(NRF53AppBin, 12, false);
+            int image_header_size = AppUtil.ToInt32(NRF53AppBin, 8, false);
+            int image_data_size = AppUtil.ToInt32(NRF53AppBin, 12, false);
             int image_size = image_header_size + image_data_size;
 
             // イメージヘッダーから、イメージTLVの開始位置を計算
@@ -121,9 +122,9 @@ namespace MaintenanceToolGUI
             // イメージTLVからSHA-256ハッシュの開始位置を検出
             while (tlv_info < NRF53AppBinSize) {
                 // タグ／長さを抽出
-                int tag = AppCommon.ToInt16(NRF53AppBin, tlv_info, false);
+                int tag = AppUtil.ToInt16(NRF53AppBin, tlv_info, false);
                 tlv_info += 2;
-                int len = AppCommon.ToInt16(NRF53AppBin, tlv_info, false);
+                int len = AppUtil.ToInt16(NRF53AppBin, tlv_info, false);
                 tlv_info += 2;
 
                 // SHA-256のタグであり、長さが32バイトであればデータをバッファにコピー
@@ -135,7 +136,7 @@ namespace MaintenanceToolGUI
                 }
             }
             // SHA-256ハッシュが見つからなかった場合はエラー
-            AppCommon.OutputLogError("ToolBLEDFUImage.ExtractImageHashSha256: SHA-256 hash of image not found");
+            AppUtil.OutputLogError("ToolBLEDFUImage.ExtractImageHashSha256: SHA-256 hash of image not found");
             return false;
         }
 
@@ -164,9 +165,9 @@ namespace MaintenanceToolGUI
 
             // ログ出力
             string fname = resName.Replace(ResourceName, "");
-            AppCommon.OutputLogDebug(string.Format("ToolBLEDFUImage: Firmware version {0}, board name {1}",
+            AppUtil.OutputLogDebug(string.Format("ToolBLEDFUImage: Firmware version {0}, board name {1}",
                 UpdateVersion, boardname));
-            AppCommon.OutputLogDebug(string.Format("ToolBLEDFUImage: {0}({1} bytes)",
+            AppUtil.OutputLogDebug(string.Format("ToolBLEDFUImage: {0}({1} bytes)",
                 fname, NRF53AppBinSize
                 ));
 
