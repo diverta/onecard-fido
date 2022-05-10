@@ -94,6 +94,7 @@
       <Link>ToolGUICommon\HIDProcess.cs</Link>
     </Compile>
     <Compile Include="AppCommon.cs" />
+    <Compile Include="Ctap2.cs" />
     <Compile Include="FIDOAttestationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,6 +305,8 @@
     <Compile Include="..\..\Numbers\Numbers\PeterO\Numbers\TrappableRadixMath.cs">
       <Link>PeterO\Numbers\TrappableRadixMath.cs</Link>
     </Compile>
+    <Compile Include="HIDMain.cs" />
+    <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

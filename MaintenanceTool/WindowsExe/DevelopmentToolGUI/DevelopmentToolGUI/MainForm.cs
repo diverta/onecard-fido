@@ -7,7 +7,7 @@ namespace DevelopmentToolGUI
 {
     public partial class MainForm : Form
     {
-        // private HIDMain hid;
+        private HIDMain HIDMainRef;
         private string commandTitle = "";
 
         // 管理ツールの情報
@@ -29,10 +29,8 @@ namespace DevelopmentToolGUI
             AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
-            // TODO:
-            // 本フォームのハンドルを引き渡すよう
-            // HIDMain クラスのコンストラクターを修正予定
-            // hid = new HIDMain(null);
+            // HIDMainクラスを生成
+            HIDMainRef = new HIDMain(this);
 
             // 画面タイトルを設定
             Text = MaintenanceToolTitle;
@@ -109,7 +107,7 @@ namespace DevelopmentToolGUI
         private void TerminateApplication()
         {
             // このアプリケーションを終了する
-            // hid.OnFormDestroy();
+            HIDMainRef.OnFormDestroy();
             AppUtil.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
@@ -136,12 +134,10 @@ namespace DevelopmentToolGUI
 
         public bool CheckUSBDeviceDisconnected()
         {
-            /*
-            if (hid.IsUSBDeviceDisconnected()) {
+            if (HIDMainRef.IsUSBDeviceDisconnected()) {
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 return true;
             }
-            */
             return false;
         }
 
@@ -200,17 +196,15 @@ namespace DevelopmentToolGUI
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
-            /*
             if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
                 // 鍵・証明書消去
-                hid.DoEraseSkeyCert();
+                HIDMainRef.DoEraseSkeyCert();
 
             } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
                 // 鍵・証明書インストール
-                hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
+                HIDMainRef.DoInstallSkeyCert(f.KeyPath, f.CertPath);
             }
-            */
-            }
+        }
 
         protected override void WndProc(ref Message m)
         {
@@ -218,14 +212,12 @@ namespace DevelopmentToolGUI
 
             if (m.Msg == WmDevicechange) {
                 int wParam = m.WParam.ToInt32();
-                /*
                 if (wParam == DbtDevicearrival) {
-                    hid.OnUSBDeviceArrival();
+                    HIDMainRef.OnUSBDeviceArrival();
                 }
                 if (wParam == DbtDeviceremovecomplete) {
-                    hid.OnUSBDeviceRemoveComplete();
+                    HIDMainRef.OnUSBDeviceRemoveComplete();
                 }
-                */
             }
         }
 
