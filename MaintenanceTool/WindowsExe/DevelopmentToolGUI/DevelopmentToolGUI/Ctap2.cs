@@ -59,9 +59,6 @@ namespace DevelopmentToolGUI
             switch (message[0]) {
             case 0x00:
                 return true;
-            case 0xfe:  // CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST (CTAP2_ERR_VENDOR_FIRST+0x0e)
-                mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
-                break;
             default:
                 break;
             }

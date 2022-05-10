@@ -93,12 +93,6 @@ namespace DevelopmentToolGUI
             case Const.HID_CMD_CTAPHID_CBOR:
                 ctap2.DoResponseCtapHidCbor(message, length);
                 break;
-            case Const.HID_CMD_BOOTLOADER_MODE:
-                if (requestType == AppCommon.RequestType.GotoBootLoaderMode) {
-                    // ステータスバイトをチェックし、画面に制御を戻す
-                    DoResponseMaintSkeyCert(message, length);
-                }
-                break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 // メイン画面に制御を戻す
                 mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -178,19 +172,12 @@ namespace DevelopmentToolGUI
         public void DoResponseCtapHidInit(byte[] message, int length)
         {
             switch (requestType) {
-            case AppCommon.RequestType.GotoBootLoaderMode:
-                DoRequestBootLoaderMode();
-                break;
             case AppCommon.RequestType.EraseSkeyCert:
                 DoRequestEraseSkeyCert();
                 break;
             case AppCommon.RequestType.InstallSkeyCert:
                 // 認証器の公開鍵を取得
                 ctap2.DoGetKeyAgreement(requestType);
-                break;
-            case AppCommon.RequestType.ChangeToBootloaderMode:
-                // ブートローダー遷移コマンドを実行
-                DoRequestCommandBootloaderMode();
                 break;
             default:
                 break;
@@ -205,18 +192,6 @@ namespace DevelopmentToolGUI
                 receivedCID[j] = message[8 + j];
             }
             return receivedCID;
-        }
-
-        public void DoBootLoaderMode()
-        {
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.GotoBootLoaderMode);
-        }
-
-        public void DoRequestBootLoaderMode()
-        {
-            // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
         }
 
         public void DoEraseSkeyCert()
@@ -299,21 +274,6 @@ namespace DevelopmentToolGUI
             bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
-        }
-
-        //
-        // ブートローダー遷移コマンド
-        //
-        public void DoCommandChangeToBootloaderMode()
-        {
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.ChangeToBootloaderMode);
-        }
-
-        private void DoRequestCommandBootloaderMode()
-        {
-            // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
         }
     }
 }
