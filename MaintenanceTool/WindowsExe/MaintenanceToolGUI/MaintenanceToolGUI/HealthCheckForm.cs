@@ -45,21 +45,21 @@ namespace MaintenanceToolGUI
         private void buttonBLECtap2HealthCheck_Click(object sender, EventArgs e)
         {
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
+            CommandTitle = AppCommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
             TerminateWindow(DialogResult.OK);
         }
 
         private void buttonBLEU2FHealthCheck_Click(object sender, EventArgs e)
         {
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
+            CommandTitle = AppCommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
             TerminateWindow(DialogResult.OK);
         }
 
         private void buttonBLEPingTest_Click(object sender, EventArgs e)
         {
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
+            CommandTitle = AppCommon.PROCESS_NAME_TEST_BLE_PING;
             TerminateWindow(DialogResult.OK);
         }
 
@@ -71,7 +71,7 @@ namespace MaintenanceToolGUI
             }
 
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
+            CommandTitle = AppCommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
             TerminateWindow(DialogResult.OK);
         }
 
@@ -83,7 +83,7 @@ namespace MaintenanceToolGUI
             }
 
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
+            CommandTitle = AppCommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
             TerminateWindow(DialogResult.OK);
         }
 
@@ -95,7 +95,7 @@ namespace MaintenanceToolGUI
             }
 
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
+            CommandTitle = AppCommon.PROCESS_NAME_TEST_CTAPHID_PING;
             TerminateWindow(DialogResult.OK);
         }
     }

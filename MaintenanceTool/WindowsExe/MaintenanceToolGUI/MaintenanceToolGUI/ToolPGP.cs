@@ -1128,16 +1128,16 @@ namespace MaintenanceToolGUI
             RequestType = requestType;
             switch (RequestType) {
                 case AppCommon.RequestType.OpenPGPInstallKeys:
-                    NameOfCommand = ToolGUICommon.PROCESS_NAME_OPENPGP_INSTALL_KEYS;
+                    NameOfCommand = AppCommon.PROCESS_NAME_OPENPGP_INSTALL_KEYS;
                     break;
                 case AppCommon.RequestType.OpenPGPStatus:
-                    NameOfCommand = ToolGUICommon.PROCESS_NAME_OPENPGP_STATUS;
+                    NameOfCommand = AppCommon.PROCESS_NAME_OPENPGP_STATUS;
                     break;
                 case AppCommon.RequestType.OpenPGPReset:
-                    NameOfCommand = ToolGUICommon.PROCESS_NAME_OPENPGP_RESET;
+                    NameOfCommand = AppCommon.PROCESS_NAME_OPENPGP_RESET;
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
-                    NameOfCommand = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
+                    NameOfCommand = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
                     break;
                 case AppCommon.RequestType.OpenPGPChangePin:
                 case AppCommon.RequestType.OpenPGPChangeAdminPin:

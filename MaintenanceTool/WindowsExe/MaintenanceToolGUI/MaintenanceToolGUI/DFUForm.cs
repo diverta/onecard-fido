@@ -51,7 +51,7 @@ namespace MaintenanceToolGUI
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_USB_DFU;
+            CommandTitle = AppCommon.PROCESS_NAME_USB_DFU;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -70,7 +70,7 @@ namespace MaintenanceToolGUI
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_BLE_DFU;
+            CommandTitle = AppCommon.PROCESS_NAME_BLE_DFU;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);

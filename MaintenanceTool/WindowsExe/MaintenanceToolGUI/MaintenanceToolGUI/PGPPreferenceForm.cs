@@ -608,7 +608,7 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.OpenPGPStatus:
                     if (success) {
                         // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
-                        CommonDisplayInfoForm.OpenForm(this, ToolGUICommon.PROCESS_NAME_OPENPGP_STATUS, ToolPGPRef.GetPGPStatusInfoString());
+                        CommonDisplayInfoForm.OpenForm(this, AppCommon.PROCESS_NAME_OPENPGP_STATUS, ToolPGPRef.GetPGPStatusInfoString());
                         return;
                     }
                     name = AppCommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
@@ -617,7 +617,7 @@ namespace MaintenanceToolGUI
                     name = AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
-                    name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
+                    name = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
                     break;
                 case AppCommon.RequestType.OpenPGPChangePin:
                 case AppCommon.RequestType.OpenPGPChangeAdminPin:

@@ -105,7 +105,7 @@ namespace MaintenanceToolGUI
             // 画面入力値をパラメーターに保持
             KeyPath = textKeyPath.Text;
             CertPath = textCertPath.Text;
-            CommandTitle = ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT;
+            CommandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -131,7 +131,7 @@ namespace MaintenanceToolGUI
             // 画面入力値をパラメーターに保持
             KeyPath = "";
             CertPath = "";
-            CommandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
+            CommandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);

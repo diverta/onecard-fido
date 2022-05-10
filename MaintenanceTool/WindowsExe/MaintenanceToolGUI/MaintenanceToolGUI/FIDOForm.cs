@@ -86,7 +86,7 @@ namespace MaintenanceToolGUI
             // プロンプトを表示し、Yesの場合だけ処理を行う
             if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message)) {
                 // 画面入力値をパラメーターに保持
-                CommandTitle = ToolGUICommon.PROCESS_NAME_AUTH_RESET;
+                CommandTitle = AppCommon.PROCESS_NAME_AUTH_RESET;
 
                 // 画面項目を初期化し、この画面を閉じる
                 TerminateWindow(DialogResult.OK);

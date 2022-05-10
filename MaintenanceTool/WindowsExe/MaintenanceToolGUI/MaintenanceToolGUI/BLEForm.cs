@@ -62,7 +62,7 @@ namespace MaintenanceToolGUI
             Passkey = PairingStartFormRef.GetPasskey();
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
+            CommandTitle = AppCommon.PROCESS_NAME_PAIRING;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -84,7 +84,7 @@ namespace MaintenanceToolGUI
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
+            CommandTitle = AppCommon.PROCESS_NAME_ERASE_BONDS;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);

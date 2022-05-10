@@ -55,7 +55,7 @@ namespace MaintenanceToolGUI
             // 画面入力値をパラメーターに保持
             PinNew = textPin.Text;
             PinOld = "";
-            CommandTitle = ToolGUICommon.PROCESS_NAME_CLIENT_PIN_SET;
+            CommandTitle = AppCommon.PROCESS_NAME_CLIENT_PIN_SET;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -71,7 +71,7 @@ namespace MaintenanceToolGUI
             // 画面入力値をパラメーターに保持
             PinNew = textPin.Text;
             PinOld = textPinOld.Text;
-            CommandTitle = ToolGUICommon.PROCESS_NAME_CLIENT_PIN_CHANGE;
+            CommandTitle = AppCommon.PROCESS_NAME_CLIENT_PIN_CHANGE;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
