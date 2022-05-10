@@ -101,7 +101,9 @@
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CCIDDevice.cs" />
     <Compile Include="CCIDProcess.cs" />
-    <Compile Include="CommandTimer.cs" />
+    <Compile Include="..\..\ToolGUICommon\CommandTimer.cs">
+      <Link>ToolGUICommon\CommandTimer.cs</Link>
+    </Compile>
     <Compile Include="CommonDisplayInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>

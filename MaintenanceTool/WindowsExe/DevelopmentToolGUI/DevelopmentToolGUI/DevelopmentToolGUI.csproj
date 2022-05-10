@@ -75,6 +75,9 @@
     <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
       <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
+    <Compile Include="..\..\ToolGUICommon\CommandTimer.cs">
+      <Link>ToolGUICommon\CommandTimer.cs</Link>
+    </Compile>
     <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
       <Link>ToolGUICommon\FormUtil.cs</Link>
     </Compile>
