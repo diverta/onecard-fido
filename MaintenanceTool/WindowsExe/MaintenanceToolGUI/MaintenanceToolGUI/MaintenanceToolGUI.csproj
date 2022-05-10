@@ -406,7 +406,9 @@
     </Compile>
     <Compile Include="ToolGUICommon.cs" />
     <Compile Include="BLEMain.cs" />
-    <Compile Include="FormUtil.cs" />
+    <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
+      <Link>ToolGUICommon\FormUtil.cs</Link>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
