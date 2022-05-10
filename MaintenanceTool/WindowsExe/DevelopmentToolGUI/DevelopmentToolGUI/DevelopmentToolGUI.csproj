@@ -72,15 +72,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\MaintenanceToolGUI\MaintenanceToolCommon\AppCommon.cs">
-      <Link>MaintenanceToolCommon\AppCommon.cs</Link>
+    <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
+      <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
-    <Compile Include="..\..\MaintenanceToolGUI\MaintenanceToolGUI\CommandTimer.cs">
-      <Link>MaintenanceToolGUI\CommandTimer.cs</Link>
+    <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
+      <Link>ToolGUICommon\FormUtil.cs</Link>
     </Compile>
-    <Compile Include="..\..\MaintenanceToolGUI\MaintenanceToolGUI\ToolGUICommon.cs">
-      <Link>MaintenanceToolGUI\ToolGUICommon.cs</Link>
+    <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
+      <Link>ToolGUICommon\HIDDevice.cs</Link>
     </Compile>
+    <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
+      <Link>ToolGUICommon\HIDProcess.cs</Link>
+    </Compile>
+    <Compile Include="AppCommon.cs" />
     <Compile Include="FIDOAttestationForm.cs">
       <SubType>Form</SubType>
     </Compile>
