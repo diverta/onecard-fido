@@ -35,7 +35,6 @@
             this.buttonSelectKeyPath = new System.Windows.Forms.Button();
             this.buttonSelectCertPath = new System.Windows.Forms.Button();
             this.buttonInstall = new System.Windows.Forms.Button();
-            this.buttonDelete = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
@@ -105,7 +104,7 @@
             // 
             // buttonInstall
             // 
-            this.buttonInstall.Location = new System.Drawing.Point(14, 88);
+            this.buttonInstall.Location = new System.Drawing.Point(280, 88);
             this.buttonInstall.Name = "buttonInstall";
             this.buttonInstall.Size = new System.Drawing.Size(200, 25);
             this.buttonInstall.TabIndex = 5;
@@ -113,22 +112,11 @@
             this.buttonInstall.UseVisualStyleBackColor = true;
             this.buttonInstall.Click += new System.EventHandler(this.buttonInstall_Click);
             // 
-            // buttonDelete
-            // 
-            this.buttonDelete.Location = new System.Drawing.Point(232, 88);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(200, 25);
-            this.buttonDelete.TabIndex = 6;
-            this.buttonDelete.Text = "鍵・証明書の消去";
-            this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
-            // 
             // FIDOAttestationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 131);
-            this.Controls.Add(this.buttonDelete);
             this.Controls.Add(this.buttonInstall);
             this.Controls.Add(this.buttonSelectCertPath);
             this.Controls.Add(this.buttonSelectKeyPath);
@@ -159,7 +147,6 @@
         private System.Windows.Forms.Button buttonSelectKeyPath;
         private System.Windows.Forms.Button buttonSelectCertPath;
         private System.Windows.Forms.Button buttonInstall;
-        private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

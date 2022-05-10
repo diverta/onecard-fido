@@ -58,7 +58,7 @@
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(180, 25);
             this.buttonReset.TabIndex = 2;
-            this.buttonReset.Text = "FIDO認証情報の消去";
+            this.buttonReset.Text = "FIDO鍵・証明書消去";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 

@@ -104,31 +104,5 @@ namespace DevelopmentToolGUI
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
         }
-
-        private void buttonDelete_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (mainForm.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_ERASE_SKEY_CERT,
-                AppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
-
-            // 鍵・証明書削除
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
-                return;
-            }
-
-            // 画面入力値をパラメーターに保持
-            KeyPath = "";
-            CertPath = "";
-            CommandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
-
-            // 画面項目を初期化し、この画面を閉じる
-            TerminateWindow(DialogResult.OK);
-        }
     }
 }

@@ -11,8 +11,6 @@ namespace DevelopmentToolGUI
 
         // 入力されたパラメーターを保持
         public string CommandTitle = "";
-        public string PinNew = "";
-        public string PinOld = "";
         public string KeyPath = "";
         public string CertPath = "";
 
@@ -53,21 +51,24 @@ namespace DevelopmentToolGUI
             if (mainForm.CheckUSBDeviceDisconnected()) {
                 return;
             }
-
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_CLEAR_PIN_CODE,
-                AppCommon.MSG_PROMPT_CLEAR_PIN_CODE);
+                AppCommon.MSG_ERASE_SKEY_CERT,
+                AppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
 
-            // FIDO認証情報の消去（認証器のリセット）
+            // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message)) {
-                // 画面入力値をパラメーターに保持
-                CommandTitle = AppCommon.PROCESS_NAME_AUTH_RESET;
-
-                // 画面項目を初期化し、この画面を閉じる
-                TerminateWindow(DialogResult.OK);
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
+                return;
             }
+
+            // 画面入力値をパラメーターに保持
+            KeyPath = "";
+            CertPath = "";
+            CommandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
+
+            // 画面項目を初期化し、この画面を閉じる
+            TerminateWindow(DialogResult.OK);
         }
 
         private void ButtonFIDOAttestation_Click(object sender, EventArgs e)
