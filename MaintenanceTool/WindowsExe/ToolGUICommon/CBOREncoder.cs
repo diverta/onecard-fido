@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using ToolGUICommon;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     internal class CBOREncoder
     {

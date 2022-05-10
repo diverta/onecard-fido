@@ -75,6 +75,12 @@
     <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
       <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
+    <Compile Include="..\..\ToolGUICommon\CBORDecoder.cs">
+      <Link>ToolGUICommon\CBORDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ToolGUICommon\CBOREncoder.cs">
+      <Link>ToolGUICommon\CBOREncoder.cs</Link>
+    </Compile>
     <Compile Include="..\..\ToolGUICommon\CommandTimer.cs">
       <Link>ToolGUICommon\CommandTimer.cs</Link>
     </Compile>
