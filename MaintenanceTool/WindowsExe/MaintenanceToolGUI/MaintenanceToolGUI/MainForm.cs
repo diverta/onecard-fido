@@ -99,8 +99,8 @@ namespace MaintenanceToolGUI
         {
             // コマンドタイムアウト発生時
             // その旨を画面・ログファイルに出力
-            OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            OnPrintMessageText(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppCommon.OutputLogError(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
 
             // コマンド固有の後処理を行う
             if (DoCommandTimedOut(sender, e)) {

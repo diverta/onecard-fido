@@ -98,19 +98,6 @@ namespace MaintenanceToolCommon
         public const string MSG_VERSION_INFO_SECURE_IC_UNAVAIL = "  セキュアIC: 非搭載";
 
         // Windows版固有のメッセージ文言
-        // USB管理
-        public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
-        public const string MSG_USB_DETECT_STARTED = "USBデバイス検知を開始しました。";
-        public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
-        public const string MSG_HID_REMOVED = "USB HIDデバイスが取り外されました。";
-        public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
-        public const string MSG_HID_RESPONSE_RECEIVED = "USB HIDデバイスからレスポンスを受信しました。";
-        public const string MSG_HID_REQUEST_SENT = "USB HIDデバイスにリクエストを送信しました。";
-        public const string MSG_HID_CMD_RESPONSE_TIMEOUT = "認証器からの応答が受信できませんでした。";
-        public const string MSG_FORMAT_NOT_INSTALLED = "{0}が導入されていません。";
-        public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
-        public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
-
         // BLE関連のメッセージ文言
         public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
         public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";

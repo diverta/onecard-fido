@@ -72,6 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
+      <Link>ToolGUICommon\AppUtil.cs</Link>
+    </Compile>
     <Compile Include="..\MaintenanceToolCommon\AppCommon.cs">
       <Link>AppCommon.cs</Link>
     </Compile>

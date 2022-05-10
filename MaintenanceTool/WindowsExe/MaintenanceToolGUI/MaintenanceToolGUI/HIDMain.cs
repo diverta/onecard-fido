@@ -6,10 +6,6 @@ namespace MaintenanceToolGUI
 {
     internal static class Const
     {
-        // HIDフレームに関する定義
-        public const int HID_FRAME_LEN = 64;
-        public const int HID_INIT_HEADER_LEN = 7;
-        public const int HID_CONT_HEADER_LEN = 5;
         // HIDコマンドバイトに関する定義
         public const int HID_CMD_CTAPHID_PING = 0x81;
         public const int HID_CMD_CTAPHID_INIT = 0x86;
