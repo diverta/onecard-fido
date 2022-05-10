@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolCommon;
 using System.Threading.Tasks;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {

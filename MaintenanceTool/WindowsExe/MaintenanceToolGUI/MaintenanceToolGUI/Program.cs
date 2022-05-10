@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
