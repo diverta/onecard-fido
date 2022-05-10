@@ -59,7 +59,7 @@ namespace MaintenanceToolGUI
         private bool CheckEntries()
         {
             // 長さチェックと数字入力チェック
-            if (FormUtil.CheckEntrySize(textPasskey, 6, 6, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
+            if (FormUtil.CheckEntrySize(textPasskey, 6, 6, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
             if (FormUtil.CheckIsNumeric(textPasskey, MainForm.MaintenanceToolTitle, ToolGUICommon.MSG_INVALID_NUMBER) == false) {

@@ -387,7 +387,7 @@ namespace MaintenanceToolGUI
 
             // 長さチェック
             informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, sizeMin, sizeMax);
-            if (FormUtil.CheckEntrySize(text, sizeMin, sizeMax, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, sizeMin, sizeMax, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
@@ -446,7 +446,7 @@ namespace MaintenanceToolGUI
         {
             // 長さチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, fieldName);
-            if (FormUtil.CheckEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
@@ -535,7 +535,7 @@ namespace MaintenanceToolGUI
         {
             // 長さチェック
             string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, fieldName, size_min);
-            if (FormUtil.CheckEntrySize(text, size_min, size_min, informativeText) == false) {
+            if (FormUtil.CheckEntrySize(text, size_min, size_min, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 

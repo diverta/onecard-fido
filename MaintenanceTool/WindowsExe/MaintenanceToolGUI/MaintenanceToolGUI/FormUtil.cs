@@ -188,11 +188,11 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string informativeText)
+        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string title, string informativeText)
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }
