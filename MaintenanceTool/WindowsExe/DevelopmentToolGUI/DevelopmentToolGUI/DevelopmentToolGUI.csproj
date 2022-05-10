@@ -7,11 +7,13 @@
     <ProjectGuid>{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MaintenanceToolGUI</RootNamespace>
-    <AssemblyName>MaintenanceToolGUI</AssemblyName>
+    <RootNamespace>DevelopmentToolGUI</RootNamespace>
+    <AssemblyName>DevelopmentToolGUI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetPlatformVersion>10.0</TargetPlatformVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,10 +26,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,76 +75,26 @@
     <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
       <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
-    <Compile Include="AppCommon.cs" />
-    <Compile Include="BLEProcess.cs" />
-    <Compile Include="BLEService.cs" />
-    <Compile Include="BLEDFUProcessingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BLEDFUProcessingForm.Designer.cs">
-      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BLEDFUStartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BLEDFUStartForm.designer.cs">
-      <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BLEForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BLEForm.designer.cs">
-      <DependentUpon>BLEForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BLESMPCBORDecoder.cs" />
     <Compile Include="..\..\ToolGUICommon\CBORDecoder.cs">
       <Link>ToolGUICommon\CBORDecoder.cs</Link>
     </Compile>
     <Compile Include="..\..\ToolGUICommon\CBOREncoder.cs">
       <Link>ToolGUICommon\CBOREncoder.cs</Link>
     </Compile>
-    <Compile Include="CCIDDevice.cs" />
-    <Compile Include="CCIDProcess.cs" />
     <Compile Include="..\..\ToolGUICommon\CommandTimer.cs">
       <Link>ToolGUICommon\CommandTimer.cs</Link>
     </Compile>
-    <Compile Include="CommonDisplayInfoForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
+      <Link>ToolGUICommon\FormUtil.cs</Link>
     </Compile>
-    <Compile Include="CommonDisplayInfoForm.designer.cs">
-      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
+    <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
+      <Link>ToolGUICommon\HIDDevice.cs</Link>
     </Compile>
-    <Compile Include="CommonProcessingForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
+      <Link>ToolGUICommon\HIDProcess.cs</Link>
     </Compile>
-    <Compile Include="CommonProcessingForm.designer.cs">
-      <DependentUpon>CommonProcessingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DFUDevice.cs" />
-    <Compile Include="DFUForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DFUForm.Designer.cs">
-      <DependentUpon>DFUForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DFUNewStartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DFUNewStartForm.Designer.cs">
-      <DependentUpon>DFUNewStartForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DFUProcessingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DFUProcessingForm.Designer.cs">
-      <DependentUpon>DFUProcessingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DFUStartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DFUStartForm.Designer.cs">
-      <DependentUpon>DFUStartForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="AppCommon.cs" />
+    <Compile Include="Ctap2.cs" />
     <Compile Include="FIDOAttestationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,50 +107,6 @@
     <Compile Include="FIDOForm.designer.cs">
       <DependentUpon>FIDOForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="HealthCheckForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HealthCheckForm.designer.cs">
-      <DependentUpon>HealthCheckForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PairingStartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PairingStartForm.designer.cs">
-      <DependentUpon>PairingStartForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PGPPreferenceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PGPPreferenceForm.designer.cs">
-      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ToolBLEDFU.cs" />
-    <Compile Include="ToolBLEDFUImage.cs" />
-    <Compile Include="ToolBLEDFUProcess.cs" />
-    <Compile Include="ToolBLESMPService.cs" />
-    <Compile Include="ToolDFU.cs" />
-    <Compile Include="ToolDFUImage.cs" />
-    <Compile Include="ToolDFUProcess.cs" />
-    <Compile Include="ToolDFUUtil.cs" />
-    <Compile Include="ToolPGPCcid.cs" />
-    <Compile Include="ToolPGP.cs" />
-    <Compile Include="ToolVersionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ToolVersionForm.designer.cs">
-      <DependentUpon>ToolVersionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="U2f.cs" />
-    <Compile Include="Ctap2.cs" />
-    <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
-      <Link>ToolGUICommon\HIDDevice.cs</Link>
-    </Compile>
-    <Compile Include="HIDMain.cs" />
-    <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
-      <Link>ToolGUICommon\HIDProcess.cs</Link>
-    </Compile>
-    <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs">
       <Link>PeterO\Cbor\Base64.cs</Link>
     </Compile>
@@ -399,22 +305,8 @@
     <Compile Include="..\..\Numbers\Numbers\PeterO\Numbers\TrappableRadixMath.cs">
       <Link>PeterO\Numbers\TrappableRadixMath.cs</Link>
     </Compile>
-    <Compile Include="PinCodeParamForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PinCodeParamForm.Designer.cs">
-      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SetPinParamForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SetPinParamForm.Designer.cs">
-      <DependentUpon>SetPinParamForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BLEMain.cs" />
-    <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
-      <Link>ToolGUICommon\FormUtil.cs</Link>
-    </Compile>
+    <Compile Include="HIDMain.cs" />
+    <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -423,57 +315,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UtilityForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UtilityForm.designer.cs">
-      <DependentUpon>UtilityForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="BLEDFUProcessingForm.resx">
-      <DependentUpon>BLEDFUProcessingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BLEDFUStartForm.resx">
-      <DependentUpon>BLEDFUStartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BLEForm.resx">
-      <DependentUpon>BLEForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommonDisplayInfoForm.resx">
-      <DependentUpon>CommonDisplayInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommonProcessingForm.resx">
-      <DependentUpon>CommonProcessingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DFUForm.resx">
-      <DependentUpon>DFUForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DFUNewStartForm.resx">
-      <DependentUpon>DFUNewStartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DFUProcessingForm.resx">
-      <DependentUpon>DFUProcessingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DFUStartForm.resx">
-      <DependentUpon>DFUStartForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FIDOAttestationForm.resx">
       <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FIDOForm.resx">
       <DependentUpon>FIDOForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HealthCheckForm.resx">
-      <DependentUpon>HealthCheckForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PairingStartForm.resx">
-      <DependentUpon>PairingStartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PGPPreferenceForm.resx">
-      <DependentUpon>PGPPreferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -485,18 +335,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="PinCodeParamForm.resx">
-      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SetPinParamForm.resx">
-      <DependentUpon>SetPinParamForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ToolVersionForm.resx">
-      <DependentUpon>ToolVersionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UtilityForm.resx">
-      <DependentUpon>UtilityForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -506,22 +344,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\card_reset.bat" />
-    <EmbeddedResource Include="Resources\card_reset.param" />
-    <EmbeddedResource Include="Resources\generate_main_key.bat" />
-    <EmbeddedResource Include="Resources\generate_main_key.param" />
-    <EmbeddedResource Include="Resources\add_sub_key.bat" />
-    <EmbeddedResource Include="Resources\add_sub_key.param" />
-    <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
-    <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
-    <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
-    <EmbeddedResource Include="Resources\card_status.bat" />
-    <EmbeddedResource Include="Resources\card_edit_unblock.param" />
-    <EmbeddedResource Include="Resources\card_edit_passwd.bat" />
-    <EmbeddedResource Include="Resources\card_edit_passwd.param" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.5.zip" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.5.zip" />
-    <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.6.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -540,6 +362,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

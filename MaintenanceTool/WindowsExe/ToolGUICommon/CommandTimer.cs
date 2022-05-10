@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Timers;
-using ToolGUICommon;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     public class CommandTimer
     {

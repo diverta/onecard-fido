@@ -1,8 +1,7 @@
 ﻿using PeterO.Cbor;
 using System.Linq;
-using ToolGUICommon;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     internal class KeyAgreement
     {
