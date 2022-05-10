@@ -79,8 +79,8 @@ namespace MaintenanceToolGUI
 
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_CLEAR_PIN_CODE,
-                ToolGUICommon.MSG_PROMPT_CLEAR_PIN_CODE);
+                AppCommon.MSG_CLEAR_PIN_CODE,
+                AppCommon.MSG_PROMPT_CLEAR_PIN_CODE);
 
             // FIDO認証情報の消去（認証器のリセット）
             // プロンプトを表示し、Yesの場合だけ処理を行う

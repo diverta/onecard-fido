@@ -16,8 +16,8 @@ namespace MaintenanceToolGUI
 
             // メッセージ文言を設定
             LabelComment.Text = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_COMMENT_START_DFU_PROCESS,
-                ToolGUICommon.MSG_PROMPT_START_DFU_PROCESS);
+                AppCommon.MSG_COMMENT_START_DFU_PROCESS,
+                AppCommon.MSG_PROMPT_START_DFU_PROCESS);
         }
 
         public bool OpenForm(IWin32Window owner)

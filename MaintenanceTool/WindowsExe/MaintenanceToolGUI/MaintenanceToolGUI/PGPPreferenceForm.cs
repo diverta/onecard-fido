@@ -41,13 +41,13 @@ namespace MaintenanceToolGUI
         private void buttonPubkeyFolderPath_Click(object sender, EventArgs e)
         {
             // フォルダーを選択
-            FormUtil.SelectFolderPath(folderBrowserDialog1, ToolGUICommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER, textPubkeyFolderPath);
+            FormUtil.SelectFolderPath(folderBrowserDialog1, AppCommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER, textPubkeyFolderPath);
         }
 
         private void buttonBackupFolderPath_Click(object sender, EventArgs e)
         {
             // フォルダーを選択
-            FormUtil.SelectFolderPath(folderBrowserDialog1, ToolGUICommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER, textBackupFolderPath);
+            FormUtil.SelectFolderPath(folderBrowserDialog1, AppCommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER, textBackupFolderPath);
         }
 
         private void buttonInstallPGPKey_Click(object sender, EventArgs e)
@@ -86,11 +86,11 @@ namespace MaintenanceToolGUI
 
             // プロンプトで表示されるタイトル
             string title = string.Format(
-                ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
-                ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET);
+                AppCommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
+                AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET);
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(this, title, ToolGUICommon.MSG_PROMPT_OPENPGP_RESET) == false) {
+            if (FormUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_OPENPGP_RESET) == false) {
                 return;
             }
 
@@ -283,41 +283,41 @@ namespace MaintenanceToolGUI
             if (sender.Equals(radioButton1)) {
                 // PIN番号を変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPChangePin;
-                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
-                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
-                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
+                labelCurPin.Text = AppCommon.MSG_LABEL_ITEM_CUR_PIN;
+                labelNewPin.Text = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
             }
             if (sender.Equals(radioButton2)) {
                 // 管理用PIN番号を変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPChangeAdminPin;
-                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
-                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
-                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+                SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+                labelCurPin.Text = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = AppCommon.MSG_LABEL_ITEM_NEW_ADMPIN;
             }
             if (sender.Equals(radioButton3)) {
                 // PIN番号をリセット
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblockPin;
-                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
-                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
-                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
+                labelCurPin.Text = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
             }
             if (sender.Equals(radioButton4)) {
                 // リセットコードを変更
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPSetResetCode;
-                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
-                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
-                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+                SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
+                labelCurPin.Text = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Text = AppCommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
             }
             if (sender.Equals(radioButton5)) {
                 // リセットコードでPIN番号をリセット
                 SelectedPinCommand = AppCommon.RequestType.OpenPGPUnblock;
-                SelectedPinCommandName = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
-                labelCurPin.Text = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
-                labelNewPin.Text = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
+                labelCurPin.Text = AppCommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                labelNewPin.Text = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
             }
 
             // 確認欄のキャプションを設定
-            labelNewPinConf.Text = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
+            labelNewPinConf.Text = string.Format(AppCommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
 
             // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
             InitTabPinManagementPinFields();
@@ -329,56 +329,56 @@ namespace MaintenanceToolGUI
         private bool CheckForInstallPGPKey()
         {
             // 入力欄のチェック
-            if (CheckMustEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME, OPENPGP_NAME_SIZE_MIN, OPENPGP_ENTRY_SIZE_MAX) == false) {
+            if (CheckMustEntry(textRealName, AppCommon.MSG_LABEL_PGP_REAL_NAME, OPENPGP_NAME_SIZE_MIN, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
-            if (CheckAsciiEntry(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+            if (CheckAsciiEntry(textRealName, AppCommon.MSG_LABEL_PGP_REAL_NAME) == false) {
                 return false;
             }
-            if (CheckEntryNoSpaceExistOnBothEnds(textRealName, ToolGUICommon.MSG_LABEL_PGP_REAL_NAME) == false) {
+            if (CheckEntryNoSpaceExistOnBothEnds(textRealName, AppCommon.MSG_LABEL_PGP_REAL_NAME) == false) {
                 return false;
             }
-            if (CheckMustEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
+            if (CheckMustEntry(textMailAddress, AppCommon.MSG_LABEL_PGP_MAIL_ADDRESS, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
-            if (CheckAddressEntry(textMailAddress, ToolGUICommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
+            if (CheckAddressEntry(textMailAddress, AppCommon.MSG_LABEL_PGP_MAIL_ADDRESS) == false) {
                 return false;
             }
-            if (CheckMustEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
+            if (CheckMustEntry(textComment, AppCommon.MSG_LABEL_PGP_COMMENT, 1, OPENPGP_ENTRY_SIZE_MAX) == false) {
                 return false;
             }
-            if (CheckAsciiEntry(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+            if (CheckAsciiEntry(textComment, AppCommon.MSG_LABEL_PGP_COMMENT) == false) {
                 return false;
             }
-            if (CheckEntryNoSpaceExistOnBothEnds(textComment, ToolGUICommon.MSG_LABEL_PGP_COMMENT) == false) {
+            if (CheckEntryNoSpaceExistOnBothEnds(textComment, AppCommon.MSG_LABEL_PGP_COMMENT) == false) {
                 return false;
             }
-            if (CheckPathEntry(textPubkeyFolderPath, ToolGUICommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER) == false) {
+            if (CheckPathEntry(textPubkeyFolderPath, AppCommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER) == false) {
                 return false;
             }
-            if (CheckPathEntry(textBackupFolderPath, ToolGUICommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER) == false) {
+            if (CheckPathEntry(textBackupFolderPath, AppCommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER) == false) {
                 return false;
             }
-            if (CheckPinNumber(textPin, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN) == false) {
+            if (CheckPinNumber(textPin, AppCommon.MSG_LABEL_PGP_ADMIN_PIN) == false) {
                 return false;
             }
-            if (CheckPinNumber(textPinConfirm, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
+            if (CheckPinNumber(textPinConfirm, AppCommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
                 return false;
             }
 
             // 確認用PINコードのチェック
-            if (CheckPinConfirm(textPinConfirm, textPin, ToolGUICommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
+            if (CheckPinConfirm(textPinConfirm, textPin, AppCommon.MSG_LABEL_PGP_ADMIN_PIN_CONFIRM) == false) {
                 return false;
             }
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            return FormUtil.DisplayPromptPopup(this, ToolGUICommon.MSG_OPENPGP_INSTALL_PGP_KEY, ToolGUICommon.MSG_PROMPT_INSTALL_PGP_KEY);
+            return FormUtil.DisplayPromptPopup(this, AppCommon.MSG_OPENPGP_INSTALL_PGP_KEY, AppCommon.MSG_PROMPT_INSTALL_PGP_KEY);
         }
 
         private bool CheckMustEntry(TextBox text, string fieldName, int sizeMin, int sizeMax)
         {
             // 必須チェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName);
             if (text.Text.Length == 0) {
                 FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, informativeText);
                 text.Focus();
@@ -386,7 +386,7 @@ namespace MaintenanceToolGUI
             }
 
             // 長さチェック
-            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, sizeMin, sizeMax);
+            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, sizeMin, sizeMax);
             if (FormUtil.CheckEntrySize(text, sizeMin, sizeMax, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -397,7 +397,7 @@ namespace MaintenanceToolGUI
         private bool CheckAsciiEntry(TextBox text, string fieldName)
         {
             // 入力パターンチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName);
             if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_ASCII, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -407,7 +407,7 @@ namespace MaintenanceToolGUI
         private bool CheckAddressEntry(TextBox text, string fieldName)
         {
             // 入力パターンチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName);
             if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -417,7 +417,7 @@ namespace MaintenanceToolGUI
         private bool CheckEntryNoSpaceExistOnBothEnds(TextBox text, string fieldName)
         {
             // 先頭または末尾に半角スペース文字が入っている場合はエラー
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS, fieldName);
             if (FormUtil.CheckValueWithPattern(text, OPENPGP_ENTRY_PATTERN_NOSP_BOTH_ENDS, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -445,13 +445,13 @@ namespace MaintenanceToolGUI
         private bool CheckPinNumber(TextBox text, string fieldName)
         {
             // 長さチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, fieldName);
             if (FormUtil.CheckEntrySize(text, OPENPGP_ADMIN_PIN_CODE_SIZE_MIN, OPENPGP_ADMIN_PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
             // 数字チェック
-            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
+            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
             if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -462,7 +462,7 @@ namespace MaintenanceToolGUI
         private bool CheckPinConfirm(TextBox textPinConfirm, TextBox textPin, string fieldName)
         {
             // PIN番号の確認入力内容をチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
             return FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, informativeText);
         }
 
@@ -475,33 +475,33 @@ namespace MaintenanceToolGUI
             int minSizeNewPin = 0;
             switch (SelectedPinCommand) {
             case AppCommon.RequestType.OpenPGPChangePin:
-                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_PIN;
+                msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_PIN;
                 minSizeCurPin = 6;
-                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                msgNewPin = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
                 minSizeNewPin = 6;
                 break;
             case AppCommon.RequestType.OpenPGPChangeAdminPin:
-                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 minSizeCurPin = 8;
-                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+                msgNewPin = AppCommon.MSG_LABEL_ITEM_NEW_ADMPIN;
                 minSizeNewPin = 8;
                 break;
             case AppCommon.RequestType.OpenPGPUnblockPin:
-                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 minSizeCurPin = 8;
-                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                msgNewPin = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
                 minSizeNewPin = 6;
                 break;
             case AppCommon.RequestType.OpenPGPSetResetCode:
-                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
                 minSizeCurPin = 8;
-                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+                msgNewPin = AppCommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
                 minSizeNewPin = 8;
                 break;
             case AppCommon.RequestType.OpenPGPUnblock:
-                msgCurPin = ToolGUICommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
                 minSizeCurPin = 8;
-                msgNewPin = ToolGUICommon.MSG_LABEL_ITEM_NEW_PIN;
+                msgNewPin = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
                 minSizeNewPin = 6;
                 break;
             default:
@@ -519,7 +519,7 @@ namespace MaintenanceToolGUI
             }
 
             // 確認用PINのラベル
-            string msgNewPinConf = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin);
+            string msgNewPinConf = string.Format(AppCommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM, msgNewPin);
 
             // 確認用PINをチェック
             if (CheckPinConfirm(textNewPinConf, textNewPin, msgNewPinConf) == false) {
@@ -527,20 +527,20 @@ namespace MaintenanceToolGUI
             }
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            string caption = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, SelectedPinCommandName);
-            return FormUtil.DisplayPromptPopup(this, caption, ToolGUICommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
+            string caption = string.Format(AppCommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, SelectedPinCommandName);
+            return FormUtil.DisplayPromptPopup(this, caption, AppCommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
         }
 
         private bool CheckPinNumberForPinCommand(TextBox text, string fieldName, int size_min)
         {
             // 長さチェック
-            string informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, fieldName, size_min);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, fieldName, size_min);
             if (FormUtil.CheckEntrySize(text, size_min, size_min, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
             // 数字チェック
-            informativeText = string.Format(ToolGUICommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
+            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, fieldName);
             if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -603,7 +603,7 @@ namespace MaintenanceToolGUI
             string name = "";
             switch (requestType) {
                 case AppCommon.RequestType.OpenPGPInstallKeys:
-                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
+                    name = AppCommon.MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
                     break;
                 case AppCommon.RequestType.OpenPGPStatus:
                     if (success) {
@@ -611,10 +611,10 @@ namespace MaintenanceToolGUI
                         CommonDisplayInfoForm.OpenForm(this, ToolGUICommon.PROCESS_NAME_OPENPGP_STATUS, ToolPGPRef.GetPGPStatusInfoString());
                         return;
                     }
-                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
+                    name = AppCommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
                     break;
                 case AppCommon.RequestType.OpenPGPReset:
-                    name = ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
+                    name = AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
                     break;
                 case AppCommon.RequestType.HidFirmwareReset:
                     name = ToolGUICommon.PROCESS_NAME_FIRMWARE_RESET;
@@ -631,9 +631,9 @@ namespace MaintenanceToolGUI
             }
 
             // メッセージをポップアップ表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 name,
-                success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+                success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             if (success) {
                 FormUtil.ShowInfoMessage(this, MainForm.MaintenanceToolTitle, formatted);
             } else {

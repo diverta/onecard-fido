@@ -138,8 +138,8 @@ namespace MaintenanceToolGUI
             // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
             if (toolBLEDFUImage.ReadBLEDFUImageFile(CurrentBoardname) == false) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
                 return false;
             }
             return true;
@@ -153,16 +153,16 @@ namespace MaintenanceToolGUI
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
                 return false;
             }
 
             // BLE経由で認証器の現在バージョンが取得できていない場合は利用不可
             if (CurrentVersion.Equals("")) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
                 return false;
             }
 
@@ -170,18 +170,18 @@ namespace MaintenanceToolGUI
             int currentVersionDec = AppUtil.CalculateDecimalVersion(CurrentVersion);
             int updateVersionDec = AppUtil.CalculateDecimalVersion(UpdateVersion);
             if (currentVersionDec > updateVersionDec) {
-                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
+                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                     CurrentVersion, UpdateVersion);
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
 
             // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可
             // （ブートローダーのバージョンが異なるため）
             if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
-                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, UpdateVersion);
-                ShowWarningMessage(ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, UpdateVersion);
+                ShowWarningMessage(AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
 
@@ -218,8 +218,8 @@ namespace MaintenanceToolGUI
         public void NotifyFirmwareVersionResponseFailed()
         {
             // メッセージを表示し、メイン画面に制御を戻す
-            AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
-            ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+            AppUtil.OutputLogError(AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+            ShowWarningMessageWithTitle(AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
             NotifyCancel();
         }
 
@@ -229,11 +229,11 @@ namespace MaintenanceToolGUI
             bool versionEqual = (CurrentVersion == UpdateVersion);
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
-                AppUtil.OutputLogInfo(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+                AppUtil.OutputLogInfo(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppUtil.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
+                AppUtil.OutputLogError(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
             }
 
             // メイン画面に制御を戻す
@@ -254,7 +254,7 @@ namespace MaintenanceToolGUI
             DialogResult ret = processingForm.OpenForm(mainForm);
             if (ret == DialogResult.Cancel) {
                 // メッセージをポップアップ表示したのち、画面に制御を戻す
-                ShowWarningMessageWithTitle(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+                ShowWarningMessageWithTitle(AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
                 NotifyCancel();
                 return;
             }
@@ -284,7 +284,7 @@ namespace MaintenanceToolGUI
             // 処理進捗画面にDFU処理開始を通知
             int maximum = 100 + DFU_WAITING_SEC_ESTIMATED;
             processingForm.NotifyStartDFUProcess(maximum);
-            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PRE_PROCESS, 0);
+            processingForm.NotifyDFUProcess(AppCommon.MSG_DFU_PRE_PROCESS, 0);
 
             // メイン画面に開始メッセージを表示
             mainForm.OnBLEDFUStarted();
@@ -323,7 +323,7 @@ namespace MaintenanceToolGUI
         {
             // 処理進捗画面のCancelボタンがクリックされた場合
             // メッセージ文言を画面とログに出力
-            OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+            OnNotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
 
             // ステータスを更新（処理キャンセル）
             Status = BLEDFUStatus.Canceled;
@@ -359,12 +359,12 @@ namespace MaintenanceToolGUI
         private void PerformDFUUpdateMonitor()
         {
             // 処理進捗画面に通知
-            processingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+            processingForm.NotifyDFUProcess(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
 
             // 反映待ち（リセットによるファームウェア再始動完了まで待機）
             for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
                 // 処理進捗画面に通知
-                OnNotifyDFUProgress(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
+                OnNotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
                 System.Threading.Thread.Sleep(1000);
             }
 

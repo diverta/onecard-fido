@@ -61,8 +61,8 @@ namespace MaintenanceToolGUI
         {
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
-                ToolGUICommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
 
             // プロンプトを表示し、Yesの場合だけ処理を続行する
             if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {

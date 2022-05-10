@@ -450,9 +450,9 @@ namespace MaintenanceToolGUI
             // リクエスト転送の前に、
             // 基板上ののMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT1);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT2);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT3);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT1);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT2);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT3);
 
             // authenticatorResetコマンドを実行する
             byte[] commandByte = { AppCommon.CTAP2_CBORCMD_AUTH_RESET };

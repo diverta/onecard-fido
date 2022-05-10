@@ -174,8 +174,8 @@ namespace MaintenanceToolGUI
                 // DFUデバイスから切断し、メイン画面に制御を戻す
                 dfuDevice.CloseDFUDevice();
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_CURRENT_VERSION_GET_FAILED);
+                    AppCommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_CURRENT_VERSION_GET_FAILED);
                 NotifyCancel();
                 return;
             }
@@ -188,8 +188,8 @@ namespace MaintenanceToolGUI
                 // DFUデバイスから切断し、メイン画面に制御を戻す
                 dfuDevice.CloseDFUDevice();
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER);
+                    AppCommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER);
                 NotifyCancel();
                 return;
             }
@@ -209,8 +209,8 @@ namespace MaintenanceToolGUI
             // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
             if (toolDFUImage.ReadDFUImageFile(CurrentBoardname) == false) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
                 return false;
             }
             return true;
@@ -224,8 +224,8 @@ namespace MaintenanceToolGUI
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
                 return false;
             }
             return true;
@@ -236,8 +236,8 @@ namespace MaintenanceToolGUI
             // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
             if (CurrentVersion.Equals("")) {
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
-                    ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    AppCommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
                 return false;
             }
 
@@ -245,17 +245,17 @@ namespace MaintenanceToolGUI
             int currentVersionDec = AppUtil.CalculateDecimalVersion(CurrentVersion);
             int updateVersionDec = AppUtil.CalculateDecimalVersion(UpdateVersion);
             if (currentVersionDec > updateVersionDec) {
-                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW, 
+                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW, 
                     CurrentVersion, UpdateVersion);
                 ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                    AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
 
             // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
             if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
-                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_OLD_USBBLD, UpdateVersion);
-                ShowWarningMessage(ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_OLD_USBBLD, UpdateVersion);
+                ShowWarningMessage(AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
 
@@ -280,8 +280,8 @@ namespace MaintenanceToolGUI
 
                 // 処理開始画面に制御を戻す
                 dfuStartForm.OnChangeToBootloaderMode(false, 
-                    ToolGUICommon.MSG_DFU_TARGET_NOT_BOOTLOADER_MODE,
-                    ToolGUICommon.MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER);
+                    AppCommon.MSG_DFU_TARGET_NOT_BOOTLOADER_MODE,
+                    AppCommon.MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER);
             }
         }
 
@@ -354,11 +354,11 @@ namespace MaintenanceToolGUI
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
                 AppUtil.OutputLogInfo(string.Format(
-                    ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+                    AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppUtil.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
+                AppUtil.OutputLogError(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
             }
 
             // メイン画面に制御を戻す
@@ -380,13 +380,13 @@ namespace MaintenanceToolGUI
                 // 処理開始画面に制御を戻す
                 dfuNewStartForm.OnDFUConnectionEstablished(success,
                     MainForm.GetMaintenanceToolTitle(),
-                    ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
+                    AppCommon.MSG_DFU_TARGET_NOT_CONNECTED);
 
             } else {
                 // 処理開始画面に制御を戻す
                 dfuStartForm.OnChangeToBootloaderMode(success,
                     MainForm.GetMaintenanceToolTitle(),
-                    ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
+                    AppCommon.MSG_DFU_TARGET_NOT_CONNECTED);
             }
         }
 
@@ -426,7 +426,7 @@ namespace MaintenanceToolGUI
         {
             // 処理進捗画面にDFU処理開始を通知
             dfuProcessingForm.NotifyStartDFUProcess();
-            dfuProcessingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE);
+            dfuProcessingForm.NotifyDFUProcess(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE);
 
             // メイン画面に主処理開始を通知
             mainForm.OnDFUStarted();
@@ -442,7 +442,7 @@ namespace MaintenanceToolGUI
 
             if (success) {
                 // 処理進捗画面に通知
-                dfuProcessingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE);
+                dfuProcessingForm.NotifyDFUProcess(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE);
 
                 // DFU転送成功時は、バージョン更新判定フラグをセット
                 NeedCompareUpdateVersion = true;

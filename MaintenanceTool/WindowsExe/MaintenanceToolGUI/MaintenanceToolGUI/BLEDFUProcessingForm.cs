@@ -70,7 +70,7 @@ namespace MaintenanceToolGUI
         private void InitFieldValue()
         {
             // テキストをブランクに設定
-            Text = ToolGUICommon.MSG_DFU_PROCESS_TITLE_GOING;
+            Text = AppCommon.MSG_DFU_PROCESS_TITLE_GOING;
             LabelProgress.Text = "";
             LevelIndicator.Value = 0;
 

@@ -301,7 +301,7 @@ namespace MaintenanceToolGUI
         private void DisplayStartMessage(string message)
         {
             // 処理開始メッセージを表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
             // ログファイルにも出力
             AppUtil.OutputLogInfo(formatted);
@@ -315,8 +315,8 @@ namespace MaintenanceToolGUI
             }
             // コマンドの実行結果をログファイルに出力後、
             // 画面およびメッセージボックスダイアログに表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
-                message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
+                message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             if (success) {
                 AppUtil.OutputLogInfo(formatted);

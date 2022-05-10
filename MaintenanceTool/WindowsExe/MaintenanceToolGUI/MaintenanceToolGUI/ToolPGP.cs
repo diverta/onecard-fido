@@ -132,7 +132,7 @@ namespace MaintenanceToolGUI
         public void DoResponseResetFirmware(bool success)
         {
             if (success == false) {
-                NotifyErrorMessage(ToolGUICommon.MSG_FIRMWARE_RESET_UNSUPP);
+                NotifyErrorMessage(AppCommon.MSG_FIRMWARE_RESET_UNSUPP);
             }
             NotifyProcessTerminated(success);
         }
@@ -177,7 +177,7 @@ namespace MaintenanceToolGUI
         {
             if (success) {
                 // バージョン照会から開始
-                AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
+                AppUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
                 DoRequestGPGVersion();
 
             } else {
@@ -199,7 +199,7 @@ namespace MaintenanceToolGUI
         {
             // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
             if (success == false || CheckIfGPGVersionAvailable(response) == false) {
-                NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL);
+                NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL);
                 NotifyProcessTerminated(false);
                 return;
             }
@@ -233,9 +233,9 @@ namespace MaintenanceToolGUI
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
                 if (CheckIfCardErrorFromResponse(error)) {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL);
                 }
             }
 
@@ -253,14 +253,14 @@ namespace MaintenanceToolGUI
         {
             // レスポンスをチェック
             if (success == false) {
-                NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL);
+                NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL);
                 NotifyProcessTerminated(false);
                 return;
             }
 
             // 生成された作業用フォルダー名称を保持
             TempFolderPath = createdTempFolderPath;
-            AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, TempFolderPath));
+            AppUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, TempFolderPath));
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
@@ -321,14 +321,14 @@ namespace MaintenanceToolGUI
                 if (keyid != null) {
                     // チェックOKの場合は鍵IDを保持し、次の処理に移行
                     GeneratedMainKeyId = keyid;
-                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, GeneratedMainKeyId));
+                    AppUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, GeneratedMainKeyId));
                     DoRequestAddSubKey();
                     return;
                 }
             }
 
             // エラーメッセージを出力し、後処理に移行
-            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL);
+            NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL);
             DoRequestRemoveTempFolder();
         }
 
@@ -360,14 +360,14 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfSubKeysExistFromResponse(response, false)) {
                     // 副鍵が３点生成された場合は、次の処理に移行
-                    AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_ADDED_SUB_KEYS);
+                    AppUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADDED_SUB_KEYS);
                     DoRequestExportPubkeyAndBackup();
                     return;
                 }
             }
 
             // エラーメッセージを出力し、後処理に移行
-            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL);
+            NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL);
             DoRequestRemoveTempFolder();
         }
 
@@ -393,15 +393,15 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfPubkeyAndBackupExist()) {
                     // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
-                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
-                    AppUtil.OutputLogDebug(string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
+                    AppUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
+                    AppUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
                     DoRequestTransferSubkeyToCard();
                     return;
                 }
             }
 
             // エラーメッセージを出力し、後処理に移行
-            NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL);
+            NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL);
             DoRequestRemoveTempFolder();
         }
 
@@ -433,25 +433,25 @@ namespace MaintenanceToolGUI
             if (CheckResponseOfScript(response)) {
                 if (CheckIfSubKeysExistFromResponse(response, true)) {
                     // 副鍵が認証器に移動された場合は、処理成功を通知
-                    AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
+                    AppUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
                     CommandSuccess = true;
 
                 } else {
                     // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
                     // （標準エラーに出力されるメッセージをチェック）
                     if (CheckIfSubKeyAlreadyStoredFromResponse(error)) {
-                        NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED);
+                        NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED);
                     } else {
-                        NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL);
+                        NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL);
                     }
                 }
 
             } else {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
                 if (CheckIfCardErrorFromResponse(error)) {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL);
                 }
             }
 
@@ -487,9 +487,9 @@ namespace MaintenanceToolGUI
             if (success == false) {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
                 if (CheckIfCardErrorFromResponse(error)) {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL);
                 }
 
             } else {
@@ -497,7 +497,7 @@ namespace MaintenanceToolGUI
                 if (CheckIfNoSubKeyExistFromResponse(response)) {
                     CommandSuccess = true;
                 } else {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED);
                 }
             }
 
@@ -553,9 +553,9 @@ namespace MaintenanceToolGUI
             if (success == false) {
                 // スクリプトエラーの場合はOpenPGP cardエラーをチェック
                 if (CheckIfCardErrorFromResponse(error)) {
-                    NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                    NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 } else {
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, Parameter.SelectedPinCommandName);
+                    string message = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, Parameter.SelectedPinCommandName);
                     NotifyErrorMessage(message);
                 }
 
@@ -565,7 +565,7 @@ namespace MaintenanceToolGUI
                     CommandSuccess = true;
                 } else {
                     string itemName = ItemNameForCardEditPasswdCommand();
-                    string message = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName);
+                    string message = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName);
                     NotifyErrorMessage(message);
                 }
             }
@@ -584,14 +584,14 @@ namespace MaintenanceToolGUI
         {
             // レスポンスをチェック
             if (success == false) {
-                NotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL);
+                NotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL);
                 NotifyProcessTerminated(false);
                 return;
             }
 
             // 生成された作業用フォルダー名称をクリア
             TempFolderPath = null;
-            AppUtil.OutputLogDebug(ToolGUICommon.MSG_OPENPGP_REMOVED_TEMPDIR);
+            AppUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_REMOVED_TEMPDIR);
 
             // 処理完了を通知
             NotifyProcessTerminated(CommandSuccess);
@@ -771,13 +771,13 @@ namespace MaintenanceToolGUI
         {
             // 公開鍵ファイルがエクスポート先に存在するかチェック
             if (CheckIfFileExist("public_key.pgp", Parameter.PubkeyFolderPath) == false) {
-                AppUtil.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
+                AppUtil.OutputLogError(AppCommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
                 return false;
             }
 
             // バックアップファイルがエクスポート先に存在するかチェック
             if (CheckIfFileExist("GNUPGHOME.tgz", Parameter.BackupFolderPath) == false) {
-                AppUtil.OutputLogError(ToolGUICommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
+                AppUtil.OutputLogError(AppCommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
                 return false;
             }
 
@@ -945,11 +945,11 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.OpenPGPUnblockPin:
             case AppCommon.RequestType.OpenPGPChangeAdminPin:
             case AppCommon.RequestType.OpenPGPSetResetCode:
-                return ToolGUICommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+                return AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
             case AppCommon.RequestType.OpenPGPUnblock:
-                return ToolGUICommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+                return AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
             default:
-                return ToolGUICommon.MSG_LABEL_ITEM_PGP_PIN;
+                return AppCommon.MSG_LABEL_ITEM_PGP_PIN;
             }
         }
 
@@ -1152,7 +1152,7 @@ namespace MaintenanceToolGUI
             }
 
             // コマンド開始メッセージをログファイルに出力
-            string startMsg = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, NameOfCommand);
+            string startMsg = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, NameOfCommand);
             AppUtil.OutputLogInfo(startMsg);
         }
 
@@ -1168,9 +1168,9 @@ namespace MaintenanceToolGUI
         private void NotifyProcessTerminated(bool success)
         {
             // コマンドの実行結果をログ出力
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 NameOfCommand,
-                success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+                success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             if (success) {
                 AppUtil.OutputLogInfo(formatted);
             } else {

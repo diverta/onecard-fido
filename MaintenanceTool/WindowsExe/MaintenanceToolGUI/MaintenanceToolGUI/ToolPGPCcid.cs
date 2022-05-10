@@ -86,7 +86,7 @@ namespace MaintenanceToolGUI
 
             } else {
                 // OpenPGP機能を認識できなかった旨のエラーメッセージを設定
-                OnCcidCommandNotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL);
                 return false;
             }
         }
@@ -113,7 +113,7 @@ namespace MaintenanceToolGUI
         {
             // 不明なエラーが発生時は以降の処理を行わない
             if (responseSW != CCIDConst.SW_SUCCESS) {
-                OnCcidCommandNotifyErrorMessage(ToolGUICommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
                 NotifyCommandTerminated(false);
                 return;
             }
@@ -139,10 +139,10 @@ namespace MaintenanceToolGUI
                 if ((responseSW & 0xfff0) == 0x63c0) {
                     // 入力PINが不正の場合はその旨のメッセージを出力
                     int retries = responseSW & 0x000f;
-                    errMsg = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, ToolGUICommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries);
+                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries);
 
                 } else {
-                    errMsg = string.Format(ToolGUICommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, ToolGUICommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
+                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
                 }
 
                 OnCcidCommandNotifyErrorMessage(errMsg);

@@ -66,7 +66,7 @@ namespace MaintenanceToolGUI
         private void buttonSelectKeyPath_Click(object sender, EventArgs e)
         {
             FormUtil.SelectFilePath(openFileDialog1,
-                ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH,
+                AppCommon.MSG_PROMPT_SELECT_PKEY_PATH,
                 ToolGUICommon.FILTER_SELECT_PEM_PATH,
                 textKeyPath);
         }
@@ -74,7 +74,7 @@ namespace MaintenanceToolGUI
         private void buttonSelectCertPath_Click(object sender, EventArgs e)
         {
             FormUtil.SelectFilePath(openFileDialog1,
-                ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH,
+                AppCommon.MSG_PROMPT_SELECT_CRT_PATH,
                 ToolGUICommon.FILTER_SELECT_CRT_PATH,
                 textCertPath);
         }
@@ -86,16 +86,16 @@ namespace MaintenanceToolGUI
                 return;
             }
             // ファイルパス入力チェック
-            if (checkPathEntry(textKeyPath, ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH) == false) {
+            if (checkPathEntry(textKeyPath, AppCommon.MSG_PROMPT_SELECT_PKEY_PATH) == false) {
                 return;
             }
-            if (checkPathEntry(textCertPath, ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH) == false) {
+            if (checkPathEntry(textCertPath, AppCommon.MSG_PROMPT_SELECT_CRT_PATH) == false) {
                 return;
             }
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_INSTALL_SKEY_CERT,
-                ToolGUICommon.MSG_PROMPT_INSTL_SKEY_CERT);
+                AppCommon.MSG_INSTALL_SKEY_CERT,
+                AppCommon.MSG_PROMPT_INSTL_SKEY_CERT);
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
             if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
@@ -119,8 +119,8 @@ namespace MaintenanceToolGUI
             }
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_ERASE_SKEY_CERT,
-                ToolGUICommon.MSG_PROMPT_ERASE_SKEY_CERT);
+                AppCommon.MSG_ERASE_SKEY_CERT,
+                AppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
