@@ -51,6 +51,7 @@ namespace DevelopmentToolGUI
             // イベントの登録
             hidProcess.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             hidProcess.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
+            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDDetectConnect);
 
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
@@ -274,6 +275,13 @@ namespace DevelopmentToolGUI
             bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
+        }
+
+        //
+        // USB接続検知時の処理
+        //
+        private void NotifyHIDDetectConnect()
+        {
         }
     }
 }
