@@ -80,10 +80,10 @@ namespace MaintenanceToolGUI
         private bool CheckEntries(bool change)
         {
             // 長さチェック
-            if (FormUtil.CheckEntrySize(textPin, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
+            if (FormUtil.CheckEntrySize(textPin, AppCommon.PIN_CODE_SIZE_MIN, AppCommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
-            if (FormUtil.CheckEntrySize(textPinConfirm, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
+            if (FormUtil.CheckEntrySize(textPinConfirm, AppCommon.PIN_CODE_SIZE_MIN, AppCommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
             if (FormUtil.CheckIsNumeric(textPin, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_NUMBER) == false) {
@@ -95,7 +95,7 @@ namespace MaintenanceToolGUI
 
             // 変更ボタンがクリックされた場合は、変更前PINコードの入力チェックを実行
             if (change) {
-                if (FormUtil.CheckEntrySize(textPinOld, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
+                if (FormUtil.CheckEntrySize(textPinOld, AppCommon.PIN_CODE_SIZE_MIN, AppCommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
                     return false;
                 }
                 if (FormUtil.CheckIsNumeric(textPinOld, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_NUMBER) == false) {

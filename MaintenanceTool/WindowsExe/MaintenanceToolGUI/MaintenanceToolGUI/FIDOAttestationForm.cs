@@ -67,7 +67,7 @@ namespace MaintenanceToolGUI
         {
             FormUtil.SelectFilePath(openFileDialog1,
                 AppCommon.MSG_PROMPT_SELECT_PKEY_PATH,
-                ToolGUICommon.FILTER_SELECT_PEM_PATH,
+                AppCommon.FILTER_SELECT_PEM_PATH,
                 textKeyPath);
         }
 
@@ -75,7 +75,7 @@ namespace MaintenanceToolGUI
         {
             FormUtil.SelectFilePath(openFileDialog1,
                 AppCommon.MSG_PROMPT_SELECT_CRT_PATH,
-                ToolGUICommon.FILTER_SELECT_CRT_PATH,
+                AppCommon.FILTER_SELECT_CRT_PATH,
                 textCertPath);
         }
 

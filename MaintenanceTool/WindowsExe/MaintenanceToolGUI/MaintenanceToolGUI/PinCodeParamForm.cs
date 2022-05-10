@@ -69,7 +69,7 @@ namespace MaintenanceToolGUI
         private bool CheckEntries(bool change)
         {
             // 長さチェックと数字入力チェック
-            if (FormUtil.CheckEntrySize(textPin, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
+            if (FormUtil.CheckEntrySize(textPin, AppCommon.PIN_CODE_SIZE_MIN, AppCommon.PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, AppCommon.MSG_INVALID_FIELD_SIZE) == false) {
                 return false;
             }
             if (FormUtil.CheckIsNumeric(textPin, AppCommon.MSG_INVALID_NUMBER, AppCommon.MSG_INVALID_NUMBER) == false) {
