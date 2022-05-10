@@ -190,9 +190,13 @@
     </Compile>
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
-    <Compile Include="HIDDevice.cs" />
+    <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
+      <Link>ToolGUICommon\HIDDevice.cs</Link>
+    </Compile>
     <Compile Include="HIDMain.cs" />
-    <Compile Include="HIDProcess.cs" />
+    <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
+      <Link>ToolGUICommon\HIDProcess.cs</Link>
+    </Compile>
     <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs">
       <Link>PeterO\Cbor\Base64.cs</Link>
