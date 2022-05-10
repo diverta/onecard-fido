@@ -72,15 +72,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MaintenanceToolCommon\AppCommon.cs">
-      <Link>AppCommon.cs</Link>
+    <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
+      <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
-    <Compile Include="..\MaintenanceToolCommon\BLEProcess.cs">
-      <Link>BLEProcess.cs</Link>
-    </Compile>
-    <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
-      <Link>BLEService.cs</Link>
-    </Compile>
+    <Compile Include="AppCommon.cs" />
+    <Compile Include="BLEProcess.cs" />
+    <Compile Include="BLEService.cs" />
     <Compile Include="BLEDFUProcessingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,9 +187,13 @@
     </Compile>
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
-    <Compile Include="HIDDevice.cs" />
+    <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
+      <Link>ToolGUICommon\HIDDevice.cs</Link>
+    </Compile>
     <Compile Include="HIDMain.cs" />
-    <Compile Include="HIDProcess.cs" />
+    <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
+      <Link>ToolGUICommon\HIDProcess.cs</Link>
+    </Compile>
     <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs">
       <Link>PeterO\Cbor\Base64.cs</Link>
@@ -404,9 +405,10 @@
     <Compile Include="SetPinParamForm.Designer.cs">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolGUICommon.cs" />
     <Compile Include="BLEMain.cs" />
-    <Compile Include="FormUtil.cs" />
+    <Compile Include="..\..\ToolGUICommon\FormUtil.cs">
+      <Link>ToolGUICommon\FormUtil.cs</Link>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     internal class HIDDevice
     {

@@ -2,10 +2,17 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Linq;
-using MaintenanceToolCommon;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
+    internal static class HIDProcessConst
+    {
+        // HIDフレームに関する定義
+        public const int HID_FRAME_LEN = 64;
+        public const int HID_INIT_HEADER_LEN = 7;
+        public const int HID_CONT_HEADER_LEN = 5;
+    }
+
     internal class HIDProcess
     {
         // HIDデバイス管理
@@ -65,11 +72,11 @@ namespace MaintenanceToolGUI
 
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
-                MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED);
-                AppCommon.OutputLogError(AppCommon.MSG_USB_DETECT_FAILED);
+                MessageTextEvent(AppUtil.MSG_USB_DETECT_FAILED);
+                AppUtil.OutputLogError(AppUtil.MSG_USB_DETECT_FAILED);
                 return;
             }
-            AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_STARTED);
+            AppUtil.OutputLogInfo(AppUtil.MSG_USB_DETECT_STARTED);
 
             // USB HIDデバイスに自動接続
             StartAsyncOperation();
@@ -83,7 +90,7 @@ namespace MaintenanceToolGUI
             // USBデバイス検知を終了
             if (notificationHandle != null) {
                 UnregisterDeviceNotification(notificationHandle);
-                AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_END);
+                AppUtil.OutputLogInfo(AppUtil.MSG_USB_DETECT_END);
             }
         }
 
@@ -103,7 +110,7 @@ namespace MaintenanceToolGUI
             if (GetHIDDevicePath().Equals("")) {
                 // USB HIDデバイスが切断されてしまった場合
                 CloseDevice();
-                MessageTextEvent(AppCommon.MSG_HID_REMOVED);
+                MessageTextEvent(AppUtil.MSG_HID_REMOVED);
             }
         }
 
@@ -145,8 +152,8 @@ namespace MaintenanceToolGUI
             // デバイスを初期化し、イベントを登録
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
-            MessageTextEvent(AppCommon.MSG_HID_CONNECTED);
-            AppCommon.OutputLogInfo(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
+            MessageTextEvent(AppUtil.MSG_HID_CONNECTED);
+            AppUtil.OutputLogInfo(string.Format(AppUtil.MSG_HID_CONNECTED + "{0}", devicePath));
 
             // 認証器に導入中のバージョンをHID経由で照会するため、
             // HIDデバイスとの接続完了をHIDMainに通知
@@ -166,7 +173,7 @@ namespace MaintenanceToolGUI
         private byte[] SendHIDMessageCID = new byte[4];
 
         // フレームデータを保持
-        private byte[] frameData = new byte[Const.HID_FRAME_LEN];
+        private byte[] frameData = new byte[HIDProcessConst.HID_FRAME_LEN];
 
         // 送信ログを保持
         private string ReceivedLogBuffer;
@@ -175,7 +182,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージは最低 8 バイト
             if (message.Length < 8) {
-                AppCommon.OutputLogError(String.Format(
+                AppUtil.OutputLogError(String.Format(
                     "Device_dataReceived: invalid received message size({0})", message.Length));
                 return;
             }
@@ -220,11 +227,11 @@ namespace MaintenanceToolGUI
                 // データをコピー
                 int dataLenInFrame = (receivedMessageLen < hid_init_data_len) ? receivedMessageLen : hid_init_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[received++] = frameData[Const.HID_INIT_HEADER_LEN + i];
+                    receivedMessage[received++] = frameData[HIDProcessConst.HID_INIT_HEADER_LEN + i];
                 }
 
                 ReceivedLogBuffer = "";
-                string dump = AppCommon.DumpMessage(frameData, dataLenInFrame + Const.HID_INIT_HEADER_LEN);
+                string dump = AppUtil.DumpMessage(frameData, dataLenInFrame + HIDProcessConst.HID_INIT_HEADER_LEN);
                 AppendLogToBuffer(string.Format(
                     "HID Recv INIT frame: data size={0} length={1}\r\n{2}",
                     receivedMessageLen, dataLenInFrame, dump));
@@ -237,10 +244,10 @@ namespace MaintenanceToolGUI
                 int remaining = receivedMessageLen - received;
                 int dataLenInFrame = (remaining < hid_cont_data_len) ? remaining : hid_cont_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[received++] = frameData[Const.HID_CONT_HEADER_LEN + i];
+                    receivedMessage[received++] = frameData[HIDProcessConst.HID_CONT_HEADER_LEN + i];
                 }
 
-                string dump = AppCommon.DumpMessage(frameData, dataLenInFrame + Const.HID_CONT_HEADER_LEN);
+                string dump = AppUtil.DumpMessage(frameData, dataLenInFrame + HIDProcessConst.HID_CONT_HEADER_LEN);
                 AppendLogToBuffer(string.Format(
                     "HID Recv CONT frame: seq={0} length={1}\r\n{2}", 
                     seq, dataLenInFrame, dump));
@@ -255,7 +262,7 @@ namespace MaintenanceToolGUI
                 // 全フレームを受信できたら、
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータをHIDMainに転送
-                AppCommon.OutputLogText(ReceivedLogBuffer);
+                AppUtil.OutputLogText(ReceivedLogBuffer);
                 ReceiveHIDMessageEvent(receivedMessage, receivedMessageLen);
             }
         }
@@ -289,8 +296,8 @@ namespace MaintenanceToolGUI
             // CMDをコピー
             frameData[4] = cmd;
 
-            string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
-            AppCommon.OutputLogDebug(string.Format(
+            string dump = AppUtil.DumpMessage(frameData, HIDProcessConst.HID_INIT_HEADER_LEN);
+            AppUtil.OutputLogDebug(string.Format(
                 "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
                 messageSize, 0, dump));
 
@@ -302,7 +309,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージがない場合は終了
             if (message == null) {
-                AppCommon.OutputLogError("SendHIDMessage: invalid message buffer");
+                AppUtil.OutputLogError("SendHIDMessage: invalid message buffer");
                 return;
             }
             // リクエスト送信時のCIDを保持
@@ -346,14 +353,14 @@ namespace MaintenanceToolGUI
                     frameData[6] = (byte)(messageSize % 256);
 
                     // データをコピー
-                    int maxLen = Const.HID_FRAME_LEN - Const.HID_INIT_HEADER_LEN;
+                    int maxLen = HIDProcessConst.HID_FRAME_LEN - HIDProcessConst.HID_INIT_HEADER_LEN;
                     int dataLenInFrame = (messageSize < maxLen) ? messageSize : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.HID_INIT_HEADER_LEN + i] = message[transferred++];
+                        frameData[HIDProcessConst.HID_INIT_HEADER_LEN + i] = message[transferred++];
                     }
 
-                    string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
-                    AppCommon.OutputLogDebug(string.Format(
+                    string dump = AppUtil.DumpMessage(frameData, HIDProcessConst.HID_INIT_HEADER_LEN + dataLenInFrame);
+                    AppUtil.OutputLogDebug(string.Format(
                         "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
                         messageSize, dataLenInFrame, dump));
 
@@ -364,14 +371,14 @@ namespace MaintenanceToolGUI
 
                     // データをコピー
                     int remaining = messageSize - transferred;
-                    int maxLen = Const.HID_FRAME_LEN - Const.HID_CONT_HEADER_LEN;
+                    int maxLen = HIDProcessConst.HID_FRAME_LEN - HIDProcessConst.HID_CONT_HEADER_LEN;
                     int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.HID_CONT_HEADER_LEN + i] = message[transferred++];
+                        frameData[HIDProcessConst.HID_CONT_HEADER_LEN + i] = message[transferred++];
                     }
 
-                    string dump = AppCommon.DumpMessage(frameData, Const.HID_CONT_HEADER_LEN + dataLenInFrame);
-                    AppCommon.OutputLogDebug(string.Format(
+                    string dump = AppUtil.DumpMessage(frameData, HIDProcessConst.HID_CONT_HEADER_LEN + dataLenInFrame);
+                    AppUtil.OutputLogDebug(string.Format(
                         "HID Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, dataLenInFrame, dump));
                 }

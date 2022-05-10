@@ -1,8 +1,8 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -34,7 +34,7 @@ namespace MaintenanceToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
-            AppCommon.OutputLogInfo(String.Format(
+            AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
             ble = new BLEMain(this);
@@ -98,8 +98,8 @@ namespace MaintenanceToolGUI
         {
             // コマンドタイムアウト発生時
             // その旨を画面・ログファイルに出力
-            OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            OnPrintMessageText(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppUtil.OutputLogError(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
 
             // コマンド固有の後処理を行う
             if (DoCommandTimedOut(sender, e)) {
@@ -128,7 +128,7 @@ namespace MaintenanceToolGUI
             ble.OnFormDestroy();
             hid.OnFormDestroy();
             toolBLEDFU.OnFormDestroy();
-            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
+            AppUtil.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
         public void OnPrintMessageText(string messageText)
@@ -144,24 +144,24 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
                 // CTAPHID_INIT --> CTAPHID_PING の順に実行する
                 DisplayStartMessage(commandTitle);
                 hid.DoTestCtapHidPing();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_GET_FLASH_STAT)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoGetFlashStat();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_GET_VERSION_INFO)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoGetVersionInfo();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_BONDS)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_BONDS)) {
                 DisplayStartMessage(commandTitle);
                 hid.DoEraseBonds();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_BLE_PING)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_TEST_BLE_PING)) {
                 // BLE経由でPINGコマンドを実行する
                 DisplayStartMessage(commandTitle);
                 ble.DoTestBLEPing();
@@ -179,7 +179,7 @@ namespace MaintenanceToolGUI
             // DFU処理の場合、ToolDFU内で終了処理を行う
             //  最終的に、OnAppMainProcessExitedを経由して
             //  MainFormに異常終了が通知されます。
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandTimedOut();
                 return true;
             }
@@ -234,19 +234,19 @@ namespace MaintenanceToolGUI
             // ボタンを押下不可とする
             enableButtons(false);
 
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK)) {
                 // BLE CTAP2ヘルスチェック
                 DoCommandCtap2Healthcheck(true);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK)) {
                 // BLE U2Fヘルスチェック
                 DoCommandU2FHealthcheck(true);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK)) {
                 // HID CTAP2ヘルスチェック
                 DoCommandCtap2Healthcheck(false);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
                 // HID U2Fヘルスチェック
                 DoCommandU2FHealthcheck(false);
 
@@ -301,10 +301,10 @@ namespace MaintenanceToolGUI
         private void DisplayStartMessage(string message)
         {
             // 処理開始メッセージを表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
             // ログファイルにも出力
-            AppCommon.OutputLogInfo(formatted);
+            AppUtil.OutputLogInfo(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -315,14 +315,14 @@ namespace MaintenanceToolGUI
             }
             // コマンドの実行結果をログファイルに出力後、
             // 画面およびメッセージボックスダイアログに表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
-                message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
+                message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             if (success) {
-                AppCommon.OutputLogInfo(formatted);
+                AppUtil.OutputLogInfo(formatted);
                 FormUtil.ShowInfoMessage(this, MaintenanceToolTitle, formatted);
             } else {
-                AppCommon.OutputLogError(formatted);
+                AppUtil.OutputLogError(formatted);
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
             }
         }
@@ -355,13 +355,13 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
 
             // ペアリング実行
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_PAIRING)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_PAIRING)) {
                 DisplayStartMessage(commandTitle);
                 ble.doPairing(f.GetPasskey());
             }
 
             // ペアリング解除
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_BONDS)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_BONDS)) {
                 // ペアリング情報削除コマンドを実行
                 doCommand(sender);
             }
@@ -387,20 +387,20 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト監視開始
             commandTimer.Start();
 
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_AUTH_RESET)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_AUTH_RESET)) {
                 // FIDO認証情報の消去
                 hid.DoAuthReset();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_CLIENT_PIN_SET) || 
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_CLIENT_PIN_CHANGE)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_CLIENT_PIN_SET) || 
+                commandTitle.Equals(AppCommon.PROCESS_NAME_CLIENT_PIN_CHANGE)) {
                 // PIN設定
                 hid.DoClientPinSet(f.PinNew, f.PinOld);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
                 // 鍵・証明書消去
                 hid.DoEraseSkeyCert();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
                 // 鍵・証明書インストール
                 hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
             }
@@ -421,16 +421,16 @@ namespace MaintenanceToolGUI
             // 開始メッセージを取得
             commandTitle = f.CommandTitle;
 
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_BLE_PING) ||
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_TEST_BLE_PING) ||
+                commandTitle.Equals(AppCommon.PROCESS_NAME_TEST_CTAPHID_PING)) {
                 // PINGコマンドを実行
                 doCommand(sender);
 
             } else if (
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK) ||
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK) ||
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK) ||
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
+                commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK) ||
+                commandTitle.Equals(AppCommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK) ||
+                commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK) ||
+                commandTitle.Equals(AppCommon.PROCESS_NAME_HID_U2F_HEALTHCHECK)) {
                 // ヘルスチェックコマンドを実行
                 DoCommandHealthCheck(sender, e);
             }
@@ -451,12 +451,12 @@ namespace MaintenanceToolGUI
             // 開始メッセージを取得
             commandTitle = f.CommandTitle;
 
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT) ||
-                commandTitle.Equals(ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_GET_FLASH_STAT) ||
+                commandTitle.Equals(AppCommon.PROCESS_NAME_GET_VERSION_INFO)) {
                 // HIDインターフェース経由でコマンドを実行
                 doCommand(sender);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
                 // バージョン情報フォームを表示
                 ToolVersionForm vf = new ToolVersionForm();
                 vf.ShowToolVersionDialog(
@@ -464,10 +464,10 @@ namespace MaintenanceToolGUI
                     MaintenanceToolVersion, 
                     MaintenanceToolCopyright);
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
                 // 管理ツールのログファイルを格納している
                 // フォルダーを、Windowsのエクスプローラで参照
-                Process.Start(AppCommon.OutputLogFileDirectoryPath());
+                Process.Start(AppUtil.OutputLogFileDirectoryPath());
             }
         }
 
@@ -489,10 +489,10 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
 
             // ファームウェア更新
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_BLE_DFU)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_DFU)) {
                 toolBLEDFU.DoCommandBLEDFU();
             }
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_USB_DFU)) {
                 toolDFU.DoCommandDFU();
             }
         }

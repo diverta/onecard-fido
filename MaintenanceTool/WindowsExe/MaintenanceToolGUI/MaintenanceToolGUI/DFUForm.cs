@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -50,7 +51,7 @@ namespace MaintenanceToolGUI
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_USB_DFU;
+            CommandTitle = AppCommon.PROCESS_NAME_USB_DFU;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -60,16 +61,16 @@ namespace MaintenanceToolGUI
         {
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
-                ToolGUICommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
 
             // プロンプトを表示し、Yesの場合だけ処理を続行する
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
                 return;
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_BLE_DFU;
+            CommandTitle = AppCommon.PROCESS_NAME_BLE_DFU;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);

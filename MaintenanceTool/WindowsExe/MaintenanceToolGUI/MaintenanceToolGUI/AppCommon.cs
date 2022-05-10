@@ -1,6 +1,6 @@
 ﻿namespace MaintenanceToolGUI
 {
-    static class ToolGUICommon
+    public static class AppCommon
     {
         // macOS版と共通のメッセージ文言を使用
         // 共通
@@ -208,5 +208,152 @@
         // サービスUUID、スキャン秒数の桁数（固定）
         public const int AUTH_PARAM_UUID_STRING_SIZE = 36;
         public const int AUTH_PARAM_UUID_SCAN_SEC_SIZE = 1;
+
+        //
+        // CTAP2関連共通リソース
+        //
+        // CBORサブコマンドバイトに関する定義
+        public const byte CTAP2_CBORCMD_NONE = 0x00;
+        public const byte CTAP2_CBORCMD_MAKE_CREDENTIAL = 0x01;
+        public const byte CTAP2_CBORCMD_GET_ASSERTION = 0x02;
+        public const byte CTAP2_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte CTAP2_CBORCMD_AUTH_RESET = 0x07;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_SET = 0x03;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
+
+        // トランスポート種別
+        public const byte TRANSPORT_NONE = 0x00;
+        public const byte TRANSPORT_BLE = 0x01;
+        public const byte TRANSPORT_HID = 0x02;
+
+        // ホーム画面
+        public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+        public const string MSG_OCCUR_KEYHANDLE_ERROR = "キーハンドルが存在しません。再度ユーザー登録を実行してください。";
+        public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
+        public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。";
+        public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
+        public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_BOOT_LOADER_MODE = "FIDO認証器をブートローダーモードに遷移させます。";
+        public const string MSG_PROMPT_BOOT_LOADER_MODE = "ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？";
+
+        // 鍵・証明書インストール関連
+        public const string MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY = "公開鍵を認証器から受け取ることができませんでした。";
+        public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
+        public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
+        public const string MSG_CANNOT_CRYPTO_SKEY_CERT_DATA = "鍵・証明書の転送データを暗号化できませんでした。";
+        public const string MSG_INVALID_SKEY_OR_CERT = "秘密鍵または公開鍵の内容が不正です。";
+
+        // ヘルスチェック関連メッセージ
+        public const string MSG_HCHK_U2F_REGISTER_SUCCESS = "U2F Registerが成功しました。";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_START = "U2F Authenticateを開始します.";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT3 = "  MAIN SWを１回押してください.";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_SUCCESS = "U2F Authenticateが成功しました。";
+        public const string MSG_PROMPT_START_HCHK_BLE_AUTH = "自動認証で使用するBLEデバイスを近づけてください。";
+        public const string MSG_COMMENT_START_HCHK_BLE_AUTH = "BLE自動認証機能が有効化されている場合は、BLEデバイスによりユーザー所在確認を行います。\nスキャン対象サービスUUIDを持つBLEデバイスを始動させ、FIDO認証器に近づけてください。\n\n「はい」をクリックすると、ヘルスチェックを実行します。";
+
+        // コマンドテスト関連メッセージ
+        public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
+        public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
+        public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
+
+        // PINコードチェック関連メッセージ
+        public const string MSG_CTAP2_ERR_PIN_INVALID = "入力されたPINコードが違います。正しいPINコードを入力してください。";
+        public const string MSG_CTAP2_ERR_PIN_BLOCKED = "使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。";
+        public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
+        public const string MSG_CTAP2_ERR_PIN_NOT_SET = "PINコードが認証器に設定されていません。PINコードを新規設定してください。";
+
+        // CTAP2ヘルスチェック関連メッセージ
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_START = "ログインテストを開始します.";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  MAIN SWを１回押してください.";
+
+        // Flash ROM情報取得関連メッセージ
+        public const string MSG_FSTAT_REMAINING_RATE = "Flash ROMの空き容量は{0:0.0}％です。";
+        public const string MSG_FSTAT_NON_REMAINING_RATE = "Flash ROMの空き容量を取得できませんでした。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST = "破損している領域は存在しません。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_EXIST = "破損している領域が存在します。";
+
+        // バージョン情報取得関連メッセージ
+        public const string MSG_VERSION_INFO_HEADER = "FIDO認証器のバージョン情報";
+        public const string MSG_VERSION_INFO_DEVICE_NAME = "  デバイス名: {0}";
+        public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_SECURE_IC_AVAIL = "  セキュアIC: 搭載";
+        public const string MSG_VERSION_INFO_SECURE_IC_UNAVAIL = "  セキュアIC: 非搭載";
+
+        // Windows版固有のメッセージ文言
+        // BLE関連のメッセージ文言
+        public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
+        public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";
+        public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO認証器の接続に失敗しました。";
+        public const string MSG_U2F_DEVICE_CONNECTED = "FIDO認証器に接続しました。";
+        public const string MSG_U2F_DEVICE_DISCONNECTED = "FIDO認証器の接続が切断されました。";
+        public const string MSG_BLE_CHARACT_NOT_DISCOVERED = "FIDO BLEサービスと通信できません。";
+        public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLEサービスからデータを受信できません。";
+        public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
+        public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
+        public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
+        public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
+        public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
+
+        // BLEペアリング関連のメッセージ文言
+        public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
+        public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
+        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
+        public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
+
+        // BLE接続無効化時のメッセージ文言
+        public const string MSG_BLE_ERR_CONN_DISABLED = "BLE接続が無効となりました。";
+        public const string MSG_BLE_ERR_CONN_DISABLED_SUB1 = "大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。";
+
+        //
+        // 処理区分
+        //
+        public enum RequestType
+        {
+            None = 0,
+            //
+            // メンテナンス機能
+            //
+            EraseSkeyCert,
+            InstallSkeyCert,
+            ToolPreferenceCommand,
+            ToolPreferenceParamInquiry,
+            ChangeToBootloaderMode,
+            EraseBonds,
+            GotoBootLoaderMode,
+            //
+            // U2F
+            //
+            TestRegister,
+            TestAuthenticateCheck,
+            TestAuthenticate,
+            //
+            // CTAP2
+            //
+            ClientPinSet,
+            TestCtapHidPing,
+            TestMakeCredential,
+            TestGetAssertion,
+            AuthReset,
+            //
+            // OpenPGP
+            //
+            OpenPGPInstallKeys,
+            OpenPGPStatus,
+            OpenPGPReset,
+            OpenPGPChangePin,
+            OpenPGPChangeAdminPin,
+            OpenPGPUnblockPin,
+            OpenPGPSetResetCode,
+            OpenPGPUnblock,
+            HidFirmwareReset
+        };
     }
 }

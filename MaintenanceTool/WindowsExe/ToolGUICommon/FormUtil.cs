@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     class FormUtil
     {
@@ -126,16 +126,6 @@ namespace MaintenanceToolGUI
             MessageBoxShow(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static bool DisplayPromptPopup(IWin32Window owner, string message)
-        {
-            DialogResult dialogResult = MessageBoxShow(owner,
-                message, MainForm.MaintenanceToolTitle,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            // Yesがクリックされた場合 true を戻す
-            return (dialogResult == DialogResult.Yes);
-        }
-
         public static bool DisplayPromptPopup(IWin32Window owner, string title, string message)
         {
             DialogResult dialogResult = MessageBoxShow(owner,
@@ -178,52 +168,41 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public static bool CheckIsNumeric(TextBox textBox, string informativeText)
+        public static bool CheckIsNumeric(TextBox textBox, string title, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }
             return true;
         }
 
-        public static bool CompareEntry(TextBox destText, TextBox srcText, string informativeText)
+        public static bool CompareEntry(TextBox destText, TextBox srcText, string title, string informativeText)
         {
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
             }
-            ShowWarningMessage(destText.Parent, MainForm.MaintenanceToolTitle, informativeText);
+            ShowWarningMessage(destText.Parent, title, informativeText);
             destText.Focus();
             return false;
         }
 
-        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string informativeText)
+        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string title, string informativeText)
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }
             return true;
         }
 
-        public static bool CheckValueInRange(TextBox textBox, int minValue, int maxValue, string informativeText)
-        {
-            int value = int.Parse(textBox.Text);
-            if (value < minValue || value > maxValue) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
-                textBox.Focus();
-                return false;
-            }
-            return true;
-        }
-
-        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string informativeText)
+        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string title, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
-                ShowWarningMessage(textBox.Parent, MainForm.MaintenanceToolTitle, informativeText);
+                ShowWarningMessage(textBox.Parent, title, informativeText);
                 textBox.Focus();
                 return false;
             }

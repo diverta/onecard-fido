@@ -1,6 +1,6 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -62,7 +62,7 @@ namespace MaintenanceToolGUI
             Passkey = PairingStartFormRef.GetPasskey();
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
+            CommandTitle = AppCommon.PROCESS_NAME_PAIRING;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
@@ -79,12 +79,12 @@ namespace MaintenanceToolGUI
             string message = string.Format("{0}\n\n{1}",
                 AppCommon.MSG_ERASE_BONDS,
                 AppCommon.MSG_PROMPT_ERASE_BONDS);
-            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, MainForm.MaintenanceToolTitle, message) == false) {
                 return;
             }
 
             // 画面入力値をパラメーターに保持
-            CommandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
+            CommandTitle = AppCommon.PROCESS_NAME_ERASE_BONDS;
 
             // 画面項目を初期化し、この画面を閉じる
             TerminateWindow(DialogResult.OK);
