@@ -1,8 +1,7 @@
-﻿using MaintenanceToolCommon;
-using MaintenanceToolGUI;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace DevelopmentToolGUI
 {
@@ -27,7 +26,7 @@ namespace DevelopmentToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
-            AppCommon.OutputLogInfo(String.Format(
+            AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
             // TODO:
@@ -83,8 +82,8 @@ namespace DevelopmentToolGUI
         {
             // コマンドタイムアウト発生時
             // その旨を画面・ログファイルに出力
-            OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            OnPrintMessageText(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppUtil.OutputLogError(AppUtil.MSG_HID_CMD_RESPONSE_TIMEOUT);
 
             // コマンド固有の後処理を行う
             if (DoCommandTimedOut(sender, e)) {
@@ -111,7 +110,7 @@ namespace DevelopmentToolGUI
         {
             // このアプリケーションを終了する
             // hid.OnFormDestroy();
-            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
+            AppUtil.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
         public void OnPrintMessageText(string messageText)
@@ -155,10 +154,10 @@ namespace DevelopmentToolGUI
         private void DisplayStartMessage(string message)
         {
             // 処理開始メッセージを表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
             // ログファイルにも出力
-            AppCommon.OutputLogInfo(formatted);
+            AppUtil.OutputLogInfo(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -169,19 +168,15 @@ namespace DevelopmentToolGUI
             }
             // コマンドの実行結果をログファイルに出力後、
             // 画面およびメッセージボックスダイアログに表示
-            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
-                message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
+                message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             if (success) {
-                AppCommon.OutputLogInfo(formatted);
-                /*
+                AppUtil.OutputLogInfo(formatted);
                 FormUtil.ShowInfoMessage(this, MaintenanceToolTitle, formatted);
-                */
             } else {
-                AppCommon.OutputLogError(formatted);
-                /*
+                AppUtil.OutputLogError(formatted);
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
-                */
             }
         }
 
@@ -206,11 +201,11 @@ namespace DevelopmentToolGUI
             commandTimer.Start();
 
             /*
-            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
                 // 鍵・証明書消去
                 hid.DoEraseSkeyCert();
 
-            } else if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
                 // 鍵・証明書インストール
                 hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
             }
