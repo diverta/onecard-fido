@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ToolGUICommon;
 
-namespace MaintenanceToolCommon
+namespace MaintenanceToolGUI
 {
     public class BLEProcess
     {
@@ -69,19 +70,19 @@ namespace MaintenanceToolCommon
             if (bleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
-                    AppCommon.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                    AppUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;
                 }
-                AppCommon.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+                AppUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
             SendBLEMessageFrames(message, length);
 
             // リクエスト送信完了メッセージを出力
-            AppCommon.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
+            AppUtil.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
         }
 
         private void SendBLEMessageFrames(byte[] message, int length)
@@ -129,8 +130,8 @@ namespace MaintenanceToolCommon
                     // フレーム長を取得
                     frameLen = Const.INIT_HEADER_LEN + dataLenInFrame;
 
-                    string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogDebug(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
+                    string dump = AppUtil.DumpMessage(frameData, frameLen);
+                    AppUtil.OutputLogDebug(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
                         transferMessageLen, dataLenInFrame, dump));
 
                 } else {
@@ -150,8 +151,8 @@ namespace MaintenanceToolCommon
                     // フレーム長を取得
                     frameLen = Const.CONT_HEADER_LEN + dataLenInFrame;
 
-                    string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogDebug(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
+                    string dump = AppUtil.DumpMessage(frameData, frameLen);
+                    AppUtil.OutputLogDebug(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, dataLenInFrame, dump));
                 }
 
@@ -207,8 +208,8 @@ namespace MaintenanceToolCommon
 
                 if (receivedMessage[0] != 0x82) {
                     // キープアライブ以外の場合はログを出力
-                    string dump = AppCommon.DumpMessage(message, message.Length);
-                    AppCommon.OutputLogDebug(string.Format(
+                    string dump = AppUtil.DumpMessage(message, message.Length);
+                    AppUtil.OutputLogDebug(string.Format(
                         "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
                         receivedMessageLen, dataLenInFrame, dump));
                 }
@@ -224,8 +225,8 @@ namespace MaintenanceToolCommon
                     receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.CONT_HEADER_LEN + i];
                 }
 
-                string dump = AppCommon.DumpMessage(message, message.Length);
-                AppCommon.OutputLogDebug(string.Format(
+                string dump = AppUtil.DumpMessage(message, message.Length);
+                AppUtil.OutputLogDebug(string.Format(
                     "BLE Recv CONT frame: seq={0} length={1}\r\n{2}",
                     seq, dataLenInFrame, dump));
             }
@@ -239,7 +240,7 @@ namespace MaintenanceToolCommon
                 int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
 
                 // 受信データを転送
-                AppCommon.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
+                AppUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
                 ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
         }

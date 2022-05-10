@@ -1,6 +1,6 @@
-﻿using MaintenanceToolCommon;
-using PeterO.Cbor;
+﻿using PeterO.Cbor;
 using System.Linq;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -144,8 +144,8 @@ namespace MaintenanceToolGUI
             index += size;
 
             if (CreateOrGetCommandResponse.OutputDebugLog) {
-                string dump = AppCommon.DumpMessage(response.RpIdHash, size);
-                AppCommon.OutputLogDebug(string.Format("rpIdHash:\r\n{0}", dump));
+                string dump = AppUtil.DumpMessage(response.RpIdHash, size);
+                AppUtil.OutputLogDebug(string.Format("rpIdHash:\r\n{0}", dump));
             }
 
             // flags
@@ -153,7 +153,7 @@ namespace MaintenanceToolGUI
             index++;
 
             // signCount（エンディアン変換が必要）
-            response.SignCount = AppCommon.ToInt32(data, index, true);
+            response.SignCount = AppUtil.ToInt32(data, index, true);
             index += CreateOrGetCommandResponse.SignCountSize;
 
             if (makeCredential) {
@@ -163,7 +163,7 @@ namespace MaintenanceToolGUI
                 index += size;
 
                 // credentialIdLength（エンディアン変換が必要）
-                response.CredentialIdLength = AppCommon.ToInt16(data, index, true);
+                response.CredentialIdLength = AppUtil.ToInt16(data, index, true);
                 index += CreateOrGetCommandResponse.CredentialIdLengthSize;
 
                 // CredentialId
@@ -172,8 +172,8 @@ namespace MaintenanceToolGUI
                 index += size;
 
                 if (CreateOrGetCommandResponse.OutputDebugLog) {
-                    string dump = AppCommon.DumpMessage(response.CredentialId, size);
-                    AppCommon.OutputLogDebug(string.Format("CredentialId:\r\n{0}", dump));
+                    string dump = AppUtil.DumpMessage(response.CredentialId, size);
+                    AppUtil.OutputLogDebug(string.Format("CredentialId:\r\n{0}", dump));
                 }
 
                 // credentialPublicKey
@@ -182,8 +182,8 @@ namespace MaintenanceToolGUI
                 index += size;
 
                 if (CreateOrGetCommandResponse.OutputDebugLog) {
-                    string dump = AppCommon.DumpMessage(response.CredentialPublicKeyByte, size);
-                    AppCommon.OutputLogDebug(string.Format("CredentialPublicKeyByte:\r\n{0}", dump));
+                    string dump = AppUtil.DumpMessage(response.CredentialPublicKeyByte, size);
+                    AppUtil.OutputLogDebug(string.Format("CredentialPublicKeyByte:\r\n{0}", dump));
                 }
             }
 
@@ -224,13 +224,13 @@ namespace MaintenanceToolGUI
 
             if (CreateOrGetCommandResponse.OutputDebugLog) {
                 if (response.HmacSecretRes.Flag) {
-                    AppCommon.OutputLogDebug(string.Format("HMAC Secret Extension available"));
+                    AppUtil.OutputLogDebug(string.Format("HMAC Secret Extension available"));
                 }
                 if (response.HmacSecretRes.Output != null) {
-                    string dump = AppCommon.DumpMessage(
+                    string dump = AppUtil.DumpMessage(
                         response.HmacSecretRes.Output,
                         ExtHmacSecretResponse.OutputSize);
-                    AppCommon.OutputLogDebug(string.Format("Extensions 'hmac-secret':\r\n{0}", dump));
+                    AppUtil.OutputLogDebug(string.Format("Extensions 'hmac-secret':\r\n{0}", dump));
                 }
             }
         }

@@ -1,7 +1,7 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ToolGUICommon;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
@@ -47,7 +47,7 @@ namespace MaintenanceToolGUI
                     OnConnectionFailed();
                     return;
                 }
-                AppCommon.OutputLogInfo("BLE SMPサービスに接続されました。");
+                AppUtil.OutputLogInfo("BLE SMPサービスに接続されました。");
             }
 
             // FIDO認証器に接続完了
@@ -58,7 +58,7 @@ namespace MaintenanceToolGUI
         {
             // 切断
             StopCommunicate();
-            AppCommon.OutputLogInfo("BLE SMPサービスから切断されました。");
+            AppUtil.OutputLogInfo("BLE SMPサービスから切断されました。");
         }
 
         //
@@ -75,17 +75,17 @@ namespace MaintenanceToolGUI
                 // データ受信監視を開始
                 foreach (GattDeviceService service in BLEServices) {
                     if (await StartBLENotification(service)) {
-                        AppCommon.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        AppUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
                         break;
                     }
-                    AppCommon.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+                    AppUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
                 }
 
                 // 接続された場合は true
                 return IsConnected();
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("StartCommunicate: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("StartCommunicate: {0}", e.Message));
                 FreeResources();
                 return false;
             }
@@ -94,7 +94,7 @@ namespace MaintenanceToolGUI
         public async Task<bool> DiscoverBLEService()
         {
             try {
-                AppCommon.OutputLogInfo(string.Format("BLE SMPサービス({0})を検索します。", BLE_SMP_SERVICE_UUID));
+                AppUtil.OutputLogInfo(string.Format("BLE SMPサービス({0})を検索します。", BLE_SMP_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(BLE_SMP_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
@@ -103,20 +103,20 @@ namespace MaintenanceToolGUI
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
                     if (service != null) {
                         BLEServices.Add(service);
-                        AppCommon.OutputLogDebug(string.Format("  BLE SMP service found [{0}]", info.Name));
+                        AppUtil.OutputLogDebug(string.Format("  BLE SMP service found [{0}]", info.Name));
                     }
                 }
 
                 if (BLEServices.Count == 0) {
-                    AppCommon.OutputLogError("BLE SMPサービスが見つかりません。");
+                    AppUtil.OutputLogError("BLE SMPサービスが見つかりません。");
                     return false;
                 }
 
-                AppCommon.OutputLogInfo("BLE SMPサービスが見つかりました。");
+                AppUtil.OutputLogInfo("BLE SMPサービスが見つかりました。");
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DiscoverBLEService: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("DiscoverBLEService: {0}", e.Message));
                 FreeResources();
                 return false;
             }
@@ -141,7 +141,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("StartBLENotification: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("StartBLENotification: {0}", e.Message));
                 FreeResources();
                 return false;
             }
@@ -150,7 +150,7 @@ namespace MaintenanceToolGUI
         public async void Send(byte[] requestData)
         {
             if (BLESMPService == null) {
-                AppCommon.OutputLogError(string.Format("BLESMPService.Send: service is null"));
+                AppUtil.OutputLogError(string.Format("BLESMPService.Send: service is null"));
                 OnTransactionFailed();
             }
 
@@ -170,12 +170,12 @@ namespace MaintenanceToolGUI
                 // リクエストを実行（SMPキャラクタリスティックに書込）
                 GattCommunicationStatus result = await BLESMPCharacteristic.WriteValueAsync(writer.DetachBuffer(), writeOption);
                 if (result != GattCommunicationStatus.Success) {
-                    AppCommon.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
+                    AppUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
                     OnTransactionFailed();
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
                 OnTransactionFailed();
             }
         }
@@ -193,7 +193,7 @@ namespace MaintenanceToolGUI
 
             } catch (Exception e) {
                 // エラー通知
-                AppCommon.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
                 OnTransactionFailed();
             }
         }
@@ -225,7 +225,7 @@ namespace MaintenanceToolGUI
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("StopCommunicate: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("StopCommunicate: {0}", e.Message));
 
             } finally {
                 FreeResources();

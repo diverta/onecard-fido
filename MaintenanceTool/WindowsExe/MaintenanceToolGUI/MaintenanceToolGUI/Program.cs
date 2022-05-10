@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -20,7 +21,7 @@ namespace MaintenanceToolGUI
             // FIDO認証器と通信ができないため、
             // プログラムを起動させない
             if (CheckAdministratorRoll() == false) {
-                FormUtil.ShowErrorMessage(title, ToolGUICommon.MSG_INVALID_USER_ROLL);
+                FormUtil.ShowErrorMessage(title, AppCommon.MSG_INVALID_USER_ROLL);
                 return;
             }
 
@@ -29,7 +30,7 @@ namespace MaintenanceToolGUI
             bool createdNew;
             Mutex mutex = new Mutex(true, mutexName, out createdNew);
             if (createdNew == false) {
-                FormUtil.ShowErrorMessage(title, ToolGUICommon.MSG_ERROR_DOUBLE_START);
+                FormUtil.ShowErrorMessage(title, AppCommon.MSG_ERROR_DOUBLE_START);
                 mutex.Close();
                 return;
             }

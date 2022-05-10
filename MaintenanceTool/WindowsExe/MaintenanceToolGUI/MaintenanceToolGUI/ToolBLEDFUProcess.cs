@@ -1,7 +1,7 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -135,7 +135,7 @@ namespace MaintenanceToolGUI
         private void DoRequestGetSlotInfo()
         {
             // DFU実行開始を通知
-            OnNotifyDFUProgress(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+            OnNotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
 
             // リクエストデータを生成
             byte[] bodyBytes = new byte[] { 0xbf, 0xff };
@@ -170,7 +170,7 @@ namespace MaintenanceToolGUI
             // CBORをデコードしてスロット照会情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(AppCommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
@@ -192,7 +192,7 @@ namespace MaintenanceToolGUI
             // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
             bool active = decoder.SlotInfos[0].Active;
             if (active && hashIsEqual) {
-                OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_IMAGE_ALREADY_INSTALLED);
+                OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_IMAGE_ALREADY_INSTALLED);
                 return false;
             }
             return true;
@@ -230,10 +230,10 @@ namespace MaintenanceToolGUI
             // 転送比率を計算
             int imageBytesTotal = ToolBLEDFUImageRef.NRF53AppBinSize;
             int percentage = ImageBytesSent * 100 / imageBytesTotal;
-            AppCommon.OutputLogDebug(string.Format("DFU image sent {0} bytes ({1}%)", ImageBytesSent, percentage));
+            AppUtil.OutputLogDebug(string.Format("DFU image sent {0} bytes ({1}%)", ImageBytesSent, percentage));
 
             // 転送状況を画面表示
-            string progressMessage = string.Format(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
+            string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
             OnNotifyDFUProgress(progressMessage, percentage);
 
             // イメージ全体が転送されたかどうかチェック
@@ -287,7 +287,7 @@ namespace MaintenanceToolGUI
             byte[] lenBytes = {
                 0x63, 0x6c, 0x65, 0x6e, 0x1a, 0x00, 0x00, 0x00, 0x00
             };
-            AppCommon.ConvertUint32ToBEBytes(bytesTotal, lenBytes, 5);
+            AppUtil.ConvertUint32ToBEBytes(bytesTotal, lenBytes, 5);
             return lenBytes;
         }
 
@@ -326,12 +326,12 @@ namespace MaintenanceToolGUI
 
             } else if (bytesSent < 0x10000) {
                 offBytes[4] = 0x19;
-                AppCommon.ConvertUint16ToBEBytes((UInt16)bytesSent, offBytes, 5);
+                AppUtil.ConvertUint16ToBEBytes((UInt16)bytesSent, offBytes, 5);
                 len = 7;
 
             } else {
                 offBytes[4] = 0x1a;
-                AppCommon.ConvertUint32ToBEBytes((UInt32)bytesSent, offBytes, 5);
+                AppUtil.ConvertUint32ToBEBytes((UInt32)bytesSent, offBytes, 5);
             }
 
             // 不要な末尾バイトを除去して戻す
@@ -365,14 +365,14 @@ namespace MaintenanceToolGUI
             // CBORをデコードして転送結果情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeUploadResultInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(AppCommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
             // 転送結果情報の rc が設定されている場合はエラー
             byte rc = decoder.ResultInfo.Rc;
             if (rc != 0) {
-                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc));
+                AppUtil.OutputLogError(string.Format(AppCommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc));
                 return false;
             }
 
@@ -405,7 +405,7 @@ namespace MaintenanceToolGUI
             }
 
             // DFU転送成功を通知
-            OnNotifyDFUInfoMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
+            OnNotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
 
             // リセット要求に移行
             DoRequestResetApplication();
@@ -442,14 +442,14 @@ namespace MaintenanceToolGUI
             // CBORをデコードしてスロット照会情報を抽出
             BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
-                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_SUB_PROCESS_FAILED);
+                AppUtil.OutputLogError(AppCommon.MSG_DFU_SUB_PROCESS_FAILED);
                 return false;
             }
 
             // スロット情報の代わりに rc が設定されている場合はエラー
             byte rc = decoder.ResultInfo.Rc;
             if (rc != 0) {
-                AppCommon.OutputLogError(string.Format(ToolGUICommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc));
+                AppUtil.OutputLogError(string.Format(AppCommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc));
                 return false;
             }
             return true;
@@ -502,8 +502,8 @@ namespace MaintenanceToolGUI
 
             // ログ出力
             if (Command != BLEDFUCommand.UploadImage) {
-                string dump = AppCommon.DumpMessage(requestData, requestData.Length);
-                AppCommon.OutputLogDebug(string.Format(
+                string dump = AppUtil.DumpMessage(requestData, requestData.Length);
+                AppUtil.OutputLogDebug(string.Format(
                     "Transmit SMP request ({0} bytes)\r\n{1}",
                     requestData.Length, dump));
             }
@@ -524,8 +524,8 @@ namespace MaintenanceToolGUI
 
             // ログ出力
             if (Command != BLEDFUCommand.UploadImage) {
-                string dump = AppCommon.DumpMessage(receivedData, receivedData.Length);
-                AppCommon.OutputLogDebug(string.Format(
+                string dump = AppUtil.DumpMessage(receivedData, receivedData.Length);
+                AppUtil.OutputLogDebug(string.Format(
                     "Incoming SMP response ({0} bytes)\r\n{1}",
                     receivedData.Length, dump));
             }
@@ -585,16 +585,16 @@ namespace MaintenanceToolGUI
             // 処理区分に応じて分岐
             switch (Command) {
                 case BLEDFUCommand.GetSlotInfo:
-                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_SLOT_INFO_GET_FAILED);
+                    OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_SLOT_INFO_GET_FAILED);
                     break;
                 case BLEDFUCommand.UploadImage:
-                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_IMAGE_TRANSFER_FAILED);
+                    OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_FAILED);
                     break;
                 case BLEDFUCommand.ChangeImageUpdateMode:
-                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED);
+                    OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED);
                     break;
                 case BLEDFUCommand.ResetApplication:
-                    OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_RESET_APPLICATION_FAILED);
+                    OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_RESET_APPLICATION_FAILED);
                     break;
                 default:
                     break;
@@ -610,7 +610,7 @@ namespace MaintenanceToolGUI
         private void OnResponseTimerElapsed(object sender, EventArgs e)
         {
             // 応答タイムアウトを通知
-            OnNotifyDFUErrorMessage(ToolGUICommon.MSG_DFU_PROCESS_TIMEOUT);
+            OnNotifyDFUErrorMessage(AppCommon.MSG_DFU_PROCESS_TIMEOUT);
             TerminateDFUProcess(false);
         }
     }

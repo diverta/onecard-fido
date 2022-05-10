@@ -1,6 +1,6 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.Linq;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -88,7 +88,7 @@ namespace MaintenanceToolGUI
                 // 受信データがある場合は連結
                 byte[] received = Device.GetReceivedBytes();
                 int responseDataSize = received.Length - 2;
-                responseSW = AppCommon.ToUInt16(received, responseDataSize, true);
+                responseSW = AppUtil.ToUInt16(received, responseDataSize, true);
                 if (responseDataSize > 0) {
                     responseData.Concat(received.Take(responseDataSize));
                 }
@@ -117,7 +117,7 @@ namespace MaintenanceToolGUI
 
                 byte[] received = Device.GetReceivedBytes();
                 int responseDataSize = received.Length - 2;
-                responseSW = AppCommon.ToUInt16(received, responseDataSize, true);
+                responseSW = AppUtil.ToUInt16(received, responseDataSize, true);
                 if (responseSW != CCIDConst.SW_SUCCESS && responseSW >> 8 != 0x61) {
                     // ステータスワードが不正の場合は制御を戻す
                     OnDataReceived(null, responseSW);

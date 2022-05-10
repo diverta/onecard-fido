@@ -1,9 +1,9 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -105,7 +105,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ToolDFUImage.ReadDFUImage: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ToolDFUImage.ReadDFUImage: {0}", e.Message));
                 return false;
             }
         }
@@ -135,15 +135,15 @@ namespace MaintenanceToolGUI
         {
             // ファイルのサイズ
             int offset = 18;
-            int compressedSize = AppCommon.ToInt32(data, index + offset, false);
+            int compressedSize = AppUtil.ToInt32(data, index + offset, false);
             offset += 8;
 
             // ファイル名のサイズ
-            int filenameSize = AppCommon.ToInt16(data, index + offset, false);
+            int filenameSize = AppUtil.ToInt16(data, index + offset, false);
             offset += 2;
 
             // コメントのサイズ
-            int commentSize = AppCommon.ToInt16(data, index + offset, false);
+            int commentSize = AppUtil.ToInt16(data, index + offset, false);
             offset += 2;
 
             // ファイル名
@@ -195,9 +195,9 @@ namespace MaintenanceToolGUI
             UpdateVersion = string.Format("{0}.{1}.{2}", elem[1], elem[2], elem[3]);
 
             // ログ出力
-            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: Firmware version {0}, board name {1}", 
+            AppUtil.OutputLogDebug(string.Format("ToolDFUImage: Firmware version {0}, board name {1}", 
                 UpdateVersion, boardname));
-            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: {0}({1} bytes), {2}({3} bytes)",
+            AppUtil.OutputLogDebug(string.Format("ToolDFUImage: {0}({1} bytes), {2}({3} bytes)",
                 NRF52_APP_DAT_FILE_NAME, NRF52AppDatSize,
                 NRF52_APP_BIN_FILE_NAME, NRF52AppBinSize
                 ));
