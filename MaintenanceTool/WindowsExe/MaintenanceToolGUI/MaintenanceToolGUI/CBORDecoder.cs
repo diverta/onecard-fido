@@ -1,5 +1,4 @@
-﻿using MaintenanceToolCommon;
-using PeterO.Cbor;
+﻿using PeterO.Cbor;
 using System.Linq;
 
 namespace MaintenanceToolGUI

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MaintenanceToolCommon
+namespace MaintenanceToolGUI
 {
     public class BLEProcess
     {

@@ -8,7 +8,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
 using Windows.Storage.Streams;
 
-namespace MaintenanceToolCommon
+namespace MaintenanceToolGUI
 {
     public class BLEService
     {

@@ -1,5 +1,4 @@
-﻿using MaintenanceToolCommon;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI

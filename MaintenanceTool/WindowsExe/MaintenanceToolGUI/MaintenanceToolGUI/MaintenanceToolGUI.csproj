@@ -75,15 +75,9 @@
     <Compile Include="..\..\ToolGUICommon\AppUtil.cs">
       <Link>ToolGUICommon\AppUtil.cs</Link>
     </Compile>
-    <Compile Include="..\MaintenanceToolCommon\AppCommon.cs">
-      <Link>AppCommon.cs</Link>
-    </Compile>
-    <Compile Include="..\MaintenanceToolCommon\BLEProcess.cs">
-      <Link>BLEProcess.cs</Link>
-    </Compile>
-    <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
-      <Link>BLEService.cs</Link>
-    </Compile>
+    <Compile Include="AppCommon.cs" />
+    <Compile Include="BLEProcess.cs" />
+    <Compile Include="BLEService.cs" />
     <Compile Include="BLEDFUProcessingForm.cs">
       <SubType>Form</SubType>
     </Compile>
