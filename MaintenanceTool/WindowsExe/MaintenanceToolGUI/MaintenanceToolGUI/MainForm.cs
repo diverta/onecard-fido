@@ -460,6 +460,7 @@ namespace MaintenanceToolGUI
                 // バージョン情報フォームを表示
                 ToolVersionForm vf = new ToolVersionForm();
                 vf.ShowToolVersionDialog(
+                    AppCommon.MSG_DIALOG_NAME_TOOL_VERSION_INFO,
                     MaintenanceToolTitle, 
                     MaintenanceToolVersion, 
                     MaintenanceToolCopyright);

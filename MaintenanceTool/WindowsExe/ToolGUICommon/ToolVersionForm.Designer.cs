@@ -1,4 +1,4 @@
-﻿namespace MaintenanceToolGUI
+﻿namespace ToolGUICommon
 {
     partial class ToolVersionForm
     {
@@ -97,7 +97,7 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "管理ツールのバージョン";
+            this.Text = "ツールのバージョン";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

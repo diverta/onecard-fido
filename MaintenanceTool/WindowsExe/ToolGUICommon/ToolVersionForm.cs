@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace MaintenanceToolGUI
+namespace ToolGUICommon
 {
     public partial class ToolVersionForm : Form
     {
@@ -16,8 +16,11 @@ namespace MaintenanceToolGUI
             buttonCancel.Focus();
         }
 
-        public void ShowToolVersionDialog(string toolName, string toolVersion, string toolCopyright)
+        public void ShowToolVersionDialog(string dialogTitle, string toolName, string toolVersion, string toolCopyright)
         {
+            // ダイアログのタイトルを表示
+            Text = dialogTitle;
+
             // ツールタイトル／バージョン／著作権表示
             labelToolName.Text = toolName;
             labelVersion.Text = toolVersion;
