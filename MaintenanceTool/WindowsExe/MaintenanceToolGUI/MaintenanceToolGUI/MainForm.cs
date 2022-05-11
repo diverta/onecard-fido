@@ -34,6 +34,7 @@ namespace MaintenanceToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
+            AppUtil.SetOutputLogApplName("MaintenanceTool");
             AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
