@@ -34,6 +34,7 @@ namespace MaintenanceToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
+            AppUtil.SetOutputLogApplName("MaintenanceTool");
             AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
@@ -460,6 +461,7 @@ namespace MaintenanceToolGUI
                 // バージョン情報フォームを表示
                 ToolVersionForm vf = new ToolVersionForm();
                 vf.ShowToolVersionDialog(
+                    AppCommon.MSG_DIALOG_NAME_TOOL_VERSION_INFO,
                     MaintenanceToolTitle, 
                     MaintenanceToolVersion, 
                     MaintenanceToolCopyright);

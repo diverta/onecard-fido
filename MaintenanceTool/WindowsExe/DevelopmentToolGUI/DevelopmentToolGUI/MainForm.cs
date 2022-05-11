@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using ToolGUICommon;
@@ -26,6 +27,7 @@ namespace DevelopmentToolGUI
             MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
+            AppUtil.SetOutputLogApplName("DevelopmentTool");
             AppUtil.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
@@ -203,6 +205,37 @@ namespace DevelopmentToolGUI
             } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
                 // 鍵・証明書インストール
                 HIDMainRef.DoInstallSkeyCert(f.KeyPath, f.CertPath);
+            }
+        }
+
+        //
+        // ユーティリティー関連インターフェース
+        //
+        private void buttonUtility_Click(object sender, EventArgs e)
+        {
+            // ユーティリティー画面を表示
+            UtilityForm f = new UtilityForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // ユーティリティー画面でCancelの場合は終了
+                return;
+            }
+
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
+
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+                // バージョン情報フォームを表示
+                ToolVersionForm vf = new ToolVersionForm();
+                vf.ShowToolVersionDialog(
+                    AppCommon.MSG_DIALOG_NAME_TOOL_VERSION_INFO,
+                    MaintenanceToolTitle,
+                    MaintenanceToolVersion,
+                    MaintenanceToolCopyright);
+
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+                // 管理ツールのログファイルを格納している
+                // フォルダーを、Windowsのエクスプローラで参照
+                Process.Start(AppUtil.OutputLogFileDirectoryPath());
             }
         }
 

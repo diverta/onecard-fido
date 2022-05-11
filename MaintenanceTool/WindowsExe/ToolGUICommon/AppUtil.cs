@@ -6,6 +6,42 @@ using System.Text;
 
 namespace ToolGUICommon
 {
+    public class AppLogUtil
+    {
+        private static AppLogUtil Instance = new AppLogUtil();
+        private string ApplicationName;
+
+        private AppLogUtil()
+        {
+        }
+
+        //
+        // 公開用メソッド
+        //
+        public static void SetApplicationName(string applicationName)
+        {
+            Instance.ApplicationName = applicationName;
+        }
+
+        public static string GetApplicationName()
+        {
+            return Instance.ApplicationName;
+        }
+
+        public static void OutputLogText(string logText, string fname)
+        {
+            try {
+                // ログファイルにメッセージを出力する
+                StreamWriter sr = new StreamWriter(new FileStream(fname, FileMode.Append), Encoding.Default);
+                sr.WriteLine(logText);
+                sr.Close();
+
+            } catch (Exception e) {
+                Console.Write(e.Message);
+            }
+        }
+    }
+
     public static class AppUtil
     {
         // Windows版固有のメッセージ文言
@@ -22,25 +58,23 @@ namespace ToolGUICommon
         public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
 
+        public static void SetOutputLogApplName(string applName)
+        {
+            // ログ出力を行うアプリケーション名を設定
+            AppLogUtil.SetApplicationName(applName);
+        }
+
         public static void OutputLogText(string logText)
         {
-            try {
-                // ログファイルにメッセージを出力する
-                string fname = OutputLogFilePath();
-                StreamWriter sr = new StreamWriter(
-                    (new FileStream(fname, FileMode.Append)), Encoding.Default);
-                sr.WriteLine(logText);
-                sr.Close();
-
-            } catch (Exception e) {
-                Console.Write(e.Message);
-            }
+            // ログファイルにメッセージを出力する
+            string fname = OutputLogFilePath();
+            AppLogUtil.OutputLogText(logText, fname);
         }
 
         private static string OutputLogFilePath()
         {
             // ファイル名を連結して戻す
-            return string.Format("{0}\\MaintenanceTool.log", OutputLogFileDirectoryPath());
+            return string.Format("{0}\\{1}.log", OutputLogFileDirectoryPath(), AppLogUtil.GetApplicationName());
         }
 
         public static string OutputLogFileDirectoryPath()

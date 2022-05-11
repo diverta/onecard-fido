@@ -21,6 +21,7 @@
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         public const string MSG_FIRMWARE_RESET_UNSUPP = "FIDO認証器のファームウェアをリセットさせることができません。";
+        public const string MSG_DIALOG_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
 
         // PIN設定画面
         public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";

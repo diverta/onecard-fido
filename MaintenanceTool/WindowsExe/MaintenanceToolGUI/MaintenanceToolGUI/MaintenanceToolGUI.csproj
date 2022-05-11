@@ -185,10 +185,12 @@
     <Compile Include="ToolDFUUtil.cs" />
     <Compile Include="ToolPGPCcid.cs" />
     <Compile Include="ToolPGP.cs" />
-    <Compile Include="ToolVersionForm.cs">
+    <Compile Include="..\..\ToolGUICommon\ToolVersionForm.cs">
+      <Link>ToolGUICommon\ToolVersionForm.cs</Link>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ToolVersionForm.designer.cs">
+    <Compile Include="..\..\ToolGUICommon\ToolVersionForm.designer.cs">
+      <Link>ToolGUICommon\ToolVersionForm.designer.cs</Link>
       <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="U2f.cs" />
@@ -491,7 +493,8 @@
     <EmbeddedResource Include="SetPinParamForm.resx">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolVersionForm.resx">
+    <EmbeddedResource Include="..\..\ToolGUICommon\ToolVersionForm.resx">
+      <Link>ToolGUICommon\ToolVersionForm.resx</Link>
       <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UtilityForm.resx">
