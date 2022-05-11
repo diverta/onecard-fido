@@ -212,8 +212,15 @@ namespace DevelopmentToolGUI
         //
         private void buttonUtility_Click(object sender, EventArgs e)
         {
-            // TODO: 仮の実装です。
-            commandTitle = AppCommon.PROCESS_NAME_TOOL_VERSION_INFO;
+            // ユーティリティー画面を表示
+            UtilityForm f = new UtilityForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // ユーティリティー画面でCancelの場合は終了
+                return;
+            }
+
+            // 開始メッセージを取得
+            commandTitle = f.CommandTitle;
 
             if (commandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
                 // バージョン情報フォームを表示
