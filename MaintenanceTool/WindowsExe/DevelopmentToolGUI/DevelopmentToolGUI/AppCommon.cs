@@ -17,10 +17,13 @@
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+        public const string MSG_DIALOG_NAME_TOOL_VERSION_INFO = "開発ツールのバージョン";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書の削除";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
+        public const string PROCESS_NAME_TOOL_VERSION_INFO = "開発ツールのバージョンを参照";
+        public const string PROCESS_NAME_VIEW_LOG_FILE = "開発ツールのログを参照";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";

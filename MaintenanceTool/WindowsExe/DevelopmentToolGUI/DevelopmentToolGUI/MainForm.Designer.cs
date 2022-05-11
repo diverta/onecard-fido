@@ -71,6 +71,7 @@
             this.buttonUtility.TabIndex = 11;
             this.buttonUtility.Text = "ユーティリティー";
             this.buttonUtility.UseVisualStyleBackColor = true;
+            this.buttonUtility.Click += new System.EventHandler(this.buttonUtility_Click);
             // 
             // MainForm
             // 

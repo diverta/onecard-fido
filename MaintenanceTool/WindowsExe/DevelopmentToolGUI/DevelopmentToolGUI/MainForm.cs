@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using ToolGUICommon;
@@ -203,6 +204,30 @@ namespace DevelopmentToolGUI
             } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
                 // 鍵・証明書インストール
                 HIDMainRef.DoInstallSkeyCert(f.KeyPath, f.CertPath);
+            }
+        }
+
+        //
+        // ユーティリティー関連インターフェース
+        //
+        private void buttonUtility_Click(object sender, EventArgs e)
+        {
+            // TODO: 仮の実装です。
+            commandTitle = AppCommon.PROCESS_NAME_TOOL_VERSION_INFO;
+
+            if (commandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+                // バージョン情報フォームを表示
+                ToolVersionForm vf = new ToolVersionForm();
+                vf.ShowToolVersionDialog(
+                    AppCommon.MSG_DIALOG_NAME_TOOL_VERSION_INFO,
+                    MaintenanceToolTitle,
+                    MaintenanceToolVersion,
+                    MaintenanceToolCopyright);
+
+            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+                // 管理ツールのログファイルを格納している
+                // フォルダーを、Windowsのエクスプローラで参照
+                Process.Start(AppUtil.OutputLogFileDirectoryPath());
             }
         }
 
