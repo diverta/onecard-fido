@@ -31,6 +31,7 @@
             this.buttonQuit = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonFIDO = new System.Windows.Forms.Button();
+            this.buttonUtility = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonQuit
@@ -62,11 +63,21 @@
             this.buttonFIDO.UseVisualStyleBackColor = true;
             this.buttonFIDO.Click += new System.EventHandler(this.buttonFIDO_Click);
             // 
+            // buttonUtility
+            // 
+            this.buttonUtility.Location = new System.Drawing.Point(203, 12);
+            this.buttonUtility.Name = "buttonUtility";
+            this.buttonUtility.Size = new System.Drawing.Size(180, 25);
+            this.buttonUtility.TabIndex = 11;
+            this.buttonUtility.Text = "ユーティリティー";
+            this.buttonUtility.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
+            this.Controls.Add(this.buttonUtility);
             this.Controls.Add(this.buttonFIDO);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.buttonQuit);
@@ -87,6 +98,7 @@
         private System.Windows.Forms.Button buttonQuit;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonFIDO;
+        private System.Windows.Forms.Button buttonUtility;
     }
 }
 
