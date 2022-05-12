@@ -12,12 +12,6 @@
         public const string MSG_FAILURE = "失敗";
 
         // ホーム画面
-        public const string MSG_PROMPT_SELECT_PKEY_PATH = "秘密鍵ファイル(PEM)のパスを選択してください";
-        public const string MSG_PROMPT_SELECT_CRT_PATH = "証明書ファイル(CRT)のパスを選択してください";
-        public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。";
-        public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
-        public const string MSG_INSTALL_SKEY_CERT = "FIDO認証器に鍵・証明書をインストールします。";
-        public const string MSG_PROMPT_INSTL_SKEY_CERT = "インストールを実行しますか？";
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         public const string MSG_FIRMWARE_RESET_UNSUPP = "FIDO認証器のファームウェアをリセットさせることができません。";
@@ -168,8 +162,6 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
         // コマンド種別に対応する処理名称
-        public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書の削除";
-        public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_BLE_PING = "BLE PINGテスト";
@@ -192,10 +184,6 @@
         public const string PROCESS_NAME_OPENPGP_RESET = "OpenPGP機能リセット";
         public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
         public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
-
-        // ファイル選択／保存ダイアログ用フィルター
-        public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
-        public const string FILTER_SELECT_CRT_PATH = "証明書ファイル (*.crt)|*.crt";
 
         // 起動時のメッセージ文言
         public const string MSG_INVALID_USER_ROLL = "このツールは、管理者として実行してください。\n\nプログラムアイコンを右クリックして、\nメニューから「管理者として実行」を選択します。";
@@ -238,13 +226,6 @@
         public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_BOOT_LOADER_MODE = "FIDO認証器をブートローダーモードに遷移させます。";
         public const string MSG_PROMPT_BOOT_LOADER_MODE = "ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？";
-
-        // 鍵・証明書インストール関連
-        public const string MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY = "公開鍵を認証器から受け取ることができませんでした。";
-        public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
-        public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
-        public const string MSG_CANNOT_CRYPTO_SKEY_CERT_DATA = "鍵・証明書の転送データを暗号化できませんでした。";
-        public const string MSG_INVALID_SKEY_OR_CERT = "秘密鍵または公開鍵の内容が不正です。";
 
         // ヘルスチェック関連メッセージ
         public const string MSG_HCHK_U2F_REGISTER_SUCCESS = "U2F Registerが成功しました。";

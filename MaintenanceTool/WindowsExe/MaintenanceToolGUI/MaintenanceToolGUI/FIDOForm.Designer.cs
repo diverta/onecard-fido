@@ -28,7 +28,6 @@
         private void InitializeComponent()
         {
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.ButtonFIDOAttestation = new System.Windows.Forms.Button();
             this.buttonSetPinParam = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -42,16 +41,6 @@
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // ButtonFIDOAttestation
-            // 
-            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(56, 108);
-            this.ButtonFIDOAttestation.Name = "ButtonFIDOAttestation";
-            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(180, 25);
-            this.ButtonFIDOAttestation.TabIndex = 3;
-            this.ButtonFIDOAttestation.Text = "FIDO鍵・証明書設定";
-            this.ButtonFIDOAttestation.UseVisualStyleBackColor = true;
-            this.ButtonFIDOAttestation.Click += new System.EventHandler(this.ButtonFIDOAttestation_Click);
             // 
             // buttonSetPinParam
             // 
@@ -79,7 +68,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 198);
             this.Controls.Add(this.buttonReset);
-            this.Controls.Add(this.ButtonFIDOAttestation);
             this.Controls.Add(this.buttonSetPinParam);
             this.Controls.Add(this.buttonCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -96,7 +84,6 @@
 
         #endregion
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button ButtonFIDOAttestation;
         private System.Windows.Forms.Button buttonSetPinParam;
         private System.Windows.Forms.Button buttonReset;
     }
