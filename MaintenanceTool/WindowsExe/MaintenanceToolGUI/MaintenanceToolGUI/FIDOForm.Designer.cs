@@ -34,7 +34,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(107, 151);
+            this.buttonCancel.Location = new System.Drawing.Point(107, 150);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(79, 23);
             this.buttonCancel.TabIndex = 4;
@@ -54,11 +54,11 @@
             // 
             // buttonReset
             // 
-            this.buttonReset.Location = new System.Drawing.Point(56, 65);
+            this.buttonReset.Location = new System.Drawing.Point(56, 86);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(180, 25);
             this.buttonReset.TabIndex = 2;
-            this.buttonReset.Text = "FIDO認証情報の消去";
+            this.buttonReset.Text = "FIDO認証情報消去";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
