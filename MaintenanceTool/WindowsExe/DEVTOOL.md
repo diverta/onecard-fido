@@ -31,7 +31,7 @@ FIDO認証器開発ツールを「管理者として実行」しなかった場�
 #### 手順書
 
 - <b>[インストール手順](../../MaintenanceTool/WindowsExe/DEVTOOLINST.md)</b><br>
-FIDO認証器管理ツールをWindows環境にインストールする手順を掲載しています。
+FIDO認証器開発ツールをWindows環境にインストールする手順を掲載しています。
 
 - <b>[鍵・証明書の導入手順](../../MaintenanceTool/WindowsExe/ATTESTATION.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
