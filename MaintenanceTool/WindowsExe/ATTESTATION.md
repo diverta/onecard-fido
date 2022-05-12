@@ -17,7 +17,7 @@
 [FIDO認証器開発ツール](../../MaintenanceTool/WindowsExe/DEVTOOL.md)を、PC環境（Windows）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[FIDO認証器開発ツール インストール手順（Windows版）](DEVTOOLINST.md) </b>
+* <b>[FIDO認証器開発ツール インストール手順](../../MaintenanceTool/WindowsExe/DEVTOOLINST.md) </b>
 
 ## 鍵・証明書ファイルのインストール
 
