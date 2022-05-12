@@ -2877,15 +2877,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FIDO Authenticator Development Tool"
-        "ProductCode" = "8:{38171107-2DF2-4216-9DFC-941BC5A1A890}"
-        "PackageCode" = "8:{87B71523-A8BC-45FC-932F-7B9A698D1606}"
-        "UpgradeCode" = "8:{FA67E1AC-C72F-4B27-A3F3-A6FA516921A5}"
+        "ProductCode" = "8:{99127628-0462-48B1-873B-29C4285021E6}"
+        "PackageCode" = "8:{6F74D02D-4132-4E4F-B421-DEEA9BDE7929}"
+        "UpgradeCode" = "8:{1784258E-12A6-4F30-B213-69A0F4CAFDFF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.40"
+        "ProductVersion" = "8:0.1.1"
         "Manufacturer" = "8:Diverta Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -3000,7 +3000,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_23B55EF4FA20470EB9DC213283C27A24"
             {
-            "Name" = "8:FIDO Authenticator Maintenance Tool"
+            "Name" = "8:FIDO Authenticator Development Tool"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -3413,7 +3413,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CFB7545529934869BB1BF6002FA785F7"
             {
-            "SourcePath" = "8:..\\MaintenanceToolGUI\\obj\\Release\\DevelopmentToolGUI.exe"
+            "SourcePath" = "8:..\\DevelopmentToolGUI\\obj\\Release\\DevelopmentToolGUI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D795D8FD85C2401CB2093E2553437743"
