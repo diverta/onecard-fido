@@ -303,8 +303,6 @@
             //
             // メンテナンス機能
             //
-            EraseSkeyCert,
-            InstallSkeyCert,
             ToolPreferenceCommand,
             ToolPreferenceParamInquiry,
             ChangeToBootloaderMode,
