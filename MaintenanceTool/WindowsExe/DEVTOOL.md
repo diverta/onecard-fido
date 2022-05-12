@@ -38,8 +38,3 @@ FIDO認証器に、鍵・証明書をインストールする手順を掲載し�
 
 - <b>[開発ツールのログファイル](../../MaintenanceTool/WindowsExe/DEVTOOLLOG.md)</b><br>
 FIDO認証器開発ツールから出力されるログファイルについて説明しています。
-
-## 開発情報（ご参考）
-
-- <b>[VS2017プロジェクトについて](../../MaintenanceTool/WindowsExe/VS2017PROJ.md)</b><br>
-管理ツール画面プログラム作成用のVisual Studio 2017プロジェクトに設定されている各種情報について掲載します。
