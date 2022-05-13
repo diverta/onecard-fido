@@ -2282,8 +2282,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
-<part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="C2" library="Parts" deviceset="CAP" device="_0402K" value="0.01uF"/>
 <part name="C5" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
 <part name="C3" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
@@ -2291,7 +2291,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
-<part name="FB3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="1k"/>
@@ -2632,8 +2632,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
-<instance part="FB1" gate="G$1" x="121.92" y="154.94"/>
-<instance part="FB2" gate="G$1" x="121.92" y="121.92"/>
+<instance part="L1" gate="G$1" x="121.92" y="154.94"/>
+<instance part="L2" gate="G$1" x="121.92" y="121.92"/>
 <instance part="C2" gate="G$1" x="116.84" y="152.4"/>
 <instance part="C5" gate="G$1" x="226.06" y="124.46"/>
 <instance part="C3" gate="G$1" x="149.86" y="152.4"/>
@@ -2641,7 +2641,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <instance part="GND9" gate="1" x="116.84" y="139.7"/>
 <instance part="GND10" gate="1" x="149.86" y="139.7"/>
 <instance part="GND14" gate="1" x="149.86" y="99.06"/>
-<instance part="FB3" gate="G$1" x="121.92" y="109.22"/>
+<instance part="L3" gate="G$1" x="121.92" y="109.22"/>
 <instance part="D1" gate="G$1" x="160.02" y="121.92"/>
 <instance part="R3" gate="G$1" x="68.58" y="33.02" rot="R90"/>
 <instance part="R4" gate="G$1" x="104.14" y="33.02" rot="R90"/>
@@ -2674,7 +2674,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <net name="VBUS" class="0">
 <segment>
 <wire x1="106.68" y1="134.62" x2="106.68" y2="139.7" width="0.1524" layer="91"/>
-<pinref part="FB1" gate="G$1" pin="1"/>
+<pinref part="L1" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="139.7" x2="106.68" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="154.94" x2="116.84" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="1"/>
@@ -2713,7 +2713,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="VBUS_NRF" class="0">
 <segment>
-<pinref part="FB1" gate="G$1" pin="2"/>
+<pinref part="L1" gate="G$1" pin="2"/>
 <wire x1="139.7" y1="154.94" x2="149.86" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="C3" gate="G$1" pin="1"/>
 <wire x1="149.86" y1="154.94" x2="149.86" y2="152.4" width="0.1524" layer="91"/>
@@ -2735,11 +2735,11 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </segment>
 <segment>
 <pinref part="GND14" gate="1" pin="0V"/>
-<pinref part="FB2" gate="G$1" pin="2"/>
+<pinref part="L2" gate="G$1" pin="2"/>
 <wire x1="139.7" y1="121.92" x2="149.86" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="121.92" x2="149.86" y2="109.22" width="0.1524" layer="91"/>
 <junction x="149.86" y="109.22"/>
-<pinref part="FB3" gate="G$1" pin="2"/>
+<pinref part="L3" gate="G$1" pin="2"/>
 <wire x1="149.86" y1="109.22" x2="149.86" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="109.22" x2="149.86" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="D1" gate="G$1" pin="GND"/>
@@ -2763,7 +2763,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="USB_GND" class="0">
 <segment>
-<pinref part="FB2" gate="G$1" pin="1"/>
+<pinref part="L2" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="121.92" x2="88.9" y2="121.92" width="0.1524" layer="91"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="127" x2="88.9" y2="121.92" width="0.1524" layer="91"/>
@@ -2789,7 +2789,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="FG" class="0">
 <segment>
-<pinref part="FB3" gate="G$1" pin="1"/>
+<pinref part="L3" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="96.52" x2="81.28" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="109.22" x2="121.92" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="CN1" gate="G$1" pin="FG_B"/>
