@@ -44,7 +44,8 @@ OATHアプレットのSELECTが実行されます。<br>
 SELECTのレスポンスは、Yubico社の独自仕様になっているようです。<br>
 （「[YKOATH Protocol Specification](https://developers.yubico.com/OATH/YKOATH_Protocol.html)」ご参照）
 
-<b>`ykman`によるコマンド実行例</b>
+<b>`ykman`によるコマンド実行例</b><br>
+認証器のOATHバージョン等の情報が表示されます。
 
 ```
 (.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath info
@@ -64,13 +65,13 @@ Password protection: disabled
                                     79 03 01 00 00 71 08 95  b8 2a d4 51 04 e4 04    |y....q.. .*.Q...
 ```
 
-
 #### `list`
 OATHアプレットの`INS_LIST`（`0xa1`）が実行されます。<br>
 こちらもレスポンスは、Yubico社の独自仕様になっているようです。<br>
 （「[YKOATH Protocol Specification](https://developers.yubico.com/OATH/YKOATH_Protocol.html)」ご参照）
 
-<b>`ykman`によるコマンド実行例</b>
+<b>`ykman`によるコマンド実行例</b><br>
+認証器に登録されているOATHアカウント（２件）が取得されます。
 
 ```
 (.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath accounts list
@@ -93,3 +94,29 @@ Example:bob@google.co
 ```
 
 [注] 最終更新日現在、nRF5340アプリケーションのCCIDインターフェースが、６４バイト以上のデータを送信できない不具合があるようです。この件につきましては、後日修正対応を行う予定です。
+
+#### `add`
+OATHアプレットの`INS_PUT`（`0x01`）が実行されます。<br>
+レスポンスはステータスワードのみのようです。
+
+<b>`ykman`によるコマンド実行例</b><br>
+下記例では、認証器内に既に登録済みのアカウント`Example:alice@google.com`について、SECRETを上書き登録しようとしています。[注]
+
+```
+(.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath accounts uri "otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+An account called alice@google.com already exists on this YubiKey. Do you want to overwrite it? [y/N]: y
+(.venv) bash-3.2$
+```
+
+<b>nRF5340アプリケーションからのデバッグ出力</b>
+
+```
+[00:00:11.540,710] <dbg> ccid_oath.ccid_oath_apdu_process: APDU recv: CLA INS P1 P2(00 01 00 00) Lc(44) Le(256)
+[00:00:11.540,740] <dbg> ccid_oath: APDU data
+                                    71 18 45 78 61 6d 70 6c  65 3a 61 6c 69 63 65 40 |q.Exampl e:alice@
+                                    67 6f 6f 67 6c 65 2e 63  6f 6d 73 10 21 06 48 65 |google.c oms.!.He
+                                    6c 6c 6f 21 de ad be ef  00 00 00 00             |llo!.... ....    
+[00:00:11.540,740] <dbg> ccid_oath.ccid_oath_apdu_process: APDU send: SW(9000)
+```
+
+[注] コマンドで指定したSECRET（`JBSWY3DPEHPK3PXP`）をBase32 Decodeすると、コマンド内でHEX（`48 65 6c 6c 6f 21 de ad be ef 00 00 00 00`）に変換され、nRF5340アプリケーションに送信されます。
