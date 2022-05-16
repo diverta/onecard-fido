@@ -34,3 +34,32 @@ ykman -r "Diverta Inc. Secure Dongle" oath info
 Error: The functionality required for this command is not enabled or not available on this YubiKey.
 (.venv) bash-3.2$
 ```
+
+## 解析結果
+
+以下はコマンドの解析結果になります。
+
+#### `info`
+OATHアプレットのSELECTが実行されます。<br>
+SELECTのレスポンスは、Yubico社の独自仕様になっているようです。<br>
+（「[YKOATH Protocol Specification](https://developers.yubico.com/OATH/YKOATH_Protocol.html)」ご参照）
+
+<b>`ykman`によるコマンド実行例</b>
+
+```
+(.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath info
+OATH version: 1.0.0
+Password protection: disabled
+(.venv) bash-3.2$
+```
+
+<b>nRF5340アプリケーションからのデバッグ出力</b>
+
+```
+[00:00:06.478,179] <dbg> ccid_oath.ccid_oath_apdu_process: APDU recv: CLA INS P1 P2(00 a4 04 00) Lc(7) Le(256)
+[00:00:06.478,210] <dbg> ccid_oath: APDU data
+                                    a0 00 00 05 27 21 01                             |....'!.          
+[00:00:06.478,210] <dbg> ccid_oath.ccid_oath_apdu_process: APDU send: SW(9000)
+[00:00:06.478,210] <dbg> ccid_oath: APDU data
+                                    79 03 01 00 00 71 08 95  b8 2a d4 51 04 e4 04    |y....q.. .*.Q...
+```
