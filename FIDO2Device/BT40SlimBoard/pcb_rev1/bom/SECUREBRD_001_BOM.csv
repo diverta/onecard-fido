@@ -10,7 +10,7 @@ Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,
 4,"C3, C4",2,Taiyo Yuden,UMK105B7104KV-FR,"MLCC, 0.1uF 50V X7R",0402,SMD,
 5,C5,1,KEMET,C0603C106M8PACTU,"MLCC, 10uF 10V X5R",0603,SMD,
 6,"C6, C7",2,Taiyo Yuden,TMR107B7105KA-T,"MLCC, 1uF 25V X7R",0603,SMD,
-7,CN1,1,Molex,2137160001,USB Type C Connector Receptacle,,SMD,
+7,CN1,1,Molex,2137160001,USB Type C Connector Receptacle,,Through-Hole,
 8,D1,1,NXP,"PRTR5V0U2X,215",ESD protection diode,SOT143B,SMD,
 9,"D2, D3",2,Nexperia,"PMEG2005AEA,115",Schottky Rectifier,SOD323-W,SMD,
 10,"FB1, FB2, FB3",3,Murata Electronics,BLM15AG121SN1D,"Ferrite Bead, 120 Ohm @ 100MHz, 850mA, 150mOhm max",0402,SMD,
@@ -24,5 +24,5 @@ Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,
 18,R5,1,Vishay,CRCW0402390RFKEDC,"Resistor, 390 ohm 1% 1/16W",0402,SMD,
 19,"SW1, SW2",2,ALPS,SKRPABE010,Surface Mount Type TACT Switch,4pos,SMD,"SKRPASE010, SKRPANE010, SKRPADE010 as alternative"
 20,SW3,1,ALPS,SKTADAE010,Surface Mount Type TACT Switch,4pos,SMD,"SKTAAAE010, SKTAACE010 as alternative"
-21,U1,1,Fanstel Corp.,BT40,"BLE 5.2, 802.15.4 Modules",LGA,SMD,
+21,U1,1,Fanstel Corp.,BT40E,"BLE 5.2, 802.15.4 Modules",LGA,SMD,"See: https://www.mouser.jp/ProductDetail/Fanstel/BT40E?qs=zW32dvEIR3vmzDgAfbp4Vw%3D%3D"
 22,U2,1,"Analog Devices, Inc.",ADP122ACPZ-3.3-R7,"Low Quiescent Current, CMOS Linear Regulator",6pos,SMD,
