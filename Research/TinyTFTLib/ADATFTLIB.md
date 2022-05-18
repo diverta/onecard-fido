@@ -185,9 +185,125 @@ void Adafruit_ST77xx::displayInit(const uint8_t *addr) {
 
 `displayInit`の引数（アドレス）は、`PROGMEM`で定義した配列名（すなわちコマンドセット名称）になります。
 
-#### Rcmd1
-コマンドセット`Rcmd1`は、以下の部分になります。<br>
+#### sendCommand関数
+
+（調査中）
+
+#### setRotation関数
+`Adafruit-ST7735-Library/Adafruit_ST7735.cpp`内のコードです。
+
+座標系の設定（すなわち、どちらが左上端となるかの設定）を実行します。<br>
+座標系には、４点のモードがあるようです。
+
+- <b>`0`：縦長モード</b>（デフォルト）<br>
+コネクターの反対側が上端になります。<br>
+（コネクターの反対側から文字列が下に向かって各行表示されます）
+
+- <b>`1`：縦長モード</b><br>
+コネクターの反対側が左端になります。<br>
+（コネクターの反対側から文字列が横に表示されます）
+
+- <b>`2`：縦長モード</b><br>
+モード'0'とは180度逆に表示されるモードで、コネクター側が上端になります。<br>
+（コネクター側から文字列が下に向かって各行表示されます）
+
+
+- <b>`3`：縦長モード</b><br>
+モード'1'とは180度逆に表示されるモードで、コネクター側が左端になります。<br>
+（コネクター側から文字列が横に表示されます）
+
+下図は、モード`3`で表示した時の例になります。
+
+<img src="assets01/0003.jpg" width="320">
+
+```
+void Adafruit_ST7735::setRotation(uint8_t m) {
+  uint8_t madctl = 0;
+
+  rotation = m & 3; // can't be higher than 3
+  :
+  switch (rotation) {
+  case 0:
+    if ((tabcolor == INITR_BLACKTAB) || (tabcolor == INITR_MINI160x80)) {
+      madctl = ST77XX_MADCTL_MX | ST77XX_MADCTL_MY | ST77XX_MADCTL_RGB;
+    } else {
+    :
+    if (tabcolor == INITR_144GREENTAB) {
+    :
+    } else if (tabcolor == INITR_MINI160x80) {
+      _height = ST7735_TFTHEIGHT_160;
+      _width = ST7735_TFTWIDTH_80;
+    } else {
+    :
+    _xstart = _colstart;
+    _ystart = _rowstart;
+    break;
+  case 1:
+    if ((tabcolor == INITR_BLACKTAB) || (tabcolor == INITR_MINI160x80)) {
+      madctl = ST77XX_MADCTL_MY | ST77XX_MADCTL_MV | ST77XX_MADCTL_RGB;
+    } else {
+    :
+    if (tabcolor == INITR_144GREENTAB) {
+    :
+    } else if (tabcolor == INITR_MINI160x80) {
+      _width = ST7735_TFTHEIGHT_160;
+      _height = ST7735_TFTWIDTH_80;
+    } else {
+    :
+    _ystart = _colstart;
+    _xstart = _rowstart;
+    break;
+  case 2:
+    if ((tabcolor == INITR_BLACKTAB) || (tabcolor == INITR_MINI160x80)) {
+      madctl = ST77XX_MADCTL_RGB;
+    } else {
+    :
+    if (tabcolor == INITR_144GREENTAB) {
+    :
+    } else if (tabcolor == INITR_MINI160x80) {
+      _height = ST7735_TFTHEIGHT_160;
+      _width = ST7735_TFTWIDTH_80;
+    } else {
+    :
+    _xstart = _colstart;
+    _ystart = _rowstart;
+    break;
+  case 3:
+    if ((tabcolor == INITR_BLACKTAB) || (tabcolor == INITR_MINI160x80)) {
+      madctl = ST77XX_MADCTL_MX | ST77XX_MADCTL_MV | ST77XX_MADCTL_RGB;
+    } else {
+    :
+    if (tabcolor == INITR_144GREENTAB) {
+    :
+    } else if (tabcolor == INITR_MINI160x80) {
+      _width = ST7735_TFTHEIGHT_160;
+      _height = ST7735_TFTWIDTH_80;
+    } else {
+    :
+    _ystart = _colstart;
+    _xstart = _rowstart;
+    break;
+  }
+
+  sendCommand(ST77XX_MADCTL, &madctl, 1);
+}
+```
+
+## 実行されるコマンドセット
+
+コマンドセットは、コマンドに対応するバイトデータのシーケンスです。<br>
 `Adafruit-ST7735-Library/Adafruit_ST7735.cpp`に記述されています。
+
+### 初期化処理
+
+「KWH009ST01-F01」の初期化処理においては、以下のコマンドセットが実行されます。
+
+- `Rcmd1`
+- `Rcmd2green160x80`
+- `Rcmd3`
+
+#### Rcmd1
+デバイスの初期設定コマンドが実行されます。
 
 <b>ご参考</b><br>
 文中の`red or green tab`ですが、製品出荷時に貼付されている透明の赤いタブのことと思われます。<br>
@@ -233,4 +349,45 @@ static const uint8_t PROGMEM
     ST77XX_COLMOD,  1,              // 15: set color mode, 1 arg, no delay:
       0x05 },                       //     16-bit color
     :
+```
+
+#### Rcmd2green160x80
+「KWH009ST01-F01」に固有のコマンドが実行されます。
+
+```
+static const uint8_t PROGMEM
+  :
+  Rcmd2green160x80[] = {            // 7735R init, part 2 (mini 160x80)
+    2,                              //  2 commands in list:
+    ST77XX_CASET,   4,              //  1: Column addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      0x00, 0x4F,                   //     XEND = 79
+    ST77XX_RASET,   4,              //  2: Row addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      0x00, 0x9F },                 //     XEND = 159
+    :
+```
+
+#### Rcmd3
+ディスプレイの開始コマンドが実行されます。
+
+```
+static const uint8_t PROGMEM
+  :
+  Rcmd3[] = {                       // 7735R init, part 3 (red or green tab)
+    4,                              //  4 commands in list:
+    ST7735_GMCTRP1, 16      ,       //  1: Gamma Adjustments (pos. polarity), 16 args + delay:
+      0x02, 0x1c, 0x07, 0x12,       //     (Not entirely necessary, but provides
+      0x37, 0x32, 0x29, 0x2d,       //      accurate colors)
+      0x29, 0x25, 0x2B, 0x39,
+      0x00, 0x01, 0x03, 0x10,
+    ST7735_GMCTRN1, 16      ,       //  2: Gamma Adjustments (neg. polarity), 16 args + delay:
+      0x03, 0x1d, 0x07, 0x06,       //     (Not entirely necessary, but provides
+      0x2E, 0x2C, 0x29, 0x2D,       //      accurate colors)
+      0x2E, 0x2E, 0x37, 0x3F,
+      0x00, 0x00, 0x02, 0x10,
+    ST77XX_NORON,     ST_CMD_DELAY, //  3: Normal display on, no args, w/delay
+      10,                           //     10 ms delay
+    ST77XX_DISPON,    ST_CMD_DELAY, //  4: Main screen turn on, no args w/delay
+      100 };                        //     100 ms delay
 ```
