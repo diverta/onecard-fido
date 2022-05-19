@@ -50,7 +50,7 @@ namespace MaintenanceToolGUI
             }
 
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
+            CommandTitle = AppCommon.PROCESS_NAME_GET_FLASH_STAT;
             TerminateWindow(DialogResult.OK);
         }
 
@@ -62,21 +62,21 @@ namespace MaintenanceToolGUI
             }
 
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO;
+            CommandTitle = AppCommon.PROCESS_NAME_GET_VERSION_INFO;
             TerminateWindow(DialogResult.OK);
         }
 
         private void buttonToolVersionInfo_Click(object sender, EventArgs e)
         {
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_TOOL_VERSION_INFO;
+            CommandTitle = AppCommon.PROCESS_NAME_TOOL_VERSION_INFO;
             TerminateWindow(DialogResult.OK);
         }
 
         private void buttonViewLogFile_Click(object sender, EventArgs e)
         {
             // 機能名を設定し、画面を閉じる
-            CommandTitle = ToolGUICommon.PROCESS_NAME_VIEW_LOG_FILE;
+            CommandTitle = AppCommon.PROCESS_NAME_VIEW_LOG_FILE;
             TerminateWindow(DialogResult.OK);
         }
     }

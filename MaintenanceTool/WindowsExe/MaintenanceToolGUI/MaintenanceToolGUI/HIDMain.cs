@@ -1,14 +1,10 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
     internal static class Const
     {
-        // HIDフレームに関する定義
-        public const int HID_FRAME_LEN = 64;
-        public const int HID_INIT_HEADER_LEN = 7;
-        public const int HID_CONT_HEADER_LEN = 5;
         // HIDコマンドバイトに関する定義
         public const int HID_CMD_CTAPHID_PING = 0x81;
         public const int HID_CMD_CTAPHID_INIT = 0x86;
@@ -412,9 +408,9 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
-            AppCommon.OutputLogDebug("Flash ROM statistics: " + responseCSV);
+            AppUtil.OutputLogDebug("Flash ROM statistics: " + responseCSV);
 
             // 情報取得CSVから空き領域に関する情報を抽出
             string[] vars = responseCSV.Split(',');
@@ -472,7 +468,7 @@ namespace MaintenanceToolGUI
         private void DoResponseGetVersionInfo(byte[] message, int length)
         {
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
 
             // 情報取得CSVからバージョンに関する情報を抽出

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PeterO.Cbor;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MaintenanceToolCommon;
-using PeterO.Cbor;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -64,7 +64,7 @@ namespace MaintenanceToolGUI
                     }
                 }
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("ReadLine failed: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("ReadLine failed: {0}", e.Message));
             }
             return text;
         }
@@ -82,7 +82,7 @@ namespace MaintenanceToolGUI
                 return transferMessage;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("Convert.FromBase64String failed: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("Convert.FromBase64String failed: {0}", e.Message));
             }
             return null;
         }
@@ -94,7 +94,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("File.ReadAllBytes failed: {0}", e.Message));
+                AppUtil.OutputLogError(string.Format("File.ReadAllBytes failed: {0}", e.Message));
             }
 
             return false;
@@ -115,10 +115,10 @@ namespace MaintenanceToolGUI
             }
 
             // for debug
-            // AppCommon.OutputLogDebug("Public key from certification: ");
-            // AppCommon.OutputLogText(AppCommon.DumpMessage(pubkeyFromCert, pubkeyFromCert.Length));
-            // AppCommon.OutputLogDebug("Public key from private key: ");
-            // AppCommon.OutputLogText(AppCommon.DumpMessage(pubkeyFromPrivkey, pubkeyFromPrivkey.Length));
+            // AppUtil.OutputLogDebug("Public key from certification: ");
+            // AppUtil.OutputLogText(AppCommon.DumpMessage(pubkeyFromCert, pubkeyFromCert.Length));
+            // AppUtil.OutputLogDebug("Public key from private key: ");
+            // AppUtil.OutputLogText(AppCommon.DumpMessage(pubkeyFromPrivkey, pubkeyFromPrivkey.Length));
 
             // 両者の公開鍵を比較し、同じでない場合はエラー
             if (Enumerable.SequenceEqual(pubkeyFromCert, pubkeyFromPrivkey) == false) {
@@ -185,7 +185,7 @@ namespace MaintenanceToolGUI
 
             // AES256-CBCで暗号化
             //   AES256-CBC(sharedSecret, IV=0, privateKey || certificate)
-            byte[] skeyCertBytesEnc = AppCommon.AES256CBCEncrypt(encoder.SharedSecretKey, skeyCertBytes16);
+            byte[] skeyCertBytesEnc = AppUtil.AES256CBCEncrypt(encoder.SharedSecretKey, skeyCertBytes16);
             if (skeyCertBytesEnc.Length != skeyCertBytesEncSize) {
                 // 暗号化失敗の場合は処理終了
                 return null;
@@ -213,8 +213,8 @@ namespace MaintenanceToolGUI
             byte[] encoded = new byte[] { 0x00 }.Concat(payload).ToArray();
 
             // for debug
-            // AppCommon.OutputLogDebug("Encoded CBOR request: ");
-            // AppCommon.OutputLogText(AppCommon.DumpMessage(encoded, encoded.Length));
+            // AppUtil.OutputLogDebug("Encoded CBOR request: ");
+            // AppUtil.OutputLogText(AppCommon.DumpMessage(encoded, encoded.Length));
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;

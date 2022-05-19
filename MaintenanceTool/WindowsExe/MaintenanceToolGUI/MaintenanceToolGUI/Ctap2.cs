@@ -1,5 +1,5 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -175,7 +175,7 @@ namespace MaintenanceToolGUI
         private void DoResponseCommandClientPin(byte[] message, int length)
         {
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
 
             switch (cborSubCommand) {
             case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
@@ -352,7 +352,7 @@ namespace MaintenanceToolGUI
         private void DoResponseCommandMakeCredential(byte[] message, int length)
         {
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             // 次のGetAssertionリクエスト送信に必要となる
             // Credential IDを抽出して退避
             MakeCredentialRes = new CBORDecoder().CreateOrGetCommand(cborBytes, true);
@@ -393,7 +393,7 @@ namespace MaintenanceToolGUI
             bool verifySaltNeeded = (GetAssertionCount == 2);
 
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             // hmac-secret拡張情報からsaltを抽出して保持
             CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
             if (VerifyHmacSecretSalt(resp.HmacSecretRes.Output, verifySaltNeeded) == false) {
@@ -423,18 +423,18 @@ namespace MaintenanceToolGUI
             if (verifySaltNeeded) {
                 // １回目のGetAssertionの場合はオリジナルSaltと内容を比較し、
                 // 同じ内容であれば検証成功
-                byte[] decryptedSaltCur = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
-                bool success = AppCommon.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
+                byte[] decryptedSaltCur = AppUtil.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                bool success = AppUtil.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
 
                 // 検証結果はログファイル出力する
-                AppCommon.OutputLogDebug(string.Format(
+                AppUtil.OutputLogDebug(string.Format(
                     "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed")
                     );
                 return success;
 
             } else {
                 // １回目のGetAssertionの場合はオリジナルSaltを抽出して終了
-                DecryptedSaltOrg = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                DecryptedSaltOrg = AppUtil.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
                 return true;
             }
         }
@@ -450,9 +450,9 @@ namespace MaintenanceToolGUI
             // リクエスト転送の前に、
             // 基板上ののMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT1);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT2);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT3);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT1);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT2);
+            mainForm.OnPrintMessageText(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT3);
 
             // authenticatorResetコマンドを実行する
             byte[] commandByte = { AppCommon.CTAP2_CBORCMD_AUTH_RESET };
