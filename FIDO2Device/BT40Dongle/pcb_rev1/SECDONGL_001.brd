@@ -163,6 +163,10 @@
 <dimension x1="0" y1="30" x2="0" y2="-9.3" x3="-7.5" y3="10.35" textsize="1.778" layer="51"/>
 <dimension x1="0" y1="30" x2="0" y2="0" x3="-3.5" y3="15" textsize="1.778" layer="51"/>
 <dimension x1="0" y1="30" x2="20" y2="30" x3="10" y3="31.5" textsize="1.778" layer="51"/>
+<rectangle x1="3.07" y1="13.57" x2="3.47" y2="13.97" layer="21"/>
+<rectangle x1="3.07" y1="16.57" x2="3.47" y2="16.97" layer="21"/>
+<rectangle x1="3.07" y1="19.57" x2="3.47" y2="19.97" layer="21"/>
+<rectangle x1="3.07" y1="22.57" x2="3.47" y2="22.97" layer="21"/>
 </plain>
 <libraries>
 <library name="Connectors">
