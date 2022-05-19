@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -893,10 +893,6 @@ type 0204, grid 5 mm</description>
 <description>&lt;b&gt;RESISTOR&lt;/b&gt;</description>
 <wire x1="-0.245" y1="0.224" x2="0.245" y2="0.224" width="0.1524" layer="51"/>
 <wire x1="0.245" y1="-0.224" x2="-0.245" y2="-0.224" width="0.1524" layer="51"/>
-<wire x1="-1.473" y1="0.483" x2="1.473" y2="0.483" width="0.0508" layer="39"/>
-<wire x1="1.473" y1="0.483" x2="1.473" y2="-0.483" width="0.0508" layer="39"/>
-<wire x1="1.473" y1="-0.483" x2="-1.473" y2="-0.483" width="0.0508" layer="39"/>
-<wire x1="-1.473" y1="-0.483" x2="-1.473" y2="0.483" width="0.0508" layer="39"/>
 <smd name="1" x="-0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
 <smd name="2" x="0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
 <text x="-0.555625" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
@@ -2273,11 +2269,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="C1" library="Parts" deviceset="CAP" device="_0603" value="4.7uF"/>
 <part name="GND2" library="Supply" deviceset="0V" device=""/>
 <part name="GND11" library="Supply" deviceset="0V" device=""/>
-<part name="GND13" library="Supply" deviceset="0V" device=""/>
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
 <part name="SW3" library="Parts" deviceset="SKTADAE010" device=""/>
 <part name="SW1" library="Parts" deviceset="SKRPACE010" device=""/>
-<part name="SW2" library="Parts" deviceset="SKRPACE010" device=""/>
 <part name="GND1" library="Supply" deviceset="0V" device=""/>
 <part name="GND4" library="Supply" deviceset="0V" device=""/>
 <part name="GND5" library="Supply" deviceset="0V" device=""/>
@@ -2286,8 +2280,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
-<part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="C2" library="Parts" deviceset="CAP" device="_0402K" value="0.01uF"/>
 <part name="C5" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
 <part name="C3" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
@@ -2295,7 +2289,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
-<part name="FB3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
+<part name="L3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="1k"/>
@@ -2338,9 +2332,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
     （rev1）</text>
 <text x="205.74" y="147.32" size="2.54" layer="91">バイパスコンデンサー</text>
 <text x="213.36" y="81.28" size="2.54" layer="91">リセット回路</text>
-<text x="111.76" y="45.72" size="2.54" layer="91">SUB SW</text>
 <text x="20.32" y="157.48" size="3.81" layer="91">モジュール部</text>
-<text x="55.88" y="45.72" size="2.54" layer="91">MAIN SW</text>
+<text x="88.9" y="50.8" size="2.54" layer="91">MAIN SW</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
@@ -2348,11 +2341,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <instance part="C1" gate="G$1" x="220.98" y="116.84"/>
 <instance part="GND2" gate="1" x="220.98" y="101.6"/>
 <instance part="GND11" gate="1" x="231.14" y="55.88"/>
-<instance part="GND13" gate="1" x="129.54" y="20.32"/>
-<instance part="GND12" gate="1" x="73.66" y="20.32"/>
+<instance part="GND12" gate="1" x="106.68" y="25.4"/>
 <instance part="SW3" gate="G$1" x="220.98" y="66.04" rot="R270"/>
-<instance part="SW1" gate="G$1" x="63.5" y="30.48" rot="R270"/>
-<instance part="SW2" gate="G$1" x="119.38" y="30.48" rot="R270"/>
+<instance part="SW1" gate="G$1" x="96.52" y="35.56" rot="R270"/>
 <instance part="GND1" gate="1" x="20.32" y="132.08"/>
 <instance part="GND4" gate="1" x="58.42" y="86.36"/>
 <instance part="GND5" gate="1" x="76.2" y="86.36"/>
@@ -2370,24 +2361,14 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <wire x1="220.98" y1="104.14" x2="220.98" y2="109.22" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SW2" gate="G$1" pin="S1"/>
-<pinref part="GND13" gate="1" pin="0V"/>
-<wire x1="124.46" y1="27.94" x2="129.54" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="27.94" x2="129.54" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="SW2" gate="G$1" pin="S"/>
-<wire x1="124.46" y1="30.48" x2="129.54" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="30.48" x2="129.54" y2="27.94" width="0.1524" layer="91"/>
-<junction x="129.54" y="27.94"/>
-</segment>
-<segment>
 <pinref part="SW1" gate="G$1" pin="S"/>
 <pinref part="GND12" gate="1" pin="0V"/>
-<wire x1="68.58" y1="30.48" x2="73.66" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="30.48" x2="73.66" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="35.56" x2="106.68" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="35.56" x2="106.68" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="SW1" gate="G$1" pin="S1"/>
-<wire x1="73.66" y1="27.94" x2="73.66" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="68.58" y1="27.94" x2="73.66" y2="27.94" width="0.1524" layer="91"/>
-<junction x="73.66" y="27.94"/>
+<wire x1="106.68" y1="33.02" x2="106.68" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="33.02" x2="106.68" y2="33.02" width="0.1524" layer="91"/>
+<junction x="106.68" y="33.02"/>
 </segment>
 <segment>
 <pinref part="SW3" gate="G$1" pin="S1"/>
@@ -2471,40 +2452,22 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <label x="162.56" y="81.28" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="SW2" class="0">
-<segment>
-<pinref part="SW2" gate="G$1" pin="P"/>
-<wire x1="114.3" y1="30.48" x2="109.22" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="SW2" gate="G$1" pin="P1"/>
-<wire x1="114.3" y1="27.94" x2="109.22" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="109.22" y1="27.94" x2="109.22" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="109.22" y1="30.48" x2="104.14" y2="30.48" width="0.1524" layer="91"/>
-<junction x="109.22" y="30.48"/>
-<label x="104.14" y="30.48" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="P0.24"/>
-<wire x1="101.6" y1="93.98" x2="101.6" y2="76.2" width="0.1524" layer="91"/>
-<label x="88.9" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
-<wire x1="88.9" y1="76.2" x2="101.6" y2="76.2" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="SW1" class="0">
 <segment>
 <pinref part="SW1" gate="G$1" pin="P"/>
-<wire x1="58.42" y1="30.48" x2="53.34" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="35.56" x2="86.36" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="SW1" gate="G$1" pin="P1"/>
-<wire x1="53.34" y1="30.48" x2="48.26" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="27.94" x2="53.34" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="53.34" y1="27.94" x2="53.34" y2="30.48" width="0.1524" layer="91"/>
-<junction x="53.34" y="30.48"/>
-<label x="48.26" y="30.48" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="86.36" y1="35.56" x2="81.28" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="33.02" x2="86.36" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="86.36" y1="33.02" x2="86.36" y2="35.56" width="0.1524" layer="91"/>
+<junction x="86.36" y="35.56"/>
+<label x="81.28" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.23"/>
-<wire x1="104.14" y1="93.98" x2="104.14" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="71.12" x2="88.9" y2="71.12" width="0.1524" layer="91"/>
-<label x="88.9" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="104.14" y1="93.98" x2="104.14" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="76.2" x2="88.9" y2="76.2" width="0.1524" layer="91"/>
+<label x="88.9" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="RESET" class="0">
@@ -2576,9 +2539,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <net name="LED1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.28"/>
-<wire x1="119.38" y1="93.98" x2="119.38" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="60.96" x2="88.9" y2="60.96" width="0.1524" layer="91"/>
-<label x="88.9" y="60.96" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="119.38" y1="93.98" x2="119.38" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="66.04" x2="88.9" y2="66.04" width="0.1524" layer="91"/>
+<label x="88.9" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="LED2" class="0">
@@ -2592,9 +2555,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <net name="TXD" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.20"/>
-<wire x1="106.68" y1="93.98" x2="106.68" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="66.04" x2="88.9" y2="66.04" width="0.1524" layer="91"/>
-<label x="88.9" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="106.68" y1="93.98" x2="106.68" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="71.12" x2="88.9" y2="71.12" width="0.1524" layer="91"/>
+<label x="88.9" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -2636,8 +2599,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
-<instance part="FB1" gate="G$1" x="121.92" y="154.94"/>
-<instance part="FB2" gate="G$1" x="121.92" y="121.92"/>
+<instance part="L1" gate="G$1" x="121.92" y="154.94"/>
+<instance part="L2" gate="G$1" x="121.92" y="121.92"/>
 <instance part="C2" gate="G$1" x="116.84" y="152.4"/>
 <instance part="C5" gate="G$1" x="226.06" y="124.46"/>
 <instance part="C3" gate="G$1" x="149.86" y="152.4"/>
@@ -2645,7 +2608,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <instance part="GND9" gate="1" x="116.84" y="139.7"/>
 <instance part="GND10" gate="1" x="149.86" y="139.7"/>
 <instance part="GND14" gate="1" x="149.86" y="99.06"/>
-<instance part="FB3" gate="G$1" x="121.92" y="109.22"/>
+<instance part="L3" gate="G$1" x="121.92" y="109.22"/>
 <instance part="D1" gate="G$1" x="160.02" y="121.92"/>
 <instance part="R3" gate="G$1" x="68.58" y="33.02" rot="R90"/>
 <instance part="R4" gate="G$1" x="104.14" y="33.02" rot="R90"/>
@@ -2678,7 +2641,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <net name="VBUS" class="0">
 <segment>
 <wire x1="106.68" y1="134.62" x2="106.68" y2="139.7" width="0.1524" layer="91"/>
-<pinref part="FB1" gate="G$1" pin="1"/>
+<pinref part="L1" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="139.7" x2="106.68" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="154.94" x2="116.84" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="1"/>
@@ -2717,7 +2680,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="VBUS_NRF" class="0">
 <segment>
-<pinref part="FB1" gate="G$1" pin="2"/>
+<pinref part="L1" gate="G$1" pin="2"/>
 <wire x1="139.7" y1="154.94" x2="149.86" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="C3" gate="G$1" pin="1"/>
 <wire x1="149.86" y1="154.94" x2="149.86" y2="152.4" width="0.1524" layer="91"/>
@@ -2739,11 +2702,11 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </segment>
 <segment>
 <pinref part="GND14" gate="1" pin="0V"/>
-<pinref part="FB2" gate="G$1" pin="2"/>
+<pinref part="L2" gate="G$1" pin="2"/>
 <wire x1="139.7" y1="121.92" x2="149.86" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="121.92" x2="149.86" y2="109.22" width="0.1524" layer="91"/>
 <junction x="149.86" y="109.22"/>
-<pinref part="FB3" gate="G$1" pin="2"/>
+<pinref part="L3" gate="G$1" pin="2"/>
 <wire x1="149.86" y1="109.22" x2="149.86" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="109.22" x2="149.86" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="D1" gate="G$1" pin="GND"/>
@@ -2767,7 +2730,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="USB_GND" class="0">
 <segment>
-<pinref part="FB2" gate="G$1" pin="1"/>
+<pinref part="L2" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="121.92" x2="88.9" y2="121.92" width="0.1524" layer="91"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="127" x2="88.9" y2="121.92" width="0.1524" layer="91"/>
@@ -2793,7 +2756,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </net>
 <net name="FG" class="0">
 <segment>
-<pinref part="FB3" gate="G$1" pin="1"/>
+<pinref part="L3" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="96.52" x2="81.28" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="109.22" x2="121.92" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="CN1" gate="G$1" pin="FG_B"/>
