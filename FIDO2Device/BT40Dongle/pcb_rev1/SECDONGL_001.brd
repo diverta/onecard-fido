@@ -1266,24 +1266,39 @@ design rules under a new name.
 <wire x1="15.1" y1="16.45" x2="15.1" y2="15.7" width="0.2032" layer="1"/>
 </signal>
 <signal name="LED4">
-<contactref element="U1" pad="C1"/>
 <contactref element="R5" pad="1"/>
-<wire x1="6.95" y1="9.6" x2="12.85" y2="20.8" width="0" layer="19" extent="1-1"/>
+<contactref element="U1" pad="Z6"/>
+<wire x1="6.95" y1="9.6" x2="7" y2="9.6" width="0.2032" layer="1"/>
+<wire x1="7" y1="9.6" x2="8.35" y2="10.95" width="0.2032" layer="1"/>
+<wire x1="8.35" y1="14.8" x2="8.35" y2="10.95" width="0.2032" layer="1"/>
 </signal>
 <signal name="LED3">
-<contactref element="U1" pad="13"/>
 <contactref element="R4" pad="1"/>
-<wire x1="6.95" y1="10.8" x2="19.1" y2="19.5" width="0" layer="19" extent="1-1"/>
+<contactref element="U1" pad="Z5"/>
+<wire x1="8.35" y1="16" x2="8.35" y2="16.15" width="0.2032" layer="1"/>
+<wire x1="6.95" y1="10.8" x2="7" y2="10.8" width="0.2032" layer="1"/>
+<wire x1="7" y1="10.8" x2="7.6" y2="11.4" width="0.2032" layer="1"/>
+<wire x1="7.6" y1="11.4" x2="7.6" y2="15.25" width="0.2032" layer="1"/>
+<wire x1="7.6" y1="15.25" x2="8.35" y2="16" width="0.2032" layer="1"/>
 </signal>
 <signal name="LED1">
-<contactref element="U1" pad="D3"/>
 <contactref element="R2" pad="1"/>
-<wire x1="6.95" y1="13.2" x2="14.35" y2="18.4" width="0" layer="19" extent="1-1"/>
+<contactref element="U1" pad="Z3"/>
+<wire x1="6.95" y1="13.2" x2="6.95" y2="17" width="0.2032" layer="1"/>
+<wire x1="6.95" y1="17" x2="8.35" y2="18.4" width="0.2032" layer="1"/>
 </signal>
 <signal name="LED2">
-<contactref element="U1" pad="D4"/>
 <contactref element="R3" pad="1"/>
-<wire x1="6.95" y1="12" x2="14.35" y2="17.2" width="0" layer="19" extent="1-1"/>
+<contactref element="U1" pad="Z4"/>
+<wire x1="6.95" y1="12" x2="7" y2="12" width="0.2032" layer="1"/>
+<wire x1="6.95" y1="12" x2="6.9" y2="12" width="0.2032" layer="1"/>
+<wire x1="6.9" y1="12" x2="6.3" y2="12.6" width="0.2032" layer="1"/>
+<wire x1="6.3" y1="12.6" x2="6.3" y2="17.6" width="0.2032" layer="1"/>
+<wire x1="6.3" y1="17.6" x2="7.7" y2="19" width="0.2032" layer="1"/>
+<wire x1="7.7" y1="19" x2="8.8" y2="19" width="0.2032" layer="1"/>
+<wire x1="8.8" y1="19" x2="9.1" y2="18.7" width="0.2032" layer="1"/>
+<wire x1="9.1" y1="18.7" x2="9.1" y2="17.95" width="0.2032" layer="1"/>
+<wire x1="9.1" y1="17.95" x2="8.35" y2="17.2" width="0.2032" layer="1"/>
 </signal>
 <signal name="TXD">
 <contactref element="U1" pad="C5"/>
