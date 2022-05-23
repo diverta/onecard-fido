@@ -712,6 +712,146 @@ size_t Adafruit_GFX::write(uint8_t c) {
 }
 ```
 
+`drawChar`関数で文字出力が実行されます。
+
+```
+/**************************************************************************/
+/*!
+   @brief   Draw a single character
+    @param    x   Bottom left corner x coordinate
+    @param    y   Bottom left corner y coordinate
+    @param    c   The 8-bit font-indexed character (likely ascii)
+    @param    color 16-bit 5-6-5 Color to draw chraracter with
+    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color,
+   no background)
+    @param    size_x  Font magnification level in X-axis, 1 is 'original' size
+    @param    size_y  Font magnification level in Y-axis, 1 is 'original' size
+*/
+/**************************************************************************/
+void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
+                            uint16_t color, uint16_t bg, uint8_t size_x,
+                            uint8_t size_y) {
+
+  if (!gfxFont) { // 'Classic' built-in font
+
+    if ((x >= _width) ||              // Clip right
+        (y >= _height) ||             // Clip bottom
+        ((x + 6 * size_x - 1) < 0) || // Clip left
+        ((y + 8 * size_y - 1) < 0))   // Clip top
+      return;
+
+    if (!_cp437 && (c >= 176))
+      c++; // Handle 'classic' charset behavior
+
+    startWrite();
+    for (int8_t i = 0; i < 5; i++) { // Char bitmap = 5 columns
+      uint8_t line = pgm_read_byte(&font[c * 5 + i]);
+      for (int8_t j = 0; j < 8; j++, line >>= 1) {
+        if (line & 1) {
+          if (size_x == 1 && size_y == 1)
+            writePixel(x + i, y + j, color);
+          else
+            writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y,
+                          color);
+        } else if (bg != color) {
+          :
+        }
+      }
+    }
+    if (bg != color) { // If opaque, draw vertical line for last column
+      :
+    }
+    endWrite();
+
+  } else { // Custom font
+    :
+  } // End classic vs custom font
+}
+```
+
+フォントは、ピクセルと出力位置の対応関係を`font`という配列で管理しているようです。<br>
+`Adafruit-GFX-Library/glcdfont.c`に定義が存在します。
+
+```
+// Standard ASCII 5x7 font
+
+static const unsigned char font[] PROGMEM = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 0x3E, 0x6B,
+    0x4F, 0x6B, 0x3E, 0x1C, 0x3E, 0x7C, 0x3E, 0x1C, 0x18, 0x3C, 0x7E, 0x3C,
+    0x18, 0x1C, 0x57, 0x7D, 0x57, 0x1C, 0x1C, 0x5E, 0x7F, 0x5E, 0x1C, 0x00,
+    0x18, 0x3C, 0x18, 0x00, 0xFF, 0xE7, 0xC3, 0xE7, 0xFF, 0x00, 0x18, 0x24,
+    0x18, 0x00, 0xFF, 0xE7, 0xDB, 0xE7, 0xFF, 0x30, 0x48, 0x3A, 0x06, 0x0E,
+    0x26, 0x29, 0x79, 0x29, 0x26, 0x40, 0x7F, 0x05, 0x05, 0x07, 0x40, 0x7F,
+    :
+    0x00, 0x00, 0x10, 0x10, 0x00, 0x30, 0x40, 0xFF, 0x01, 0x01, 0x00, 0x1F,
+    0x01, 0x01, 0x1E, 0x00, 0x19, 0x1D, 0x17, 0x12, 0x00, 0x3C, 0x3C, 0x3C,
+    0x3C, 0x00, 0x00, 0x00, 0x00, 0x00 // #255 NBSP
+};
+```
+
+`writePixel`で、文字のピクセル出力が行われます。<br>
+（フォントのピクセルを１ピクセル分描画します）
+
+前述の`SPI_WRITE32`と同様、`SPI_WRITE16`は、16ビットのワードデータをビッグエンディアン転送（バイトデータを頭から転送）することに注意します。
+
+```
+void Adafruit_GFX::writePixel(int16_t x, int16_t y, uint16_t color) {
+  drawPixel(x, y, color);
+}
+
+void Adafruit_SPITFT::drawPixel(int16_t x, int16_t y, uint16_t color) {
+  // Clip first...
+  if ((x >= 0) && (x < _width) && (y >= 0) && (y < _height)) {
+    // THEN set up transaction (if needed) and draw...
+    startWrite();
+    setAddrWindow(x, y, 1, 1);
+    SPI_WRITE16(color);
+    endWrite();
+  }
+}
+
+/*!
+    @brief  Issue a single 16-bit value to the display. Chip-select,
+            transaction and data/command selection must have been
+            previously set -- this ONLY issues the word. Despite the name,
+            this function is used even if display connection is parallel;
+            name was maintaned for backward compatibility. Naming is also
+            not consistent with the 8-bit version, spiWrite(). Sorry about
+            that. Again, staying compatible with outside code.
+    @param  w  16-bit value to write.
+*/
+void Adafruit_SPITFT::SPI_WRITE16(uint16_t w) {
+  if (connection == TFT_HARD_SPI) {
+#if defined(__AVR__)
+    AVR_WRITESPI(w >> 8);
+    AVR_WRITESPI(w);
+#elif defined(ESP8266) || defined(ESP32)
+    :
+#else
+    // MSB, LSB because TFTs are generally big-endian
+    hwspi._spi->transfer(w >> 8);
+    hwspi._spi->transfer(w);
+#endif
+  } else if (connection == TFT_SOFT_SPI) {
+    :
+  } else { // TFT_PARALLEL
+    :
+  }
+}
+```
+
+文字サイズが`2`以上の場合は、`writeFillRect`が呼び出されます。<br>
+（フォントのピクセルを大きく描画するため、複数ピクセル分の出力が行われます）
+
+`writeFillRect`は、先述の`fillRect`関数を内部呼出しています。
+
+```
+void Adafruit_GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
+                                 uint16_t color) {
+  // Overwrite in subclasses if desired!
+  fillRect(x, y, w, h, color);
+}
+```
 
 ## 実行されるコマンドセット
 
