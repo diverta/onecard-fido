@@ -381,26 +381,27 @@ void Adafruit_ST7735::setRotation(uint8_t m) {
 }
 ```
 
-## TFTの処理
+## 文字フォントの出力
 
-`Adafruit_ST7735`オブジェクトの処理で主なものになります。
+TFTの画面上に、文字フォントを出力させます。<br>
+概ね、下記のようなシーケンスで実行します。
+
+```
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setTextWrap(false);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_RED);
+  tft.setTextSize(1);
+  tft.println("Hello World!");
+
+```
 
 #### fillScreen
 
-`setup`関数で呼び出されます。<br>
-あらかじめ用意されているピクセルバッファを、所定の色で塗りつぶします。
+事前処理として、`tft.fillScreen(ST77XX_BLACK);`を実行します。<br>
+すなわち、画面全体を黒いピクセルで塗りつぶします。
 
-```
-void setup(void) {
-  :
-  uint16_t time = millis();
-  tft.fillScreen(ST77XX_BLACK);
-  time = millis() - time;
-  :
-}
-```
-
-実装は下記のようになっています。
+`fillScreen`関数の実装は下記のようになっています。
 
 ```
 void Adafruit_GFX::fillScreen(uint16_t color) {
@@ -562,6 +563,155 @@ void Adafruit_SPITFT::endWrite(void) {
   SPI_END_TRANSACTION();
 }
 ```
+#### setTextWrap
+
+フォントの折り返し可否を設定します。<br>
+折り返しを行わない場合、`tft.setTextWrap(false);`のように実行します。
+
+```
+  /**********************************************************************/
+  /*!
+  @brief  Set whether text that is too long for the screen width should
+          automatically wrap around to the next line (else clip right).
+  @param  w  true for wrapping, false for clipping
+  */
+  /**********************************************************************/
+  void setTextWrap(bool w) { wrap = w; }
+
+protected:
+  :
+  bool wrap;            ///< If set, 'wrap' text at right edge of display
+```
+
+#### setCursor
+
+フォント出力開始座標を設定します。<br>
+画面左上端から出力したい場合、`tft.setCursor(0, 0);`のように実行します。
+
+```
+  /**********************************************************************/
+  /*!
+    @brief  Set text cursor location
+    @param  x    X coordinate in pixels
+    @param  y    Y coordinate in pixels
+  */
+  /**********************************************************************/
+  void setCursor(int16_t x, int16_t y) {
+    cursor_x = x;
+    cursor_y = y;
+  }
+
+protected:
+  :
+  int16_t cursor_x;     ///< x location to start print()ing text
+  int16_t cursor_y;     ///< y location to start print()ing text
+
+```
+
+#### setTextColor
+
+フォント色を設定します。<br>
+`tft.setTextColor(ST77XX_RED);`のように実行します。
+
+```
+  /**********************************************************************/
+  /*!
+    @brief   Set text font color with transparant background
+    @param   c   16-bit 5-6-5 Color to draw text with
+    @note    For 'transparent' background, background and foreground
+             are set to same color rather than using a separate flag.
+  */
+  /**********************************************************************/
+  void setTextColor(uint16_t c) { textcolor = textbgcolor = c; }
+
+protected:
+  :
+  uint16_t textcolor;   ///< 16-bit background color for print()
+  uint16_t textbgcolor; ///< 16-bit text color for print()
+```
+
+#### setTextSize
+
+フォントサイズを設定します。<br>
+`tft.setTextSize(1);`のように実行します。
+
+```
+/**************************************************************************/
+/*!
+    @brief   Set text 'magnification' size. Each increase in s makes 1 pixel
+   that much bigger.
+    @param  s  Desired text size. 1 is default 6x8, 2 is 12x16, 3 is 18x24, etc
+*/
+/**************************************************************************/
+void Adafruit_GFX::setTextSize(uint8_t s) { setTextSize(s, s); }
+
+protected:
+  :
+  uint8_t textsize_x;   ///< Desired magnification in X-axis of text to print()
+  uint8_t textsize_y;   ///< Desired magnification in Y-axis of text to print()
+```
+
+#### println
+
+フォントを出力します。<br>
+`tft.println("Hello World!");`のように実行します。
+
+実体にたどり着くためには、まず`println`関数の実装からたどる必要があります。
+
+下記は[`ArduinoCore-avr/cores/arduino/Print.cpp`](https://github.com/arduino/ArduinoCore-avr/blob/master/cores/arduino/Print.cpp)の実装になります。<br>
+内部で`write`関数を実行しているようです。
+
+```
+size_t Print::println(const String &s)
+{
+  size_t n = print(s);
+  n += println();
+  return n;
+}
+
+size_t Print::print(const String &s)
+{
+  return write(s.c_str(), s.length());
+}
+
+size_t Print::println(void)
+{
+  return write("\r\n");
+}
+```
+
+`write`関数は、`Adafruit-GFX-Library/Adafruit_GFX.cpp`で実装されているようです。
+
+```
+/**************************************************************************/
+/*!
+    @brief  Print one byte/character of data, used to support print()
+    @param  c  The 8-bit ascii character to write
+*/
+/**************************************************************************/
+size_t Adafruit_GFX::write(uint8_t c) {
+  if (!gfxFont) { // 'Classic' built-in font
+
+    if (c == '\n') {              // Newline?
+      cursor_x = 0;               // Reset x to zero,
+      cursor_y += textsize_y * 8; // advance y one line
+    } else if (c != '\r') {       // Ignore carriage returns
+      if (wrap && ((cursor_x + textsize_x * 6) > _width)) { // Off right?
+        cursor_x = 0;                                       // Reset x to zero,
+        cursor_y += textsize_y * 8; // advance y one line
+      }
+      drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x,
+               textsize_y);
+      cursor_x += textsize_x * 6; // Advance x one char
+    }
+
+  } else { // Custom font
+    :
+  }
+  return 1;
+}
+```
+
 
 ## 実行されるコマンドセット
 
