@@ -1,6 +1,6 @@
 # TFTライブラリーの解析
 
-最新更新日：2022/5/18
+最新更新日：2022/5/23
 
 ## 概要
 
@@ -187,7 +187,128 @@ void Adafruit_ST77xx::displayInit(const uint8_t *addr) {
 
 #### sendCommand関数
 
-（調査中）
+TFTに対し、I2C経由でコマンドを送信する関数です。<br>
+本ライブラリーでもっとも重要な部分になります。
+
+```
+void Adafruit_SPITFT::sendCommand(uint8_t commandByte, const uint8_t *dataBytes,
+                                  uint8_t numDataBytes) {
+  SPI_BEGIN_TRANSACTION();
+  if (_cs >= 0)
+    SPI_CS_LOW();
+
+  SPI_DC_LOW();          // Command mode
+  spiWrite(commandByte); // Send the command byte
+
+  SPI_DC_HIGH();
+  for (int i = 0; i < numDataBytes; i++) {
+    if ((connection == TFT_PARALLEL) && tft8.wide) {
+      SPI_WRITE16(*(uint16_t *)dataBytes);
+      dataBytes += 2;
+    } else {
+      spiWrite(pgm_read_byte(dataBytes++));
+    }
+  }
+
+  if (_cs >= 0)
+    SPI_CS_HIGH();
+  SPI_END_TRANSACTION();
+}
+```
+
+`SPI_CS_LOW`の実装は下記になります。<br>
+`SPI_CS_HIGH`、`SPI_DC_LOW`、`SPI_DC_HIGH`の実装も、下記と同様の処理です。
+
+```
+  void SPI_CS_LOW(void) {
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+    *csPortClr = 1;
+#else  // !KINETISK
+    *csPortClr = csPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+    *csPort &= csPinMaskClr;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
+    digitalWrite(_cs, LOW);
+#endif // end !USE_FAST_PINIO
+  }
+```
+
+`SPI_BEGIN_TRANSACTION`、`SPI_END_TRANSACTION`の実装は下記になります。<br>
+nRF5340に移植時は、Zephyrのサンプルなどを参考にした方が良いと思われます。
+
+```
+inline void Adafruit_SPITFT::SPI_BEGIN_TRANSACTION(void) {
+  if (connection == TFT_HARD_SPI) {
+#if defined(SPI_HAS_TRANSACTION)
+    hwspi._spi->beginTransaction(hwspi.settings);
+#else // No transactions, configure SPI manually...
+#if defined(__AVR__) || defined(TEENSYDUINO) || defined(ARDUINO_ARCH_STM32F1)
+    hwspi._spi->setClockDivider(SPI_CLOCK_DIV2);
+#elif defined(__arm__)
+    hwspi._spi->setClockDivider(11);
+#elif defined(ESP8266) || defined(ESP32)
+    hwspi._spi->setFrequency(hwspi._freq);
+#elif defined(RASPI) || defined(ARDUINO_ARCH_STM32F1)
+    hwspi._spi->setClock(hwspi._freq);
+#endif
+    hwspi._spi->setBitOrder(MSBFIRST);
+    hwspi._spi->setDataMode(hwspi._mode);
+#endif // end !SPI_HAS_TRANSACTION
+  }
+}
+
+inline void Adafruit_SPITFT::SPI_END_TRANSACTION(void) {
+#if defined(SPI_HAS_TRANSACTION)
+  if (connection == TFT_HARD_SPI) {
+    hwspi._spi->endTransaction();
+  }
+#endif
+}
+```
+
+`spiWrite`の実装は下記になります。<br>
+こちらもnRF5340に移植時は、Zephyrのサンプルなどを参考にした方が良いと思われます。
+
+```
+void Adafruit_SPITFT::spiWrite(uint8_t b) {
+  if (connection == TFT_HARD_SPI) {
+#if defined(__AVR__)
+    AVR_WRITESPI(b);
+#elif defined(ESP8266) || defined(ESP32)
+    hwspi._spi->write(b);
+#elif defined(ARDUINO_ARCH_RP2040)
+    spi_inst_t *pi_spi = hwspi._spi == &SPI ? spi0 : spi1;
+    spi_write_blocking(pi_spi, &b, 1);
+#else
+    hwspi._spi->transfer(b);
+#endif
+  } else if (connection == TFT_SOFT_SPI) {
+    for (uint8_t bit = 0; bit < 8; bit++) {
+      if (b & 0x80)
+        SPI_MOSI_HIGH();
+      else
+        SPI_MOSI_LOW();
+      SPI_SCK_HIGH();
+      b <<= 1;
+      SPI_SCK_LOW();
+    }
+  } else { // TFT_PARALLEL
+#if defined(__AVR__)
+    *tft8.writePort = b;
+#elif defined(USE_FAST_PINIO)
+    if (!tft8.wide)
+      *tft8.writePort = b;
+    else
+      *(volatile uint16_t *)tft8.writePort = b;
+#endif
+    TFT_WR_STROBE();
+  }
+}
+```
 
 #### setRotation関数
 `Adafruit-ST7735-Library/Adafruit_ST7735.cpp`内のコードです。
