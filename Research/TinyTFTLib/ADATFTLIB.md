@@ -222,15 +222,7 @@ void Adafruit_SPITFT::sendCommand(uint8_t commandByte, const uint8_t *dataBytes,
 ```
   void SPI_CS_LOW(void) {
 #if defined(USE_FAST_PINIO)
-#if defined(HAS_PORT_SET_CLR)
-#if defined(KINETISK)
-    *csPortClr = 1;
-#else  // !KINETISK
-    *csPortClr = csPinMask;
-#endif // end !KINETISK
-#else  // !HAS_PORT_SET_CLR
-    *csPort &= csPinMaskClr;
-#endif // end !HAS_PORT_SET_CLR
+    :
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
@@ -251,9 +243,7 @@ inline void Adafruit_SPITFT::SPI_BEGIN_TRANSACTION(void) {
 #elif defined(__arm__)
     hwspi._spi->setClockDivider(11);
 #elif defined(ESP8266) || defined(ESP32)
-    hwspi._spi->setFrequency(hwspi._freq);
-#elif defined(RASPI) || defined(ARDUINO_ARCH_STM32F1)
-    hwspi._spi->setClock(hwspi._freq);
+    :
 #endif
     hwspi._spi->setBitOrder(MSBFIRST);
     hwspi._spi->setDataMode(hwspi._mode);
@@ -279,33 +269,14 @@ void Adafruit_SPITFT::spiWrite(uint8_t b) {
 #if defined(__AVR__)
     AVR_WRITESPI(b);
 #elif defined(ESP8266) || defined(ESP32)
-    hwspi._spi->write(b);
-#elif defined(ARDUINO_ARCH_RP2040)
-    spi_inst_t *pi_spi = hwspi._spi == &SPI ? spi0 : spi1;
-    spi_write_blocking(pi_spi, &b, 1);
+    :
 #else
     hwspi._spi->transfer(b);
 #endif
   } else if (connection == TFT_SOFT_SPI) {
-    for (uint8_t bit = 0; bit < 8; bit++) {
-      if (b & 0x80)
-        SPI_MOSI_HIGH();
-      else
-        SPI_MOSI_LOW();
-      SPI_SCK_HIGH();
-      b <<= 1;
-      SPI_SCK_LOW();
-    }
+    :
   } else { // TFT_PARALLEL
-#if defined(__AVR__)
-    *tft8.writePort = b;
-#elif defined(USE_FAST_PINIO)
-    if (!tft8.wide)
-      *tft8.writePort = b;
-    else
-      *(volatile uint16_t *)tft8.writePort = b;
-#endif
-    TFT_WR_STROBE();
+    :
   }
 }
 ```
@@ -407,6 +378,188 @@ void Adafruit_ST7735::setRotation(uint8_t m) {
   }
 
   sendCommand(ST77XX_MADCTL, &madctl, 1);
+}
+```
+
+## TFTの処理
+
+`Adafruit_ST7735`オブジェクトの処理で主なものになります。
+
+#### fillScreen
+
+`setup`関数で呼び出されます。<br>
+あらかじめ用意されているピクセルバッファを、所定の色で塗りつぶします。
+
+```
+void setup(void) {
+  :
+  uint16_t time = millis();
+  tft.fillScreen(ST77XX_BLACK);
+  time = millis() - time;
+  :
+}
+```
+
+実装は下記のようになっています。
+
+```
+void Adafruit_GFX::fillScreen(uint16_t color) {
+  fillRect(0, 0, _width, _height, color);
+}
+
+void Adafruit_SPITFT::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
+                               uint16_t color) {
+  if (w && h) {   // Nonzero width and height?
+    if (w < 0) {  // If negative width...
+      x += w + 1; //   Move X to left edge
+      w = -w;     //   Use positive width
+    }
+    if (x < _width) { // Not off right
+      if (h < 0) {    // If negative height...
+        y += h + 1;   //   Move Y to top edge
+        h = -h;       //   Use positive height
+      }
+      if (y < _height) { // Not off bottom
+        int16_t x2 = x + w - 1;
+        if (x2 >= 0) { // Not off left
+          int16_t y2 = y + h - 1;
+          if (y2 >= 0) { // Not off top
+            // Rectangle partly or fully overlaps screen
+            if (x < 0) {
+              x = 0;
+              w = x2 + 1;
+            } // Clip left
+            if (y < 0) {
+              y = 0;
+              h = y2 + 1;
+            } // Clip top
+            if (x2 >= _width) {
+              w = _width - x;
+            } // Clip right
+            if (y2 >= _height) {
+              h = _height - y;
+            } // Clip bottom
+            startWrite();
+            writeFillRectPreclipped(x, y, w, h, color);
+            endWrite();
+          }
+        }
+      }
+    }
+  }
+}
+
+inline void Adafruit_SPITFT::writeFillRectPreclipped(int16_t x, int16_t y,
+                                                     int16_t w, int16_t h,
+                                                     uint16_t color) {
+  setAddrWindow(x, y, w, h);
+  writeColor(color, (uint32_t)w * h);
+}
+
+```
+
+`setAddrWindow`は下記になります。<br>
+`SPI_WRITE32`は、32ビットのワードデータをビッグエンディアン転送（バイトデータを頭から転送）することに注意します。
+
+```
+void Adafruit_ST77xx::setAddrWindow(uint16_t x, uint16_t y, uint16_t w,
+                                    uint16_t h) {
+  x += _xstart;
+  y += _ystart;
+  uint32_t xa = ((uint32_t)x << 16) | (x + w - 1);
+  uint32_t ya = ((uint32_t)y << 16) | (y + h - 1);
+
+  writeCommand(ST77XX_CASET); // Column addr set
+  SPI_WRITE32(xa);
+
+  writeCommand(ST77XX_RASET); // Row addr set
+  SPI_WRITE32(ya);
+
+  writeCommand(ST77XX_RAMWR); // write to RAM
+}
+
+void Adafruit_SPITFT::writeCommand(uint8_t cmd) {
+  SPI_DC_LOW();
+  spiWrite(cmd);
+  SPI_DC_HIGH();
+}
+
+void Adafruit_SPITFT::SPI_WRITE32(uint32_t l) {
+  if (connection == TFT_HARD_SPI) {
+#if defined(__AVR__)
+    AVR_WRITESPI(l >> 24);
+    AVR_WRITESPI(l >> 16);
+    AVR_WRITESPI(l >> 8);
+    AVR_WRITESPI(l);
+#elif defined(ESP8266) || defined(ESP32)
+    :
+#else
+    hwspi._spi->transfer(l >> 24);
+    hwspi._spi->transfer(l >> 16);
+    hwspi._spi->transfer(l >> 8);
+    hwspi._spi->transfer(l);
+#endif
+  } else if (connection == TFT_SOFT_SPI) {
+     :
+  } else { // TFT_PARALLEL
+     :
+  }
+}
+```
+
+`writeColor`の実装は下記になります。<br>
+不要なコードがたくさん存在し、非常に見づらいですが、要はTFTの全ピクセル数分、ピクセルデータを送信しているだけです。
+
+```
+void Adafruit_SPITFT::writeColor(uint16_t color, uint32_t len) {
+
+  if (!len)
+    return; // Avoid 0-byte transfers
+
+  uint8_t hi = color >> 8, lo = color;
+
+#if defined(ESP32) // ESP32 has a special SPI pixel-writing function...
+  :
+#endif // end !ESP32
+
+  // All other cases (non-DMA hard SPI, bitbang SPI, parallel)...
+
+  if (connection == TFT_HARD_SPI) {
+#if defined(ESP8266)
+    :
+#else // !ESP8266 && !ARDUINO_ARCH_RP2040
+    while (len--) {
+#if defined(__AVR__)
+      AVR_WRITESPI(hi);
+      AVR_WRITESPI(lo);
+#elif defined(ESP32)
+      :
+#else
+      hwspi._spi->transfer(hi);
+      hwspi._spi->transfer(lo);
+#endif
+    }
+#endif // end !ESP8266
+  } else if (connection == TFT_SOFT_SPI) {
+    :
+  } else { // PARALLEL
+    :
+  }
+}
+```
+
+関数`startWrite`、`endWrite`は下記の通りです。
+```
+void Adafruit_SPITFT::startWrite(void) {
+  SPI_BEGIN_TRANSACTION();
+  if (_cs >= 0)
+    SPI_CS_LOW();
+}
+
+void Adafruit_SPITFT::endWrite(void) {
+  if (_cs >= 0)
+    SPI_CS_HIGH();
+  SPI_END_TRANSACTION();
 }
 ```
 
