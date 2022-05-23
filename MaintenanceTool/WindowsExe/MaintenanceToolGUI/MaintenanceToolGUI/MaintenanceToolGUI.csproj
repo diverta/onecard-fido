@@ -145,12 +145,6 @@
     <Compile Include="DFUStartForm.Designer.cs">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FIDOAttestationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FIDOAttestationForm.Designer.cs">
-      <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="FIDOForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,7 +196,6 @@
     <Compile Include="..\..\ToolGUICommon\HIDProcess.cs">
       <Link>ToolGUICommon\HIDProcess.cs</Link>
     </Compile>
-    <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs">
       <Link>PeterO\Cbor\Base64.cs</Link>
     </Compile>
@@ -457,9 +450,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DFUStartForm.resx">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FIDOAttestationForm.resx">
-      <DependentUpon>FIDOAttestationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FIDOForm.resx">
       <DependentUpon>FIDOForm.cs</DependentUpon>

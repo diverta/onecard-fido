@@ -13,8 +13,6 @@ namespace MaintenanceToolGUI
         public string CommandTitle = "";
         public string PinNew = "";
         public string PinOld = "";
-        public string KeyPath = "";
-        public string CertPath = "";
 
         public FIDOForm(MainForm mf)
         {
@@ -91,29 +89,6 @@ namespace MaintenanceToolGUI
                 // 画面項目を初期化し、この画面を閉じる
                 TerminateWindow(DialogResult.OK);
             }
-        }
-
-        private void ButtonFIDOAttestation_Click(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (mainForm.CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // 鍵・証明書設定画面を表示
-            FIDOAttestationForm f = new FIDOAttestationForm(mainForm);
-            if (f.ShowDialog() == DialogResult.Cancel) {
-                // 鍵・証明書設定画面でCancelの場合は終了
-                return;
-            }
-
-            // 画面入力値をパラメーターに保持
-            CommandTitle = f.CommandTitle;
-            KeyPath = f.KeyPath;
-            CertPath = f.CertPath;
-
-            // 画面項目を初期化し、この画面を閉じる
-            TerminateWindow(DialogResult.OK);
         }
     }
 }

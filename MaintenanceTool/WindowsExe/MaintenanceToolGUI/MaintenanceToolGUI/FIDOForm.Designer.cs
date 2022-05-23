@@ -28,30 +28,19 @@
         private void InitializeComponent()
         {
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.ButtonFIDOAttestation = new System.Windows.Forms.Button();
             this.buttonSetPinParam = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(107, 151);
+            this.buttonCancel.Location = new System.Drawing.Point(107, 150);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(79, 23);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // ButtonFIDOAttestation
-            // 
-            this.ButtonFIDOAttestation.Location = new System.Drawing.Point(56, 108);
-            this.ButtonFIDOAttestation.Name = "ButtonFIDOAttestation";
-            this.ButtonFIDOAttestation.Size = new System.Drawing.Size(180, 25);
-            this.ButtonFIDOAttestation.TabIndex = 3;
-            this.ButtonFIDOAttestation.Text = "FIDO鍵・証明書設定";
-            this.ButtonFIDOAttestation.UseVisualStyleBackColor = true;
-            this.ButtonFIDOAttestation.Click += new System.EventHandler(this.ButtonFIDOAttestation_Click);
             // 
             // buttonSetPinParam
             // 
@@ -65,11 +54,11 @@
             // 
             // buttonReset
             // 
-            this.buttonReset.Location = new System.Drawing.Point(56, 65);
+            this.buttonReset.Location = new System.Drawing.Point(56, 86);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(180, 25);
             this.buttonReset.TabIndex = 2;
-            this.buttonReset.Text = "FIDO認証情報の消去";
+            this.buttonReset.Text = "FIDO認証情報消去";
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
@@ -79,7 +68,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 198);
             this.Controls.Add(this.buttonReset);
-            this.Controls.Add(this.ButtonFIDOAttestation);
             this.Controls.Add(this.buttonSetPinParam);
             this.Controls.Add(this.buttonCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -96,7 +84,6 @@
 
         #endregion
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button ButtonFIDOAttestation;
         private System.Windows.Forms.Button buttonSetPinParam;
         private System.Windows.Forms.Button buttonReset;
     }

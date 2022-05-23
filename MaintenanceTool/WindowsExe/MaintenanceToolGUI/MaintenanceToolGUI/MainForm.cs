@@ -396,14 +396,6 @@ namespace MaintenanceToolGUI
                 commandTitle.Equals(AppCommon.PROCESS_NAME_CLIENT_PIN_CHANGE)) {
                 // PIN設定
                 hid.DoClientPinSet(f.PinNew, f.PinOld);
-
-            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_ERASE_SKEY_CERT)) {
-                // 鍵・証明書消去
-                hid.DoEraseSkeyCert();
-
-            } else if (commandTitle.Equals(AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT)) {
-                // 鍵・証明書インストール
-                hid.DoInstallSkeyCert(f.KeyPath, f.CertPath);
             }
         }
 
