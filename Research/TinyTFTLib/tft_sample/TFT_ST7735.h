@@ -92,6 +92,19 @@
 #define ST7735_YELLOW ST77XX_YELLOW
 #define ST7735_ORANGE ST77XX_ORANGE
 
+// HARDWARE CONFIG
+// PORT values are 8-bit
+typedef uint8_t ADAGFX_PORT_t;
+
+// PORT register type
+typedef volatile ADAGFX_PORT_t *PORTreg_t;
+
+// Use direct PORT register access
+#define USE_FAST_PINIO
+
+// Hardware SPI default speed
+#define DEFAULT_SPI_FREQ 8000000L
+
 class TFT_ST7735 : public Adafruit_GFX {
 public:
   TFT_ST7735(uint16_t w, uint16_t h, int8_t CS, int8_t RS, int8_t RST = -1);
@@ -106,6 +119,134 @@ public:
   void initR(void); 
   void setRotation(uint8_t m);
 
+  // Subclass' begin() function invokes this to initialize hardware.
+  // freq=0 to use default SPI speed. spiMode must be one of the SPI_MODEn
+  // values defined in SPI.h, which are NOT the same as 0 for SPI_MODE0,
+  // 1 for SPI_MODE1, etc...use ONLY the SPI_MODEn defines! Only!
+  // Name is outdated (interface may be parallel) but for compatibility:
+  void initSPI(uint32_t freq = 0, uint8_t spiMode = SPI_MODE0);
+  void setSPISpeed(uint32_t freq);
+  // Chip select and/or hardware SPI transaction start as needed:
+  void startWrite(void);
+  // Chip deselect and/or hardware SPI transaction end as needed:
+  void endWrite(void);
+  void sendCommand(uint8_t commandByte, uint8_t *dataBytes,
+                   uint8_t numDataBytes);
+  void sendCommand(uint8_t commandByte, const uint8_t *dataBytes = NULL,
+                   uint8_t numDataBytes = 0);
+  void sendCommand16(uint16_t commandWord, const uint8_t *dataBytes = NULL,
+                     uint8_t numDataBytes = 0);
+  uint8_t readcommand8(uint8_t commandByte, uint8_t index = 0);
+  uint16_t readcommand16(uint16_t addr);
+
+  // These functions require a chip-select and/or SPI transaction
+  // around them. Higher-level graphics primitives might start a
+  // single transaction and then make multiple calls to these functions
+  // (e.g. circle or text rendering might make repeated lines or rects)
+  // before ending the transaction. It's more efficient than starting a
+  // transaction every time.
+  void writePixel(int16_t x, int16_t y, uint16_t color);
+  void writePixels(uint16_t *colors, uint32_t len, bool block = true,
+                   bool bigEndian = false);
+  void writeColor(uint16_t color, uint32_t len);
+  void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
+                     uint16_t color);
+  void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+  void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+  // This is a new function, similar to writeFillRect() except that
+  // all arguments MUST be onscreen, sorted and clipped. If higher-level
+  // primitives can handle their own sorting/clipping, it avoids repeating
+  // such operations in the low-level code, making it potentially faster.
+  // CALLING THIS WITH UNCLIPPED OR NEGATIVE VALUES COULD BE DISASTROUS.
+  inline void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w,
+                                      int16_t h, uint16_t color);
+  // Another new function, companion to the new non-blocking
+  // writePixels() variant.
+  void dmaWait(void);
+  // Used by writePixels() in some situations, but might have rare need in
+  // user code, so it's public...
+  bool dmaBusy(void) const; // true if DMA is used and busy, false otherwise
+  void swapBytes(uint16_t *src, uint32_t len, uint16_t *dest = NULL);
+
+  // These functions are similar to the 'write' functions above, but with
+  // a chip-select and/or SPI transaction built-in. They're typically used
+  // solo -- that is, as graphics primitives in themselves, not invoked by
+  // higher-level primitives (which should use the functions above).
+  void drawPixel(int16_t x, int16_t y, uint16_t color);
+  void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+  void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+  void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+  // A single-pixel push encapsulated in a transaction. I don't think
+  // this is used anymore (BMP demos might've used it?) but is provided
+  // for backward compatibility, consider it deprecated:
+  void pushColor(uint16_t color);
+
+  using Adafruit_GFX::drawRGBBitmap; // Check base class first
+  void drawRGBBitmap(int16_t x, int16_t y, uint16_t *pcolors, int16_t w,
+                     int16_t h);
+
+  void invertDisplay(bool i);
+  uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
+
+  // Despite parallel additions, function names kept for compatibility:
+  void spiWrite(uint8_t b);          // Write single byte as DATA
+  void writeCommand(uint8_t cmd);    // Write single byte as COMMAND
+  uint8_t spiRead(void);             // Read single byte of data
+  void write16(uint16_t w);          // Write 16-bit value as DATA
+  void writeCommand16(uint16_t cmd); // Write 16-bit value as COMMAND
+  uint16_t read16(void);             // Read single 16-bit value
+
+  // Most of these low-level functions were formerly macros in
+  // TFT_SPITFT_Macros.h. Some have been made into inline functions
+  // to avoid macro mishaps. Despite the addition of code for a parallel
+  // display interface, the names have been kept for backward
+  // compatibility (some subclasses may be invoking these):
+  void SPI_WRITE16(uint16_t w); // Not inline
+  void SPI_WRITE32(uint32_t l); // Not inline
+  // Old code had both a spiWrite16() function and SPI_WRITE16 macro
+  // in addition to the SPI_WRITE32 macro. The latter two have been
+  // made into functions here, and spiWrite16() removed (use SPI_WRITE16()
+  // instead). It looks like most subclasses had gotten comfortable with
+  // SPI_WRITE16 and SPI_WRITE32 anyway so those names were kept rather
+  // than the less-obnoxious camelcase variants, oh well.
+
+  // Placing these functions entirely in the class definition inlines
+  // them implicitly them while allowing their use in other code:
+
+  /*!
+      @brief  Set the chip-select line HIGH. Does NOT check whether CS pin
+              is set (>=0), that should be handled in calling function.
+              Despite function name, this is used even if the display
+              connection is parallel.
+  */
+  void SPI_CS_HIGH(void) {
+    *csPort |= csPinMaskSet;
+  }
+
+  /*!
+      @brief  Set the chip-select line LOW. Does NOT check whether CS pin
+              is set (>=0), that should be handled in calling function.
+              Despite function name, this is used even if the display
+              connection is parallel.
+  */
+  void SPI_CS_LOW(void) {
+    *csPort &= csPinMaskClr;
+  }
+
+  /*!
+      @brief  Set the data/command line HIGH (data mode).
+  */
+  void SPI_DC_HIGH(void) {
+    *dcPort |= dcPinMaskSet;
+  }
+
+  /*!
+      @brief  Set the data/command line LOW (command mode).
+  */
+  void SPI_DC_LOW(void) {
+    *dcPort &= dcPinMaskClr;
+  }
+  
 protected:
   uint8_t _colstart = 0,   ///< Some displays need this changed to offset
       _rowstart = 0,       ///< Some displays need this changed to offset
@@ -115,6 +256,93 @@ protected:
   void commonInit(const uint8_t *cmdList);
   void displayInit(const uint8_t *addr);
   void setColRowStart(int8_t col, int8_t row);
+
+    // A few more low-level member functions -- some may have previously
+  // been macros. Shouldn't have a need to access these externally, so
+  // they've been moved to the protected section. Additionally, they're
+  // declared inline here and the code is in the .cpp file, since outside
+  // code doesn't need to see these.
+  inline void SPI_MOSI_HIGH(void);
+  inline void SPI_MOSI_LOW(void);
+  inline void SPI_SCK_HIGH(void);
+  inline void SPI_SCK_LOW(void);
+  inline bool SPI_MISO_READ(void);
+  inline void SPI_BEGIN_TRANSACTION(void);
+  inline void SPI_END_TRANSACTION(void);
+  inline void TFT_WR_STROBE(void); // Parallel interface write strobe
+  inline void TFT_RD_HIGH(void);   // Parallel interface read high
+  inline void TFT_RD_LOW(void);    // Parallel interface read low
+
+  // CLASS INSTANCE VARIABLES --------------------------------------------
+
+  // Here be dragons! There's a big union of three structures here --
+  // one each for hardware SPI, software (bitbang) SPI, and parallel
+  // interfaces. This is to save some memory, since a display's connection
+  // will be only one of these. The order of some things is a little weird
+  // in an attempt to get values to align and pack better in RAM.
+
+  PORTreg_t csPort;                 ///< PORT register for chip select
+  PORTreg_t dcPort;                 ///< PORT register for data/command
+  
+  union {
+    struct {          //   Values specific to HARDWARE SPI:
+      SPIClass *_spi; ///< SPI class pointer
+      SPISettings settings; ///< SPI transaction settings
+      uint32_t _mode; ///< SPI data mode (transactions or no)
+    } hwspi;          ///< Hardware SPI values
+
+    struct {          //   Values specific to SOFTWARE SPI:
+      PORTreg_t misoPort; ///< PORT (PIN) register for MISO
+      PORTreg_t mosiPort;           ///< PORT register for MOSI
+      PORTreg_t sckPort;            ///< PORT register for SCK
+      ADAGFX_PORT_t mosiPinMaskSet; ///< Bitmask for MOSI SET (OR)
+      ADAGFX_PORT_t mosiPinMaskClr; ///< Bitmask for MOSI CLEAR (AND)
+      ADAGFX_PORT_t sckPinMaskSet;  ///< Bitmask for SCK SET (OR bitmask)
+      ADAGFX_PORT_t sckPinMaskClr;  ///< Bitmask for SCK CLEAR (AND)
+      ADAGFX_PORT_t misoPinMask; ///< Bitmask for MISO
+      int8_t _mosi;              ///< MOSI pin #
+      int8_t _miso;              ///< MISO pin #
+      int8_t _sck;               ///< SCK pin #
+    } swspi;                     ///< Software SPI values
+
+    struct {                     //   Values specific to 8-bit parallel:
+
+      volatile uint8_t *writePort;  ///< PORT register for DATA WRITE
+      volatile uint8_t *readPort;   ///< PORT (PIN) register for DATA READ
+
+      // Port direction register pointer is always 8-bit regardless of
+      // PORTreg_t -- even if 32-bit port, we modify a byte-aligned 8 bits.
+      volatile uint8_t *portDir;  ///< PORT direction register
+      PORTreg_t wrPort;           ///< PORT register for write strobe
+      PORTreg_t rdPort;           ///< PORT register for read strobe
+      ADAGFX_PORT_t wrPinMaskSet; ///< Bitmask for write strobe SET (OR)
+      ADAGFX_PORT_t wrPinMaskClr; ///< Bitmask for write strobe CLEAR (AND)
+      ADAGFX_PORT_t rdPinMaskSet; ///< Bitmask for read strobe SET (OR)
+      ADAGFX_PORT_t rdPinMaskClr; ///< Bitmask for read strobe CLEAR (AND)
+
+      int8_t _d0;              ///< Data pin 0 #
+      int8_t _wr;              ///< Write strobe pin #
+      int8_t _rd;              ///< Read strobe pin # (or -1)
+      bool wide = 0;           ///< If true, is 16-bit interface
+    } tft8;                    ///< Parallel interface settings
+  }; ///< Only one interface is active
+
+  ADAGFX_PORT_t csPinMaskSet;     ///< Bitmask for chip select SET (OR)
+  ADAGFX_PORT_t csPinMaskClr;     ///< Bitmask for chip select CLEAR (AND)
+  ADAGFX_PORT_t dcPinMaskSet;     ///< Bitmask for data/command SET (OR)
+  ADAGFX_PORT_t dcPinMaskClr;     ///< Bitmask for data/command CLEAR (AND)
+
+  uint8_t connection;      ///< TFT_HARD_SPI, TFT_SOFT_SPI, etc.
+  int8_t _rst;             ///< Reset pin # (or -1)
+  int8_t _cs;              ///< Chip select pin # (or -1)
+  int8_t _dc;              ///< Data/command pin #
+
+  int16_t _xstart = 0;          ///< Internal framebuffer X offset
+  int16_t _ystart = 0;          ///< Internal framebuffer Y offset
+  uint8_t invertOnCommand = 0;  ///< Command to enable invert mode
+  uint8_t invertOffCommand = 0; ///< Command to disable invert mode
+
+  uint32_t _freq = 0; ///< Dummy var to keep subclasses happy
 };
 
 #endif // _TFT_ST7735H_
