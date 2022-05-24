@@ -4,8 +4,7 @@
 #include "Arduino.h"
 #include "Print.h"
 #include <Adafruit_GFX.h>
-#include <Adafruit_SPITFT.h>
-#include <Adafruit_SPITFT_Macros.h>
+#include <SPI.h>
 
 #define ST7735_TFTWIDTH_80 80
 #define ST7735_TFTHEIGHT_160 160
@@ -93,7 +92,7 @@
 #define ST7735_YELLOW ST77XX_YELLOW
 #define ST7735_ORANGE ST77XX_ORANGE
 
-class TFT_ST7735 : public Adafruit_SPITFT {
+class TFT_ST7735 : public Adafruit_GFX {
 public:
   TFT_ST7735(uint16_t w, uint16_t h, int8_t CS, int8_t RS, int8_t RST = -1);
 

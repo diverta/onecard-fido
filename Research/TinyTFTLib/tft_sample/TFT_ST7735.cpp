@@ -1,10 +1,7 @@
 #include "TFT_ST7735.h"
 #include <limits.h>
-#ifndef ARDUINO_STM32_FEATHER
 #include "pins_arduino.h"
 #include "wiring_private.h"
-#endif
-#include <SPI.h>
 
 #define SPI_DEFAULT_FREQ 32000000 ///< Default SPI data clock frequency
 
@@ -17,7 +14,8 @@
     @param  rst  Reset pin # (optional, pass -1 if unused)
 */
 TFT_ST7735::TFT_ST7735(uint16_t w, uint16_t h, int8_t cs, int8_t dc, int8_t rst)
-    : Adafruit_SPITFT(w, h, cs, dc, rst) {}
+    : Adafruit_GFX(w, h), connection(TFT_HARD_SPI), _rst(rst), _cs(cs), _dc(dc) {
+}
 
 /*!
     @brief  Companion code to the initiliazation tables. Reads and issues
