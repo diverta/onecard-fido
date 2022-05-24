@@ -35,11 +35,19 @@ void setup(void) {
 }
 
 void loop() {
-  tft.invertDisplay(true);
-  delay(2500);
-  
-  tft.invertDisplay(false);
-  delay(2500);
+  static int c = 0;
+  if (c < 5) {
+    tft.invertDisplay(true);
+    delay(2500);
+    tft.invertDisplay(false);
+    delay(2500);
+    c++;
+
+  } else if (c == 5) {
+    tft.fillScreen(ST77XX_BLACK);
+    Serial.println("End");
+    c++;
+  }
 }
 
 void tftPrintTest() {
