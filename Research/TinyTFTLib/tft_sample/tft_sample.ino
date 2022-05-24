@@ -1,6 +1,3 @@
-#include <Adafruit_GFX.h>
-#include <SPI.h>
-
 #include "TFT_ST7735.h"
 
 #define TFT_CS        10
