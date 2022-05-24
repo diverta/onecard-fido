@@ -7,7 +7,7 @@
 #define TFT_RST        9
 #define TFT_DC         8
 
-TFT_ST7735 tft = TFT_ST7735(TFT_CS, TFT_DC, TFT_RST);
+TFT_ST7735 tft = TFT_ST7735(ST7735_TFTWIDTH_80, ST7735_TFTHEIGHT_160, TFT_CS, TFT_DC, TFT_RST);
 
 void setup(void) {
   Serial.begin(9600);

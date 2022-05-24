@@ -3,12 +3,14 @@
 
 /*!
     @brief  Instantiate ST7735 driver with default hardware SPI
+    @param  w    Display width in pixels at default rotation setting (0)
+    @param  h    Display height in pixels at default rotation setting (0)
     @param  cs   Chip select pin #
     @param  dc   Data/Command pin #
     @param  rst  Reset pin # (optional, pass -1 if unused)
 */
-TFT_ST7735::TFT_ST7735(int8_t cs, int8_t dc, int8_t rst)
-    : Adafruit_ST77xx(ST7735_TFTWIDTH_80, ST7735_TFTHEIGHT_160, cs, dc, rst) {}
+TFT_ST7735::TFT_ST7735(uint16_t w, uint16_t h, int8_t cs, int8_t dc, int8_t rst)
+    : Adafruit_SPITFT(w, h, cs, dc, rst) {}
 
 // SCREEN INITIALIZATION ***************************************************
 // Rather than a bazillion writecommand() and writedata() calls, screen

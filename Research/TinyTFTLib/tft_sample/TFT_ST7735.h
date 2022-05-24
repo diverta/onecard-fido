@@ -1,7 +1,7 @@
 #ifndef _TFT_ST7735H_
 #define _TFT_ST7735H_
 
-#include "Adafruit_ST77xx.h"
+#include <Adafruit_SPITFT.h>
 
 // Some register settings
 #define ST7735_MADCTL_BGR 0x08
@@ -36,9 +36,9 @@
 #define ST7735_YELLOW ST77XX_YELLOW
 #define ST7735_ORANGE ST77XX_ORANGE
 
-class TFT_ST7735 : public Adafruit_ST77xx {
+class TFT_ST7735 : public Adafruit_SPITFT {
 public:
-  TFT_ST7735(int8_t cs, int8_t dc, int8_t rst);
+  TFT_ST7735(uint16_t w, uint16_t h, int8_t CS, int8_t RS, int8_t RST = -1);
 
   // Differences between displays (usu. identified by colored tab on
   // plastic overlay) are odd enough that we need to do this 'by hand':
