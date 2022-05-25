@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include "Print.h"
-#include <Adafruit_GFX.h>
 #include <SPI.h>
 
 #define ST7735_TFTWIDTH_80 80
@@ -92,6 +91,25 @@
 #define ST7735_YELLOW ST77XX_YELLOW
 #define ST7735_ORANGE ST77XX_ORANGE
 
+/// Font data stored PER GLYPH
+typedef struct {
+  uint16_t bitmapOffset;  ///< Pointer into GRPXfont->bitmap
+  uint8_t width;          ///< Bitmap dimensions in pixels
+  uint8_t height;         ///< Bitmap dimensions in pixels
+  uint8_t xAdvance;       ///< Distance to advance cursor (x axis)
+  int8_t xOffset;         ///< X dist from cursor pos to UL corner
+  int8_t yOffset;         ///< Y dist from cursor pos to UL corner
+} GRPXglyph;
+
+/// Data stored for FONT AS A WHOLE
+typedef struct {
+  uint8_t *bitmap;        ///< Glyph bitmaps, concatenated
+  GRPXglyph *glyph;       ///< Glyph array
+  uint16_t first;         ///< ASCII extents (first char)
+  uint16_t last;          ///< ASCII extents (last char)
+  uint8_t yAdvance;       ///< Newline distance (y axis)
+} GRPXfont;
+
 // HARDWARE CONFIG
 // PORT values are 8-bit
 typedef uint8_t ADAGFX_PORT_t;
@@ -105,7 +123,7 @@ typedef volatile ADAGFX_PORT_t *PORTreg_t;
 // Hardware SPI default speed
 #define DEFAULT_SPI_FREQ 8000000L
 
-class TFT_ST7735 : public Adafruit_GFX {
+class TFT_ST7735 : public Print {
 public:
   TFT_ST7735(uint16_t w, uint16_t h, int8_t CS, int8_t RS, int8_t RST = -1);
 
@@ -181,10 +199,6 @@ public:
   // for backward compatibility, consider it deprecated:
   void pushColor(uint16_t color);
 
-  using Adafruit_GFX::drawRGBBitmap; // Check base class first
-  void drawRGBBitmap(int16_t x, int16_t y, uint16_t *pcolors, int16_t w,
-                     int16_t h);
-
   void invertDisplay(bool i);
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
 
@@ -246,7 +260,7 @@ public:
   void SPI_DC_LOW(void) {
     *dcPort &= dcPinMaskClr;
   }
-  
+
 protected:
   uint8_t _colstart = 0,   ///< Some displays need this changed to offset
       _rowstart = 0,       ///< Some displays need this changed to offset
@@ -257,7 +271,7 @@ protected:
   void displayInit(const uint8_t *addr);
   void setColRowStart(int8_t col, int8_t row);
 
-    // A few more low-level member functions -- some may have previously
+  // A few more low-level member functions -- some may have previously
   // been macros. Shouldn't have a need to access these externally, so
   // they've been moved to the protected section. Additionally, they're
   // declared inline here and the code is in the .cpp file, since outside
@@ -342,7 +356,24 @@ protected:
   uint8_t invertOnCommand = 0;  ///< Command to enable invert mode
   uint8_t invertOffCommand = 0; ///< Command to disable invert mode
 
-  uint32_t _freq = 0; ///< Dummy var to keep subclasses happy
+  uint32_t _freq = 0;           ///< Dummy var to keep subclasses happy
+
+  void init_graphics(int16_t w, int16_t h);
+
+  int16_t WIDTH;        ///< This is the 'raw' display width - never changes
+  int16_t HEIGHT;       ///< This is the 'raw' display height - never changes
+  int16_t _width;       ///< Display width as modified by current rotation
+  int16_t _height;      ///< Display height as modified by current rotation
+  int16_t cursor_x;     ///< x location to start print()ing text
+  int16_t cursor_y;     ///< y location to start print()ing text
+  uint16_t textcolor;   ///< 16-bit background color for print()
+  uint16_t textbgcolor; ///< 16-bit text color for print()
+  uint8_t textsize_x;   ///< Desired magnification in X-axis of text to print()
+  uint8_t textsize_y;   ///< Desired magnification in Y-axis of text to print()
+  uint8_t rotation;     ///< Display rotation (0 thru 3)
+  bool wrap;            ///< If set, 'wrap' text at right edge of display
+  bool _cp437;          ///< If set, use correct CP437 charset (default is off)
+  GRPXfont *gfxFont;    ///< Pointer to special font
 };
 
 #endif // _TFT_ST7735H_

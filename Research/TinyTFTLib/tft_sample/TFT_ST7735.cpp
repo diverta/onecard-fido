@@ -18,8 +18,14 @@
     @param  dc   Data/Command pin #
     @param  rst  Reset pin # (optional, pass -1 if unused)
 */
-TFT_ST7735::TFT_ST7735(uint16_t w, uint16_t h, int8_t cs, int8_t dc, int8_t rst)
-    : Adafruit_GFX(w, h), connection(TFT_HARD_SPI), _rst(rst), _cs(cs), _dc(dc) {
+TFT_ST7735::TFT_ST7735(uint16_t w, uint16_t h, int8_t cs, int8_t dc, int8_t rst) {
+  // Initialization
+  init_graphics(w, h);
+  connection = TFT_HARD_SPI;
+  _rst = rst;
+  _cs = cs;
+  _dc = dc;
+
   // This just invokes the hardware SPI constructor below,
   // passing the default SPI device (&SPI).
   hwspi._spi = &SPI;
@@ -1335,4 +1341,24 @@ inline void TFT_ST7735::TFT_RD_HIGH(void) {
 */
 inline void TFT_ST7735::TFT_RD_LOW(void) {
   *tft8.rdPort &= tft8.rdPinMaskClr;
+}
+
+/*!
+   @brief    Instatiate a GFX context for graphics! Can only be done by a
+   superclass
+   @param    w   Display width, in pixels
+   @param    h   Display height, in pixels
+*/
+void TFT_ST7735::init_graphics(int16_t w, int16_t h) {
+  WIDTH = w;
+  HEIGHT = h;
+  _width = w;
+  _height = h;
+  rotation = 0;
+  cursor_y = cursor_x = 0;
+  textsize_x = textsize_y = 1;
+  textcolor = textbgcolor = 0xFFFF;
+  wrap = true;
+  _cp437 = false;
+  gfxFont = NULL;
 }
