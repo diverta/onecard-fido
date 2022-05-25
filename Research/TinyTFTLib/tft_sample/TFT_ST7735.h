@@ -296,6 +296,8 @@ public:
   void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
+  void setTextColor(uint16_t c);
+  void setTextColor(uint16_t c, uint16_t bg);
   void setFont(const GRPXfont *f = NULL);
 
   /*!
@@ -306,24 +308,6 @@ public:
   void setCursor(int16_t x, int16_t y) {
     cursor_x = x;
     cursor_y = y;
-  }
-
-  /*!
-    @brief   Set text font color with transparant background
-    @param   c   16-bit 5-6-5 Color to draw text with
-    @note    For 'transparent' background, background and foreground
-             are set to same color rather than using a separate flag.
-  */
-  void setTextColor(uint16_t c) { textcolor = textbgcolor = c; }
-
-  /*!
-    @brief   Set text font color with custom background color
-    @param   c   16-bit 5-6-5 Color to draw text with
-    @param   bg  16-bit 5-6-5 Color to draw background/fill with
-  */
-  void setTextColor(uint16_t c, uint16_t bg) {
-    textcolor = c;
-    textbgcolor = bg;
   }
 
   /*!

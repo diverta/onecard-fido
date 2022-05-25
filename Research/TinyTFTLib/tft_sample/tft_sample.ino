@@ -51,25 +51,25 @@ void tftPrintTest() {
   tft.setTextWrap(false);
 
   tft.setCursor(0, 0);
-  tft.setTextColor(swapbit(ST77XX_RED));
+  tft.setTextColor(ST77XX_RED);
   tft.setTextSize(1);
   tft.println("Hello World!");
   
   delay(2000);
 
-  tft.setTextColor(swapbit(ST77XX_YELLOW));
+  tft.setTextColor(ST77XX_YELLOW);
   tft.setTextSize(2);
   tft.println("Hello World!");
   
   delay(2000);
   
-  tft.setTextColor(swapbit(ST77XX_GREEN));
+  tft.setTextColor(ST77XX_GREEN);
   tft.setTextSize(3);
   tft.println("Hello World!");
   
   delay(2000);
   
-  tft.setTextColor(swapbit(ST77XX_BLUE));
+  tft.setTextColor(ST77XX_BLUE);
   tft.setTextSize(4);
   tft.println(123.45);
 
@@ -103,15 +103,4 @@ void tftPrintTest() {
   
   tft.setTextColor(ST77XX_WHITE);
   tft.print(" seconds.");
-}
-
-uint16_t swapbit(uint16_t x) {
-  uint16_t r = 0;
-  uint8_t b = 16;
-  while (b--) {
-    r <<= 1;
-    r |= (x & 1);
-    x >>= 1;
-  }
-  return r;
 }

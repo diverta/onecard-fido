@@ -2693,3 +2693,34 @@ void TFT_ST7735::getTextBounds(const __FlashStringHelper *str, int16_t x,
     *h = maxy - miny + 1;
   }
 }
+
+uint16_t swapbit(uint16_t x) {
+  uint16_t r = 0;
+  uint8_t b = 16;
+  while (b--) {
+    r <<= 1;
+    r |= (x & 1);
+    x >>= 1;
+  }
+  return r;
+}
+
+/*!
+  @brief   Set text font color with transparant background
+  @param   c   16-bit 5-6-5 Color to draw text with
+  @note    For 'transparent' background, background and foreground
+           are set to same color rather than using a separate flag.
+*/
+void TFT_ST7735::setTextColor(uint16_t c) { 
+  textcolor = textbgcolor = swapbit(c);
+}
+
+/*!
+  @brief   Set text font color with custom background color
+  @param   c   16-bit 5-6-5 Color to draw text with
+  @param   bg  16-bit 5-6-5 Color to draw background/fill with
+*/
+void TFT_ST7735::setTextColor(uint16_t c, uint16_t bg) {
+  textcolor = swapbit(c);
+  textbgcolor = bg;
+}
