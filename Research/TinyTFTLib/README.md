@@ -20,6 +20,16 @@
 - 消費電力：`62mW`（`3.0`Vで動作時）
 - SPI接続
 
+## サンプルアプリ
+「KWH009ST01-F01」の動作確認用サンプルアプリを制作しました。<br>
+Arduino UNOで動作します。
+
+#### [ソースコード](../../Research/TinyTFTLib/tft_sample)
+フォルダー`tft_sample`配下に格納しています。
+
+#### 解説書
+（現在作成中）
+
 ## 参考文献
 
 #### 動作確認方法
@@ -28,3 +38,6 @@
 
 - USING THE ST7735 1.8″ COLOR TFT DISPLAY WITH ARDUINO<br>
 https://www.electronics-lab.com/project/using-st7735-1-8-color-tft-display-arduino/
+
+#### [TFTライブラリーの解析](../../Research/TinyTFTLib/ADATFTLIB.md)
+「KWH009ST01-F01」をArduino UNOに接続するためのライブラリー（`Adafruit-ST7735-Library`／`Adafruit-GFX-Library`）について、解析を行いました。
