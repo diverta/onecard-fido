@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -2441,9 +2441,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="VDD_NRF"/>
-<wire x1="172.72" y1="111.76" x2="195.58" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="111.76" x2="195.58" y2="134.62" width="0.1524" layer="91"/>
-<label x="195.58" y="134.62" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="172.72" y1="111.76" x2="190.5" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="111.76" x2="190.5" y2="134.62" width="0.1524" layer="91"/>
+<label x="190.5" y="134.62" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="VDDH"/>
@@ -2921,7 +2921,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <text x="33.02" y="157.48" size="2.54" layer="91" align="top-left">USBポートに装着時は、VBUSの5.0V--&gt;3.3Vに降圧して供給します。
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
 <text x="76.2" y="78.74" size="2.54" layer="91">ボタン乾電池ケースは
-基板の表面に実装</text>
+基板の裏面に実装</text>
 <text x="175.26" y="119.38" size="3.81" layer="91">ユーティリティーI/F部</text>
 <text x="182.88" y="111.76" size="2.1844" layer="91">TXD: UARTデバッグ出力</text>
 <text x="217.424" y="20.32" size="1.778" layer="91">Secure Dongle rev1</text>
