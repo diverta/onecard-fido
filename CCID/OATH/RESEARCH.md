@@ -1,6 +1,6 @@
 # OATH管理コマンドについての調査
 
-最終更新日：2022/5/16
+最終更新日：2022/5/30
 
 OATH管理コマンドについての調査手順・結果を掲載しております。
 
@@ -144,3 +144,43 @@ Deleted Example:bob@google.co.
                                     6f 67 6c 65 2e 63 6f                             |ogle.co          
 [00:00:35.389,770] <dbg> ccid_oath.ccid_oath_apdu_process: APDU send: SW(9000)
 ```
+
+#### `calculate`
+OATHアプレットの独自INSコード`0xa4`が実行されます。[注1]<br>
+レスポンスは計算されたパスワードになります。
+
+<b>`ykman`によるコマンド実行例</b><br>
+下記例では、認証器内に既に登録済みのアカウント`Example:alice@google.com`について、TOTPパスワードを計算しようとしています。<br>
+レスポンスは`373492`という６桁のパスワードです。
+
+```
+(.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath accounts code Example:alice@google.com
+Example:alice@google.com  373492
+(.venv) bash-3.2$
+```
+
+<b>nRF5340アプリケーションからのデバッグ出力</b>
+
+まず、認証器にchallengeパラメーター（`00 00 00 00 03 49 36 f3`）が渡されます。<br>
+これに基づいて認証器側がTOTPを計算して戻します。
+
+概ね下記ロジックになっているようです。
+- `ykman`側で、現在時刻からカウンターを計算（カウンター = UNIX時間 / `30`秒）し、challengeパラメーター生成
+- challengeパラメーターと、認証器内で保持しているSECRETから、20バイトのHMAC-SHA1ハッシュ値を計算
+- 前項ハッシュ値から、所定のロジックにより31ビットを取得し数値化-->４バイトのTOTPを生成
+
+`ykman`側では、戻ってきたTOTP（`31 32 33 34`）を数値化（６桁の数字でフォーマット[注2]）して表示させています。
+
+```
+[00:00:10.185,852] <dbg> ccid_oath.ccid_oath_apdu_process: APDU recv: CLA INS P1 P2(00 a4 00 01) Lc(10) Le(256)
+[00:00:10.185,852] <dbg> ccid_oath: APDU data
+                                    74 08 00 00 00 00 03 49  36 f3                   |t......I 6.      
+[00:00:10.185,852] <dbg> ccid_oath.ccid_oath_apdu_process: APDU send: SW(9000)
+[00:00:10.185,882] <dbg> ccid_oath: APDU data
+                                    71 18 45 78 61 6d 70 6c  65 3a 61 6c 69 63 65 40 |q.Exampl e:alice@
+                                    67 6f 6f 67 6c 65 2e 63  6f 6d 76 05 06 31 32 33 |google.c omv..123
+                                    34                                               |4
+```
+
+[注1] 正確には`INS=0xa4, P1=0x00, P2=0x01`となっています。<br>
+[注2] 厳密には、戻ってきたTOTP（４バイト）を10進数変換-->下６桁を取得しているようです。
