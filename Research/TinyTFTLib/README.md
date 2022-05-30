@@ -1,6 +1,6 @@
 # Tiny TFT Library
 
-最新更新日：2022/5/18
+最終更新日：2022/5/30
 
 ## 概要
 
@@ -21,13 +21,10 @@
 - SPI接続
 
 ## サンプルアプリ
-「KWH009ST01-F01」の動作確認用サンプルアプリを制作しました。<br>
-Arduino UNOで動作します。
+Arduino UNOで動作する「KWH009ST01-F01」の動作確認用サンプルアプリを制作しました。<br>
+ソースコードは、フォルダー[`tft_sample`](../../Research/TinyTFTLib/tft_sample)配下に格納しています。
 
-#### [ソースコード](../../Research/TinyTFTLib/tft_sample)
-フォルダー`tft_sample`配下に格納しています。
-
-#### [解説書](../../Research/TinyTFTLib/tft_sample/README.md)
+### [解説書](../../Research/TinyTFTLib/tft_sample/README.md)
 動作確認用サンプルアプリの構成について解説しています。
 
 ## 参考文献
