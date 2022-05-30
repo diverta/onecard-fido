@@ -27,8 +27,8 @@ Arduino UNOで動作します。
 #### [ソースコード](../../Research/TinyTFTLib/tft_sample)
 フォルダー`tft_sample`配下に格納しています。
 
-#### 解説書
-（現在作成中）
+#### [解説書](../../Research/TinyTFTLib/tft_sample/README.md)
+動作確認用サンプルアプリの構成について解説しています。
 
 ## 参考文献
 
