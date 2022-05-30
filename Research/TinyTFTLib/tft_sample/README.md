@@ -6,7 +6,11 @@
 
 超小型TFTディスプレイ「KWH009ST01-F01」の動作確認用サンプルアプリについて解説しています。
 
-<img src="../assets01/0002.jpg" width="300">
+<img src="../assets01/0003.jpg" width="300">
+
+## 動作環境
+
+プログラムを書き込んだArduino Unoに、「KWH009ST01-F01」をSPI接続して動作させます。
 
 #### 使用機材
 - PC（Arduinoをあらかじめインストールします）
@@ -17,7 +21,7 @@
 
 [注1] FPCコネクターは、0.5mmピッチ8Pinタイプを使用します。
 
-## TFTとの接続方法
+#### TFTとの接続方法
 TFT〜Arduino UNO間の配線は以下になります。
 
 |TFT||Arduino UNO|説明|
@@ -31,6 +35,147 @@ TFT〜Arduino UNO間の配線は以下になります。
 |#7（VDD）|<--|3.3V|動作電圧入力|
 |#8（CS）|<--|D10（CS）|TFT通信開始|
 
+## 動作説明
+
+プログラムの概要と、TFTの表示動作について記述します。
+
+#### デバイスの初期化
+
+TFTを使用可能状態にするため、デバイスの初期化を実行します。
+- デバイス初期化処理（`initR()`）
+- TFT画面の向きを横長に設定（`setRotation(3)`）
+
+```
+void setup(void) {
+  :
+  // Init ST7735S mini display (0.96" 160x80 TFT)
+  tft.initR();
+  tft.setRotation(3);
+  :
+```
+
+#### 文字列の表示（１回目）
+
+画面を黒く塗りつぶしたのち、テキストを４通りの色／サイズで表示します。
+- `Hello World!`（サイズ１倍、赤色）
+- `Hello World!`（サイズ２倍、黄色）
+- `Hello World!`（サイズ３倍、緑色）
+- `123.45`（サイズ４倍、青色）
+
+```
+void setup(void) {
+  :
+  // tft print function!
+  tftPrintTest();
+  :
+
+void tftPrintTest() {
+  tft.setTextWrap(false);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_RED);
+  tft.setTextSize(1);
+  tft.println("Hello World!");
+  :
+  tft.setTextColor(ST77XX_YELLOW);
+  tft.setTextSize(2);
+  tft.println("Hello World!");
+  :
+  tft.setTextColor(ST77XX_GREEN);
+  tft.setTextSize(3);
+  tft.println("Hello World!");
+  :
+  tft.setTextColor(ST77XX_BLUE);
+  tft.setTextSize(4);
+  tft.println(123.45);
+  :
+```
+
+<b>表示イメージ</b>
+
+<img src="../assets01/0004.jpg" width="300">
+
+#### 文字列の表示（２回目）
+
+画面を黒く塗りつぶしたのち、テキストを表示します。
+- `Hello World!`（白色）
+- `3.141592 Want pi?`（緑色）
+- ` `
+- `845FED Print HEX!`（緑色）
+- ` `
+- `Sketch has been`（白色）
+- `running for: `（白色）
+- `N seconds.`（`N`＝整数値、`N`だけマゼンタピンク、他は白色）
+
+```
+void tftPrintTest() {
+  :
+  tft.setCursor(0, 0);
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setTextColor(ST77XX_WHITE);
+
+  tft.setTextSize(0);
+  tft.println("Hello World!");
+
+  float p = 3.1415926;
+
+  tft.setTextSize(1);
+  tft.setTextColor(ST77XX_GREEN);
+  tft.print(p, 6);
+  tft.println(" Want pi?");
+  tft.println(" ");
+
+  tft.print(8675309, HEX); // print 8,675,309 out in HEX!
+  tft.println(" Print HEX!");
+  tft.println(" ");
+
+  tft.setTextColor(ST77XX_WHITE);
+  tft.println("Sketch has been");
+  tft.println("running for: ");
+
+  tft.setTextColor(ST77XX_MAGENTA);
+  tft.print(millis() / 1000);
+
+  tft.setTextColor(ST77XX_WHITE);
+  tft.print(" seconds.");
+}
+```
+
+<b>表示イメージ</b>
+
+<img src="../assets01/0005.jpg" width="300">
+
+#### 画面のビット反転（繰り返し）
+
+前述「文字列の表示（２回目）」で表示した画面を、2.5秒ごとに５回ずつビット反転させます。<br>
+例えば黒い背景が白色背景になり、白色文字が黒色文字に反転します。
+
+５回ずつのビット反転が完了すると、再び画面が黒く塗りつぶされ、終了となります。
+
+```
+void loop() {
+  static int c = 0;
+  if (c < 5) {
+    tft.invertDisplay(true);
+    delay(2500);
+    tft.invertDisplay(false);
+    delay(2500);
+    c++;
+
+  } else if (c == 5) {
+    tft.fillScreen(ST77XX_BLACK);
+    Serial.println("End");
+    c++;
+  }
+}
+```
+
+<b>表示イメージ</b>（反転時）
+
+<img src="../assets01/0007.jpg" width="300">
+
+<b>表示イメージ</b>（再反転時＝前の状態に復元）
+
+<img src="../assets01/0006.jpg" width="300">
 
 ## プログラム
 フォルダー`tft_sample`配下に格納しています。

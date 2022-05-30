@@ -10,7 +10,7 @@
 
 使用するディスプレイは、FORMIKEというメーカーの「KWH009ST01-F01」になります。
 
-<img src="assets01/0002.jpg" width="300">
+<img src="assets01/0003.jpg" width="300">
 
 #### 特色
 - 外形寸法：`28`mm x `14`mm
