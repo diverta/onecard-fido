@@ -66,7 +66,7 @@ Password protection: disabled
 ```
 
 #### `list`
-OATHアプレットの`INS_LIST`（`0xa1`）が実行されます。<br>
+OATHアプレットの独自INSコード`0xa1`が実行されます。<br>
 こちらもレスポンスは、Yubico社の独自仕様になっているようです。<br>
 （「[YKOATH Protocol Specification](https://developers.yubico.com/OATH/YKOATH_Protocol.html)」ご参照）
 
@@ -120,3 +120,27 @@ An account called alice@google.com already exists on this YubiKey. Do you want t
 ```
 
 [注] コマンドで指定したSECRET（`JBSWY3DPEHPK3PXP`）をBase32 Decodeすると、コマンド内でHEX（`48 65 6c 6c 6f 21 de ad be ef 00 00 00 00`）に変換され、nRF5340アプリケーションに送信されます。
+
+#### `delete`
+OATHアプレットの`INS_DELETE`（`0x02`）が実行されます。<br>
+レスポンスはステータスワードのみのようです。
+
+<b>`ykman`によるコマンド実行例</b><br>
+下記例では、認証器内に既に登録済みのアカウント`Example:bob@google.co`について、アカウントを削除しようとしています。
+
+```
+(.venv) bash-3.2$ ykman -r "Diverta Inc. Secure Dongle" oath accounts delete Example:bob@google.co
+Delete account: Example:bob@google.co ? [y/N]: y
+Deleted Example:bob@google.co.
+(.venv) bash-3.2$
+```
+
+<b>nRF5340アプリケーションからのデバッグ出力</b>
+
+```
+[00:00:35.389,739] <dbg> ccid_oath.ccid_oath_apdu_process: APDU recv: CLA INS P1 P2(00 02 00 00) Lc(23) Le(256)
+[00:00:35.389,770] <dbg> ccid_oath: APDU data
+                                    71 15 45 78 61 6d 70 6c  65 3a 62 6f 62 40 67 6f |q.Exampl e:bob@go
+                                    6f 67 6c 65 2e 63 6f                             |ogle.co          
+[00:00:35.389,770] <dbg> ccid_oath.ccid_oath_apdu_process: APDU send: SW(9000)
+```
