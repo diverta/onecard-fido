@@ -23,7 +23,21 @@
 
     - (bool)hasScreenshotPermission {
         // 画面収録の許可があるかどうかを問い合わせる
-        return false;
+        CGDisplayStreamRef streamRef;
+        streamRef = CGDisplayStreamCreateWithDispatchQueue(
+            CGMainDisplayID(), 1, 1, kCVPixelFormatType_32BGRA, nil, dispatch_get_main_queue(),
+            ^(CGDisplayStreamFrameStatus status, uint64_t time, IOSurfaceRef frame, CGDisplayStreamUpdateRef ref) {
+            }
+        );
+        // 画面収録の許可がない場合 false
+        bool hasPermission = false;
+        if (streamRef) {
+            hasPermission = true;
+            CFRelease(streamRef);
+        } else {
+            [[ToolLogFile defaultLogger] error:@"No permission for screen shot capture"];
+        }
+        return hasPermission;
     }
 
     - (bool)scanQRCodeFromScreenShot {
