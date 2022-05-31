@@ -1,37 +1,43 @@
-# FIDO認証器管理ツール
+# PCツール（管理ツール／開発ツール）
 
 ## 概要
-PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入などを行うツールです。
+PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うツールです。
 
 macOS版と、Windows版を用意しました。
 
-## 機能
+## [FIDO認証器管理ツール](../MaintenanceTool/MNTTOOL.md)
+エンドユーザー向けのツールです。
+
+#### [macOS版](../MaintenanceTool/macOSApp/README.md)
+<img src="assets/0001.jpg" width="350">
+
+#### [Windows版](../MaintenanceTool/WindowsExe/MNTTOOL.md)
+<img src="assets/0002.jpg" width="350">
+
+
+#### 機能
 * ペアリング実行／解除
-* FIDO鍵・証明書設定
+* FIDO鍵・証明書設定（macOS版のみ）
 * PINコード設定
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
 * コマンドテスト機能
 * Flash ROM情報取得機能
 * バージョン情報取得機能
-* 自動認証パラメーター設定機能
 * PIV機能設定（macOS版のみ）
 * OpenPGP機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
-## [macOS版](macOSApp)
+## FIDO認証器開発ツール
+ベンダー向けのツールです。
 
-#### 画面イメージ
-<img src="assets/0001.jpg" width="500">
+#### macOS版
+<b>開発中</b>
 
-#### 動作環境
-macOS Sierra (Version 10.12.6)〜
+#### [Windows版](../MaintenanceTool/WindowsExe/DEVTOOL.md)
+<img src="../MaintenanceTool/WindowsExe/assets08/0001.jpg" width="350">
 
-## [Windows版](WindowsExe)
-
-#### 画面イメージ
-<img src="assets/0002.jpg" width="500">
-
-#### 動作環境
-Windows 10 (64bit版)
+#### 機能
+* FIDO鍵・証明書設定
+* ログファイル格納ディレクトリー参照機能

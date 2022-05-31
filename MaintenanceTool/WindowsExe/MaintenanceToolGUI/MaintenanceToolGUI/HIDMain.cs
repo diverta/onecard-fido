@@ -1,19 +1,13 @@
-﻿using MaintenanceToolCommon;
-using System;
+﻿using System;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
     internal static class Const
     {
-        // HIDフレームに関する定義
-        public const int HID_FRAME_LEN = 64;
-        public const int HID_INIT_HEADER_LEN = 7;
-        public const int HID_CONT_HEADER_LEN = 5;
         // HIDコマンドバイトに関する定義
         public const int HID_CMD_CTAPHID_PING = 0x81;
         public const int HID_CMD_CTAPHID_INIT = 0x86;
-        public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
-        public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_GET_VERSION_INFO = 0xc3;
         public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
@@ -34,9 +28,6 @@ namespace MaintenanceToolGUI
         // CTAP2、U2F共通処理
         private Ctap2 ctap2;
         private U2f u2f;
-
-        // ツール設定処理
-        private ToolPreference toolPreference;
 
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
@@ -122,10 +113,8 @@ namespace MaintenanceToolGUI
                 DoResponseTestCtapHidInit(message, length);
                 break;
             case Const.HID_CMD_ERASE_BONDS:
-            case Const.HID_CMD_ERASE_SKEY_CERT:
-            case Const.HID_CMD_INSTALL_SKEY_CERT:
                 // ステータスバイトをチェックし、画面に制御を戻す
-                DoResponseMaintSkeyCert(message, length);
+                DoResponseEraseBonds(message, length);
                 break;
             case Const.HID_CMD_GET_FLASH_STAT:
                 DoResponseGetFlashStat(message, length);
@@ -139,13 +128,10 @@ namespace MaintenanceToolGUI
             case U2f.Const.BLE_CMD_MSG:
                 u2f.DoResponse(message, length);
                 break;
-            case Const.HID_CMD_TOOL_PREF_PARAM:
-                toolPreference.DoResponseToolPreference(message, length);
-                break;
             case Const.HID_CMD_BOOTLOADER_MODE:
                 if (requestType == AppCommon.RequestType.GotoBootLoaderMode) {
                     // ステータスバイトをチェックし、画面に制御を戻す
-                    DoResponseMaintSkeyCert(message, length);
+                    DoResponseBootLoaderMode(message, length);
                 } else {
                     ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
                 }
@@ -154,10 +140,7 @@ namespace MaintenanceToolGUI
                 DoResponseFirmwareReset(hidProcess.receivedCMD, message);
                 break;
             case Const.HID_CMD_UNKNOWN_ERROR:
-                if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
-                    // ツール設定から呼び出された場合は、ツール設定クラスに制御を戻す
-                    toolPreference.OnHidMainProcessExited(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                } else if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
+                if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
                     // DFU処理から呼び出された場合は、DFU処理クラスに制御を戻す
                     ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
                 } else if (requestType == AppCommon.RequestType.HidFirmwareReset) {
@@ -221,14 +204,6 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
         }
 
-        public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
-        {
-            toolPreference = tp;
-
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.ToolPreferenceCommand);
-        }
-
         private void DoResponseTestCtapHidInit(byte[] message, int length)
         {
             // nonceの一致チェック
@@ -260,13 +235,6 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.HidFirmwareReset:
                 DoRequestFirmwareReset();
                 break;
-            case AppCommon.RequestType.EraseSkeyCert:
-                DoRequestEraseSkeyCert();
-                break;
-            case AppCommon.RequestType.ToolPreferenceCommand:
-            case AppCommon.RequestType.ToolPreferenceParamInquiry:
-                toolPreference.DoResponseHidInit(message, length);
-                break;
             case AppCommon.RequestType.TestCtapHidPing:
                 // PINGコマンドを実行
                 ctap2.DoRequestPing();
@@ -283,7 +251,6 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.TestMakeCredential:
             case AppCommon.RequestType.TestGetAssertion:
             case AppCommon.RequestType.ClientPinSet:
-            case AppCommon.RequestType.InstallSkeyCert:
                 // 認証器の公開鍵を取得
                 ctap2.DoGetKeyAgreement(requestType);
                 break;
@@ -322,6 +289,14 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_BONDS, RequestData, 0);
         }
 
+        public void DoResponseEraseBonds(byte[] message, int length)
+        {
+            // ステータスバイトをチェック
+            bool result = (message[0] == 0x00);
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(result);
+        }
+
         public void DoBootLoaderMode()
         {
             // INITコマンドを実行し、nonce を送信する
@@ -334,79 +309,7 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
         }
 
-        public void DoEraseSkeyCert()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.EraseSkeyCert);
-        }
-
-        public void DoRequestEraseSkeyCert()
-        {
-            // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
-        }
-
-        // インストール元の鍵・証明書ファイルパスを保持
-        private string skeyFilePathForInstall;
-        private string certFilePathForInstall;
-
-        public void DoInstallSkeyCert(string skeyFilePath, string certFilePath)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // インストール元の鍵・証明書ファイルパスを保持
-            skeyFilePathForInstall = skeyFilePath;
-            certFilePathForInstall = certFilePath;
-
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit(AppCommon.RequestType.InstallSkeyCert);
-        }
-
-        public void DoRequestInstallSkeyCert(byte[] agreementKeyCBOR)
-        {
-            // CBORレスポンスから、公開鍵を抽出
-            InstallSkeyCert installSkeyCert = new InstallSkeyCert();
-            if (installSkeyCert.ExtractKeyAgreement(agreementKeyCBOR) == false) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-            // 秘密鍵をファイルから読込
-            if (installSkeyCert.ReadPemFile(skeyFilePathForInstall) == false) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_SKEY_PEM_FILE);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-            // 証明書をファイルから読込
-            if (installSkeyCert.ReadCertFile(certFilePathForInstall) == false) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_CERT_CRT_FILE);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-            // 秘密鍵と証明書の整合性検証を行う
-            if (installSkeyCert.ValidateSkeyCert() == false) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_INVALID_SKEY_OR_CERT);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-            // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
-            byte[] cbor = installSkeyCert.GenerateInstallSkeyCertBytes();
-            if (cbor == null) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_CRYPTO_SKEY_CERT_DATA);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, cbor, cbor.Length);
-        }
-
-        private void DoResponseMaintSkeyCert(byte[] message, int length)
+        private void DoResponseBootLoaderMode(byte[] message, int length)
         {
             // ステータスバイトをチェック
             bool result = (message[0] == 0x00);
@@ -433,9 +336,9 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
-            AppCommon.OutputLogDebug("Flash ROM statistics: " + responseCSV);
+            AppUtil.OutputLogDebug("Flash ROM statistics: " + responseCSV);
 
             // 情報取得CSVから空き領域に関する情報を抽出
             string[] vars = responseCSV.Split(',');
@@ -493,7 +396,7 @@ namespace MaintenanceToolGUI
         private void DoResponseGetVersionInfo(byte[] message, int length)
         {
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
 
             // 情報取得CSVからバージョンに関する情報を抽出

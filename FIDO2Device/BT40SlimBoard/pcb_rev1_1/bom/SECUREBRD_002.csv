@@ -1,0 +1,30 @@
+,,,,,,,,
+,,,SECUREBRD_002 1PCS BOM  (Bill of Materials),,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,Your Instructions / Notes
+1,BAT1,1,Linx Technologies,BAT-HLD-012-SMT,Coin Cell Battery Holder,,SMD,
+2,C1,1,TDK Corporation,C1608X7S1A475M080AC,"MLCC, 4.7uF 10V X7S","0603",SMD,
+3,C2,1,KEMET,C0402C103K5RAC7411,"MLCC, 0.01uF 50V X7R","0402",SMD,
+4,"C3, C4, C8, C9",4,Taiyo Yuden,UMK105B7104KV-FR,"MLCC, 0.1uF 50V X7R","0402",SMD,
+5,C5,1,KEMET,C0603C106M8PACTU,"MLCC, 10uF 10V X5R","0603",SMD,
+6,"C6, C7",2,Taiyo Yuden,TMR107B7105KA-T,"MLCC, 1uF 25V X7R","0603",SMD,
+7,CN1,1,Global Connector Technology (GCT),USB4105-GF-A,USB Type C Receptacle for USB 2.0,,SMD,"USB4105-GF-A-120 as alternative. Caution: USB4105-GF-A-060 is not available."
+8,D1,1,NXP,"PRTR5V0U2X,215",ESD protection diode,SOT143B,SMD,
+9,"D2, D3",2,Nexperia,"PMEG2005AEA,115",Schottky Rectifier,SOD323-W,SMD,
+10,"L1, L2, L3",3,Murata Electronics,BLM15AG121SN1D,"Ferrite Bead, 120 Ohm @ 100MHz, 850mA, 150mOhm max","0402",SMD,
+11,LD1,1,Kingbright Company LLC,APTD1608LSECK/J4-PF,Chip LED yellow,"0603",SMD,
+12,LD2,1,Kingbright Company LLC,APHD1608LSURCK,Chip LED red,"0603",SMD,
+13,LD3,1,Kingbright Company LLC,APTD1608LZGCK,Chip LED green,"0603",SMD,
+14,LD4,1,Kingbright Company LLC,APTD1608LVBC/D,Chip LED blue,"0603",SMD,
+15,R1,1,Vishay,CRCW04025K10FKEDC,"Resistor, 5.1k ohm 1% 1/16W","0402",SMD,
+16,"R2, R3",2,Vishay,CRCW04021K20FKEDC,"Resistor, 1.2k ohm 1% 1/16W","0402",SMD,
+17,R4,1,Vishay,CRCW04021K00FKEDC,"Resistor, 1k ohm 1% 1/16W","0402",SMD,
+18,"R5, R9",2,Vishay,CRCW0402390RFKEDC,"Resistor, 390 ohm 1% 1/16W","0402",SMD,
+19,"R6, R7, R8",3,Vishay,CRCW040210K0FKEDC,"Resistor, 10k ohm 1% 1/16W","0402",SMD,
+20,SW1,1,ALPS,SKRPACE010,Surface Mount Type TACT Switch,4pos,SMD,"SKRPASE010, SKRPANE010, SKRPADE010 as alternative"
+21,SW2,1,ALPS,SKTADAE010,Surface Mount Type TACT Switch,4pos,SMD,"SKTAAAE010, SKTAACE010 as alternative"
+22,U1,1,Fanstel Corp.,BT40,"BLE 5.2, 802.15.4 Modules",LGA,SMD,See: https://www.mouser.jp/ProductDetail/Fanstel/BT40E?qs=zW32dvEIR3vmzDgAfbp4Vw%3D%3D
+23,U2,1,"Analog Devices, Inc.",ADP122ACPZ-3.3-R7,"Low Quiescent Current, CMOS Linear Regulator",6pos,SMD,
+24,U3,1,Micro Crystal,RV-3028-C7 32.768KHZ 1PPM-TA-QC,"Real Time Clock 32.768kHz I2C Time Acc. 1ppm",SON-8,SMD,RV-3028-C7 32.768KHZ 1PPM-TA-QA' as alternative
