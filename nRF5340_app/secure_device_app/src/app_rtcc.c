@@ -225,6 +225,42 @@ static bool set_backup_switchover_mode(uint8_t val)
     }
     return true;
 }
+
+static bool enable_trickle_charge(bool enable, uint8_t tcr)
+{
+    if (tcr > 3) {
+        return false;
+    }
+
+    // Read EEPROM Backup Register (0x37)
+    uint8_t backup_reg_val;
+    if (read_eeprom_backup_register(RV3028C7_REG_EEPROM_BACKUP, &backup_reg_val) == false) {
+        LOG_ERR("Read EEPROM backup register fail");
+        return false;
+    }
+
+    // Clear TCE Bit (Trickle Charge Enable)
+    backup_reg_val &= RV3028C7_MASK_EEPROM_BACKUP_TCE_CLEAR;
+
+    // Clear TCR Bits (Trickle Charge Resistor)
+    backup_reg_val &= RV3028C7_MASK_EEPROM_BACKUP_TCR_CLEAR;
+
+    if (enable) {
+        // Set TCR Bits (Trickle Charge Resistor)
+        //  Shift values into EEPROM Backup Register
+        backup_reg_val |= (tcr << RV3028C7_SHIFT_EEPROM_BACKUP_TCR);
+        // Write 1 to TCE Bit
+        backup_reg_val |= (1 << RV3028C7_BIT_EEPROM_BACKUP_TCE);
+    }
+
+    // Write EEPROM Backup Register
+    if (write_eeprom_backup_register(RV3028C7_REG_EEPROM_BACKUP, backup_reg_val) == false) {
+        LOG_ERR("Write EEPROM backup register fail");
+        return false;
+    }
+    return true;
+}
+
 //
 // RTCCの初期化
 //
@@ -250,9 +286,25 @@ bool app_rtcc_initialize(void)
     // 3 = Level Switching Mode
     uint8_t val = 0x03;
     if (set_backup_switchover_mode(val) == false) {
-        LOG_ERR("RTCC backup switchover mode is not available");
+        LOG_ERR("RTCC backup switchover mode setting failed");
         return false;
     }
+    // 
+    // トリクル充電は行わないよう設定。
+    // TODO:
+    //   将来的にトリクル充電を行わせる場合、
+    //   外部提供電源のインピーダンスを設定
+    //   0 =  3kOhm
+    //   1 =  5kOhm
+    //   2 =  9kOhm
+    //   3 = 15kOhm
+    //
+    uint8_t tcr = 0x03;
+    if (enable_trickle_charge(false, tcr) == false) {
+        LOG_ERR("RTCC tricle charge setting failed");
+        return false;
+    }
+
     return true;
 }
 

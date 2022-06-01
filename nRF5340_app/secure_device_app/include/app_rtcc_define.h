@@ -58,6 +58,7 @@ extern "C" {
 #define RV3028C7_SHIFT_EEPROM_BACKUP_TCR        0       // Trickle Charge Resistor shift
 #define RV3028C7_MASK_EEPROM_BACKUP_BSM_CLEAR   0xf3    // 0b11110011 = Backup Switchover Mode clear
 #define RV3028C7_MASK_EEPROM_BACKUP_TCR_CLEAR   0xfc    // 0b11111100 = Trickle Charge Resistor clear
+#define RV3028C7_MASK_EEPROM_BACKUP_TCE_CLEAR   0xdf    // 0b11011111 = Trickle Charge Enable Bit clear
 
 #ifdef __cplusplus
 }

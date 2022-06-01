@@ -13,9 +13,6 @@
 fido_log_module_register(rtcc);
 #endif
 
-// 作業用領域
-static char work_buf[32];
-
 void rtcc_init(void)
 {
     // RTCCの初期化
