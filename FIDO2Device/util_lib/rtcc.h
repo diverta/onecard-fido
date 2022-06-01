@@ -11,8 +11,10 @@
 extern "C" {
 #endif
 
-
-
+//
+// 関数群
+//
+void        rtcc_init(void);
 
 #ifdef __cplusplus
 }

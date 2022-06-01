@@ -7,12 +7,16 @@
 #ifndef APP_RTCC_H
 #define APP_RTCC_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-
+//
+// 関数群
+//
+bool        app_rtcc_initialize(void);
 
 #ifdef __cplusplus
 }
