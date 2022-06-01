@@ -8,6 +8,7 @@
 #define APP_RTCC_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +18,7 @@ extern "C" {
 // 関数群
 //
 bool        app_rtcc_initialize(void);
+bool        app_rtcc_get_timestamp(char *buf, size_t size);
 
 #ifdef __cplusplus
 }

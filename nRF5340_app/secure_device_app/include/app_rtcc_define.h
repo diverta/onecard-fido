@@ -60,6 +60,18 @@ extern "C" {
 #define RV3028C7_MASK_EEPROM_BACKUP_TCR_CLEAR   0xfc    // 0b11111100 = Trickle Charge Resistor clear
 #define RV3028C7_MASK_EEPROM_BACKUP_TCE_CLEAR   0xdf    // 0b11011111 = Trickle Charge Enable Bit clear
 
+// Datetime components
+#define DATETIME_COMPONENTS_SIZE    7
+enum DATETIME_COMPONENT {
+    DATETIME_SECOND = 0,
+    DATETIME_MINUTE = 1,
+    DATETIME_HOUR = 2,
+    DATETIME_DAY_OF_WEEK = 3,
+    DATETIME_DAY_OF_MONTH = 4,
+    DATETIME_MONTH = 5,
+    DATETIME_YEAR = 6
+};
+
 #ifdef __cplusplus
 }
 #endif

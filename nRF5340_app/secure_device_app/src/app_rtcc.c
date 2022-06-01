@@ -5,6 +5,7 @@
  * Created on 2022/06/01, 12:08
  */
 #include <stdio.h>
+#include <string.h>
 #include <zephyr/types.h>
 #include <zephyr.h>
 #include <device.h>
@@ -22,6 +23,7 @@ static const struct device *i2c_dev;
 static struct i2c_msg msgs[2];
 static uint8_t read_buff[32];
 static uint8_t write_buff[32];
+static uint8_t m_datetime[DATETIME_COMPONENTS_SIZE];
 
 //
 // I2C write & read
@@ -46,6 +48,29 @@ static bool read_register(uint8_t reg_addr, uint8_t *reg_val)
     }
 
     *reg_val = read_buff[0];
+    return true;
+}
+
+static bool read_bytes_from_registers(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+{
+    write_buff[0] = reg_addr;
+
+    // Send the address to read from
+    msgs[0].buf = write_buff;
+    msgs[0].len = 1U;
+    msgs[0].flags = I2C_MSG_WRITE;
+
+    // Read from device. STOP after this
+    msgs[1].buf = read_buff;
+    msgs[1].len = size;
+    msgs[1].flags = I2C_MSG_READ | I2C_MSG_STOP;
+
+    if (i2c_transfer(i2c_dev, &msgs[0], 2, RV3028C7_ADDRESS) != 0) {
+        LOG_DBG("i2c_transfer error");
+        return false;
+    }
+
+    memcpy(data, read_buff, size);
     return true;
 }
 
@@ -258,7 +283,14 @@ static bool enable_trickle_charge(bool enable, uint8_t tcr)
         LOG_ERR("Write EEPROM backup register fail");
         return false;
     }
+
+    LOG_DBG("Write EEPROM backup register success (0x%02x)", backup_reg_val);
     return true;
+}
+
+static uint8_t convert_to_decimal(uint8_t bcd)
+{
+    return (bcd / 16 * 10) + (bcd % 16);
 }
 
 //
@@ -303,6 +335,27 @@ bool app_rtcc_initialize(void)
     if (enable_trickle_charge(false, tcr) == false) {
         LOG_ERR("RTCC tricle charge setting failed");
         return false;
+    }
+
+    return true;
+}
+
+bool app_rtcc_get_timestamp(char *buf, size_t size)
+{
+    // レジスター（Clock register）から現在時刻を取得
+    if (read_bytes_from_registers(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+        return false;
+    }
+
+    // フォーマットして指定のバッファに設定
+    if (buf != NULL) {
+        snprintf(buf, size, "20%02d/%02d/%02d %02d:%02d:%02d",
+                convert_to_decimal(m_datetime[DATETIME_YEAR]),
+                convert_to_decimal(m_datetime[DATETIME_MONTH]),
+                convert_to_decimal(m_datetime[DATETIME_DAY_OF_MONTH]),
+                convert_to_decimal(m_datetime[DATETIME_HOUR]),
+                convert_to_decimal(m_datetime[DATETIME_MINUTE]),
+                convert_to_decimal(m_datetime[DATETIME_SECOND]));    
     }
 
     return true;

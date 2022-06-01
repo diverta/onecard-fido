@@ -13,12 +13,19 @@
 fido_log_module_register(rtcc);
 #endif
 
+// 作業領域
+static char work_buf[32];
+
 void rtcc_init(void)
 {
     // RTCCの初期化
     if (app_rtcc_initialize() == false) {
         return;
     }
+    if (app_rtcc_get_timestamp(work_buf, sizeof(work_buf)) == false) {
+        return;
+    }
 
-    fido_log_info("RTCC is available");
+    // 現在時刻を表示
+    fido_log_info("RTCC is available. Current timestamp: %s", log_strdup(work_buf));
 }
