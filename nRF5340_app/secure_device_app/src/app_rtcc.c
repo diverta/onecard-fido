@@ -54,7 +54,7 @@ static bool read_register(uint8_t reg_addr, uint8_t *reg_val)
     return true;
 }
 
-static bool read_bytes_from_registers(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+static bool read_bytes_from_register(uint8_t reg_addr, uint8_t *data, uint8_t size) 
 {
     write_buff[0] = reg_addr;
 
@@ -87,7 +87,7 @@ static bool write_register(uint8_t reg_addr, uint8_t reg_val)
     msgs[0].len = 2U;
     msgs[0].flags = I2C_MSG_WRITE | I2C_MSG_STOP;
 
-    if (i2c_transfer(i2c_dev, &msgs[0], 2, RV3028C7_ADDRESS) != 0) {
+    if (i2c_transfer(i2c_dev, &msgs[0], 1, RV3028C7_ADDRESS) != 0) {
         LOG_DBG("i2c_transfer error");
         return false;
     }
@@ -95,7 +95,7 @@ static bool write_register(uint8_t reg_addr, uint8_t reg_val)
     return true;
 }
 
-static bool write_bytes_to_registers(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+static bool write_bytes_to_register(uint8_t reg_addr, uint8_t *data, uint8_t size) 
 {
     write_buff[0] = reg_addr;
     memcpy(write_buff + 1, data, size);
@@ -160,6 +160,7 @@ static bool reenable_auto_refresh_with_eerd_bit(uint8_t *ctr1_reg_val)
     }
     return true;
 }
+
 bool read_eeprom_backup_register(uint8_t reg_addr, uint8_t *reg_val)
 {
     if (wait_for_eeprom() == false) {
@@ -371,7 +372,7 @@ static bool set_unix_timestamp(uint32_t seconds_since_epoch, bool sync_calendar,
         (uint8_t)(seconds_since_epoch >> 16),
         (uint8_t)(seconds_since_epoch >> 24)
     };
-    if (write_bytes_to_registers(RV3028C7_REG_UNIX_TIME_0, ts, 4) == false) {
+    if (write_bytes_to_register(RV3028C7_REG_UNIX_TIME_0, ts, 4) == false) {
         return false;
     }
 
@@ -383,7 +384,7 @@ static bool set_unix_timestamp(uint32_t seconds_since_epoch, bool sync_calendar,
         if (set_datetime_components(m_datetime, dt->tm_year + 1900, dt->tm_mon + 1, dt->tm_mday, 0, dt->tm_hour, dt->tm_min, dt->tm_sec) == false) {
             return false;
         }
-        if (write_bytes_to_registers(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+        if (write_bytes_to_register(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
             return false;
         }
     }
@@ -456,7 +457,7 @@ bool app_rtcc_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_
 bool app_rtcc_get_timestamp(char *buf, size_t size)
 {
     // レジスター（Clock register）から現在時刻を取得
-    if (read_bytes_from_registers(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+    if (read_bytes_from_register(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
         return false;
     }
 
