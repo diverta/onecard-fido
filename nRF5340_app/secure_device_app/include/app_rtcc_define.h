@@ -25,6 +25,12 @@ extern "C" {
 #define RV3028C7_REG_EEPROM_CLKOUT      0x35
 #define RV3028C7_REG_EEPROM_BACKUP      0x37
 
+// UNIX Time Registers
+#define RV3028C7_REG_UNIX_TIME_0        0x1b // UNIX Time 0 (LSB)
+#define RV3028C7_REG_UNIX_TIME_1        0x1c // UNIX Time 1
+#define RV3028C7_REG_UNIX_TIME_2        0x1d // UNIX Time 2
+#define RV3028C7_REG_UNIX_TIME_3        0x1e // UNIX Time 3 (MSB)
+
 // Bits in Status Register
 #define RV3028C7_BIT_STATUS_EEBUSY      7
 #define RV3028C7_BIT_STATUS_CLKF        6

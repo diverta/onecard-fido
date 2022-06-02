@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool        app_rtcc_initialize(void);
+bool        app_rtcc_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours);
 bool        app_rtcc_get_timestamp(char *buf, size_t size);
 
 #ifdef __cplusplus
