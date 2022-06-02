@@ -10,6 +10,7 @@
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_rtcc.h"
 #include "app_timer.h"
 #include "app_usb.h"
 
@@ -32,6 +33,7 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 #include "ctap2_client_pin.h"
 #include "ccid.h"
+#include "rtcc.h"
 
 // for resume after Flash ROM object updated/deleted
 #include "fido_flash.h"
@@ -77,6 +79,9 @@ void app_main_data_channel_initialized(void)
     // 業務処理をオープンさせる前に、
     // CTAP2で使用する機密データを初期化
     ctap2_client_pin_init();
+    
+    // RTCCを初期化
+    rtcc_init();
 
     // バージョンをデバッグ出力
     LOG_INF("Secure device application (%s) version %s", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR);

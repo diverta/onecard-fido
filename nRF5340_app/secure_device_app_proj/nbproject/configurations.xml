@@ -160,6 +160,9 @@
           </df>
         </df>
       </df>
+      <df name="include">
+        <in>app_rtcc.h</in>
+      </df>
       <df name="src">
         <in>app_ble_fido.c</in>
         <in>app_ble_pairing.c</in>
@@ -174,6 +177,7 @@
         <in>app_main.c</in>
         <in>app_platform.c</in>
         <in>app_process.c</in>
+        <in>app_rtcc.c</in>
         <in>app_settings.c</in>
         <in>app_status_indicator.c</in>
         <in>app_timer.c</in>
@@ -194,6 +198,10 @@
       <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="util_lib" displayName="util_lib" projectFiles="true">
+      <itemPath>../../FIDO2Device/util_lib/rtcc.c</itemPath>
+      <itemPath>../../FIDO2Device/util_lib/rtcc.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
                    projectFiles="false"
@@ -212,6 +220,7 @@
     <Elem>../../CCID/openpgp_lib</Elem>
     <Elem>../../CCID/piv_lib</Elem>
     <Elem>../../CCID/oath_lib</Elem>
+    <Elem>../../FIDO2Device/util_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -774,6 +783,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../FIDO2Device/util_lib/rtcc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/util_lib/rtcc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/configs.c"
             ex="false"
             tool="0"
@@ -812,6 +825,11 @@
             flavor2="3">
         <cTool flags="1">
         </cTool>
+      </item>
+      <item path="../secure_device_app/include/app_rtcc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../secure_device_app/src/app_ble_fido.c"
             ex="false"
@@ -1132,6 +1150,11 @@
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_rtcc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
       </item>
       <item path="../secure_device_app/src/app_settings.c"
             ex="false"

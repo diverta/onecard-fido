@@ -14,3 +14,6 @@
 &qspi {
     status = "disabled";
 };
+&i2c1 {
+    status = "okay";
+};
