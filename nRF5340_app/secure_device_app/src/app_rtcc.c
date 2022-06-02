@@ -478,6 +478,7 @@ bool app_rtcc_get_timestamp(char *buf, size_t size)
 //
 // デバイスの初期化
 //
+#ifdef CONFIG_USE_EXTERNAL_RTCC
 static int app_rtcc_init(const struct device *dev)
 {
     // I2C（i2c1）デバイス初期化
@@ -493,3 +494,4 @@ static int app_rtcc_init(const struct device *dev)
 }
 
 SYS_INIT(app_rtcc_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
+#endif
