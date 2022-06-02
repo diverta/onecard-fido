@@ -13,11 +13,24 @@
 fido_log_module_register(rtcc);
 #endif
 
+// モジュール利用の可否を保持
+#ifdef CONFIG_USE_EXTERNAL_RTCC
+static bool rtcc_is_available = true;
+#else
+static bool rtcc_is_available = false;
+#endif
+
 // 作業領域
 static char work_buf[32];
 
 void rtcc_init(void)
 {
+    // RTCCが搭載されていない場合は終了
+    if (rtcc_is_available == false) {
+        fido_log_info("RTCC is unavailable");
+        return;
+    }
+    
     // RTCCの初期化
     if (app_rtcc_initialize() == false) {
         return;

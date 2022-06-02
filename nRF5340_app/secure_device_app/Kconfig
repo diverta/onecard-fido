@@ -29,6 +29,16 @@ config APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
 	  Enables generating RSA-2048 new keypair
 
 #
+# Enable external RTCC
+#
+config USE_EXTERNAL_RTCC
+	bool "Use external RTCC"
+	default n
+	depends on I2C
+	help
+	  Enables using of RV-3028-C7 as external RTCC
+
+#
 # Enable ATECC608A
 #
 config USE_ATECC608A
