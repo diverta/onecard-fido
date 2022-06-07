@@ -413,6 +413,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonFIDODidPress:" target="494" id="ADL-kq-SjZ"/>
+                        </connections>
                     </button>
                     <button horizontalHuggingPriority="249" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4k9-eQ-arQ" userLabel="buttonUtility">
                         <rect key="frame" x="176" y="308" width="160" height="32"/>
@@ -420,6 +423,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonUtilityDidPress:" target="494" id="1y2-FA-mRT"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U" userLabel="buttonQuit">
                         <rect key="frame" x="400" y="308" width="150" height="32"/>
@@ -453,7 +459,9 @@
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="buttonFIDO" destination="FlF-Id-KYb" id="rFV-Ou-wu5"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
+                <outlet property="buttonUtility" destination="4k9-eQ-arQ" id="sGk-lL-mfK"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
