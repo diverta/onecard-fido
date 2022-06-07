@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolLogFile.h"
+#import "UtilityCommand.h"
 
 @interface AppDelegate ()
 
@@ -15,6 +16,9 @@
     @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
+
+    @property (nonatomic) UtilityCommand    *utilityCommand;
+
 @end
 
 @implementation AppDelegate
@@ -25,6 +29,9 @@
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // コマンドクラスの初期化
+        [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -55,8 +62,8 @@
     }
 
     - (IBAction)buttonUtilityDidPress:(id)sender {
-        // TODO: 仮の実装です。
-        [self appendLogMessage:MSG_APP_FUNC_NOT_SUPPORTED];
+        // ユーティリティー画面を開く
+        [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
