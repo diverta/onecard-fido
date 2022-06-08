@@ -13,20 +13,22 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_tiny_tft);
 
-static const struct device *spi_dev;
+//
+// デバイスの初期化
+//
+#ifdef CONFIG_USE_TINY_TFT
+#include "app_tiny_tft_define.h"
 
+// 制御用GPIO
+static const struct device *m_tft_rst, *m_tft_d_c, *m_tft_led;
+
+// SPI
+static const struct device *spi_dev;
 static const struct spi_config spi_cfg = {
     .operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8),
     .frequency = 4000000,
     .slave = 0,
 };
-
-//
-// TFTの初期化
-//
-#include "app_tiny_tft_define.h"
-
-static const struct device *m_tft_rst, *m_tft_d_c, *m_tft_led;
 
 static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gpio_flags_t flags)
 {
@@ -49,15 +51,6 @@ static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gp
     return dev;
 }
 
-bool app_tiny_tft_initialize(void)
-{
-    return true;
-}
-
-//
-// デバイスの初期化
-//
-#ifdef CONFIG_USE_TINY_TFT
 static int app_tiny_tft_init(const struct device *dev)
 {
     // SPI（spi4）デバイス初期化
@@ -81,3 +74,11 @@ static int app_tiny_tft_init(const struct device *dev)
 
 SYS_INIT(app_tiny_tft_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
 #endif
+
+//
+// TFTの初期化
+//
+bool app_tiny_tft_initialize(void)
+{
+    return true;
+}
