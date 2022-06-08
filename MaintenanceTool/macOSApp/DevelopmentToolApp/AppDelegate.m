@@ -6,19 +6,21 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
+#import "FIDOSettingCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
 @interface AppDelegate ()
 
-    @property (assign) IBOutlet NSWindow    *window;
-    @property (assign) IBOutlet NSButton    *buttonFIDO;
-    @property (assign) IBOutlet NSButton    *buttonUtility;
-    @property (assign) IBOutlet NSButton    *buttonQuit;
-    @property (assign) IBOutlet NSTextView  *textView;
+    @property (assign) IBOutlet NSWindow        *window;
+    @property (assign) IBOutlet NSButton        *buttonFIDO;
+    @property (assign) IBOutlet NSButton        *buttonUtility;
+    @property (assign) IBOutlet NSButton        *buttonQuit;
+    @property (assign) IBOutlet NSTextView      *textView;
 
-    @property (nonatomic) UtilityCommand    *utilityCommand;
+    @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
+    @property (nonatomic) UtilityCommand        *utilityCommand;
 
 @end
 
@@ -32,6 +34,7 @@
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
         
         // コマンドクラスの初期化
+        [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
     }
 
@@ -58,8 +61,8 @@
     }
 
     - (IBAction)buttonFIDODidPress:(id)sender {
-        // TODO: 仮の実装です。
-        [self appendLogMessage:MSG_APP_FUNC_NOT_SUPPORTED];
+        // FIDO設定画面を開く
+        [[self fidoSettingCommand] FIDOSettingWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonUtilityDidPress:(id)sender {
@@ -76,7 +79,5 @@
         // ウィンドウをすべて閉じたらアプリケーションを終了
         return YES;
     }
-
-#pragma mark - Private Functions
 
 @end
