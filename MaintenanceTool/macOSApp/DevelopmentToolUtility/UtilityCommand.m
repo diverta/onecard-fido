@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 #import "UtilityWindow.h"
@@ -34,8 +35,7 @@
             [self setUtilityWindow:[[UtilityWindow alloc] initWithWindowNibName:@"UtilityWindow"]];
             [self setToolVersionWindow:[[ToolVersionWindow alloc] initWithWindowNibName:@"ToolVersionWindow"]];
             // バージョン情報をセット
-            NSString *version = [NSString stringWithFormat:MSG_FORMAT_APP_VERSION,
-                                 [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]];
+            NSString *version = [NSString stringWithFormat:MSG_FORMAT_APP_VERSION, [ToolCommonFunc getAppVersionString]];
             [[self toolVersionWindow] setVersionInfoWithToolName:MSG_APP_NAME toolVersion:version toolCopyright:MSG_APP_COPYRIGHT];
         }
         return self;

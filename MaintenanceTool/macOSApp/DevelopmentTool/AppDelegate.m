@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
@@ -25,7 +26,7 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         // アプリケーション開始ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [self getAppVersionString]];
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -77,9 +78,5 @@
     }
 
 #pragma mark - Private Functions
-
-    - (NSString *)getAppVersionString {
-        return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-    }
 
 @end
