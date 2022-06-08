@@ -1,0 +1,3 @@
+&spi4 {
+    status = "okay";
+};
