@@ -28,6 +28,7 @@ build
 
 # ignore for macOS
 .DS_Store
+xcuserdata
 
 # ignore for nRF Connect SDK
 pyvenvs/ncs/.west

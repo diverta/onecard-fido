@@ -1,0 +1,83 @@
+//
+//  AppDelegate.m
+//  DevelopmentTool
+//
+//  Created by Makoto Morita on 2021/10/14.
+//
+#import "AppCommonMessage.h"
+#import "AppDelegate.h"
+#import "FIDOSettingCommand.h"
+#import "ToolCommonFunc.h"
+#import "ToolLogFile.h"
+#import "UtilityCommand.h"
+
+@interface AppDelegate ()
+
+    @property (assign) IBOutlet NSWindow        *window;
+    @property (assign) IBOutlet NSButton        *buttonFIDO;
+    @property (assign) IBOutlet NSButton        *buttonUtility;
+    @property (assign) IBOutlet NSButton        *buttonQuit;
+    @property (assign) IBOutlet NSTextView      *textView;
+
+    @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
+    @property (nonatomic) UtilityCommand        *utilityCommand;
+
+@end
+
+@implementation AppDelegate
+
+    - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+        // アプリケーション開始ログを出力
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
+
+        // テキストエリアの初期化
+        [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // コマンドクラスの初期化
+        [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
+        [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
+    }
+
+    - (void)applicationWillTerminate:(NSNotification *)notification {
+        // アプリケーションの終了ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_APP_TERMINATED];
+    }
+
+    - (void)appendLogMessage:(NSString *)message {
+        // テキストフィールドにメッセージを追加し、末尾に移動
+        if (message) {
+            [[self textView] setString:[[[self textView] string] stringByAppendingFormat:@"%@\n", message]];
+            [[self textView] performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
+        }
+    }
+
+#pragma mark - Functions for button handling
+
+    - (void)enableButtons:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonFIDO] setEnabled:enabled];
+        [[self buttonUtility] setEnabled:enabled];
+        [[self buttonQuit] setEnabled:enabled];
+    }
+
+    - (IBAction)buttonFIDODidPress:(id)sender {
+        // FIDO設定画面を開く
+        [[self fidoSettingCommand] FIDOSettingWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonUtilityDidPress:(id)sender {
+        // ユーティリティー画面を開く
+        [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonQuitDidPress:(id)sender {
+        // このアプリケーションを終了する
+        [NSApp terminate:sender];
+    }
+
+    - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+        // ウィンドウをすべて閉じたらアプリケーションを終了
+        return YES;
+    }
+
+@end
