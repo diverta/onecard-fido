@@ -7,6 +7,10 @@
 #ifndef APP_TINY_TFT_H
 #define APP_TINY_TFT_H
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool        app_tiny_tft_initialize(void);
+bool        app_tiny_tft_write(uint8_t *buf, size_t len);
 
 #ifdef __cplusplus
 }

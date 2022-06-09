@@ -82,3 +82,27 @@ bool app_tiny_tft_initialize(void)
 {
     return true;
 }
+
+//
+// データ転送関連
+//
+static struct spi_buf     m_tx_buf;
+static struct spi_buf_set m_tx_bufs;
+
+bool app_tiny_tft_write(uint8_t *buf, size_t len)
+{
+    // 転送バイトを設定
+    m_tx_buf.buf = buf;
+    m_tx_buf.len = len;
+
+    m_tx_bufs.buffers = &m_tx_buf;
+    m_tx_bufs.count = 1;
+
+    int ret = spi_write(spi_dev, &spi_cfg, &m_tx_bufs);
+    if (ret != 0) {
+        LOG_ERR("spi_write returns %d", ret);
+        return false;
+    }
+
+    return true;
+}
