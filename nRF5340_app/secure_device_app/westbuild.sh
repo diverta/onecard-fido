@@ -27,6 +27,10 @@ retrieve_prj_conf() {
     grep $1 ${CONFIG_FILE} | sed -e "s/.*\"\(.*\)\"/\1/"
 }
 
+retrieve_config_yesno() {
+    grep $1 $2 | sed -e "s/.*=\(.*\)/\1/"
+}
+
 # Enter Python3 venv
 source ${NCS_HOME}/bin/activate
 
@@ -50,6 +54,11 @@ else
         OVR_FILE=configuration/${BUILD_TARGET}/${HW_REV_STR}.conf
         if [ -f ${OVR_FILE} ]; then
             OVR_OPT="${OVR_OPT};${OVR_FILE}"
+            # Config for tiny TFT
+            USE_TFT=`retrieve_config_yesno CONFIG_USE_TINY_TFT ${OVR_FILE}`
+            if [ "${USE_TFT}" == "y" ]; then
+                DTS_OPT="${DTS_OPT};configuration/${BUILD_TARGET}/tiny_tft.overlay"
+            fi
         fi
     fi
     # Build for nRF5340

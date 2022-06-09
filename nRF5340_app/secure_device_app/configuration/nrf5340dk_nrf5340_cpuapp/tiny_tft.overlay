@@ -1,0 +1,26 @@
+/ {
+	aliases {
+		tftrst = &tft0;
+		tftdc  = &tft1;
+		tftled = &tft2;
+	};
+	tfts {
+		compatible = "gpio-leds";
+		tft0: tft_0 {
+			gpios = < &gpio1 0x0b 0x1 >;
+			label = "Reset";
+		};
+		tft1: tft_1 {
+			gpios = < &gpio1 0x0a 0x1 >;
+			label = "Command/Data control";
+		};
+		tft2: tft_2 {
+			gpios = < &gpio1 0x09 0x1 >;
+			label = "LED backlight control";
+		};
+	};
+};
+
+&spi4 {
+    status = "okay";
+};
