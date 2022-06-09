@@ -187,6 +187,12 @@
         <in>main.c</in>
       </df>
     </df>
+    <logicalFolder name="tiny_tft_lib"
+                   displayName="tiny_tft_lib"
+                   projectFiles="true">
+      <itemPath>../../TFT/tiny_tft_lib/tiny_tft.c</itemPath>
+      <itemPath>../../TFT/tiny_tft_lib/tiny_tft.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
       <itemPath>../../FIDO2Device/u2f_lib/u2f.h</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
@@ -221,6 +227,7 @@
     <Elem>../../CCID/piv_lib</Elem>
     <Elem>../../CCID/oath_lib</Elem>
     <Elem>../../FIDO2Device/util_lib</Elem>
+    <Elem>../../TFT/tiny_tft_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -786,6 +793,10 @@
       <item path="../../FIDO2Device/util_lib/rtcc.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../../FIDO2Device/util_lib/rtcc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../TFT/tiny_tft_lib/tiny_tft.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../../TFT/tiny_tft_lib/tiny_tft.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/configs.c"
             ex="false"
