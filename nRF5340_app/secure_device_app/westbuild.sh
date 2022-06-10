@@ -27,6 +27,10 @@ retrieve_prj_conf() {
     grep $1 ${CONFIG_FILE} | sed -e "s/.*\"\(.*\)\"/\1/"
 }
 
+retrieve_config_yesno() {
+    grep $1 $2 | sed -e "s/.*=\(.*\)/\1/"
+}
+
 # Enter Python3 venv
 source ${NCS_HOME}/bin/activate
 
@@ -38,6 +42,8 @@ if [ "$1" == "-f" ]; then
         exit 1
     fi
 else
+    # Config for BLE DFU
+    OVR_OPT="-DOVERLAY_CONFIG=overlay-smp.conf"
     # Config for target board
     HW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_HW_REV_STR`
     if [ -n "${HW_REV_STR}" ]; then
@@ -45,10 +51,19 @@ else
         if [ -f ${DTS_FILE} ]; then
             DTS_OPT="-DDTC_OVERLAY_FILE=${DTS_FILE}"
         fi
+        OVR_FILE=configuration/${BUILD_TARGET}/${HW_REV_STR}.conf
+        if [ -f ${OVR_FILE} ]; then
+            OVR_OPT="${OVR_OPT};${OVR_FILE}"
+            # Config for tiny TFT
+            USE_TFT=`retrieve_config_yesno CONFIG_USE_TINY_TFT ${OVR_FILE}`
+            if [ "${USE_TFT}" == "y" ]; then
+                DTS_OPT="${DTS_OPT};configuration/${BUILD_TARGET}/tiny_tft.overlay"
+            fi
+        fi
     fi
     # Build for nRF5340
     rm -rf build_signed
-    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DOVERLAY_CONFIG=overlay-smp.conf ${DTS_OPT}
+    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- ${OVR_OPT} ${DTS_OPT}
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1

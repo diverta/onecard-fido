@@ -29,6 +29,26 @@ config APP_SETTINGS_GENERATE_RSA2048_KEYPAIR
 	  Enables generating RSA-2048 new keypair
 
 #
+# Enable external RTCC
+#
+config USE_EXTERNAL_RTCC
+	bool "Use external RTCC"
+	default n
+	depends on I2C
+	help
+	  Enables using of RV-3028-C7 as external RTCC
+
+#
+# Enable tiny TFT display
+#
+config USE_TINY_TFT
+	bool "Use external tiny TFT display"
+	default n
+	depends on SPI
+	help
+	  Enables using of KWH009ST01-F01 as external TFT display
+
+#
 # Enable ATECC608A
 #
 config USE_ATECC608A

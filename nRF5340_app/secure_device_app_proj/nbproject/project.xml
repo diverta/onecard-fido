@@ -18,6 +18,7 @@
                 <sourceRootElem>../../CCID/openpgp_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/piv_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/oath_lib</sourceRootElem>
+                <sourceRootElem>../../FIDO2Device/util_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -1,6 +1,6 @@
 # Tiny TFT Library
 
-最新更新日：2022/5/18
+最終更新日：2022/5/30
 
 ## 概要
 
@@ -10,7 +10,7 @@
 
 使用するディスプレイは、FORMIKEというメーカーの「KWH009ST01-F01」になります。
 
-<img src="assets01/0002.jpg" width="300">
+<img src="assets01/0003.jpg" width="300">
 
 #### 特色
 - 外形寸法：`28`mm x `14`mm
@@ -20,6 +20,13 @@
 - 消費電力：`62mW`（`3.0`Vで動作時）
 - SPI接続
 
+## サンプルアプリ
+Arduino UNOで動作する「KWH009ST01-F01」の動作確認用サンプルアプリを制作しました。<br>
+ソースコードは、フォルダー[`tft_sample`](../../Research/TinyTFTLib/tft_sample)配下に格納しています。
+
+### [解説書](../../Research/TinyTFTLib/tft_sample/README.md)
+動作確認用サンプルアプリの構成について解説しています。
+
 ## 参考文献
 
 #### 動作確認方法
@@ -28,3 +35,6 @@
 
 - USING THE ST7735 1.8″ COLOR TFT DISPLAY WITH ARDUINO<br>
 https://www.electronics-lab.com/project/using-st7735-1-8-color-tft-display-arduino/
+
+#### [TFTライブラリーの解析](../../Research/TinyTFTLib/ADATFTLIB.md)
+「KWH009ST01-F01」をArduino UNOに接続するためのライブラリー（`Adafruit-ST7735-Library`／`Adafruit-GFX-Library`）について、解析を行いました。
