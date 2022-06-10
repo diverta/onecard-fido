@@ -1615,26 +1615,26 @@ CR1216/1225&lt;br&gt;
 <wire x1="4.02" y1="-3.78" x2="4.62" y2="-3.78" width="0.1" layer="46" curve="-180"/>
 <wire x1="4.02" y1="-4.58" x2="4.62" y2="-4.58" width="0.1" layer="46" curve="180"/>
 <smd name="FG4" x="4.32" y="-4.18" dx="1" dy="1.8" layer="1" roundness="100"/>
-<smd name="A1" x="-3.2" y="0.625" dx="0.6" dy="1.05" layer="1" stop="no" cream="no"/>
-<smd name="A4" x="-2.4" y="0.625" dx="0.6" dy="1.05" layer="1" stop="no" cream="no"/>
+<smd name="A1" x="-3.2" y="0.625" dx="0.58" dy="1.05" layer="1" stop="no" cream="no"/>
+<smd name="A4" x="-2.4" y="0.625" dx="0.58" dy="1.05" layer="1" stop="no" cream="no"/>
 <rectangle x1="-3.475" y1="0.125" x2="-2.925" y2="1.125" layer="31"/>
 <rectangle x1="-2.675" y1="0.125" x2="-2.125" y2="1.125" layer="31"/>
 <rectangle x1="-3.55" y1="0.05" x2="-2.85" y2="1.2" layer="29"/>
 <rectangle x1="-2.75" y1="0.05" x2="-2.05" y2="1.2" layer="29"/>
-<smd name="B4" x="2.4" y="0.625" dx="0.6" dy="1.05" layer="1" stop="no" cream="no"/>
-<smd name="B1" x="3.2" y="0.625" dx="0.6" dy="1.05" layer="1" stop="no" cream="no"/>
+<smd name="B4" x="2.4" y="0.625" dx="0.58" dy="1.05" layer="1" stop="no" cream="no"/>
+<smd name="B1" x="3.2" y="0.625" dx="0.58" dy="1.05" layer="1" stop="no" cream="no"/>
 <rectangle x1="2.125" y1="0.125" x2="2.675" y2="1.125" layer="31"/>
 <rectangle x1="2.925" y1="0.125" x2="3.475" y2="1.125" layer="31"/>
 <rectangle x1="2.05" y1="0.05" x2="2.75" y2="1.2" layer="29"/>
 <rectangle x1="2.85" y1="0.05" x2="3.55" y2="1.2" layer="29"/>
-<smd name="B8" x="-1.75" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="A5" x="-1.25" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="B7" x="-0.75" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="A6" x="-0.25" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="A7" x="0.25" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="B6" x="0.75" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="A8" x="1.25" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
-<smd name="B5" x="1.75" y="0.575" dx="0.3" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="B8" x="-1.75" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="A5" x="-1.25" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="B7" x="-0.75" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="A6" x="-0.25" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="A7" x="0.25" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="B6" x="0.75" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="A8" x="1.25" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
+<smd name="B5" x="1.75" y="0.575" dx="0.28" dy="1.15" layer="1" stop="no" cream="no"/>
 <rectangle x1="1.625" y1="0.025" x2="1.875" y2="1.125" layer="31"/>
 <rectangle x1="1.125" y1="0.025" x2="1.375" y2="1.125" layer="31"/>
 <rectangle x1="0.625" y1="0.025" x2="0.875" y2="1.125" layer="31"/>
