@@ -1,6 +1,6 @@
 # BT40 Slim Board（rev1.1）
 
-最新更新日：2022/5/18
+最新更新日：2022/6/10
 
 ## 概要
 
@@ -12,13 +12,14 @@
 - 外形寸法＝3cm x 3cm
 - FIDO2機能（WebAuthn）をサポート
 - FIDO2機能はUSB HID／BLEの両トランスポートをサポート
-- USB給電／ボタン電池の２電源方式
 - 署名検証機能付きBLEブートローダーを採用し、不正ファームウェアの書込みを抑止
 - PIVカード／OpenPGPカードのエミュレーション機能を搭載
+- USB給電／ボタン電池の２電源方式
+- リアルタイムクロックモジュールを搭載
 
 ### [BT40 Slim Board回路図](../../FIDO2Device/BT40SlimBoard/pcb_rev1_1/SECUREBRD_002.pdf)
 
-Fanstel社の評価基板「[EV-BT40](https://www.mouser.jp/ProductDetail/Fanstel/EV-BT40?qs=zW32dvEIR3sMMGv%2FNMlB9A%3D%3D)」をベースとし、電池電源の増設と、回路簡略化・配線変更を行っております。
+Fanstel社の評価基板「[EV-BT40](https://www.mouser.jp/ProductDetail/Fanstel/EV-BT40?qs=zW32dvEIR3sMMGv%2FNMlB9A%3D%3D)」をベースとし、電池電源、リアルタイムクロックモジュールの増設と、回路簡略化・配線変更を行っております。
 
 ### [nRF5340アプリケーション](../../nRF5340_app/README.md)
 
