@@ -73,10 +73,10 @@ SYS_INIT(app_tiny_tft_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
 //
 // TFTの初期化
 //
-bool app_tiny_tft_initialize(void)
+bool app_tiny_tft_initialize(uint32_t frequency)
 {
-    spi_cfg.operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8);
-    spi_cfg.frequency = 32000000;
+    spi_cfg.operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8) | SPI_TRANSFER_MSB;
+    spi_cfg.frequency = frequency;
     spi_cfg.slave = 0;
 
     return true;
@@ -111,17 +111,17 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
 //
 void app_tiny_tft_set_rst(int value)
 {
-    gpio_pin_set(m_tft_rst, TFT_RST_GPIO_PIN, value);
+    gpio_pin_set(m_tft_rst, TFT_RST_GPIO_PIN, value ? 0 : 1);
 }
 
 void app_tiny_tft_set_d_c(int value)
 {
-    gpio_pin_set(m_tft_d_c, TFT_D_C_GPIO_PIN, value);
+    gpio_pin_set(m_tft_d_c, TFT_D_C_GPIO_PIN, value ? 0 : 1);
 }
 
 void app_tiny_tft_set_led(int value)
 {
-    gpio_pin_set(m_tft_led, TFT_LED_GPIO_PIN, value);
+    gpio_pin_set(m_tft_led, TFT_LED_GPIO_PIN, value ? 0 : 1);
 }
 
 void app_tiny_tft_delay_ms(uint32_t ms)
