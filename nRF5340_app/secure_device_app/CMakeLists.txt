@@ -63,6 +63,7 @@ target_sources(app PRIVATE
     ../../CCID/openpgp_lib/ccid_openpgp_pin.c
     ../../CCID/openpgp_lib/ccid_pin_auth.c
     ../../CCID/oath_lib/ccid_oath.c
+    ../../TFT/tiny_tft_lib/tiny_tft.c
 )
 target_include_directories(app PRIVATE 
     include
@@ -75,4 +76,5 @@ target_include_directories(app PRIVATE
     ../../CCID/oath_lib
     ../../CCID/openpgp_lib
     ../../CCID/piv_lib
+    ../../TFT/tiny_tft_lib
 )
