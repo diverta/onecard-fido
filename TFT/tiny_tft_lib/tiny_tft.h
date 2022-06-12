@@ -11,6 +11,10 @@
 extern "C" {
 #endif
 
+//
+// 関数群
+//
+void        tiny_tft_init_display(void);
 
 #ifdef __cplusplus
 }

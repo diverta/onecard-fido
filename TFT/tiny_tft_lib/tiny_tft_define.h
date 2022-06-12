@@ -97,6 +97,9 @@ extern "C" {
 #define ST7735_YELLOW       ST77XX_YELLOW
 #define ST7735_ORANGE       ST77XX_ORANGE
 
+#define HIGH                1
+#define LOW                 0
+
 #ifdef __cplusplus
 }
 #endif
