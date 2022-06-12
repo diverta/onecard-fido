@@ -8,6 +8,13 @@
 #include "tiny_tft_const.h"
 #include "tiny_tft_define.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(tiny_tft);
+#endif
+
 //
 // データ転送関連
 //
@@ -41,6 +48,9 @@ static uint8_t orientation;     // Display rotation (0 thru 3)
 static bool wrap;               // If set, 'wrap' text at right edge of display
 static bool _cp437;             // If set, use correct CP437 charset (default is off)
 
+//
+// TFTディスプレイ初期化関連
+//
 static void tiny_tft_initialize(void)
 {
     // Initialization values for graphics
@@ -62,7 +72,7 @@ static void tiny_tft_initialize(void)
 static void begin_spi(uint32_t freq) 
 {
     // Initialize spi config
-    app_tiny_tft_initialize();
+    app_tiny_tft_initialize(freq);
 
     // Init basic control pins common to all connection types
     app_tiny_tft_set_d_c(HIGH);
@@ -84,7 +94,9 @@ static void send_command(uint8_t command_byte, uint8_t *data_bytes, uint8_t data
 
     // Send the data bytes
     app_tiny_tft_set_d_c(HIGH);
-    app_tiny_tft_write(data_bytes, data_size);
+    if (data_size > 0) {
+        app_tiny_tft_write(data_bytes, data_size);
+    }
 }
 
 static void initialize_display(uint8_t *addr) 
