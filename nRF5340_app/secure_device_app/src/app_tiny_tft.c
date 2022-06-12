@@ -24,11 +24,7 @@ static const struct device *m_tft_rst, *m_tft_d_c, *m_tft_led;
 
 // SPI
 static const struct device *spi_dev;
-static const struct spi_config spi_cfg = {
-    .operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8),
-    .frequency = 4000000,
-    .slave = 0,
-};
+static struct spi_config spi_cfg;
 
 static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gpio_flags_t flags)
 {
@@ -73,13 +69,16 @@ static int app_tiny_tft_init(const struct device *dev)
 }
 
 SYS_INIT(app_tiny_tft_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
-#endif
 
 //
 // TFTの初期化
 //
 bool app_tiny_tft_initialize(void)
 {
+    spi_cfg.operation = SPI_OP_MODE_MASTER | SPI_WORD_SET(8);
+    spi_cfg.frequency = 32000000;
+    spi_cfg.slave = 0;
+
     return true;
 }
 
@@ -106,3 +105,5 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
 
     return true;
 }
+
+#endif
