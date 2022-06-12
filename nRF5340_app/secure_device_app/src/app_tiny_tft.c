@@ -106,4 +106,27 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
     return true;
 }
 
+//
+// 制御用GPIO関連
+//
+void app_tiny_tft_set_rst(int value)
+{
+    gpio_pin_set(m_tft_rst, TFT_RST_GPIO_PIN, value);
+}
+
+void app_tiny_tft_set_d_c(int value)
+{
+    gpio_pin_set(m_tft_d_c, TFT_D_C_GPIO_PIN, value);
+}
+
+void app_tiny_tft_set_led(int value)
+{
+    gpio_pin_set(m_tft_led, TFT_LED_GPIO_PIN, value);
+}
+
+void app_tiny_tft_delay_ms(uint32_t ms)
+{
+    k_sleep(K_MSEC(ms));
+}
+
 #endif

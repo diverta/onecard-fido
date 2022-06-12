@@ -20,6 +20,10 @@ extern "C" {
 //
 bool        app_tiny_tft_initialize(void);
 bool        app_tiny_tft_write(uint8_t *buf, size_t len);
+void        app_tiny_tft_set_rst(int value);
+void        app_tiny_tft_set_d_c(int value);
+void        app_tiny_tft_set_led(int value);
+void        app_tiny_tft_delay_ms(uint32_t ms);
 
 #ifdef __cplusplus
 }
