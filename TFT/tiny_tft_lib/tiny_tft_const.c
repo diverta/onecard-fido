@@ -4,10 +4,11 @@
  *
  * Created on 2022/06/12, 10:02
  */
+#include <stdint.h>
 #include "tiny_tft_define.h"
 
 // 7735R init, part 1 (red or green tab)
-static const uint8_t init_command_1[] = {
+static uint8_t init_command_1[] = {
     15,                             // 15 commands in list:
     ST77XX_SWRESET,   ST_CMD_DELAY, //  1: Software reset, 0 args, w/delay
       150,                          //     150 ms delay
@@ -46,7 +47,7 @@ static const uint8_t init_command_1[] = {
 };
 
 // 7735R init, part 2 (mini 160x80)
-static const uint8_t init_command_2[] = {
+static uint8_t init_command_2[] = {
     2,                              //  2 commands in list:
     ST77XX_CASET,   4,              //  1: Column addr set, 4 args, no delay:
       0x00, 0x00,                   //     XSTART = 0
@@ -57,7 +58,7 @@ static const uint8_t init_command_2[] = {
 };
 
 // 7735R init, part 3 (red or green tab)
-static const uint8_t init_command_3[] = {
+static uint8_t init_command_3[] = {
     4,                              //  4 commands in list:
     ST7735_GMCTRP1, 16      ,       //  1: Gamma Adjustments (pos. polarity), 16 args + delay:
       0x02, 0x1c, 0x07, 0x12,       //     (Not entirely necessary, but provides
