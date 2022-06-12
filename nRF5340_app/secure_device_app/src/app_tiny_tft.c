@@ -140,6 +140,7 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
 {
     (void)buf;
     (void)len;
+    return true;
 }
 
 void app_tiny_tft_set_rst(int value)
