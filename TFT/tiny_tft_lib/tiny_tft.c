@@ -75,6 +75,7 @@ static void begin_spi(uint32_t freq)
     app_tiny_tft_initialize(freq);
 
     // Init basic control pins common to all connection types
+    app_tiny_tft_set_c_s(HIGH);
     app_tiny_tft_set_d_c(HIGH);
 
     // Perform reset
@@ -197,7 +198,7 @@ void tiny_tft_init_display(void)
     tiny_tft_initialize();
     
     // Default SPI data clock frequency
-    begin_spi(32000000);
+    begin_spi(4000000);
 
     // Initialization code
     initialize_display(tiny_tft_const_init_command_1());
@@ -209,5 +210,5 @@ void tiny_tft_init_display(void)
     send_command(ST77XX_MADCTL, &data, 1);
 
     // Set origin of (0,0) and orientation of TFT display
-    set_origin_and_orientation(0);
+    set_origin_and_orientation(3);
 }

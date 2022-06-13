@@ -16,6 +16,11 @@ extern "C" {
 //
 // TFT制御用GPIO関連
 //
+#define TFT_C_S_NODE        DT_ALIAS(tftcs)
+#define TFT_C_S_GPIO_LABEL  DT_GPIO_LABEL(TFT_C_S_NODE, gpios)
+#define TFT_C_S_GPIO_PIN    DT_GPIO_PIN(TFT_C_S_NODE, gpios)
+#define TFT_C_S_GPIO_FLAGS  (GPIO_OUTPUT | DT_GPIO_FLAGS(TFT_C_S_NODE, gpios))
+
 #define TFT_RST_NODE        DT_ALIAS(tftrst)
 #define TFT_RST_GPIO_LABEL  DT_GPIO_LABEL(TFT_RST_NODE, gpios)
 #define TFT_RST_GPIO_PIN    DT_GPIO_PIN(TFT_RST_NODE, gpios)

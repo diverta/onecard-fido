@@ -20,7 +20,7 @@ LOG_MODULE_REGISTER(app_tiny_tft);
 #include "app_tiny_tft_define.h"
 
 // 制御用GPIO
-static const struct device *m_tft_rst, *m_tft_d_c, *m_tft_led;
+static const struct device *m_tft_c_s, *m_tft_rst, *m_tft_d_c, *m_tft_led;
 
 // SPI
 static const struct device *spi_dev;
@@ -49,17 +49,18 @@ static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gp
 
 static int app_tiny_tft_init(const struct device *dev)
 {
-    // SPI（spi4）デバイス初期化
+    // SPI（spi2）デバイス初期化
     (void)dev;
-    spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi4));
+    spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi2));
     if (device_is_ready(spi_dev) == false) {
-        LOG_ERR("SPI master #4 is not ready");
+        LOG_ERR("SPI master #2 is not ready");
         return -ENOTSUP;
     }
 
-    LOG_INF("SPI master #4 is ready");
+    LOG_INF("SPI master #2 is ready");
 
     // 制御用GPIOデバイス初期化
+    m_tft_c_s = initialize_gpio(TFT_C_S_GPIO_LABEL, TFT_C_S_GPIO_PIN, TFT_C_S_GPIO_FLAGS);
     m_tft_rst = initialize_gpio(TFT_RST_GPIO_LABEL, TFT_RST_GPIO_PIN, TFT_RST_GPIO_FLAGS);
     m_tft_d_c = initialize_gpio(TFT_D_C_GPIO_LABEL, TFT_D_C_GPIO_PIN, TFT_D_C_GPIO_FLAGS);
     m_tft_led = initialize_gpio(TFT_LED_GPIO_LABEL, TFT_LED_GPIO_PIN, TFT_LED_GPIO_FLAGS);
@@ -97,7 +98,10 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
     m_tx_bufs.buffers = &m_tx_buf;
     m_tx_bufs.count = 1;
 
+    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, 1);
     int ret = spi_write(spi_dev, &spi_cfg, &m_tx_bufs);
+    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, 0);
+
     if (ret != 0) {
         LOG_ERR("spi_write returns %d", ret);
         return false;
@@ -109,6 +113,11 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
 //
 // 制御用GPIO関連
 //
+void app_tiny_tft_set_c_s(int value)
+{
+    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, value ? 0 : 1);
+}
+
 void app_tiny_tft_set_rst(int value)
 {
     gpio_pin_set(m_tft_rst, TFT_RST_GPIO_PIN, value ? 0 : 1);
@@ -131,8 +140,9 @@ void app_tiny_tft_delay_ms(uint32_t ms)
 
 #else
 
-bool app_tiny_tft_initialize(void)
+bool app_tiny_tft_initialize(uint32_t frequency)
 {
+    (void)frequency;
     return true;
 }
 
@@ -141,6 +151,11 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
     (void)buf;
     (void)len;
     return true;
+}
+
+void app_tiny_tft_set_c_s(int value)
+{
+    (void)value;
 }
 
 void app_tiny_tft_set_rst(int value)
