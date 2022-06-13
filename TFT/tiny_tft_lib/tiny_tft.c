@@ -198,7 +198,7 @@ void tiny_tft_init_display(void)
     tiny_tft_initialize();
     
     // Default SPI data clock frequency
-    begin_spi(2000000);
+    begin_spi(1000000);
 
     // Initialization code
     initialize_display(tiny_tft_const_init_command_1());

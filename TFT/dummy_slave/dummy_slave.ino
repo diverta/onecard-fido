@@ -36,7 +36,7 @@ void loop() {
   if (received) {
     bytes[cnt++] = Slavereceived;
     received= false;
-    if (cnt == 92) {
+    if (cnt == 91) {
       dump_byte_array(bytes, cnt);
     }
   }
