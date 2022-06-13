@@ -18,7 +18,7 @@ extern "C" {
 //
 // 関数群
 //
-bool        app_tiny_tft_initialize(void);
+bool        app_tiny_tft_initialize(uint32_t frequency);
 bool        app_tiny_tft_write(uint8_t *buf, size_t len);
 void        app_tiny_tft_set_rst(int value);
 void        app_tiny_tft_set_d_c(int value);

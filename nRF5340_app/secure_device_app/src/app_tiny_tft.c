@@ -131,8 +131,9 @@ void app_tiny_tft_delay_ms(uint32_t ms)
 
 #else
 
-bool app_tiny_tft_initialize(void)
+bool app_tiny_tft_initialize(uint32_t frequency)
 {
+    (void)frequency;
     return true;
 }
 
