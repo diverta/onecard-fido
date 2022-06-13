@@ -22,17 +22,17 @@
 
 ## ライブラリーの詳細
 
-#### [Tiny TFT Library](../../TFT/tiny_tft_lib/README.md)
+#### [Tiny TFT Library](../TFT/tiny_tft_lib/README.md)
 ライブラリーの構成について記載しています。
 
 ## 調査用アプリ
 Arduino UNOで動作する「KWH009ST01-F01」の動作確認用サンプルアプリを制作しました。<br>
 ソースコードは、フォルダー[`tft_sample`](../../TFT/tft_sample)配下に格納しています。
 
-#### [TFTサンプルアプリ](../../TFT/tft_sample/README.md)
+#### [TFTサンプルアプリ](../TFT/tft_sample/README.md)
 超小型TFTディスプレイ「KWH009ST01-F01」の動作確認用サンプルアプリについて解説しています。
 
-#### [SPIダミースレーブアプリ](../../TFT/dummy_slave)
+#### [SPIダミースレーブアプリ](../TFT/dummy_slave)
 TFTサンプルアプリがディスプレイに転送するコマンド／データバイトを、ダンプ出力させるためのアプリです。
 
 ## 参考文献
@@ -44,5 +44,5 @@ TFTサンプルアプリがディスプレイに転送するコマンド／デ�
 - USING THE ST7735 1.8″ COLOR TFT DISPLAY WITH ARDUINO<br>
 https://www.electronics-lab.com/project/using-st7735-1-8-color-tft-display-arduino/
 
-#### [TFTライブラリーの解析](../../TFT/ADATFTLIB.md)
+#### [TFTライブラリーの解析](../TFT/ADATFTLIB.md)
 「KWH009ST01-F01」をArduino UNOに接続するためのライブラリー（`Adafruit-ST7735-Library`／`Adafruit-GFX-Library`）について、解析を行いました。
