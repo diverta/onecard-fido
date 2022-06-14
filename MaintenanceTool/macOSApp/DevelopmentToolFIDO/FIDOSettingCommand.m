@@ -63,4 +63,11 @@
         }
     }
 
+#pragma mark - For FIDO attestation window
+
+    - (bool)checkUSBHIDConnection {
+        // TODO: USBポートに接続されていない場合はfalse
+        return true;
+    }
+
 @end

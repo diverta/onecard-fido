@@ -18,5 +18,13 @@
 #pragma mark - 共通
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
+#define MSG_BUTTON_SELECT           @"選択"
+
+#pragma mark - FIDO鍵・証明書設定
+#define MSG_PROMPT_USB_PORT_SET     @"FIDO認証器をUSBポートに装着してから実行してください。"
+#define MSG_PROMPT_SELECT_PKEY_PATH @"秘密鍵ファイル(PEM)のパスを選択してください"
+#define MSG_PROMPT_SELECT_CRT_PATH  @"証明書ファイル(CRT)のパスを選択してください"
+#define MSG_INSTALL_SKEY_CERT       @"FIDO認証器に鍵・証明書をインストールします。"
+#define MSG_PROMPT_INSTL_SKEY_CERT  @"インストールを実行しますか？"
 
 #endif /* AppCommonMessage_h */
