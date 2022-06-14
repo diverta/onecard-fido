@@ -11,6 +11,9 @@
 
 @interface AppCommand : NSObject
 
+    // 上位クラスの参照を保持
+    @property (nonatomic, weak) id delegate;
+
     - (id)initWithDelegate:(id)delegate;
 
 @end

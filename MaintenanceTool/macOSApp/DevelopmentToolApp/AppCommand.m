@@ -8,9 +8,6 @@
 
 @interface AppCommand ()
 
-    // 上位クラスの参照を保持
-    @property (nonatomic, weak) id                      delegate;
-
 @end
 
 @implementation AppCommand

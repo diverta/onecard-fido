@@ -61,7 +61,8 @@
                 [self fidoAttestationWindowWillOpen];
                 break;
             case COMMAND_FIDO_ATTESTATION_RESET:
-                // TODO: FIDO鍵・証明書を消去
+                // FIDO鍵・証明書を消去
+                [self doFIDOAttestationReset];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -90,12 +91,25 @@
         // 実行コマンドにより処理分岐
         switch ([[self fidoAttestationWindow] commandToPerform]) {
             case COMMAND_FIDO_ATTESTATION_INSTALL:
-                // TODO: FIDO鍵・証明書をインストール
+                // FIDO鍵・証明書をインストール
+                [self doFIDOAttestationInstall];
                 break;
             default:
                 // メイン画面に制御を戻す
                 break;
         }
+    }
+
+#pragma mark - FIDO setting functions
+
+    - (void)doFIDOAttestationInstall {
+        // TODO: FIDO鍵・証明書をインストール
+        [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
+    }
+
+    - (void)doFIDOAttestationReset {
+        // TODO: FIDO鍵・証明書を消去
+        [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
     }
 
     - (bool)checkUSBHIDConnection {
