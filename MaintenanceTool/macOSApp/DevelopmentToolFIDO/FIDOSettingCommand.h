@@ -7,9 +7,10 @@
 #ifndef FIDOSettingCommand_h
 #define FIDOSettingCommand_h
 
-@interface FIDOSettingCommand : NSObject
+#import "AppCommand.h"
 
-    - (id)initWithDelegate:(id)delegate;
+@interface FIDOSettingCommand : AppCommand
+
     - (void)FIDOSettingWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
 @end

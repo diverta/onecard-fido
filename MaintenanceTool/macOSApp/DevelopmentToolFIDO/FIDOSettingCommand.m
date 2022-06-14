@@ -21,12 +21,8 @@
 
 @implementation FIDOSettingCommand
 
-    - (id)init {
-        return [self initWithDelegate:nil];
-    }
-
     - (id)initWithDelegate:(id)delegate {
-        self = [super init];
+        self = [super initWithDelegate:delegate];
         if (self) {
             // 画面のインスタンスを生成
             [self setFidoSettingWindow:[[FIDOSettingWindow alloc] initWithWindowNibName:@"FIDOSettingWindow"]];

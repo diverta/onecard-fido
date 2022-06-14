@@ -11,7 +11,7 @@
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow        *window;
     @property (assign) IBOutlet NSButton        *buttonFIDO;
@@ -78,6 +78,18 @@
     - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
         // ウィンドウをすべて閉じたらアプリケーションを終了
         return YES;
+    }
+
+#pragma mark - Call back from AppCommand
+
+    - (void)enableButtonsOfMainUI:(bool)enable {
+        // メニュー、ボタンを活性化／非活性化
+        [self enableButtons:enable];
+    }
+
+    - (void)notifyMessageToMainUI:(NSString *)message {
+        // 画面上のテキストエリアにメッセージを表示する
+        [self appendLogMessage:message];
     }
 
 @end
