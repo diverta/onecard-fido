@@ -15,4 +15,8 @@
 #define MSG_APP_COPYRIGHT           @"Copyright (c) 2017-2022 Diverta Inc."
 #define MSG_FORMAT_APP_VERSION      @"Version %@"
 
+#pragma mark - 共通
+#define MSG_INVALID_FIELD           @"入力値が不正です。"
+#define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
+
 #endif /* AppCommonMessage_h */
