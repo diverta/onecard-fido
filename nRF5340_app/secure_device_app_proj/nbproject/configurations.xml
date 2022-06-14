@@ -77,6 +77,7 @@
     <logicalFolder name="oath_lib" displayName="oath_lib" projectFiles="true">
       <itemPath>../../CCID/oath_lib/ccid_oath.c</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_define.h</itemPath>
     </logicalFolder>
     <logicalFolder name="openpgp_lib" displayName="openpgp_lib" projectFiles="true">
       <itemPath>../../CCID/openpgp_lib/README.md</itemPath>
@@ -277,6 +278,11 @@
       <item path="../../CCID/oath_lib/ccid_oath.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../../CCID/oath_lib/ccid_oath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/README.md" ex="false" tool="3" flavor2="0">
       </item>
