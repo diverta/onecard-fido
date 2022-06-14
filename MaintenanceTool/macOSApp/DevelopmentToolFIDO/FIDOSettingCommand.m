@@ -30,6 +30,7 @@
             [self setFidoSettingWindow:[[FIDOSettingWindow alloc] initWithWindowNibName:@"FIDOSettingWindow"]];
             [self setFidoAttestationWindow:[[FIDOAttestationWindow alloc] initWithWindowNibName:@"FIDOAttestationWindow"]];
             // このクラスの参照を引き渡し
+            [[self fidoSettingWindow] setCommandRef:self];
             [[self fidoAttestationWindow] setCommandRef:self];
         }
         return self;
