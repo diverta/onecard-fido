@@ -52,6 +52,12 @@
         [[self fidoSettingWindow] close];
         // 実行コマンドにより処理分岐
         switch ([[self fidoSettingWindow] commandToPerform]) {
+            case COMMAND_FIDO_ATTESTATION:
+                // TODO: FIDO鍵・証明書インストール画面を表示
+                break;
+            case COMMAND_FIDO_ATTESTATION_RESET:
+                // TODO: FIDO鍵・証明書を消去
+                break;
             default:
                 // メイン画面に制御を戻す
                 break;

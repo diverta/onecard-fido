@@ -41,12 +41,12 @@
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
         // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_VIEW_APP_VERSION];
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION];
     }
 
     - (IBAction)buttonResetDidPress:(id)sender {
         // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_VIEW_LOG_FILE];
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION_RESET];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
