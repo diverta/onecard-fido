@@ -35,7 +35,6 @@
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
         [[self fidoSettingWindow] setParentWindowRef:parentWindow];
-        [[self fidoSettingWindow] setCommandRef:self];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self fidoSettingWindow] window];
         FIDOSettingCommand * __weak weakSelf = self;

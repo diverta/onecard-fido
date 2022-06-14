@@ -16,8 +16,6 @@
     @property (assign) IBOutlet NSButton                   *buttonCancel;
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
-    // コマンドクラスの参照を保持
-    @property (nonatomic, weak) UtilityCommand             *utilityCommand;
     // 実行するコマンドを保持
     @property (nonatomic) Command                           command;
 
@@ -32,11 +30,6 @@
     - (void)setParentWindowRef:(id)ref {
         // 親画面の参照を保持
         [self setParentWindow:(NSWindow *)ref];
-    }
-
-    - (void)setCommandRef:(id)ref {
-        // コマンドクラスの参照を保持
-        [self setUtilityCommand:(UtilityCommand *)ref];
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {

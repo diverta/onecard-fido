@@ -12,7 +12,6 @@
 @interface FIDOSettingWindow : NSWindowController
 
     - (void)setParentWindowRef:(id)ref;
-    - (void)setCommandRef:(id)ref;
     - (Command)commandToPerform;
 
 @end
