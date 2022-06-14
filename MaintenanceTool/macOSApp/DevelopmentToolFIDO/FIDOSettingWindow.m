@@ -4,9 +4,11 @@
 //
 //  Created by Makoto Morita on 2022/06/08.
 //
+#import "AppCommonMessage.h"
 #import "AppDefine.h"
-#import "UtilityCommand.h"
 #import "FIDOSettingWindow.h"
+#import "ToolPopupWindow.h"
+#import "UtilityCommand.h"
 
 @interface FIDOSettingWindow ()
 
@@ -38,8 +40,9 @@
     }
 
     - (IBAction)buttonResetDidPress:(id)sender {
-        // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION_RESET];
+        // 処理開始前に確認
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_SKEY_CERT informativeText:MSG_PROMPT_ERASE_SKEY_CERT
+                                             withObject:self forSelector:@selector(resumeFIDOAttestationReset) parentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -52,6 +55,15 @@
         [self setCommand:command];
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (void)resumeFIDOAttestationReset {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION_RESET];
     }
 
 #pragma mark - Interface for parameters
