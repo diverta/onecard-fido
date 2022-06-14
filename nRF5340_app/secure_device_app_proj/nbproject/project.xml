@@ -19,6 +19,7 @@
                 <sourceRootElem>../../CCID/piv_lib</sourceRootElem>
                 <sourceRootElem>../../CCID/oath_lib</sourceRootElem>
                 <sourceRootElem>../../FIDO2Device/util_lib</sourceRootElem>
+                <sourceRootElem>../../TFT/tiny_tft_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
