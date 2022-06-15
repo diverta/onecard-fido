@@ -19,9 +19,10 @@ fido_log_module_register(ccid_oath);
 //
 // アカウントデータ格納用
 //
-static char m_account_name[MAX_NAME_LEN];
-static char m_secret[MAX_KEY_LEN];
+static char    m_account_name[MAX_NAME_LEN];
+static char    m_secret[MAX_KEY_LEN];
 static uint8_t m_property;
+static uint8_t m_challange[MAX_CHALLENGE_LEN];
 
 static const uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
 
@@ -152,6 +153,36 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
         offset++;
     }
 
+    //
+    // カウンターを抽出
+    //
+    if (capdu->data[offset] == OATH_TAG_COUNTER) {
+        offset++;
+
+        // データ長のチェック
+        if (offset >= capdu->lc) {
+            return SW_WRONG_LENGTH;
+        }
+        uint8_t counter_len = capdu->data[offset++];
+        if (counter_len != 4) {
+            return SW_WRONG_DATA;
+        }
+        uint8_t counter_offset = offset;
+        if (counter_offset >= capdu->lc) {
+            return SW_WRONG_LENGTH;
+        }
+
+        // カウンターを保持
+        memcpy(m_challange + 4, capdu->data + counter_offset, counter_len);
+        offset += counter_len;
+    }
+
+    // 全体データ長のチェック
+    if (offset > capdu->lc) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // TODO: 受領データを永続化
     return SW_NO_ERROR;
 }
 
