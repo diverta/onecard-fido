@@ -12,6 +12,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for debug hex dump data
+#define LOG_HEXDUMP_DEBUG_PUT_DATA      false
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_oath);
 #endif
@@ -183,6 +186,13 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // TODO: 受領データを永続化
+#if LOG_HEXDUMP_DEBUG_PUT_DATA
+    fido_log_print_hexdump_debug(m_account_name, sizeof(m_account_name), "m_account_name");
+    fido_log_print_hexdump_debug(m_secret, sizeof(m_secret), "m_secret");
+    fido_log_print_hexdump_debug(&m_property, sizeof(m_property), "m_property");
+    fido_log_print_hexdump_debug(m_challange, sizeof(m_challange), "m_challange");
+#endif
+
     return SW_NO_ERROR;
 }
 
