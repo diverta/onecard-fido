@@ -90,7 +90,7 @@ void ccid_oath_object_write_retry(void)
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
     if (m_flash_func == write_account_object) {
-        // TODO: OATH INSを再実行
+        ccid_oath_ins_retry();
     }
 }
 
@@ -99,6 +99,6 @@ void ccid_oath_object_write_resume(bool success)
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行
     if (m_flash_func == write_account_object) {
-        // TODO: OATH INSの処理を継続
+        ccid_oath_ins_resume(success);
     }
 }
