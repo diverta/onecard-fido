@@ -21,6 +21,7 @@ fido_log_module_register(ccid_oath);
 //
 static char m_account_name[MAX_NAME_LEN];
 static char m_secret[MAX_KEY_LEN];
+static uint8_t m_property;
 
 static const uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
 
@@ -119,6 +120,36 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
         // Secretを保持
         memcpy(m_secret, capdu->data + key_offset, key_len);
         offset += key_len;
+    }
+
+    //
+    // オプション属性を抽出
+    //
+    if (capdu->data[offset] == OATH_TAG_PROPERTY) {
+        offset++;
+
+        // データ長のチェック
+        if (offset >= capdu->lc) {
+            return SW_WRONG_LENGTH;
+        }
+        uint8_t prop_len = capdu->data[offset++];
+        if (prop_len != 1) {
+            return SW_WRONG_DATA;
+        }
+        uint8_t prop_offset = offset;
+        if (prop_offset >= capdu->lc) {
+            return SW_WRONG_LENGTH;
+        }
+
+        // データのチェック
+        uint8_t prop = capdu->data[prop_offset];
+        if ((prop & ~OATH_PROP_ALL_FLAGS) != 0) {
+            return SW_WRONG_DATA;
+        }
+
+        // オプション属性を保持
+        m_property = prop;
+        offset++;
     }
 
     return SW_NO_ERROR;
