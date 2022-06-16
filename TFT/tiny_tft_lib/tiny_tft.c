@@ -27,6 +27,23 @@ static bool tiny_tft_write(uint8_t b)
     return app_tiny_tft_write(work_buf, 1);
 }
 
+static bool tiny_tft_write_32(uint32_t l)
+{
+    // ４バイトを転送
+    work_buf[0] = l >> 24;
+    work_buf[1] = l >> 16;
+    work_buf[2] = l >> 8;
+    work_buf[3] = l;
+    return app_tiny_tft_write(work_buf, 4);
+}
+
+static void tiny_tft_write_command(uint8_t command_byte) 
+{
+    app_tiny_tft_set_d_c(LOW);
+    tiny_tft_write(command_byte);
+    app_tiny_tft_set_d_c(HIGH);
+}
+
 //
 // TFT操作に必要な変数群
 //
@@ -187,6 +204,57 @@ static void set_origin_and_orientation(uint8_t orientation_)
     }
 
     send_command(ST77XX_MADCTL, &madctl, 1);
+}
+
+//
+// グラフィック操作関連
+//
+static void set_addr_window(uint16_t x, uint16_t y, uint16_t w, uint16_t h) 
+{
+    // SPI displays set an address window rectangle 
+    // for blitting pixels
+    x += _xstart;
+    y += _ystart;
+    uint32_t xa = ((uint32_t)x << 16) | (x + w - 1);
+    uint32_t ya = ((uint32_t)y << 16) | (y + h - 1);
+
+    // Column addr set
+    tiny_tft_write_command(ST77XX_CASET);
+    tiny_tft_write_32(xa);
+
+    // Row addr set
+    tiny_tft_write_command(ST77XX_RASET);
+    tiny_tft_write_32(ya);
+
+    // write to RAM
+    tiny_tft_write_command(ST77XX_RAMWR);
+}
+
+static void write_color(uint16_t color, uint32_t len) 
+{
+    // Avoid 0-byte transfers
+    if (len == 0) {
+        return;
+    }
+
+    // Issue a series of pixels, all the same color
+    uint8_t hi = color >> 8, lo = color;
+    while (len--) {
+        tiny_tft_write(hi);
+        tiny_tft_write(lo);
+    }
+}
+
+static uint16_t swap_bit(uint16_t x) 
+{
+    uint16_t r = 0;
+    uint8_t b = 16;
+    while (b--) {
+        r <<= 1;
+        r |= (x & 1);
+        x >>= 1;
+    }
+    return r;
 }
 
 //
