@@ -7,6 +7,8 @@
 #ifndef TINY_TFT_H
 #define TINY_TFT_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,6 +17,7 @@ extern "C" {
 // 関数群
 //
 void        tiny_tft_init_display(void);
+void        tiny_tft_fill_screen(uint16_t color);
 
 #ifdef __cplusplus
 }

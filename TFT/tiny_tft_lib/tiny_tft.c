@@ -280,3 +280,77 @@ void tiny_tft_init_display(void)
     // Set origin of (0,0) and orientation of TFT display
     set_origin_and_orientation(3);
 }
+
+//
+// 画面全体を同一色で塗りつぶす
+//
+static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
+{
+    // Nonzero width and height?
+    if (w == 0 || h == 0) {
+        return;
+    }
+    // If negative width...
+    if (w < 0) {
+        // Move X to left edge
+        x += w + 1;
+        // Use positive width
+        w = -w;
+    }
+    // Not off right
+    if (x >= _width) {
+        return;
+    }
+    // If negative height...
+    if (h < 0) {
+        // Move Y to top edge
+        y += h + 1;
+        // Use positive height
+        h = -h;
+    }
+    // Not off bottom
+    if (y >= _height) {
+        return;
+    }
+    // Not off left
+    int16_t x2 = x + w - 1;
+    if (x2 < 0) {
+        return;
+    }
+    // Not off top
+    int16_t y2 = y + h - 1;
+    if (y2 < 0) {
+        return;
+    }
+    // Rectangle partly or fully overlaps screen
+    // Clip left
+    if (x < 0) {
+        x = 0;
+        w = x2 + 1;
+    }
+    // Clip top
+    if (y < 0) {
+        y = 0;
+        h = y2 + 1;
+    }
+    // Clip right
+    if (x2 >= _width) {
+        w = _width - x;
+    }
+    // Clip bottom
+    if (y2 >= _height) {
+        h = _height - y;
+    }
+
+    // Set an address window rectangle for blitting pixels
+    set_addr_window(x, y, w, h);
+
+    // Issue a series of pixels, all the same color
+    write_color(swap_bit(color), (uint32_t)w * h);
+}
+
+void tiny_tft_fill_screen(uint16_t color)
+{
+    // Fill the screen completely with one color
+    fill_rect(0, 0, _width, _height, color);
+}
