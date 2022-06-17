@@ -42,4 +42,14 @@
         return true;
     }
 
+    + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected {
+        // USBポートに接続されていない場合はfalse
+        if (connected == false) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_PROMPT_USB_PORT_SET informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:window];
+            return false;
+        }
+        return true;
+    }
+
 @end

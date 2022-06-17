@@ -10,6 +10,7 @@
 #import "FIDOAttestationWindow.h"
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
@@ -121,12 +122,8 @@
 
     - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
         // USBポートに接続されていない場合はfalse
-        if ([[self appHIDCommand] checkUSBHIDConnection] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_PROMPT_USB_PORT_SET informativeText:nil
-                                           withObject:nil forSelector:nil parentWindow:window];
-            return false;
-        }
-        return true;
+        bool connected = [[self appHIDCommand] checkUSBHIDConnection];
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:window connected:connected];
     }
 
 #pragma mark - Call back from AppHIDCommand
