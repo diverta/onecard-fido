@@ -6,18 +6,21 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "AppHIDCommand.h"
 #import "FIDOAttestationWindow.h"
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
 #import "ToolLogFile.h"
 
-@interface FIDOSettingCommand ()
+@interface FIDOSettingCommand () <AppHIDCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) FIDOSettingWindow            *fidoSettingWindow;
     @property (nonatomic) FIDOAttestationWindow        *fidoAttestationWindow;
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) AppHIDCommand                *appHIDCommand;
 
 @end
 
@@ -32,6 +35,8 @@
             // このクラスの参照を引き渡し
             [[self fidoSettingWindow] setCommandRef:self];
             [[self fidoAttestationWindow] setCommandRef:self];
+            // ヘルパークラスのインスタンスを生成
+            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -114,8 +119,16 @@
     }
 
     - (bool)checkUSBHIDConnection {
-        // TODO: USBポートに接続されていない場合はfalse
-        return true;
+        // USBポートに接続されていない場合はfalse
+        return [[self appHIDCommand] checkUSBHIDConnection];
+    }
+
+#pragma mark - Call back from AppHIDCommand
+
+    - (void)didDetectConnect {
+    }
+
+    - (void)didDetectRemoval {
     }
 
 @end
