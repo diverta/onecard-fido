@@ -11,6 +11,7 @@
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
 #import "ToolLogFile.h"
+#import "ToolPopupWindow.h"
 
 @interface FIDOSettingCommand () <AppHIDCommandDelegate>
 
@@ -118,9 +119,14 @@
         [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
     }
 
-    - (bool)checkUSBHIDConnection {
+    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
         // USBポートに接続されていない場合はfalse
-        return [[self appHIDCommand] checkUSBHIDConnection];
+        if ([[self appHIDCommand] checkUSBHIDConnection] == false) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_PROMPT_USB_PORT_SET informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:window];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Call back from AppHIDCommand

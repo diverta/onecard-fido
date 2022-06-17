@@ -12,7 +12,7 @@
 @interface FIDOSettingCommand : AppCommand
 
     - (void)FIDOSettingWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (bool)checkUSBHIDConnection;
+    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window;
 
 @end
 

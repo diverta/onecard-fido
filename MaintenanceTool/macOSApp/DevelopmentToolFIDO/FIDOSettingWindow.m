@@ -43,15 +43,17 @@
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
+        // USBポートに接続されていない場合は処理中止
+        if ([[self fidoSettingCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+            return;
+        }
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION];
     }
 
     - (IBAction)buttonResetDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
-        if ([[self fidoSettingCommand] checkUSBHIDConnection] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_PROMPT_USB_PORT_SET informativeText:nil
-                                           withObject:nil forSelector:nil parentWindow:[self window]];
+        if ([[self fidoSettingCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
             return;
         }
         // 処理開始前に確認
