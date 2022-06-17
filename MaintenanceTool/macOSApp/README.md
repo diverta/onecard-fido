@@ -19,7 +19,7 @@ PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入な�
 * ログファイル格納ディレクトリー参照機能
 
 ### 画面イメージ
-<img src="../assets/0001.jpg" width="500">
+<img src="../assets/0001.jpg" width="400">
 
 ### 動作環境
 macOS Sierra (Version 10.12.6) 〜
@@ -59,3 +59,13 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。
+
+## [FIDO認証器開発ツール](../../MaintenanceTool/macOSApp/DEVTOOL.md)
+
+ベンダー向けのツールです。
+
+<img src="assets08/0001.jpg" width="400">
+
+#### 機能
+* FIDO鍵・証明書設定
+* ログファイル格納ディレクトリー参照機能
