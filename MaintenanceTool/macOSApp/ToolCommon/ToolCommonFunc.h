@@ -12,6 +12,9 @@
 @interface ToolCommonFunc : NSObject
 
     + (NSString *)getAppVersionString;
+    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected;
 
 @end
 
