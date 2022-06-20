@@ -21,7 +21,8 @@ static void *m_flash_func = NULL;
 //
 // アカウント登録
 //
-static uint8_t account_write_buff[135];
+static uint8_t account_read_buff[160];
+static uint8_t account_write_buff[140];
 
 static bool write_account_object(uint8_t *write_buff, size_t write_size, uint16_t serial)
 {
@@ -46,13 +47,13 @@ static bool write_account_object(uint8_t *write_buff, size_t write_size, uint16_
 uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t property, uint8_t *challange)
 {
     // Flash ROMに登録するオブジェクトデータを生成
-    // バイトイメージ（135バイト固定）
+    // バイトイメージ（139バイト固定）
     //   0   : アカウント（64バイト）
     //   64  : アルゴリズム（1バイト）
     //   65  : OTP桁数（1バイト）
     //   66  : Secret（64バイト）
     //   130 : オプション属性（1バイト）
-    //   131 : Challenge（4バイト）
+    //   131 : Challenge（8バイト）
     uint8_t offset = 0;
     
     // アカウント
@@ -70,8 +71,16 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     memcpy(account_write_buff + offset, challange, MAX_CHALLENGE_LEN);
     offset += MAX_CHALLENGE_LEN;
 
-    // TODO: 連番を設定
-    uint16_t serial = 1;
+    //
+    // 連番を設定
+    //   exist==true時:  既存レコードに付与された連番
+    //   exist==false時: 新規レコードに付与すべき連番
+    //
+    bool exist;
+    uint16_t serial;
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, &exist, &serial) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
 
     // Flash ROMに登録
     if (write_account_object(account_write_buff, offset, serial) == false) {
