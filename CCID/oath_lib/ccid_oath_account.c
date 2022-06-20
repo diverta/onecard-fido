@@ -9,9 +9,8 @@
 #include "ccid_oath_account.h"
 #include "ccid_oath_define.h"
 #include "ccid_oath_object.h"
+#include "ccid_oath_totp.h"
 #include "ccid_process.h"
-#include "fido_common.h"
-#include "rtcc.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -200,35 +199,6 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
 }
 
 //
-// TOTPカウンターを使用し、時刻同期を実行
-//
-static uint16_t set_current_timestamp_by_totp_counter(uint8_t *secret, uint8_t *challange)
-{
-    // TOTPでない場合は、何もせず正常終了
-    uint8_t alg = secret[0];
-    uint8_t oath_type = get_oath_type(alg);
-    if (oath_type != OATH_TYPE_TOTP){
-        return SW_NO_ERROR;
-    }
-
-    // Challangeをカウンター（64ビット整数）に変換
-    uint64_t counter = fido_get_uint64_from_bytes(challange);
-
-    // カウンターが未設定の場合は、何もせず正常終了
-    if (counter == 0) {
-        return SW_NO_ERROR;
-    }
-
-    // カウンターをRTCCに設定
-    if (rtcc_update_timestamp_by_unixtime((uint32_t)counter) == false) {
-        return SW_UNABLE_TO_PROCESS;
-    }
-
-    // 正常終了
-    return SW_NO_ERROR;
-}
-
-//
 // Flash ROM更新後のコールバック関数
 //
 void ccid_oath_account_retry(void)
@@ -255,7 +225,7 @@ void ccid_oath_account_resume(bool success)
         uint16_t sw = SW_NO_ERROR;
         if (m_flash_func == ccid_oath_account_add) {
             // TOTPカウンターを使用し、時刻同期を実行
-            sw = set_current_timestamp_by_totp_counter(m_secret, m_challange);
+            sw = ccid_oath_totp_set_timestamp(m_secret, m_challange);
             if (sw == SW_NO_ERROR) {
                 // 正常終了
                 fido_log_info("OATH account registration success");
