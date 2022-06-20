@@ -200,6 +200,12 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
     fido_log_print_hexdump_debug(m_challange, sizeof(m_challange), "m_challange");
 #endif
 
+    // TOTPカウンターを使用し、時刻同期を実行
+    uint16_t sw = set_current_timestamp_by_totp_counter(m_secret, m_challange);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
     return SW_NO_ERROR;
 }
 
