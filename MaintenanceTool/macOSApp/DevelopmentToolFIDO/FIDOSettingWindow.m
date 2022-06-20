@@ -4,9 +4,12 @@
 //
 //  Created by Makoto Morita on 2022/06/08.
 //
+#import "AppCommonMessage.h"
 #import "AppDefine.h"
-#import "UtilityCommand.h"
+#import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
+#import "ToolPopupWindow.h"
+#import "UtilityCommand.h"
 
 @interface FIDOSettingWindow ()
 
@@ -17,7 +20,7 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
     // コマンドクラスの参照を保持
-    @property (nonatomic, weak) UtilityCommand             *utilityCommand;
+    @property (nonatomic, weak) FIDOSettingCommand         *fidoSettingCommand;
     // 実行するコマンドを保持
     @property (nonatomic) Command                           command;
 
@@ -36,17 +39,26 @@
 
     - (void)setCommandRef:(id)ref {
         // コマンドクラスの参照を保持
-        [self setUtilityCommand:(UtilityCommand *)ref];
+        [self setFidoSettingCommand:(FIDOSettingCommand *)ref];
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
+        // USBポートに接続されていない場合は処理中止
+        if ([[self fidoSettingCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+            return;
+        }
         // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_VIEW_APP_VERSION];
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION];
     }
 
     - (IBAction)buttonResetDidPress:(id)sender {
-        // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_VIEW_LOG_FILE];
+        // USBポートに接続されていない場合は処理中止
+        if ([[self fidoSettingCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+            return;
+        }
+        // 処理開始前に確認
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_SKEY_CERT informativeText:MSG_PROMPT_ERASE_SKEY_CERT
+                                             withObject:self forSelector:@selector(resumeFIDOAttestationReset) parentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -59,6 +71,15 @@
         [self setCommand:command];
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (void)resumeFIDOAttestationReset {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_FIDO_ATTESTATION_RESET];
     }
 
 #pragma mark - Interface for parameters

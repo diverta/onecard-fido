@@ -38,6 +38,7 @@ extern "C" {
 #include "app_crypto.h"
 #include "app_crypto_ec.h"
 #include "app_platform.h"
+#include "app_rtcc.h"
 #include "app_settings.h"
 #include "app_timer.h"
 
