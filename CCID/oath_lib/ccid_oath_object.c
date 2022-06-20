@@ -12,6 +12,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for debug
+#define LOG_ACCOUNT_EXIST_AND_SERIAL    false
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_oath_object);
 #endif
@@ -82,6 +85,10 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
+
+#if LOG_ACCOUNT_EXIST_AND_SERIAL
+    fido_log_debug("account record(%s): exist=%d, serial=%d", log_strdup(account_name), exist, serial);
+#endif
 
     // Flash ROMに登録
     if (write_account_object(account_write_buff, offset, serial) == false) {
