@@ -74,11 +74,17 @@ void ccid_oath_ins_retry(void)
 void ccid_oath_ins_resume(bool success)
 {
     if (success) {
-        // Flash ROM書込みが成功した場合は処理終了
+        // Flash ROM書込みが成功した場合
+        uint16_t sw = SW_NO_ERROR;
         if (m_flash_func == oath_ins_put) {
-            fido_log_info("OATH account registration success");
+            // TOTPカウンターを使用し、時刻同期を実行
+            sw = set_current_timestamp_by_totp_counter(m_secret, m_challange);
+            if (sw == SW_NO_ERROR) {
+                // 正常終了
+                fido_log_info("OATH account registration success");
+            }
         }
-        ccid_process_resume_response(SW_NO_ERROR);
+        ccid_process_resume_response(sw);
 
     } else {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
