@@ -43,6 +43,12 @@ void rtcc_init(void)
 
 bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime)
 {
+    // RTCCが搭載されていない場合は終了
+    if (rtcc_is_available == false) {
+        fido_log_error("RTCC is unavailable");
+        return false;
+    }
+
     // カウンターをRTCCに設定
     uint8_t timezone_diff_hours = 9;
     if (app_rtcc_set_timestamp(unixtime, timezone_diff_hours) == false) {
