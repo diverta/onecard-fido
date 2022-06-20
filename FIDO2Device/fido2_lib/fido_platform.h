@@ -30,6 +30,7 @@ extern "C" {
 #include "ccid_flash_object.h"
 #include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
+#include "ccid_flash_oath_object.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"

@@ -8,8 +8,13 @@
 
 #include "ccid_oath.h"
 #include "ccid_oath_define.h"
+#include "ccid_oath_object.h"
+#include "ccid_process.h"
 #include "fido_common.h"
 #include "rtcc.h"
+
+// Flash ROM書込み時に実行した関数の参照を保持
+static void *m_flash_func = NULL;
 
 //
 // 時刻同期関連
@@ -47,6 +52,47 @@ void ccid_oath_stop_applet(void)
 }
 
 //
+// Flash ROM更新後のコールバック関数
+//
+void ccid_oath_ins_retry(void)
+{
+    uint16_t sw = SW_NO_ERROR;
+    if (m_flash_func == oath_ins_put) {
+        // 受領データをFlash ROMに設定
+        sw = ccid_oath_object_account_set(m_account_name, m_secret, m_property, m_challange);
+    }
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        fido_log_warning("OATH account registration retry");
+    } else {
+        // 異常時はエラーレスポンス処理を指示
+        fido_log_error("OATH data object registration retry fail");
+        ccid_process_resume_response(sw);        
+    }
+}
+
+void ccid_oath_ins_resume(bool success)
+{
+    if (success) {
+        // Flash ROM書込みが成功した場合
+        uint16_t sw = SW_NO_ERROR;
+        if (m_flash_func == oath_ins_put) {
+            // TOTPカウンターを使用し、時刻同期を実行
+            sw = set_current_timestamp_by_totp_counter(m_secret, m_challange);
+            if (sw == SW_NO_ERROR) {
+                // 正常終了
+                fido_log_info("OATH account registration success");
+            }
+        }
+        ccid_process_resume_response(sw);
+
+    } else {
+        // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
+        fido_log_error("OATH data object registration fail");
+        ccid_process_resume_response(SW_UNABLE_TO_PROCESS);
+    }
+}
+
 // TOTPカウンターを使用し、時刻同期を実行
 //
 static uint16_t set_current_timestamp_by_totp_counter(uint8_t *secret, uint8_t *challange)
