@@ -19,6 +19,8 @@ extern "C" {
 bool        ccid_oath_aid_is_applet(command_apdu_t *capdu);
 void        ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
 void        ccid_oath_stop_applet(void);
+void        ccid_oath_ins_retry(void);
+void        ccid_oath_ins_resume(bool success);
 
 #ifdef __cplusplus
 }

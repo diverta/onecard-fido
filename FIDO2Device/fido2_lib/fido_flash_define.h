@@ -118,6 +118,20 @@ extern "C" {
 #define OPGP_DATA_OBJ_20_RECORD_KEY     (0xBF99)
 #define OPGP_DATA_OBJ_21_RECORD_KEY     (0xBF98)
 
+//
+// 以下はOATHアプリケーションで使用
+//
+// OATHオブジェクト
+//   オブジェクトデータの長さ: 1ワード（4バイト）
+//   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+#define OATH_DATA_OBJ_FILE_ID           (0xBF9E)
+#define OATH_DATA_OBJ_WORDS_MAX         256
+//
+// OATHオブジェクト格納ファイルで
+// 共通利用するレコードID
+//
+#define OATH_DATA_OBJ_01_RECORD_KEY     (0xBF8E)
+
 #ifdef __cplusplus
 }
 #endif
