@@ -185,6 +185,10 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
         // カウンターを保持
         memcpy(m_challange + 4, capdu->data + counter_offset, counter_len);
         offset += counter_len;
+
+    } else {
+        // カウンターを未設定状態にする
+        memset(m_challange, 0, sizeof(m_challange));
     }
 
     // 全体データ長のチェック
@@ -253,6 +257,11 @@ static uint16_t set_current_timestamp_by_totp_counter(uint8_t *secret, uint8_t *
 
     // Challangeをカウンター（64ビット整数）に変換
     uint64_t counter = fido_get_uint64_from_bytes(challange);
+
+    // カウンターが未設定の場合は、何もせず正常終了
+    if (counter == 0) {
+        return SW_NO_ERROR;
+    }
 
     // カウンターをRTCCに設定
     if (rtcc_update_timestamp_by_unixtime((uint32_t)counter) == false) {
