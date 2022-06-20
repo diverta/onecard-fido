@@ -19,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool        ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size, bool use_serial, uint16_t serial);
+bool        ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial);
 
 //
 // コールバック関数群
