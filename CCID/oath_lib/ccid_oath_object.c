@@ -6,6 +6,7 @@
  */
 #include <string.h>
 #include "ccid_oath.h"
+#include "ccid_oath_account.h"
 #include "ccid_oath_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -99,7 +100,7 @@ void ccid_oath_object_write_retry(void)
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
     if (m_flash_func == write_account_object) {
-        ccid_oath_ins_retry();
+        ccid_oath_account_retry();
     }
 }
 
@@ -108,6 +109,6 @@ void ccid_oath_object_write_resume(bool success)
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行
     if (m_flash_func == write_account_object) {
-        ccid_oath_ins_resume(success);
+        ccid_oath_account_resume(success);
     }
 }
