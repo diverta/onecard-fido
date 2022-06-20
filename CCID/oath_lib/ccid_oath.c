@@ -166,6 +166,10 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
         // オプション属性を保持
         m_property = prop;
         offset++;
+
+    } else {
+        // 属性を未設定状態にする
+        m_property = 0;
     }
 
     //
@@ -201,7 +205,6 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
         return SW_WRONG_LENGTH;
     }
 
-    // TODO: 受領データを永続化
 #if LOG_HEXDUMP_DEBUG_PUT_DATA
     fido_log_print_hexdump_debug(m_account_name, sizeof(m_account_name), "m_account_name");
     fido_log_print_hexdump_debug(m_secret, sizeof(m_secret), "m_secret");
@@ -209,13 +212,14 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
     fido_log_print_hexdump_debug(m_challange, sizeof(m_challange), "m_challange");
 #endif
 
-    // TOTPカウンターを使用し、時刻同期を実行
-    uint16_t sw = set_current_timestamp_by_totp_counter(m_secret, m_challange);
-    if (sw != SW_NO_ERROR) {
-        return sw;
+    // 受領データをFlash ROMに設定
+    uint16_t sw = ccid_oath_object_account_set(m_account_name, m_secret, m_property, m_challange);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_process_resume_prepare(capdu, rapdu);
+        m_flash_func = oath_ins_put;
     }
-
-    return SW_NO_ERROR;
+    return sw;
 }
 
 void ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
