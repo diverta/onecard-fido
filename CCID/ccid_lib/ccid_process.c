@@ -103,3 +103,28 @@ void ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
     }
 }
+
+//
+// Flash ROM書込時のレスポンス制御
+//
+// APDU格納領域の参照を待避
+static command_apdu_t  *m_capdu;
+static response_apdu_t *m_rapdu;
+
+void ccid_process_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    ccid_apdu_response_set_pending(true);
+
+    // APDU格納領域の参照を待避
+    m_capdu = capdu;
+    m_rapdu = rapdu;
+}
+
+void ccid_process_resume_response(uint16_t sw)
+{
+    // レスポンス処理再開を指示
+    m_rapdu->sw = sw;
+    ccid_apdu_response_set_pending(false);
+    ccid_apdu_resume_process(m_capdu, m_rapdu);
+}
