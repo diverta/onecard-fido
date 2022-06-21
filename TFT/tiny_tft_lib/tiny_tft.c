@@ -245,6 +245,14 @@ static void write_color(uint16_t color, uint32_t len)
     }
 }
 
+static void issue_color_pixel(uint16_t color) 
+{
+    // Issue a pixel of color
+    uint8_t hi = color >> 8, lo = color;
+    tiny_tft_write(hi);
+    tiny_tft_write(lo);
+}
+
 static uint16_t swap_bit(uint16_t x) 
 {
     uint16_t r = 0;
@@ -353,4 +361,18 @@ void tiny_tft_fill_screen(uint16_t color)
 {
     // Fill the screen completely with one color
     fill_rect(0, 0, _width, _height, color);
+}
+
+//
+// テキスト描画関連
+//
+static void write_pixel(int16_t x, int16_t y, uint16_t color)
+{
+    if ((x >= 0) && (x < _width) && (y >= 0) && (y < _height)) {
+        // Set an address window rectangle for blitting pixels
+        set_addr_window(x, y, 1, 1);
+
+        // Issue a pixel of color
+        issue_color_pixel(swap_bit(color));
+    }
 }
