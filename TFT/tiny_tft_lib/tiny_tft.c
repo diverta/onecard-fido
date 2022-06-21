@@ -366,6 +366,41 @@ void tiny_tft_fill_screen(uint16_t color)
 //
 // テキスト描画関連
 //
+void tiny_tft_set_text_wrap(bool w)
+{
+    // Set whether text that is too long for the screen width should
+    // automatically wrap around to the next line (else clip right).
+    wrap = w;
+}
+
+void tiny_tft_set_cursor(int16_t x, int16_t y)
+{
+    // Set text cursor location
+    // (x or y coordinate in pixels)
+    cursor_x = x;
+    cursor_y = y;
+}
+
+void tiny_tft_set_text_color(uint16_t c)
+{
+    // Set text font color with transparant background
+    textcolor = textbgcolor = c;
+}
+
+void tiny_tft_set_text_size_each(uint8_t s_x, uint8_t s_y) 
+{
+    // Set text 'magnification' size. 
+    // Each increase in s makes 1 pixel that much bigger.
+    textsize_x = (s_x > 0) ? s_x : 1;
+    textsize_y = (s_y > 0) ? s_y : 1;
+}
+
+void tiny_tft_set_text_size(uint8_t s) 
+{
+    // テキストのサイズを、引数倍の大きさに設定
+    tiny_tft_set_text_size_each(s, s);
+}
+
 static void write_pixel(int16_t x, int16_t y, uint16_t color)
 {
     if ((x >= 0) && (x < _width) && (y >= 0) && (y < _height)) {
