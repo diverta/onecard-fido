@@ -7,6 +7,8 @@
 #ifndef TINY_TFT_CONST_H
 #define TINY_TFT_CONST_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,6 +19,7 @@ extern "C" {
 uint8_t    *tiny_tft_const_init_command_1(void);
 uint8_t    *tiny_tft_const_init_command_2(void);
 uint8_t    *tiny_tft_const_init_command_3(void);
+uint8_t    *tiny_tft_const_raster_font(void);
 
 #ifdef __cplusplus
 }

@@ -27,6 +27,23 @@ static bool tiny_tft_write(uint8_t b)
     return app_tiny_tft_write(work_buf, 1);
 }
 
+static bool tiny_tft_write_32(uint32_t l)
+{
+    // ４バイトを転送
+    work_buf[0] = l >> 24;
+    work_buf[1] = l >> 16;
+    work_buf[2] = l >> 8;
+    work_buf[3] = l;
+    return app_tiny_tft_write(work_buf, 4);
+}
+
+static void tiny_tft_write_command(uint8_t command_byte) 
+{
+    app_tiny_tft_set_d_c(LOW);
+    tiny_tft_write(command_byte);
+    app_tiny_tft_set_d_c(HIGH);
+}
+
 //
 // TFT操作に必要な変数群
 //
@@ -190,6 +207,65 @@ static void set_origin_and_orientation(uint8_t orientation_)
 }
 
 //
+// グラフィック操作関連
+//
+static void set_addr_window(uint16_t x, uint16_t y, uint16_t w, uint16_t h) 
+{
+    // SPI displays set an address window rectangle 
+    // for blitting pixels
+    x += _xstart;
+    y += _ystart;
+    uint32_t xa = ((uint32_t)x << 16) | (x + w - 1);
+    uint32_t ya = ((uint32_t)y << 16) | (y + h - 1);
+
+    // Column addr set
+    tiny_tft_write_command(ST77XX_CASET);
+    tiny_tft_write_32(xa);
+
+    // Row addr set
+    tiny_tft_write_command(ST77XX_RASET);
+    tiny_tft_write_32(ya);
+
+    // write to RAM
+    tiny_tft_write_command(ST77XX_RAMWR);
+}
+
+static void issue_color_pixels(uint16_t color, uint32_t len) 
+{
+    // Avoid 0-byte transfers
+    if (len == 0) {
+        return;
+    }
+
+    // Issue a series of pixels, all the same color
+    uint8_t hi = color >> 8, lo = color;
+    while (len--) {
+        tiny_tft_write(hi);
+        tiny_tft_write(lo);
+    }
+}
+
+static void issue_color_pixel(uint16_t color) 
+{
+    // Issue a pixel of color
+    uint8_t hi = color >> 8, lo = color;
+    tiny_tft_write(hi);
+    tiny_tft_write(lo);
+}
+
+static uint16_t swap_bit(uint16_t x) 
+{
+    uint16_t r = 0;
+    uint8_t b = 16;
+    while (b--) {
+        r <<= 1;
+        r |= (x & 1);
+        x >>= 1;
+    }
+    return r;
+}
+
+//
 // TFTディスプレイを初期化
 //
 void tiny_tft_init_display(void)
@@ -211,4 +287,266 @@ void tiny_tft_init_display(void)
 
     // Set origin of (0,0) and orientation of TFT display
     set_origin_and_orientation(3);
+}
+
+//
+// 画面全体を同一色で塗りつぶす
+//
+static void fill_rect_preclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
+    // Set an address window rectangle for blitting pixels
+    set_addr_window(x, y, w, h);
+
+    // Issue a series of pixels, all the same color
+    issue_color_pixels(swap_bit(color), (uint32_t)w * h);
+}
+
+static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
+{
+    // Nonzero width and height?
+    if (w == 0 || h == 0) {
+        return;
+    }
+    // If negative width...
+    if (w < 0) {
+        // Move X to left edge
+        x += w + 1;
+        // Use positive width
+        w = -w;
+    }
+    // Not off right
+    if (x >= _width) {
+        return;
+    }
+    // If negative height...
+    if (h < 0) {
+        // Move Y to top edge
+        y += h + 1;
+        // Use positive height
+        h = -h;
+    }
+    // Not off bottom
+    if (y >= _height) {
+        return;
+    }
+    // Not off left
+    int16_t x2 = x + w - 1;
+    if (x2 < 0) {
+        return;
+    }
+    // Not off top
+    int16_t y2 = y + h - 1;
+    if (y2 < 0) {
+        return;
+    }
+    // Rectangle partly or fully overlaps screen
+    // Clip left
+    if (x < 0) {
+        x = 0;
+        w = x2 + 1;
+    }
+    // Clip top
+    if (y < 0) {
+        y = 0;
+        h = y2 + 1;
+    }
+    // Clip right
+    if (x2 >= _width) {
+        w = _width - x;
+    }
+    // Clip bottom
+    if (y2 >= _height) {
+        h = _height - y;
+    }
+
+    // Draw a filled rectangle to the display.
+    fill_rect_preclipped(x, y, w, h, color);
+}
+
+void tiny_tft_fill_screen(uint16_t color)
+{
+    // Fill the screen completely with one color
+    fill_rect(0, 0, _width, _height, color);
+}
+
+//
+// テキスト描画関連
+//
+void tiny_tft_set_text_wrap(bool w)
+{
+    // Set whether text that is too long for the screen width should
+    // automatically wrap around to the next line (else clip right).
+    wrap = w;
+}
+
+void tiny_tft_set_cursor(int16_t x, int16_t y)
+{
+    // Set text cursor location
+    // (x or y coordinate in pixels)
+    cursor_x = x;
+    cursor_y = y;
+}
+
+void tiny_tft_set_text_color(uint16_t c)
+{
+    // Set text font color with transparant background
+    textcolor = textbgcolor = c;
+}
+
+void tiny_tft_set_text_size_each(uint8_t s_x, uint8_t s_y) 
+{
+    // Set text 'magnification' size. 
+    // Each increase in s makes 1 pixel that much bigger.
+    textsize_x = (s_x > 0) ? s_x : 1;
+    textsize_y = (s_y > 0) ? s_y : 1;
+}
+
+void tiny_tft_set_text_size(uint8_t s) 
+{
+    // テキストのサイズを、引数倍の大きさに設定
+    tiny_tft_set_text_size_each(s, s);
+}
+
+static void write_pixel(int16_t x, int16_t y, uint16_t color)
+{
+    if ((x >= 0) && (x < _width) && (y >= 0) && (y < _height)) {
+        // Set an address window rectangle for blitting pixels
+        set_addr_window(x, y, 1, 1);
+
+        // Issue a pixel of color
+        issue_color_pixel(swap_bit(color));
+    }
+}
+
+static void write_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
+{
+    // X on screen, nonzero height
+    if ((x < 0) || (x >= _width) || (h == 0)) {
+        return;
+    }
+    // If negative height...
+    if (h < 0) {                       
+        // Move Y to top edge
+        y += h + 1;
+        // Use positive height
+        h = -h;
+    }
+    // Not off bottom
+    if (y >= _height) {
+        return;
+    }
+    int16_t y2 = y + h - 1;
+    // Not off top
+    if (y2 >= 0) { 
+        // Line partly or fully overlaps screen
+        if (y < 0) {
+            // Clip top
+            y = 0;
+            h = y2 + 1;
+        }
+        if (y2 >= _height) {
+            // Clip bottom
+            h = _height - y;
+        }
+        // Draw a filled rectangle to the display.
+        fill_rect_preclipped(x, y, 1, h, color);
+    }
+}
+
+static void start_write(void)
+{
+    app_tiny_tft_set_c_s(LOW);
+}
+
+static void end_write(void)
+{
+    app_tiny_tft_set_c_s(HIGH);
+}
+
+static void draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+{
+    bool clip_right  = (x >= _width);
+    bool clip_bottom = (y >= _height);
+    bool clip_left   = ((x + 6 * size_x - 1) < 0);
+    bool clip_top    = ((y + 8 * size_y - 1) < 0);
+    if (clip_right || clip_bottom || clip_left || clip_top) {
+        // 描画可能領域から外れている場合は処理終了
+        return;
+    }
+
+    if (!_cp437 && (c >= 176)) {
+        // Handle 'classic' charset behavior
+        c++;
+    }
+
+    // Char bitmap = 5 columns
+    start_write();
+    uint8_t *font = tiny_tft_const_raster_font();
+    for (int8_t i = 0; i < 5; i++) {
+        uint8_t line = font[c * 5 + i];
+        for (int8_t j = 0; j < 8; j++, line >>= 1) {
+            if (line & 1) {
+                if (size_x == 1 && size_y == 1) {
+                    write_pixel(x + i, y + j, color);
+                } else {
+                    fill_rect(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                }
+            } else if (bg != color) {
+                if (size_x == 1 && size_y == 1) {
+                    write_pixel(x + i, y + j, bg);
+                } else {
+                    fill_rect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+                }
+            }
+        }
+    }
+
+    // If opaque, draw vertical line for last column
+    if (bg != color) {
+        if (size_x == 1 && size_y == 1) {
+            write_fast_vline(x + 5, y, 8, bg);
+        } else {
+            fill_rect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
+        }
+    }
+    end_write();
+}
+
+static void write(uint8_t c)
+{
+    // Newline?
+    if (c == '\n') {
+        // Reset x to zero,
+        cursor_x = 0;
+        // advance y one line
+        cursor_y += textsize_y * 8;
+
+    } else if (c != '\r') {
+        // Ignore carriage returns
+        // Off right?
+        if (wrap && ((cursor_x + textsize_x * 6) > _width)) {
+            // Reset x to zero,
+            cursor_x = 0;
+            // advance y one line
+            cursor_y += textsize_y * 8;
+        }
+        draw_char(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
+        // Advance x one char
+        cursor_x += textsize_x * 6;
+    }
+}
+
+static size_t write_buffer(const uint8_t *buffer, size_t size)
+{
+    size_t n = 0;
+    while (size--) {
+        write(*buffer++);
+        n++;
+    }
+    return n;
+}
+
+size_t tiny_tft_print(const char *s)
+{
+    return write_buffer((const uint8_t *)s, strlen(s));
 }
