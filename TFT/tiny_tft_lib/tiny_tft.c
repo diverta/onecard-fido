@@ -511,3 +511,42 @@ static void draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uin
     }
     end_write();
 }
+
+static void write(uint8_t c)
+{
+    // Newline?
+    if (c == '\n') {
+        // Reset x to zero,
+        cursor_x = 0;
+        // advance y one line
+        cursor_y += textsize_y * 8;
+
+    } else if (c != '\r') {
+        // Ignore carriage returns
+        // Off right?
+        if (wrap && ((cursor_x + textsize_x * 6) > _width)) {
+            // Reset x to zero,
+            cursor_x = 0;
+            // advance y one line
+            cursor_y += textsize_y * 8;
+        }
+        draw_char(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
+        // Advance x one char
+        cursor_x += textsize_x * 6;
+    }
+}
+
+static size_t write_buffer(const uint8_t *buffer, size_t size)
+{
+    size_t n = 0;
+    while (size--) {
+        write(*buffer++);
+        n++;
+    }
+    return n;
+}
+
+size_t tiny_tft_print(const char *s)
+{
+    return write_buffer((const uint8_t *)s, strlen(s));
+}

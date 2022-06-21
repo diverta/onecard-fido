@@ -8,6 +8,7 @@
 #define TINY_TFT_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -24,6 +25,7 @@ void        tiny_tft_set_cursor(int16_t x, int16_t y);
 void        tiny_tft_set_text_color(uint16_t c);
 void        tiny_tft_set_text_size_each(uint8_t s_x, uint8_t s_y);
 void        tiny_tft_set_text_size(uint8_t s);
+size_t      tiny_tft_print(const char *s);
 
 #ifdef __cplusplus
 }
