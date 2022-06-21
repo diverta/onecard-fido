@@ -230,7 +230,7 @@ static void set_addr_window(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     tiny_tft_write_command(ST77XX_RAMWR);
 }
 
-static void write_color(uint16_t color, uint32_t len) 
+static void issue_color_pixels(uint16_t color, uint32_t len) 
 {
     // Avoid 0-byte transfers
     if (len == 0) {
@@ -354,7 +354,7 @@ static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
     set_addr_window(x, y, w, h);
 
     // Issue a series of pixels, all the same color
-    write_color(swap_bit(color), (uint32_t)w * h);
+    issue_color_pixels(swap_bit(color), (uint32_t)w * h);
 }
 
 void tiny_tft_fill_screen(uint16_t color)
