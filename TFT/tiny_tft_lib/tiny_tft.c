@@ -417,3 +417,97 @@ static void write_pixel(int16_t x, int16_t y, uint16_t color)
         issue_color_pixel(swap_bit(color));
     }
 }
+
+static void write_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
+{
+    // X on screen, nonzero height
+    if ((x < 0) || (x >= _width) || (h == 0)) {
+        return;
+    }
+    // If negative height...
+    if (h < 0) {                       
+        // Move Y to top edge
+        y += h + 1;
+        // Use positive height
+        h = -h;
+    }
+    // Not off bottom
+    if (y >= _height) {
+        return;
+    }
+    int16_t y2 = y + h - 1;
+    // Not off top
+    if (y2 >= 0) { 
+        // Line partly or fully overlaps screen
+        if (y < 0) {
+            // Clip top
+            y = 0;
+            h = y2 + 1;
+        }
+        if (y2 >= _height) {
+            // Clip bottom
+            h = _height - y;
+        }
+        // Draw a filled rectangle to the display.
+        fill_rect_preclipped(x, y, 1, h, color);
+    }
+}
+
+static void start_write(void)
+{
+    app_tiny_tft_set_c_s(LOW);
+}
+
+static void end_write(void)
+{
+    app_tiny_tft_set_c_s(HIGH);
+}
+
+static void draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+{
+    bool clip_right  = (x >= _width);
+    bool clip_bottom = (y >= _height);
+    bool clip_left   = ((x + 6 * size_x - 1) < 0);
+    bool clip_top    = ((y + 8 * size_y - 1) < 0);
+    if (clip_right || clip_bottom || clip_left || clip_top) {
+        // 描画可能領域から外れている場合は処理終了
+        return;
+    }
+
+    if (!_cp437 && (c >= 176)) {
+        // Handle 'classic' charset behavior
+        c++;
+    }
+
+    // Char bitmap = 5 columns
+    start_write();
+    uint8_t *font = tiny_tft_const_raster_font();
+    for (int8_t i = 0; i < 5; i++) {
+        uint8_t line = font[c * 5 + i];
+        for (int8_t j = 0; j < 8; j++, line >>= 1) {
+            if (line & 1) {
+                if (size_x == 1 && size_y == 1) {
+                    write_pixel(x + i, y + j, color);
+                } else {
+                    fill_rect(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                }
+            } else if (bg != color) {
+                if (size_x == 1 && size_y == 1) {
+                    write_pixel(x + i, y + j, bg);
+                } else {
+                    fill_rect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+                }
+            }
+        }
+    }
+
+    // If opaque, draw vertical line for last column
+    if (bg != color) {
+        if (size_x == 1 && size_y == 1) {
+            write_fast_vline(x + 5, y, 8, bg);
+        } else {
+            fill_rect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
+        }
+    }
+    end_write();
+}
