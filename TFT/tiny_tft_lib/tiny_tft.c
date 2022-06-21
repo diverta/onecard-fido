@@ -292,6 +292,15 @@ void tiny_tft_init_display(void)
 //
 // 画面全体を同一色で塗りつぶす
 //
+static void fill_rect_preclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
+    // Set an address window rectangle for blitting pixels
+    set_addr_window(x, y, w, h);
+
+    // Issue a series of pixels, all the same color
+    issue_color_pixels(swap_bit(color), (uint32_t)w * h);
+}
+
 static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
 {
     // Nonzero width and height?
@@ -350,11 +359,8 @@ static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
         h = _height - y;
     }
 
-    // Set an address window rectangle for blitting pixels
-    set_addr_window(x, y, w, h);
-
-    // Issue a series of pixels, all the same color
-    issue_color_pixels(swap_bit(color), (uint32_t)w * h);
+    // Draw a filled rectangle to the display.
+    fill_rect_preclipped(x, y, w, h, color);
 }
 
 void tiny_tft_fill_screen(uint16_t color)
