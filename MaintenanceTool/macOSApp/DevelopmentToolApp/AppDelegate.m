@@ -111,4 +111,7 @@
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
     }
 
+    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+    }
+
 @end
