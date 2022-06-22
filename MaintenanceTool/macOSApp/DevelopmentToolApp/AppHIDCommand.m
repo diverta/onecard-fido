@@ -75,12 +75,8 @@
             [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:nil];
             return;
         }
-        switch ([self command]) {
-            default:
-                // 画面に制御を戻す
-                [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:nil];
-                break;
-        }
+        // 画面に制御を戻す
+        [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
     }
 
 #pragma mark - Call back from ToolHIDHelper
