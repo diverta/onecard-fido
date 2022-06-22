@@ -9,6 +9,7 @@ namespace DevelopmentToolGUI
         public const int HID_CMD_CTAPHID_INIT = 0x86;
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
+        public const int HID_CMD_INSTALL_ATTESTATION = 0xc8;
         public const int HID_CMD_BOOTLOADER_MODE = 0xc5;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
