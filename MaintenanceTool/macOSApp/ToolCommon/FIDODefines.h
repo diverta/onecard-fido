@@ -68,6 +68,7 @@
 #define HID_CMD_BOOTLOADER_MODE     0xC5
 #define HID_CMD_ERASE_BONDS         0xC6
 #define HID_CMD_FIRMWARE_RESET      0xC7
+#define HID_CMD_INSTALL_ATTESTATION 0xC8
 #define HID_CMD_UNKNOWN_ERROR       0xBF
 
 // BLEコマンドバイト

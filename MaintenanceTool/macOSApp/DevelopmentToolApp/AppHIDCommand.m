@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/06/17.
 //
+#import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommonMessage.h"
@@ -95,8 +96,8 @@
 #pragma mark - FIDO Attestation functions
 
     - (void)doRequestFidoAttestationInstall:(NSData *)installData {
-        // コマンド 0xC1 を実行
-        [[self toolHIDHelper] hidHelperWillSend:installData CID:[self cid] CMD:HID_CMD_INSTALL_SKEY_CERT];
+        // コマンド 0xC8 を実行
+        [[self toolHIDHelper] hidHelperWillSend:installData CID:[self cid] CMD:HID_CMD_INSTALL_ATTESTATION];
     }
 
     - (void)doResponseFidoAttestationInstall:(NSData *)message {
@@ -120,10 +121,12 @@
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
-            case HID_CMD_INSTALL_SKEY_CERT:
+            case HID_CMD_INSTALL_ATTESTATION:
                 [self doResponseFidoAttestationInstall:message];
                 break;
             default:
+                // メッセージを画面表示
+                [[self delegate] didResponseCommand:[self command] response:nil success:false errorMessage:MSG_APP_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }

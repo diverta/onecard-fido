@@ -12,6 +12,7 @@
 #define MSG_APP_LAUNCHED            @"FIDO認証器開発ツールを起動しました: Version %@"
 #define MSG_APP_TERMINATED          @"FIDO認証器開発ツールを終了しました。"
 #define MSG_APP_FUNC_NOT_SUPPORTED  @"この機能は実行できません。"
+#define MSG_APP_OCCUR_UNKNOWN_ERROR @"不明なエラーが発生しました。"
 #define MSG_APP_COPYRIGHT           @"Copyright (c) 2017-2022 Diverta Inc."
 #define MSG_FORMAT_APP_VERSION      @"Version %@"
 #define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
