@@ -23,6 +23,9 @@
     @property (nonatomic) FIDOAttestationWindow        *fidoAttestationWindow;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    // 実行コマンドを保持
+    @property (nonatomic) Command                       command;
+    @property (nonatomic) NSString                     *commandName;
 
 @end
 
@@ -111,8 +114,13 @@
 #pragma mark - FIDO setting functions
 
     - (void)doFIDOAttestationInstall {
-        // TODO: FIDO鍵・証明書をインストール
-        [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
+        // FIDO鍵・証明書をインストール
+        [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL];
+        [self setCommandName:PROCESS_NAME_INSTALL_SKEY_CERT];
+        // コマンド開始メッセージを画面表示
+        [self notifyCommandStarted:[self commandName]];
+        // インストール処理を開始
+        [[self appHIDCommand] doRequestCommand:[self command]];
     }
 
     - (void)doFIDOAttestationReset {
@@ -132,6 +140,11 @@
     }
 
     - (void)didDetectRemoval {
+    }
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 即時でアプリケーションに制御を戻す
+        [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
     }
 
 @end
