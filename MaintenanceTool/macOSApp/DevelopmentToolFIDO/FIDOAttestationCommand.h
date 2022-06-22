@@ -15,14 +15,13 @@
 @interface FIDOAttestationCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (NSData *)generatedInstallMessage;
-    - (bool)generateInstallMessageFrom:(NSArray<NSString *> *)selectedFilePaths;
+    - (void)generateInstallMessageFrom:(NSArray<NSString *> *)selectedFilePaths;
 
 @end
 
 @protocol FIDOAttestationCommandDelegate <NSObject>
 
-    - (void)notifyErrorMessage:(NSString *)message;
+    - (void)generatedInstallMessage:(NSData *)installMessage success:(bool)success withErrorMessage:(NSString *)errorMessage;
 
 @end
 

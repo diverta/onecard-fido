@@ -129,13 +129,7 @@
     - (void)doFIDOAttestationInstallRequest {
         // FIDO鍵・証明書インストール用リクエストデータを生成
         [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST];
-        if ([[self attestationCommand] generateInstallMessageFrom:[[self fidoAttestationWindow] selectedFilePaths]] == false) {
-            // 処理失敗時はメイン画面に制御を戻す
-            [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
-            return;
-        }
-        // インストールリクエストを実行
-        [[self appHIDCommand] doRequestCommand:[self command] withData:[[self attestationCommand] generatedInstallMessage]];
+        [[self attestationCommand] generateInstallMessageFrom:[[self fidoAttestationWindow] selectedFilePaths]];
     }
 
     - (void)doFIDOAttestationReset {
@@ -178,9 +172,14 @@
 
 #pragma mark - Call back from FIDOAttestationCommand
 
-    - (void)notifyErrorMessage:(NSString *)message {
-        // メイン画面にエラーメッセージを表示
-        [[self delegate] notifyMessageToMainUI:message];
+    - (void)generatedInstallMessage:(NSData *)installMessage success:(bool)success withErrorMessage:(NSString *)errorMessage {
+        // 処理失敗時はメイン画面に制御を戻す
+        if (success == false) {
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:false fromWindow:[self parentWindow]];
+            return;
+        }
+        // インストールリクエストを実行
+        [[self appHIDCommand] doRequestCommand:[self command] withData:installMessage];
     }
 
 @end

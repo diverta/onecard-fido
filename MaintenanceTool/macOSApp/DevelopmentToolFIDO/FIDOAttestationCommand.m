@@ -14,7 +14,6 @@
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id          delegate;
-    @property (nonatomic) NSMutableData    *message;
 
 @end
 
@@ -32,11 +31,7 @@
         return self;
     }
 
-    - (NSData *)generatedInstallMessage {
-        return [self message];
-    }
-
-    - (bool)generateInstallMessageFrom:(NSArray<NSString *> *)selectedFilePaths {
+    - (void)generateInstallMessageFrom:(NSArray<NSString *> *)selectedFilePaths {
         // 鍵／証明書ファイルのパスを抽出
         NSString *skeyFilePath = [selectedFilePaths objectAtIndex:0];
         NSString *certFilePath = [selectedFilePaths objectAtIndex:1];
@@ -44,27 +39,27 @@
         // 鍵ファイルから秘密鍵（32バイト）を取得し、レスポンスメッセージ領域に格納
         NSData *dataSkey = [self readSkeyFromFile:skeyFilePath];
         if (dataSkey == nil) {
-            return false;
+            return;
         }
 
         // 証明書ファイルから内容を取得
         NSData *dataCert = [self readCertFromFile:certFilePath];
         if (dataCert == nil) {
-            return false;
+            return;
         }
 
         // 秘密鍵と証明書の整合性検証を行う
         if (validate_skey_cert((uint8_t *)[dataSkey bytes], [dataSkey length], (uint8_t *)[dataCert bytes], [dataCert length]) != CTAP1_ERR_SUCCESS) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Public key validation failed: %s", log_debug_message()];
-            [[self delegate] notifyErrorMessage:MSG_INVALID_SKEY_OR_CERT];
-            return false;
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_INVALID_SKEY_OR_CERT];
+            return;
         }
 
         // 秘密鍵を証明書をマージ
-        [self setMessage:[[NSMutableData alloc] init]];
-        [[self message] appendData:dataSkey];
-        [[self message] appendData:dataCert];
-        return true;
+        NSMutableData *message = [[NSMutableData alloc] init];
+        [message appendData:dataSkey];
+        [message appendData:dataCert];
+        [[self delegate] generatedInstallMessage:message success:true withErrorMessage:nil];
     }
 
     #pragma mark - Read private key data
@@ -75,7 +70,7 @@
         NSString *str = [NSString stringWithContentsOfFile:skeyFilePath encoding:NSUTF8StringEncoding error:&err];
         if (err.code) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Secure key file read error: %@", [err description]];
-            [[self delegate] notifyErrorMessage:MSG_CANNOT_READ_SKEY_PEM_FILE];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_CANNOT_READ_SKEY_PEM_FILE];
             return nil;
         }
 
@@ -102,7 +97,7 @@
         // ヘッダーが見つからない場合はエラー
         if (headerFound == false) {
             [[ToolLogFile defaultLogger] error:@"Secure key file has no header 'BEGIN EC PRIVATE KEY'"];
-            [[self delegate] notifyErrorMessage:MSG_INVALID_SKEY_CONTENT_IN_PEM];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_INVALID_SKEY_CONTENT_IN_PEM];
             return nil;
         }
 
@@ -120,7 +115,7 @@
         // デコードされたデータが39バイト未満の場合はエラー
         if ([decodedPemData length] < 39) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Secure key has invalid length: %ld", [decodedPemData length]];
-            [[self delegate] notifyErrorMessage:MSG_INVALID_SKEY_LENGTH_IN_PEM];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_INVALID_SKEY_LENGTH_IN_PEM];
             return nil;
         }
 
@@ -128,7 +123,7 @@
         const char *decodedPem = [decodedPemData bytes];
         if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]];
-            [[self delegate] notifyErrorMessage:MSG_INVALID_SKEY_HEADER_IN_PEM];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_INVALID_SKEY_HEADER_IN_PEM];
             return nil;
         }
 
@@ -151,7 +146,7 @@
         NSData *data = [NSData dataWithContentsOfFile:certFilePath];
         if (data == nil || [data length] == 0) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Cannot read cert file: %@", certFilePath];
-            [[self delegate] notifyErrorMessage:MSG_CANNOT_READ_CERT_CRT_FILE];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_CANNOT_READ_CERT_CRT_FILE];
             return nil;
         }
 
@@ -159,7 +154,7 @@
         NSUInteger dataCertLength = [data length];
         if (dataCertLength < 68) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"Invalid cert length: %@", dataCertLength];
-            [[self delegate] notifyErrorMessage:MSG_INVALID_CERT_LENGTH_IN_CRT];
+            [[self delegate] generatedInstallMessage:nil success:false withErrorMessage:MSG_INVALID_CERT_LENGTH_IN_CRT];
             return nil;
         }
 
