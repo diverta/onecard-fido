@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "AppHIDCommand.h"
+#import "FIDOAttestationCommand.h"
 #import "FIDOAttestationWindow.h"
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
@@ -14,7 +15,7 @@
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
-@interface FIDOSettingCommand () <AppHIDCommandDelegate>
+@interface FIDOSettingCommand () <AppHIDCommandDelegate, FIDOAttestationCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
@@ -23,6 +24,7 @@
     @property (nonatomic) FIDOAttestationWindow        *fidoAttestationWindow;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    @property (nonatomic) FIDOAttestationCommand       *attestationCommand;
     // 実行コマンドを保持
     @property (nonatomic) Command                       command;
     @property (nonatomic) NSString                     *commandName;
@@ -42,6 +44,7 @@
             [[self fidoAttestationWindow] setCommandRef:self];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            [self setAttestationCommand:[[FIDOAttestationCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -120,15 +123,19 @@
         // コマンド開始メッセージを画面表示
         [self notifyCommandStarted:[self commandName]];
         // インストール処理を開始
-        [[self appHIDCommand] doRequestCommand:[self command]];
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
     }
 
     - (void)doFIDOAttestationInstallRequest {
         // FIDO鍵・証明書インストール用リクエストデータを生成
-        // 処理失敗時はその旨を画面に通知
         [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST];
+        if ([[self attestationCommand] generateInstallMessageFrom:[[self fidoAttestationWindow] selectedFilePaths]] == false) {
+            // 処理失敗時はメイン画面に制御を戻す
+            [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
+            return;
+        }
         // インストールリクエストを実行
-        [[self appHIDCommand] doRequestCommand:[self command]];
+        [[self appHIDCommand] doRequestCommand:[self command] withData:[[self attestationCommand] generatedInstallMessage]];
     }
 
     - (void)doFIDOAttestationReset {
@@ -167,6 +174,13 @@
                 [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
                 break;
         }
+    }
+
+#pragma mark - Call back from FIDOAttestationCommand
+
+    - (void)notifyErrorMessage:(NSString *)message {
+        // メイン画面にエラーメッセージを表示
+        [[self delegate] notifyMessageToMainUI:message];
     }
 
 @end
