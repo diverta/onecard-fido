@@ -123,6 +123,14 @@
         [[self appHIDCommand] doRequestCommand:[self command]];
     }
 
+    - (void)doFIDOAttestationInstallRequest {
+        // FIDO鍵・証明書インストール用リクエストデータを生成
+        // 処理失敗時はその旨を画面に通知
+        [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST];
+        // インストールリクエストを実行
+        [[self appHIDCommand] doRequestCommand:[self command]];
+    }
+
     - (void)doFIDOAttestationReset {
         // TODO: FIDO鍵・証明書を消去
         [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
@@ -144,7 +152,21 @@
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
         // 即時でアプリケーションに制御を戻す
-        [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+        if (success == false) {
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_FIDO_ATTESTATION_INSTALL:
+                // FIDO鍵・証明書インストール用リクエストデータを生成
+                [self doFIDOAttestationInstallRequest];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
+                break;
+        }
     }
 
 @end

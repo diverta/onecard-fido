@@ -42,8 +42,10 @@
         [self setCommand:command];
         switch ([self command]) {
             case COMMAND_FIDO_ATTESTATION_INSTALL:
-                // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
                 [self doRequestCtapHidInit];
+                break;
+            case COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST:
+                [self doRequestFidoAttestationInstall];
                 break;
             default:
                 break;
@@ -62,7 +64,7 @@
     }
 
     - (void)doRequestCtapHidInit {
-        // CTAPHID_INITコマンドを実行
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITコマンドを実行
         NSData *message = [[NSData alloc] initWithBytes:nonceBytes length:sizeof(nonceBytes)];
         NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
         // HIDデバイスにリクエストを送信
@@ -75,6 +77,18 @@
             [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:nil];
             return;
         }
+        // 画面に制御を戻す
+        [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
+    }
+
+#pragma mark - FIDO Attestation functions
+
+    - (void)doRequestFidoAttestationInstall {
+        // TODO: 仮の実装です。
+        [self doResponseFidoAttestationInstall:nil];
+    }
+
+    - (void)doResponseFidoAttestationInstall:(NSData *)message {
         // 画面に制御を戻す
         [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
     }
