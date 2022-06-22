@@ -6,6 +6,7 @@
 //
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
+#import "ToolCommonMessage.h"
 #import "ToolHIDHelper.h"
 
 @interface AppHIDCommand () <ToolHIDHelperDelegate>
@@ -14,6 +15,8 @@
     @property (nonatomic) ToolHIDHelper *toolHIDHelper;
     // 実行コマンドを保持
     @property (nonatomic) Command        command;
+    // CIDを保持
+    @property (nonatomic) NSData        *cid;
 
 @end
 
@@ -37,7 +40,7 @@
         return [[self toolHIDHelper] isDeviceConnected];
     }
 
-    - (void)doRequestCommand:(Command)command {
+    - (void)doRequestCommand:(Command)command withData:(NSData *)data {
         // 実行コマンドを保持
         [self setCommand:command];
         switch ([self command]) {
@@ -45,7 +48,7 @@
                 [self doRequestCtapHidInit];
                 break;
             case COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST:
-                [self doRequestFidoAttestationInstall];
+                [self doRequestFidoAttestationInstall:data];
                 break;
             default:
                 break;
@@ -63,6 +66,12 @@
         return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) != 0);
     }
 
+    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
+        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
+        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
+        return newCID;
+    }
+
     - (void)doRequestCtapHidInit {
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITコマンドを実行
         NSData *message = [[NSData alloc] initWithBytes:nonceBytes length:sizeof(nonceBytes)];
@@ -77,15 +86,17 @@
             [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:nil];
             return;
         }
+        // レスポンスからCIDを抽出し、内部で保持
+        [self setCid:[self getNewCIDFrom:message]];
         // 画面に制御を戻す
         [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
     }
 
 #pragma mark - FIDO Attestation functions
 
-    - (void)doRequestFidoAttestationInstall {
-        // TODO: 仮の実装です。
-        [self doResponseFidoAttestationInstall:nil];
+    - (void)doRequestFidoAttestationInstall:(NSData *)installData {
+        // コマンド 0xC1 を実行
+        [[self toolHIDHelper] hidHelperWillSend:installData CID:[self cid] CMD:HID_CMD_INSTALL_SKEY_CERT];
     }
 
     - (void)doResponseFidoAttestationInstall:(NSData *)message {
@@ -109,12 +120,17 @@
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
+            case HID_CMD_INSTALL_SKEY_CERT:
+                [self doResponseFidoAttestationInstall:message];
+                break;
             default:
                 break;
         }
     }
 
     - (void)hidHelperDidResponseTimeout {
+        // タイムアウト時はエラーメッセージを表示
+        [[self delegate] didResponseCommand:[self command] response:nil success:false errorMessage:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
 @end

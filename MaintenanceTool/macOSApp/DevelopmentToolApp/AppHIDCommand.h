@@ -18,7 +18,7 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (bool)checkUSBHIDConnection;
-    - (void)doRequestCommand:(Command)command;
+    - (void)doRequestCommand:(Command)command withData:(NSData *)data;
 
 @end
 
