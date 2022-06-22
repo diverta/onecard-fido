@@ -253,6 +253,7 @@ static void on_hid_request_receive_completed(void)
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
         case MNT_COMMAND_PREFERENCE_PARAM:
@@ -380,6 +381,7 @@ void on_hid_response_send_completed(void)
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
         case MNT_COMMAND_PREFERENCE_PARAM:
