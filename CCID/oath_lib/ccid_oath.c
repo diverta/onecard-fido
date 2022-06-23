@@ -38,6 +38,11 @@ static uint16_t oath_ins_put(command_apdu_t *capdu, response_apdu_t *rapdu)
     return ccid_oath_account_add(capdu, rapdu);
 }
 
+static uint16_t oath_ins_delete(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_oath_account_delete(capdu, rapdu);
+}
+
 void ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -56,6 +61,9 @@ void ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OATH_INS_PUT:
             rapdu->sw = oath_ins_put(capdu, rapdu);
+            break;
+        case OATH_INS_DELETE:
+            rapdu->sw = oath_ins_delete(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

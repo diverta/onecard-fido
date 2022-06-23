@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 #define OATH_INS_PUT                0x01
+#define OATH_INS_DELETE             0x02
 #define OATH_INS_SELECT             0xA4
 
 #define OATH_TAG_NAME               0x71
