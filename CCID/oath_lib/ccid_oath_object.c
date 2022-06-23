@@ -99,6 +99,33 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     return SW_NO_ERROR;
 }
 
+uint16_t ccid_oath_object_account_delete(char *account_name)
+{
+    //
+    // Flash ROMから該当レコードを削除
+    //
+    bool exist;
+    uint16_t serial;
+    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, &exist, &serial) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+#if LOG_ACCOUNT_EXIST_AND_SERIAL
+    fido_log_debug("account record(%s): exist=%d, serial=%d", log_strdup(account_name), exist, serial);
+#endif
+
+    // 該当レコードが無い場合はエラー
+    if (exist == false) {
+        return SW_DATA_INVALID;
+    }
+
+    // Flash ROM書込み後のコールバック先を判定するため、関数参照を設定
+    m_flash_func = (void *)ccid_oath_object_account_delete;
+
+    // 処理成功
+    return SW_NO_ERROR;
+}
+
 //
 // Flash ROM書込み後のコールバック関数
 //
@@ -109,6 +136,9 @@ void ccid_oath_object_write_retry(void)
     if (m_flash_func == write_account_object) {
         ccid_oath_account_retry();
     }
+    if (m_flash_func == ccid_oath_object_account_delete) {
+        ccid_oath_account_retry();
+    }
 }
 
 void ccid_oath_object_write_resume(bool success)
@@ -116,6 +146,9 @@ void ccid_oath_object_write_resume(bool success)
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行
     if (m_flash_func == write_account_object) {
+        ccid_oath_account_resume(success);
+    }
+    if (m_flash_func == ccid_oath_object_account_delete) {
         ccid_oath_account_resume(success);
     }
 }
