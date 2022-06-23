@@ -126,6 +126,22 @@ uint16_t ccid_oath_object_account_delete(char *account_name)
     return SW_NO_ERROR;
 }
 
+uint16_t ccid_oath_object_delete_all(void)
+{
+    //
+    // Flash ROMから全レコードを削除
+    //
+    if (ccid_flash_oath_object_delete_all() == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // Flash ROM書込み後のコールバック先を判定するため、関数参照を設定
+    m_flash_func = (void *)ccid_oath_object_delete_all;
+
+    // 処理成功
+    return SW_NO_ERROR;
+}
+
 //
 // Flash ROM書込み後のコールバック関数
 //
@@ -139,6 +155,9 @@ void ccid_oath_object_write_retry(void)
     if (m_flash_func == ccid_oath_object_account_delete) {
         ccid_oath_account_retry();
     }
+    if (m_flash_func == ccid_oath_object_delete_all) {
+        ccid_oath_account_retry();
+    }
 }
 
 void ccid_oath_object_write_resume(bool success)
@@ -149,6 +168,9 @@ void ccid_oath_object_write_resume(bool success)
         ccid_oath_account_resume(success);
     }
     if (m_flash_func == ccid_oath_object_account_delete) {
+        ccid_oath_account_resume(success);
+    }
+    if (m_flash_func == ccid_oath_object_delete_all) {
         ccid_oath_account_resume(success);
     }
 }

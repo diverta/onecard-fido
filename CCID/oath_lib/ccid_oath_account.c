@@ -234,6 +234,23 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     return sw;
 }
 
+uint16_t ccid_oath_account_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+
+    // アカウントデータをFlash ROMから全て削除
+    uint16_t sw = ccid_oath_object_delete_all();
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_process_resume_prepare(capdu, rapdu);
+        m_flash_func = ccid_oath_account_reset;
+    }
+    return sw;
+}
+
 //
 // Flash ROM更新後のコールバック関数
 //
@@ -247,6 +264,10 @@ void ccid_oath_account_retry(void)
     if (m_flash_func == ccid_oath_account_delete) {
         // アカウントデータをFlash ROMから削除
         sw = ccid_oath_object_account_delete(m_account_name);
+    }
+    if (m_flash_func == ccid_oath_account_reset) {
+        // アカウントデータをFlash ROMから全て削除
+        sw = ccid_oath_object_delete_all();
     }
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
@@ -274,6 +295,10 @@ void ccid_oath_account_resume(bool success)
         if (m_flash_func == ccid_oath_account_delete) {
             // 正常終了
             fido_log_info("OATH account delete success");
+        }
+        if (m_flash_func == ccid_oath_account_reset) {
+            // 正常終了
+            fido_log_info("OATH account reset success");
         }
         ccid_process_resume_response(sw);
 
