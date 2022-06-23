@@ -188,6 +188,9 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     return true;
 }
 
+//
+// データ削除
+//
 bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
 {
     // 引数からファイル名、レコードキーを取得
@@ -214,6 +217,24 @@ bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size
     APP_SETTINGS_KEY key = {file_id, record_key, true, *serial};
     if (app_settings_delete_multi(&key)) {
         // 削除成功の場合は、管理用コマンドの処理を継続
+        app_event_notify(APEVT_APP_SETTINGS_DELETED);
+        return true;
+
+    } else {
+        // 削除失敗の場合は、呼び出し元に制御を戻す
+        return false;
+    }
+}
+
+bool ccid_flash_oath_object_delete_all(void)
+{
+    // Flash ROM更新関数の参照を保持
+    m_flash_func = (void *)ccid_flash_oath_object_delete_all;
+
+    // 全てのOATHオブジェクトデータをFlash ROM領域から削除
+    APP_SETTINGS_KEY key = {OATH_DATA_OBJ_FILE_ID, 0, false, 0};
+    if (app_settings_delete_multi(&key)) {
+        // 削除成功の場合は、OpenPGP関連処理を継続
         app_event_notify(APEVT_APP_SETTINGS_DELETED);
         return true;
 
@@ -254,6 +275,9 @@ void ccid_flash_oath_object_record_deleted(void)
 
     // 正常系の後続処理を実行
     if (flash_func == ccid_flash_oath_object_delete) {
+        ccid_oath_object_write_resume(true);
+    }
+    if (flash_func == ccid_flash_oath_object_delete_all) {
         ccid_oath_object_write_resume(true);
     }
 }
