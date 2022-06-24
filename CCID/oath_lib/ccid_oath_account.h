@@ -17,6 +17,8 @@ extern "C" {
 // 関数群
 //
 uint16_t    ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_oath_account_reset(command_apdu_t *capdu, response_apdu_t *rapdu);
 void        ccid_oath_account_retry(void);
 void        ccid_oath_account_resume(bool success);
 
