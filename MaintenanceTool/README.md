@@ -28,7 +28,7 @@ macOS版と、Windows版を用意しました。
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
-## FIDO認証器開発ツール
+## [FIDO認証器開発ツール](../MaintenanceTool/DEVTOOL.md)
 ベンダー向けのツールです。
 
 #### [macOS版](../MaintenanceTool/macOSApp/DEVTOOL.md)
