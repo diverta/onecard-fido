@@ -7,6 +7,9 @@
 #ifndef RTCC_H
 #define RTCC_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,6 +18,7 @@ extern "C" {
 // 関数群
 //
 void        rtcc_init(void);
+bool        rtcc_update_timestamp_by_unixtime(uint32_t unixtime);
 
 #ifdef __cplusplus
 }

@@ -49,6 +49,8 @@
       <itemPath>../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_development.c</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_development.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_flash_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.h</itemPath>
@@ -77,6 +79,13 @@
     <logicalFolder name="oath_lib" displayName="oath_lib" projectFiles="true">
       <itemPath>../../CCID/oath_lib/ccid_oath.c</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_account.c</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_account.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_define.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_object.c</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_object.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_totp.c</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_totp.h</itemPath>
     </logicalFolder>
     <logicalFolder name="openpgp_lib" displayName="openpgp_lib" projectFiles="true">
       <itemPath>../../CCID/openpgp_lib/README.md</itemPath>
@@ -190,8 +199,11 @@
     <logicalFolder name="tiny_tft_lib"
                    displayName="tiny_tft_lib"
                    projectFiles="true">
+      <itemPath>../../TFT/tiny_tft_lib/README.md</itemPath>
       <itemPath>../../TFT/tiny_tft_lib/tiny_tft.c</itemPath>
       <itemPath>../../TFT/tiny_tft_lib/tiny_tft.h</itemPath>
+      <itemPath>../../TFT/tiny_tft_lib/tiny_tft_const.c</itemPath>
+      <itemPath>../../TFT/tiny_tft_lib/tiny_tft_const.h</itemPath>
       <itemPath>../../TFT/tiny_tft_lib/tiny_tft_define.h</itemPath>
     </logicalFolder>
     <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
@@ -277,6 +289,41 @@
       <item path="../../CCID/oath_lib/ccid_oath.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../../CCID/oath_lib/ccid_oath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_account.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_account.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_totp.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_totp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/README.md" ex="false" tool="3" flavor2="0">
       </item>
@@ -629,6 +676,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_development.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_development.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../FIDO2Device/fido2_lib/fido_flash_define.h"
             ex="false"
             tool="3"
@@ -795,9 +852,21 @@
       </item>
       <item path="../../FIDO2Device/util_lib/rtcc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../TFT/tiny_tft_lib/README.md" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../TFT/tiny_tft_lib/tiny_tft.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../../TFT/tiny_tft_lib/tiny_tft.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../TFT/tiny_tft_lib/tiny_tft_const.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../TFT/tiny_tft_lib/tiny_tft_const.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../TFT/tiny_tft_lib/tiny_tft_define.h"
             ex="false"

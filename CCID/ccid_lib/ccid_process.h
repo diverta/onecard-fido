@@ -18,6 +18,8 @@ extern "C" {
 //
 void        ccid_process_stop_applet(void);
 void        ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu);
+void        ccid_process_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu);
+void        ccid_process_resume_response(uint16_t sw);
 
 #ifdef __cplusplus
 }

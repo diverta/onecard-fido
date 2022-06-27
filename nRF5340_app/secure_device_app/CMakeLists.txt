@@ -27,6 +27,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_command_common.c
     ../../FIDO2Device/fido2_lib/fido_common.c
     ../../FIDO2Device/fido2_lib/fido_ctap2_command.c
+    ../../FIDO2Device/fido2_lib/fido_development.c
     ../../FIDO2Device/fido2_lib/fido_hid_channel.c
     ../../FIDO2Device/fido2_lib/fido_hid_receive.c
     ../../FIDO2Device/fido2_lib/fido_hid_send.c
@@ -63,6 +64,9 @@ target_sources(app PRIVATE
     ../../CCID/openpgp_lib/ccid_openpgp_pin.c
     ../../CCID/openpgp_lib/ccid_pin_auth.c
     ../../CCID/oath_lib/ccid_oath.c
+    ../../CCID/oath_lib/ccid_oath_account.c
+    ../../CCID/oath_lib/ccid_oath_object.c
+    ../../CCID/oath_lib/ccid_oath_totp.c
     ../../TFT/tiny_tft_lib/tiny_tft.c
     ../../TFT/tiny_tft_lib/tiny_tft_const.c
 )
