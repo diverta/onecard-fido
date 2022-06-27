@@ -133,8 +133,19 @@
     }
 
     - (void)doFIDOAttestationReset {
-        // TODO: FIDO鍵・証明書を消去
-        [[self delegate] notifyMessageToMainUI:MSG_APP_FUNC_NOT_SUPPORTED];
+        // FIDO鍵・証明書を消去
+        [self setCommand:COMMAND_FIDO_ATTESTATION_RESET];
+        [self setCommandName:PROCESS_NAME_ERASE_SKEY_CERT];
+        // コマンド開始メッセージを画面表示
+        [self notifyCommandStarted:[self commandName]];
+        // インストール処理を開始
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
+    }
+
+    - (void)doFIDOAttestationResetRequest {
+        // FIDO鍵・証明書消去リクエストを実行
+        [self setCommand:COMMAND_FIDO_ATTESTATION_RESET_REQUEST];
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
     }
 
     - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
@@ -162,6 +173,10 @@
             case COMMAND_FIDO_ATTESTATION_INSTALL:
                 // FIDO鍵・証明書インストール用リクエストデータを生成
                 [self doFIDOAttestationInstallRequest];
+                break;
+            case COMMAND_FIDO_ATTESTATION_RESET:
+                // FIDO鍵・証明書消去リクエストを実行
+                [self doFIDOAttestationResetRequest];
                 break;
             default:
                 // メイン画面に制御を戻す

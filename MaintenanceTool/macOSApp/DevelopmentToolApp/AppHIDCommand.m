@@ -46,10 +46,14 @@
         [self setCommand:command];
         switch ([self command]) {
             case COMMAND_FIDO_ATTESTATION_INSTALL:
+            case COMMAND_FIDO_ATTESTATION_RESET:
                 [self doRequestCtapHidInit];
                 break;
             case COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST:
                 [self doRequestFidoAttestationInstall:data];
+                break;
+            case COMMAND_FIDO_ATTESTATION_RESET_REQUEST:
+                [self doRequestFidoAttestationReset];
                 break;
             default:
                 break;
@@ -105,6 +109,17 @@
         [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
     }
 
+    - (void)doRequestFidoAttestationReset {
+        // コマンド 0xC9 を実行
+        NSData *data = [[NSData alloc] init];
+        [[self toolHIDHelper] hidHelperWillSend:data CID:[self cid] CMD:HID_CMD_RESET_ATTESTATION];
+    }
+
+    - (void)doResponseFidoAttestationReset:(NSData *)message {
+        // 画面に制御を戻す
+        [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
+    }
+
 #pragma mark - Call back from ToolHIDHelper
 
     - (void)hidHelperDidDetectConnect {
@@ -123,6 +138,9 @@
                 break;
             case HID_CMD_INSTALL_ATTESTATION:
                 [self doResponseFidoAttestationInstall:message];
+                break;
+            case HID_CMD_RESET_ATTESTATION:
+                [self doResponseFidoAttestationReset:message];
                 break;
             default:
                 // メッセージを画面表示
