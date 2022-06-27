@@ -571,11 +571,13 @@ void fido_flash_object_record_deleted(void)
     // 正常系の後続処理を実行
     if (flash_func == fido_flash_skey_cert_delete) {
         fido_maintenance_command_skey_cert_file_deleted();
+        fido_development_command_attestation_file_deleted();
     }
     if (flash_func == fido_flash_token_counter_delete) {
         // CTAP2コマンドの処理を実行
         fido_ctap2_command_token_counter_file_deleted();
         // 管理用コマンドの処理を実行
         fido_maintenance_command_token_counter_file_deleted();
+        fido_development_command_token_counter_file_deleted();
     }
 }

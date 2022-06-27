@@ -165,7 +165,8 @@ void fido_development_command_attestation_record_updated(void)
 
 void fido_development_command_aes_password_record_updated(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION) {
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION ||
+        fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
         // AESパスワード生成完了
         fido_log_debug("Update AES password record completed ");
 
@@ -181,6 +182,34 @@ static void command_reset_attestation(void)
 {
     fido_log_info("Reset FIDO attestation start");
 
-    // TODO: 仮の実装です
-    send_command_error_response(CTAP1_ERR_SUCCESS);
+    // 秘密鍵／証明書をFlash ROM領域から削除
+    if (fido_flash_skey_cert_delete() == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+    }
+}
+
+void fido_development_command_attestation_file_deleted(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
+        // 秘密鍵／証明書削除が完了
+        fido_log_debug("Erase FIDO attestation file completed ");
+
+        // 続いて、署名カウンター情報をFlash ROM領域から削除
+        if (fido_command_sign_counter_delete() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        }
+    }
+}
+
+void fido_development_command_token_counter_file_deleted(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
+        // 署名カウンター情報削除が完了
+        fido_log_debug("Erase token counter file completed");
+
+        // 続いて、AESパスワード生成処理を行う
+        if (generate_random_password() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        }
+    }
 }
