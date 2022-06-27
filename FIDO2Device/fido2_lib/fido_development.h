@@ -15,6 +15,8 @@ extern "C" {
 
 void        fido_development_command(TRANSPORT_TYPE transport_type);
 void        fido_development_command_report_sent(void);
+void        fido_development_command_attestation_record_updated(void);
+void        fido_development_command_aes_password_record_updated(void);
 
 #ifdef __cplusplus
 }

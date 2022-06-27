@@ -9,6 +9,7 @@
 //
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
+#include "fido_command_common.h"
 #include "fido_development.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -21,6 +22,9 @@ fido_log_module_register(fido_development);
 // 関数群
 static void command_install_attestation(void);
 static void command_reset_attestation(void);
+
+// データ編集用エリア
+static uint8_t work_buf[64];
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
@@ -126,8 +130,48 @@ static void command_install_attestation(void)
         return;
     }
 
-    // TODO: 仮の実装です
-    send_command_error_response(CTAP1_ERR_SUCCESS);
+    // 鍵・証明書データをFlash ROMへ書込
+    if (fido_flash_skey_cert_write() == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+    }
+}
+
+static bool generate_random_password(void)
+{
+    // 32バイトのランダムベクターを生成
+    fido_command_generate_random_vector(work_buf, 32);
+
+    // Flash ROMに書き出して保存
+    if (fido_flash_password_set(work_buf) == false) {
+        return false;
+    }
+
+    fido_log_debug("Generated random vector for AES password ");
+    return true;
+}
+
+void fido_development_command_attestation_record_updated(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION) {
+        // 証明書データ書込完了
+        fido_log_debug("Update FIDO attestation record completed ");
+
+        // 続いて、AESパスワード生成処理を行う
+        if (generate_random_password() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        }
+    }
+}
+
+void fido_development_command_aes_password_record_updated(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION) {
+        // AESパスワード生成完了
+        fido_log_debug("Update AES password record completed ");
+
+        // レスポンスを生成してU2Fクライアントに戻す
+        send_command_error_response(CTAP1_ERR_SUCCESS);
+    }
 }
 
 //
