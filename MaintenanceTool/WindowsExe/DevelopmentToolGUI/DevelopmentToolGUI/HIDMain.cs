@@ -22,7 +22,7 @@ namespace DevelopmentToolGUI
         private HIDProcess hidProcess = new HIDProcess();
 
         // ブロードキャストCIDを保持
-        private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
+        private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff };
 
         // INITコマンドで受信したCIDを保持
         private byte[] ReceivedCID = null;
@@ -219,16 +219,10 @@ namespace DevelopmentToolGUI
             DoRequestCtapHidInit(AppCommon.RequestType.InstallSkeyCert);
         }
 
-        public void DoRequestInstallSkeyCert(byte[] agreementKeyCBOR)
+        public void DoRequestInstallSkeyCert()
         {
             AppUtil.OutputLogDebug("DoRequestInstallSkeyCert");
-            // CBORレスポンスから、公開鍵を抽出
             InstallSkeyCert installSkeyCert = new InstallSkeyCert();
-            if (installSkeyCert.ExtractKeyAgreement(agreementKeyCBOR) == false) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
             // 秘密鍵をファイルから読込
             if (installSkeyCert.ReadPemFile(skeyFilePathForInstall) == false) {
                 mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_SKEY_PEM_FILE);
@@ -247,13 +241,8 @@ namespace DevelopmentToolGUI
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
-            // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
-            byte[] cbor = installSkeyCert.GenerateInstallSkeyCertBytes();
-            if (cbor == null) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_CRYPTO_SKEY_CERT_DATA);
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
+            // 秘密鍵を証明書をマージして配列にセットし、HIDデバイスに送信
+            byte[] installData = installSkeyCert.GenerateInstallSkeyCertBytes();
             AppUtil.OutputLogDebug("DoRequestInstallSkeyCert hidProcess.SendHIDMessage");
             hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_ATTESTATION, installData, installData.Length);
         }
