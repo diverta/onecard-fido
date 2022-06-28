@@ -15,6 +15,8 @@
     @property (nonatomic, weak) id delegate;
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)notifyCommandStarted:(NSString *)processNameOfCommand;
+    - (void)notifyCommandTerminated:(NSString *)processNameOfCommand message:(NSString *)message success:(bool)success fromWindow:(NSWindow *)window;
 
 @end
 
