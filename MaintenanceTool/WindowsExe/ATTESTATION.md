@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器開発ツール](README.md)を使用して、FIDO2認証器に鍵・証明書を導入する手順を掲載します。
+[FIDO認証器開発ツール](../../MaintenanceTool/WindowsExe/DEVTOOL.md)を使用して、FIDO2認証器に鍵・証明書を導入する手順を掲載します。
 
 ## 認証器の準備
 

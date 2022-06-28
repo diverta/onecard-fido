@@ -70,7 +70,7 @@
             [self toolHIDManager], &handleDeviceRemoval, (__bridge void *)self);
         IOHIDManagerRegisterInputReportCallback(
             [self toolHIDManager], &handleInputReport, (__bridge void *)self);
-        [[ToolLogFile defaultLogger] info:MSG_USB_DETECT_STARTED];
+        [[ToolLogFile defaultLogger] debug:MSG_USB_DETECT_STARTED];
     }
 
     - (bool)isDeviceConnected {
