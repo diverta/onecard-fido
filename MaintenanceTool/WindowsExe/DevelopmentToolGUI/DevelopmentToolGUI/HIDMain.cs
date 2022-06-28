@@ -7,9 +7,8 @@ namespace DevelopmentToolGUI
     {
         // HIDコマンドバイトに関する定義
         public const int HID_CMD_CTAPHID_INIT = 0x86;
-        public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
-        public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
         public const int HID_CMD_INSTALL_ATTESTATION = 0xc8;
+        public const int HID_CMD_RESET_ATTESTATION = 0xc9;
         public const int HID_CMD_BOOTLOADER_MODE = 0xc5;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
@@ -21,9 +20,6 @@ namespace DevelopmentToolGUI
         private MainForm mainForm;
         // HIDデバイス関連
         private HIDProcess hidProcess = new HIDProcess();
-
-        // CTAP2共通処理
-        private Ctap2 ctap2;
 
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
@@ -57,10 +53,6 @@ namespace DevelopmentToolGUI
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
             hidProcess.OnFormCreate(mainForm.Handle);
-
-            // CTAP2共通処理に各種参照を引き渡す
-            ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_HID);
-            ctap2.SetHidMain(this);
         }
 
         public void OnFormDestroy()
@@ -87,13 +79,10 @@ namespace DevelopmentToolGUI
             case Const.HID_CMD_CTAPHID_INIT:
                 DoResponseTestCtapHidInit(message, length);
                 break;
-            case Const.HID_CMD_ERASE_SKEY_CERT:
-            case Const.HID_CMD_INSTALL_SKEY_CERT:
+            case Const.HID_CMD_INSTALL_ATTESTATION:
+            case Const.HID_CMD_RESET_ATTESTATION:
                 // ステータスバイトをチェックし、画面に制御を戻す
                 DoResponseMaintSkeyCert(message, length);
-                break;
-            case Const.HID_CMD_CTAPHID_CBOR:
-                ctap2.DoResponseCtapHidCbor(message, length);
                 break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 // メイン画面に制御を戻す
@@ -178,8 +167,7 @@ namespace DevelopmentToolGUI
                 DoRequestEraseSkeyCert();
                 break;
             case AppCommon.RequestType.InstallSkeyCert:
-                // 認証器の公開鍵を取得
-                ctap2.DoGetKeyAgreement(requestType);
+                DoRequestInstallSkeyCert();
                 break;
             default:
                 break;
@@ -209,7 +197,7 @@ namespace DevelopmentToolGUI
         public void DoRequestEraseSkeyCert()
         {
             // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_RESET_ATTESTATION, RequestData, 0);
         }
 
         // インストール元の鍵・証明書ファイルパスを保持
@@ -267,7 +255,7 @@ namespace DevelopmentToolGUI
                 return;
             }
             AppUtil.OutputLogDebug("DoRequestInstallSkeyCert hidProcess.SendHIDMessage");
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, cbor, cbor.Length);
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_ATTESTATION, installData, installData.Length);
         }
 
         private void DoResponseMaintSkeyCert(byte[] message, int length)
