@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
 #### 使用機材
 

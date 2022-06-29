@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -14,9 +14,9 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
@@ -27,7 +27,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### ファームウェアを更新
 
-最新ファームウェアを、MDBT50Q Dongleに書込み、ファームウェアを更新します。<br>
+最新ファームウェアを、FIDO2認証器に書込み、ファームウェアを更新します。<br>
 （最新ファームウェアは、FIDO認証器管理ツールに同梱されています）
 
 ファームウェアの更新手順につきましては、<b>[ファームウェア更新手順書](UPDATEFIRMWARE.md)</b>をご参照ください。

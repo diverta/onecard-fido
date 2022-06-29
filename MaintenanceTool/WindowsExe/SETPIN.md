@@ -2,15 +2,15 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
 
 ## 認証器の準備
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
