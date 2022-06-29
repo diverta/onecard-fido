@@ -15,6 +15,7 @@
 #include "fido_ctap2_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_development.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
@@ -261,6 +262,10 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_SYSTEM_RESET:
             fido_maintenance_command(TRANSPORT_HID);
             break;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+        case MNT_COMMAND_RESET_ATTESTATION:
+            fido_development_command(TRANSPORT_HID);
+            break;
         default:
             // 不正なコマンドであるため
             // エラーレスポンスを送信
@@ -387,6 +392,10 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_ERASE_BONDING_DATA:
         case MNT_COMMAND_SYSTEM_RESET:
             fido_maintenance_command_report_sent();
+            break;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+        case MNT_COMMAND_RESET_ATTESTATION:
+            fido_development_command_report_sent();
             break;
         default:
             break;

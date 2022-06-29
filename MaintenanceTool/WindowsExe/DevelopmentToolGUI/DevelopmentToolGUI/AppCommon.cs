@@ -50,7 +50,6 @@
         public const string MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY = "公開鍵を認証器から受け取ることができませんでした。";
         public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
         public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
-        public const string MSG_CANNOT_CRYPTO_SKEY_CERT_DATA = "鍵・証明書の転送データを暗号化できませんでした。";
         public const string MSG_INVALID_SKEY_OR_CERT = "秘密鍵または公開鍵の内容が不正です。";
 
         // コマンドテスト関連メッセージ

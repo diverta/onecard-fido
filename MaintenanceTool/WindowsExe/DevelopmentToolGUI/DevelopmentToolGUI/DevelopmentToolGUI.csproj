@@ -102,7 +102,6 @@
       <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AppCommon.cs" />
-    <Compile Include="Ctap2.cs" />
     <Compile Include="FIDOAttestationForm.cs">
       <SubType>Form</SubType>
     </Compile>

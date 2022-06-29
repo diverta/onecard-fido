@@ -30,6 +30,7 @@ extern "C" {
 #include "ccid_flash_object.h"
 #include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
+#include "ccid_flash_oath_object.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"
@@ -38,6 +39,7 @@ extern "C" {
 #include "app_crypto.h"
 #include "app_crypto_ec.h"
 #include "app_platform.h"
+#include "app_rtcc.h"
 #include "app_settings.h"
 #include "app_timer.h"
 

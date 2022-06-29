@@ -6,30 +6,45 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "AppHIDCommand.h"
+#import "FIDOAttestationCommand.h"
+#import "FIDOAttestationWindow.h"
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
+#import "ToolPopupWindow.h"
 
-@interface FIDOSettingCommand ()
+@interface FIDOSettingCommand () <AppHIDCommandDelegate, FIDOAttestationCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) FIDOSettingWindow            *fidoSettingWindow;
+    @property (nonatomic) FIDOAttestationWindow        *fidoAttestationWindow;
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    @property (nonatomic) FIDOAttestationCommand       *attestationCommand;
+    // 実行コマンドを保持
+    @property (nonatomic) Command                       command;
+    @property (nonatomic) NSString                     *commandName;
 
 @end
 
 @implementation FIDOSettingCommand
 
-    - (id)init {
-        return [self initWithDelegate:nil];
-    }
-
     - (id)initWithDelegate:(id)delegate {
-        self = [super init];
+        self = [super initWithDelegate:delegate];
         if (self) {
             // 画面のインスタンスを生成
             [self setFidoSettingWindow:[[FIDOSettingWindow alloc] initWithWindowNibName:@"FIDOSettingWindow"]];
+            [self setFidoAttestationWindow:[[FIDOAttestationWindow alloc] initWithWindowNibName:@"FIDOAttestationWindow"]];
+            // このクラスの参照を引き渡し
+            [[self fidoSettingWindow] setCommandRef:self];
+            [[self fidoAttestationWindow] setCommandRef:self];
+            // ヘルパークラスのインスタンスを生成
+            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            [self setAttestationCommand:[[FIDOAttestationCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -39,7 +54,6 @@
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
         [[self fidoSettingWindow] setParentWindowRef:parentWindow];
-        [[self fidoSettingWindow] setCommandRef:self];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self fidoSettingWindow] window];
         FIDOSettingCommand * __weak weakSelf = self;
@@ -56,10 +70,131 @@
         [[self fidoSettingWindow] close];
         // 実行コマンドにより処理分岐
         switch ([[self fidoSettingWindow] commandToPerform]) {
+            case COMMAND_FIDO_ATTESTATION:
+                // FIDO鍵・証明書インストール画面を表示
+                [self fidoAttestationWindowWillOpen];
+                break;
+            case COMMAND_FIDO_ATTESTATION_RESET:
+                // FIDO鍵・証明書を消去
+                [self doFIDOAttestationReset];
+                break;
             default:
                 // メイン画面に制御を戻す
                 break;
         }
+    }
+
+#pragma mark - For FIDO attestation window
+
+    - (void)fidoAttestationWindowWillOpen {
+        // 画面に親画面参照をセット
+        NSWindow *parentWindow = [self parentWindow];
+        [[self fidoAttestationWindow] setParentWindowRef:parentWindow];
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [[self fidoAttestationWindow] window];
+        FIDOSettingCommand * __weak weakSelf = self;
+        [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf fidoAttestationWindowDidClose:weakSelf modalResponse:response];
+        }];
+    }
+
+    - (void)fidoAttestationWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self fidoAttestationWindow] close];
+        // 実行コマンドにより処理分岐
+        switch ([[self fidoAttestationWindow] commandToPerform]) {
+            case COMMAND_FIDO_ATTESTATION_INSTALL:
+                // FIDO鍵・証明書をインストール
+                [self doFIDOAttestationInstall];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                break;
+        }
+    }
+
+#pragma mark - FIDO setting functions
+
+    - (void)doFIDOAttestationInstall {
+        // FIDO鍵・証明書をインストール
+        [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL];
+        [self setCommandName:PROCESS_NAME_INSTALL_SKEY_CERT];
+        // コマンド開始メッセージを画面表示
+        [self notifyCommandStarted:[self commandName]];
+        // インストール処理を開始
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
+    }
+
+    - (void)doFIDOAttestationInstallRequest {
+        // FIDO鍵・証明書インストール用リクエストデータを生成
+        [self setCommand:COMMAND_FIDO_ATTESTATION_INSTALL_REQUEST];
+        [[self attestationCommand] generateInstallMessageFrom:[[self fidoAttestationWindow] selectedFilePaths]];
+    }
+
+    - (void)doFIDOAttestationReset {
+        // FIDO鍵・証明書を消去
+        [self setCommand:COMMAND_FIDO_ATTESTATION_RESET];
+        [self setCommandName:PROCESS_NAME_ERASE_SKEY_CERT];
+        // コマンド開始メッセージを画面表示
+        [self notifyCommandStarted:[self commandName]];
+        // インストール処理を開始
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
+    }
+
+    - (void)doFIDOAttestationResetRequest {
+        // FIDO鍵・証明書消去リクエストを実行
+        [self setCommand:COMMAND_FIDO_ATTESTATION_RESET_REQUEST];
+        [[self appHIDCommand] doRequestCommand:[self command] withData:nil];
+    }
+
+    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
+        // USBポートに接続されていない場合はfalse
+        bool connected = [[self appHIDCommand] checkUSBHIDConnection];
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:window connected:connected];
+    }
+
+#pragma mark - Call back from AppHIDCommand
+
+    - (void)didDetectConnect {
+    }
+
+    - (void)didDetectRemoval {
+    }
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 即時でアプリケーションに制御を戻す
+        if (success == false) {
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_FIDO_ATTESTATION_INSTALL:
+                // FIDO鍵・証明書インストール用リクエストデータを生成
+                [self doFIDOAttestationInstallRequest];
+                break;
+            case COMMAND_FIDO_ATTESTATION_RESET:
+                // FIDO鍵・証明書消去リクエストを実行
+                [self doFIDOAttestationResetRequest];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
+                break;
+        }
+    }
+
+#pragma mark - Call back from FIDOAttestationCommand
+
+    - (void)generatedInstallMessage:(NSData *)installMessage success:(bool)success withErrorMessage:(NSString *)errorMessage {
+        // 処理失敗時はメイン画面に制御を戻す
+        if (success == false) {
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:false fromWindow:[self parentWindow]];
+            return;
+        }
+        // インストールリクエストを実行
+        [[self appHIDCommand] doRequestCommand:[self command] withData:installMessage];
     }
 
 @end
