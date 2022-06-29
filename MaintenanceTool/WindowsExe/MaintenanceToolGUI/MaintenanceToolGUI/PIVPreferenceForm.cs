@@ -29,5 +29,14 @@ namespace MaintenanceToolGUI
             DialogResult = dialogResult;
             Close();
         }
+
+        //
+        // PIV設定機能の各処理
+        //
+        public void OnCommandProcessTerminated(AppCommon.RequestType requestType, bool success, string errMessage)
+        {
+            // TODO:
+            // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
+        }
     }
 }

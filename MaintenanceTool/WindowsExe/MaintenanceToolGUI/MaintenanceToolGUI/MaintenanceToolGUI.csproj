@@ -194,6 +194,7 @@
       <DependentUpon>ToolVersionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolPIV.cs" />
+    <Compile Include="ToolPIVCcid.cs" />
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
     <Compile Include="..\..\ToolGUICommon\HIDDevice.cs">
