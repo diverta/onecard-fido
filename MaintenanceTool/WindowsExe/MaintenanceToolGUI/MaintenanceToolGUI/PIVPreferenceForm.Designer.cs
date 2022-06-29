@@ -108,7 +108,7 @@
             this.groupBox4.Location = new System.Drawing.Point(18, 191);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(417, 88);
-            this.groupBox4.TabIndex = 22;
+            this.groupBox4.TabIndex = 16;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "認証情報";
             // 
@@ -117,7 +117,7 @@
             this.textPinConfirm.Location = new System.Drawing.Point(130, 54);
             this.textPinConfirm.Name = "textPinConfirm";
             this.textPinConfirm.Size = new System.Drawing.Size(130, 19);
-            this.textPinConfirm.TabIndex = 26;
+            this.textPinConfirm.TabIndex = 18;
             this.textPinConfirm.UseSystemPasswordChar = true;
             // 
             // textPin
@@ -125,7 +125,7 @@
             this.textPin.Location = new System.Drawing.Point(130, 27);
             this.textPin.Name = "textPin";
             this.textPin.Size = new System.Drawing.Size(130, 19);
-            this.textPin.TabIndex = 24;
+            this.textPin.TabIndex = 17;
             this.textPin.UseSystemPasswordChar = true;
             // 
             // label5
@@ -155,7 +155,7 @@
             this.groupBox3.Location = new System.Drawing.Point(18, 88);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(417, 88);
-            this.groupBox3.TabIndex = 15;
+            this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "鍵・証明書ファイルのパス";
             // 
@@ -164,7 +164,7 @@
             this.buttonCertFolderPath.Location = new System.Drawing.Point(352, 50);
             this.buttonCertFolderPath.Name = "buttonCertFolderPath";
             this.buttonCertFolderPath.Size = new System.Drawing.Size(55, 23);
-            this.buttonCertFolderPath.TabIndex = 21;
+            this.buttonCertFolderPath.TabIndex = 15;
             this.buttonCertFolderPath.Text = "参照";
             this.buttonCertFolderPath.UseVisualStyleBackColor = true;
             // 
@@ -173,7 +173,7 @@
             this.buttonPkeyFolderPath.Location = new System.Drawing.Point(352, 23);
             this.buttonPkeyFolderPath.Name = "buttonPkeyFolderPath";
             this.buttonPkeyFolderPath.Size = new System.Drawing.Size(55, 23);
-            this.buttonPkeyFolderPath.TabIndex = 18;
+            this.buttonPkeyFolderPath.TabIndex = 13;
             this.buttonPkeyFolderPath.Text = "参照";
             this.buttonPkeyFolderPath.UseVisualStyleBackColor = true;
             // 
@@ -183,7 +183,7 @@
             this.textCertFolderPath.Name = "textCertFolderPath";
             this.textCertFolderPath.ReadOnly = true;
             this.textCertFolderPath.Size = new System.Drawing.Size(235, 19);
-            this.textCertFolderPath.TabIndex = 20;
+            this.textCertFolderPath.TabIndex = 14;
             this.textCertFolderPath.TabStop = false;
             // 
             // textPkeyFolderPath
@@ -192,7 +192,7 @@
             this.textPkeyFolderPath.Name = "textPkeyFolderPath";
             this.textPkeyFolderPath.ReadOnly = true;
             this.textPkeyFolderPath.Size = new System.Drawing.Size(235, 19);
-            this.textPkeyFolderPath.TabIndex = 17;
+            this.textPkeyFolderPath.TabIndex = 12;
             this.textPkeyFolderPath.TabStop = false;
             // 
             // label2
@@ -219,7 +219,7 @@
             this.groupBoxPkeySlotId.Location = new System.Drawing.Point(18, 20);
             this.groupBoxPkeySlotId.Name = "groupBoxPkeySlotId";
             this.groupBoxPkeySlotId.Size = new System.Drawing.Size(417, 53);
-            this.groupBoxPkeySlotId.TabIndex = 1;
+            this.groupBoxPkeySlotId.TabIndex = 7;
             this.groupBoxPkeySlotId.TabStop = false;
             this.groupBoxPkeySlotId.Text = "インストールする鍵・証明書";
             // 
@@ -260,7 +260,7 @@
             this.buttonInstallPkeyCert.Location = new System.Drawing.Point(126, 295);
             this.buttonInstallPkeyCert.Name = "buttonInstallPkeyCert";
             this.buttonInstallPkeyCert.Size = new System.Drawing.Size(200, 23);
-            this.buttonInstallPkeyCert.TabIndex = 27;
+            this.buttonInstallPkeyCert.TabIndex = 19;
             this.buttonInstallPkeyCert.Text = "鍵・証明書ファイルのインストール";
             this.buttonInstallPkeyCert.UseVisualStyleBackColor = true;
             // 
@@ -282,7 +282,7 @@
             this.buttonPerformPinCommand.Location = new System.Drawing.Point(146, 215);
             this.buttonPerformPinCommand.Name = "buttonPerformPinCommand";
             this.buttonPerformPinCommand.Size = new System.Drawing.Size(160, 23);
-            this.buttonPerformPinCommand.TabIndex = 19;
+            this.buttonPerformPinCommand.TabIndex = 31;
             this.buttonPerformPinCommand.Text = "実行";
             this.buttonPerformPinCommand.UseVisualStyleBackColor = true;
             // 
@@ -297,7 +297,7 @@
             this.groupBoxPinText.Location = new System.Drawing.Point(18, 88);
             this.groupBoxPinText.Name = "groupBoxPinText";
             this.groupBoxPinText.Size = new System.Drawing.Size(417, 114);
-            this.groupBoxPinText.TabIndex = 18;
+            this.groupBoxPinText.TabIndex = 24;
             this.groupBoxPinText.TabStop = false;
             this.groupBoxPinText.Text = "認証情報";
             // 
@@ -307,7 +307,7 @@
             this.textNewPinConf.MaxLength = 64;
             this.textNewPinConf.Name = "textNewPinConf";
             this.textNewPinConf.Size = new System.Drawing.Size(130, 19);
-            this.textNewPinConf.TabIndex = 22;
+            this.textNewPinConf.TabIndex = 30;
             this.textNewPinConf.UseSystemPasswordChar = true;
             // 
             // labelNewPinConf
@@ -315,7 +315,7 @@
             this.labelNewPinConf.Location = new System.Drawing.Point(13, 80);
             this.labelNewPinConf.Name = "labelNewPinConf";
             this.labelNewPinConf.Size = new System.Drawing.Size(140, 12);
-            this.labelNewPinConf.TabIndex = 21;
+            this.labelNewPinConf.TabIndex = 27;
             this.labelNewPinConf.Text = "新しいPUK番号（確認）";
             // 
             // textNewPin
@@ -324,7 +324,7 @@
             this.textNewPin.MaxLength = 64;
             this.textNewPin.Name = "textNewPin";
             this.textNewPin.Size = new System.Drawing.Size(130, 19);
-            this.textNewPin.TabIndex = 12;
+            this.textNewPin.TabIndex = 29;
             this.textNewPin.UseSystemPasswordChar = true;
             // 
             // textCurPin
@@ -333,7 +333,7 @@
             this.textCurPin.MaxLength = 64;
             this.textCurPin.Name = "textCurPin";
             this.textCurPin.Size = new System.Drawing.Size(130, 19);
-            this.textCurPin.TabIndex = 11;
+            this.textCurPin.TabIndex = 28;
             this.textCurPin.UseSystemPasswordChar = true;
             // 
             // labelNewPin
@@ -341,7 +341,7 @@
             this.labelNewPin.Location = new System.Drawing.Point(13, 53);
             this.labelNewPin.Name = "labelNewPin";
             this.labelNewPin.Size = new System.Drawing.Size(140, 12);
-            this.labelNewPin.TabIndex = 20;
+            this.labelNewPin.TabIndex = 26;
             this.labelNewPin.Text = "新しいPUK番号";
             // 
             // labelCurPin
@@ -349,7 +349,7 @@
             this.labelCurPin.Location = new System.Drawing.Point(13, 26);
             this.labelCurPin.Name = "labelCurPin";
             this.labelCurPin.Size = new System.Drawing.Size(140, 12);
-            this.labelCurPin.TabIndex = 19;
+            this.labelCurPin.TabIndex = 25;
             this.labelCurPin.Text = "現在のPUK番号";
             // 
             // groupBoxPinCommand
@@ -360,7 +360,7 @@
             this.groupBoxPinCommand.Location = new System.Drawing.Point(18, 20);
             this.groupBoxPinCommand.Name = "groupBoxPinCommand";
             this.groupBoxPinCommand.Size = new System.Drawing.Size(417, 53);
-            this.groupBoxPinCommand.TabIndex = 15;
+            this.groupBoxPinCommand.TabIndex = 20;
             this.groupBoxPinCommand.TabStop = false;
             this.groupBoxPinCommand.Text = "実行する機能";
             // 
@@ -370,7 +370,7 @@
             this.radioPinCommand3.Location = new System.Drawing.Point(236, 23);
             this.radioPinCommand3.Name = "radioPinCommand3";
             this.radioPinCommand3.Size = new System.Drawing.Size(106, 16);
-            this.radioPinCommand3.TabIndex = 16;
+            this.radioPinCommand3.TabIndex = 23;
             this.radioPinCommand3.Text = "PIN番号をリセット";
             this.radioPinCommand3.UseVisualStyleBackColor = true;
             // 
@@ -380,7 +380,7 @@
             this.radioPinCommand2.Location = new System.Drawing.Point(128, 23);
             this.radioPinCommand2.Name = "radioPinCommand2";
             this.radioPinCommand2.Size = new System.Drawing.Size(102, 16);
-            this.radioPinCommand2.TabIndex = 15;
+            this.radioPinCommand2.TabIndex = 22;
             this.radioPinCommand2.Text = "PUK番号を変更";
             this.radioPinCommand2.UseVisualStyleBackColor = true;
             // 
@@ -391,7 +391,7 @@
             this.radioPinCommand1.Location = new System.Drawing.Point(18, 23);
             this.radioPinCommand1.Name = "radioPinCommand1";
             this.radioPinCommand1.Size = new System.Drawing.Size(98, 16);
-            this.radioPinCommand1.TabIndex = 14;
+            this.radioPinCommand1.TabIndex = 21;
             this.radioPinCommand1.TabStop = true;
             this.radioPinCommand1.Text = "PIN番号を変更";
             this.radioPinCommand1.UseVisualStyleBackColor = true;
@@ -410,7 +410,7 @@
             this.buttonClearSetting.Location = new System.Drawing.Point(238, 385);
             this.buttonClearSetting.Name = "buttonClearSetting";
             this.buttonClearSetting.Size = new System.Drawing.Size(110, 23);
-            this.buttonClearSetting.TabIndex = 2;
+            this.buttonClearSetting.TabIndex = 3;
             this.buttonClearSetting.Text = "設定情報を消去";
             this.buttonClearSetting.UseVisualStyleBackColor = true;
             // 
@@ -419,7 +419,7 @@
             this.buttonFirmwareReset.Location = new System.Drawing.Point(358, 385);
             this.buttonFirmwareReset.Name = "buttonFirmwareReset";
             this.buttonFirmwareReset.Size = new System.Drawing.Size(110, 23);
-            this.buttonFirmwareReset.TabIndex = 3;
+            this.buttonFirmwareReset.TabIndex = 4;
             this.buttonFirmwareReset.Text = "認証器のリセット";
             this.buttonFirmwareReset.UseVisualStyleBackColor = true;
             // 
@@ -428,7 +428,7 @@
             this.buttonClose.Location = new System.Drawing.Point(202, 419);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(80, 23);
-            this.buttonClose.TabIndex = 4;
+            this.buttonClose.TabIndex = 5;
             this.buttonClose.Text = "閉じる";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
@@ -438,7 +438,7 @@
             this.buttonInitialSetting.Location = new System.Drawing.Point(132, 385);
             this.buttonInitialSetting.Name = "buttonInitialSetting";
             this.buttonInitialSetting.Size = new System.Drawing.Size(100, 23);
-            this.buttonInitialSetting.TabIndex = 5;
+            this.buttonInitialSetting.TabIndex = 2;
             this.buttonInitialSetting.Text = "ID設定を実行";
             this.buttonInitialSetting.UseVisualStyleBackColor = true;
             // 
