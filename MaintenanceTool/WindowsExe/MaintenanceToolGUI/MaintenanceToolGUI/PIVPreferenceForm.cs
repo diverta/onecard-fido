@@ -5,10 +5,16 @@ namespace MaintenanceToolGUI
 {
     public partial class PIVPreferenceForm : Form
     {
-        public PIVPreferenceForm()
+        // 処理クラスの参照を保持
+        private ToolPIV ToolPIVRef;
+
+        public PIVPreferenceForm(ToolPIV toolPIV)
         {
             // 画面項目の初期化
             InitializeComponent();
+
+            // 処理クラスの参照を保持
+            ToolPIVRef = toolPIV;
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
