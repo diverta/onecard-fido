@@ -1,10 +1,18 @@
 # BT40 Dongle（rev1）
 
-最新更新日：2022/5/25
+最新更新日：2022/6/29
 
 ## 概要
 
 日本国内の技適取得済みであるnRF5340搭載モジュール「BT40」を使用し、Fanstel社の評価基板「[EV-BT40](https://www.mouser.jp/ProductDetail/Fanstel/EV-BT40?qs=zW32dvEIR3sMMGv%2FNMlB9A%3D%3D)」を簡略する仕様で開発・製作中の、小型USBドングル基板です。
+
+#### 表面
+
+<img src="assets01/0001.jpg" width="300">
+
+#### 裏面
+
+<img src="assets01/0002.jpg" width="300">
 
 #### 特色
 - 外形寸法＝4.5cm x 2cm（基板外形は 3cm x 2cm）
@@ -22,6 +30,10 @@ Fanstel社の評価基板「[EV-BT40](https://www.mouser.jp/ProductDetail/Fanste
 
 BT40 Dongleで使用するファームウェアです。
 
-### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)
+### ファームウェア更新手順
 
-BT40 Dongleのファームウェアを、[FIDO認証器管理ツール（macOS版）](../../MaintenanceTool/macOSApp)により更新する手順について説明しています。
+BT40 Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/MNTTOOL.md)により更新する手順について説明しています。
+
+- <b>[Windows版](../../MaintenanceTool/WindowsExe/UPDATEFW_BLE.md)</b>
+
+- <b>[macOS版](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b>

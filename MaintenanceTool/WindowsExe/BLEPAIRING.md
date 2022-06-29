@@ -2,14 +2,14 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
 #### 使用機材
 
-本手順書では、FIDO認証器として、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を使用するものといたします。
+本手順書では、FIDO認証器として、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)を使用するものといたします。
 
 まずは、背面にあるボタン電池ケースに電池をセットし、BLEペリフェラル・モードで起動されていることをご確認ください。<br>
-（MDBT50Q Dongleの青色LEDが点滅していることを確認します）
+（BT40 Dongleの青色LEDが点滅していることを確認します）
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0004.jpg" width="400">
 
@@ -36,7 +36,7 @@ PCのBluetooth設定画面を開き、ペアリング設定を削除します。
 #### ペアリングモードに遷移
 
 ペアリング相手のFIDO認証器を、ペアリングモードに遷移させます。<br>
-MDBT50Q Dongleの場合は、基板上のボタンを３秒以上長押してから離すと、下図のように基板上の橙色LEDが点灯します。
+基板上のボタンを３秒以上長押してから離すと、下図のように基板上の橙色LEDが点灯します。
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0005.jpg" width="400">
 
@@ -50,10 +50,7 @@ MDBT50Q Dongleの場合は、基板上のボタンを３秒以上長押してか
 
 ペアリング実行画面がポップアップ表示されます。
 
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)（nRF52840基板）の場合、パスコード入力は不要です。<br>
-画面上部のグループ内にある「ペアリングを実行する」ボタンをクリックします。
-
-nRF5340基板の場合は、パスコード入力が必要です。<br>
+BT40 Dongleとペアリングを行うためには、パスコード入力が必要です。<br>
 画面下部のグループ内にある入力欄に、半角数字６桁のパスコードを入力し「ペアリングを実行する」ボタンをクリックします。
 
 <img src="assets06/0025.jpg" width="400">
