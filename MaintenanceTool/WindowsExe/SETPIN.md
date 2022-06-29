@@ -14,10 +14,10 @@
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を、PC環境（Windows）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（Windows版）](INSTALLPRG.md) </b>
+* <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>
 
 ## PINコードの設定
 
