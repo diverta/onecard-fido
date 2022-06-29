@@ -13,7 +13,7 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 また、[Gpg4win](https://www.gnupg.org)というツールを、PCに別途インストールする必要があります。
 
 #### 管理ツールのバージョン確認
-まずは(../../MaintenanceTool/WindowsExe/INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
+まずは[インストール手順](../../MaintenanceTool/WindowsExe/INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
 次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.39以降</b>であるかどうか確認します。
 
 管理ツールのユーティリティー画面で「管理ツールのバージョンを参照」をクリックします。
