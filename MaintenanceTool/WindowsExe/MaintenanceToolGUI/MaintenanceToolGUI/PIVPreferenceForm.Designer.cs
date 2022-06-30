@@ -422,6 +422,7 @@
             this.buttonFirmwareReset.TabIndex = 4;
             this.buttonFirmwareReset.Text = "認証器のリセット";
             this.buttonFirmwareReset.UseVisualStyleBackColor = true;
+            this.buttonFirmwareReset.Click += new System.EventHandler(this.buttonFirmwareReset_Click);
             // 
             // buttonClose
             // 
