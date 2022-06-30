@@ -23,6 +23,9 @@ namespace MaintenanceToolGUI
         // エラーメッセージテキストを保持
         private string ErrorMessageOfCommand;
 
+        // コマンドが成功したかどうかを保持
+        private bool CommandSuccess;
+
         public ToolPIV(MainForm f, HIDMain h)
         {
             // メイン画面の参照を保持
@@ -46,9 +49,54 @@ namespace MaintenanceToolGUI
             PreferenceForm.ShowDialog();
         }
 
+        public bool CheckUSBDeviceDisconnected()
+        {
+            return MainFormRef.CheckUSBDeviceDisconnected();
+        }
+
+        //
+        // ファームウェアリセット用関数
+        //
+        public void DoCommandResetFirmware()
+        {
+            // HIDインターフェース経由でファームウェアをリセット
+            AppCommon.RequestType requestType = AppCommon.RequestType.HidFirmwareReset;
+            NotifyProcessStarted(requestType);
+            HidMainRef.DoFirmwareReset(requestType, this);
+        }
+
+        public void DoResponseResetFirmware(bool success)
+        {
+            if (success == false) {
+                NotifyErrorMessage(AppCommon.MSG_FIRMWARE_RESET_UNSUPP);
+            }
+            NotifyProcessTerminated(success);
+        }
+
         // 
         // 共通処理
         //
+        private void NotifyProcessStarted(AppCommon.RequestType requestType)
+        {
+            // コマンド処理結果を初期化
+            CommandSuccess = false;
+
+            // 処理機能に応じ、以下の処理に分岐
+            RequestType = requestType;
+            switch (RequestType) {
+            case AppCommon.RequestType.HidFirmwareReset:
+                NameOfCommand = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
+                break;
+            default:
+                NameOfCommand = "";
+                break;
+            }
+
+            // コマンド開始メッセージをログファイルに出力
+            string startMsg = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, NameOfCommand);
+            AppUtil.OutputLogInfo(startMsg);
+        }
+
         private void NotifyErrorMessage(string message)
         {
             // エラーメッセージをログファイルに出力（出力前に改行文字を削除）
