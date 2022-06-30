@@ -595,7 +595,7 @@ namespace MaintenanceToolGUI
             if (NeedNotifyDetectConnectRef is ToolDFU) {
                 ToolDFURef.OnUSBDeviceArrival();
 
-            } else if (NeedNotifyDetectConnectRef is ToolPGP) {
+            } else if (NeedNotifyDetectConnectRef is ToolPGP || NeedNotifyDetectConnectRef is ToolPIV) {
                 if (requestType == AppCommon.RequestType.HidFirmwareReset) {
                     CompletedResetFirmware(true);
                 }
