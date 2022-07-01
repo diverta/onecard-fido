@@ -265,6 +265,7 @@
             this.buttonInstallPkeyCert.TabIndex = 19;
             this.buttonInstallPkeyCert.Text = "鍵・証明書ファイルのインストール";
             this.buttonInstallPkeyCert.UseVisualStyleBackColor = true;
+            this.buttonInstallPkeyCert.Click += new System.EventHandler(this.buttonInstallPkeyCert_Click);
             // 
             // tabPagePinManagement
             // 

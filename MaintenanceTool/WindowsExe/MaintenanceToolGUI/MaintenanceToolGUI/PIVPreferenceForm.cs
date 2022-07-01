@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using ToolGUICommon;
 
@@ -6,6 +7,10 @@ namespace MaintenanceToolGUI
 {
     public partial class PIVPreferenceForm : Form
     {
+        // 入力可能文字数
+        private const int PIV_PIN_CODE_SIZE_MIN = 6;
+        private const int PIV_PIN_CODE_SIZE_MAX = 6;
+
         // 処理クラスの参照を保持
         private ToolPIV ToolPIVRef;
 
@@ -29,6 +34,21 @@ namespace MaintenanceToolGUI
         {
             // ファイルを選択
             FormUtil.SelectFilePath(openFileDialog1, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH, AppCommon.MSG_FILTER_SELECT_PIV_CERT_PEM_PATH, textCertFolderPath);
+        }
+
+        private void buttonInstallPkeyCert_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPIVRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // 入力欄の内容をチェック
+            if (CheckForInstallPkeyCert()) {
+                // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
+                EnableButtons(false);
+                DoCommandInstallPGPKey();
+            }
         }
 
         private void buttonFirmwareReset_Click(object sender, EventArgs e)
@@ -210,8 +230,84 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // 入力チェック関連
+        //
+        private bool CheckForInstallPkeyCert()
+        {
+            // 入力欄のチェック
+            if (CheckPathEntry(textPkeyFolderPath, AppCommon.MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH) == false) {
+                return false;
+            }
+            if (CheckPathEntry(textCertFolderPath, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH) == false) {
+                return false;
+            }
+            if (CheckPinNumber(textPin, AppCommon.MSG_LABEL_CURRENT_PIN) == false) {
+                return false;
+            }
+            if (CheckPinNumber(textPinConfirm, AppCommon.MSG_LABEL_CURRENT_PIN_FOR_CONFIRM) == false) {
+                return false;
+            }
+
+            // 確認用PINコードのチェック
+            if (CheckPinConfirm(textPinConfirm, textPin, AppCommon.MSG_LABEL_CURRENT_PIN_FOR_CONFIRM) == false) {
+                return false;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            return FormUtil.DisplayPromptPopup(this, AppCommon.MSG_INSTALL_PIV_PKEY_CERT, AppCommon.MSG_PROMPT_INSTALL_PGP_KEY);
+        }
+
+        private bool CheckPathEntry(TextBox text, string messageIfError)
+        {
+            // 必須チェック（ただし、入力できないのでフォーカスは移動しない）
+            if (text.Text.Length == 0) {
+                FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, messageIfError);
+                return false;
+            }
+
+            // 入力されたファイルが存在しない場合は終了
+            string path = text.Text;
+            if (File.Exists(path) == false) {
+                FormUtil.ShowWarningMessage(this, MainForm.MaintenanceToolTitle, messageIfError);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckPinNumber(TextBox text, string fieldName)
+        {
+            // 長さチェック
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_DIGIT, fieldName);
+            if (FormUtil.CheckEntrySize(text, PIV_PIN_CODE_SIZE_MIN, PIV_PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, informativeText) == false) {
+                return false;
+            }
+
+            // 数字チェック
+            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_NUM, fieldName);
+            if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckPinConfirm(TextBox textPinConfirm, TextBox textPin, string fieldName)
+        {
+            // PIN番号の確認入力内容をチェック
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_CONFIRM, fieldName);
+            return FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, informativeText);
+        }
+
+        //
         // PIV設定機能の各処理
         //
+        void DoCommandInstallPGPKey()
+        {
+            // TODO:
+            // 画面入力内容をパラメーターとして、鍵／証明書インストール処理を実行
+        }
+
         void DoCommandResetFirmware()
         {
             ToolPIVRef.DoCommandResetFirmware();
