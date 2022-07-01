@@ -162,6 +162,10 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
         // PIV機能設定関連
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
+        public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
+        public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
         public const string MSG_LABEL_CURRENT_PIN = "現在のPIN番号";
         public const string MSG_LABEL_NEW_PIN = "新しいPIN番号";
         public const string MSG_LABEL_CURRENT_PUK = "現在のPUK番号";

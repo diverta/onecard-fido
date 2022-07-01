@@ -19,6 +19,18 @@ namespace MaintenanceToolGUI
             ToolPIVRef = toolPIV;
         }
 
+        private void buttonPkeyFolderPath_Click(object sender, EventArgs e)
+        {
+            // ファイルを選択
+            FormUtil.SelectFilePath(openFileDialog1, AppCommon.MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH, AppCommon.MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH, textPkeyFolderPath);
+        }
+
+        private void buttonCertFolderPath_Click(object sender, EventArgs e)
+        {
+            // ファイルを選択
+            FormUtil.SelectFilePath(openFileDialog1, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH, AppCommon.MSG_FILTER_SELECT_PIV_CERT_PEM_PATH, textCertFolderPath);
+        }
+
         private void buttonFirmwareReset_Click(object sender, EventArgs e)
         {
             // USB HID接続がない場合はエラーメッセージを表示

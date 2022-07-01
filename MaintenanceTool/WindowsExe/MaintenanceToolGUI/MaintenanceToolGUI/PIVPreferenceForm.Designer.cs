@@ -63,8 +63,8 @@
             this.buttonClearSetting = new System.Windows.Forms.Button();
             this.buttonFirmwareReset = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.buttonInitialSetting = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabPreference.SuspendLayout();
             this.tabPagePkeyCertManagement.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -167,6 +167,7 @@
             this.buttonCertFolderPath.TabIndex = 15;
             this.buttonCertFolderPath.Text = "参照";
             this.buttonCertFolderPath.UseVisualStyleBackColor = true;
+            this.buttonCertFolderPath.Click += new System.EventHandler(this.buttonCertFolderPath_Click);
             // 
             // buttonPkeyFolderPath
             // 
@@ -176,6 +177,7 @@
             this.buttonPkeyFolderPath.TabIndex = 13;
             this.buttonPkeyFolderPath.Text = "参照";
             this.buttonPkeyFolderPath.UseVisualStyleBackColor = true;
+            this.buttonPkeyFolderPath.Click += new System.EventHandler(this.buttonPkeyFolderPath_Click);
             // 
             // textCertFolderPath
             // 
@@ -517,10 +519,10 @@
         private System.Windows.Forms.RadioButton radioPinCommand3;
         private System.Windows.Forms.RadioButton radioPinCommand2;
         private System.Windows.Forms.RadioButton radioPinCommand1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.RadioButton radioPkeySlotId3;
         private System.Windows.Forms.RadioButton radioPkeySlotId2;
         private System.Windows.Forms.RadioButton radioPkeySlotId1;
         private System.Windows.Forms.Button buttonInitialSetting;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
