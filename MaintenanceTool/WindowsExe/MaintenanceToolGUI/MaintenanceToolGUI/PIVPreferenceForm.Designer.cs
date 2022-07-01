@@ -29,12 +29,12 @@
         {
             this.tabPreference = new System.Windows.Forms.TabControl();
             this.tabPagePkeyCertManagement = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBoxAuthPinText = new System.Windows.Forms.GroupBox();
             this.textPinConfirm = new System.Windows.Forms.TextBox();
             this.textPin = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBoxFilePathText = new System.Windows.Forms.GroupBox();
             this.buttonCertFolderPath = new System.Windows.Forms.Button();
             this.buttonPkeyFolderPath = new System.Windows.Forms.Button();
             this.textCertFolderPath = new System.Windows.Forms.TextBox();
@@ -67,8 +67,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabPreference.SuspendLayout();
             this.tabPagePkeyCertManagement.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.groupBoxAuthPinText.SuspendLayout();
+            this.groupBoxFilePathText.SuspendLayout();
             this.groupBoxPkeySlotId.SuspendLayout();
             this.tabPagePinManagement.SuspendLayout();
             this.groupBoxPinText.SuspendLayout();
@@ -87,8 +87,8 @@
             // 
             // tabPagePkeyCertManagement
             // 
-            this.tabPagePkeyCertManagement.Controls.Add(this.groupBox4);
-            this.tabPagePkeyCertManagement.Controls.Add(this.groupBox3);
+            this.tabPagePkeyCertManagement.Controls.Add(this.groupBoxAuthPinText);
+            this.tabPagePkeyCertManagement.Controls.Add(this.groupBoxFilePathText);
             this.tabPagePkeyCertManagement.Controls.Add(this.groupBoxPkeySlotId);
             this.tabPagePkeyCertManagement.Controls.Add(this.buttonInstallPkeyCert);
             this.tabPagePkeyCertManagement.Location = new System.Drawing.Point(4, 22);
@@ -99,18 +99,18 @@
             this.tabPagePkeyCertManagement.Text = "鍵・証明書管理";
             this.tabPagePkeyCertManagement.UseVisualStyleBackColor = true;
             // 
-            // groupBox4
+            // groupBoxAuthPinText
             // 
-            this.groupBox4.Controls.Add(this.textPinConfirm);
-            this.groupBox4.Controls.Add(this.textPin);
-            this.groupBox4.Controls.Add(this.label5);
-            this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Location = new System.Drawing.Point(18, 191);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(417, 88);
-            this.groupBox4.TabIndex = 16;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "認証情報";
+            this.groupBoxAuthPinText.Controls.Add(this.textPinConfirm);
+            this.groupBoxAuthPinText.Controls.Add(this.textPin);
+            this.groupBoxAuthPinText.Controls.Add(this.label5);
+            this.groupBoxAuthPinText.Controls.Add(this.label10);
+            this.groupBoxAuthPinText.Location = new System.Drawing.Point(18, 191);
+            this.groupBoxAuthPinText.Name = "groupBoxAuthPinText";
+            this.groupBoxAuthPinText.Size = new System.Drawing.Size(417, 88);
+            this.groupBoxAuthPinText.TabIndex = 16;
+            this.groupBoxAuthPinText.TabStop = false;
+            this.groupBoxAuthPinText.Text = "認証情報";
             // 
             // textPinConfirm
             // 
@@ -144,20 +144,20 @@
             this.label10.TabIndex = 23;
             this.label10.Text = "PIN番号";
             // 
-            // groupBox3
+            // groupBoxFilePathText
             // 
-            this.groupBox3.Controls.Add(this.buttonCertFolderPath);
-            this.groupBox3.Controls.Add(this.buttonPkeyFolderPath);
-            this.groupBox3.Controls.Add(this.textCertFolderPath);
-            this.groupBox3.Controls.Add(this.textPkeyFolderPath);
-            this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Location = new System.Drawing.Point(18, 88);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(417, 88);
-            this.groupBox3.TabIndex = 11;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "鍵・証明書ファイルのパス";
+            this.groupBoxFilePathText.Controls.Add(this.buttonCertFolderPath);
+            this.groupBoxFilePathText.Controls.Add(this.buttonPkeyFolderPath);
+            this.groupBoxFilePathText.Controls.Add(this.textCertFolderPath);
+            this.groupBoxFilePathText.Controls.Add(this.textPkeyFolderPath);
+            this.groupBoxFilePathText.Controls.Add(this.label2);
+            this.groupBoxFilePathText.Controls.Add(this.label3);
+            this.groupBoxFilePathText.Location = new System.Drawing.Point(18, 88);
+            this.groupBoxFilePathText.Name = "groupBoxFilePathText";
+            this.groupBoxFilePathText.Size = new System.Drawing.Size(417, 88);
+            this.groupBoxFilePathText.TabIndex = 11;
+            this.groupBoxFilePathText.TabStop = false;
+            this.groupBoxFilePathText.Text = "鍵・証明書ファイルのパス";
             // 
             // buttonCertFolderPath
             // 
@@ -470,10 +470,10 @@
             this.Text = "PIV機能設定";
             this.tabPreference.ResumeLayout(false);
             this.tabPagePkeyCertManagement.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.groupBoxAuthPinText.ResumeLayout(false);
+            this.groupBoxAuthPinText.PerformLayout();
+            this.groupBoxFilePathText.ResumeLayout(false);
+            this.groupBoxFilePathText.PerformLayout();
             this.groupBoxPkeySlotId.ResumeLayout(false);
             this.groupBoxPkeySlotId.PerformLayout();
             this.tabPagePinManagement.ResumeLayout(false);
@@ -492,12 +492,12 @@
         private System.Windows.Forms.TabPage tabPagePinManagement;
         private System.Windows.Forms.Button buttonInstallPkeyCert;
         private System.Windows.Forms.GroupBox groupBoxPkeySlotId;
-        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBoxAuthPinText;
         private System.Windows.Forms.TextBox textPinConfirm;
         private System.Windows.Forms.TextBox textPin;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBoxFilePathText;
         private System.Windows.Forms.Button buttonCertFolderPath;
         private System.Windows.Forms.Button buttonPkeyFolderPath;
         private System.Windows.Forms.TextBox textCertFolderPath;

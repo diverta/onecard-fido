@@ -111,14 +111,9 @@ namespace MaintenanceToolGUI
             buttonClearSetting.Enabled = enabled;
             buttonFirmwareReset.Enabled = enabled;
 
-            // 現在選択中のタブ内も同様に制御を行う
-            TabPage page = tabPreference.SelectedTab;
-            if (page.Equals(tabPagePkeyCertManagement)) {
-                EnableButtonsInTabPagePkeyCertManagement(enabled);
-            }
-            if (page.Equals(tabPagePinManagement)) {
-                EnableButtonsInTabPinManagement(enabled);
-            }
+            // タブ内も同様に制御を行う
+            EnableButtonsInTabPagePkeyCertManagement(enabled);
+            EnableButtonsInTabPinManagement(enabled);
         }
 
         //
@@ -151,11 +146,9 @@ namespace MaintenanceToolGUI
         void EnableButtonsInTabPagePkeyCertManagement(bool enabled)
         {
             // ボタンや入力欄の使用可能／不可制御
-            textPin.Enabled = enabled;
-            textPinConfirm.Enabled = enabled;
-
-            buttonPkeyFolderPath.Enabled = enabled;
-            buttonCertFolderPath.Enabled = enabled;
+            groupBoxPkeySlotId.Enabled = enabled;
+            groupBoxFilePathText.Enabled = enabled;
+            groupBoxAuthPinText.Enabled = enabled;
             buttonInstallPkeyCert.Enabled = enabled;
         }
 
