@@ -31,6 +31,21 @@ namespace MaintenanceToolGUI
             DoCommandResetFirmware();
         }
 
+        private void radioPinCommand1_CheckedChanged_1(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioPinCommand2_CheckedChanged_1(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioPinCommand3_CheckedChanged_1(object sender, EventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
         private void buttonClose_Click(object sender, EventArgs e)
         {
             // 画面項目を初期化し、この画面を閉じる
@@ -128,6 +143,7 @@ namespace MaintenanceToolGUI
         {
             // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
             radioButton.Checked = true;
+            GetSelectedPinCommandValue(radioButton);
         }
 
         private void InitTabPinManagementPinFields()
@@ -147,6 +163,38 @@ namespace MaintenanceToolGUI
             groupBoxPinCommand.Enabled = enabled;
             groupBoxPinText.Enabled = enabled;
             buttonPerformPinCommand.Enabled = enabled;
+        }
+
+        private void GetSelectedPinCommandValue(object sender)
+        {
+            // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+            if (sender.Equals(radioPinCommand1)) {
+                // PIN番号を変更
+                SelectedPinCommand = AppCommon.RequestType.PIVChangePin;
+                SelectedPinCommandName = AppCommon.MSG_PIV_CHANGE_PIN_NUMBER;
+                labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PIN;
+                labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PIN;
+            }
+            if (sender.Equals(radioPinCommand2)) {
+                // PUK番号を変更
+                SelectedPinCommand = AppCommon.RequestType.PIVChangePuk;
+                SelectedPinCommandName = AppCommon.MSG_PIV_CHANGE_PUK_NUMBER;
+                labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PUK;
+                labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PUK;
+            }
+            if (sender.Equals(radioPinCommand3)) {
+                // PIN番号をリセット
+                SelectedPinCommand = AppCommon.RequestType.PivUnblockPin;
+                SelectedPinCommandName = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
+                labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PUK;
+                labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PIN;
+            }
+
+            // 確認欄のキャプションを設定
+            labelNewPinConf.Text = string.Format(AppCommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
+
+            // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+            InitTabPinManagementPinFields();
         }
 
         //

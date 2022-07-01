@@ -373,6 +373,7 @@
             this.radioPinCommand3.TabIndex = 23;
             this.radioPinCommand3.Text = "PIN番号をリセット";
             this.radioPinCommand3.UseVisualStyleBackColor = true;
+            this.radioPinCommand3.CheckedChanged += new System.EventHandler(this.radioPinCommand3_CheckedChanged_1);
             // 
             // radioPinCommand2
             // 
@@ -383,6 +384,7 @@
             this.radioPinCommand2.TabIndex = 22;
             this.radioPinCommand2.Text = "PUK番号を変更";
             this.radioPinCommand2.UseVisualStyleBackColor = true;
+            this.radioPinCommand2.CheckedChanged += new System.EventHandler(this.radioPinCommand2_CheckedChanged_1);
             // 
             // radioPinCommand1
             // 
@@ -395,6 +397,7 @@
             this.radioPinCommand1.TabStop = true;
             this.radioPinCommand1.Text = "PIN番号を変更";
             this.radioPinCommand1.UseVisualStyleBackColor = true;
+            this.radioPinCommand1.CheckedChanged += new System.EventHandler(this.radioPinCommand1_CheckedChanged_1);
             // 
             // buttonPivStatus
             // 

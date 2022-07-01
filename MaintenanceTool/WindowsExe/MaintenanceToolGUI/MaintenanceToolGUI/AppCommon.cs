@@ -161,6 +161,15 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
+        // PIV機能設定関連
+        public const string MSG_LABEL_CURRENT_PIN = "現在のPIN番号";
+        public const string MSG_LABEL_NEW_PIN = "新しいPIN番号";
+        public const string MSG_LABEL_CURRENT_PUK = "現在のPUK番号";
+        public const string MSG_LABEL_NEW_PUK = "新しいPUK番号";
+        public const string MSG_PIV_CHANGE_PIN_NUMBER = "PIN番号の変更";
+        public const string MSG_PIV_CHANGE_PUK_NUMBER = "PUK番号の変更";
+        public const string MSG_PIV_RESET_PIN_NUMBER = "PIN番号のリセット";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -333,6 +342,12 @@
             OpenPGPUnblockPin,
             OpenPGPSetResetCode,
             OpenPGPUnblock,
+            //
+            // PIV
+            //
+            PIVChangePin,
+            PIVChangePuk,
+            PivUnblockPin,
             HidFirmwareReset
         };
     }
