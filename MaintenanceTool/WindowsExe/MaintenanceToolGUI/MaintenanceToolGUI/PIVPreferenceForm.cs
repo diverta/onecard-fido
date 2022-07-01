@@ -13,6 +13,7 @@ namespace MaintenanceToolGUI
         {
             // 画面項目の初期化
             InitializeComponent();
+            InitFieldValue();
 
             // 処理クラスの参照を保持
             ToolPIVRef = toolPIV;
@@ -39,8 +40,19 @@ namespace MaintenanceToolGUI
         private void TerminateWindow(DialogResult dialogResult)
         {
             // 画面項目を初期化し、この画面を閉じる
+            InitFieldValue();
             DialogResult = dialogResult;
             Close();
+        }
+
+        private void InitFieldValue()
+        {
+            // PGP鍵管理タブ内の入力項目を初期化（このタブが選択状態になります）
+            tabPreference.SelectedTab = tabPagePkeyCertManagement;
+            InitTabPagePkeyCertManagement();
+
+            // PIN番号管理タブ内の入力項目を初期化
+            InitTabPinManagement();
         }
 
         private void EnableButtons(bool enabled)
@@ -65,6 +77,30 @@ namespace MaintenanceToolGUI
         //
         // 鍵・証明書管理タブ関連の処理
         //
+        private void InitTabPagePkeyCertManagement()
+        {
+            // テキストボックスの初期化
+            InitTabPkeyCertPathFields();
+            InitTabPGPKeyEntryFields();
+        }
+
+        private void InitTabPkeyCertPathFields()
+        {
+            // ファイルパスのテキストボックスを初期化
+            textPkeyFolderPath.Text = "";
+            textCertFolderPath.Text = "";
+        }
+
+        private void InitTabPGPKeyEntryFields()
+        {
+            // テキストボックスを初期化
+            textPin.Text = "";
+            textPinConfirm.Text = "";
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            textPin.Focus();
+        }
+
         void EnableButtonsInTabPagePkeyCertManagement(bool enabled)
         {
             // ボタンや入力欄の使用可能／不可制御
@@ -79,6 +115,32 @@ namespace MaintenanceToolGUI
         //
         // PIN番号管理タブ関連の処理
         //
+        private AppCommon.RequestType SelectedPinCommand { get; set; }
+        private string SelectedPinCommandName { get; set; }
+
+        private void InitTabPinManagement()
+        {
+            // ラジオボタンの初期化
+            InitButtonPinCommandsWithDefault(radioPinCommand1);
+        }
+
+        private void InitButtonPinCommandsWithDefault(RadioButton radioButton)
+        {
+            // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+            radioButton.Checked = true;
+        }
+
+        private void InitTabPinManagementPinFields()
+        {
+            // PIN番号のテキストボックスを初期化
+            textCurPin.Text = "";
+            textNewPin.Text = "";
+            textNewPinConf.Text = "";
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            textCurPin.Focus();
+        }
+
         void EnableButtonsInTabPinManagement(bool enabled)
         {
             // ボタンや入力欄の使用可能／不可制御
