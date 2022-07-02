@@ -1,0 +1,36 @@
+/ {
+	leds {
+		led0: led_0 {
+			gpios = < &gpio1 0xc 0x1 >;
+			label = "LED Yellow";
+		};
+		led1: led_1 {
+			gpios = < &gpio1 0xd 0x1 >;
+			label = "LED Red";
+		};
+		led2: led_2 {
+			gpios = < &gpio1 0xe 0x1 >;
+			label = "LED Green";
+		};
+		led3: led_3 {
+			gpios = < &gpio1 0xf 0x1 >;
+			label = "LED Blue";
+		};
+	};
+};
+/* Disable unused peripherals to reduce power consumption */
+&i2c1 {
+    status = "okay";
+};
+&spi2 {
+    status = "disabled";
+};
+&adc {
+    status = "disabled";
+};
+&pwm0 {
+    status = "disabled";
+};
+&qspi {
+    status = "disabled";
+};
