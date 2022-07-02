@@ -25,6 +25,6 @@ Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,
 19,"R6, R7, R8",3,Vishay,CRCW040210K0FKEDC,"Resistor, 10k ohm 1% 1/16W","0402",SMD,
 20,SW1,1,ALPS,SKRPACE010,Surface Mount Type TACT Switch,4pos,SMD,"SKRPASE010, SKRPANE010, SKRPADE010 as alternative"
 21,SW2,1,ALPS,SKTADAE010,Surface Mount Type TACT Switch,4pos,SMD,"SKTAAAE010, SKTAACE010 as alternative"
-22,U1,1,Fanstel Corp.,BT40,"BLE 5.2, 802.15.4 Modules",LGA,SMD,See: https://www.mouser.jp/ProductDetail/Fanstel/BT40E?qs=zW32dvEIR3vmzDgAfbp4Vw%3D%3D
+22,U1,1,Fanstel Corp.,BT40E,"BLE 5.2, 802.15.4 Modules",LGA,SMD,See: https://www.mouser.jp/ProductDetail/Fanstel/BT40E?qs=zW32dvEIR3vmzDgAfbp4Vw%3D%3D
 23,U2,1,"Analog Devices, Inc.",ADP122ACPZ-3.3-R7,"Low Quiescent Current, CMOS Linear Regulator",6pos,SMD,
 24,U3,1,Micro Crystal,RV-3028-C7 32.768KHZ 1PPM-TA-QC,"Real Time Clock 32.768kHz I2C Time Acc. 1ppm",SON-8,SMD,RV-3028-C7 32.768KHZ 1PPM-TA-QA' as alternative
