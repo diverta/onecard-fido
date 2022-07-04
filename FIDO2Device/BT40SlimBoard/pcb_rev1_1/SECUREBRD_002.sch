@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1699,10 +1699,10 @@ CR1216/1225&lt;br&gt;
 <rectangle x1="0.55" y1="-0.05" x2="0.95" y2="1.2" layer="29"/>
 <rectangle x1="1.05" y1="-0.05" x2="1.45" y2="1.2" layer="29"/>
 <rectangle x1="1.55" y1="-0.05" x2="1.95" y2="1.2" layer="29"/>
-<pad name="FG1" x="-4.32" y="0" drill="0.55" shape="long" rot="R90"/>
-<pad name="FG3" x="4.32" y="0" drill="0.55" shape="long" rot="R90"/>
-<pad name="FG4" x="4.32" y="-4.18" drill="0.55" shape="long" rot="R90"/>
-<pad name="FG2" x="-4.32" y="-4.18" drill="0.55" shape="long" rot="R90"/>
+<pad name="FG1" x="-4.32" y="0" drill="0.55" diameter="1.15" shape="long" rot="R90"/>
+<pad name="FG3" x="4.32" y="0" drill="0.55" diameter="1.15" shape="long" rot="R90"/>
+<pad name="FG4" x="4.32" y="-4.18" drill="0.55" diameter="1.05" shape="long" rot="R90"/>
+<pad name="FG2" x="-4.32" y="-4.18" drill="0.55" diameter="1.05" shape="long" rot="R90"/>
 </package>
 <package name="HEADER_6PIN">
 <pad name="1" x="-6.35" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
