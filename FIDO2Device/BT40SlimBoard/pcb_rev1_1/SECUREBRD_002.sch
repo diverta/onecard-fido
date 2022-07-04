@@ -1624,7 +1624,7 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 <description>&lt;b&gt;Battery Holders&lt;/B&gt; &lt;p&gt;
 CR1216/1225&lt;br&gt;
 9.5 mm x 15.3 mm x 3.6 mm</description>
-<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100"/>
+<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100" cream="no"/>
 <smd name="+@1" x="-7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
 <smd name="+@2" x="7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
 <wire x1="6.35" y1="3.048" x2="4.826" y2="4.572" width="0.127" layer="21"/>
@@ -1803,15 +1803,6 @@ CR1216/1225&lt;br&gt;
 <gate name="G$1" symbol="3V" x="0" y="0"/>
 </gates>
 <devices>
-<device name="'_'" package="BAT-HLD-012-SMT">
-<connects>
-<connect gate="G$1" pin="+" pad="+@1"/>
-<connect gate="G$1" pin="-" pad="-"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
 <device name="" package="BAT-HLD-012-SMT">
 <connects>
 <connect gate="G$1" pin="+" pad="+@2"/>
