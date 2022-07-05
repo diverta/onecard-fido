@@ -11,6 +11,7 @@
 #include <usb/usb_device.h>
 
 #include "app_usb.h"
+#include "app_usb_bos.h"
 #include "app_usb_ccid_define.h"
 #include "app_event.h"
 
@@ -28,7 +29,7 @@ static size_t  m_rx_buf_size;
 //
 // CCID I/F用デスクリプター
 //
-USBD_CLASS_DESCR_DEFINE(primary, 0) struct usb_ccid_config usb_ccid_cfg = {
+USBD_CLASS_DESCR_DEFINE(primary, 1) struct usb_ccid_config usb_ccid_cfg = {
     // Interface descriptor
     .if0 = {
         .bLength = sizeof(struct usb_if_descriptor),
@@ -200,9 +201,9 @@ static int usb_ccid_handler(struct usb_setup_packet *setup, int32_t *len, uint8_
     if ((USB_REQTYPE_GET_DIR(setup->bmRequestType) == USB_REQTYPE_DIR_TO_HOST) && (setup->bRequest == 0x02) && (setup->wIndex == 0x07)) {
         /* Get MS OS 2.0 Descriptors request */
         /* 0x07 means "MS_OS_20_DESCRIPTOR_INDEX" */
-        *data = app_usb_msos2_descriptor();
-        *len  = setup->wLength;
-        LOG_DBG("Get MS OS Descriptors v2, wLength %d, data %p", setup->wLength, *data);
+        *data = app_usb_bos_msos2_descriptor();
+        *len  = (int32_t)app_usb_bos_msos2_descriptor_size();
+        LOG_DBG("Get MS OS Descriptors v2, Length %d, data %p", *len, *data);
         return 0;
     }
 

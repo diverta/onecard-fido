@@ -14,7 +14,6 @@ extern "C" {
 //
 // 関数群
 //
-uint8_t    *app_usb_msos2_descriptor(void);
 void        app_usb_initialize(void);
 bool        app_usb_deinitialize(void);
 
