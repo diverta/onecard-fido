@@ -10,6 +10,7 @@
 #include <sys/byteorder.h>
 #include <usb/usb_device.h>
 
+#include "app_usb.h"
 #include "app_usb_ccid_define.h"
 #include "app_event.h"
 
@@ -192,6 +193,15 @@ static int usb_ccid_handler(struct usb_setup_packet *setup, int32_t *len, uint8_
 
     if ((USB_REQTYPE_GET_DIR(setup->bmRequestType) == USB_REQTYPE_DIR_TO_HOST) && (setup->bRequest == 0x5c)) {
         LOG_DBG("Device-to-Host, wLength %d, data %p", setup->wLength, *data);
+        return 0;
+    }
+
+    if ((USB_REQTYPE_GET_DIR(setup->bmRequestType) == USB_REQTYPE_DIR_TO_HOST) && (setup->bRequest == 0x02) && (setup->wIndex == 0x07)) {
+        /* Get MS OS 2.0 Descriptors request */
+        /* 0x07 means "MS_OS_20_DESCRIPTOR_INDEX" */
+        *data = app_usb_msos2_descriptor();
+        *len  = setup->wLength;
+        LOG_DBG("Get MS OS Descriptors v2, wLength %d, data %p", setup->wLength, *data);
         return 0;
     }
 

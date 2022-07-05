@@ -65,6 +65,11 @@ static const uint8_t msos2_descriptor[] = {
     'F', 0x00, '4', 0x00, '}', 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+uint8_t *app_usb_msos2_descriptor(void)
+{
+    return (uint8_t *)msos2_descriptor;
+}
+
 //
 // BOSディスクリプターを保持
 //
@@ -136,6 +141,9 @@ static void status_cb(enum usb_dc_status_code status, const uint8_t *param)
 //
 void app_usb_initialize(void)
 {
+    // Windows OSでUSBデバイスを使用可能にする
+    usb_bos_register_cap((void *)&bos_cap_msosv2);
+    
     // USBデバイスを使用可能にする
     int ret = usb_enable(status_cb);
     if (ret != 0) {
