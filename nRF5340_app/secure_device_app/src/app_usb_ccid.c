@@ -174,8 +174,9 @@ static void usb_ccid_status_cb(struct usb_cfg_data *cfg, enum usb_dc_status_code
 
 static void usb_ccid_interface_config(struct usb_desc_header *head, uint8_t bInterfaceNumber)
 {
-    (void)head;
-    usb_ccid_cfg.if0.bInterfaceNumber = bInterfaceNumber;
+    struct usb_if_descriptor *if_desc = (struct usb_if_descriptor *)head;
+    struct usb_ccid_config *desc = CONTAINER_OF(if_desc, struct usb_ccid_config, if0);
+    desc->if0.bInterfaceNumber = bInterfaceNumber;
 }
 
 static int usb_ccid_handler(struct usb_setup_packet *setup, int32_t *len, uint8_t **data)
@@ -208,7 +209,7 @@ static int usb_ccid_handler(struct usb_setup_packet *setup, int32_t *len, uint8_
     return -ENOTSUP;
 }
 
-USBD_DEFINE_CFG_DATA(primary_ccid) = {
+USBD_DEFINE_CFG_DATA(usb_ccid_config) = {
     .usb_device_description = NULL,
     .interface_config = usb_ccid_interface_config,
     .interface_descriptor = &usb_ccid_cfg.if0,
