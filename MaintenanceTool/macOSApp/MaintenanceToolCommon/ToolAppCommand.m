@@ -171,7 +171,7 @@
         if ([self checkUSBHIDConnection] == false) {
             // エラーメッセージをポップアップ表示-->ボタンを活性化
             [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil
-                                           withObject:self forSelector:@selector(enableUserInterface)];
+                                           withObject:self forSelector:@selector(enableUserInterface) parentWindow:[self parentWindow]];
             return;
         }
         // コマンドごとの後続処理
@@ -199,12 +199,12 @@
             case COMMAND_ERASE_BONDS:
                 // ペアリング情報削除
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
-                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:[self parentWindow]];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 // ブートローダーモード遷移
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
-                                                     withObject:self forSelector:@selector(resumeHIDCommand)];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:[self parentWindow]];
                 break;
             case COMMAND_OPEN_WINDOW_PINPARAM:
                 // PINコード設定画面を開く
@@ -313,7 +313,7 @@
         if ([[ToolContext instance] bleScanAuthEnabled]) {
             // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
             [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_HCHK_BLE_AUTH informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH
-                                                      withObject:self forSelector:@selector(healthCheckCommandPromptDone)];
+                                                      withObject:self forSelector:@selector(healthCheckCommandPromptDone) parentWindow:[self parentWindow]];
             return;
         }
         // ヘルスチェック処理を実行

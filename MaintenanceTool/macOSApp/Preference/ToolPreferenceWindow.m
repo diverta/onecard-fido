@@ -184,18 +184,18 @@
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDScanSec]
                                minSize:UUID_SCAN_SEC_SIZE maxSize:UUID_SCAN_SEC_SIZE
-                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN] == false) {
+                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         if ([ToolCommon checkIsNumeric:[self fieldServiceUUIDScanSec]
-                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM onWindow:[self window]] == false) {
             return false;
         }
         // 範囲チェック
         if ([ToolCommon checkValueInRange:[self fieldServiceUUIDScanSec]
                                  minValue:1 maxValue:9
-                          informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE] == false) {
+                          informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -212,14 +212,14 @@
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDString]
                                minSize:UUID_STRING_SIZE maxSize:UUID_STRING_SIZE
-                       informativeText:MSG_PROMPT_INPUT_UUID_STRING_LEN] == false) {
+                       informativeText:MSG_PROMPT_INPUT_UUID_STRING_LEN onWindow:[self window]] == false) {
             return false;
         }
         // 入力形式チェック（正規表現チェック）
         NSString *pattern = @"([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})";
         if ([ToolCommon checkValueWithPattern:[self fieldServiceUUIDString]
                                       pattern:pattern
-                              informativeText:MSG_PROMPT_INPUT_UUID_STRING_PATTERN] == false) {
+                              informativeText:MSG_PROMPT_INPUT_UUID_STRING_PATTERN onWindow:[self window]] == false) {
             return false;
         }
         // チェックOK

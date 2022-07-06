@@ -51,7 +51,7 @@
             [[self toolDFUCommand] commandWillChangeToBootloaderMode];
         } else {
             // エラーメッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
         }
     }
 
@@ -77,7 +77,7 @@
                                  informative:(NSString *)informative {
         if (success == false) {
             // ブートローダーモード遷移処理がNGの場合、エラーメッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:errorMessage informativeText:informative withObject:self forSelector:@selector(displayErrorMessageDone)];
+            [[ToolPopupWindow defaultWindow] critical:errorMessage informativeText:informative withObject:self forSelector:@selector(displayErrorMessageDone) parentWindow:[self window]];
             return;
         }
         // このウィンドウを終了

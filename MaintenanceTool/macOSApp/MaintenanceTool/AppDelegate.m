@@ -46,9 +46,6 @@
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
-        
-        // 共通ポップアップ画面の初期化
-        [[ToolPopupWindow defaultWindow] setApplicationWindow:[self window]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -236,10 +233,12 @@
         // メッセージをログファイルに出力してから、ポップアップを表示-->ボタンを活性化
         if (result) {
             [[ToolLogFile defaultLogger] info:str];
-            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)
+                                              parentWindow:[self window]];
         } else {
             [[ToolLogFile defaultLogger] error:str];
-            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)
+                                         parentWindow:[self window]];
         }
     }
 

@@ -63,12 +63,12 @@
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldPin]
                                minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                       informativeText:MSG_PROMPT_INPUT_CUR_PIN] == false) {
+                       informativeText:MSG_PROMPT_INPUT_CUR_PIN onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         if ([ToolCommon checkIsNumeric:[self fieldPin]
-                       informativeText:MSG_PROMPT_INPUT_CUR_PIN_NUM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_CUR_PIN_NUM onWindow:[self window]] == false) {
             return false;
         }
         return true;

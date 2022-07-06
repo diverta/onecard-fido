@@ -98,78 +98,78 @@
 
 #pragma mark - Utilities for check entry
 
-    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
+    + (bool)checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力項目が正しく指定されていない場合はfalseを戻す
         if ([[textField stringValue] length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText {
+    + (bool)checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力されたファイルパスが存在しない場合はfalseを戻す
         if ([[NSFileManager defaultManager] fileExistsAtPath:[textField stringValue]] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FILE_PATH informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FILE_PATH informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText{
+    + (bool)checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力値が数字だけで構成されていない場合はfalseを戻す
         NSString *string = [textField stringValue];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
         if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_NOT_NUMERIC informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_NOT_NUMERIC informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
-          informativeText:(NSString *)informativeText {
+    + (bool)compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
+         informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力項目が等しくない場合はfalseを戻す
         if ([[destField stringValue] isEqualToString:[srcField stringValue]] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [destField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) checkEntrySize:(NSTextField *)textField
-                    minSize:(size_t)minSize maxSize:(size_t)maxSize
-            informativeText:(NSString *)informativeText {
+    + (bool)checkEntrySize:(NSTextField *)textField
+                   minSize:(size_t)minSize maxSize:(size_t)maxSize
+           informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力項目が正しく指定されていない場合はfalseを戻す
         size_t size = [[textField stringValue] length];
         if (size < minSize || size > maxSize) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD_SIZE informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD_SIZE informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) checkValueInRange:(NSTextField *)textField
-                      minValue:(int)minValue maxValue:(int)maxValue
-               informativeText:(NSString *)informativeText {
+    + (bool)checkValueInRange:(NSTextField *)textField
+                     minValue:(int)minValue maxValue:(int)maxValue
+              informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力項目が正しく指定されていない場合はfalseを戻す
         int value = [textField intValue];
         if (value < minValue || value > maxValue) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
     }
 
-    + (bool) checkValueWithPattern:(NSTextField *)textField
-                           pattern:(NSString *)pattern
-                   informativeText:(NSString *)informativeText {
+    + (bool)checkValueWithPattern:(NSTextField *)textField
+                          pattern:(NSString *)pattern
+                  informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力項目が正規表現にマッチしていない場合はfalseを戻す
         NSString *value = [textField stringValue];
         NSError *error = nil;
@@ -181,7 +181,7 @@
         [regex firstMatchInString:value options:0 range:NSMakeRange(0, value.length)];
         
         if (match == nil) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_PATTERN informativeText:informativeText withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_PATTERN informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
             [textField becomeFirstResponder];
             return false;
         }

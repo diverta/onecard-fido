@@ -91,38 +91,38 @@
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldPin]
                                minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                       informativeText:MSG_PROMPT_INPUT_NEW_PIN] == false) {
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN onWindow:[self window]] == false) {
             return false;
         }
         if ([ToolCommon checkEntrySize:[self fieldPinConfirm]
                                minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONFIRM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONFIRM onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         if ([ToolCommon checkIsNumeric:[self fieldPin]
-                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_NUM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_NUM onWindow:[self window]] == false) {
             return false;
         }
         if ([ToolCommon checkIsNumeric:[self fieldPinConfirm]
-                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM onWindow:[self window]] == false) {
             return false;
         }
         // 変更ボタンがクリックされた場合は、変更前PINコードの入力チェックを実行
         if (sender == _buttonChangePin) {
             if ([ToolCommon checkEntrySize:[self fieldPinOld]
                                    minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                           informativeText:MSG_PROMPT_INPUT_OLD_PIN] == false) {
+                           informativeText:MSG_PROMPT_INPUT_OLD_PIN onWindow:[self window]] == false) {
                 return false;
             }
             if ([ToolCommon checkIsNumeric:[self fieldPinOld]
-                          informativeText:MSG_PROMPT_INPUT_OLD_PIN_NUM] == false) {
+                          informativeText:MSG_PROMPT_INPUT_OLD_PIN_NUM onWindow:[self window]] == false) {
                 return false;
             }
         }
         // 確認用PINコードのチェック
         if ([ToolCommon compareEntry:[self fieldPinConfirm] srcField:[self fieldPin]
-                     informativeText:MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT] == false) {
+                     informativeText:MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT onWindow:[self window]] == false) {
             return false;
         }
         return true;

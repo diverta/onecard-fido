@@ -47,7 +47,7 @@
             [self terminateWindow:NSModalResponseOK withCommand:COMMAND_USB_DFU];
         } else {
             // エラーメッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
         }
     }
 

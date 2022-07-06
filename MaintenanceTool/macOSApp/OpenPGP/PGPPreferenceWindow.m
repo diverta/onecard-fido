@@ -202,7 +202,7 @@
             return true;
         }
         // エラーメッセージをポップアップ表示
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
         return false;
     }
 
@@ -466,12 +466,12 @@
     - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName sizeMin:(int)min sizeMax:(int)max {
         // 必須チェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName];
-        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
+        if ([ToolCommon checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 長さチェック
         message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT, fieldName, min, max];
-        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:message] == false) {
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:max informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -480,7 +480,7 @@
     - (bool)checkAsciiEntry:(NSTextField *)field fieldName:(NSString *)fieldName {
         // 入力パターンチェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ASCII_ENTRY, fieldName];
-        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_ASCII informativeText:message] == false) {
+        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_ASCII informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -489,7 +489,7 @@
     - (bool)checkAddressEntry:(NSTextField *)field fieldName:(NSString *)fieldName {
         // 入力パターンチェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY, fieldName];
-        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS informativeText:message] == false) {
+        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -498,7 +498,7 @@
     - (bool)checkEntryNoSpaceExistOnBothEnds:(NSTextField *)field fieldName:(NSString *)fieldName {
         // 入力パターンチェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTHEND, fieldName];
-        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND informativeText:message] == false) {
+        if ([ToolCommon checkValueWithPattern:field pattern:OPENPGP_ENTRY_PATTERN_NOSP_BOTHEND informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -506,11 +506,11 @@
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
         // 入力項目が正しく指定されていない場合は終了
-        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
+        if ([ToolCommon checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommon checkFileExist:field informativeText:message] == false) {
+        if ([ToolCommon checkFileExist:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -520,12 +520,12 @@
         // 長さチェック
         NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT, name];
         if ([ToolCommon checkEntrySize:field minSize:OPENPGP_ADMIN_PIN_CODE_SIZE_MIN maxSize:OPENPGP_ADMIN_PIN_CODE_SIZE_MAX
-                       informativeText:msg1] == false) {
+                       informativeText:msg1 onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         NSString *msg2 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, name];
-        if ([ToolCommon checkIsNumeric:field informativeText:msg2] == false) {
+        if ([ToolCommon checkIsNumeric:field informativeText:msg2 onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -534,7 +534,7 @@
     - (bool)checkPinConfirmFor:(NSTextField *)dest withSource:(NSTextField *)source withName:(NSString *)name {
         // PIN番号の確認入力内容をチェック
         NSString *msg = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, name];
-        return [ToolCommon compareEntry:dest srcField:source informativeText:msg];
+        return [ToolCommon compareEntry:dest srcField:source informativeText:msg onWindow:[self window]];
     }
 
     - (bool)checkForPerformPinCommand:(id)sender {
@@ -597,12 +597,12 @@
     - (bool)checkPinNumbersForPinCommand:(NSTextField *)field fieldName:(NSString *)name sizeMin:(int)min {
         // 長さチェック
         NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_PIN_DIGIT, name, min];
-        if ([ToolCommon checkEntrySize:field minSize:min maxSize:min informativeText:msg1] == false) {
+        if ([ToolCommon checkEntrySize:field minSize:min maxSize:min informativeText:msg1 onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         NSString *msg2 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM, name];
-        if ([ToolCommon checkIsNumeric:field informativeText:msg2] == false) {
+        if ([ToolCommon checkIsNumeric:field informativeText:msg2 onWindow:[self window]] == false) {
             return false;
         }
         return true;
