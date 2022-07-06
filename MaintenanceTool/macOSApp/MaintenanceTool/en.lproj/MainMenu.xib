@@ -487,18 +487,21 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq" userLabel="buttonFIDOAttestation">
-                        <rect key="frame" x="395" y="243" width="155" height="32"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq" userLabel="buttonUtility">
+                        <rect key="frame" x="403" y="243" width="147" height="32"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="lHS-3K-zvA"/>
                         </constraints>
-                        <buttonCell key="cell" type="push" title="FIDO鍵・証明書設定" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
+                        <buttonCell key="cell" type="push" title="ユーティリティー" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonUtilityDidPress:" target="494" id="Fps-pa-Ztg"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U" userLabel="buttonQuit">
-                        <rect key="frame" x="395" y="309" width="155" height="32"/>
+                        <rect key="frame" x="403" y="309" width="147" height="32"/>
                         <buttonCell key="cell" type="push" title="終了" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GV1-ni-AJH">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -538,7 +541,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wze-D2-dCv" userLabel="buttonSetPgpParam">
-                        <rect key="frame" x="395" y="276" width="155" height="32"/>
+                        <rect key="frame" x="403" y="276" width="147" height="32"/>
                         <buttonCell key="cell" type="push" title="OpenPGP機能設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="50R-6Y-uu0">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -626,6 +629,7 @@
                 <outlet property="buttonSetPinParam" destination="FlF-Id-KYb" id="xxD-HA-LNp"/>
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>
+                <outlet property="buttonUtility" destination="IdI-T9-vnq" id="hKn-3u-8pf"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>

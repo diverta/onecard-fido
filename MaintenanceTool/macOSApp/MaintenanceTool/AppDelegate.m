@@ -20,6 +20,7 @@
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
+    @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
@@ -73,6 +74,7 @@
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
@@ -163,6 +165,12 @@
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonUtilityDidPress:(id)sender {
+        // TODO: ユーティリティー画面を開く
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil withObject:nil forSelector:nil
+                                     parentWindow:[self window]];
     }
 
     - (IBAction)menuItemViewLogDidSelect:(id)sender {
