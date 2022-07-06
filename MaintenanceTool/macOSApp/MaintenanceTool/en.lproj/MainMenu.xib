@@ -496,9 +496,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="buttonFIDOAttestationDidPress:" target="494" id="Dac-um-vGh"/>
-                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U" userLabel="buttonQuit">
                         <rect key="frame" x="395" y="309" width="155" height="32"/>
@@ -623,7 +620,6 @@
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="buttonDFU" destination="1rF-YJ-d6M" id="jnA-lM-anu"/>
-                <outlet property="buttonFIDOAttestation" destination="IdI-T9-vnq" id="pVS-77-IMc"/>
                 <outlet property="buttonPairing" destination="Mg1-7s-419" id="hT7-R3-AGo"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="buttonSetPgpParam" destination="wze-D2-dCv" id="mi6-yo-6Vn"/>

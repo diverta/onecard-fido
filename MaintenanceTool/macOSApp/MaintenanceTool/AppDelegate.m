@@ -16,7 +16,6 @@
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
     @property (assign) IBOutlet NSButton    *buttonUnpairing;
-    @property (assign) IBOutlet NSButton    *buttonFIDOAttestation;
     @property (assign) IBOutlet NSButton    *buttonSetPinParam;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
@@ -70,7 +69,6 @@
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonPairing] setEnabled:enabled];
         [[self buttonUnpairing] setEnabled:enabled];
-        [[self buttonFIDOAttestation] setEnabled:enabled];
         [[self buttonSetPinParam] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
@@ -90,11 +88,6 @@
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
         [[self toolAppCommand] doCommandEraseBond];
-    }
-
-    - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
-        // FIDO鍵・証明書設定画面を開く
-        [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
