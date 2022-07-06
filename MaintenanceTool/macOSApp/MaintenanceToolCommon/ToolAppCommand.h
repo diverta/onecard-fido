@@ -33,7 +33,6 @@
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
     - (bool)checkUSBHIDConnection;
 
-    - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent;

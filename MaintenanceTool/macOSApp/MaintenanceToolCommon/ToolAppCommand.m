@@ -11,7 +11,6 @@
 #import "ToolCommonMessage.h"
 #import "ToolContext.h"
 #import "ToolUSBDFUCommand.h"
-#import "ToolFIDOAttestationCommand.h"
 #import "ToolPGPCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
@@ -33,7 +32,6 @@
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
     @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
-    @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
     // 実行するコマンドの種別を保持
@@ -62,8 +60,6 @@
             [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
             [self setToolUSBDFUCommand:[[ToolUSBDFUCommand alloc] initWithDelegate:self]];
-            // FIDO鍵・証明書設定機能の初期設定
-            [self setToolFIDOAttestationCommand:[[ToolFIDOAttestationCommand alloc] initWithDelegate:self]];
             // GPG機能の初期設定
             [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
         }
@@ -210,10 +206,6 @@
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
                                                      withObject:self forSelector:@selector(resumeHIDCommand)];
                 break;
-            case COMMAND_OPEN_WINDOW_FIDOATTEST:
-                // FIDO鍵・証明書設定画面を開く
-                [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
-                break;
             case COMMAND_OPEN_WINDOW_PINPARAM:
                 // PINコード設定画面を開く
                 [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
@@ -257,11 +249,6 @@
     }
 
 #pragma mark - For opening other window
-
-    - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // FIDO鍵・証明書設定画面を開く
-        [self doHIDCommand:COMMAND_OPEN_WINDOW_FIDOATTEST sender:sender parentWindow:parentWindow];
-    }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // PINコード設定画面を開く
