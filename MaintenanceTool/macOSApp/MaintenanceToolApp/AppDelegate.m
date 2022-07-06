@@ -11,6 +11,7 @@
 #import "ToolContext.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
+#import "UtilityCommand.h"
 
 @interface AppDelegate () <ToolAppCommandDelegate>
 
@@ -30,7 +31,10 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
 
+    // クラスの参照を保持
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
+    @property (nonatomic) UtilityCommand    *utilityCommand;
+
 @end
 
 @implementation AppDelegate
@@ -44,6 +48,7 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -166,9 +171,8 @@
     }
 
     - (IBAction)buttonUtilityDidPress:(id)sender {
-        // TODO: ユーティリティー画面を開く
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil withObject:nil forSelector:nil
-                                     parentWindow:[self window]];
+        // ユーティリティー画面を開く
+        [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)menuItemViewLogDidSelect:(id)sender {

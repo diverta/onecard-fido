@@ -18,8 +18,10 @@
 #define MSG_FAILURE                 @"失敗"
 
 #pragma mark - ホーム画面
+#define MSG_APP_NAME                @"FIDO認証器管理ツール"
 #define MSG_APP_LAUNCHED            @"FIDO認証器管理ツールを起動しました: Version %@"
 #define MSG_APP_TERMINATED          @"FIDO認証器管理ツールを終了しました。"
+#define MSG_APP_COPYRIGHT           @"Copyright (c) 2017-2022 Diverta Inc."
 #define MSG_PROMPT_SELECT_PKEY_PATH @"秘密鍵ファイル(PEM)のパスを選択してください"
 #define MSG_PROMPT_SELECT_CRT_PATH  @"証明書ファイル(CRT)のパスを選択してください"
 #define MSG_ERASE_SKEY_CERT         @"FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。"
@@ -33,6 +35,7 @@
 #define MSG_OCCUR_SKEYNOEXIST_ERROR @"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
 #define MSG_OCCUR_PAIRINGMODE_ERROR @"ペアリングモードでは、ペアリング実行以外の機能は使用できません。\nペアリングモードを解除してから、機能を再度実行してください。"
 #define MSG_OCCUR_UNKNOWN_ERROR     @"不明なエラーが発生しました。"
+#define MSG_FORMAT_APP_VERSION      @"Version %@"
 #define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
 #define MSG_ERASE_BONDS             @"FIDO認証器からペアリング情報をすべて削除します。"
