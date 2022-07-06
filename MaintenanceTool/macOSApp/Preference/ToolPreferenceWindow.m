@@ -8,7 +8,8 @@
 #import "ToolPreferenceWindow.h"
 #import "ToolProcessingWindow.h"
 #import "ToolPopupWindow.h"
-#import "ToolCommon.h"
+#import "ToolCommonFunc.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface ToolPreferenceWindow ()
@@ -36,7 +37,7 @@
         [super windowDidLoad];
         // バージョン文字列を設定
         [[self fieldVersionText] setStringValue:[NSString stringWithFormat:@"Version %@",
-                                                 [ToolCommon getAppVersionString]]];
+                                                 [ToolCommonFunc getAppVersionString]]];
         // 著作権情報文字列を設定（バンドルに該当項目がないため、ここで管理）
         [[self fieldCopyrightText] setStringValue:@"Copyright (c) 2017-2022 Diverta Inc."];
         // 画面項目を初期化

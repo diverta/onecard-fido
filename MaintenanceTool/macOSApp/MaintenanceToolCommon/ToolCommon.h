@@ -78,7 +78,6 @@ typedef enum : NSInteger {
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 
-    + (NSString *)getAppVersionString;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
     + (NSData *)generateSHA256HashDataOf:(NSData *)data;
@@ -87,8 +86,6 @@ typedef enum : NSInteger {
     + (uint16_t)getLENumber16FromBEBytes:(uint8_t *)p;
     + (uint32_t)getLENumber32FromBEBytes:(uint8_t *)p;
 
-    + (bool)checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
-    + (bool)checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool)checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool)compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
           informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;

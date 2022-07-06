@@ -9,6 +9,7 @@
 
 #import "AppCommonMessage.h"
 #import "ToolCommon.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
@@ -20,10 +21,6 @@
 @end
 
 @implementation ToolCommon
-
-    + (NSString *)getAppVersionString {
-        return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-    }
 
     + (NSData *)generateHexBytesFrom:(NSString *)hexString {
         unsigned int  hexInt;
@@ -98,26 +95,6 @@
     }
 
 #pragma mark - Utilities for check entry
-
-    + (bool)checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
-        // 入力項目が正しく指定されていない場合はfalseを戻す
-        if ([[textField stringValue] length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FIELD informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
-            [textField becomeFirstResponder];
-            return false;
-        }
-        return true;
-    }
-
-    + (bool)checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
-        // 入力されたファイルパスが存在しない場合はfalseを戻す
-        if ([[NSFileManager defaultManager] fileExistsAtPath:[textField stringValue]] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FILE_PATH informativeText:informativeText withObject:nil forSelector:nil parentWindow:window];
-            [textField becomeFirstResponder];
-            return false;
-        }
-        return true;
-    }
 
     + (bool)checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
         // 入力値が数字だけで構成されていない場合はfalseを戻す

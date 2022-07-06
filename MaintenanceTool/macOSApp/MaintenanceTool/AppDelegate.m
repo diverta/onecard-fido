@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
+#import "ToolCommonFunc.h"
 #import "ToolContext.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
@@ -39,7 +40,7 @@
         [[ToolContext instance] setAppDelegateRef:self];
 
         // アプリケーション開始ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommon getAppVersionString]];
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];

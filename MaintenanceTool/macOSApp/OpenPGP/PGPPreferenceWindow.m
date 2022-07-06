@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "PGPPreferenceWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPGPCommand.h"
@@ -466,7 +467,7 @@
     - (bool)checkMustEntry:(NSTextField *)field fieldName:(NSString *)fieldName sizeMin:(int)min sizeMax:(int)max {
         // 必須チェック
         NSString *message = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PGP_MUST_ENTRY, fieldName];
-        if ([ToolCommon checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 長さチェック
@@ -506,11 +507,11 @@
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
         // 入力項目が正しく指定されていない場合は終了
-        if ([ToolCommon checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommon checkFileExist:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkFileExist:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;

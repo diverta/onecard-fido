@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "PIVPreferenceWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
@@ -457,11 +458,11 @@
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
         // 入力項目が正しく指定されていない場合は終了
-        if ([ToolCommon checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommon checkFileExist:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkFileExist:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
