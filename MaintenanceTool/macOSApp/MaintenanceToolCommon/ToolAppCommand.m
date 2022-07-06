@@ -89,19 +89,19 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY_CERT];
     }
 
-    - (void)doCommandTestCtapHidPing {
+    - (void)doCommandTestCtapHidPing:(NSWindow *)parentWindow {
         // PINGテスト実行
-        [self doHIDCommand:COMMAND_TEST_CTAPHID_PING];
+        [self doHIDCommand:COMMAND_TEST_CTAPHID_PING sender:nil parentWindow:parentWindow];
     }
 
-    - (void)doCommandHidGetFlashStat {
+    - (void)doCommandHidGetFlashStat:(NSWindow *)parentWindow {
         // Flash ROM情報取得
-        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT];
+        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT sender:nil parentWindow:parentWindow];
     }
 
-    - (void)doCommandHidGetVersionInfo {
+    - (void)doCommandHidGetVersionInfo:(NSWindow *)parentWindow {
         // バージョン情報取得
-        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO];
+        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO sender:nil parentWindow:parentWindow];
     }
 
     - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
@@ -126,24 +126,24 @@
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
         // HID CTAP2ヘルスチェック実行
-        [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL];
+        [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL sender:nil parentWindow:parentWindow];
     }
 
     - (void)doCommandHidU2fHealthCheck:(NSWindow *)parentWindow {
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
         // HID U2Fヘルスチェック実行
-        [self doHIDCommand:COMMAND_TEST_REGISTER];
+        [self doHIDCommand:COMMAND_TEST_REGISTER sender:nil parentWindow:parentWindow];
     }
 
-    - (void)doCommandEraseBond {
+    - (void)doCommandEraseBond:(NSWindow *)parentWindow {
         // ペアリング情報削除
-        [self doHIDCommand:COMMAND_ERASE_BONDS];
+        [self doHIDCommand:COMMAND_ERASE_BONDS sender:nil parentWindow:parentWindow];
     }
 
-    - (void)doCommandBLMode {
+    - (void)doCommandBLMode:(NSWindow *)parentWindow {
         // ブートローダーモード遷移
-        [self doHIDCommand:COMMAND_HID_BOOTLOADER_MODE];
+        [self doHIDCommand:COMMAND_HID_BOOTLOADER_MODE sender:nil parentWindow:parentWindow];
     }
 
     - (void)doCommandFirmwareResetForCommandRef:(id)ref {
@@ -158,10 +158,6 @@
 
 #pragma mark - For HID connection check
 
-    - (void)doHIDCommand:(Command)command {
-        [self doHIDCommand:command sender:nil parentWindow:nil];
-    }
-
     - (void)doHIDCommand:(Command)command sender:(id)sender parentWindow:(NSWindow *)parentWindow  {
         // 実行コマンドを退避
         [self setCommand:command];
@@ -171,7 +167,7 @@
         if ([self checkUSBHIDConnection] == false) {
             // エラーメッセージをポップアップ表示-->ボタンを活性化
             [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil
-                                           withObject:self forSelector:@selector(enableUserInterface) parentWindow:[self parentWindow]];
+                                           withObject:self forSelector:@selector(enableUserInterface) parentWindow:parentWindow];
             return;
         }
         // コマンドごとの後続処理
@@ -199,12 +195,12 @@
             case COMMAND_ERASE_BONDS:
                 // ペアリング情報削除
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
-                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:[self parentWindow]];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:parentWindow];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 // ブートローダーモード遷移
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
-                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:[self parentWindow]];
+                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:parentWindow];
                 break;
             case COMMAND_OPEN_WINDOW_PINPARAM:
                 // PINコード設定画面を開く

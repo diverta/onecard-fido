@@ -86,7 +86,7 @@
 
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond];
+        [[self toolAppCommand] doCommandEraseBond:[self window]];
     }
 
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
@@ -131,17 +131,17 @@
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
         // PINGテスト実行
-        [[self toolAppCommand] doCommandTestCtapHidPing];
+        [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
     }
 
     - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         // Flash ROM情報取得
-        [[self toolAppCommand] doCommandHidGetFlashStat];
+        [[self toolAppCommand] doCommandHidGetFlashStat:[self window]];
     }
 
     - (IBAction)menuItemTestHID5DidSelect:(id)sender {
         // バージョン情報取得
-        [[self toolAppCommand] doCommandHidGetVersionInfo];
+        [[self toolAppCommand] doCommandHidGetVersionInfo:[self window]];
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
