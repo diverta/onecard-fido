@@ -4,11 +4,11 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
 #import "ToolContext.h"
 #import "ToolPopupWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface AppDelegate () <ToolAppCommandDelegate>

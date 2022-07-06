@@ -4,9 +4,9 @@
 //
 //  Created by Makoto Morita on 2018/02/27.
 //
+#import "AppCommonMessage.h"
 #import "SetPinParamWindow.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolPopupWindow.h"
 
 @interface SetPinParamWindow ()

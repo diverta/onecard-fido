@@ -5,11 +5,11 @@
 //  Created by Makoto Morita on 2019/10/24.
 //
 #import <Foundation/Foundation.h>
+#import "AppCommonMessage.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolHIDCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolPopupWindow.h"
 
 @interface ToolPreferenceCommand ()

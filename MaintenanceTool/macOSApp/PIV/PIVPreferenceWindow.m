@@ -4,13 +4,13 @@
 //
 //  Created by Makoto Morita on 2020/12/21.
 //
+#import "AppCommonMessage.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolProcessingWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface PIVPreferenceWindow () <ToolFilePanelDelegate>

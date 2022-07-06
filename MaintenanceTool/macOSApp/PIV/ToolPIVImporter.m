@@ -9,8 +9,8 @@
 #import "tool_crypto_private_key.h"
 #import "tool_piv_admin.h"
 
+#import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPIVImporter.h"
 

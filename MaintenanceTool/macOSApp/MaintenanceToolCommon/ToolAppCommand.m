@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "AppCommonMessage.h"
 #import "FIDODefines.h"
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"

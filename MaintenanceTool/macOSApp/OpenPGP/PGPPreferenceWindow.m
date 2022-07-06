@@ -4,13 +4,13 @@
 //
 //  Created by Makoto Morita on 2021/12/27.
 //
+#import "AppCommonMessage.h"
 #import "PGPPreferenceWindow.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPGPCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolProcessingWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 // 入力可能文字数

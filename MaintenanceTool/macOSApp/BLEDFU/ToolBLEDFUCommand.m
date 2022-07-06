@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "AppCommonMessage.h"
 #import "BLEDFUDefine.h"
 #import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
@@ -11,7 +12,6 @@
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolBLESMPCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 

@@ -7,9 +7,9 @@
 #import "debug_log.h"
 #import "tool_pcsc.h"
 
+#import "AppCommonMessage.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface ToolCCIDHelper ()

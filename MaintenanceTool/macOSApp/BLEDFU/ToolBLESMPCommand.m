@@ -4,10 +4,10 @@
 //
 //  Created by Makoto Morita on 2021/10/27.
 //
+#import "AppCommonMessage.h"
 #import "BLEDFUDefine.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 #define SmpServiceUUID          @"8D53DC1D-1DB7-4CD3-868B-8A527460AA84"

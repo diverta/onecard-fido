@@ -6,8 +6,9 @@
 //
 #import <Foundation/Foundation.h>
 #import "debug_log.h"
+
+#import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 

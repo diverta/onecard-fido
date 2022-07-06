@@ -4,9 +4,9 @@
 //
 //  Created by Makoto Morita on 2022/03/02.
 //
+#import "AppCommonMessage.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
-#import "ToolCommonMessage.h"
 #import "ToolPGPCcidCommand.h"
 #import "ToolPGPCommand.h"
 #import "ToolPGPCommon.h"

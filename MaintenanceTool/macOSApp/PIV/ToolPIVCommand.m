@@ -9,11 +9,11 @@
 #import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
 
+#import "AppCommonMessage.h"
 #import "ToolAppCommand.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
-#import "ToolCommonMessage.h"
 #import "ToolInfoWindow.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"

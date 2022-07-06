@@ -4,9 +4,9 @@
 //
 //  Created by Makoto Morita on 2021/11/22.
 //
+#import "AppCommonMessage.h"
 #import "ToolDFUCommand.h"
 #import "ToolDFUWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolPopupWindow.h"
 
 @interface ToolDFUWindow ()
