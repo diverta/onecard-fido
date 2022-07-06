@@ -7,7 +7,7 @@
 #ifndef ToolPreferenceCommand_h
 #define ToolPreferenceCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 // サービスUUID、スキャン秒数の桁数（固定）
 #define UUID_STRING_SIZE    36

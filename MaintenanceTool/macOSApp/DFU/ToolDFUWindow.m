@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2021/11/22.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "ToolDFUCommand.h"
 #import "ToolDFUWindow.h"
 #import "ToolPopupWindow.h"

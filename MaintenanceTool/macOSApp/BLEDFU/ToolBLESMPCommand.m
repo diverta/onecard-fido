@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2021/10/27.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "BLEDFUDefine.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"

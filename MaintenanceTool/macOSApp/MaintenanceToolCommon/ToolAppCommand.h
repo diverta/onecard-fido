@@ -8,7 +8,7 @@
 #define ToolAppCommand_h
 
 #import <Foundation/Foundation.h>
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @protocol ToolAppCommandDelegate;
 

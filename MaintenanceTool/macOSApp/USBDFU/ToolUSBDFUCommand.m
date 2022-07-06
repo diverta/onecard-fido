@@ -7,9 +7,11 @@
 #import <Foundation/Foundation.h>
 
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "FIDODefines.h"
 #import "debug_log.h"
 #import "nrf52_app_image.h"
+#import "ToolCommon.h"
 #import "ToolCDCHelper.h"
 #import "ToolUSBDFUCommand.h"
 #import "ToolHIDCommand.h"

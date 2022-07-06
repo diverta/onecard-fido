@@ -8,6 +8,7 @@
 #import "ToolPreferenceWindow.h"
 #import "ToolProcessingWindow.h"
 #import "ToolPopupWindow.h"
+#import "ToolCommon.h"
 #import "ToolCommonFunc.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"

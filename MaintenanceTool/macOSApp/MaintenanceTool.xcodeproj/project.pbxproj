@@ -145,6 +145,7 @@
 		7A3A1B26271E6F8D006864A1 /* ToolPreferenceCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceCommand.m; sourceTree = "<group>"; };
 		7A3A1B27271E6F8D006864A1 /* ToolPreferenceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPreferenceWindow.h; sourceTree = "<group>"; };
 		7A3A1B28271E6F8D006864A1 /* ToolPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceWindow.m; sourceTree = "<group>"; };
+		7A3F4F1728755D12003CFE67 /* AppDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDefine.h; sourceTree = "<group>"; };
 		7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVImporter.h; sourceTree = "<group>"; };
 		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
 		7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
@@ -318,6 +319,7 @@
 				7A3A1B18271E6F29006864A1 /* HealthCheck */,
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
+				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
 				7A3A1B17271E6F11006864A1 /* Preference */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
@@ -356,8 +358,6 @@
 			isa = PBXGroup;
 			children = (
 				7ADA84631FE36E6D00879CB4 /* Images.xcassets */,
-				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
-				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
 				64ED9A8E1647439300F39EAE /* MainMenu.xib */,
 				64ED9A801647439300F39EAE /* Supporting Files */,
 			);
@@ -406,6 +406,17 @@
 			children = (
 			);
 			path = MaintenanceToolUtility;
+			sourceTree = "<group>";
+		};
+		7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */ = {
+			isa = PBXGroup;
+			children = (
+				7A92D0E228754B140094D2DB /* AppCommonMessage.h */,
+				7A3F4F1728755D12003CFE67 /* AppDefine.h */,
+				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
+				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
+			);
+			path = MaintenanceToolApp;
 			sourceTree = "<group>";
 		};
 		7A4B02C5274B3C1500BF44C2 /* DFU */ = {
@@ -542,7 +553,6 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A92D0E228754B140094D2DB /* AppCommonMessage.h */,
 				7A5E615E270EC2B700C4AA3D /* ToolBLEHelper.h */,
 				7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */,
 				7A9274022105AB950062FA89 /* ToolBLECommand.h */,

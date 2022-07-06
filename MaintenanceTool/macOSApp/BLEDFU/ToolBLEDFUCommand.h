@@ -7,7 +7,7 @@
 #ifndef ToolBLEDFUCommand_h
 #define ToolBLEDFUCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface ToolBLEDFUCommand : NSObject
 

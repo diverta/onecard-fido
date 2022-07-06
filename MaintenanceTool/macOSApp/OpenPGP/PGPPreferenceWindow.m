@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2021/12/27.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "PGPPreferenceWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
