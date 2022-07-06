@@ -8,9 +8,7 @@
 #define AppCommonMessage_h
 
 #pragma mark - 共通
-#define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
-#define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
 #define MSG_INVALID_OUT_OF_RANGE    @"入力値の範囲が不正です。"
 #define MSG_INVALID_PATTERN         @"入力値の形式が不正です。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"

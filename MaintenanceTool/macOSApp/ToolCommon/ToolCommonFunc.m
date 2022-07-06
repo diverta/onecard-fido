@@ -4,7 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/06/08.
 //
-#import "AppCommonMessage.h"
+#import "ToolCommonMessage.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
 
