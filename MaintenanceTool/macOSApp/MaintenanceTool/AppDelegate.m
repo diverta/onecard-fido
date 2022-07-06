@@ -4,11 +4,12 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
+#import "ToolCommonFunc.h"
 #import "ToolContext.h"
 #import "ToolPopupWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface AppDelegate () <ToolAppCommandDelegate>
@@ -16,11 +17,11 @@
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
     @property (assign) IBOutlet NSButton    *buttonUnpairing;
-    @property (assign) IBOutlet NSButton    *buttonFIDOAttestation;
     @property (assign) IBOutlet NSButton    *buttonSetPinParam;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
+    @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
@@ -39,16 +40,13 @@
         [[ToolContext instance] setAppDelegateRef:self];
 
         // アプリケーション開始ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommon getAppVersionString]];
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
-        
-        // 共通ポップアップ画面の初期化
-        [[ToolPopupWindow defaultWindow] setApplicationWindow:[self window]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -70,11 +68,11 @@
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonPairing] setEnabled:enabled];
         [[self buttonUnpairing] setEnabled:enabled];
-        [[self buttonFIDOAttestation] setEnabled:enabled];
         [[self buttonSetPinParam] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
@@ -89,12 +87,7 @@
 
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond];
-    }
-
-    - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
-        // FIDO鍵・証明書設定画面を開く
-        [[self toolAppCommand] fidoAttestationWindowWillOpen:self parentWindow:[self window]];
+        [[self toolAppCommand] doCommandEraseBond:[self window]];
     }
 
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
@@ -139,17 +132,17 @@
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
         // PINGテスト実行
-        [[self toolAppCommand] doCommandTestCtapHidPing];
+        [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
     }
 
     - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         // Flash ROM情報取得
-        [[self toolAppCommand] doCommandHidGetFlashStat];
+        [[self toolAppCommand] doCommandHidGetFlashStat:[self window]];
     }
 
     - (IBAction)menuItemTestHID5DidSelect:(id)sender {
         // バージョン情報取得
-        [[self toolAppCommand] doCommandHidGetVersionInfo];
+        [[self toolAppCommand] doCommandHidGetVersionInfo:[self window]];
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
@@ -170,6 +163,12 @@
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonUtilityDidPress:(id)sender {
+        // TODO: ユーティリティー画面を開く
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil withObject:nil forSelector:nil
+                                     parentWindow:[self window]];
     }
 
     - (IBAction)menuItemViewLogDidSelect:(id)sender {
@@ -235,10 +234,12 @@
         // メッセージをログファイルに出力してから、ポップアップを表示-->ボタンを活性化
         if (result) {
             [[ToolLogFile defaultLogger] info:str];
-            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+            [[ToolPopupWindow defaultWindow] informational:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)
+                                              parentWindow:[self window]];
         } else {
             [[ToolLogFile defaultLogger] error:str];
-            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)];
+            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self forSelector:@selector(displayCommandResultDone)
+                                         parentWindow:[self window]];
         }
     }
 

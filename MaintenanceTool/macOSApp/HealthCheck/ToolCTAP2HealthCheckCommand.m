@@ -6,8 +6,8 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolContext.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "PinCodeParamWindow.h"

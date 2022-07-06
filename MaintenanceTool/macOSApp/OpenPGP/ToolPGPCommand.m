@@ -4,9 +4,9 @@
 //
 //  Created by Makoto Morita on 2021/12/16.
 //
+#import "AppCommonMessage.h"
 #import "PGPPreferenceWindow.h"
 #import "ToolAppCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolPGPCcidCommand.h"
 #import "ToolPGPCommand.h"
 #import "ToolPGPCommon.h"

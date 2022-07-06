@@ -1,16 +1,14 @@
 //
-//  ToolCommonMessage.h
+//  AppCommonMessage.h
 //  MaintenanceTool
 //
-//  Created by Makoto Morita on 2018/02/26.
+//  Created by Makoto Morita on 2022/07/06.
 //
-#ifndef ToolCommonMessage_h
-#define ToolCommonMessage_h
+#ifndef AppCommonMessage_h
+#define AppCommonMessage_h
 
 #pragma mark - 共通
-#define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
-#define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
 #define MSG_INVALID_OUT_OF_RANGE    @"入力値の範囲が不正です。"
 #define MSG_INVALID_PATTERN         @"入力値の形式が不正です。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
@@ -195,13 +193,6 @@
 #define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
 #define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
 
-#pragma mark - USB HID関連
-#define MSG_USB_DETECT_FAILED                   @"USBデバイス検知の開始に失敗しました。"
-#define MSG_USB_DETECT_STARTED                  @"USBデバイス検知を開始しました。"
-#define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
-#define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
-#define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
-
 #pragma mark - BLE DFU関連
 #define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
 #define MSG_DFU_VERSION_INFO_GET_FAILED         @"FIDO認証器ファームウェアのバージョンが取得できませんでした。"
@@ -385,4 +376,4 @@
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードによるPIN番号リセット"
 #define MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY  @"管理用PIN番号の検証"
 
-#endif /* ToolCommonMessage_h */
+#endif /* AppCommonMessage_h */

@@ -63,7 +63,6 @@ typedef enum : NSInteger {
     COMMAND_OPENPGP_UNBLOCK_PIN,
     COMMAND_OPENPGP_SET_RESET_CODE,
     COMMAND_OPENPGP_UNBLOCK,
-    COMMAND_OPEN_WINDOW_FIDOATTEST,
     COMMAND_OPEN_WINDOW_PINPARAM,
     COMMAND_OPEN_WINDOW_PIVPARAM,
     COMMAND_OPEN_WINDOW_PGPPARAM,
@@ -79,7 +78,6 @@ typedef enum : NSInteger {
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 
-    + (NSString *)getAppVersionString;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
     + (NSData *)generateSHA256HashDataOf:(NSData *)data;
@@ -88,20 +86,18 @@ typedef enum : NSInteger {
     + (uint16_t)getLENumber16FromBEBytes:(uint8_t *)p;
     + (uint32_t)getLENumber32FromBEBytes:(uint8_t *)p;
 
-    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
-    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
-    + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText;
-    + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
-          informativeText:(NSString *)informativeText;
-    + (bool) checkEntrySize:(NSTextField *)textField
-                    minSize:(size_t)minSize maxSize:(size_t)maxSize
-            informativeText:(NSString *)informativeText;
-    + (bool) checkValueInRange:(NSTextField *)textField
-                      minValue:(int)minValue maxValue:(int)maxValue
-               informativeText:(NSString *)informativeText;
-    + (bool) checkValueWithPattern:(NSTextField *)textField
-                           pattern:(NSString *)pattern
-                   informativeText:(NSString *)informativeText;
+    + (bool)checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool)compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
+          informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool)checkEntrySize:(NSTextField *)textField
+                   minSize:(size_t)minSize maxSize:(size_t)maxSize
+           informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool)checkValueInRange:(NSTextField *)textField
+                    minValue:(int)minValue maxValue:(int)maxValue
+            informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
+    + (bool)checkValueWithPattern:(NSTextField *)textField
+                        pattern:(NSString *)pattern
+                informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
 
     + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
 

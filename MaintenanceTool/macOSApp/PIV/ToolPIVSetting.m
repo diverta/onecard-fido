@@ -7,8 +7,8 @@
 #import "tool_crypto_certificate.h"
 #import "tool_piv_admin.h"
 
+#import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolPIVCommon.h"
 #import "ToolPIVSetting.h"
 #import "ToolLogFile.h"
