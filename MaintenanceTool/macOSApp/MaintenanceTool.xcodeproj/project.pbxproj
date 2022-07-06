@@ -206,9 +206,9 @@
 		7A9274022105AB950062FA89 /* ToolBLECommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolBLECommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLECommand.m; sourceTree = "<group>"; };
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
-		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
 		7A92D0E228754B140094D2DB /* AppCommonMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppCommonMessage.h; sourceTree = "<group>"; };
+		7A92D0E328754DD00094D2DB /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
@@ -412,6 +412,7 @@
 		7A4C217C287520DA005CC8D0 /* ToolCommon */ = {
 			isa = PBXGroup;
 			children = (
+				7A92D0E328754DD00094D2DB /* ToolCommonMessage.h */,
 				7AF7B5DD28753E5A00D4DFFC /* ToolHIDHelper.h */,
 				7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */,
 				7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */,
@@ -535,7 +536,6 @@
 				7A9274032105AB950062FA89 /* ToolBLECommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
 				7A92740A2105AB960062FA89 /* ToolCommon.m */,
-				7A9274072105AB960062FA89 /* ToolCommonMessage.h */,
 				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
 				7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */,
 				7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */,
