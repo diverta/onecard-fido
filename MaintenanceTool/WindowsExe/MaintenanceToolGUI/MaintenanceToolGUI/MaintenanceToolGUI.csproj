@@ -512,9 +512,7 @@
     <EmbeddedResource Include="Resources\card_edit_unblock.param" />
     <EmbeddedResource Include="Resources\card_edit_passwd.bat" />
     <EmbeddedResource Include="Resources\card_edit_passwd.param" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.5.zip" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.5.zip" />
-    <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.6.bin" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.7.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -2,22 +2,22 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)から、FIDO認証情報を消去する手順について掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)から、FIDO認証情報を消去する手順について掲載します。
 
 ## 認証器の準備
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を、PC環境（Windows）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（Windows版）](INSTALLPRG.md) </b>
+* <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>
 
 ## FIDO認証情報の消去
 
@@ -29,9 +29,9 @@ FIDO認証情報（認証器に登録されているユーザー情報やログ�
 
 ### 消去手順
 
-まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
+管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
-<img src="../../MaintenanceTool/WindowsExe/assets/0020.jpg" width="400">
+<img src="assets/0020.jpg" width="400">
 
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツールのFIDO設定画面で「FIDO認証情報消去」ボタンをクリックします。
 

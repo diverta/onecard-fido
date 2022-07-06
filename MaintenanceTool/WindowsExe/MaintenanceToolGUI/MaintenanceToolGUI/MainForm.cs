@@ -470,25 +470,23 @@ namespace MaintenanceToolGUI
         //
         private void buttonDFU_Click(object sender, EventArgs e)
         {
-            // ファームウェア更新画面を表示
-            DFUForm f = new DFUForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel) {
-                // ファームウェア更新画面でCancelの場合は終了
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+
+            // プロンプトを表示し、Yesの場合だけ処理を続行する
+            if (FormUtil.DisplayPromptPopup(this, MaintenanceToolTitle, message) == false) {
                 return;
             }
 
             // ボタンを押下不可とする
             enableButtons(false);
             // 開始メッセージを取得
-            commandTitle = f.CommandTitle;
+            commandTitle = AppCommon.PROCESS_NAME_BLE_DFU;
 
             // ファームウェア更新
-            if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_DFU)) {
-                toolBLEDFU.DoCommandBLEDFU();
-            }
-            if (commandTitle.Equals(AppCommon.PROCESS_NAME_USB_DFU)) {
-                toolDFU.DoCommandDFU();
-            }
+            toolBLEDFU.DoCommandBLEDFU();
         }
 
         public void OnDFUStarted()
