@@ -318,6 +318,7 @@
 				7A3A1B18271E6F29006864A1 /* HealthCheck */,
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
+				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
 				7A3A1B17271E6F11006864A1 /* Preference */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				64ED9A781647439300F39EAE /* Frameworks */,
@@ -398,6 +399,13 @@
 				7A3A1B1F271E6F7E006864A1 /* ToolU2FHealthCheckCommand.m */,
 			);
 			path = HealthCheck;
+			sourceTree = "<group>";
+		};
+		7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MaintenanceToolUtility;
 			sourceTree = "<group>";
 		};
 		7A4B02C5274B3C1500BF44C2 /* DFU */ = {
