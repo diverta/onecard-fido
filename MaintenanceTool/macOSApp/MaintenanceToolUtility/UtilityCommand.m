@@ -1,16 +1,15 @@
 //
 //  UtilityCommand.m
-//  DevelopmentTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2022/07/06.
 //
 #import "AppCommonMessage.h"
-#import "AppDefine.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
+#import "ToolVersionWindow.h"
 #import "UtilityCommand.h"
 #import "UtilityWindow.h"
-#import "ToolVersionWindow.h"
 
 @interface UtilityCommand ()
 
@@ -24,12 +23,8 @@
 
 @implementation UtilityCommand
 
-    - (id)init {
-        return [self initWithDelegate:nil];
-    }
-
     - (id)initWithDelegate:(id)delegate {
-        self = [super init];
+        self = [super initWithDelegate:delegate];
         if (self) {
             // 画面のインスタンスを生成
             [self setUtilityWindow:[[UtilityWindow alloc] initWithWindowNibName:@"UtilityWindow"]];

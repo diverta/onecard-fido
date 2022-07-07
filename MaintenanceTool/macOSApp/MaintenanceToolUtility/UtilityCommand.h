@@ -1,15 +1,16 @@
 //
 //  UtilityCommand.h
-//  DevelopmentTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2022/07/06.
 //
 #ifndef UtilityCommand_h
 #define UtilityCommand_h
 
-@interface UtilityCommand : NSObject
+#import "AppCommand.h"
 
-    - (id)initWithDelegate:(id)delegate;
+@interface UtilityCommand : AppCommand
+
     - (void)utilityWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
 @end
