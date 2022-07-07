@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
@@ -13,7 +14,7 @@
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
-@interface AppDelegate () <ToolAppCommandDelegate>
+@interface AppDelegate () <ToolAppCommandDelegate, AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
@@ -250,6 +251,16 @@
     - (void)displayCommandResultDone {
         // ボタンを活性化
         [self enableButtons:true];
+    }
+
+    - (void)enableButtonsOfMainUI:(bool)enable {
+        // ボタンを活性化
+        [self enableButtons:enable];
+    }
+
+    - (void)notifyMessageToMainUI:(NSString *)message {
+        // メッセージを画面のテキストエリアに表示
+        [self notifyAppCommandMessage:message];
     }
 
 @end
