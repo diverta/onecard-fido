@@ -141,16 +141,6 @@
         [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
     }
 
-    - (IBAction)menuItemTestHID4DidSelect:(id)sender {
-        // Flash ROM情報取得
-        [[self toolAppCommand] doCommandHidGetFlashStat:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID5DidSelect:(id)sender {
-        // バージョン情報取得
-        [[self toolAppCommand] doCommandHidGetVersionInfo:[self window]];
-    }
-
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
         [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];

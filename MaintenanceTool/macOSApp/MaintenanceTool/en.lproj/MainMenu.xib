@@ -371,18 +371,6 @@
                                                 <action selector="menuItemTestHID3DidSelect:" target="494" id="5NO-8f-dUF"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID4DidSelect:" target="494" id="vyY-3J-f9s"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="バージョン情報取得" id="Wfx-0z-Fa6">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID5DidSelect:" target="494" id="QMh-LU-o06"/>
-                                            </connections>
-                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
