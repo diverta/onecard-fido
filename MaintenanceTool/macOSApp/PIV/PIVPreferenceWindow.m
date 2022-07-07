@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2020/12/21.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"

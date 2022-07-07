@@ -27,11 +27,7 @@
                             <menuItem isSeparatorItem="YES" id="236">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Preferences…" keyEquivalent="," id="129">
-                                <connections>
-                                    <action selector="menuItemPreferencesDidSelect:" target="494" id="lgC-mb-ffO"/>
-                                </connections>
-                            </menuItem>
+                            <menuItem title="Preferences…" keyEquivalent="," id="129"/>
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -71,16 +67,6 @@
                 <menuItem title="File" id="83">
                     <menu key="submenu" title="File" autoenablesItems="NO" id="81">
                         <items>
-                            <menuItem isSeparatorItem="YES" enabled="YES" id="8UF-J7-ozH">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="管理ツールのログを参照" id="ZNn-Z2-Lob">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemViewLogDidSelect:" target="494" id="qrw-Xf-a6q"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="373"/>
@@ -371,18 +357,6 @@
                                                 <action selector="menuItemTestHID3DidSelect:" target="494" id="5NO-8f-dUF"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID4DidSelect:" target="494" id="vyY-3J-f9s"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="バージョン情報取得" id="Wfx-0z-Fa6">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID5DidSelect:" target="494" id="QMh-LU-o06"/>
-                                            </connections>
-                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -630,10 +604,8 @@
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>
                 <outlet property="buttonUtility" destination="IdI-T9-vnq" id="hKn-3u-8pf"/>
-                <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
-                <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>

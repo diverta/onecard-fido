@@ -7,7 +7,7 @@
 #ifndef ToolBLECommand_h
 #define ToolBLECommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @protocol ToolBLECommandDelegate;
 

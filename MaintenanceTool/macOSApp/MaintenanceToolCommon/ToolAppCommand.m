@@ -17,7 +17,6 @@
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
-#import "ToolPreferenceCommand.h"
 #import "ToolDFUCommand.h"
 
 @interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLECommandDelegate>
@@ -28,7 +27,6 @@
     @property (nonatomic) ToolBLECommand        *toolBLECommand;
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
-    @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
@@ -53,8 +51,6 @@
             // コマンドクラスの初期化
             [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
             [self setToolBLECommand:[[ToolBLECommand alloc] initWithDelegate:self]];
-            // 設定画面の初期設定
-            [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self toolHIDCommandRef:[self toolHIDCommand]]];
             // PIV機能の初期設定
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
@@ -93,16 +89,6 @@
     - (void)doCommandTestCtapHidPing:(NSWindow *)parentWindow {
         // PINGテスト実行
         [self doHIDCommand:COMMAND_TEST_CTAPHID_PING sender:nil parentWindow:parentWindow];
-    }
-
-    - (void)doCommandHidGetFlashStat:(NSWindow *)parentWindow {
-        // Flash ROM情報取得
-        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT sender:nil parentWindow:parentWindow];
-    }
-
-    - (void)doCommandHidGetVersionInfo:(NSWindow *)parentWindow {
-        // バージョン情報取得
-        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO sender:nil parentWindow:parentWindow];
     }
 
     - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
@@ -176,14 +162,6 @@
             case COMMAND_TEST_CTAPHID_PING:
                 // PINGテスト実行
                 [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-                break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                // Flash ROM情報取得
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                // バージョン情報取得
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 // HID CTAP2ヘルスチェック実行
@@ -263,12 +241,6 @@
         [self doHIDCommand:COMMAND_OPEN_WINDOW_PIVPARAM sender:nil parentWindow:parent];
     }
 
-    - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ツール設定画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolPreferenceCommand] toolPreferenceWindowWillOpen:sender parentWindow:parentWindow];
-    }
-
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ファームウェア更新処理を実行
         [[self toolUSBDFUCommand] dfuProcessWillStart:sender parentWindow:parentWindow toolHIDCommandRef:[self toolHIDCommand]];
@@ -293,27 +265,8 @@
 #pragma mark - Perform health check
 
     - (void)performHealthCheckCommand:(Command)command {
-        // 事前にツール設定照会を実行
-        [self setCommand:command];
-        [[self toolPreferenceCommand] toolPreferenceInquiryWillProcess];
-    }
-
-    - (void)toolPreferenceInquiryDidProcess:(bool)result {
-        // 処理失敗時は、BLE自動認証機能を無効化し、ヘルスチェック処理を実行
-        if (result == false) {
-            [[ToolContext instance] setBleScanAuthEnabled:false];
-            [self resumeHealthCheckCommand];
-            return;
-        }
-        // ツール設定情報を共有情報に保持させる
-        [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
-        if ([[ToolContext instance] bleScanAuthEnabled]) {
-            // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
-            [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_HCHK_BLE_AUTH informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH
-                                                      withObject:self forSelector:@selector(healthCheckCommandPromptDone) parentWindow:[self parentWindow]];
-            return;
-        }
         // ヘルスチェック処理を実行
+        [self setCommand:command];
         [self resumeHealthCheckCommand];
     }
 
@@ -414,12 +367,6 @@
             case COMMAND_TEST_CTAPHID_PING:
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
                 break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
-                break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
                 break;
@@ -499,9 +446,6 @@
 
     - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response {
         // 下位のコマンドクラスにデータと制御を引き渡す
-        if ([ref isMemberOfClass:[ToolPreferenceCommand class]]) {
-            [[self toolPreferenceCommand] hidCommandDidProcess:command CMD:cmd response:response];
-        }
         if ([ref isMemberOfClass:[ToolUSBDFUCommand class]]) {
             [[self toolUSBDFUCommand] hidCommandDidProcess:command CMD:cmd response:response];
         }

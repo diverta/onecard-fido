@@ -7,6 +7,7 @@
 #import <Foundation/Foundation.h>
 
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "ToolCommon.h"
 #import "ToolContext.h"
 #import "ToolU2FHealthCheckCommand.h"

@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "ToolAppCommand.h"
@@ -11,8 +12,9 @@
 #import "ToolContext.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
+#import "UtilityCommand.h"
 
-@interface AppDelegate () <ToolAppCommandDelegate>
+@interface AppDelegate () <ToolAppCommandDelegate, AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
@@ -27,10 +29,11 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
-    @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
 
+    // クラスの参照を保持
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
+    @property (nonatomic) UtilityCommand    *utilityCommand;
+
 @end
 
 @implementation AppDelegate
@@ -44,6 +47,7 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -76,8 +80,6 @@
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
-        [[self menuItemPreferences] setHidden:!(enabled)];
-        [[self menuItemViewLog] setEnabled:enabled];
     }
 
     - (IBAction)buttonPairingDidPress:(id)sender {
@@ -135,16 +137,6 @@
         [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
     }
 
-    - (IBAction)menuItemTestHID4DidSelect:(id)sender {
-        // Flash ROM情報取得
-        [[self toolAppCommand] doCommandHidGetFlashStat:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID5DidSelect:(id)sender {
-        // バージョン情報取得
-        [[self toolAppCommand] doCommandHidGetVersionInfo:[self window]];
-    }
-
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
         [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];
@@ -160,23 +152,9 @@
         [[self toolAppCommand] doCommandTestBlePing];
     }
 
-    - (IBAction)menuItemPreferencesDidSelect:(id)sender {
-        // ツール設定画面を開く
-        [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
-    }
-
     - (IBAction)buttonUtilityDidPress:(id)sender {
-        // TODO: ユーティリティー画面を開く
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil withObject:nil forSelector:nil
-                                     parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemViewLogDidSelect:(id)sender {
-        // ログファイル格納ディレクトリーをFinderで表示
-        NSURL *url =
-        [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
-        NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
+        // ユーティリティー画面を開く
+        [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
     }
 
 #pragma mark - Call back from ToolAppCommand
@@ -246,6 +224,16 @@
     - (void)displayCommandResultDone {
         // ボタンを活性化
         [self enableButtons:true];
+    }
+
+    - (void)enableButtonsOfMainUI:(bool)enable {
+        // ボタンを活性化
+        [self enableButtons:enable];
+    }
+
+    - (void)notifyMessageToMainUI:(NSString *)message {
+        // メッセージを画面のテキストエリアに表示
+        [self notifyAppCommandMessage:message];
     }
 
 @end
