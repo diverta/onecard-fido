@@ -9,8 +9,10 @@
         <customObject id="-2" userLabel="File's Owner" customClass="UtilityWindow">
             <connections>
                 <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="dkG-BB-wdx"/>
-                <outlet property="buttonToolVersionInfo" destination="yW2-iH-hwH" id="0h7-J7-W6h"/>
-                <outlet property="buttonViewLogFile" destination="Ces-dO-XfH" id="nMa-4M-GPH"/>
+                <outlet property="buttonFWVersionInfo" destination="Ces-dO-XfH" id="xp3-tD-Of6"/>
+                <outlet property="buttonFlashROMInfo" destination="yW2-iH-hwH" id="Raf-jT-VyP"/>
+                <outlet property="buttonToolVersionInfo" destination="ipb-6D-UPC" id="hGp-qU-Lbl"/>
+                <outlet property="buttonViewLogFile" destination="5U6-2P-9eb" id="DNo-hg-7kV"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -19,14 +21,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="358" height="193"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="305"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="358" height="193"/>
+                <rect key="frame" x="0.0" y="0.0" width="358" height="305"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
-                        <rect key="frame" x="29" y="167" width="300" height="17"/>
+                        <rect key="frame" x="29" y="279" width="300" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
@@ -36,30 +38,52 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonToolVersionInfo">
-                        <rect key="frame" x="25" y="116" width="308" height="32"/>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonFlashROMInfo">
+                        <rect key="frame" x="25" y="228" width="308" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="開発ツールのバージョンを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
+                        <buttonCell key="cell" type="push" title="Flash ROMの情報を参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonToolVersionInfoDidPress:" target="-2" id="sS5-Mg-paW"/>
+                            <action selector="buttonFlashROMInfoDidPress:" target="-2" id="XG8-BC-0Wg"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonViewLogFile">
-                        <rect key="frame" x="25" y="66" width="308" height="32"/>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonFWVersionInfo">
+                        <rect key="frame" x="25" y="178" width="308" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="開発ツールのログを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
+                        <buttonCell key="cell" type="push" title="ファームウェアのバージョンを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonViewLogFileDidPress:" target="-2" id="4Lo-J3-a18"/>
+                            <action selector="buttonFWVersionInfoDidPress:" target="-2" id="5N3-ZV-0Cx"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ipb-6D-UPC" userLabel="buttonToolVersionInfo">
+                        <rect key="frame" x="25" y="128" width="308" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="管理ツールのバージョンを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="du2-X1-STI">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonToolVersionInfoDidPress:" target="-2" id="Qhk-Jp-bHA"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5U6-2P-9eb" userLabel="buttonViewLogFile">
+                        <rect key="frame" x="25" y="78" width="308" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="管理ツールのログを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gYB-oV-Z3Z">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonViewLogFileDidPress:" target="-2" id="onO-Dh-lqf"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
-                        <rect key="frame" x="138" y="13" width="82" height="32"/>
+                        <rect key="frame" x="138" y="28" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -82,7 +106,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
             </connections>
-            <point key="canvasLocation" x="122" y="123.5"/>
+            <point key="canvasLocation" x="119" y="168.5"/>
         </window>
     </objects>
 </document>

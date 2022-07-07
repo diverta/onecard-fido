@@ -1,6 +1,6 @@
 //
 //  UtilityWindow.m
-//  DevelopmentTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2022/06/07.
 //
@@ -11,6 +11,8 @@
 @interface UtilityWindow ()
 
     // 画面項目
+    @property (assign) IBOutlet NSButton                   *buttonFlashROMInfo;
+    @property (assign) IBOutlet NSButton                   *buttonFWVersionInfo;
     @property (assign) IBOutlet NSButton                   *buttonToolVersionInfo;
     @property (assign) IBOutlet NSButton                   *buttonViewLogFile;
     @property (assign) IBOutlet NSButton                   *buttonCancel;
@@ -37,6 +39,16 @@
     - (void)setCommandRef:(id)ref {
         // コマンドクラスの参照を保持
         [self setUtilityCommand:(UtilityCommand *)ref];
+    }
+
+    - (IBAction)buttonFlashROMInfoDidPress:(id)sender {
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_HID_GET_FLASH_STAT];
+    }
+
+    - (IBAction)buttonFWVersionInfoDidPress:(id)sender {
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_HID_GET_VERSION_INFO];
     }
 
     - (IBAction)buttonToolVersionInfoDidPress:(id)sender {
