@@ -5,19 +5,22 @@
 //  Created by Makoto Morita on 2022/07/06.
 //
 #import "AppCommonMessage.h"
+#import "AppHIDCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "ToolVersionWindow.h"
 #import "UtilityCommand.h"
 #import "UtilityWindow.h"
 
-@interface UtilityCommand ()
+@interface UtilityCommand () <AppHIDCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) UtilityWindow                *utilityWindow;
     @property (nonatomic) ToolVersionWindow            *toolVersionWindow;
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) AppHIDCommand                *appHIDCommand;
 
 @end
 
@@ -29,6 +32,8 @@
             // 画面のインスタンスを生成
             [self setUtilityWindow:[[UtilityWindow alloc] initWithWindowNibName:@"UtilityWindow"]];
             [self setToolVersionWindow:[[ToolVersionWindow alloc] initWithWindowNibName:@"ToolVersionWindow"]];
+            // ヘルパークラスのインスタンスを生成
+            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             // バージョン情報をセット
             NSString *version = [NSString stringWithFormat:MSG_FORMAT_APP_VERSION, [ToolCommonFunc getAppVersionString]];
             [[self toolVersionWindow] setVersionInfoWithToolName:MSG_APP_NAME toolVersion:version toolCopyright:MSG_APP_COPYRIGHT];
@@ -49,6 +54,12 @@
             // ダイアログが閉じられた時の処理
             [weakSelf utilityWindowDidClose:self modalResponse:response];
         }];
+    }
+
+    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
+        // USBポートに接続されていない場合はfalse
+        bool connected = [[self appHIDCommand] checkUSBHIDConnection];
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:window connected:connected];
     }
 
 #pragma mark - Perform functions
@@ -96,6 +107,29 @@
     - (void)toolVersionWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self toolVersionWindow] close];
+    }
+
+#pragma mark - Call back from AppHIDCommand
+
+    - (void)didDetectConnect {
+    }
+
+    - (void)didDetectRemoval {
+    }
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 即時でアプリケーションに制御を戻す
+        if (success == false) {
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            default:
+                // メイン画面に制御を戻す
+                [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
+                break;
+        }
     }
 
 @end

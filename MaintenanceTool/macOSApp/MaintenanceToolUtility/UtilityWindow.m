@@ -42,11 +42,19 @@
     }
 
     - (IBAction)buttonFlashROMInfoDidPress:(id)sender {
+        // USBポートに接続されていない場合は処理中止
+        if ([[self utilityCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+            return;
+        }
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseOK withCommand:COMMAND_HID_GET_FLASH_STAT];
     }
 
     - (IBAction)buttonFWVersionInfoDidPress:(id)sender {
+        // USBポートに接続されていない場合は処理中止
+        if ([[self utilityCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+            return;
+        }
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseOK withCommand:COMMAND_HID_GET_VERSION_INFO];
     }

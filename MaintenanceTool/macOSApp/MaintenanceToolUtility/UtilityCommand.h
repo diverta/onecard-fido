@@ -12,6 +12,7 @@
 @interface UtilityCommand : AppCommand
 
     - (void)utilityWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window;
 
 @end
 
