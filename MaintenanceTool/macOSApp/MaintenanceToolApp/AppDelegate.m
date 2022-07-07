@@ -29,8 +29,6 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
-    @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
 
     // クラスの参照を保持
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
@@ -82,8 +80,6 @@
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
-        [[self menuItemPreferences] setHidden:!(enabled)];
-        [[self menuItemViewLog] setEnabled:enabled];
     }
 
     - (IBAction)buttonPairingDidPress:(id)sender {
@@ -156,22 +152,9 @@
         [[self toolAppCommand] doCommandTestBlePing];
     }
 
-    - (IBAction)menuItemPreferencesDidSelect:(id)sender {
-        // ツール設定画面を開く
-        [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
-    }
-
     - (IBAction)buttonUtilityDidPress:(id)sender {
         // ユーティリティー画面を開く
         [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemViewLogDidSelect:(id)sender {
-        // ログファイル格納ディレクトリーをFinderで表示
-        NSURL *url =
-        [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
-        NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
 #pragma mark - Call back from ToolAppCommand

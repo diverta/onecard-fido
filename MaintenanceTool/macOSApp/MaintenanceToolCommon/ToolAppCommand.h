@@ -34,13 +34,10 @@
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent;
-    - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-
-    - (void)toolPreferenceInquiryDidProcess:(bool)result;
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type;
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
