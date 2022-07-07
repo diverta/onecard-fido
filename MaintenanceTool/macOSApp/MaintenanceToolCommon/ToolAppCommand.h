@@ -21,8 +21,6 @@
     - (void)doCommandEraseSkeyCert;
     - (void)doCommandInstallSkeyCert:(NSArray<NSString *> *)filePaths;
     - (void)doCommandTestCtapHidPing:(NSWindow *)parentWindow;
-    - (void)doCommandHidGetFlashStat:(NSWindow *)parentWindow;
-    - (void)doCommandHidGetVersionInfo:(NSWindow *)parentWindow;
     - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow;
     - (void)doCommandBleU2fHealthCheck:(NSWindow *)parentWindow;
     - (void)doCommandTestBlePing;

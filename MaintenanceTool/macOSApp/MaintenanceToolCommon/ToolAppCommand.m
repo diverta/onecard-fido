@@ -95,16 +95,6 @@
         [self doHIDCommand:COMMAND_TEST_CTAPHID_PING sender:nil parentWindow:parentWindow];
     }
 
-    - (void)doCommandHidGetFlashStat:(NSWindow *)parentWindow {
-        // Flash ROM情報取得
-        [self doHIDCommand:COMMAND_HID_GET_FLASH_STAT sender:nil parentWindow:parentWindow];
-    }
-
-    - (void)doCommandHidGetVersionInfo:(NSWindow *)parentWindow {
-        // バージョン情報取得
-        [self doHIDCommand:COMMAND_HID_GET_VERSION_INFO sender:nil parentWindow:parentWindow];
-    }
-
     - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
         // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
         [[self delegate] disableUserInterface];
@@ -176,14 +166,6 @@
             case COMMAND_TEST_CTAPHID_PING:
                 // PINGテスト実行
                 [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-                break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                // Flash ROM情報取得
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                // バージョン情報取得
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 // HID CTAP2ヘルスチェック実行
@@ -413,12 +395,6 @@
                 break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
-                break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
