@@ -109,6 +109,7 @@
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
+		7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
 		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
 		7AF7B5DF28753E5A00D4DFFC /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */; };
@@ -291,6 +292,8 @@
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
+		7AF1CE622876A5D00065ECD3 /* AppHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHIDCommand.h; sourceTree = "<group>"; };
+		7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHIDCommand.m; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
 		7AF43D12279E37080016086E /* ToolProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToolProcessingWindow.xib; sourceTree = "<group>"; };
 		7AF43D13279E37080016086E /* ToolProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolProcessingWindow.m; sourceTree = "<group>"; };
@@ -441,6 +444,8 @@
 				7A3F4F1728755D12003CFE67 /* AppDefine.h */,
 				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
 				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
+				7AF1CE622876A5D00065ECD3 /* AppHIDCommand.h */,
+				7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */,
 			);
 			path = MaintenanceToolApp;
 			sourceTree = "<group>";
@@ -768,6 +773,7 @@
 			files = (
 				7A4D118B271E6A750095C29E /* nrf52_app_image.c in Sources */,
 				7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */,
+				7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */,
 				7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */,
 				7A3A1B23271E6F7E006864A1 /* ToolU2FHealthCheckCommand.m in Sources */,
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
