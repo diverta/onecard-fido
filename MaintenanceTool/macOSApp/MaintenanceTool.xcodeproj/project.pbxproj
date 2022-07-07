@@ -333,6 +333,7 @@
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
+				7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				64ED9A781647439300F39EAE /* Frameworks */,
@@ -561,6 +562,13 @@
 				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
 			);
 			path = OATH;
+			sourceTree = "<group>";
+		};
+		7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MaintenanceToolHcheck;
 			sourceTree = "<group>";
 		};
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
