@@ -89,6 +89,11 @@ namespace MaintenanceToolGUI
             if (CheckForPerformPinCommand() == false) {
                 return;
             }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (PromptForPerformPinCommand() == false) {
+                return;
+            }
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -350,6 +355,34 @@ namespace MaintenanceToolGUI
             }
 
             return true;
+        }
+
+        private bool PromptForPerformPinCommand()
+        {
+            // 処理名称、詳細を設定
+            string commandName = "";
+            string commandDesc = "";
+            switch (SelectedPinCommand) {
+            case AppCommon.RequestType.PIVChangePin:
+                commandName = AppCommon.MSG_PIV_CHANGE_PIN_NUMBER;
+                commandDesc = AppCommon.MSG_DESC_PIV_CHANGE_PIN_NUMBER;
+                break;
+            case AppCommon.RequestType.PIVChangePuk:
+                commandName = AppCommon.MSG_PIV_CHANGE_PUK_NUMBER;
+                commandDesc = AppCommon.MSG_DESC_PIV_CHANGE_PUK_NUMBER;
+                break;
+            case AppCommon.RequestType.PivUnblockPin:
+                commandName = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
+                commandDesc = AppCommon.MSG_DESC_PIV_RESET_PIN_NUMBER;
+                break;
+            default:
+                break;
+            }
+
+            // 事前に確認ダイアログを表示
+            string title = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, commandName);
+            string message = string.Format(AppCommon.MSG_FORMAT_PROCESS_INFORMATIVE, commandDesc);
+            return FormUtil.DisplayPromptPopup(this, title, message);
         }
 
         //
