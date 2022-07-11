@@ -32,11 +32,8 @@
             this.textPasskey = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.ButtonCancel = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.ButtonOK = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -44,16 +41,16 @@
             this.groupBox1.Controls.Add(this.ButtonOK_2);
             this.groupBox1.Controls.Add(this.textPasskey);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 121);
+            this.groupBox1.Location = new System.Drawing.Point(12, 75);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(285, 88);
+            this.groupBox1.Size = new System.Drawing.Size(285, 93);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "nRF5340用";
+            this.groupBox1.Text = "ペアリング実行";
             // 
             // ButtonOK_2
             // 
-            this.ButtonOK_2.Location = new System.Drawing.Point(57, 52);
+            this.ButtonOK_2.Location = new System.Drawing.Point(57, 53);
             this.ButtonOK_2.Name = "ButtonOK_2";
             this.ButtonOK_2.Size = new System.Drawing.Size(169, 23);
             this.ButtonOK_2.TabIndex = 14;
@@ -81,7 +78,7 @@
             // 
             // ButtonCancel
             // 
-            this.ButtonCancel.Location = new System.Drawing.Point(116, 223);
+            this.ButtonCancel.Location = new System.Drawing.Point(116, 180);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
             this.ButtonCancel.TabIndex = 12;
@@ -89,42 +86,21 @@
             this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.ButtonOK);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(285, 97);
-            this.groupBox2.TabIndex = 14;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "nRF52840用";
-            // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(15, 20);
+            this.label3.Location = new System.Drawing.Point(12, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(254, 31);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "MDBT50Q Dongleとペアリングする場合は、\r\n下のボタンをクリックしてください。";
+            this.label3.Size = new System.Drawing.Size(285, 63);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "FIDO認証器とペアリングする場合は、\r\n基板背面に記載されたパスコードを入力し、\r\n下のボタンをクリックしてください。";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ButtonOK
-            // 
-            this.ButtonOK.Location = new System.Drawing.Point(57, 58);
-            this.ButtonOK.Name = "ButtonOK";
-            this.ButtonOK.Size = new System.Drawing.Size(169, 23);
-            this.ButtonOK.TabIndex = 14;
-            this.ButtonOK.Text = "ペアリングを実行する";
-            this.ButtonOK.UseVisualStyleBackColor = true;
-            this.ButtonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
             // PairingStartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(309, 258);
-            this.Controls.Add(this.groupBox2);
+            this.ClientSize = new System.Drawing.Size(309, 217);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -137,7 +113,6 @@
             this.Text = "ペアリング実行";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -149,8 +124,6 @@
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.TextBox textPasskey;
         private System.Windows.Forms.Button ButtonOK_2;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button ButtonOK;
         private System.Windows.Forms.Label label3;
     }
 }

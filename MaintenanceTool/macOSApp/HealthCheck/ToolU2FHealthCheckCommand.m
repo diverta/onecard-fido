@@ -6,8 +6,9 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolContext.h"
 #import "ToolU2FHealthCheckCommand.h"
 #import "FIDODefines.h"

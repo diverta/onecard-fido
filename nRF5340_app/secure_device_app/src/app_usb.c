@@ -9,6 +9,7 @@
 #include <usb/usb_device.h>
 
 #include "app_event.h"
+#include "app_usb_bos.h"
 #include "app_usb_hid.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -44,6 +45,9 @@ static void status_cb(enum usb_dc_status_code status, const uint8_t *param)
 //
 void app_usb_initialize(void)
 {
+    // Windows OSでUSBデバイスを使用可能にする
+    app_usb_bos_register_caps();
+    
     // USBデバイスを使用可能にする
     int ret = usb_enable(status_cb);
     if (ret != 0) {

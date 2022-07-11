@@ -6,7 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
-#import "ToolCommonMessage.h"
+#import "AppCommonMessage.h"
 #import "ToolInstallCommand.h"
 #import "ToolLogFile.h"
 

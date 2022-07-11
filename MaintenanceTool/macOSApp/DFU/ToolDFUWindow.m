@@ -4,9 +4,10 @@
 //
 //  Created by Makoto Morita on 2021/11/22.
 //
+#import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "ToolDFUCommand.h"
 #import "ToolDFUWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolPopupWindow.h"
 
 @interface ToolDFUWindow ()
@@ -47,7 +48,7 @@
             [self terminateWindow:NSModalResponseOK withCommand:COMMAND_USB_DFU];
         } else {
             // エラーメッセージをポップアップ表示
-            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
         }
     }
 

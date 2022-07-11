@@ -7,7 +7,7 @@
 #ifndef ToolHIDCommand_h
 #define ToolHIDCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @protocol ToolHIDCommandDelegate;
 

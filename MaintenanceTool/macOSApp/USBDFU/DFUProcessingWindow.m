@@ -4,10 +4,10 @@
 //
 //  Created by Makoto Morita on 2020/02/24.
 //
+#import "AppCommonMessage.h"
 #import "DFUProcessingWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface DFUProcessingWindow ()

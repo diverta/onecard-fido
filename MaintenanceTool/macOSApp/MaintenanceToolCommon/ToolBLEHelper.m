@@ -7,8 +7,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
+#import "AppCommonMessage.h"
 #import "ToolBLEHelper.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate>

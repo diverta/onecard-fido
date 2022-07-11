@@ -7,7 +7,6 @@ macOS版と、Windows版を用意しました。
 
 ## 機能
 * ペアリング実行／解除
-* FIDO鍵・証明書設定（macOS版のみ）
 * PINコード設定
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
@@ -19,7 +18,7 @@ macOS版と、Windows版を用意しました。
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
-## [macOS版](../MaintenanceTool/macOSApp/README.md)
+## [macOS版](../MaintenanceTool/macOSApp/MNTTOOL.md)
 
 #### 画面イメージ
 <img src="assets/0001.jpg" width="500">

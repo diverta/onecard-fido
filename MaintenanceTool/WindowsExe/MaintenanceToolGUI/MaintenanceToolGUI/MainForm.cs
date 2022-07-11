@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPGP toolPGP;
+        private ToolPIV toolPIV;
         private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
         private string commandTitle = "";
@@ -48,8 +49,9 @@ namespace MaintenanceToolGUI
             commandTimer = new CommandTimer(Name, 30000);
             commandTimer.CommandTimeoutEvent += CommandTimerElapsed;
 
-            // OpenPGP機能設定画面を生成
+            // OpenPGP/PIV機能設定画面を生成
             toolPGP = new ToolPGP(this, hid);
+            toolPIV = new ToolPIV(this, hid);
 
             // パラメーター入力画面を生成
             PinCodeParamFormRef = new PinCodeParamForm();
@@ -328,6 +330,16 @@ namespace MaintenanceToolGUI
             }
         }
 
+        private void buttonSetPivParam_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // PIV機能設定画面を表示
+            toolPIV.ShowDialog();
+        }
+
         private void buttonSetPgpParam_Click(object sender, EventArgs e)
         {
             // USB HID接続がない場合はエラーメッセージを表示
@@ -470,25 +482,23 @@ namespace MaintenanceToolGUI
         //
         private void buttonDFU_Click(object sender, EventArgs e)
         {
-            // ファームウェア更新画面を表示
-            DFUForm f = new DFUForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel) {
-                // ファームウェア更新画面でCancelの場合は終了
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+
+            // プロンプトを表示し、Yesの場合だけ処理を続行する
+            if (FormUtil.DisplayPromptPopup(this, MaintenanceToolTitle, message) == false) {
                 return;
             }
 
             // ボタンを押下不可とする
             enableButtons(false);
             // 開始メッセージを取得
-            commandTitle = f.CommandTitle;
+            commandTitle = AppCommon.PROCESS_NAME_BLE_DFU;
 
             // ファームウェア更新
-            if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_DFU)) {
-                toolBLEDFU.DoCommandBLEDFU();
-            }
-            if (commandTitle.Equals(AppCommon.PROCESS_NAME_USB_DFU)) {
-                toolDFU.DoCommandDFU();
-            }
+            toolBLEDFU.DoCommandBLEDFU();
         }
 
         public void OnDFUStarted()

@@ -4,13 +4,15 @@
 //
 //  Created by Makoto Morita on 2020/12/21.
 //
+#import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "PIVPreferenceWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolProcessingWindow.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface PIVPreferenceWindow () <ToolFilePanelDelegate>
@@ -238,7 +240,7 @@
             return true;
         }
         // エラーメッセージをポップアップ表示
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil];
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
         return false;
     }
 
@@ -457,11 +459,11 @@
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
         // 入力項目が正しく指定されていない場合は終了
-        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
+        if ([ToolCommonFunc checkMustEntry:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommon checkFileExist:field informativeText:message] == false) {
+        if ([ToolCommonFunc checkFileExist:field informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -471,12 +473,12 @@
         // 長さチェック
         NSString *msg1 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT, name];
         if ([ToolCommon checkEntrySize:field minSize:PIV_PIN_CODE_SIZE_MIN maxSize:PIV_PIN_CODE_SIZE_MAX
-                       informativeText:msg1] == false) {
+                       informativeText:msg1 onWindow:[self window]] == false) {
             return false;
         }
         // 数字チェック
         NSString *msg2 = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM, name];
-        if ([ToolCommon checkIsNumeric:field informativeText:msg2] == false) {
+        if ([ToolCommon checkIsNumeric:field informativeText:msg2 onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -484,7 +486,7 @@
 
     - (bool)checkPinConfirmFor:(NSTextField *)dest withSource:(NSTextField *)source withName:(NSString *)name {
         NSString *msg = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM, name];
-        return [ToolCommon compareEntry:dest srcField:source informativeText:msg];
+        return [ToolCommon compareEntry:dest srcField:source informativeText:msg onWindow:[self window]];
     }
 
     - (bool)checkForPerformPinCommand:(id)sender withCommand:(Command)command {

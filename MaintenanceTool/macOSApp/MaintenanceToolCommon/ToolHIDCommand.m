@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppCommonMessage.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
@@ -169,67 +170,6 @@
         [self commandDidProcess:[self command] result:result message:MSG_CMDTST_INVALID_PING];
     }
 
-    - (void)doHidGetFlashStat {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // コマンド 0xC2 を実行（メッセージはブランクとする）
-        NSData *message = [[NSData alloc] init];
-        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
-        [self doRequest:message CID:cid CMD:HID_CMD_GET_FLASH_STAT];
-    }
-
-    - (void)doResponseHidGetFlashStat:(NSData *)message {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[message bytes];
-        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合は画面に制御を戻す
-            [self commandDidProcess:[self command] result:false message:nil];
-            return;
-        }
-        // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
-        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
-        // 情報取得CSVから空き領域に関する情報を抽出
-        NSString *strUsed = @"";
-        NSString *strAvail = @"";
-        NSString *strCorrupt = @"";
-        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
-            NSArray *items = [element componentsSeparatedByString:@"="];
-            NSString *key = [items objectAtIndex:0];
-            NSString *val = [items objectAtIndex:1];
-            if ([key isEqualToString:@"words_used"]) {
-                strUsed = val;
-            } else if ([key isEqualToString:@"words_available"]) {
-                strAvail = val;
-            } else if ([key isEqualToString:@"corruption"]) {
-                strCorrupt = val;
-            }
-        }
-        // 空き容量、破損状況を画面に表示
-        NSString *rateText;
-        if ([strUsed length] > 0 && [strAvail length] > 0) {
-            float avail = [strAvail floatValue];
-            float remaining = avail - [strUsed floatValue];
-            float rate = remaining / avail * 100.0;
-            rateText = [NSString stringWithFormat:MSG_FSTAT_REMAINING_RATE, rate];
-        } else {
-            rateText = MSG_FSTAT_NON_REMAINING_RATE;
-        }
-        NSString *corruptText = [strCorrupt isEqualToString:@"0"] ?
-            MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : MSG_FSTAT_CORRUPTING_AREA_EXIST;
-        // 画面に制御を戻す
-        [self displayMessage:[NSString stringWithFormat:@"  %1$@%2$@", rateText, corruptText]];
-        [self commandDidProcess:[self command] result:true message:nil];
-    }
-
-    - (void)doHidGetVersionInfo {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // バージョン照会リクエストを実行
-        [self doHidGetVersionInfoRequest];
-    }
-
     - (void)doHidGetVersionInfoRequest {
         // コマンド 0xC3 を実行（メッセージはブランクとする）
         NSData *message = [[NSData alloc] init];
@@ -243,27 +183,6 @@
             [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:0x00 response:message];
             return;
         }
-        // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
-        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        // 情報取得CSVからバージョン情報を抽出
-        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
-        NSString *strDeviceName = array[0];
-        NSString *strFWRev = array[1];
-        NSString *strHWRev = array[2];
-        NSString *strSecic = array[3];
-        // 画面に制御を戻す
-        [self displayMessage:MSG_VERSION_INFO_HEADER];
-        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
-        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
-        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
-        // セキュアICの搭載有無を表示
-        if ([strSecic length] > 0) {
-            [self displayMessage:MSG_VERSION_INFO_SECURE_IC_AVAIL];
-        } else {
-            [self displayMessage:MSG_VERSION_INFO_SECURE_IC_UNAVAIL];
-        }
-        [self commandDidProcess:[self command] result:true message:nil];
     }
 
     - (void)doHidBootloaderMode {
@@ -435,12 +354,6 @@
             case COMMAND_TEST_CTAPHID_PING:
                 [self doTestCtapHidPing];
                 break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                [self doHidGetFlashStat];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                [self doHidGetVersionInfo];
-                break;
             case COMMAND_HID_GET_VERSION_FOR_DFU:
                 [self doHidGetVersionInfoRequest];
                 break;
@@ -537,12 +450,6 @@
                 break;
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
-                break;
-            case HID_CMD_GET_FLASH_STAT:
-                [self doResponseHidGetFlashStat:message];
-                break;
-            case HID_CMD_GET_VERSION_INFO:
-                [self doResponseHidGetVersionInfo:message];
                 break;
             case HID_CMD_BOOTLOADER_MODE:
                 [self doResponseHidBootloaderMode:message CMD:cmd];
