@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にPGP鍵をインストールする手順について掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にPGP鍵をインストールする手順について掲載します。
 
 ## ソフトウェアの準備
 
@@ -12,7 +12,7 @@ PGP鍵のインストールを実行するためには、管理ツール、フ�
 また、[Gpg4win](https://www.gnupg.org)というツールを、PCに別途インストールする必要があります。
 
 #### 管理ツールのバージョン確認
-まずは[インストール手順](INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
+まずは[インストール手順](../../MaintenanceTool/WindowsExe/INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
 次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.39以降</b>であるかどうか確認します。
 
 管理ツールのユーティリティー画面で「管理ツールのバージョンを参照」をクリックします。
@@ -25,7 +25,7 @@ PGP鍵のインストールを実行するためには、管理ツール、フ�
 <img src="assets07/0001.jpg" width="400">
 
 #### ファームウェアのバージョン確認
-続いて、下記手順で[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)ファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
+続いて、下記手順で[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)ファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
 MDBT50Q DongleをPCのUSBポートに装着した後、管理ツールのユーティリティー画面で「ファームウェアのバージョンを参照」をクリックします。
 
 <img src="assets07/0002.jpg" width="400">
@@ -47,7 +47,7 @@ Gpg4winのインストール手順につきましては、別ドキュメント�
 
 PGP秘密鍵のインストールは「OpenPGP機能設定画面」上から行います。
 
-まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
+まずは管理ツールを起動し、USBポートに[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)を装着します。<br>
 
 <img src="../../MaintenanceTool/WindowsExe/assets/0020.jpg" width="400">
 
@@ -61,7 +61,7 @@ PGP秘密鍵のインストールは「OpenPGP機能設定画面」上から行�
 
 ## PGP秘密鍵のインストール
 
-OpenPGP機能で使用するPGP秘密鍵を、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に導入します。
+OpenPGP機能で使用するPGP秘密鍵を、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に導入します。
 
 導入が必要な秘密鍵は、以下の３セットになります。<br>
 いずれも、本機能で自動生成されます。

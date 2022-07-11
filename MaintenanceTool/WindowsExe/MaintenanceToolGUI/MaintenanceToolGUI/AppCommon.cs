@@ -161,6 +161,37 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
+        // PIV機能設定関連
+        public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
+        public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
+        public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";
+        public const string MSG_LABEL_CURRENT_PIN = "現在のPIN番号";
+        public const string MSG_LABEL_CURRENT_PIN_FOR_CONFIRM = "現在のPIN番号（確認用）";
+        public const string MSG_LABEL_NEW_PIN = "新しいPIN番号";
+        public const string MSG_LABEL_NEW_PIN_FOR_CONFIRM = "新しいPIN番号（確認用）";
+        public const string MSG_LABEL_CURRENT_PUK = "現在のPUK番号";
+        public const string MSG_LABEL_NEW_PUK = "新しいPUK番号";
+        public const string MSG_LABEL_NEW_PUK_FOR_CONFIRM = "新しいPUK番号（確認用）";
+        public const string MSG_FORMAT_WILL_PROCESS = "{0}を実行します。";
+        public const string MSG_FORMAT_PROCESS_INFORMATIVE = "{0}\n\n処理を開始しますか？";
+        public const string MSG_PIV_INITIAL_SETTING = "ID設定の処理";
+        public const string MSG_PROMPT_PIV_INITIAL_SETTING = "新規にCHUID、CCCが設定されます。\n\n処理を開始しますか？";
+        public const string MSG_PIV_CLEAR_SETTING = "設定情報の消去";
+        public const string MSG_PROMPT_PIV_CLEAR_SETTING = "PIV機能の設定（鍵・証明書・PIN番号等）が全て削除され、PIV機能が使用できなくなります。\n\n処理を開始しますか？";
+        public const string MSG_PIV_INSTALL_PKEY_CERT = "鍵・証明書ファイルのインストール";
+        public const string MSG_PIV_CHANGE_PIN_NUMBER = "PIN番号の変更";
+        public const string MSG_PIV_CHANGE_PUK_NUMBER = "PUK番号の変更";
+        public const string MSG_PIV_RESET_PIN_NUMBER = "PIN番号のリセット";
+        public const string MSG_DESC_PIV_CHANGE_PIN_NUMBER = "現在のPIN番号を、入力した新しいPIN番号に変更します。";
+        public const string MSG_DESC_PIV_CHANGE_PUK_NUMBER = "現在のPUK番号を、入力した新しいPUK番号に変更します。";
+        public const string MSG_DESC_PIV_RESET_PIN_NUMBER = "現在のPIN番号をリセットし、入力した新しいPIN番号に変更します。";
+        public const string MSG_PIV_STATUS = "設定情報の取得";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -333,6 +364,16 @@
             OpenPGPUnblockPin,
             OpenPGPSetResetCode,
             OpenPGPUnblock,
+            //
+            // PIV
+            //
+            PIVChangePin,
+            PIVChangePuk,
+            PIVUnblockPin,
+            PIVReset,
+            PIVImportKey,
+            PIVSetChuId,
+            PIVStatus,
             HidFirmwareReset
         };
     }

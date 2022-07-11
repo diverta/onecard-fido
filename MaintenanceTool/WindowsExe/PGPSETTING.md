@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
 
 ## ソフトウェアのバージョン確認／インストール
 
@@ -13,7 +13,7 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 また、[Gpg4win](https://www.gnupg.org)というツールを、PCに別途インストールする必要があります。
 
 #### 管理ツールのバージョン確認
-まずは[インストール手順](INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
+まずは[インストール手順](../../MaintenanceTool/WindowsExe/INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
 次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.39以降</b>であるかどうか確認します。
 
 管理ツールのユーティリティー画面で「管理ツールのバージョンを参照」をクリックします。
@@ -26,8 +26,8 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 <img src="assets07/0001.jpg" width="400">
 
 #### ファームウェアのバージョン確認
-続いて、下記手順で[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)ファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
-MDBT50Q DongleをPCのUSBポートに装着した後、管理ツールのユーティリティー画面で「ファームウェアのバージョンを参照」をクリックします。
+続いて、下記手順で[BT40 Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)ファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
+BT40 DongleをPCのUSBポートに装着した後、管理ツールのユーティリティー画面で「ファームウェアのバージョンを参照」をクリックします。
 
 <img src="assets07/0002.jpg" width="400">
 
@@ -49,7 +49,7 @@ Gpg4winのインストール手順につきましては、別ドキュメント�
 
 OpenPGP機能の設定は「OpenPGP機能設定画面」上で行います。
 
-まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
+まずは管理ツールを起動し、USBポートに[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)を装着します。<br>
 
 <img src="../../MaintenanceTool/WindowsExe/assets/0020.jpg" width="400">
 
@@ -69,7 +69,7 @@ OpenPGP機能に最低限必要な基本設定、すなわちPGP鍵のインス�
 
 ### PGP秘密鍵のインストール
 
-OpenPGP機能では、PGP秘密鍵を[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する必要があります。
+OpenPGP機能では、PGP秘密鍵を[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に導入する必要があります。
 
 導入が必要な秘密鍵は、以下の３セットになります。<br>
 いずれも、本機能で自動生成されます。
@@ -151,7 +151,7 @@ OpenPGP機能設定画面の左下部のボタン「設定情報を参照」を�
 万が一、管理用PIN番号を３回連続で間違えて指定した場合は、認証がブロックされます。<br>
 他方、管理用PIN番号のリセット機能は存在しません。
 
-したがって、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)において、再び管理用PIN番号が利用できるようにするためには、いったんOpenPGP機能設定情報を全て消去する必要があります。<br>
+したがって、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)において、再び管理用PIN番号が利用できるようにするためには、いったんOpenPGP機能設定情報を全て消去する必要があります。<br>
 この場合、OpenPGP機能に関連する以下の設定情報が全て消去されてしまいますので、ご注意ください。
 
 - 電子署名用（Signature key）の設定情報
@@ -200,7 +200,7 @@ OpenPGP設定情報取得画面で確認すると、下記３点の設定情報�
 
 <img src="assets07/0024.jpg" width="350">
 
-万が一、上記手順でも解消しない場合は、一旦MDBT50Q DongleをPCのUSBポートから取り出し、再度装着した後、処理を再試行していただけますようお願いします。
+万が一、上記手順でも解消しない場合は、一旦BT40 DongleをPCのUSBポートから取り出し、再度装着した後、処理を再試行していただけますようお願いします。
 
 ## その他の各種設定
 

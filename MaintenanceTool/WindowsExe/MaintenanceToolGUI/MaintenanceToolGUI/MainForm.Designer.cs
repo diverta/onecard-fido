@@ -62,13 +62,13 @@
             // 
             // buttonSetPivParam
             // 
-            this.buttonSetPivParam.Enabled = false;
             this.buttonSetPivParam.Location = new System.Drawing.Point(203, 12);
             this.buttonSetPivParam.Name = "buttonSetPivParam";
             this.buttonSetPivParam.Size = new System.Drawing.Size(180, 25);
             this.buttonSetPivParam.TabIndex = 4;
             this.buttonSetPivParam.Text = "PIV設定";
             this.buttonSetPivParam.UseVisualStyleBackColor = true;
+            this.buttonSetPivParam.Click += new System.EventHandler(this.buttonSetPivParam_Click);
             // 
             // buttonDFU
             // 

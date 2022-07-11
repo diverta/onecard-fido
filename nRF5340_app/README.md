@@ -1,10 +1,10 @@
 # nRF5340アプリケーション
 
-最終更新日：2022/4/26
+最終更新日：2022/6/29
 
 ## 概要
 
-現在開発中の[BT40 Slim Board](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/BT40SlimBoard)上での稼働を予定しているアプリケーションです。<br>
+[BT40 Dongle](../FIDO2Device/BT40Dongle/README.md)、[BT40 Slim Board](../FIDO2Device/BT40SlimBoard)（現在開発中）上で稼働するアプリケーションです。<br>
 [nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)を使用し、開発しています。
 
 ## 搭載機能
@@ -33,10 +33,10 @@ OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです�
 詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
 
 ### 管理機能
-nRF52840アプリケーションと等価の管理機能を提供します。<br>
+以前開発していた、[nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
 FIDO機能で使用する秘密鍵／証明書（Attestation）の導入や、PINコード設定、BLEペアリング実行、ヘルスチェック等の機能があります。
 
-最終更新日現在、いずれも管理ツール（[macOS版](../MaintenanceTool/macOSApp/README.md)／[Windows版](../MaintenanceTool/WindowsExe/README.md)）により実行可能となっております。
+最終更新日現在、いずれも[管理ツール](../MaintenanceTool/MNTTOOL.md)や[開発ツール](../MaintenanceTool/DEVTOOL.md)により実行可能となっております。
 
 ### ファームウェア更新機能
 nRF5340アプリケーションでは、BLE経由のファームウェア更新機能（DFU）を用意しています。<br>

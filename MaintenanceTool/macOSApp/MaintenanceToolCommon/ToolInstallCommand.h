@@ -7,7 +7,7 @@
 #ifndef ToolInstallCommand_h
 #define ToolInstallCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface ToolInstallCommand : NSObject
 

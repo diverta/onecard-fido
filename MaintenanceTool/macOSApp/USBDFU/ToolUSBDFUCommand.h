@@ -8,7 +8,7 @@
 #define ToolUSBDFUCommand_h
 
 #import "usb_dfu_util.h"
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface ToolUSBDFUCommand : NSObject
 

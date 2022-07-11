@@ -6,13 +6,15 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "FIDODefines.h"
 #import "debug_log.h"
 #import "nrf52_app_image.h"
+#import "ToolCommon.h"
 #import "ToolCDCHelper.h"
 #import "ToolUSBDFUCommand.h"
 #import "ToolHIDCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 #import "ToolAppCommand.h"
@@ -48,6 +50,8 @@
     @property (nonatomic, weak) ToolAppCommand *toolAppCommand;
     @property (nonatomic) DFUStartWindow       *dfuStartWindow;
     @property (nonatomic) DFUProcessingWindow  *dfuProcessingWindow;
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow             *parentWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t mainQueue;
     @property (nonatomic) dispatch_queue_t subQueue;
@@ -237,6 +241,8 @@
 #pragma mark - Interface for Main Process
 
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolHIDCommandRef:(id)toolHIDCommandRef {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // 処理前のチェック
         if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
@@ -285,7 +291,7 @@
         NSString *zipFileNamePrefix = [NSString stringWithFormat:@"appkg.%@.", [self currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:zipFileNamePrefix] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         return true;
@@ -296,7 +302,7 @@
         NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
         // バージョンが取得できなかった場合は利用不可
         if ([update length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
@@ -305,13 +311,13 @@
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 更新バージョンを保持
@@ -322,13 +328,15 @@
     - (bool)versionCheckForDFU {
         // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
         if ([[self currentVersion] length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_CURRENT_VERSION_UNKNOWN withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_CURRENT_VERSION_UNKNOWN withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         return true;
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // 新規導入対象の基板名を設定
         [self setCurrentBoardname:DFU_NEW_TARGET_BOARD_NAME];
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
@@ -363,7 +371,7 @@
                 } else {
                     // エラーメッセージを表示して終了
                     [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_CONNECTION_FAILED
-                                                   withObject:self forSelector:@selector(notifyDFUTargetConnectionFailedDone)];
+                                                   withObject:self forSelector:@selector(notifyDFUTargetConnectionFailedDone) parentWindow:[self parentWindow]];
                 }
             });
         });
@@ -427,7 +435,7 @@
         if (softDeviceVersion < DFU_NEW_TARGET_SOFTDEVICE_VER) {
             // ソフトデバイスのバージョンが所定バージョンより前であればエラーメッセージを表示
             [[self toolCDCHelper] disconnectDevice];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         return true;

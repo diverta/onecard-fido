@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "AppCommonMessage.h"
 #import "BLEDFUDefine.h"
 #import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
@@ -11,7 +12,6 @@
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolBLESMPCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
@@ -43,6 +43,8 @@ typedef enum : NSInteger {
     // 画面の参照を保持
     @property (nonatomic) BLEDFUStartWindow        *bleDfuStartWindow;
     @property (nonatomic) BLEDFUProcessingWindow   *bleDfuProcessingWindow;
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow                 *parentWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t          mainQueue;
     @property (nonatomic) dispatch_queue_t          subQueue;
@@ -89,6 +91,8 @@ typedef enum : NSInteger {
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // 処理開始／進捗画面に親画面参照をセット
         [[self bleDfuStartWindow] setParentWindow:parentWindow];
         [[self bleDfuProcessingWindow] setParentWindow:parentWindow];
@@ -134,7 +138,7 @@ typedef enum : NSInteger {
         if (success == false || response == nil || [response length] < 2) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled) parentWindow:[self parentWindow]];
             return;
         }
         // 戻りメッセージからバージョン情報を抽出し内部保持
@@ -256,7 +260,7 @@ typedef enum : NSInteger {
                 break;
             case NSModalResponseCancel:
                 // メッセージをポップアップ表示したのち、画面に制御を戻す
-                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
+                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled) parentWindow:[self parentWindow]];
                 break;
             default:
                 break;
@@ -523,7 +527,7 @@ typedef enum : NSInteger {
         NSString *binFileNamePrefix = [NSString stringWithFormat:@"app_update.%@.", [self currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:binFileNamePrefix] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         return true;
@@ -558,7 +562,7 @@ typedef enum : NSInteger {
         NSString *update = [[NSString alloc] initWithUTF8String:mcumgr_app_image_bin_version()];
         // バージョンが取得できなかった場合は利用不可
         if ([update length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
@@ -567,13 +571,13 @@ typedef enum : NSInteger {
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 更新バージョンを保持

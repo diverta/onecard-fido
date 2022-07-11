@@ -18,6 +18,8 @@ extern "C" {
 // 関数群
 //
 uint16_t    ccid_oath_object_account_set(char *account_name, char *secret, uint8_t property, uint8_t *challange);
+uint16_t    ccid_oath_object_account_delete(char *account_name);
+uint16_t    ccid_oath_object_delete_all(void);
 void        ccid_oath_object_write_retry(void);
 void        ccid_oath_object_write_resume(bool success);
 

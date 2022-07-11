@@ -5,11 +5,11 @@
 //  Created by Makoto Morita on 2017/11/20.
 //
 #import <Foundation/Foundation.h>
+#import "AppCommonMessage.h"
 #import "FIDODefines.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
-#import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
 #import "ToolLogFile.h"

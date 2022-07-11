@@ -8,7 +8,7 @@ macOS版と、Windows版を用意しました。
 ## [FIDO認証器管理ツール](../MaintenanceTool/MNTTOOL.md)
 エンドユーザー向けのツールです。
 
-#### [macOS版](../MaintenanceTool/macOSApp/README.md)
+#### [macOS版](../MaintenanceTool/macOSApp/MNTTOOL.md)
 <img src="assets/0001.jpg" width="350">
 
 #### [Windows版](../MaintenanceTool/WindowsExe/MNTTOOL.md)
@@ -17,7 +17,6 @@ macOS版と、Windows版を用意しました。
 
 #### 機能
 * ペアリング実行／解除
-* FIDO鍵・証明書設定（macOS版のみ）
 * PINコード設定
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
@@ -29,11 +28,11 @@ macOS版と、Windows版を用意しました。
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
-## FIDO認証器開発ツール
+## [FIDO認証器開発ツール](../MaintenanceTool/DEVTOOL.md)
 ベンダー向けのツールです。
 
-#### macOS版
-<b>開発中</b>
+#### [macOS版](../MaintenanceTool/macOSApp/DEVTOOL.md)
+<img src="../MaintenanceTool/macOSApp/assets08/0001.jpg" width="350">
 
 #### [Windows版](../MaintenanceTool/WindowsExe/DEVTOOL.md)
 <img src="../MaintenanceTool/WindowsExe/assets08/0001.jpg" width="350">

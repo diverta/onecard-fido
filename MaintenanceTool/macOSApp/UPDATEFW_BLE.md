@@ -2,14 +2,14 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のファームウェアを更新する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のファームウェアを更新する手順を掲載します。
 
 #### ご注意
 
 バージョン`0.4.0`以降のファームウェアは、全てBLE経由でのファームウェア更新となります。[注1]
 
-MDBT50Q Dongleをご使用の場合は、背面にあるボタン電池ケースに電池をセットし、BLEペリフェラル・モードで起動されていることをご確認ください。<br>
-（MDBT50Q Dongleの青色LEDが点滅していることを確認します）
+BT40 Dongleをご使用の場合は、背面にあるボタン電池ケースに電池をセットし、BLEペリフェラル・モードで起動されていることをご確認ください。<br>
+（BT40 Dongleの青色LEDが点滅していることを確認します）
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0004.jpg" width="400">
 
@@ -32,7 +32,7 @@ MDBT50Q Dongleをご使用の場合は、背面にあるボタン電池ケース
 <img src="assets06/0013.jpg" width="400">
 
 処理開始画面が表示されます。<br>
-MDBT50Q Dongleに導入されているファームウェアのバージョンと、更新するバージョンが表示されます。
+BT40 Dongleに導入されているファームウェアのバージョンと、更新するバージョンが表示されます。
 
 <img src="assets06/0002.jpg" width="400">
 
@@ -41,7 +41,7 @@ MDBT50Q Dongleに導入されているファームウェアのバージョンと
 
 <img src="assets06/0003.jpg" width="400">
 
-次に、MDBT50Q Dongle内で、転送されたファームウェア更新イメージが反映中であることを知らせています。
+次に、BT40 Dongle内で、転送されたファームウェア更新イメージが反映中であることを知らせています。
 
 <img src="assets06/0004.jpg" width="400">
 

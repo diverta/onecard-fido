@@ -1,6 +1,6 @@
 /* Disable unused peripherals to reduce power consumption */
 &i2c1 {
-    status = "disabled";
+    status = "okay";
 };
 &spi2 {
     status = "disabled";
@@ -13,7 +13,4 @@
 };
 &qspi {
     status = "disabled";
-};
-&i2c1 {
-    status = "okay";
 };
