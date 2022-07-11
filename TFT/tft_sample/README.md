@@ -99,9 +99,9 @@ void tftPrintTest() {
 画面を黒く塗りつぶしたのち、テキストを表示します。
 - `Hello World!`（白色）
 - `3.141592 Want pi?`（緑色）
-- ` `
+- 空行
 - `845FED Print HEX!`（緑色）
-- ` `
+- 空行
 - `Sketch has been`（白色）
 - `running for: `（白色）
 - `N seconds.`（`N`＝整数値、`N`だけマゼンタピンク、他は白色）
