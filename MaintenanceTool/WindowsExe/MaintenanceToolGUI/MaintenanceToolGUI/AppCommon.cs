@@ -179,6 +179,7 @@
         public const string MSG_LABEL_NEW_PUK_FOR_CONFIRM = "新しいPUK番号（確認用）";
         public const string MSG_FORMAT_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_PROCESS_INFORMATIVE = "{0}\n\n処理を開始しますか？";
+        public const string MSG_PIV_INSTALL_PKEY_CERT = "鍵・証明書ファイルのインストール";
         public const string MSG_PIV_CHANGE_PIN_NUMBER = "PIN番号の変更";
         public const string MSG_PIV_CHANGE_PUK_NUMBER = "PUK番号の変更";
         public const string MSG_PIV_RESET_PIN_NUMBER = "PIN番号のリセット";
@@ -363,7 +364,8 @@
             //
             PIVChangePin,
             PIVChangePuk,
-            PivUnblockPin,
+            PIVUnblockPin,
+            PIVImportKey,
             HidFirmwareReset
         };
     }

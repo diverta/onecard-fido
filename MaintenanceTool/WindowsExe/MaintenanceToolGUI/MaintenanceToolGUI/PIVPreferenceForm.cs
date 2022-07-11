@@ -94,6 +94,10 @@ namespace MaintenanceToolGUI
             if (PromptForPerformPinCommand() == false) {
                 return;
             }
+
+            // 画面入力内容を引数とし、PIN番号管理コマンドを実行
+            EnableButtons(false);
+            DoCommandPinManagement();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -114,7 +118,7 @@ namespace MaintenanceToolGUI
         {
             // PGP鍵管理タブ内の入力項目を初期化（このタブが選択状態になります）
             tabPreference.SelectedTab = tabPagePkeyCertManagement;
-            InitTabPagePkeyCertManagement();
+            InitTabPkeyCertManagement();
 
             // PIN番号管理タブ内の入力項目を初期化
             InitTabPinManagement();
@@ -130,18 +134,18 @@ namespace MaintenanceToolGUI
             buttonFirmwareReset.Enabled = enabled;
 
             // タブ内も同様に制御を行う
-            EnableButtonsInTabPagePkeyCertManagement(enabled);
+            EnableButtonsInTabPkeyCertManagement(enabled);
             EnableButtonsInTabPinManagement(enabled);
         }
 
         //
         // 鍵・証明書管理タブ関連の処理
         //
-        private void InitTabPagePkeyCertManagement()
+        private void InitTabPkeyCertManagement()
         {
             // テキストボックスの初期化
             InitTabPkeyCertPathFields();
-            InitTabPGPKeyEntryFields();
+            InitTabPkeyCertEntryFields();
         }
 
         private void InitTabPkeyCertPathFields()
@@ -151,7 +155,7 @@ namespace MaintenanceToolGUI
             textCertFolderPath.Text = "";
         }
 
-        private void InitTabPGPKeyEntryFields()
+        private void InitTabPkeyCertEntryFields()
         {
             // テキストボックスを初期化
             textPin.Text = "";
@@ -161,7 +165,7 @@ namespace MaintenanceToolGUI
             textPin.Focus();
         }
 
-        void EnableButtonsInTabPagePkeyCertManagement(bool enabled)
+        void EnableButtonsInTabPkeyCertManagement(bool enabled)
         {
             // ボタンや入力欄の使用可能／不可制御
             groupBoxPkeySlotId.Enabled = enabled;
@@ -229,7 +233,7 @@ namespace MaintenanceToolGUI
             }
             if (sender.Equals(radioPinCommand3)) {
                 // PIN番号をリセット
-                SelectedPinCommand = AppCommon.RequestType.PivUnblockPin;
+                SelectedPinCommand = AppCommon.RequestType.PIVUnblockPin;
                 SelectedPinCommandName = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
                 labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PUK;
                 labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PIN;
@@ -327,7 +331,7 @@ namespace MaintenanceToolGUI
                 msgNewPin = AppCommon.MSG_LABEL_NEW_PUK;
                 msgNewPinConf = AppCommon.MSG_LABEL_NEW_PUK_FOR_CONFIRM;
                 break;
-            case AppCommon.RequestType.PivUnblockPin:
+            case AppCommon.RequestType.PIVUnblockPin:
                 msgCurPin = AppCommon.MSG_LABEL_CURRENT_PUK;
                 msgNewPin = AppCommon.MSG_LABEL_NEW_PIN;
                 msgNewPinConf = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
@@ -371,7 +375,7 @@ namespace MaintenanceToolGUI
                 commandName = AppCommon.MSG_PIV_CHANGE_PUK_NUMBER;
                 commandDesc = AppCommon.MSG_DESC_PIV_CHANGE_PUK_NUMBER;
                 break;
-            case AppCommon.RequestType.PivUnblockPin:
+            case AppCommon.RequestType.PIVUnblockPin:
                 commandName = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
                 commandDesc = AppCommon.MSG_DESC_PIV_RESET_PIN_NUMBER;
                 break;
@@ -392,6 +396,14 @@ namespace MaintenanceToolGUI
         {
             // TODO:
             // 画面入力内容をパラメーターとして、鍵／証明書インストール処理を実行
+            OnCommandProcessTerminated(AppCommon.RequestType.PIVImportKey, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        void DoCommandPinManagement()
+        {
+            // TODO:
+            // 画面入力内容をパラメーターとして、PIN番号管理コマンドを実行
+            OnCommandProcessTerminated(SelectedPinCommand, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         void DoCommandResetFirmware()
@@ -412,8 +424,16 @@ namespace MaintenanceToolGUI
             // 処理名称を設定
             string name = "";
             switch (requestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                name = AppCommon.MSG_PIV_INSTALL_PKEY_CERT;
+                break;
             case AppCommon.RequestType.HidFirmwareReset:
                 name = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
+                break;
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+                name = SelectedPinCommandName;
                 break;
             default:
                 break;
@@ -434,6 +454,19 @@ namespace MaintenanceToolGUI
         {
             // 全ての入力欄をクリア
             switch (requestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                if (success) {
+                    InitTabPkeyCertPathFields();
+                    InitTabPkeyCertEntryFields();
+                }
+                break;
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+                if (success) {
+                    InitTabPinManagementPinFields();
+                }
+                break;
             default:
                 break;
             }
