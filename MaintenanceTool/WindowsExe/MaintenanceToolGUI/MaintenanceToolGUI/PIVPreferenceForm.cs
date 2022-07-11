@@ -9,7 +9,7 @@ namespace MaintenanceToolGUI
     {
         // 入力可能文字数
         private const int PIV_PIN_CODE_SIZE_MIN = 6;
-        private const int PIV_PIN_CODE_SIZE_MAX = 6;
+        private const int PIV_PIN_CODE_SIZE_MAX = 8;
 
         // 処理クラスの参照を保持
         private ToolPIV ToolPIVRef;
@@ -199,6 +199,7 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = AppCommon.MSG_PIV_CHANGE_PIN_NUMBER;
                 labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PIN;
                 labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PIN;
+                labelNewPinConf.Text = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
             }
             if (sender.Equals(radioPinCommand2)) {
                 // PUK番号を変更
@@ -206,6 +207,7 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = AppCommon.MSG_PIV_CHANGE_PUK_NUMBER;
                 labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PUK;
                 labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PUK;
+                labelNewPinConf.Text = AppCommon.MSG_LABEL_NEW_PUK_FOR_CONFIRM;
             }
             if (sender.Equals(radioPinCommand3)) {
                 // PIN番号をリセット
@@ -213,10 +215,8 @@ namespace MaintenanceToolGUI
                 SelectedPinCommandName = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
                 labelCurPin.Text = AppCommon.MSG_LABEL_CURRENT_PUK;
                 labelNewPin.Text = AppCommon.MSG_LABEL_NEW_PIN;
+                labelNewPinConf.Text = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
             }
-
-            // 確認欄のキャプションを設定
-            labelNewPinConf.Text = string.Format(AppCommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Text);
 
             // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
             InitTabPinManagementPinFields();
@@ -271,13 +271,13 @@ namespace MaintenanceToolGUI
         private bool CheckPinNumber(TextBox text, string fieldName)
         {
             // 長さチェック
-            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_DIGIT, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT, fieldName);
             if (FormUtil.CheckEntrySize(text, PIV_PIN_CODE_SIZE_MIN, PIV_PIN_CODE_SIZE_MAX, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
 
             // 数字チェック
-            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_NUM, fieldName);
+            informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM, fieldName);
             if (FormUtil.CheckIsNumeric(text, MainForm.MaintenanceToolTitle, informativeText) == false) {
                 return false;
             }
@@ -288,7 +288,7 @@ namespace MaintenanceToolGUI
         private bool CheckPinConfirm(TextBox textPinConfirm, TextBox textPin, string fieldName)
         {
             // PIN番号の確認入力内容をチェック
-            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_CONFIRM, fieldName);
+            string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM, fieldName);
             return FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, informativeText);
         }
 
