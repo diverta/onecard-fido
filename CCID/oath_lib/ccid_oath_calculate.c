@@ -6,13 +6,24 @@
  */
 #include "ccid_oath.h"
 #include "ccid_oath_define.h"
+#include "ccid_oath_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for debug
+#define LOG_ACCOUNT_EXIST_AND_READ      false
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_oath_calculate);
 #endif
+
+//
+// アカウントデータ格納用
+//
+static char    m_secret[MAX_KEY_LEN];
+static uint8_t m_property;
+static uint8_t m_challange[MAX_CHALLENGE_LEN];
 
 uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
@@ -40,6 +51,21 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (offset > capdu->lc) {
         return SW_WRONG_LENGTH;
     }
+    
+    //
+    // アカウントデータを取得
+    //
+    bool exist = false;
+    uint16_t sw = ccid_oath_object_account_read(capdu->data + name_offset, m_secret, &m_property, m_challange, &exist);
 
-    return SW_NO_ERROR;
+#if LOG_ACCOUNT_EXIST_AND_READ
+    fido_log_debug("account record(%s): exist=%d", log_strdup(capdu->data + name_offset), exist);
+    fido_log_print_hexdump_debug(m_secret, MAX_KEY_LEN, "secret");
+    fido_log_print_hexdump_debug(m_challange, MAX_CHALLENGE_LEN, "challange");
+#endif
+    if (exist == false) {
+        return SW_DATA_INVALID;
+    }
+
+    return sw;
 }
