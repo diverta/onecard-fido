@@ -14,6 +14,7 @@
 
 // for debug
 #define LOG_ACCOUNT_EXIST_AND_SERIAL    false
+#define LOG_ACCOUNT_READ                false
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_oath_object);
@@ -137,6 +138,60 @@ uint16_t ccid_oath_object_delete_all(void)
 
     // Flash ROM書込み後のコールバック先を判定するため、関数参照を設定
     m_flash_func = (void *)ccid_oath_object_delete_all;
+
+    // 処理成功
+    return SW_NO_ERROR;
+}
+
+uint16_t ccid_oath_object_account_read(char *account_name, char *secret, uint8_t *property, uint8_t *challange, bool *exist)
+{
+    //
+    // Flash ROMから対象レコードを検索
+    //
+    uint16_t serial;
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, exist, &serial) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+#if LOG_ACCOUNT_READ
+    // account_read_buff の内容（143バイト）：
+    //  レコード長（4バイト）
+    //  バイトイメージ（139バイト固定）
+    //   0   : アカウント（64バイト）
+    //   64  : アルゴリズム（1バイト）
+    //   65  : OTP桁数（1バイト）
+    //   66  : Secret（64バイト）
+    //   130 : オプション属性（1バイト）
+    //   131 : Challenge（8バイト）
+    fido_log_debug("account record(%s): exist=%d", log_strdup(account_name), *exist);
+    fido_log_print_hexdump_debug(account_read_buff + 68 , 75, "record bytes");
+#endif
+
+    // 既存データがない場合はここで終了
+    if (*exist == false) {
+        return SW_NO_ERROR;
+    }
+
+    // 取得したデータを、引数の領域に格納
+    uint8_t offset = 4 + MAX_NAME_LEN;
+
+    // アルゴリズム、OTP桁数、Secret
+    if (secret != NULL) {
+        memcpy(secret, account_read_buff + offset, MAX_KEY_LEN);
+    }
+    offset += MAX_KEY_LEN;
+
+    // オプション属性
+    if (property != NULL) {
+        *property = account_read_buff[offset];
+    }
+    offset++;
+
+    // Challenge
+    if (challange != NULL) {
+        memcpy(challange, account_read_buff + offset, MAX_CHALLENGE_LEN);
+    }
+    offset += MAX_CHALLENGE_LEN;
 
     // 処理成功
     return SW_NO_ERROR;
