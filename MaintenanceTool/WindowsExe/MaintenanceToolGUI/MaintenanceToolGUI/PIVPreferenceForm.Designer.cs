@@ -288,6 +288,7 @@
             this.buttonPerformPinCommand.TabIndex = 31;
             this.buttonPerformPinCommand.Text = "実行";
             this.buttonPerformPinCommand.UseVisualStyleBackColor = true;
+            this.buttonPerformPinCommand.Click += new System.EventHandler(this.buttonPerformPinCommand_Click);
             // 
             // groupBoxPinText
             // 

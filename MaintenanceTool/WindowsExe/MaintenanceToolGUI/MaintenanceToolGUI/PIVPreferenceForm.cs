@@ -78,6 +78,19 @@ namespace MaintenanceToolGUI
             GetSelectedPinCommandValue(sender);
         }
 
+        private void buttonPerformPinCommand_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPIVRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // 入力欄の内容をチェック
+            if (CheckForPerformPinCommand() == false) {
+                return;
+            }
+        }
+
         private void buttonClose_Click(object sender, EventArgs e)
         {
             // 画面項目を初期化し、この画面を閉じる
@@ -290,6 +303,53 @@ namespace MaintenanceToolGUI
             // PIN番号の確認入力内容をチェック
             string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM, fieldName);
             return FormUtil.CompareEntry(textPinConfirm, textPin, MainForm.MaintenanceToolTitle, informativeText);
+        }
+
+        private bool CheckForPerformPinCommand()
+        {
+            // チェック用パラメーターの設定
+            string msgCurPin = "";
+            string msgNewPin = "";
+            string msgNewPinConf = "";
+            switch (SelectedPinCommand) {
+            case AppCommon.RequestType.PIVChangePin:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PIN;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PIN;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            case AppCommon.RequestType.PIVChangePuk:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PUK;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PUK;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PUK_FOR_CONFIRM;
+                break;
+            case AppCommon.RequestType.PivUnblockPin:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PUK;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PIN;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            default:
+                break;
+            }
+
+            // 現在のPINをチェック
+            if (CheckPinNumber(textCurPin, msgCurPin) == false) {
+                return false;
+            }
+
+            // 新しいPINをチェック
+            if (CheckPinNumber(textNewPin, msgNewPin) == false) {
+                return false;
+            }
+
+            // 確認用PINをチェック
+            if (CheckPinNumber(textNewPinConf, msgNewPinConf) == false) {
+                return false;
+            }
+            if (CheckPinConfirm(textNewPinConf, textNewPin, msgNewPinConf) == false) {
+                return false;
+            }
+
+            return true;
         }
 
         //
