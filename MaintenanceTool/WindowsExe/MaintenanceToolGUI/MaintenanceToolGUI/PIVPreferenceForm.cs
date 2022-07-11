@@ -47,7 +47,51 @@ namespace MaintenanceToolGUI
             if (CheckForInstallPkeyCert()) {
                 // 画面入力内容を引数とし、PGP秘密鍵インストール処理を実行
                 EnableButtons(false);
-                DoCommandInstallPGPKey();
+                DoCommandInstallPKeyCert();
+            }
+        }
+
+        private void buttonPivStatus_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPIVRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // PIV設定情報取得
+            EnableButtons(false);
+            DoCommandPIVStatus();
+        }
+
+        private void buttonInitialSetting_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPIVRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string title = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, AppCommon.MSG_PIV_INITIAL_SETTING);
+            if (FormUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_PIV_INITIAL_SETTING)) {
+                // CHUID設定機能を実行
+                EnableButtons(false);
+                DoCommandPIVSetChuId();
+            }
+        }
+
+        private void buttonClearSetting_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (ToolPIVRef.CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string title = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, AppCommon.MSG_PIV_CLEAR_SETTING);
+            if (FormUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_PIV_CLEAR_SETTING)) {
+                // PIVリセット機能を実行
+                EnableButtons(false);
+                DoCommandPIVReset();
             }
         }
 
@@ -392,7 +436,7 @@ namespace MaintenanceToolGUI
         //
         // PIV設定機能の各処理
         //
-        void DoCommandInstallPGPKey()
+        void DoCommandInstallPKeyCert()
         {
             // TODO:
             // 画面入力内容をパラメーターとして、鍵／証明書インストール処理を実行
@@ -404,6 +448,27 @@ namespace MaintenanceToolGUI
             // TODO:
             // 画面入力内容をパラメーターとして、PIN番号管理コマンドを実行
             OnCommandProcessTerminated(SelectedPinCommand, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        void DoCommandPIVStatus()
+        {
+            // TODO:
+            // PIV設定情報取得
+            OnCommandProcessTerminated(AppCommon.RequestType.PIVStatus, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        void DoCommandPIVSetChuId()
+        {
+            // TODO:
+            // CHUID設定機能を実行
+            OnCommandProcessTerminated(AppCommon.RequestType.PIVSetChuId, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        void DoCommandPIVReset()
+        {
+            // TODO:
+            // PIVリセット機能を実行
+            OnCommandProcessTerminated(AppCommon.RequestType.PIVReset, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         void DoCommandResetFirmware()
@@ -426,6 +491,15 @@ namespace MaintenanceToolGUI
             switch (requestType) {
             case AppCommon.RequestType.PIVImportKey:
                 name = AppCommon.MSG_PIV_INSTALL_PKEY_CERT;
+                break;
+            case AppCommon.RequestType.PIVStatus:
+                name = AppCommon.MSG_PIV_STATUS;
+                break;
+            case AppCommon.RequestType.PIVSetChuId:
+                name = AppCommon.MSG_PIV_INITIAL_SETTING;
+                break;
+            case AppCommon.RequestType.PIVReset:
+                name = AppCommon.MSG_PIV_CLEAR_SETTING;
                 break;
             case AppCommon.RequestType.HidFirmwareReset:
                 name = AppCommon.PROCESS_NAME_FIRMWARE_RESET;

@@ -411,6 +411,7 @@
             this.buttonPivStatus.TabIndex = 1;
             this.buttonPivStatus.Text = "設定情報を参照";
             this.buttonPivStatus.UseVisualStyleBackColor = true;
+            this.buttonPivStatus.Click += new System.EventHandler(this.buttonPivStatus_Click);
             // 
             // buttonClearSetting
             // 
@@ -420,6 +421,7 @@
             this.buttonClearSetting.TabIndex = 3;
             this.buttonClearSetting.Text = "設定情報を消去";
             this.buttonClearSetting.UseVisualStyleBackColor = true;
+            this.buttonClearSetting.Click += new System.EventHandler(this.buttonClearSetting_Click);
             // 
             // buttonFirmwareReset
             // 
@@ -449,6 +451,7 @@
             this.buttonInitialSetting.TabIndex = 2;
             this.buttonInitialSetting.Text = "ID設定を実行";
             this.buttonInitialSetting.UseVisualStyleBackColor = true;
+            this.buttonInitialSetting.Click += new System.EventHandler(this.buttonInitialSetting_Click);
             // 
             // PIVPreferenceForm
             // 
