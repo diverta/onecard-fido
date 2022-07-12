@@ -7,6 +7,7 @@
 #import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
+#import "HcheckCommand.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolContext.h"
@@ -23,6 +24,7 @@
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
+    @property (assign) IBOutlet NSButton    *buttonHealthCheck;
     @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
@@ -32,6 +34,7 @@
 
     // クラスの参照を保持
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
+    @property (nonatomic) HcheckCommand     *hcheckCommand;
     @property (nonatomic) UtilityCommand    *utilityCommand;
 
 @end
@@ -47,6 +50,7 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
@@ -76,6 +80,7 @@
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
@@ -150,6 +155,11 @@
     - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
         // BLE PINGテスト実行
         [[self toolAppCommand] doCommandTestBlePing];
+    }
+
+    - (IBAction)buttonHealthCheckDidPress:(id)sender {
+        // ヘルスチェック実行画面を開く
+        [[self hcheckCommand] hcheckWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonUtilityDidPress:(id)sender {
