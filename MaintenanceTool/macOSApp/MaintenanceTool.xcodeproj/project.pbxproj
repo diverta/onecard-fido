@@ -106,6 +106,11 @@
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
+		7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042B8287CF868009518C3 /* HcheckWindow.xib */; };
+		7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
+		7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BE287D00D5009518C3 /* HcheckCommand.m */; };
+		7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */; };
+		7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042C5287D3113009518C3 /* HcheckPinWindow.m */; };
 		7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
 		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
@@ -284,6 +289,14 @@
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
+		7AF042B8287CF868009518C3 /* HcheckWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckWindow.xib; sourceTree = "<group>"; };
+		7AF042BA287CFC69009518C3 /* HcheckWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckWindow.m; sourceTree = "<group>"; };
+		7AF042BB287CFC69009518C3 /* HcheckWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HcheckWindow.h; sourceTree = "<group>"; };
+		7AF042BD287D00D5009518C3 /* HcheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HcheckCommand.h; sourceTree = "<group>"; };
+		7AF042BE287D00D5009518C3 /* HcheckCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckCommand.m; sourceTree = "<group>"; };
+		7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckPinWindow.xib; sourceTree = "<group>"; };
+		7AF042C4287D3113009518C3 /* HcheckPinWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HcheckPinWindow.h; sourceTree = "<group>"; };
+		7AF042C5287D3113009518C3 /* HcheckPinWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckPinWindow.m; sourceTree = "<group>"; };
 		7AF1CE622876A5D00065ECD3 /* AppHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHIDCommand.h; sourceTree = "<group>"; };
 		7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHIDCommand.m; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
@@ -333,6 +346,7 @@
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
+				7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				64ED9A781647439300F39EAE /* Frameworks */,
@@ -563,6 +577,21 @@
 			path = OATH;
 			sourceTree = "<group>";
 		};
+		7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */ = {
+			isa = PBXGroup;
+			children = (
+				7AF042BD287D00D5009518C3 /* HcheckCommand.h */,
+				7AF042BE287D00D5009518C3 /* HcheckCommand.m */,
+				7AF042C4287D3113009518C3 /* HcheckPinWindow.h */,
+				7AF042C5287D3113009518C3 /* HcheckPinWindow.m */,
+				7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */,
+				7AF042BB287CFC69009518C3 /* HcheckWindow.h */,
+				7AF042BA287CFC69009518C3 /* HcheckWindow.m */,
+				7AF042B8287CF868009518C3 /* HcheckWindow.xib */,
+			);
+			path = MaintenanceToolHcheck;
+			sourceTree = "<group>";
+		};
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
@@ -713,6 +742,7 @@
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
+				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
@@ -729,6 +759,7 @@
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7A4B02CD274B3C8B00BF44C2 /* ToolDFUWindow.xib in Resources */,
+				7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7AAD79A72818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin in Resources */,
 				7A3F4F2428755FB1003CFE67 /* ToolVersionWindow.xib in Resources */,
@@ -764,6 +795,7 @@
 				7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */,
+				7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */,
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
@@ -788,6 +820,7 @@
 				7AF7B5DF28753E5A00D4DFFC /* ToolHIDHelper.m in Sources */,
 				7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */,
 				7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */,
+				7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
 				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,
@@ -801,6 +834,7 @@
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A4D118E271E6A750095C29E /* usb_dfu_util.c in Sources */,
 				7A4D1187271E6A750095C29E /* ToolUSBDFUCommand.m in Sources */,
+				7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */,
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */,
