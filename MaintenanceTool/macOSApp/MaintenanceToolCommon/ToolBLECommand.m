@@ -8,6 +8,7 @@
 #import "AppCommonMessage.h"
 #import "FIDODefines.h"
 #import "ToolBLEHelper.h"
+#import "ToolBLEHelperDefine.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
 #import "ToolCTAP2HealthCheckCommand.h"
@@ -419,7 +420,7 @@
         }
     }
 
-    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason {
+    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
         // ログをファイル出力
         NSString *message = [self helperMessageOnFailConnection:reason];
         if (error) {

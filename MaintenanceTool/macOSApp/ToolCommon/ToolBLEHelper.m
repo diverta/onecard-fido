@@ -1,14 +1,14 @@
 //
 //  ToolBLEHelper.m
-//  MaintenanceTool
+//  ToolCommon
 //
-//  Created by Makoto Morita on 2021/10/07.
+//  Created by Makoto Morita on 2022/07/12.
 //
-#import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-#import "AppCommonMessage.h"
 #import "ToolBLEHelper.h"
+#import "ToolBLEHelperDefine.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate>

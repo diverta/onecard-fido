@@ -16,6 +16,7 @@
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
+		7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
@@ -50,7 +51,6 @@
 		7A4D118E271E6A750095C29E /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1184271E6A750095C29E /* usb_dfu_util.c */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
-		7A5E6160270EC2D400C4AA3D /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */; };
 		7A629F4524C00245007ABA89 /* ToolContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A629F4424C00245007ABA89 /* ToolContext.m */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
@@ -135,6 +135,9 @@
 		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		7A0EB1862580768F004ED59C /* tool_pcsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_pcsc.h; sourceTree = "<group>"; };
 		7A0EB1872580768F004ED59C /* tool_pcsc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_pcsc.c; sourceTree = "<group>"; };
+		7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
+		7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
+		7A175F1B287D654E0055F6B3 /* ToolBLEHelperDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelperDefine.h; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
@@ -192,8 +195,6 @@
 		7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PIVPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVPreferenceWindow.h; sourceTree = "<group>"; };
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
-		7A5E615E270EC2B700C4AA3D /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
-		7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
 		7A629F4424C00245007ABA89 /* ToolContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolContext.m; sourceTree = "<group>"; };
 		7A629F4624C00262007ABA89 /* ToolContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolContext.h; sourceTree = "<group>"; };
 		7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolInfoWindow.xib; sourceTree = "<group>"; };
@@ -458,21 +459,24 @@
 		7A4C217C287520DA005CC8D0 /* ToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A3F4F2028755FB1003CFE67 /* ToolVersionWindow.h */,
-				7A3F4F2128755FB1003CFE67 /* ToolVersionWindow.m */,
-				7A3F4F2228755FB1003CFE67 /* ToolVersionWindow.xib */,
 				7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */,
+				7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */,
+				7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */,
+				7A175F1B287D654E0055F6B3 /* ToolBLEHelperDefine.h */,
 				7A92D0E528754F3C0094D2DB /* ToolCommonFunc.h */,
 				7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */,
 				7A92D0E328754DD00094D2DB /* ToolCommonMessage.h */,
-				7AF7B5DD28753E5A00D4DFFC /* ToolHIDHelper.h */,
-				7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */,
 				7ACC0E06287522F900B03F74 /* ToolFilePanel.h */,
 				7ACC0E05287522F900B03F74 /* ToolFilePanel.m */,
+				7AF7B5DD28753E5A00D4DFFC /* ToolHIDHelper.h */,
+				7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */,
 				7AE6031D287521A800DA5BF3 /* ToolLogFile.h */,
 				7AE6031B2875218100DA5BF3 /* ToolLogFile.m */,
 				7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */,
 				7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */,
+				7A3F4F2028755FB1003CFE67 /* ToolVersionWindow.h */,
+				7A3F4F2128755FB1003CFE67 /* ToolVersionWindow.m */,
+				7A3F4F2228755FB1003CFE67 /* ToolVersionWindow.xib */,
 			);
 			path = ToolCommon;
 			sourceTree = "<group>";
@@ -595,8 +599,6 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A5E615E270EC2B700C4AA3D /* ToolBLEHelper.h */,
-				7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */,
 				7A9274022105AB950062FA89 /* ToolBLECommand.h */,
 				7A9274032105AB950062FA89 /* ToolBLECommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
@@ -836,12 +838,12 @@
 				7A4D1187271E6A750095C29E /* ToolUSBDFUCommand.m in Sources */,
 				7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */,
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
+				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
 				7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */,
-				7A5E6160270EC2D400C4AA3D /* ToolBLEHelper.m in Sources */,
 				7AB4B16E271E6E8B0099D51B /* ToolClientPINCommand.m in Sources */,
 				7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */,
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
