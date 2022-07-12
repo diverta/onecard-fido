@@ -110,6 +110,7 @@
 		7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
 		7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BE287D00D5009518C3 /* HcheckCommand.m */; };
 		7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */; };
+		7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042C5287D3113009518C3 /* HcheckPinWindow.m */; };
 		7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
 		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
@@ -294,6 +295,8 @@
 		7AF042BD287D00D5009518C3 /* HcheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HcheckCommand.h; sourceTree = "<group>"; };
 		7AF042BE287D00D5009518C3 /* HcheckCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckCommand.m; sourceTree = "<group>"; };
 		7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckPinWindow.xib; sourceTree = "<group>"; };
+		7AF042C4287D3113009518C3 /* HcheckPinWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HcheckPinWindow.h; sourceTree = "<group>"; };
+		7AF042C5287D3113009518C3 /* HcheckPinWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckPinWindow.m; sourceTree = "<group>"; };
 		7AF1CE622876A5D00065ECD3 /* AppHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHIDCommand.h; sourceTree = "<group>"; };
 		7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHIDCommand.m; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
@@ -579,6 +582,8 @@
 			children = (
 				7AF042BD287D00D5009518C3 /* HcheckCommand.h */,
 				7AF042BE287D00D5009518C3 /* HcheckCommand.m */,
+				7AF042C4287D3113009518C3 /* HcheckPinWindow.h */,
+				7AF042C5287D3113009518C3 /* HcheckPinWindow.m */,
 				7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */,
 				7AF042BB287CFC69009518C3 /* HcheckWindow.h */,
 				7AF042BA287CFC69009518C3 /* HcheckWindow.m */,
@@ -790,6 +795,7 @@
 				7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */,
+				7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */,
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
