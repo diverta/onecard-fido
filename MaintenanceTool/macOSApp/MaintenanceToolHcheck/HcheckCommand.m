@@ -14,6 +14,8 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) HcheckWindow                 *hcheckWindow;
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) AppHIDCommand                *appHIDCommand;
 
 @end
 
@@ -24,6 +26,8 @@
         if (self) {
             // 画面のインスタンスを生成
             [self setHcheckWindow:[[HcheckWindow alloc] initWithWindowNibName:@"HcheckWindow"]];
+            // ヘルパークラスのインスタンスを生成
+            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -41,6 +45,11 @@
             // ダイアログが閉じられた時の処理
             [weakSelf hcheckWindowDidClose:self modalResponse:response];
         }];
+    }
+
+    - (bool)isUSBHIDConnected {
+        // USBポートに接続されていない場合はfalse
+        return [[self appHIDCommand] checkUSBHIDConnection];
     }
 
 #pragma mark - Perform functions

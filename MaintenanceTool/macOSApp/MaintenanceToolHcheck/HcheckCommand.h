@@ -12,6 +12,7 @@
 @interface HcheckCommand : AppCommand
 
     - (void)hcheckWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (bool)isUSBHIDConnected;
 
 @end
 

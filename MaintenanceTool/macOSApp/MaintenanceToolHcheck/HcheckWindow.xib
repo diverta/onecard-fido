@@ -47,6 +47,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonBLECtap2HealthCheckDidPress:" target="-2" id="4Vk-iD-CiZ"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9w4-Ex-gVU" userLabel="ButtonBLEU2FHealthCheck">
                                     <rect key="frame" x="14" y="48" width="290" height="32"/>
@@ -55,6 +58,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonBLEU2FHealthCheckDidPress:" target="-2" id="4hx-mR-4VN"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4TY-ap-DWC" userLabel="ButtonBLEPingTest">
                                     <rect key="frame" x="14" y="13" width="290" height="32"/>
@@ -63,6 +69,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonBLEPingTestDidPress:" target="-2" id="0tx-tm-RH0"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </view>
@@ -82,6 +91,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonHIDCtap2HealthCheckDidPress:" target="-2" id="Zx8-rp-apt"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tlX-8a-aKj" userLabel="ButtonHIDU2FHealthCheck">
                                     <rect key="frame" x="14" y="48" width="290" height="32"/>
@@ -90,6 +102,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonHIDU2FHealthCheckDidPress:" target="-2" id="dlr-xS-XBn"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QzL-Ot-2Ra" userLabel="ButtonHIDPingTest">
                                     <rect key="frame" x="14" y="13" width="290" height="32"/>
@@ -98,6 +113,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonHIDPingTestDidPress:" target="-2" id="1ea-Pn-90A"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </view>
