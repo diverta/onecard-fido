@@ -39,9 +39,11 @@
     }
 
     - (IBAction)buttonOKDidPress:(id)sender {
-        // USBポートに接続されていない場合は処理中止
-        if ([self checkUSBHIDConnection] == false) {
-            return;
+        // HID機能時は、USBポートに接続されていない場合、処理中止
+        if ([[self commandParameterRef] command] == COMMAND_HID_CTAP2_HCHECK) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
         }
         // 入力内容チェック
         if ([self checkEntries:sender] == false) {
