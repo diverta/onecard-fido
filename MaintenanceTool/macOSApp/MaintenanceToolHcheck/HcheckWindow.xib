@@ -113,6 +113,9 @@
 Gw
 </string>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="VrG-Ss-Ban"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
