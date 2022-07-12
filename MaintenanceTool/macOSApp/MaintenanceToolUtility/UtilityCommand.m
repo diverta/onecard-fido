@@ -58,10 +58,9 @@
         }];
     }
 
-    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
+    - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        bool connected = [[self appHIDCommand] checkUSBHIDConnection];
-        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:window connected:connected];
+        return [[self appHIDCommand] checkUSBHIDConnection];
     }
 
 #pragma mark - Perform functions
