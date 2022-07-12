@@ -11,7 +11,7 @@
 
 @interface HcheckPinWindow : NSWindowController
 
-    - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef;
+    - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef;
 
 @end
 
