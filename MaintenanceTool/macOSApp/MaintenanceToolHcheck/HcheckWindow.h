@@ -11,9 +11,7 @@
 
 @interface HcheckWindow : NSWindowController
 
-    - (void)setParentWindowRef:(id)ref;
-    - (void)setCommandRef:(id)ref;
-    - (Command)commandToPerform;
+    - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef;
 
 @end
 

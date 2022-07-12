@@ -7,6 +7,11 @@
 #import "AppHIDCommand.h"
 #import "HcheckCommand.h"
 #import "HcheckWindow.h"
+#import "ToolLogFile.h"
+
+@implementation HcheckCommandParameter
+
+@end
 
 @interface HcheckCommand () <AppHIDCommandDelegate>
 
@@ -16,6 +21,8 @@
     @property (nonatomic) HcheckWindow                 *hcheckWindow;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    // ヘルスチェック処理のパラメーターを保持
+    @property (nonatomic) HcheckCommandParameter       *commandParameter;
 
 @end
 
@@ -28,6 +35,7 @@
             [self setHcheckWindow:[[HcheckWindow alloc] initWithWindowNibName:@"HcheckWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            [self setCommandParameter:[[HcheckCommandParameter alloc] init]];
         }
         return self;
     }
@@ -36,8 +44,7 @@
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
-        [[self hcheckWindow] setParentWindowRef:parentWindow];
-        [[self hcheckWindow] setCommandRef:self];
+        [[self hcheckWindow] setParentWindowRef:parentWindow withCommandRef:self withParameterRef:[self commandParameter]];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self hcheckWindow] window];
         HcheckCommand * __weak weakSelf = self;
@@ -57,12 +64,8 @@
     - (void)hcheckWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self hcheckWindow] close];
-        // 実行コマンドにより処理分岐
-        switch ([[self hcheckWindow] commandToPerform]) {
-            default:
-                // メイン画面に制御を戻す
-                break;
-        }
+        // TODO: 設定されたパラメーターを使用し、ヘルスチェック処理を実行する
+        [[ToolLogFile defaultLogger] debugWithFormat:@"command:%d, pin:%@", [[self commandParameter] command], [[self commandParameter] pin]];
     }
 
 #pragma mark - Call back from AppHIDCommand

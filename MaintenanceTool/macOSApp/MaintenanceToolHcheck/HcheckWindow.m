@@ -6,6 +6,7 @@
 //
 #import "AppDefine.h"
 #import "HcheckCommand.h"
+#import "HcheckPinWindow.h"
 #import "HcheckWindow.h"
 #import "ToolCommonFunc.h"
 
@@ -13,10 +14,12 @@
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
+    // 画面の参照を保持
+    @property (nonatomic) HcheckPinWindow                  *hcheckPinWindow;
     // コマンドクラスの参照を保持
     @property (nonatomic, weak) id                          hcheckCommandRef;
-    // 実行するコマンドを保持
-    @property (nonatomic) Command                           command;
+    // ヘルスチェック処理のパラメーターを保持
+    @property (nonatomic) HcheckCommandParameter           *commandParameterRef;
 
 @end
 
@@ -24,25 +27,38 @@
 
     - (void)windowDidLoad {
         [super windowDidLoad];
+        if ([self hcheckPinWindow] == nil) {
+            // 画面のインスタンスを生成
+            [self setHcheckPinWindow:[[HcheckPinWindow alloc] initWithWindowNibName:@"HcheckPinWindow"]];
+        }
     }
 
-    - (void)setParentWindowRef:(id)ref {
+    - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef {
         // 親画面の参照を保持
         [self setParentWindow:(NSWindow *)ref];
-    }
-
-    - (void)setCommandRef:(id)ref {
         // コマンドクラスの参照を保持
-        [self setHcheckCommandRef:ref];
+        [self setHcheckCommandRef:commandRef];
+        // ヘルスチェック処理のパラメーターを保持
+        [self setCommandParameterRef:parameterRef];
+        // パラメーターを初期化
+        [[self commandParameterRef] setCommand:COMMAND_NONE];
+        [[self commandParameterRef] setPin:@""];
     }
 
     - (IBAction)buttonBLECtap2HealthCheckDidPress:(id)sender {
+        // PIN番号入力画面を開く
+        [[self commandParameterRef] setCommand:COMMAND_BLE_CTAP2_HCHECK];
+        [self hcheckPinWindowWillOpen];
     }
 
     - (IBAction)buttonBLEU2FHealthCheckDidPress:(id)sender {
+        [[self commandParameterRef] setCommand:COMMAND_BLE_U2F_HCHECK];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonBLEPingTestDidPress:(id)sender {
+        [[self commandParameterRef] setCommand:COMMAND_TEST_BLE_PING];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonHIDCtap2HealthCheckDidPress:(id)sender {
@@ -50,6 +66,9 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
+        // PIN番号入力画面を開く
+        [[self commandParameterRef] setCommand:COMMAND_HID_CTAP2_HCHECK];
+        [self hcheckPinWindowWillOpen];
     }
 
     - (IBAction)buttonHIDU2FHealthCheckDidPress:(id)sender {
@@ -57,6 +76,8 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
+        [[self commandParameterRef] setCommand:COMMAND_HID_U2F_HCHECK];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonHIDPingTestDidPress:(id)sender {
@@ -64,16 +85,16 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
+        [[self commandParameterRef] setCommand:COMMAND_TEST_CTAPHID_PING];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
         // このウィンドウを終了
-        [self terminateWindow:NSModalResponseCancel withCommand:COMMAND_NONE];
+        [self terminateWindow:NSModalResponseCancel];
     }
 
-    - (void)terminateWindow:(NSModalResponse)response withCommand:(Command)command {
-        // 実行コマンドを保持
-        [self setCommand:command];
+    - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
@@ -84,11 +105,27 @@
         return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[command isUSBHIDConnected]];
     }
 
-#pragma mark - Interface for parameters
+#pragma mark - Interface for PIN entry window
 
-    - (Command)commandToPerform {
-        // 実行コマンドを戻す
-        return [self command];
+    - (void)hcheckPinWindowWillOpen {
+        // 画面に親画面参照をセット
+        [[self hcheckPinWindow] setParentWindowRef:[self window] withCommandRef:[self hcheckCommandRef] withParameterRef:[self commandParameterRef]];
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [[self hcheckPinWindow] window];
+        HcheckWindow * __weak weakSelf = self;
+        [[self window] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf hcheckPinWindowDidClose:self modalResponse:response];
+        }];
+    }
+
+    - (void)hcheckPinWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // PIN入力画面を閉じる
+        [[self hcheckPinWindow] close];
+        if (modalResponse == NSModalResponseOK) {
+            // この画面も閉じる
+            [self terminateWindow:NSModalResponseOK];
+        }
     }
 
 @end

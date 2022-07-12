@@ -9,6 +9,13 @@
 
 #import "AppCommand.h"
 
+@interface HcheckCommandParameter : NSObject
+
+    @property (nonatomic) Command       command;
+    @property (nonatomic) NSString     *pin;
+
+@end
+
 @interface HcheckCommand : AppCommand
 
     - (void)hcheckWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;

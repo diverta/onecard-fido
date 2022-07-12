@@ -54,7 +54,7 @@
 
     - (IBAction)buttonCancelDidPress:(id)sender {
         // このウィンドウを終了
-        [[self commandParameterRef] setPin:nil];
+        [[self commandParameterRef] setPin:@""];
         [self terminateWindow:NSModalResponseCancel];
     }
 
