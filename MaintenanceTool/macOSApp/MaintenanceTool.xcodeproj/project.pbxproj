@@ -106,6 +106,7 @@
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
+		7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042B8287CF868009518C3 /* HcheckWindow.xib */; };
 		7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
 		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
@@ -284,6 +285,7 @@
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
+		7AF042B8287CF868009518C3 /* HcheckWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckWindow.xib; sourceTree = "<group>"; };
 		7AF1CE622876A5D00065ECD3 /* AppHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHIDCommand.h; sourceTree = "<group>"; };
 		7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHIDCommand.m; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
@@ -567,6 +569,7 @@
 		7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */ = {
 			isa = PBXGroup;
 			children = (
+				7AF042B8287CF868009518C3 /* HcheckWindow.xib */,
 			);
 			path = MaintenanceToolHcheck;
 			sourceTree = "<group>";
@@ -721,6 +724,7 @@
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
+				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
