@@ -64,13 +64,6 @@
     }
 
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[message bytes];
-        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合は画面に制御を戻す
-            [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:MSG_OCCUR_UNKNOWN_ERROR];
-            return;
-        }
         // 正常終了扱い
         [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
     }
