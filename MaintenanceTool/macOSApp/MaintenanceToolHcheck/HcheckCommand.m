@@ -6,8 +6,10 @@
 //
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
+#import "FIDODefines.h"
 #import "HcheckCommand.h"
 #import "HcheckWindow.h"
+#import "ToolCommon.h"
 #import "ToolLogFile.h"
 
 @implementation HcheckCommandParameter
@@ -24,6 +26,8 @@
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
     // ヘルスチェック処理のパラメーターを保持
     @property (nonatomic) HcheckCommandParameter       *commandParameter;
+    // PINGデータを保持
+    @property (nonatomic) NSData                       *pingData;
 
 @end
 
@@ -88,10 +92,26 @@
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
         switch ([[self commandParameter] command]) {
+            case COMMAND_TEST_CTAPHID_PING:
+                [self doRequestCtapHidPing:[[self commandParameter] command]];
+                break;
             default:
                 [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
                 break;
         }
+    }
+
+    - (void)doRequestCtapHidPing:(Command)command {
+        // 100バイトのランダムなPINGデータを生成し、CTAPHID_PINGコマンドを実行
+        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
+        [[self appHIDCommand] doRequestCtap2Command:command withCMD:HID_CMD_CTAPHID_PING withData:[self pingData]];
+    }
+
+    - (void)doResponseCtapHidPing:(NSData *)message {
+        // PINGレスポンスの内容をチェックし、画面に制御を戻す
+        bool success = [message isEqualToData:[self pingData]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseCtapHidPing: %@", success ? @"success" : @"fail"];
+        [self notifyCommandTerminated:[self commandName] message:MSG_CMDTST_INVALID_PING success:success fromWindow:[self parentWindow]];
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -112,6 +132,9 @@
         switch (command) {
             case COMMAND_HID_CTAP2_INIT:
                 [self doResponseHIDCtap2Init];
+                break;
+            case COMMAND_TEST_CTAPHID_PING:
+                [self doResponseCtapHidPing:response];
                 break;
             default:
                 // メイン画面に制御を戻す

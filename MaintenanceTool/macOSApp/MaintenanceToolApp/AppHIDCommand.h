@@ -18,6 +18,7 @@
     - (bool)checkUSBHIDConnection;
     - (void)doRequestCtapHidInit;
     - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data;
+    - (void)doRequestCtap2Command:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data;
 
 @end
 

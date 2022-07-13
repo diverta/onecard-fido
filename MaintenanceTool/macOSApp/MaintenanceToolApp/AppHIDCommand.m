@@ -87,6 +87,13 @@
         [[self toolHIDHelper] hidHelperWillSend:data CID:cid CMD:cmd];
     }
 
+    - (void)doRequestCtap2Command:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
+        // 実行コマンドを保持
+        [self setCommand:command];
+        // CTAPHID_INITから応答されたCIDを使用し、HIDコマンド／データを送信
+        [[self toolHIDHelper] hidHelperWillSend:data CID:[self cid] CMD:cmd];
+    }
+
 #pragma mark - Call back from ToolHIDHelper
 
     - (void)hidHelperDidDetectConnect {
