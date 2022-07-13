@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
+#import "CTAP2HcheckCommand.h"
 #import "FIDODefines.h"
 #import "HcheckCommand.h"
 #import "HcheckWindow.h"
@@ -17,7 +18,7 @@
 
 @end
 
-@interface HcheckCommand () <AppHIDCommandDelegate, U2FHcheckCommandDelegate>
+@interface HcheckCommand () <AppHIDCommandDelegate, CTAP2HcheckCommandDelegate, U2FHcheckCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
@@ -26,6 +27,7 @@
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
     // 下位クラスの参照を保持
+    @property (nonatomic) CTAP2HcheckCommand           *ctap2HcheckCommand;
     @property (nonatomic) U2FHcheckCommand             *u2fHcheckCommand;
     // ヘルスチェック処理のパラメーターを保持
     @property (nonatomic) HcheckCommandParameter       *commandParameter;
@@ -44,6 +46,7 @@
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setCommandParameter:[[HcheckCommandParameter alloc] init]];
+            [self setCtap2HcheckCommand:[[CTAP2HcheckCommand alloc] initWithDelegate:self]];
             [self setU2fHcheckCommand:[[U2FHcheckCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -77,6 +80,10 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"command:%d, pin:%@", [[self commandParameter] command], [[self commandParameter] pin]];
         // 実行コマンドにより処理分岐
         switch ([[self commandParameter] command]) {
+            case COMMAND_HID_CTAP2_HCHECK:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
+                [[self ctap2HcheckCommand] doRequestHidCtap2HealthCheck];
+                break;
             case COMMAND_HID_U2F_HCHECK:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 [[self u2fHcheckCommand] doRequestHidU2fHealthCheck];
@@ -152,6 +159,13 @@
                 [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
                 break;
         }
+    }
+
+#pragma mark - Call back from CTAP2HcheckCommand
+
+    - (void)doResponseCtap2HealthCheck:(bool)success message:(NSString *)message {
+        // メイン画面に制御を戻す
+        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }
 
 #pragma mark - Call back from U2FHcheckCommand

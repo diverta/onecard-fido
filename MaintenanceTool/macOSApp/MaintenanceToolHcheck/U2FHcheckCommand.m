@@ -20,9 +20,9 @@
     // 実行対象コマンドを保持
     @property (nonatomic) Command                   command;
     // Registerレスポンスを保持（３件のテストケースで共通使用するため）
-    @property (nonatomic) NSData                    *registerReponseData;
+    @property (nonatomic) NSData                   *registerReponseData;
     // 使用トランスポートを保持
-    @property (nonatomic) TransportType              transportType;
+    @property (nonatomic) TransportType             transportType;
 
 @end
 

@@ -62,6 +62,7 @@
 		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
+		7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
 		7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80509B2819066A000BF498 /* CoreImage.framework */; };
 		7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A822077281A812F00FDBFA8 /* QRCodeUtil.m */; };
@@ -214,6 +215,8 @@
 		7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPPreferenceWindow.m; sourceTree = "<group>"; };
 		7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PGPPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A72011927794E5400EE3AD6 /* PGPPreferenceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGPPreferenceWindow.h; sourceTree = "<group>"; };
+		7A726F44287EAE3100DB456E /* CTAP2HcheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAP2HcheckCommand.h; sourceTree = "<group>"; };
+		7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAP2HcheckCommand.m; sourceTree = "<group>"; };
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
@@ -587,6 +590,8 @@
 		7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */ = {
 			isa = PBXGroup;
 			children = (
+				7A726F44287EAE3100DB456E /* CTAP2HcheckCommand.h */,
+				7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */,
 				7AF042BD287D00D5009518C3 /* HcheckCommand.h */,
 				7AF042BE287D00D5009518C3 /* HcheckCommand.m */,
 				7AF042C4287D3113009518C3 /* HcheckPinWindow.h */,
@@ -809,6 +814,7 @@
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */,
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
+				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
