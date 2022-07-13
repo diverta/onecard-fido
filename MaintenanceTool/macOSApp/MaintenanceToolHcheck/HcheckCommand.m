@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/07/12.
 //
+#import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "HcheckCommand.h"
 #import "HcheckWindow.h"
@@ -66,6 +67,31 @@
         [[self hcheckWindow] close];
         // TODO: 設定されたパラメーターを使用し、ヘルスチェック処理を実行する
         [[ToolLogFile defaultLogger] debugWithFormat:@"command:%d, pin:%@", [[self commandParameter] command], [[self commandParameter] pin]];
+        // 実行コマンドにより処理分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_TEST_CTAPHID_PING:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
+                [[self appHIDCommand] doRequestCtapHidInit];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                break;
+        }
+    }
+
+    - (void)notifyCommandStartedWithCommandName:(NSString *)commandName {
+        // コマンド開始メッセージを画面表示
+        [self setCommandName:commandName];
+        [self notifyCommandStarted:[self commandName]];
+    }
+
+    - (void)doResponseHIDCtap2Init {
+        // CTAPHID_INIT応答後の処理を実行
+        switch ([[self commandParameter] command]) {
+            default:
+                [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
+                break;
+        }
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -84,6 +110,9 @@
         }
         // 実行コマンドにより処理分岐
         switch (command) {
+            case COMMAND_HID_CTAP2_INIT:
+                [self doResponseHIDCtap2Init];
+                break;
             default:
                 // メイン画面に制御を戻す
                 [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
