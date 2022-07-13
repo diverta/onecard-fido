@@ -7,6 +7,8 @@
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "AppHIDCommand.h"
+#import "CBORDecoder.h"
+#import "CBOREncoder.h"
 #import "CTAP2HcheckCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
@@ -17,8 +19,10 @@
     @property (nonatomic, weak) id                  delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand            *appHIDCommand;
-    // 実行対象コマンドを保持
+    // 実行対象コマンド／サブコマンドを保持
     @property (nonatomic) Command                   command;
+    @property (nonatomic) uint8_t                   cborCommand;
+    @property (nonatomic) uint8_t                   subCommand;
     // 使用トランスポートを保持
     @property (nonatomic) TransportType             transportType;
 
@@ -52,7 +56,24 @@
     }
 
     - (void)doRequestCommandGetKeyAgreement {
-        // TODO: 仮の実装です。
+        // 実行対象サブコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
+        // メッセージを編集
+        NSData *message = [self generateGetKeyAgreementRequest];
+        if (message == nil) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // getKeyAgreementサブコマンドを実行
+        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_CTAPHID_CBOR withData:message];
+        }
+    }
+
+    - (void)doRequestCommandGetPinToken:(NSData *)message {
+        // TODO:仮の実装です。
         [self doResponseCtap2HealthCheck:true message:nil];
     }
 
@@ -63,6 +84,20 @@
         switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 [self doRequestCommandGetKeyAgreement];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self doResponseCtap2HealthCheck:true message:nil];
+                break;
+        }
+    }
+
+    - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
+        // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // PINトークン取得処理を続行
+                [self doRequestCommandGetPinToken:message];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
@@ -95,6 +130,9 @@
             case COMMAND_HID_CTAP2_INIT:
                 [self doResponseHIDCtap2Init];
                 break;
+            case COMMAND_CTAP2_GET_KEY_AGREEMENT:
+                [self doResponseCommandGetKeyAgreement:response];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
                 [self doResponseCtap2HealthCheck:false message:nil];
@@ -103,5 +141,15 @@
     }
 
 #pragma mark - Private functions
+
+    - (NSData *)generateGetKeyAgreementRequest {
+        // GetKeyAgreementリクエストを生成して戻す
+        uint8_t status_code = ctap2_cbor_encode_get_agreement_key();
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes() length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            return nil;
+        }
+    }
 
 @end

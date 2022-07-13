@@ -64,6 +64,7 @@ typedef enum : NSInteger {
     COMMAND_HID_CTAP2_INIT,
     COMMAND_HID_CTAP2_HCHECK,
     COMMAND_HID_U2F_HCHECK,
+    COMMAND_CTAP2_GET_KEY_AGREEMENT,
 } Command;
 
 // トランスポート種別
