@@ -13,6 +13,7 @@
 		64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
 		64ED9A901647439300F39EAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
+		7A03A1D9287E87AE00BADBB7 /* U2FHcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
@@ -131,6 +132,8 @@
 		64ED9A8C1647439300F39EAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		64ED9A8F1647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		64ED9A9C164752C800F39EAE /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		7A03A1D7287E879A00BADBB7 /* U2FHcheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = U2FHcheckCommand.h; sourceTree = "<group>"; };
+		7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = U2FHcheckCommand.m; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		7A0EB1862580768F004ED59C /* tool_pcsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_pcsc.h; sourceTree = "<group>"; };
@@ -592,6 +595,8 @@
 				7AF042BB287CFC69009518C3 /* HcheckWindow.h */,
 				7AF042BA287CFC69009518C3 /* HcheckWindow.m */,
 				7AF042B8287CF868009518C3 /* HcheckWindow.xib */,
+				7A03A1D7287E879A00BADBB7 /* U2FHcheckCommand.h */,
+				7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */,
 			);
 			path = MaintenanceToolHcheck;
 			sourceTree = "<group>";
@@ -796,6 +801,7 @@
 				7AB4B171271E6E8B0099D51B /* SetPinParamWindow.m in Sources */,
 				7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
+				7A03A1D9287E87AE00BADBB7 /* U2FHcheckCommand.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */,
 				7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */,
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,

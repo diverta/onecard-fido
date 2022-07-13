@@ -11,12 +11,13 @@
 #import "HcheckWindow.h"
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
+#import "U2FHcheckCommand.h"
 
 @implementation HcheckCommandParameter
 
 @end
 
-@interface HcheckCommand () <AppHIDCommandDelegate>
+@interface HcheckCommand () <AppHIDCommandDelegate, U2FHcheckCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
@@ -24,6 +25,8 @@
     @property (nonatomic) HcheckWindow                 *hcheckWindow;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    // 下位クラスの参照を保持
+    @property (nonatomic) U2FHcheckCommand             *u2fHcheckCommand;
     // ヘルスチェック処理のパラメーターを保持
     @property (nonatomic) HcheckCommandParameter       *commandParameter;
     // PINGデータを保持
@@ -41,6 +44,7 @@
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setCommandParameter:[[HcheckCommandParameter alloc] init]];
+            [self setU2fHcheckCommand:[[U2FHcheckCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -73,6 +77,10 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"command:%d, pin:%@", [[self commandParameter] command], [[self commandParameter] pin]];
         // 実行コマンドにより処理分岐
         switch ([[self commandParameter] command]) {
+            case COMMAND_HID_U2F_HCHECK:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_HID_U2F_HEALTHCHECK];
+                [[self u2fHcheckCommand] doRequestHidU2fHealthCheck];
+                break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
                 [[self appHIDCommand] doRequestCtapHidInit];
@@ -92,6 +100,9 @@
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
         switch ([[self commandParameter] command]) {
+            case COMMAND_HID_U2F_HCHECK:
+                [[self u2fHcheckCommand] doRequestHidU2fHealthCheck];
+                break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self doRequestCtapHidPing:[[self commandParameter] command]];
                 break;
@@ -141,6 +152,18 @@
                 [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
                 break;
         }
+    }
+
+#pragma mark - Call back from U2FHcheckCommand
+
+    - (void)doResponseU2fHealthCheck:(bool)success message:(NSString *)message {
+        // メイン画面に制御を戻す
+        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        // メイン画面にテキストを表示
+        [[self delegate] notifyMessageToMainUI:message];
     }
 
 @end
