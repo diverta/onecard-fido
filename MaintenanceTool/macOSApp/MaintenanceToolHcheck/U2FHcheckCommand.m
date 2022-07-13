@@ -52,7 +52,7 @@
 
     - (void)doRequestCommandRegister {
         // TODO: 仮の実装です。
-        [self doResponseToAppDelegate:true message:nil];
+        [self doResponseU2fHealthCheck:true message:nil];
     }
 
 #pragma mark - Common methods
@@ -65,17 +65,14 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
+                [self doResponseU2fHealthCheck:true message:nil];
                 break;
         }
     }
 
-    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
-        // TODO: BLEトランスポートは後日実装
-        if ([self transportType] == TRANSPORT_HID) {
-            // 即時でアプリケーションに制御を戻す
-            [[self delegate] doResponseU2fHealthCheck:result message:message];
-        }
+    - (void)doResponseU2fHealthCheck:(bool)result message:(NSString *)message {
+        // 上位クラスに制御を戻す
+        [[self delegate] doResponseU2fHealthCheck:result message:message];
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -89,7 +86,7 @@
     - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
         // 即時で上位クラスに制御を戻す
         if (success == false) {
-            [self doResponseToAppDelegate:false message:errorMessage];
+            [self doResponseU2fHealthCheck:false message:errorMessage];
             return;
         }
         // 実行コマンドにより処理分岐
@@ -99,7 +96,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseToAppDelegate:false message:nil];
+                [self doResponseU2fHealthCheck:false message:nil];
                 break;
         }
     }
