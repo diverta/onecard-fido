@@ -14,7 +14,7 @@
 @interface CTAP2HcheckCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)doRequestHidCtap2HealthCheck;
+    - (void)doRequestHidCtap2HealthCheck:(id)parameterRef;
 
 @end
 

@@ -82,7 +82,7 @@
         switch ([[self commandParameter] command]) {
             case COMMAND_HID_CTAP2_HCHECK:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
-                [[self ctap2HcheckCommand] doRequestHidCtap2HealthCheck];
+                [[self ctap2HcheckCommand] doRequestHidCtap2HealthCheck:[self commandParameter]];
                 break;
             case COMMAND_HID_U2F_HCHECK:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_HID_U2F_HEALTHCHECK];
