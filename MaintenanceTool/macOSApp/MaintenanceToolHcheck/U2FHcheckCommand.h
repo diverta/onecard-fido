@@ -8,7 +8,6 @@
 #define U2FHcheckCommand_h
 
 #import <Foundation/Foundation.h>
-#import "AppDefine.h"
 
 @protocol U2FHcheckCommandDelegate;
 

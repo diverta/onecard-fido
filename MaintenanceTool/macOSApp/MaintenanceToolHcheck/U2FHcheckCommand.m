@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2022/07/13.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
