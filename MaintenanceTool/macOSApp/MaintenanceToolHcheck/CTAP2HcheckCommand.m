@@ -85,7 +85,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
+                [self doResponseCtap2HealthCheck:false message:nil];
                 break;
         }
     }
@@ -117,7 +117,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
+                [self doResponseCtap2HealthCheck:false message:nil];
                 break;
         }
     }
@@ -158,8 +158,8 @@
                 [self doRequestCommandGetAssertion:message];
                 break;
             default:
-                // 画面に制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self doResponseCtap2HealthCheck:false message:nil];
                 break;
         }
     }

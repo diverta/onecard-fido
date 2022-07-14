@@ -88,7 +88,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseU2fHealthCheck:true message:nil];
+                [self doResponseU2fHealthCheck:false message:nil];
                 break;
         }
     }
