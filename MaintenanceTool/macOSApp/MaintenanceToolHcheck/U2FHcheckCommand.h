@@ -14,7 +14,9 @@
 @interface U2FHcheckCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (bool)isUSBHIDConnected;
     - (void)doRequestHidU2fHealthCheck;
+    - (void)doRequestHidPingTest;
 
 @end
 

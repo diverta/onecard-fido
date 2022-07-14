@@ -21,6 +21,8 @@
     @property (nonatomic) Command                   command;
     // Registerレスポンスを保持（３件のテストケースで共通使用するため）
     @property (nonatomic) NSData                   *registerReponseData;
+    // PINGデータを保持
+    @property (nonatomic) NSData                   *pingData;
     // 使用トランスポートを保持
     @property (nonatomic) TransportType             transportType;
 
@@ -43,6 +45,11 @@
         return self;
     }
 
+    - (bool)isUSBHIDConnected {
+        // USBポートに接続されていない場合はfalse
+        return [[self appHIDCommand] checkUSBHIDConnection];
+    }
+
 #pragma mark - Command/subcommand process
 
     - (void)doRequestHidU2fHealthCheck {
@@ -51,6 +58,39 @@
         // CTAPHID_INITから実行
         [self setCommand:COMMAND_TEST_REGISTER];
         [[self appHIDCommand] doRequestCtapHidInit];
+    }
+
+    - (void)doRequestHidPingTest {
+        // トランスポートをUSB HIDに設定
+        [self setTransportType:TRANSPORT_HID];
+        // CTAPHID_INITから実行
+        [self setCommand:COMMAND_TEST_CTAPHID_PING];
+        [[self appHIDCommand] doRequestCtapHidInit];
+    }
+
+    - (void)doResponseHIDCtap2Init {
+        // CTAPHID_INIT応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_TEST_REGISTER:
+                [self doRequestCommandRegister];
+                break;
+            case COMMAND_TEST_AUTH_CHECK:
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
+                break;
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
+                break;
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
+                break;
+            case COMMAND_TEST_CTAPHID_PING:
+                [self doRequestCtapHidPing];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self doResponseU2fHealthCheck:true message:nil];
+                break;
+        }
     }
 
     - (void)doRequestCommandRegister {
@@ -131,28 +171,16 @@
         [self setRegisterReponseData:nil];
     }
 
-#pragma mark - Common methods
+    - (void)doRequestCtapHidPing {
+        // 100バイトのランダムなPINGデータを生成し、CTAPHID_PINGコマンドを実行
+        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
+        [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:HID_CMD_CTAPHID_PING withData:[self pingData]];
+    }
 
-    - (void)doResponseHIDCtap2Init {
-        // CTAPHID_INIT応答後の処理を実行
-        switch ([self command]) {
-            case COMMAND_TEST_REGISTER:
-                [self doRequestCommandRegister];
-                break;
-            case COMMAND_TEST_AUTH_CHECK:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
-                break;
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
-                break;
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseU2fHealthCheck:true message:nil];
-                break;
-        }
+    - (void)doResponseCtapHidPing:(NSData *)message {
+        // PINGレスポンスの内容をチェックし、上位クラスに制御を戻す
+        bool success = [message isEqualToData:[self pingData]];
+        [self doResponseU2fHealthCheck:success message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doResponseU2fHealthCheck:(bool)result message:(NSString *)message {
@@ -190,6 +218,9 @@
                 break;
             case COMMAND_TEST_AUTH_USER_PRESENCE:
                 [self doResponseCommandAuthenticateUP:response];
+                break;
+            case COMMAND_TEST_CTAPHID_PING:
+                [self doResponseCtapHidPing:response];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す

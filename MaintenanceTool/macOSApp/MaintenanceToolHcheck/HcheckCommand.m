@@ -5,7 +5,6 @@
 //  Created by Makoto Morita on 2022/07/12.
 //
 #import "AppCommonMessage.h"
-#import "AppHIDCommand.h"
 #import "CTAP2HcheckCommand.h"
 #import "FIDODefines.h"
 #import "HcheckCommand.h"
@@ -18,14 +17,12 @@
 
 @end
 
-@interface HcheckCommand () <AppHIDCommandDelegate, CTAP2HcheckCommandDelegate, U2FHcheckCommandDelegate>
+@interface HcheckCommand () <CTAP2HcheckCommandDelegate, U2FHcheckCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) HcheckWindow                 *hcheckWindow;
-    // ヘルパークラスの参照を保持
-    @property (nonatomic) AppHIDCommand                *appHIDCommand;
     // 下位クラスの参照を保持
     @property (nonatomic) CTAP2HcheckCommand           *ctap2HcheckCommand;
     @property (nonatomic) U2FHcheckCommand             *u2fHcheckCommand;
@@ -44,7 +41,6 @@
             // 画面のインスタンスを生成
             [self setHcheckWindow:[[HcheckWindow alloc] initWithWindowNibName:@"HcheckWindow"]];
             // ヘルパークラスのインスタンスを生成
-            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setCommandParameter:[[HcheckCommandParameter alloc] init]];
             [self setCtap2HcheckCommand:[[CTAP2HcheckCommand alloc] initWithDelegate:self]];
             [self setU2fHcheckCommand:[[U2FHcheckCommand alloc] initWithDelegate:self]];
@@ -68,7 +64,7 @@
 
     - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        return [[self appHIDCommand] checkUSBHIDConnection];
+        return [[self u2fHcheckCommand] isUSBHIDConnected];
     }
 
 #pragma mark - Perform functions
@@ -90,7 +86,7 @@
                 break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
-                [[self appHIDCommand] doRequestCtapHidInit];
+                [[self u2fHcheckCommand] doRequestHidPingTest];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -102,60 +98,6 @@
         // コマンド開始メッセージを画面表示
         [self setCommandName:commandName];
         [self notifyCommandStarted:[self commandName]];
-    }
-
-    - (void)doResponseHIDCtap2Init {
-        // CTAPHID_INIT応答後の処理を実行
-        switch ([[self commandParameter] command]) {
-            case COMMAND_TEST_CTAPHID_PING:
-                [self doRequestCtapHidPing:[[self commandParameter] command]];
-                break;
-            default:
-                [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
-                break;
-        }
-    }
-
-    - (void)doRequestCtapHidPing:(Command)command {
-        // 100バイトのランダムなPINGデータを生成し、CTAPHID_PINGコマンドを実行
-        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
-        [[self appHIDCommand] doRequestCtap2Command:command withCMD:HID_CMD_CTAPHID_PING withData:[self pingData]];
-    }
-
-    - (void)doResponseCtapHidPing:(NSData *)message {
-        // PINGレスポンスの内容をチェックし、画面に制御を戻す
-        bool success = [message isEqualToData:[self pingData]];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseCtapHidPing: %@", success ? @"success" : @"fail"];
-        [self notifyCommandTerminated:[self commandName] message:MSG_CMDTST_INVALID_PING success:success fromWindow:[self parentWindow]];
-    }
-
-#pragma mark - Call back from AppHIDCommand
-
-    - (void)didDetectConnect {
-    }
-
-    - (void)didDetectRemoval {
-    }
-
-    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時でアプリケーションに制御を戻す
-        if (success == false) {
-            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
-            return;
-        }
-        // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_HID_CTAP2_INIT:
-                [self doResponseHIDCtap2Init];
-                break;
-            case COMMAND_TEST_CTAPHID_PING:
-                [self doResponseCtapHidPing:response];
-                break;
-            default:
-                // メイン画面に制御を戻す
-                [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
-                break;
-        }
     }
 
 #pragma mark - Call back from CTAP2HcheckCommand
