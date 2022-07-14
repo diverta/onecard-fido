@@ -26,6 +26,8 @@
     @property (nonatomic) Command                   command;
     @property (nonatomic) uint8_t                   cborCommand;
     @property (nonatomic) uint8_t                   subCommand;
+    // ログインテストカウンター
+    @property (nonatomic) uint8_t                   getAssertionCount;
     // ヘルスチェック処理のパラメーターを保持
     @property (nonatomic) HcheckCommandParameter   *commandParameter;
     // 使用トランスポートを保持
@@ -99,6 +101,38 @@
     }
 
     - (void)doRequestCommandMakeCredential:(NSData *)message {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // メッセージを編集
+        NSData *request = [self generateMakeCredentialRequestWith:cborBytes];
+        if (request == nil) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // authenticatorMakeCredentialコマンドを実行
+        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self appHIDCommand] doRequestCtap2Command:COMMAND_TEST_MAKE_CREDENTIAL withCMD:HID_CMD_CTAPHID_CBOR withData:request];
+        }
+    }
+
+    - (void)doResponseCommandMakeCredential:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:message] == false) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // MakeCredentialレスポンスを解析して保持
+        if ([self parseMakeCredentialResponseWith:cborBytes] == false) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを実行
+        [self setGetAssertionCount:1];
         // TODO: 仮の実装です。
         [self doResponseCtap2HealthCheck:true message:nil];
     }
@@ -181,6 +215,9 @@
             case COMMAND_CTAP2_GET_PIN_TOKEN:
                 [self doResponseCommandGetPinToken:response];
                 break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                [self doResponseCommandMakeCredential:response];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
                 [self doResponseCtap2HealthCheck:false message:nil];
@@ -223,6 +260,44 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
+    }
+
+    - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse {
+        // GetPinTokenレスポンスからPINトークンを抽出
+        uint8_t *pinTokenResp = (uint8_t *)[getPinTokenResponse bytes];
+        size_t   pinTokenRespSize = [getPinTokenResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_pin_token(pinTokenResp, pinTokenRespSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        // makeCredentialリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_make_credential(
+                            ctap2_cbor_decode_agreement_pubkey_X(),
+                            ctap2_cbor_decode_agreement_pubkey_Y(),
+                            ctap2_cbor_decrypted_pin_token());
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
+            return nil;
+        }
+    }
+
+    - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse {
+        // MakeCredentialレスポンスからクレデンシャルIDを抽出
+        uint8_t *response = (uint8_t *)[makeCredentialResponse bytes];
+        size_t   responseSize = [makeCredentialResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_make_credential(response, responseSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return false;
+        }
+        // レスポンス内に"hmac-secret"拡張が含まれていたらその旨をログ表示
+        if (ctap2_cbor_decode_ext_hmac_secret()->flag) {
+            [[ToolLogFile defaultLogger]
+             debug:@"authenticatorMakeCredential: HMAC Secret Extension available"];
+        }
+        return true;
     }
 
     - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
