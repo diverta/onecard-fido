@@ -28,6 +28,8 @@
     @property (nonatomic) uint8_t                   subCommand;
     // ログインテストカウンター
     @property (nonatomic) uint8_t                   getAssertionCount;
+    // HMAC暗号を保持
+    @property (nonatomic) NSData                   *hmacSecretSalt;
     // ヘルスチェック処理のパラメーターを保持
     @property (nonatomic) HcheckCommandParameter   *commandParameter;
     // 使用トランスポートを保持
@@ -48,8 +50,18 @@
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            // テストデータ（HMAC暗号）を生成
+            [self setHmacSecretSalt:[self createHmacSecretSalt]];
         }
         return self;
+    }
+
+    - (NSData *)createHmacSecretSalt {
+        NSData *salt1 = [ToolCommon generateHexBytesFrom:@"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
+        NSData *salt2 = [ToolCommon generateHexBytesFrom:@"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
+        NSMutableData *salt = [[NSMutableData alloc] initWithData:salt1];
+        [salt appendData:salt2];
+        return salt;
     }
 
 #pragma mark - Command/subcommand process
@@ -68,6 +80,7 @@
         // CTAPHID_INIT応答後の処理を実行
         switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 [self doRequestCommandGetKeyAgreement];
                 break;
             default:
@@ -98,6 +111,7 @@
         // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT応答後の処理を実行
         switch ([self command]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 // PINトークン取得処理を続行
                 [self doRequestCommandGetPinToken:message];
                 break;
@@ -139,6 +153,10 @@
                 // ユーザー登録テスト処理を続行
                 [self doRequestCommandMakeCredential:message];
                 break;
+            case COMMAND_TEST_GET_ASSERTION:
+                // ログインテスト処理を続行
+                [self doRequestCommandGetAssertion:message];
+                break;
             default:
                 // 画面に制御を戻す
                 [self doResponseCtap2HealthCheck:true message:nil];
@@ -179,8 +197,69 @@
         }
         // CTAP2ヘルスチェックのログインテストを実行
         [self setGetAssertionCount:1];
-        // TODO: 仮の実装です。
-        [self doResponseCtap2HealthCheck:true message:nil];
+        [self setCommand:COMMAND_TEST_GET_ASSERTION];
+        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_HID) {
+            // CTAPHID_INITから実行
+            [[self appHIDCommand] doRequestCtapHidInit];
+        }
+    }
+
+    - (void)doRequestCommandGetAssertion:(NSData *)message {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // メッセージを編集し、GetAssertionコマンドを実行
+        // ２回目のコマンド実行では、基板上のボタン押下によるユーザー所在確認が必要
+        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
+        NSData *request = [self generateGetAssertionRequestWith:cborBytes userPresence:testUserPresenceNeeded];
+        if (request == nil) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        if (testUserPresenceNeeded) {
+            // リクエスト転送の前に、基板上のボタンを押してもらうように促すメッセージを画面表示
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        }
+        // authenticatorGetAssertionコマンドを実行
+        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self appHIDCommand] doRequestCtap2Command:COMMAND_TEST_GET_ASSERTION withCMD:HID_CMD_CTAPHID_CBOR withData:request];
+        }
+    }
+
+    - (void)doResponseCommandGetAssertion:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:message] == false) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // GetAssertionレスポンスを解析
+        // ２回目のコマンド実行では、認証器から受領したHMAC暗号の内容検証が必要
+        bool verifySaltNeeded = ([self getAssertionCount] == 2);
+        if ([self parseGetAssertionResponseWith:cborBytes verifySalt:verifySaltNeeded] == false) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // ２回目のテストが成功したら上位クラスに制御を戻して終了
+        if (verifySaltNeeded) {
+            [self doResponseCtap2HealthCheck:true message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを再度実行
+        [self setGetAssertionCount:[self getAssertionCount] + 1];
+        [self setCommand:COMMAND_TEST_GET_ASSERTION];
+        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_HID) {
+            // CTAPHID_INITから実行
+            [[self appHIDCommand] doRequestCtapHidInit];
+        }
     }
 
     - (void)doResponseCtap2HealthCheck:(bool)result message:(NSString *)message {
@@ -215,6 +294,9 @@
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 [self doResponseCommandMakeCredential:response];
+                break;
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doResponseCommandGetAssertion:response];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
@@ -296,6 +378,57 @@
              debug:@"authenticatorMakeCredential: HMAC Secret Extension available"];
         }
         return true;
+    }
+
+    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up {
+        // GetPinTokenレスポンスからPINトークンを抽出
+        uint8_t *pinTokenResp = (uint8_t *)[getPinTokenResponse bytes];
+        size_t   pinTokenRespSize = [getPinTokenResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_pin_token(pinTokenResp, pinTokenRespSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        // getAssertionリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_get_assertion(
+                            ctap2_cbor_decode_agreement_pubkey_X(),
+                            ctap2_cbor_decode_agreement_pubkey_Y(),
+                            ctap2_cbor_decrypted_pin_token(),
+                            ctap2_cbor_decode_credential_id(),
+                            ctap2_cbor_decode_credential_id_size(),
+                            (uint8_t *)[[self hmacSecretSalt] bytes], up);
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
+            return nil;
+        }
+    }
+
+    - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt {
+        // GetAssertionレスポンスを解析
+        uint8_t *response = (uint8_t *)[getAssertionResponse bytes];
+        size_t   responseSize = [getAssertionResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_assertion(response, responseSize, verifySalt);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"parseGetAssertionResponseWith failed(0x%02x)", status_code];
+            return false;
+        }
+        // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
+        if (ctap2_cbor_decode_ext_hmac_secret()->output_size == 0) {
+            return true;
+        }
+        // ２回目のGetAssertion時は、認証器から受領したHMAC暗号の内容検証を行う
+        if (verifySalt) {
+            bool success = ctap2_cbor_decode_verify_salt();
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"authenticatorGetAssertion: HMAC Secret verification %@",
+             success ? @"success" : @"failed"];
+            return success;
+        } else {
+            return true;
+        }
     }
 
     - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
