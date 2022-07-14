@@ -107,9 +107,6 @@
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
         switch ([[self commandParameter] command]) {
-            case COMMAND_HID_U2F_HCHECK:
-                [[self u2fHcheckCommand] doRequestHidU2fHealthCheck];
-                break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self doRequestCtapHidPing:[[self commandParameter] command]];
                 break;
