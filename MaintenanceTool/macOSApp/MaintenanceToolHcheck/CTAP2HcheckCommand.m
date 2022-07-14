@@ -64,6 +64,19 @@
         [[self appHIDCommand] doRequestCtapHidInit];
     }
 
+    - (void)doResponseHIDCtap2Init {
+        // CTAPHID_INIT応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                [self doRequestCommandGetKeyAgreement];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self doResponseCtap2HealthCheck:true message:nil];
+                break;
+        }
+    }
+
     - (void)doRequestCommandGetKeyAgreement {
         // 実行対象サブコマンドを退避
         [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
@@ -78,6 +91,20 @@
         // TODO: BLEトランスポートは後日実装
         if ([self transportType] == TRANSPORT_HID) {
             [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_CTAPHID_CBOR withData:message];
+        }
+    }
+
+    - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
+        // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // PINトークン取得処理を続行
+                [self doRequestCommandGetPinToken:message];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self doResponseCtap2HealthCheck:true message:nil];
+                break;
         }
     }
 
@@ -97,6 +124,25 @@
         // TODO: BLEトランスポートは後日実装
         if ([self transportType] == TRANSPORT_HID) {
             [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_PIN_TOKEN withCMD:HID_CMD_CTAPHID_CBOR withData:request];
+        }
+    }
+
+    - (void)doResponseCommandGetPinToken:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:message] == false) {
+            [self doResponseCtap2HealthCheck:false message:nil];
+            return;
+        }
+        // CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // ユーザー登録テスト処理を続行
+                [self doRequestCommandMakeCredential:message];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseCtap2HealthCheck:true message:nil];
+                break;
         }
     }
 
@@ -135,54 +181,6 @@
         [self setGetAssertionCount:1];
         // TODO: 仮の実装です。
         [self doResponseCtap2HealthCheck:true message:nil];
-    }
-
-#pragma mark - Common methods
-
-    - (void)doResponseHIDCtap2Init {
-        // CTAPHID_INIT応答後の処理を実行
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                [self doRequestCommandGetKeyAgreement];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
-        // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT応答後の処理を実行
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // PINトークン取得処理を続行
-                [self doRequestCommandGetPinToken:message];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandGetPinToken:(NSData *)message {
-        // レスポンスをチェックし、内容がNGであれば処理終了
-        if ([self checkStatusCode:message] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
-            return;
-        }
-        // CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN応答後の処理を実行
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // ユーザー登録テスト処理を続行
-                [self doRequestCommandMakeCredential:message];
-                break;
-            default:
-                // 画面に制御を戻す
-                [self doResponseCtap2HealthCheck:true message:nil];
-                break;
-        }
     }
 
     - (void)doResponseCtap2HealthCheck:(bool)result message:(NSString *)message {
