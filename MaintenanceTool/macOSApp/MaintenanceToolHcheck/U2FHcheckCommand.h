@@ -17,6 +17,7 @@
     - (bool)isUSBHIDConnected;
     - (void)doRequestHidU2fHealthCheck;
     - (void)doRequestHidPingTest;
+    - (void)doRequestBlePingTest;
 
 @end
 

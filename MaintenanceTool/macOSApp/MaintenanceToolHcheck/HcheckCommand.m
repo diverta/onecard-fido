@@ -88,6 +88,10 @@
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
                 [[self u2fHcheckCommand] doRequestHidPingTest];
                 break;
+            case COMMAND_TEST_BLE_PING:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_BLE_PING];
+                [[self u2fHcheckCommand] doRequestBlePingTest];
+                break;
             default:
                 // メイン画面に制御を戻す
                 break;

@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/07/13.
 //
+#import "AppBLECommand.h"
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "AppHIDCommand.h"
@@ -11,11 +12,12 @@
 #import "ToolCommon.h"
 #import "U2FHcheckCommand.h"
 
-@interface U2FHcheckCommand () <AppHIDCommandDelegate>
+@interface U2FHcheckCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                  delegate;
     // ヘルパークラスの参照を保持
+    @property (nonatomic) AppBLECommand            *appBLECommand;
     @property (nonatomic) AppHIDCommand            *appHIDCommand;
     // 実行対象コマンドを保持
     @property (nonatomic) Command                   command;
@@ -40,6 +42,7 @@
             // 上位クラスの参照を保持
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
+            [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -174,18 +177,28 @@
     - (void)doRequestCtapHidPing {
         // 100バイトのランダムなPINGデータを生成し、CTAPHID_PINGコマンドを実行
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
-        [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:HID_CMD_CTAPHID_PING withData:[self pingData]];
+        [self doRequestCtap2Command:[self command] withCMD:HID_CMD_CTAPHID_PING withData:[self pingData]];
     }
 
     - (void)doResponseCtapHidPing:(NSData *)message {
         // PINGレスポンスの内容をチェックし、上位クラスに制御を戻す
         bool success = [message isEqualToData:[self pingData]];
-        [self doResponseU2fHealthCheck:success message:MSG_CMDTST_INVALID_PING];
+        [self commandDidProcess:success message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doResponseU2fHealthCheck:(bool)result message:(NSString *)message {
         // 上位クラスに制御を戻す
         [[self delegate] doResponseU2fHealthCheck:result message:message];
+    }
+
+#pragma mark - BLE Command/subcommand process
+
+    - (void)doRequestBlePingTest {
+        // トランスポートをBLEに設定
+        [self setTransportType:TRANSPORT_BLE];
+        // BLE PING処理を実行
+        [self setCommand:COMMAND_TEST_BLE_PING];
+        [self doRequestCtapHidPing];
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -229,7 +242,49 @@
         }
     }
 
+#pragma mark - Call back from AppBLECommand
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_TEST_BLE_PING:
+                [self doResponseCtapHidPing:response];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
+                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+    }
+
+    - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 上位クラスに制御を戻す
+        [self doResponseU2fHealthCheck:success message:errorMessage];
+    }
+
 #pragma mark - Private functions
+
+    - (void)doRequestCtap2Command:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
+        // コマンドリクエストを、BLE／HIDトランスポート経由で実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self appBLECommand] doRequestCommand:command withCMD:cmd withData:data];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self appHIDCommand] doRequestCtap2Command:command withCMD:cmd withData:data];
+        }
+    }
+
+    - (void)commandDidProcess:(bool)success message:(NSString *)message {
+        // コマンド実行完了後の処理
+        if ([self transportType] == TRANSPORT_BLE) {
+            // 一旦ヘルパークラスに制御を戻し、BLE切断処理を実行
+            [[self appBLECommand] commandDidProcess:success message:message];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            // 上位クラスに制御を戻す
+            [self doResponseU2fHealthCheck:success message:message];
+        }
+    }
 
     - (NSMutableData *)createTestRequestData {
         // テストデータから、リクエストデータの先頭部分を生成
