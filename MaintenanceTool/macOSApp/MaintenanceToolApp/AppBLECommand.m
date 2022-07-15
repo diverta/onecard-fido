@@ -50,7 +50,15 @@
         return self;
     }
 
-    - (void)doConnect {
+    - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
+        // 実行コマンドを退避
+        [self setCommand:command];
+        // 分割送信のために64バイトごとのコマンド配列を作成する
+        [self setBleRequestArray:[self generateCommandArrayFrom:data cmd:cmd]];
+        // コマンド配列がブランクの場合は終了
+        if ([self commandArrayIsBlank]) {
+            return;
+        }
         // 再試行回数をゼロクリア
         [self setBleConnectionRetryCount:0];
         // メッセージ表示用変数を初期化
@@ -61,20 +69,15 @@
         [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
     }
 
-    - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
-        // 分割送信のために64バイトごとのコマンド配列を作成する
-        [self setBleRequestArray:[self generateCommandArrayFrom:data cmd:cmd]];
-        // コマンド配列がブランクの場合は終了
-        if ([self commandArrayIsBlank]) {
-            return;
+    - (void)commandDidProcess:(bool)result message:(NSString *)message {
+        // コマンド配列をブランクに初期化
+        [self setBleRequestArray:nil];
+        if (message) {
+            // コマンド実行結果のメッセージを保持
+            [self setLastCommandMessage:message];
         }
-        // U2F Control Pointに、実行するコマンドを書き込み
-        NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
-        [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
-        [self setBleTransactionStarted:true];
-    }
-
-    - (void)doDisconnect {
+        // コマンド実行結果のリザルトを保持
+        [self setLastCommandSuccess:result];
         // デバイス接続を切断
         [[self toolBLEHelper] helperWillDisconnect];
     }
@@ -118,8 +121,10 @@
         [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
         // 送信済フレーム数をクリア
         [self setBleRequestFrameNumber:0];
-        // 上位クラスに接続成功通知を行う
-        [[self delegate] didConnect:true errorMessage:nil];
+        // U2F Control Pointに、実行するコマンドを書き込み
+        NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
+        [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
+        [self setBleTransactionStarted:true];
     }
 
     - (void)helperDidWriteForCharacteristics {
@@ -146,7 +151,7 @@
             [[ToolLogFile defaultLogger] info:MSG_RESPONSE_RECEIVED];
             [self setBleTransactionStarted:false];
             // レスポンスを上位クラスに引き渡す
-            [[self delegate] didResponseCommand:[self command] response:[self bleResponseData] success:true errorMessage:nil];
+            [[self delegate] didResponseCommand:[self command] response:[self bleResponseData]];
         }
     }
 
@@ -173,8 +178,8 @@
         if (error) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
         }
-        // 上位クラスに切断通知を行う
-        [[self delegate] didDisconnect:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
+        // 上位クラスに完了通知を行う
+        [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
     }
 
 #pragma mark - Function for sending data frames
