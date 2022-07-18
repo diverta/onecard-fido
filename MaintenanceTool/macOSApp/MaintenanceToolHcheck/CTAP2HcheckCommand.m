@@ -192,9 +192,12 @@
         // CTAP2ヘルスチェックのログインテストを実行
         [self setGetAssertionCount:1];
         [self setCommand:COMMAND_TEST_GET_ASSERTION];
-        // TODO: BLEトランスポートは後日実装
+        // BLEの場合は、CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENTから再実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doRequestCommandGetKeyAgreement];
+        }
+        // HIDの場合は、CTAPHID_INITから再実行
         if ([self transportType] == TRANSPORT_HID) {
-            // CTAPHID_INITから実行
             [[self appHIDCommand] doRequestCtapHidInit];
         }
     }
@@ -220,10 +223,7 @@
             [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
         }
         // authenticatorGetAssertionコマンドを実行
-        // TODO: BLEトランスポートは後日実装
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:COMMAND_TEST_GET_ASSERTION withCMD:HID_CMD_CTAPHID_CBOR withData:request];
-        }
+        [self doRequestCtap2CborCommand:COMMAND_TEST_GET_ASSERTION withData:request];
     }
 
     - (void)doResponseCommandGetAssertion:(NSData *)message {
@@ -249,9 +249,12 @@
         // CTAP2ヘルスチェックのログインテストを再度実行
         [self setGetAssertionCount:[self getAssertionCount] + 1];
         [self setCommand:COMMAND_TEST_GET_ASSERTION];
-        // TODO: BLEトランスポートは後日実装
+        // BLEの場合は、CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENTから再実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doRequestCommandGetKeyAgreement];
+        }
+        // HIDの場合は、CTAPHID_INITから再実行
         if ([self transportType] == TRANSPORT_HID) {
-            // CTAPHID_INITから実行
             [[self appHIDCommand] doRequestCtapHidInit];
         }
     }
@@ -324,6 +327,9 @@
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 [self doResponseCommandMakeCredential:response];
+                break;
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doResponseCommandGetAssertion:response];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
