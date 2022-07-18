@@ -146,6 +146,11 @@
     }
 
     - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusWordOfResponse:message] == false) {
+            [self doResponseU2fHealthCheck:false message:nil];
+            return;
+        }
         // U2Fヘルスチェックの後続テストを実行
         // TODO: BLEトランスポートは後日実装
         if ([self transportType] == TRANSPORT_HID) {
@@ -160,6 +165,11 @@
     }
 
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusWordOfResponse:message] == false) {
+            [self doResponseU2fHealthCheck:false message:nil];
+            return;
+        }
         // 後続のU2F Authenticateを開始する前に、ボタンを押してもらうように促すメッセージを表示
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
@@ -179,6 +189,11 @@
     }
 
     - (void)doResponseCommandAuthenticateUP:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusWordOfResponse:message] == false) {
+            [self doResponseU2fHealthCheck:false message:nil];
+            return;
+        }
         // 結果メッセージを表示
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
         // U2Fヘルスチェック終了
