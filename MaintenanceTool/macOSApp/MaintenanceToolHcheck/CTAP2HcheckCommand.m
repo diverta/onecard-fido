@@ -254,7 +254,7 @@
         }
         // ２回目のテストが成功したら上位クラスに制御を戻して終了
         if (verifySaltNeeded) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:true message:nil];
             return;
         }
         // CTAP2ヘルスチェックのログインテストを再度実行
