@@ -51,6 +51,10 @@
         }
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
+        [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
+        [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
+                                               toolBLECommand:nil
+                                               toolHIDCommand:self];
         return self;
     }
 
