@@ -88,7 +88,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:false message:nil];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -100,7 +100,7 @@
         // メッセージを編集
         NSData *message = [self generateGetKeyAgreementRequest];
         if (message == nil) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // getKeyAgreementサブコマンドを実行
@@ -122,7 +122,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:false message:nil];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -136,7 +136,7 @@
         // メッセージを編集
         NSData *request = [self generateClientPinTokenGetRequestWith:cborBytes];
         if (request == nil) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // getPINTokenサブコマンドを実行
@@ -149,7 +149,7 @@
     - (void)doResponseCommandGetPinToken:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN応答後の処理を実行
@@ -164,7 +164,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:false message:nil];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -177,7 +177,7 @@
         // メッセージを編集
         NSData *request = [self generateMakeCredentialRequestWith:cborBytes];
         if (request == nil) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // authenticatorMakeCredentialコマンドを実行
@@ -190,14 +190,14 @@
     - (void)doResponseCommandMakeCredential:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // レスポンスされたCBORを抽出
         NSData *cborBytes = [self extractCBORBytesFrom:message];
         // MakeCredentialレスポンスを解析して保持
         if ([self parseMakeCredentialResponseWith:cborBytes] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // CTAP2ヘルスチェックのログインテストを実行
@@ -220,7 +220,7 @@
         bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
         NSData *request = [self generateGetAssertionRequestWith:cborBytes userPresence:testUserPresenceNeeded];
         if (request == nil) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         if (testUserPresenceNeeded) {
@@ -240,7 +240,7 @@
     - (void)doResponseCommandGetAssertion:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // レスポンスされたCBORを抽出
@@ -249,12 +249,12 @@
         // ２回目のコマンド実行では、認証器から受領したHMAC暗号の内容検証が必要
         bool verifySaltNeeded = ([self getAssertionCount] == 2);
         if ([self parseGetAssertionResponseWith:cborBytes verifySalt:verifySaltNeeded] == false) {
-            [self doResponseCtap2HealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // ２回目のテストが成功したら上位クラスに制御を戻して終了
         if (verifySaltNeeded) {
-            [self doResponseCtap2HealthCheck:true message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // CTAP2ヘルスチェックのログインテストを再度実行
@@ -317,7 +317,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:false message:nil];
+                [self doResponseCtap2HealthCheck:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
