@@ -21,12 +21,9 @@
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef;
     - (void)hidHelperWillDetectConnect:(Command)command forCommand:(id)commandRef;
     - (void)hidHelperWillDetectRemoval:(Command)command forCommand:(id)commandRef;
-    - (void)setInstallParameter:(Command)command
-                   skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid;
-    - (void)doRequestInstallSkeyCert:(NSData *)messageKeyAgreement CID:(NSData *)cid;
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
