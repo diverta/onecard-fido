@@ -72,8 +72,6 @@
     - (void)hcheckWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self hcheckWindow] close];
-        // TODO: 設定されたパラメーターを使用し、ヘルスチェック処理を実行する
-        [[ToolLogFile defaultLogger] debugWithFormat:@"command:%d, pin:%@", [[self commandParameter] command], [[self commandParameter] pin]];
         // 実行コマンドにより処理分岐
         switch ([[self commandParameter] command]) {
             case COMMAND_HID_CTAP2_HCHECK:
@@ -87,6 +85,10 @@
             case COMMAND_TEST_CTAPHID_PING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
                 [[self u2fHcheckCommand] doRequestHidPingTest];
+                break;
+            case COMMAND_BLE_CTAP2_HCHECK:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_BLE_CTAP2_HEALTHCHECK];
+                [[self ctap2HcheckCommand] doRequestBleCtap2HealthCheck:[self commandParameter]];
                 break;
             case COMMAND_BLE_U2F_HCHECK:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_BLE_U2F_HEALTHCHECK];

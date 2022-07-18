@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/07/13.
 //
+#import "AppBLECommand.h"
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "AppHIDCommand.h"
@@ -21,6 +22,7 @@
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                  delegate;
     // ヘルパークラスの参照を保持
+    @property (nonatomic) AppBLECommand            *appBLECommand;
     @property (nonatomic) AppHIDCommand            *appHIDCommand;
     // 実行対象コマンド／サブコマンドを保持
     @property (nonatomic) Command                   command;
@@ -49,6 +51,7 @@
             // 上位クラスの参照を保持
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
+            [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             // テストデータ（HMAC暗号）を生成
             [self setHmacSecretSalt:[self createHmacSecretSalt]];
@@ -101,7 +104,9 @@
             return;
         }
         // getKeyAgreementサブコマンドを実行
-        // TODO: BLEトランスポートは後日実装
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self appBLECommand] doRequestCommand:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_MSG withData:message];
+        }
         if ([self transportType] == TRANSPORT_HID) {
             [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_CTAPHID_CBOR withData:message];
         }
@@ -267,6 +272,18 @@
         [[self delegate] doResponseCtap2HealthCheck:result message:message];
     }
 
+#pragma mark - BLE Command/subcommand process
+
+    - (void)doRequestBleCtap2HealthCheck:(id)parameterRef {
+        // パラメーターを保持
+        [self setCommandParameter:(HcheckCommandParameter *)parameterRef];
+        // トランスポートをBLEに設定
+        [self setTransportType:TRANSPORT_BLE];
+        // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENTから実行
+        [self setCommand:COMMAND_TEST_MAKE_CREDENTIAL];
+        [self doRequestCommandGetKeyAgreement];
+    }
+
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
@@ -305,7 +322,39 @@
         }
     }
 
+#pragma mark - Call back from AppBLECommand
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_CTAP2_GET_KEY_AGREEMENT:
+                [self doResponseCommandGetKeyAgreement:response];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
+                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+    }
+
+    - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 上位クラスに制御を戻す
+        [self doResponseCtap2HealthCheck:success message:errorMessage];
+    }
+
 #pragma mark - Private functions
+
+    - (void)commandDidProcess:(bool)success message:(NSString *)message {
+        // コマンド実行完了後の処理
+        if ([self transportType] == TRANSPORT_BLE) {
+            // 一旦ヘルパークラスに制御を戻し、BLE切断処理を実行
+            [[self appBLECommand] commandDidProcess:success message:message];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            // 上位クラスに制御を戻す
+            [self doResponseCtap2HealthCheck:success message:message];
+        }
+    }
 
     - (NSData *)generateGetKeyAgreementRequest {
         // GetKeyAgreementリクエストを生成して戻す
