@@ -279,6 +279,19 @@
         [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT];
     }
 
+    - (bool)helperIsSubscribingCharacteristic {
+        if ([self connectedService] == nil) {
+            return false;
+        }
+        if ([self connectedPeripheral] == nil) {
+            return false;
+        }
+        if ([self characteristicForNotify] == nil) {
+            return false;
+        }
+        return [[self characteristicForNotify] isNotifying];
+    }
+
 #pragma mark - Write value for characteristics
 
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage {

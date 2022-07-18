@@ -59,14 +59,23 @@
         if ([self commandArrayIsBlank]) {
             return;
         }
-        // 再試行回数をゼロクリア
-        [self setBleConnectionRetryCount:0];
-        // メッセージ表示用変数を初期化
-        [self setLastCommandMessage:nil];
-        [self setLastCommandSuccess:false];
-        // BLEデバイス接続処理を開始する
-        [self setBleTransactionStarted:false];
-        [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
+        // 接続されている場合（U2F Statusからの受信監視が継続されている場合）
+        if ([[self toolBLEHelper] helperIsSubscribingCharacteristic]) {
+            // 送信済フレーム数をクリア
+            [self setBleRequestFrameNumber:0];
+            // U2F Control Pointに、実行するコマンドを書き込み
+            NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
+            [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
+        } else {
+            // 再試行回数をゼロクリア
+            [self setBleConnectionRetryCount:0];
+            // メッセージ表示用変数を初期化
+            [self setLastCommandMessage:nil];
+            [self setLastCommandSuccess:false];
+            // BLEデバイス接続処理を開始する
+            [self setBleTransactionStarted:false];
+            [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
+        }
     }
 
     - (void)commandDidProcess:(bool)result message:(NSString *)message {

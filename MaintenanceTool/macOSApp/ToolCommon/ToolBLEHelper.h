@@ -22,6 +22,7 @@
     - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec;
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
+    - (bool)helperIsSubscribingCharacteristic;
 
 @end
 
