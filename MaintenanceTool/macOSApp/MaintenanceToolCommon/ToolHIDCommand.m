@@ -14,7 +14,6 @@
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
-#import "ToolU2FHealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -26,8 +25,6 @@
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
     @property (nonatomic) ToolCTAP2HealthCheckCommand
                                                *toolCTAP2HealthCheckCommand;
-    @property (nonatomic) ToolU2FHealthCheckCommand
-                                               *toolU2FHealthCheckCommand;
 
     // コマンド、送受信データを保持
     @property (nonatomic) Command   command;
@@ -63,10 +60,6 @@
         [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
                                                toolBLECommand:nil
                                                toolHIDCommand:self];
-        [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
-        [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_HID
-                                             toolBLECommand:nil
-                                             toolHIDCommand:self];
         return self;
     }
 
@@ -105,10 +98,6 @@
             [self commandDidProcess:[self command] result:false message:nil];
         }
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_PING:
-                // 受領したCIDを使用し、CTAPHID_PINGコマンドを実行
-                [self doRequestCtapHidPing:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
@@ -118,14 +107,6 @@
                 // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
                 [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
                 [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                // 受領したCIDを使用し、U2FRegister／Authenticateコマンドを実行
-                [[self toolU2FHealthCheckCommand] setCID:[self getNewCIDFrom:message]];
-                [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
@@ -148,26 +129,6 @@
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
-    }
-
-    - (void)doTestCtapHidPing {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestCtapHidPing:(NSData *)cid {
-        // 100バイトのランダムなPINGデータを生成
-        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
-        // メッセージを編集し、CTAPHID_PINGコマンドを実行
-        [self doRequest:[self pingData] CID:cid CMD:HID_CMD_CTAPHID_PING];
-    }
-
-    - (void)doResponseCtapHidPing:(NSData *)message {
-        // PINGレスポンスの内容をチェックし、画面に制御を戻す
-        bool result = [message isEqualToData:[self pingData]];
-        [self commandDidProcess:[self command] result:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetVersionInfoRequest {
@@ -324,22 +285,6 @@
         [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
     }
 
-    - (void)doU2FHealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_REGISTER) {
-            [self displayStartMessage];
-        }
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doResponseU2FHidMsg:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        [[self toolU2FHealthCheckCommand] setCID:cid];
-        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
-    }
-
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
         // HID接続／切断検知時、所定のコマンドに通知しないようにする
         [self setNeedNotifyDetectConnect:false];
@@ -351,9 +296,6 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_PING:
-                [self doTestCtapHidPing];
-                break;
             case COMMAND_HID_GET_VERSION_FOR_DFU:
                 [self doHidGetVersionInfoRequest];
                 break;
@@ -380,12 +322,6 @@
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
                 [self doCtap2HealthCheck];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self doU2FHealthCheck];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
@@ -445,9 +381,6 @@
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // コマンドに応じ、以下の処理に分岐
         switch (cmd) {
-            case HID_CMD_CTAPHID_PING:
-                [self doResponseCtapHidPing:message];
-                break;
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
@@ -464,9 +397,6 @@
                 break;
             case HID_CMD_CTAPHID_CBOR:
                 [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
-                break;
-            case HID_CMD_MSG:
-                [self doResponseU2FHidMsg:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_TOOL_PREF_PARAM:
                 [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
