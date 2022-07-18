@@ -16,6 +16,7 @@
     - (id)initWithDelegate:(id)delegate;
     - (bool)isUSBHIDConnected;
     - (void)doRequestHidU2fHealthCheck;
+    - (void)doRequestBleU2fHealthCheck;
     - (void)doRequestHidPingTest;
     - (void)doRequestBlePingTest;
 

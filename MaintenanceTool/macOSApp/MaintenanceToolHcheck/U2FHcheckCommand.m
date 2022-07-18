@@ -102,11 +102,8 @@
         // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
         NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
         // U2F Registerコマンドを実行
-        // TODO: BLEトランスポートは後日実装
         [self setCommand:COMMAND_TEST_REGISTER];
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:HID_CMD_MSG withData:dataForRequest];
-        }
+        [self doRequestCtap2Command:[self command] withCMD:HID_CMD_MSG withData:dataForRequest];
     }
 
     - (void)doResponseCommandRegister:(NSData *)message {
@@ -120,10 +117,12 @@
         // Registerレスポンスを内部で保持して後続処理を実行
         [self setRegisterReponseData:[[NSData alloc] initWithData:message]];
         // U2Fヘルスチェックの後続テストを実行
-        // TODO: BLEトランスポートは後日実装
+        [self setCommand:COMMAND_TEST_AUTH_CHECK];
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doRequestCommandAuthenticateCheck];
+        }
+        // HIDの場合は、CTAPHID_INITから再実行
         if ([self transportType] == TRANSPORT_HID) {
-            // CTAPHID_INITから実行
-            [self setCommand:COMMAND_TEST_AUTH_CHECK];
             [[self appHIDCommand] doRequestCtapHidInit];
         }
     }
@@ -135,10 +134,7 @@
         // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
         NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:p1];
         // U2F Authenticateコマンドを実行
-        // TODO: BLEトランスポートは後日実装
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:HID_CMD_MSG withData:dataForRequest];
-        }
+        [self doRequestCtap2Command:[self command] withCMD:HID_CMD_MSG withData:dataForRequest];
     }
 
     - (void)doRequestCommandAuthenticateCheck {
@@ -152,10 +148,12 @@
             return;
         }
         // U2Fヘルスチェックの後続テストを実行
-        // TODO: BLEトランスポートは後日実装
+        [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doRequestCommandAuthenticateNoUP];
+        }
+        // HIDの場合は、CTAPHID_INITから再実行
         if ([self transportType] == TRANSPORT_HID) {
-            // CTAPHID_INITから実行
-            [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
             [[self appHIDCommand] doRequestCtapHidInit];
         }
     }
@@ -176,10 +174,12 @@
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
         // U2Fヘルスチェックの後続テストを実行
-        // TODO: BLEトランスポートは後日実装
+        [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doRequestCommandAuthenticateUP];
+        }
+        // HIDの場合は、CTAPHID_INITから再実行
         if ([self transportType] == TRANSPORT_HID) {
-            // CTAPHID_INITから実行
-            [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
             [[self appHIDCommand] doRequestCtapHidInit];
         }
     }
@@ -197,8 +197,8 @@
         // 結果メッセージを表示
         [[self delegate] notifyMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
         // U2Fヘルスチェック終了
-        [self doResponseU2fHealthCheck:true message:@"Health check end"];
         [self setRegisterReponseData:nil];
+        [self commandDidProcess:true message:nil];
     }
 
     - (void)doRequestCtapHidPing {
@@ -219,6 +219,13 @@
     }
 
 #pragma mark - BLE Command/subcommand process
+
+    - (void)doRequestBleU2fHealthCheck {
+        // トランスポートをBLEに設定
+        [self setTransportType:TRANSPORT_BLE];
+        // U2F Registerから実行
+        [self doRequestCommandRegister];
+    }
 
     - (void)doRequestBlePingTest {
         // トランスポートをBLEに設定
@@ -274,6 +281,18 @@
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
         // 実行コマンドにより処理分岐
         switch (command) {
+            case COMMAND_TEST_REGISTER:
+                [self doResponseCommandRegister:response];
+                break;
+            case COMMAND_TEST_AUTH_CHECK:
+                [self doResponseCommandAuthenticateCheck:response];
+                break;
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+                [self doResponseCommandAuthenticateNoUP:response];
+                break;
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self doResponseCommandAuthenticateUP:response];
+                break;
             case COMMAND_TEST_BLE_PING:
                 [self doResponseCtapHidPing:response];
                 break;

@@ -88,6 +88,10 @@
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_CTAPHID_PING];
                 [[self u2fHcheckCommand] doRequestHidPingTest];
                 break;
+            case COMMAND_BLE_U2F_HCHECK:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_BLE_U2F_HEALTHCHECK];
+                [[self u2fHcheckCommand] doRequestBleU2fHealthCheck];
+                break;
             case COMMAND_TEST_BLE_PING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_TEST_BLE_PING];
                 [[self u2fHcheckCommand] doRequestBlePingTest];
