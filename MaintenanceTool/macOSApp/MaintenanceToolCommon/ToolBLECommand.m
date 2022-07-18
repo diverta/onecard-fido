@@ -575,17 +575,4 @@
         [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
     }
 
-#pragma mark - Interface for PinCodeParamWindow
-
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログをモーダルで表示
-        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
-                                                          parentWindow:parentWindow];
-    }
-
-    - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] bleCommandDidProcess:COMMAND_NONE result:true message:nil];
-    }
-
 @end

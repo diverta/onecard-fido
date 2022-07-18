@@ -31,8 +31,6 @@
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowDidClose;
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)pinCodeParamWindowDidClose;
 
 @end
 
