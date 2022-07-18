@@ -15,7 +15,6 @@
 
     - (void)setTransportParam:(TransportType)type
                toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid;
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (bool)checkStatusCode:(NSData *)responseMessage;
 
     // Request & Response process

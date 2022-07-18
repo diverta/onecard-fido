@@ -11,7 +11,6 @@
 #import "ToolBLEHelperDefine.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
-#import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolLogFile.h"
 
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
@@ -40,8 +39,6 @@
     @property (nonatomic) NSUInteger         bleRequestFrameNumber;
     // 呼び出し元のコマンドオブジェクト参照を保持
     @property(nonatomic, weak) id            toolCommandRef;
-    // 処理クラス
-    @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
 @end
 
 @implementation ToolBLECommand
@@ -55,10 +52,6 @@
         if (self) {
             [self setDelegate:delegate];
             [self setToolBLEHelper:[[ToolBLEHelper alloc] initWithDelegate:self]];
-            [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
-            [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
-                                                   toolBLECommand:self
-                                                   toolHIDCommand:nil];
         }
         return self;
     }
@@ -169,15 +162,6 @@
         return true;
     }
 
-    - (void)doCtap2HealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
-            [self displayStartMessage];
-        }
-        // まず最初にGetKeyAgreementサブコマンドを実行
-        [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-    }
-
 #pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
@@ -191,10 +175,6 @@
         switch (command) {
             case COMMAND_PAIRING:
                 [self doRequestCommandPairing];
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // CTAP2コマンドを生成して実行
-                [self doCtap2HealthCheck];
                 break;
             case COMMAND_BLE_GET_VERSION_INFO:
                 [self doRequestGetVersionInfo];
@@ -278,12 +258,6 @@
     - (void)toolCommandWillProcessBleResponse {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // ステータス（１バイト）をチェック後、レスポンス処理に移る
-                [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command]
-                                                    responseMessage:[self bleResponseData]];
-                break;
             case COMMAND_PAIRING:
                 // ステータスワード（２バイト）をチェック後、画面に制御を戻す
                 [self doResponseCommandPairing:[self bleResponseData]];

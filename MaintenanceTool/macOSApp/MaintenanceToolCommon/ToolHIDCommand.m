@@ -56,10 +56,6 @@
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
         [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
-        [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
-        [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
-                                               toolBLECommand:nil
-                                               toolHIDCommand:self];
         return self;
     }
 
@@ -100,8 +96,6 @@
         switch ([self command]) {
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
             case COMMAND_AUTH_RESET:
             case COMMAND_INSTALL_SKEY_CERT:
                 // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
@@ -269,15 +263,6 @@
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
-    - (void)doCtap2HealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
-            [self displayStartMessage];
-        }
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
     - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
         // ステータスコードを確認し、NGの場合は画面に制御を戻す
@@ -318,10 +303,6 @@
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_AUTH_RESET:
                 [self doClientPin];
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                [self doCtap2HealthCheck];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
