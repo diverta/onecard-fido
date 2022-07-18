@@ -91,7 +91,7 @@
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseU2fHealthCheck:false message:nil];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -109,7 +109,7 @@
     - (void)doResponseCommandRegister:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self doResponseU2fHealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // 中間メッセージを表示
@@ -144,7 +144,7 @@
     - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self doResponseU2fHealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // U2Fヘルスチェックの後続テストを実行
@@ -165,7 +165,7 @@
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self doResponseU2fHealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // 後続のU2F Authenticateを開始する前に、ボタンを押してもらうように促すメッセージを表示
@@ -191,7 +191,7 @@
     - (void)doResponseCommandAuthenticateUP:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self doResponseU2fHealthCheck:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // 結果メッセージを表示
