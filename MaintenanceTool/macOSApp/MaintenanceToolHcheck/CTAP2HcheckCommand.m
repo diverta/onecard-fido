@@ -135,10 +135,7 @@
             return;
         }
         // getPINTokenサブコマンドを実行
-        // TODO: BLEトランスポートは後日実装
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_PIN_TOKEN withCMD:HID_CMD_CTAPHID_CBOR withData:request];
-        }
+        [self doRequestCtap2CborCommand:COMMAND_CTAP2_GET_PIN_TOKEN withData:request];
     }
 
     - (void)doResponseCommandGetPinToken:(NSData *)message {
@@ -176,10 +173,7 @@
             return;
         }
         // authenticatorMakeCredentialコマンドを実行
-        // TODO: BLEトランスポートは後日実装
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:COMMAND_TEST_MAKE_CREDENTIAL withCMD:HID_CMD_CTAPHID_CBOR withData:request];
-        }
+        [self doRequestCtap2CborCommand:COMMAND_TEST_MAKE_CREDENTIAL withData:request];
     }
 
     - (void)doResponseCommandMakeCredential:(NSData *)message {
@@ -324,6 +318,12 @@
         switch (command) {
             case COMMAND_CTAP2_GET_KEY_AGREEMENT:
                 [self doResponseCommandGetKeyAgreement:response];
+                break;
+            case COMMAND_CTAP2_GET_PIN_TOKEN:
+                [self doResponseCommandGetPinToken:response];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                [self doResponseCommandMakeCredential:response];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
