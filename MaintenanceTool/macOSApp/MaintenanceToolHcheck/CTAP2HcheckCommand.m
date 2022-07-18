@@ -104,12 +104,7 @@
             return;
         }
         // getKeyAgreementサブコマンドを実行
-        if ([self transportType] == TRANSPORT_BLE) {
-            [[self appBLECommand] doRequestCommand:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_MSG withData:message];
-        }
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self appHIDCommand] doRequestCtap2Command:COMMAND_CTAP2_GET_KEY_AGREEMENT withCMD:HID_CMD_CTAPHID_CBOR withData:message];
-        }
+        [self doRequestCtap2CborCommand:COMMAND_CTAP2_GET_KEY_AGREEMENT withData:message];
     }
 
     - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
@@ -343,6 +338,16 @@
     }
 
 #pragma mark - Private functions
+
+    - (void)doRequestCtap2CborCommand:(Command)command withData:(NSData *)data {
+        // コマンドリクエストを、BLE／HIDトランスポート経由で実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self appBLECommand] doRequestCommand:command withCMD:HID_CMD_MSG withData:data];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self appHIDCommand] doRequestCtap2Command:command withCMD:HID_CMD_CTAPHID_CBOR withData:data];
+        }
+    }
 
     - (void)commandDidProcess:(bool)success message:(NSString *)message {
         // コマンド実行完了後の処理
