@@ -18,6 +18,7 @@
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
 		7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */; };
+		7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
@@ -139,6 +140,8 @@
 		7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
 		7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
 		7A175F1B287D654E0055F6B3 /* ToolBLEHelperDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelperDefine.h; sourceTree = "<group>"; };
+		7A199C0F28853F5100AF8B62 /* FIDOSettingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOSettingCommand.h; sourceTree = "<group>"; };
+		7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FIDOSettingCommand.m; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
@@ -345,6 +348,7 @@
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
+				7A199C0E28853ED300AF8B62 /* MaintenanceToolFIDO */,
 				7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
@@ -399,6 +403,15 @@
 				64ED9A871647439300F39EAE /* MaintenanceTool-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7A199C0E28853ED300AF8B62 /* MaintenanceToolFIDO */ = {
+			isa = PBXGroup;
+			children = (
+				7A199C0F28853F5100AF8B62 /* FIDOSettingCommand.h */,
+				7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */,
+			);
+			path = MaintenanceToolFIDO;
 			sourceTree = "<group>";
 		};
 		7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */ = {
@@ -779,6 +792,7 @@
 				7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */,
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
 				7A629F4524C00245007ABA89 /* ToolContext.m in Sources */,
+				7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */,
 				7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */,
 				7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */,
 				7AB3C9B7276B13E900DEDD0E /* ToolPGPCommand.m in Sources */,
