@@ -71,58 +71,6 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_PAIRING];
     }
 
-    - (void)doCommandEraseSkeyCert {
-        // 鍵・証明書削除
-        [[self delegate] disableUserInterface];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
-    }
-
-    - (void)doCommandInstallSkeyCert:(NSArray<NSString *> *)filePaths {
-        // 鍵・証明書インストール
-        [[self delegate] disableUserInterface];
-        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY_CERT
-                                      skeyFilePath:filePaths[0]
-                                      certFilePath:filePaths[1]];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY_CERT];
-    }
-
-    - (void)doCommandTestCtapHidPing:(NSWindow *)parentWindow {
-        // PINGテスト実行
-        [self doHIDCommand:COMMAND_TEST_CTAPHID_PING sender:nil parentWindow:parentWindow];
-    }
-
-    - (void)doCommandBleCtap2HealthCheck:(NSWindow *)parentWindow {
-        // BLE CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] pinCodeParamWindowWillOpen:self parentWindow:parentWindow];
-    }
-
-    - (void)doCommandBleU2fHealthCheck:(NSWindow *)parentWindow {
-        // BLE U2Fヘルスチェック実行
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_REGISTER];
-    }
-
-    - (void)doCommandTestBlePing {
-        // BLE PINGテスト実行
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
-    }
-
-    - (void)doCommandHidCtap2HealthCheck:(NSWindow *)parentWindow {
-        // 親画面の参照を保持
-        [self setParentWindow:parentWindow];
-        // HID CTAP2ヘルスチェック実行
-        [self doHIDCommand:COMMAND_TEST_MAKE_CREDENTIAL sender:nil parentWindow:parentWindow];
-    }
-
-    - (void)doCommandHidU2fHealthCheck:(NSWindow *)parentWindow {
-        // 親画面の参照を保持
-        [self setParentWindow:parentWindow];
-        // HID U2Fヘルスチェック実行
-        [self doHIDCommand:COMMAND_TEST_REGISTER sender:nil parentWindow:parentWindow];
-    }
-
     - (void)doCommandEraseBond:(NSWindow *)parentWindow {
         // ペアリング情報削除
         [self doHIDCommand:COMMAND_ERASE_BONDS sender:nil parentWindow:parentWindow];
@@ -159,18 +107,6 @@
         }
         // コマンドごとの後続処理
         switch (command) {
-            case COMMAND_TEST_CTAPHID_PING:
-                // PINGテスト実行
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // HID CTAP2ヘルスチェック実行
-                [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
-                break;
-            case COMMAND_TEST_REGISTER:
-                // HID U2Fヘルスチェック実行
-                [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
-                break;
             case COMMAND_ERASE_BONDS:
                 // ペアリング情報削除
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
@@ -262,39 +198,6 @@
         [self doHIDCommand:COMMAND_OPEN_WINDOW_PGPPARAM sender:sender parentWindow:parentWindow];
     }
 
-#pragma mark - Perform health check
-
-    - (void)performHealthCheckCommand:(Command)command {
-        // ヘルスチェック処理を実行
-        [self setCommand:command];
-        [self resumeHealthCheckCommand];
-    }
-
-    - (void)resumeHealthCheckCommand {
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
-                [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self parentWindow]];
-                break;
-            case COMMAND_TEST_REGISTER:
-                // HID U2Fヘルスチェック処理を実行
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_REGISTER];
-                break;
-            default:
-                break;
-        }
-    }
-
-    - (void)healthCheckCommandPromptDone {
-        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
-        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
-            [self commandDidProcess:COMMAND_NONE result:true message:nil];
-            return;
-        }
-        // ヘルスチェック処理を実行
-        [self resumeHealthCheckCommand];
-    }
-
 #pragma mark - Perform bootloader mode
 
     - (void)changeToBootloaderMode {
@@ -348,24 +251,12 @@
             case COMMAND_PAIRING:
                 [self setProcessNameOfCommand:PROCESS_NAME_PAIRING];
                 break;
-            case COMMAND_TEST_BLE_PING:
-                [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
-                break;
             case COMMAND_BLE_DFU:
                 [self setProcessNameOfCommand:PROCESS_NAME_BLE_DFU];
                 break;
             // HID関連
             case COMMAND_ERASE_BONDS:
                 [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
-                break;
-            case COMMAND_ERASE_SKEY_CERT:
-                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
-                break;
-            case COMMAND_INSTALL_SKEY_CERT:
-                [self setProcessNameOfCommand:PROCESS_NAME_INSTALL_SKEY_CERT];
-                break;
-            case COMMAND_TEST_CTAPHID_PING:
-                [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
@@ -386,26 +277,6 @@
                 [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
                 break;
             // BLE、HID共通
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                if (type == TRANSPORT_BLE) {
-                    [self setProcessNameOfCommand:PROCESS_NAME_BLE_CTAP2_HEALTHCHECK];
-                }
-                if (type == TRANSPORT_HID) {
-                    [self setProcessNameOfCommand:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
-                }
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                if (type == TRANSPORT_BLE) {
-                    [self setProcessNameOfCommand:PROCESS_NAME_BLE_U2F_HEALTHCHECK];
-                }
-                if (type == TRANSPORT_HID) {
-                    [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
-                }
-                break;
             default:
                 break;
         }

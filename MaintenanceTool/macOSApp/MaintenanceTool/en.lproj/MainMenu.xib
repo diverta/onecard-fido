@@ -331,63 +331,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Test" id="375">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Test" id="376">
-                        <items>
-                            <menuItem title="USB" id="377">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="USB" systemMenu="font" id="388">
-                                    <items>
-                                        <menuItem title="CTAP2ヘルスチェック実行" id="SwG-eq-nz8">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID1DidSelect:" target="494" id="lSA-3I-4EY"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="U2Fヘルスチェック実行" id="HJO-wE-AeZ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID2DidSelect:" target="494" id="11w-ct-9jU"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="PINGテスト実行" id="jXE-Zz-HlF">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="5NO-8f-dUF"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="BLE" id="496">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="BLE" id="497">
-                                    <items>
-                                        <menuItem title="CTAP2ヘルスチェック実行" id="juh-bR-WOr">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestBLE1DidSelect:" target="494" id="Bo5-LT-bDZ"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="U2Fヘルスチェック実行" id="500">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestBLE2DidSelect:" target="494" id="ibM-r0-Bqa"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="PINGテスト実行" id="rll-on-8pg">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestBLE3DidSelect:" target="494" id="ls6-Ez-q9g"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -622,8 +565,6 @@
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>
                 <outlet property="buttonUtility" destination="IdI-T9-vnq" id="hKn-3u-8pf"/>
-                <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
-                <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
