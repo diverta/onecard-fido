@@ -217,6 +217,13 @@
             [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
             return;
         }
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [self notifyCommandTerminated:[self commandName] message:MSG_OCCUR_UNKNOWN_ERROR success:false fromWindow:[self parentWindow]];
+            return;
+        }
         // 実行コマンドにより処理分岐
         switch (command) {
             case COMMAND_HID_GET_FLASH_STAT:

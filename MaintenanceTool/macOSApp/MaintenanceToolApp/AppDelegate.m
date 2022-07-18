@@ -29,9 +29,6 @@
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-
     // クラスの参照を保持
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
     @property (nonatomic) HcheckCommand     *hcheckCommand;
@@ -83,8 +80,6 @@
         [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
-        [[self menuItemTestUSB] setEnabled:enabled];
-        [[self menuItemTestBLE] setEnabled:enabled];
     }
 
     - (IBAction)buttonPairingDidPress:(id)sender {
@@ -125,36 +120,6 @@
     - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
         // ウィンドウをすべて閉じたらアプリケーションを終了
         return YES;
-    }
-
-    - (IBAction)menuItemTestHID1DidSelect:(id)sender {
-        // HID CTAP2ヘルスチェック実行
-        [[self toolAppCommand] doCommandHidCtap2HealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID2DidSelect:(id)sender {
-        // HID U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandHidU2fHealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID3DidSelect:(id)sender {
-        // PINGテスト実行
-        [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
-        // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
-        [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
-        // BLE U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandBleU2fHealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
-        // BLE PINGテスト実行
-        [[self toolAppCommand] doCommandTestBlePing];
     }
 
     - (IBAction)buttonHealthCheckDidPress:(id)sender {

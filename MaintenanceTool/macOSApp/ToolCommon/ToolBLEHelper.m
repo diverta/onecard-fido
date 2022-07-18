@@ -1,14 +1,14 @@
 //
 //  ToolBLEHelper.m
-//  MaintenanceTool
+//  ToolCommon
 //
-//  Created by Makoto Morita on 2021/10/07.
+//  Created by Makoto Morita on 2022/07/12.
 //
-#import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-#import "AppCommonMessage.h"
 #import "ToolBLEHelper.h"
+#import "ToolBLEHelperDefine.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate>
@@ -277,6 +277,19 @@
     - (void)subscribeCharacteristicDidTimeout {
         // 監視ステータス更新タイムアウトの旨をAppDelegateに通知
         [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT];
+    }
+
+    - (bool)helperIsSubscribingCharacteristic {
+        if ([self connectedService] == nil) {
+            return false;
+        }
+        if ([self connectedPeripheral] == nil) {
+            return false;
+        }
+        if ([self characteristicForNotify] == nil) {
+            return false;
+        }
+        return [[self characteristicForNotify] isNotifying];
     }
 
 #pragma mark - Write value for characteristics

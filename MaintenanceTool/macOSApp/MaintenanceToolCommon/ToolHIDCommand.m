@@ -11,10 +11,8 @@
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
-#import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
-#import "ToolU2FHealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -22,18 +20,13 @@
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
     @property (nonatomic) ToolHIDHelper        *toolHIDHelper;
-    @property (nonatomic) ToolInstallCommand   *toolInstallCommand;
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
     @property (nonatomic) ToolCTAP2HealthCheckCommand
                                                *toolCTAP2HealthCheckCommand;
-    @property (nonatomic) ToolU2FHealthCheckCommand
-                                               *toolU2FHealthCheckCommand;
 
     // コマンド、送受信データを保持
     @property (nonatomic) Command   command;
     @property (nonatomic) NSData   *processData;
-    @property (nonatomic) NSString *skeyFilePath;
-    @property (nonatomic) NSString *certFilePath;
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
@@ -57,26 +50,12 @@
             [self setDelegate:delegate];
         }
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
-        [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
         [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
         [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
                                                toolBLECommand:nil
                                                toolHIDCommand:self];
-        [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
-        [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_HID
-                                             toolBLECommand:nil
-                                             toolHIDCommand:self];
         return self;
-    }
-
-#pragma mark - Parameter set
-
-    - (void)setInstallParameter:(Command)command
-                   skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath {
-        // インストール対象の鍵・証明書ファイルパスを保持
-        [self setSkeyFilePath:skeyFilePath];
-        [self setCertFilePath:certFilePath];
     }
 
 #pragma mark - Constants for test
@@ -105,27 +84,12 @@
             [self commandDidProcess:[self command] result:false message:nil];
         }
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_PING:
-                // 受領したCIDを使用し、CTAPHID_PINGコマンドを実行
-                [self doRequestCtapHidPing:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
             case COMMAND_AUTH_RESET:
-            case COMMAND_INSTALL_SKEY_CERT:
                 // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
                 [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
                 [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                // 受領したCIDを使用し、U2FRegister／Authenticateコマンドを実行
-                [[self toolU2FHealthCheckCommand] setCID:[self getNewCIDFrom:message]];
-                [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
@@ -136,10 +100,6 @@
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
                 [self doRequestHidFirmwareReset:[self getNewCIDFrom:message]];
-                break;
-            case COMMAND_ERASE_SKEY_CERT:
-                [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_ERASE_BONDS:
                 [self doRequestEraseBonds:[self getNewCIDFrom:message]];
                 break;
@@ -148,26 +108,6 @@
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
-    }
-
-    - (void)doTestCtapHidPing {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestCtapHidPing:(NSData *)cid {
-        // 100バイトのランダムなPINGデータを生成
-        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
-        // メッセージを編集し、CTAPHID_PINGコマンドを実行
-        [self doRequest:[self pingData] CID:cid CMD:HID_CMD_CTAPHID_PING];
-    }
-
-    - (void)doResponseCtapHidPing:(NSData *)message {
-        // PINGレスポンスの内容をチェックし、画面に制御を戻す
-        bool result = [message isEqualToData:[self pingData]];
-        [self commandDidProcess:[self command] result:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetVersionInfoRequest {
@@ -236,55 +176,6 @@
         [self doRequest:message CID:cid CMD:HID_CMD_ERASE_BONDS];
     }
 
-    - (void)doEraseSkeyCert {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestEraseSkeyCert:(NSData *)cid {
-        // メッセージを編集し、コマンド 0xC0 を実行
-        NSData *message = [[self toolInstallCommand] generateEraseSkeyCertMessage:[self command]];
-        [self doRequest:message CID:cid CMD:HID_CMD_ERASE_SKEY_CERT];
-    }
-
-    - (void)doInstallSkeyCert {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestInstallSkeyCert:(NSData *)messageKeyAgreement CID:(NSData *)cid {
-        // 公開鍵を抽出
-        if ([[self toolInstallCommand] extractKeyAgreement:messageKeyAgreement] == false) {
-            // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
-            return;
-        }
-        // 鍵ファイル・証明書ファイルから、バイナリーデータを読込んで１本にマージ
-        NSData *skeyCertBinaryData = [[self toolInstallCommand]
-                                      extractSkeyCertBinaryData:[self command]
-                                      skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
-        if (skeyCertBinaryData == nil) {
-            // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
-            return;
-        }
-        // 共通鍵により鍵・証明書を暗号化し、コマンド実行のためのCBORメッセージを生成
-        NSData *skeyCertInstallCbor =
-            [[self toolInstallCommand] generateSkeyCertInstallCbor:skeyCertBinaryData];
-        if (skeyCertInstallCbor == nil) {
-            // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
-            return;
-        }
-
-        // コマンド 0xC1 を実行
-        [self doRequest:skeyCertInstallCbor CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
-    }
-
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
         [self commandDidProcess:[self command] result:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
@@ -308,36 +199,11 @@
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
-    - (void)doCtap2HealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
-            [self displayStartMessage];
-        }
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
     - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
         // ステータスコードを確認し、NGの場合は画面に制御を戻す
         [[self toolCTAP2HealthCheckCommand] setCID:cid];
         [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
-    }
-
-    - (void)doU2FHealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_REGISTER) {
-            [self displayStartMessage];
-        }
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doResponseU2FHidMsg:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        [[self toolU2FHealthCheckCommand] setCID:cid];
-        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
     }
 
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
@@ -351,9 +217,6 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_PING:
-                [self doTestCtapHidPing];
-                break;
             case COMMAND_HID_GET_VERSION_FOR_DFU:
                 [self doHidGetVersionInfoRequest];
                 break;
@@ -366,26 +229,10 @@
             case COMMAND_ERASE_BONDS:
                 [self doEraseBonds];
                 break;
-            case COMMAND_ERASE_SKEY_CERT:
-                [self doEraseSkeyCert];
-                break;
-            case COMMAND_INSTALL_SKEY_CERT:
-                [self doInstallSkeyCert];
-                break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_AUTH_RESET:
                 [self doClientPin];
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                [self doCtap2HealthCheck];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self doU2FHealthCheck];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
@@ -445,9 +292,6 @@
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // コマンドに応じ、以下の処理に分岐
         switch (cmd) {
-            case HID_CMD_CTAPHID_PING:
-                [self doResponseCtapHidPing:message];
-                break;
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
@@ -458,21 +302,19 @@
                 [self doResponseHidFirmwareReset:message CMD:cmd];
                 break;
             case HID_CMD_ERASE_BONDS:
-            case HID_CMD_ERASE_SKEY_CERT:
-            case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];
                 break;
             case HID_CMD_CTAPHID_CBOR:
                 [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
-                break;
-            case HID_CMD_MSG:
-                [self doResponseU2FHidMsg:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_TOOL_PREF_PARAM:
                 [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_UNKNOWN_ERROR:
                 [self hidHelperDidReceiveUnknownError:message CID:cid CMD:cmd];
+                break;
+            case HID_CMD_GET_VERSION_INFO:
+                [self doResponseHidGetVersionInfo:message];
                 break;
             default:
                 break;
@@ -567,19 +409,6 @@
     }
 
     - (void)setPinParamWindowDidClose {
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [self commandDidProcess:COMMAND_NONE result:true message:nil];
-    }
-
-#pragma mark - Interface for PinCodeParamWindow
-
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログをモーダルで表示
-        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
-                                            parentWindow:parentWindow];
-    }
-
-    - (void)pinCodeParamWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
         [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }

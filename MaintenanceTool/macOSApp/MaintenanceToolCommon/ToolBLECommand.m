@@ -8,10 +8,9 @@
 #import "AppCommonMessage.h"
 #import "FIDODefines.h"
 #import "ToolBLEHelper.h"
+#import "ToolBLEHelperDefine.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
-#import "ToolCTAP2HealthCheckCommand.h"
-#import "ToolU2FHealthCheckCommand.h"
 #import "ToolLogFile.h"
 
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
@@ -40,9 +39,6 @@
     @property (nonatomic) NSUInteger         bleRequestFrameNumber;
     // 呼び出し元のコマンドオブジェクト参照を保持
     @property(nonatomic, weak) id            toolCommandRef;
-    // 処理クラス
-    @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
-    @property (nonatomic) ToolU2FHealthCheckCommand   *toolU2FHealthCheckCommand;
 @end
 
 @implementation ToolBLECommand
@@ -56,14 +52,6 @@
         if (self) {
             [self setDelegate:delegate];
             [self setToolBLEHelper:[[ToolBLEHelper alloc] initWithDelegate:self]];
-            [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
-            [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
-                                                   toolBLECommand:self
-                                                   toolHIDCommand:nil];
-            [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
-            [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_BLE
-                                                 toolBLECommand:self
-                                                 toolHIDCommand:nil];
         }
         return self;
     }
@@ -82,23 +70,7 @@
 
     - (void)doResponseCommandPairing:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self commandDidProcess:[[self toolU2FHealthCheckCommand] checkStatusWordOfResponse:message]
-                        message:nil];
-    }
-
-    - (void)doRequestCommandPing {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // 100バイトのランダムなPINGデータを生成
-        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
-        // 分割送信のために64バイトごとのコマンド配列を作成する
-        [self doBLECommandRequestFrom:[self pingData] cmd:0x81];
-    }
-
-    - (void)doResponseCommandPing {
-        // PINGレスポンスの内容をチェックし、画面に制御を戻す
-        bool result = [[self bleResponseData] isEqualToData:[self pingData]];
-        [self commandDidProcess:result message:nil];
+        [self commandDidProcess:[self checkStatusWordOfResponse:message] message:nil];
     }
 
     - (void)doRequestGetVersionInfo {
@@ -190,24 +162,6 @@
         return true;
     }
 
-    - (void)doCtap2HealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
-            [self displayStartMessage];
-        }
-        // まず最初にGetKeyAgreementサブコマンドを実行
-        [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-    }
-
-    - (void)doU2FHealthCheck {
-        // コマンド開始メッセージを画面表示
-        if ([self command] == COMMAND_TEST_REGISTER) {
-            [self displayStartMessage];
-        }
-        // まず最初にU2F Registerコマンドを実行
-        [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
-    }
-
 #pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
@@ -219,20 +173,8 @@
         [self setToolCommandRef:commandRef];
         [self setCommand:command];
         switch (command) {
-            case COMMAND_TEST_REGISTER:
-                // U2Fコマンドを生成して実行
-                [self doU2FHealthCheck];
-                break;
             case COMMAND_PAIRING:
                 [self doRequestCommandPairing];
-                break;
-            case COMMAND_TEST_BLE_PING:
-                [self doRequestCommandPing];
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // CTAP2コマンドを生成して実行
-                [self doCtap2HealthCheck];
                 break;
             case COMMAND_BLE_GET_VERSION_INFO:
                 [self doRequestGetVersionInfo];
@@ -316,27 +258,9 @@
     - (void)toolCommandWillProcessBleResponse {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // ステータス（１バイト）をチェック後、レスポンス処理に移る
-                [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command]
-                                                    responseMessage:[self bleResponseData]];
-                break;
             case COMMAND_PAIRING:
                 // ステータスワード（２バイト）をチェック後、画面に制御を戻す
                 [self doResponseCommandPairing:[self bleResponseData]];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                // ステータスワード（２バイト）をチェック後、レスポンス処理に移る
-                [[self toolU2FHealthCheckCommand] doU2FResponse:[self command]
-                                                responseMessage:[self bleResponseData]];
-                break;
-            case COMMAND_TEST_BLE_PING:
-                // PINGレスポンスの内容をチェックし、画面に制御を戻す
-                [self doResponseCommandPing];
                 break;
             case COMMAND_BLE_GET_VERSION_INFO:
                 [self doResponseGetVersionInfo];
@@ -419,7 +343,7 @@
         }
     }
 
-    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason {
+    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
         // ログをファイル出力
         NSString *message = [self helperMessageOnFailConnection:reason];
         if (error) {
@@ -574,17 +498,54 @@
         [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
     }
 
-#pragma mark - Interface for PinCodeParamWindow
+    - (bool)checkStatusWordOfResponse:(NSData *)responseMessage {
+        // レスポンスデータが揃っていない場合はNG
+        if (responseMessage == nil || [responseMessage length] == 0) {
+            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            return false;
+        }
 
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログをモーダルで表示
-        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
-                                                          parentWindow:parentWindow];
+        // ステータスワード(レスポンスの末尾２バイト)を取得
+        NSUInteger statusWord = [self getStatusWordFrom:responseMessage];
+        
+        // 成功判定は、キーハンドルチェックの場合0x6985、それ以外は0x9000
+        if (statusWord == 0x6985) {
+            return true;
+        } else if (statusWord == 0x9000) {
+            return true;
+        }
+        
+        // invalid keyhandleエラーである場合はその旨を通知
+        if (statusWord == 0x6a80) {
+            [self displayMessage:MSG_OCCUR_KEYHANDLE_ERROR];
+            return false;
+        }
+        
+        // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+        if (statusWord == 0x9402) {
+            [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+            return false;
+        }
+        
+        // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
+        if (statusWord == 0x9601) {
+            [self displayMessage:MSG_OCCUR_PAIRINGMODE_ERROR];
+            return false;
+        }
+        
+        // ステータスワードチェックがNGの場合
+        [self displayMessage:MSG_OCCUR_UNKNOWN_BLE_ERROR];
+        return false;
     }
 
-    - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] bleCommandDidProcess:COMMAND_NONE result:true message:nil];
+    - (NSUInteger)getStatusWordFrom:(NSData *)bleResponseData {
+        // BLEレスポンスデータから、ステータスワードを取得する
+        NSUInteger length = [bleResponseData length];
+        NSData *responseStatusWord = [bleResponseData subdataWithRange:NSMakeRange(length-2, 2)];
+        unsigned char *statusWordChar = (unsigned char *)[responseStatusWord bytes];
+        NSUInteger statusWord = statusWordChar[0] * 256 + statusWordChar[1];
+        
+        return statusWord;
     }
 
 @end

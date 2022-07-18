@@ -8,6 +8,7 @@
 #import "AppDefine.h"
 #import "BLEDFUDefine.h"
 #import "ToolBLEHelper.h"
+#import "ToolBLEHelperDefine.h"
 #import "ToolBLESMPCommand.h"
 #import "ToolLogFile.h"
 
@@ -282,7 +283,7 @@
         }
     }
 
-    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason {
+    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
         // エラーログを出力
         NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
         if (error) {
