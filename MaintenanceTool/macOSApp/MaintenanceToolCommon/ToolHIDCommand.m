@@ -313,6 +313,9 @@
             case HID_CMD_UNKNOWN_ERROR:
                 [self hidHelperDidReceiveUnknownError:message CID:cid CMD:cmd];
                 break;
+            case HID_CMD_GET_VERSION_INFO:
+                [self doResponseHidGetVersionInfo:message];
+                break;
             default:
                 break;
         }
