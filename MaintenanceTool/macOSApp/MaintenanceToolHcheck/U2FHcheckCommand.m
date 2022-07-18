@@ -78,13 +78,13 @@
                 [self doRequestCommandRegister];
                 break;
             case COMMAND_TEST_AUTH_CHECK:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
+                [self doRequestCommandAuthenticateCheck];
                 break;
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
+                [self doRequestCommandAuthenticateNoUP];
                 break;
             case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
+                [self doRequestCommandAuthenticateUP];
                 break;
             case COMMAND_TEST_CTAPHID_PING:
                 [self doRequestCtapHidPing];
@@ -141,6 +141,10 @@
         }
     }
 
+    - (void)doRequestCommandAuthenticateCheck {
+        [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
+    }
+
     - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
         // U2Fヘルスチェックの後続テストを実行
         // TODO: BLEトランスポートは後日実装
@@ -149,6 +153,10 @@
             [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
             [[self appHIDCommand] doRequestCtapHidInit];
         }
+    }
+
+    - (void)doRequestCommandAuthenticateNoUP {
+        [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
     }
 
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
@@ -164,6 +172,10 @@
             [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
             [[self appHIDCommand] doRequestCtapHidInit];
         }
+    }
+
+    - (void)doRequestCommandAuthenticateUP {
+        [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
     }
 
     - (void)doResponseCommandAuthenticateUP:(NSData *)message {
