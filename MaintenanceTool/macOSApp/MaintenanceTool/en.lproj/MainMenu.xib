@@ -427,14 +427,14 @@
                             <action selector="buttonQuitDidPress:" target="494" id="1js-lz-oHm"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb" userLabel="buttonSetPinParam">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb" userLabel="buttonFIDOSetting">
                         <rect key="frame" x="223" y="309" width="149" height="32"/>
-                        <buttonCell key="cell" type="push" title="PINコード設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
+                        <buttonCell key="cell" type="push" title="FIDO設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonSetPinParamDidPress:" target="494" id="VpM-mb-yTS"/>
+                            <action selector="buttonFIDOSettingDidPress:" target="494" id="w2S-db-qR5"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4k9-eQ-arQ" userLabel="buttonSetPivParam">
@@ -557,11 +557,11 @@
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="buttonDFU" destination="1rF-YJ-d6M" id="jnA-lM-anu"/>
+                <outlet property="buttonFIDOSetting" destination="FlF-Id-KYb" id="UhI-6F-kYc"/>
                 <outlet property="buttonHealthCheck" destination="Y2n-rr-XfI" id="tcU-oD-8ka"/>
                 <outlet property="buttonPairing" destination="Mg1-7s-419" id="hT7-R3-AGo"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="buttonSetPgpParam" destination="wze-D2-dCv" id="mi6-yo-6Vn"/>
-                <outlet property="buttonSetPinParam" destination="FlF-Id-KYb" id="xxD-HA-LNp"/>
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>
                 <outlet property="buttonUtility" destination="IdI-T9-vnq" id="hKn-3u-8pf"/>
