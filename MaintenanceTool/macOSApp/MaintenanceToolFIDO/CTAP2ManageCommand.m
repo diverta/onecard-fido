@@ -6,9 +6,13 @@
 //
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
+#import "CBORDecoder.h"
+#import "CBOREncoder.h"
 #import "CTAP2ManageCommand.h"
 #import "FIDODefines.h"
 #import "FIDOSettingCommand.h"
+#import "ToolLogFile.h"
+#import "debug_log.h"
 
 @interface CTAP2ManageCommand () <AppHIDCommandDelegate>
 
@@ -16,10 +20,8 @@
     @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
-    // 実行対象コマンド／サブコマンドを保持
+    // 実行対象コマンドを保持
     @property (nonatomic) Command                       command;
-    @property (nonatomic) uint8_t                       cborCommand;
-    @property (nonatomic) uint8_t                       subCommand;
     // PINコード設定処理のパラメーターを保持
     @property (nonatomic) FIDOSettingCommandParameter  *commandParameter;
     // 使用トランスポートを保持
@@ -64,6 +66,10 @@
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
         switch ([self command]) {
+            case COMMAND_CLIENT_PIN_SET:
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self doRequestCommandGetKeyAgreement];
+                break;
             case COMMAND_AUTH_RESET:
                 [self doRequestCommandAuthReset];
                 break;
@@ -74,9 +80,57 @@
         }
     }
 
+    - (void)doRequestCommandGetKeyAgreement {
+        // メッセージを編集
+        NSData *message = [self generateGetKeyAgreementRequest];
+        if (message == nil) {
+            [self commandDidProcess:false message:nil];
+            return;
+        }
+        // getKeyAgreementサブコマンドを実行
+        [self doRequestCtap2CborCommand:COMMAND_CTAP2_GET_KEY_AGREEMENT withData:message];
+    }
+
+    - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
+        // CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT応答後の処理を実行
+        switch ([self command]) {
+            case COMMAND_CLIENT_PIN_SET:
+                // PIN新規設定処理を続行
+                [self doRequestClientPinSet:message];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                // PIN変更処理を続行
+                [self doRequestClientPinSet:message];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+    }
+
+    - (void)doRequestClientPinSet:(NSData *)keyAgreementResponse {
+        // メッセージを編集し、サブコマンドを実行
+        NSData *request = [self generateClientPinSetRequestWith:keyAgreementResponse];
+        if (request == nil) {
+            [self commandDidProcess:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequestCtap2CborCommand:[self command] withData:request];
+    }
+
+    - (void)doResponseClientPinSet:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:message] == false) {
+            [self commandDidProcess:false message:nil];
+            return;
+        }
+        // 画面に制御を戻す
+        [self commandDidProcess:true message:nil];
+    }
+
     - (void)doRequestCommandAuthReset {
-        // 実行するサブコマンドを退避
-        [self setCborCommand:CTAP2_CMD_RESET];
         // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
         [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
         [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
@@ -121,6 +175,13 @@
             case COMMAND_HID_CTAP2_INIT:
                 [self doResponseHIDCtap2Init];
                 break;
+            case COMMAND_CTAP2_GET_KEY_AGREEMENT:
+                [self doResponseCommandGetKeyAgreement:response];
+                break;
+            case COMMAND_CLIENT_PIN_SET:
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self doResponseClientPinSet:response];
+                break;
             case COMMAND_AUTH_RESET:
                 [self doResponseCommandAuthReset:response];
                 break;
@@ -146,6 +207,56 @@
             // 上位クラスに制御を戻す
             [self doResponseCtap2Management:success message:message];
         }
+    }
+
+    - (NSData *)generateGetKeyAgreementRequest {
+        // GetKeyAgreementリクエストを生成して戻す
+        uint8_t status_code = ctap2_cbor_encode_get_agreement_key();
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes() length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            return nil;
+        }
+    }
+
+    - (NSData *)generateClientPinSetRequestWith:(NSData *)message {
+        // レスポンスされたCBORを抽出
+        NSData *keyAgreementResponse = [self extractCBORBytesFrom:message];
+        // GetKeyAgreementレスポンスから公開鍵を抽出
+        uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
+        size_t   keyAgreementSize = [keyAgreementResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        
+        // 画面から入力されたPINコードを取得
+        NSString *pinNew = [[self commandParameter] pinNew];
+        NSString *pinOld = [[self commandParameter] pinOld];
+
+        // SetPINまたはChangePINリクエストを生成して戻す
+        char *pin_new = (char *)[pinNew UTF8String];
+        char *pin_old = NULL;
+        if ([pinOld length] != 0) {
+            pin_old = (char *)[pinOld UTF8String];
+        }
+        status_code = ctap2_cbor_encode_client_pin_set_or_change(
+                        ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y(),
+                        pin_new, pin_old);
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
+            return nil;
+        }
+    }
+
+    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
     }
 
     - (bool)checkStatusCode:(NSData *)responseMessage {
