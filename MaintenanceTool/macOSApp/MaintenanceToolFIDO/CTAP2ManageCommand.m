@@ -11,6 +11,7 @@
 #import "CTAP2ManageCommand.h"
 #import "FIDODefines.h"
 #import "FIDOSettingCommand.h"
+#import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
 
@@ -221,7 +222,7 @@
 
     - (NSData *)generateClientPinSetRequestWith:(NSData *)message {
         // レスポンスされたCBORを抽出
-        NSData *keyAgreementResponse = [self extractCBORBytesFrom:message];
+        NSData *keyAgreementResponse = [ToolCommon extractCBORBytesFrom:message];
         // GetKeyAgreementレスポンスから公開鍵を抽出
         uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
         size_t   keyAgreementSize = [keyAgreementResponse length];
@@ -250,13 +251,6 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
-    }
-
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
     }
 
     - (bool)checkStatusCode:(NSData *)responseMessage {

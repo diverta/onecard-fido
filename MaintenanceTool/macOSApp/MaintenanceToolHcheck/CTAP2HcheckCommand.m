@@ -127,7 +127,7 @@
         [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
         [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
         // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        NSData *cborBytes = [ToolCommon extractCBORBytesFrom:message];
         // メッセージを編集
         NSData *request = [self generateClientPinTokenGetRequestWith:cborBytes];
         if (request == nil) {
@@ -165,7 +165,7 @@
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
         // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        NSData *cborBytes = [ToolCommon extractCBORBytesFrom:message];
         // メッセージを編集
         NSData *request = [self generateMakeCredentialRequestWith:cborBytes];
         if (request == nil) {
@@ -183,7 +183,7 @@
             return;
         }
         // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        NSData *cborBytes = [ToolCommon extractCBORBytesFrom:message];
         // MakeCredentialレスポンスを解析して保持
         if ([self parseMakeCredentialResponseWith:cborBytes] == false) {
             [self commandDidProcess:false message:nil];
@@ -206,7 +206,7 @@
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
         // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        NSData *cborBytes = [ToolCommon extractCBORBytesFrom:message];
         // メッセージを編集し、GetAssertionコマンドを実行
         // ２回目のコマンド実行では、基板上のボタン押下によるユーザー所在確認が必要
         bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
@@ -233,7 +233,7 @@
             return;
         }
         // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        NSData *cborBytes = [ToolCommon extractCBORBytesFrom:message];
         // GetAssertionレスポンスを解析
         // ２回目のコマンド実行では、認証器から受領したHMAC暗号の内容検証が必要
         bool verifySaltNeeded = ([self getAssertionCount] == 2);
@@ -489,13 +489,6 @@
         } else {
             return true;
         }
-    }
-
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
     }
 
     - (bool)checkStatusCode:(NSData *)responseMessage {
