@@ -23,8 +23,6 @@
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
-    // 送信PINGデータを保持
-    @property (nonatomic) NSData   *pingData;
     // BLE接続に関する情報を保持
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
@@ -57,21 +55,6 @@
     }
 
 #pragma mark - Private methods
-
-    - (void)doRequestCommandPairing {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        
-        // 書き込むコマンド（APDU）を編集
-        unsigned char arr[] = {0x00, 0x45, 0x00, 0x00};
-        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        [self doBLECommandRequestFrom:commandData cmd:0x83];
-    }
-
-    - (void)doResponseCommandPairing:(NSData *)message {
-        // ステータスコードを確認し、画面に制御を戻す
-        [self commandDidProcess:[self checkStatusWordOfResponse:message] message:nil];
-    }
 
     - (void)doRequestGetVersionInfo {
         // BLE経由でバージョン情報を取得
@@ -173,9 +156,6 @@
         [self setToolCommandRef:commandRef];
         [self setCommand:command];
         switch (command) {
-            case COMMAND_PAIRING:
-                [self doRequestCommandPairing];
-                break;
             case COMMAND_BLE_GET_VERSION_INFO:
                 [self doRequestGetVersionInfo];
                 break;
@@ -258,10 +238,6 @@
     - (void)toolCommandWillProcessBleResponse {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_PAIRING:
-                // ステータスワード（２バイト）をチェック後、画面に制御を戻す
-                [self doResponseCommandPairing:[self bleResponseData]];
-                break;
             case COMMAND_BLE_GET_VERSION_INFO:
                 [self doResponseGetVersionInfo];
                 break;

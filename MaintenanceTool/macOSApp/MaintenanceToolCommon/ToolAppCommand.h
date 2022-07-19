@@ -17,8 +17,6 @@
     @property (nonatomic, weak) id<ToolAppCommandDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolAppCommandDelegate>)delegate;
-    - (void)doCommandPairing;
-    - (void)doCommandEraseBond:(NSWindow *)parentWindow;
     - (void)doCommandBLMode:(NSWindow *)parentWindow;
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
     - (bool)checkUSBHIDConnection;

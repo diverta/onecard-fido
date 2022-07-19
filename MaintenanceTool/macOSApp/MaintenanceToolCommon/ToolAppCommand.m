@@ -64,17 +64,6 @@
 
 #pragma mark - Public methods
 
-    - (void)doCommandPairing {
-        // ペアリング実行
-        [[self delegate] disableUserInterface];
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_PAIRING];
-    }
-
-    - (void)doCommandEraseBond:(NSWindow *)parentWindow {
-        // ペアリング情報削除
-        [self doHIDCommand:COMMAND_ERASE_BONDS sender:nil parentWindow:parentWindow];
-    }
-
     - (void)doCommandBLMode:(NSWindow *)parentWindow {
         // ブートローダーモード遷移
         [self doHIDCommand:COMMAND_HID_BOOTLOADER_MODE sender:nil parentWindow:parentWindow];
@@ -106,11 +95,6 @@
         }
         // コマンドごとの後続処理
         switch (command) {
-            case COMMAND_ERASE_BONDS:
-                // ペアリング情報削除
-                [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_BONDS informativeText:MSG_PROMPT_ERASE_BONDS
-                                                     withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:parentWindow];
-                break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 // ブートローダーモード遷移
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
@@ -141,10 +125,6 @@
             return;
         }
         switch ([self command]) {
-            case COMMAND_ERASE_BONDS:
-                // ペアリング情報削除
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
-                break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 // ブートローダーモード遷移
                 [self changeToBootloaderMode];
@@ -238,16 +218,10 @@
         [self setProcessNameOfCommand:nil];
         switch (command) {
             // BLE関連
-            case COMMAND_PAIRING:
-                [self setProcessNameOfCommand:PROCESS_NAME_PAIRING];
-                break;
             case COMMAND_BLE_DFU:
                 [self setProcessNameOfCommand:PROCESS_NAME_BLE_DFU];
                 break;
             // HID関連
-            case COMMAND_ERASE_BONDS:
-                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
-                break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
                 break;
