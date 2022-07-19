@@ -17,7 +17,7 @@
 #import "ToolLogFile.h"
 #import "debug_log.h"
 
-@interface CTAP2HcheckCommand () <AppHIDCommandDelegate>
+@interface CTAP2HcheckCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                  delegate;
