@@ -23,7 +23,6 @@
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
     - (bool)checkUSBHIDConnection;
 
-    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;

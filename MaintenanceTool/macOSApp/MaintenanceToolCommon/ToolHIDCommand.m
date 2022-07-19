@@ -11,8 +11,6 @@
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
-#import "ToolClientPINCommand.h"
-#import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -20,9 +18,6 @@
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
     @property (nonatomic) ToolHIDHelper        *toolHIDHelper;
-    @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
-    @property (nonatomic) ToolCTAP2HealthCheckCommand
-                                               *toolCTAP2HealthCheckCommand;
 
     // コマンド、送受信データを保持
     @property (nonatomic) Command   command;
@@ -50,11 +45,6 @@
             [self setDelegate:delegate];
         }
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
-        [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
-        [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
-        [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
-                                               toolBLECommand:nil
-                                               toolHIDCommand:self];
         return self;
     }
 
@@ -84,13 +74,6 @@
             [self commandDidProcess:[self command] result:false message:nil];
         }
         switch ([self command]) {
-            case COMMAND_CLIENT_PIN_SET:
-            case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_AUTH_RESET:
-                // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
-                [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
-                [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-                break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
                 [self doRequestToolPreferenceParameter:[self getNewCIDFrom:message]];
@@ -178,32 +161,25 @@
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self commandDidProcess:[self command] result:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
+        [self commandDidProcess:[self command] result:[self checkStatusCode:message] message:nil];
     }
 
-    - (void)doClientPin {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
-        // メッセージを編集し、GetKeyAgreementサブコマンドを実行
-        NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
-        if (request == nil) {
-            [self commandDidProcess:[self command] result:false message:nil];
-            return;
+    - (bool)checkStatusCode:(NSData *)responseMessage {
+        // レスポンスデータが揃っていない場合はNG
+        if (responseMessage == nil || [responseMessage length] == 0) {
+            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            return false;
         }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCtapHidCbor:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        [[self toolCTAP2HealthCheckCommand] setCID:cid];
-        [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
+        switch (requestBytes[0]) {
+            case CTAP1_ERR_SUCCESS:
+                return true;
+            default:
+                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+        return false;
     }
 
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
@@ -228,11 +204,6 @@
                 break;
             case COMMAND_ERASE_BONDS:
                 [self doEraseBonds];
-                break;
-            case COMMAND_CLIENT_PIN_SET:
-            case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_AUTH_RESET:
-                [self doClientPin];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
@@ -303,9 +274,6 @@
                 break;
             case HID_CMD_ERASE_BONDS:
                 [self doResponseMaintenanceCommand:message];
-                break;
-            case HID_CMD_CTAPHID_CBOR:
-                [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_TOOL_PREF_PARAM:
                 [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
@@ -398,19 +366,6 @@
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
         return [[self toolHIDHelper] isDeviceConnected];
-    }
-
-#pragma mark - Interface for SetPinParamWindow
-
-    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログをモーダルで表示
-        [[self toolClientPINCommand] setPinParamWindowWillOpen:sender
-                                                  parentWindow:parentWindow toolCommand:self];
-    }
-
-    - (void)setPinParamWindowDidClose {
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end
