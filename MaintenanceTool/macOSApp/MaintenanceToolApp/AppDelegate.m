@@ -11,7 +11,6 @@
 #import "HcheckCommand.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonFunc.h"
-#import "ToolContext.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
@@ -41,9 +40,6 @@
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        // 共有情報にアプリケーションの参照を設定
-        [[ToolContext instance] setAppDelegateRef:self];
-
         // アプリケーション開始ログを出力
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 

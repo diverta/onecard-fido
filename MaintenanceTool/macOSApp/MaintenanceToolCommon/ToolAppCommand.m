@@ -10,7 +10,6 @@
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolCommonMessage.h"
-#import "ToolContext.h"
 #import "ToolUSBDFUCommand.h"
 #import "ToolPGPCommand.h"
 #import "ToolHIDCommand.h"
@@ -117,10 +116,6 @@
                 [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_BOOT_LOADER_MODE informativeText:MSG_PROMPT_BOOT_LOADER_MODE
                                                      withObject:self forSelector:@selector(resumeHIDCommand) parentWindow:parentWindow];
                 break;
-            case COMMAND_OPEN_WINDOW_PINPARAM:
-                // PINコード設定画面を開く
-                [[self toolHIDCommand] setPinParamWindowWillOpen:sender parentWindow:parentWindow];
-                break;
             case COMMAND_OPEN_WINDOW_PIVPARAM:
                 // PIV機能設定画面を表示
                 [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:parentWindow];
@@ -160,11 +155,6 @@
     }
 
 #pragma mark - For opening other window
-
-    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // PINコード設定画面を開く
-        [self doHIDCommand:COMMAND_OPEN_WINDOW_PINPARAM sender:sender parentWindow:parentWindow];
-    }
 
     - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ファームウェア更新画面を開く
@@ -264,17 +254,8 @@
             case COMMAND_HID_FIRMWARE_RESET:
                 [self setProcessNameOfCommand:PROCESS_NAME_FIRMWARE_RESET];
                 break;
-            case COMMAND_CLIENT_PIN_SET:
-                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
-                break;
             case COMMAND_USB_DFU:
                 [self setProcessNameOfCommand:PROCESS_NAME_USB_DFU];
-                break;
-            case COMMAND_CLIENT_PIN_CHANGE:
-                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];
-                break;
-            case COMMAND_AUTH_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
                 break;
             // BLE、HID共通
             default:
