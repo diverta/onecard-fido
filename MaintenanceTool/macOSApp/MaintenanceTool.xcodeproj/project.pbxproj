@@ -347,6 +347,7 @@
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
+				7AACA24F288677870093340D /* MaintenanceToolBLE */,
 				7A199C0E28853ED300AF8B62 /* MaintenanceToolFIDO */,
 				7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
@@ -649,6 +650,13 @@
 				7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		7AACA24F288677870093340D /* MaintenanceToolBLE */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MaintenanceToolBLE;
 			sourceTree = "<group>";
 		};
 		7AB3C9B4276B139400DEDD0E /* OpenPGP */ = {
