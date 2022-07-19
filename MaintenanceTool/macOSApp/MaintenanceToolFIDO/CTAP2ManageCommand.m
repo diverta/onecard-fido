@@ -64,11 +64,37 @@
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
         switch ([self command]) {
+            case COMMAND_AUTH_RESET:
+                [self doRequestCommandAuthReset];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
                 [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
+    }
+
+    - (void)doRequestCommandAuthReset {
+        // 実行するサブコマンドを退避
+        [self setCborCommand:CTAP2_CMD_RESET];
+        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
+        // メッセージを編集し、authenticatorResetコマンドを実行
+        char commandByte[] = {CTAP2_CMD_RESET};
+        NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
+        [self doRequestCtap2CborCommand:COMMAND_AUTH_RESET withData:message];
+    }
+
+    - (void)doResponseCommandAuthReset:(NSData *)message {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:message] == false) {
+            [self commandDidProcess:false message:nil];
+            return;
+        }
+        // 画面に制御を戻す
+        [self commandDidProcess:true message:nil];
     }
 
     - (void)doResponseCtap2Management:(bool)result message:(NSString *)message {
@@ -95,6 +121,9 @@
             case COMMAND_HID_CTAP2_INIT:
                 [self doResponseHIDCtap2Init];
                 break;
+            case COMMAND_AUTH_RESET:
+                [self doResponseCommandAuthReset:response];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
                 [self doResponseCtap2Management:false message:MSG_OCCUR_UNKNOWN_ERROR];
@@ -117,6 +146,45 @@
             // 上位クラスに制御を戻す
             [self doResponseCtap2Management:success message:message];
         }
+    }
+
+    - (bool)checkStatusCode:(NSData *)responseMessage {
+        // レスポンスデータが揃っていない場合はNG
+        if (responseMessage == nil || [responseMessage length] == 0) {
+            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            return false;
+        }
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
+        switch (requestBytes[0]) {
+            case CTAP1_ERR_SUCCESS:
+                return true;
+            case CTAP2_ERR_PIN_INVALID:
+            case CTAP2_ERR_PIN_AUTH_INVALID:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
+                break;
+            case CTAP2_ERR_PIN_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_AUTH_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_NOT_SET:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+                break;
+            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
+                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+                break;
+            default:
+                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+        return false;
+    }
+
+    - (void)displayMessage:(NSString *)message {
+        // メッセージを画面表示
+        [[self delegate] notifyMessage:message];
     }
 
 @end
