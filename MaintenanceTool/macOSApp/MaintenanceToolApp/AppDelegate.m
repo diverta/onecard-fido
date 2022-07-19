@@ -7,6 +7,7 @@
 #import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
+#import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonFunc.h"
@@ -20,7 +21,7 @@
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
     @property (assign) IBOutlet NSButton    *buttonUnpairing;
-    @property (assign) IBOutlet NSButton    *buttonSetPinParam;
+    @property (assign) IBOutlet NSButton    *buttonFIDOSetting;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
@@ -30,9 +31,10 @@
     @property (assign) IBOutlet NSTextView  *textView;
 
     // クラスの参照を保持
-    @property (nonatomic) ToolAppCommand    *toolAppCommand;
-    @property (nonatomic) HcheckCommand     *hcheckCommand;
-    @property (nonatomic) UtilityCommand    *utilityCommand;
+    @property (nonatomic) ToolAppCommand        *toolAppCommand;
+    @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
+    @property (nonatomic) HcheckCommand         *hcheckCommand;
+    @property (nonatomic) UtilityCommand        *utilityCommand;
 
 @end
 
@@ -47,6 +49,7 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
         [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
 
@@ -73,7 +76,7 @@
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonPairing] setEnabled:enabled];
         [[self buttonUnpairing] setEnabled:enabled];
-        [[self buttonSetPinParam] setEnabled:enabled];
+        [[self buttonFIDOSetting] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
@@ -92,9 +95,9 @@
         [[self toolAppCommand] doCommandEraseBond:[self window]];
     }
 
-    - (IBAction)buttonSetPinParamDidPress:(id)sender {
-        // PINコード設定画面を開く
-        [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+    - (IBAction)buttonFIDOSettingDidPress:(id)sender {
+        // FIDO設定画面を開く
+        [[self fidoSettingCommand] fidoSettingWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
