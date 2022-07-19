@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/07/18.
 //
+#import "AppCommonMessage.h"
 #import "FIDOSettingCommand.h"
 #import "FIDOSettingWindow.h"
 
@@ -59,6 +60,27 @@
     - (void)fidoSettingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self fidoSettingWindow] close];
+        // 実行コマンドにより処理分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_CLIENT_PIN_SET:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_CLIENT_PIN_CHANGE];
+                break;
+            case COMMAND_AUTH_RESET:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_AUTH_RESET];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                break;
+        }
+    }
+
+    - (void)notifyCommandStartedWithCommandName:(NSString *)commandName {
+        // コマンド開始メッセージを画面表示
+        [self setCommandName:commandName];
+        [self notifyCommandStarted:[self commandName]];
     }
 
 @end
