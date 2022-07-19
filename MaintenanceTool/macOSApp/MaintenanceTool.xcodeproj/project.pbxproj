@@ -26,6 +26,7 @@
 		7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A23613528867A4200322E93 /* BLESettingWindow.xib */; };
 		7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
 		7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613B28867DA600322E93 /* BLESettingCommand.m */; };
+		7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613E28868E5F00322E93 /* BLEPairingCommand.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
@@ -156,6 +157,8 @@
 		7A23613728867A4200322E93 /* BLESettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLESettingWindow.m; sourceTree = "<group>"; };
 		7A23613A28867D8E00322E93 /* BLESettingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLESettingCommand.h; sourceTree = "<group>"; };
 		7A23613B28867DA600322E93 /* BLESettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLESettingCommand.m; sourceTree = "<group>"; };
+		7A23613D28868E4A00322E93 /* BLEPairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEPairingCommand.h; sourceTree = "<group>"; };
+		7A23613E28868E5F00322E93 /* BLEPairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEPairingCommand.m; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
@@ -663,6 +666,8 @@
 		7AACA24F288677870093340D /* MaintenanceToolBLE */ = {
 			isa = PBXGroup;
 			children = (
+				7A23613D28868E4A00322E93 /* BLEPairingCommand.h */,
+				7A23613E28868E5F00322E93 /* BLEPairingCommand.m */,
 				7A23613A28867D8E00322E93 /* BLESettingCommand.h */,
 				7A23613B28867DA600322E93 /* BLESettingCommand.m */,
 				7A23613628867A4200322E93 /* BLESettingWindow.h */,
@@ -850,6 +855,7 @@
 				7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */,
 				7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */,
 				7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */,
+				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
 				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,

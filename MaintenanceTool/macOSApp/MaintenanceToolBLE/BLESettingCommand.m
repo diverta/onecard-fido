@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2022/07/19.
 //
 #import "AppCommonMessage.h"
+#import "BLEPairingCommand.h"
 #import "BLESettingCommand.h"
 #import "BLESettingWindow.h"
 
@@ -12,12 +13,14 @@
 
 @end
 
-@interface BLESettingCommand ()
+@interface BLESettingCommand () <BLEPairingCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) BLESettingWindow             *bleSettingWindow;
+    // 下位クラスの参照を保持
+    @property (nonatomic) BLEPairingCommand            *blePairingCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) BLESettingCommandParameter   *commandParameter;
 
@@ -32,6 +35,7 @@
             [self setBleSettingWindow:[[BLESettingWindow alloc] initWithWindowNibName:@"BLESettingWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[BLESettingCommandParameter alloc] init]];
+            [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -51,8 +55,8 @@
     }
 
     - (bool)isUSBHIDConnected {
-        // TODO: USBポートに接続されていない場合はfalse
-        return true;
+        // USBポートに接続されていない場合はfalse
+        return [[self blePairingCommand] isUSBHIDConnected];
     }
 
 #pragma mark - Perform functions
@@ -64,13 +68,11 @@
         switch ([[self commandParameter] command]) {
             case COMMAND_PAIRING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_PAIRING];
-                // TODO: 仮の実装です。
-                [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
+                [[self blePairingCommand] doRequestBlePairing];
                 break;
             case COMMAND_ERASE_BONDS:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_ERASE_BONDS];
-                // TODO: 仮の実装です。
-                [self notifyCommandTerminated:[self commandName] message:nil success:false fromWindow:[self parentWindow]];
+                [[self blePairingCommand] doRequestHidEraseBonds];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -82,6 +84,18 @@
         // コマンド開始メッセージを画面表示
         [self setCommandName:commandName];
         [self notifyCommandStarted:[self commandName]];
+    }
+
+#pragma mark - Call back from BLEPairingCommand
+
+    - (void)doResponseBLEPairing:(bool)success message:(NSString *)message {
+        // メイン画面に制御を戻す
+        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        // メイン画面にテキストを表示
+        [[self delegate] notifyMessageToMainUI:message];
     }
 
 @end
