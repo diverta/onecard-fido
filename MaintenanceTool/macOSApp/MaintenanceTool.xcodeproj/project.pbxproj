@@ -23,6 +23,9 @@
 		7A199C16288545DB00AF8B62 /* FIDOSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C14288545DB00AF8B62 /* FIDOSettingWindow.m */; };
 		7A1BCD4B28862DA6007AEE12 /* FIDOPinSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */; };
 		7A1BCD4C28862DA6007AEE12 /* FIDOPinSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */; };
+		7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A23613528867A4200322E93 /* BLESettingWindow.xib */; };
+		7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
+		7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613B28867DA600322E93 /* BLESettingCommand.m */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A2D7DD527F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A2D7DD227F570A80036E35F /* appkg.PCA10059_02.0.3.5.zip */; };
@@ -148,6 +151,11 @@
 		7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOPinSettingWindow.m; sourceTree = "<group>"; };
 		7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOPinSettingWindow.xib; sourceTree = "<group>"; };
 		7A1BCD4D2886304E007AEE12 /* FIDOPinSettingWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOPinSettingWindow.h; sourceTree = "<group>"; };
+		7A23613528867A4200322E93 /* BLESettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLESettingWindow.xib; sourceTree = "<group>"; };
+		7A23613628867A4200322E93 /* BLESettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLESettingWindow.h; sourceTree = "<group>"; };
+		7A23613728867A4200322E93 /* BLESettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLESettingWindow.m; sourceTree = "<group>"; };
+		7A23613A28867D8E00322E93 /* BLESettingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLESettingCommand.h; sourceTree = "<group>"; };
+		7A23613B28867DA600322E93 /* BLESettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLESettingCommand.m; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
@@ -655,6 +663,11 @@
 		7AACA24F288677870093340D /* MaintenanceToolBLE */ = {
 			isa = PBXGroup;
 			children = (
+				7A23613A28867D8E00322E93 /* BLESettingCommand.h */,
+				7A23613B28867DA600322E93 /* BLESettingCommand.m */,
+				7A23613628867A4200322E93 /* BLESettingWindow.h */,
+				7A23613728867A4200322E93 /* BLESettingWindow.m */,
+				7A23613528867A4200322E93 /* BLESettingWindow.xib */,
 			);
 			path = MaintenanceToolBLE;
 			sourceTree = "<group>";
@@ -752,6 +765,7 @@
 				7A4D1188271E6A750095C29E /* DFUProcessingWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
+				7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
@@ -823,6 +837,7 @@
 				7A4D118D271E6A750095C29E /* DFUStartWindow.m in Sources */,
 				7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */,
 				7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */,
+				7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */,
 				7A4D118A271E6A750095C29E /* DFUProcessingWindow.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */,
@@ -841,6 +856,7 @@
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
 				7A3F4F2328755FB1003CFE67 /* ToolVersionWindow.m in Sources */,
 				7A4B02CC274B3C8B00BF44C2 /* ToolDFUWindow.m in Sources */,
+				7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
