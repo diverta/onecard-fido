@@ -29,6 +29,8 @@
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // ファームウェア更新処理を実行
         [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow];
     }
@@ -50,7 +52,7 @@
     - (void)notifyCommandTerminated:(Command)command success:(bool)success message:(NSString *)message {
         // メイン画面に制御を戻す
         [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
-}
+    }
 
     - (void)notifyMessage:(NSString *)message {
         [[self delegate] notifyMessageToMainUI:message];
