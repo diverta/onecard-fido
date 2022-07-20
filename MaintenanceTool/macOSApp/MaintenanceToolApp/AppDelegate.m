@@ -7,6 +7,8 @@
 #import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
+#import "BLESettingCommand.h"
+#import "DFUCommand.h"
 #import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
 #import "ToolAppCommand.h"
@@ -18,9 +20,9 @@
 @interface AppDelegate () <ToolAppCommandDelegate, AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
-    @property (assign) IBOutlet NSButton    *buttonPairing;
-    @property (assign) IBOutlet NSButton    *buttonUnpairing;
+    @property (assign) IBOutlet NSButton    *buttonBLESetting;
     @property (assign) IBOutlet NSButton    *buttonFIDOSetting;
+    @property (assign) IBOutlet NSButton    *buttonOATHSetting;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
@@ -31,6 +33,8 @@
 
     // クラスの参照を保持
     @property (nonatomic) ToolAppCommand        *toolAppCommand;
+    @property (nonatomic) BLESettingCommand     *bleSettingCommand;
+    @property (nonatomic) DFUCommand            *dfuCommand;
     @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
     @property (nonatomic) HcheckCommand         *hcheckCommand;
     @property (nonatomic) UtilityCommand        *utilityCommand;
@@ -45,6 +49,8 @@
 
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setBleSettingCommand:[[BLESettingCommand alloc] initWithDelegate:self]];
+        [self setDfuCommand:[[DFUCommand alloc] initWithDelegate:self]];
         [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
         [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
@@ -70,8 +76,7 @@
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [[self buttonPairing] setEnabled:enabled];
-        [[self buttonUnpairing] setEnabled:enabled];
+        [[self buttonBLESetting] setEnabled:enabled];
         [[self buttonFIDOSetting] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
@@ -81,19 +86,17 @@
         [[self buttonQuit] setEnabled:enabled];
     }
 
-    - (IBAction)buttonPairingDidPress:(id)sender {
-        // ペアリング実行
-        [[self toolAppCommand] doCommandPairing];
-    }
-
-    - (IBAction)buttonUnpairingDidPress:(id)sender {
-        // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond:[self window]];
+    - (IBAction)buttonBLESettingDidPress:(id)sender {
+        // BLE設定画面を開く
+        [[self bleSettingCommand] bleSettingWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonFIDOSettingDidPress:(id)sender {
         // FIDO設定画面を開く
         [[self fidoSettingCommand] fidoSettingWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonOATHSettingDidPress:(id)sender {
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
@@ -103,7 +106,7 @@
 
     - (IBAction)buttonDFUDidPress:(id)sender {
         // ファームウェア更新画面を表示
-        [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
+        [[self dfuCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {

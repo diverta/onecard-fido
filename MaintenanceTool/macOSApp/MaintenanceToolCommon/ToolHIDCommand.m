@@ -22,9 +22,6 @@
     // コマンド、送受信データを保持
     @property (nonatomic) Command   command;
     @property (nonatomic) NSData   *processData;
-
-    // 送信PINGデータを保持
-    @property(nonatomic) NSData    *pingData;
     // HID接続／切断の検知時、所定コマンドへの通知の要否を保持
     @property(nonatomic) bool       needNotifyDetectConnect;
     @property(nonatomic) bool       needNotifyDetectRemoval;
@@ -74,56 +71,12 @@
             [self commandDidProcess:[self command] result:false message:nil];
         }
         switch ([self command]) {
-            case COMMAND_TOOL_PREF_PARAM:
-            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
-                [self doRequestToolPreferenceParameter:[self getNewCIDFrom:message]];
-                break;
-            case COMMAND_HID_BOOTLOADER_MODE:
-                [self doRequestHidBootloaderMode:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_HID_FIRMWARE_RESET:
                 [self doRequestHidFirmwareReset:[self getNewCIDFrom:message]];
-            case COMMAND_ERASE_BONDS:
-                [self doRequestEraseBonds:[self getNewCIDFrom:message]];
-                break;
             default:
                 // 画面に制御を戻す
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
-        }
-    }
-
-    - (void)doHidGetVersionInfoRequest {
-        // コマンド 0xC3 を実行（メッセージはブランクとする）
-        NSData *message = [[NSData alloc] init];
-        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
-        [self doRequest:message CID:cid CMD:HID_CMD_GET_VERSION_INFO];
-    }
-
-    - (void)doResponseHidGetVersionInfo:(NSData *)message {
-        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
-        if ([self toolCommandRef]) {
-            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:0x00 response:message];
-            return;
-        }
-    }
-
-    - (void)doHidBootloaderMode {
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestHidBootloaderMode:(NSData *)cid {
-        // コマンド 0xC5 を実行（メッセージはブランクとする）
-        NSData *message = [[NSData alloc] init];
-        [self doRequest:message CID:cid CMD:HID_CMD_BOOTLOADER_MODE];
-    }
-
-    - (void)doResponseHidBootloaderMode:(NSData *)message CMD:(uint8_t)cmd {
-        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
-        if ([self toolCommandRef]) {
-            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
-            return;
         }
     }
 
@@ -146,42 +99,6 @@
         }
     }
 
-    - (void)doEraseBonds {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestEraseBonds:(NSData *)cid {
-        // メッセージを編集し、コマンド 0xC6 を実行
-        NSData *message = [[NSData alloc] init];
-        [self doRequest:message CID:cid CMD:HID_CMD_ERASE_BONDS];
-    }
-
-    - (void)doResponseMaintenanceCommand:(NSData *)message {
-        // ステータスコードを確認し、画面に制御を戻す
-        [self commandDidProcess:[self command] result:[self checkStatusCode:message] message:nil];
-    }
-
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスデータが揃っていない場合はNG
-        if (responseMessage == nil || [responseMessage length] == 0) {
-            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
-            return false;
-        }
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        switch (requestBytes[0]) {
-            case CTAP1_ERR_SUCCESS:
-                return true;
-            default:
-                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
-        }
-        return false;
-    }
-
     - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
         // HID接続／切断検知時、所定のコマンドに通知しないようにする
         [self setNeedNotifyDetectConnect:false];
@@ -193,21 +110,8 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_HID_GET_VERSION_FOR_DFU:
-                [self doHidGetVersionInfoRequest];
-                break;
-            case COMMAND_HID_BOOTLOADER_MODE:
-                [self doHidBootloaderMode];
-                break;
             case COMMAND_HID_FIRMWARE_RESET:
                 [self doHidFirmwareReset];
-                break;
-            case COMMAND_ERASE_BONDS:
-                [self doEraseBonds];
-                break;
-            case COMMAND_TOOL_PREF_PARAM:
-            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
-                [self doToolPreferenceParameter];
                 break;
             default:
                 // エラーメッセージを表示
@@ -240,24 +144,6 @@
         [self setToolCommandRef:commandRef];
     }
 
-#pragma mark - For tool preference parameters
-
-    - (void)doToolPreferenceParameter {
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
-    - (void)doRequestToolPreferenceParameter:(NSData *)cid {
-        // メッセージを編集し、コマンドを実行
-        [self doRequest:[self processData] CID:cid CMD:HID_CMD_TOOL_PREF_PARAM];
-    }
-
-    - (void)doResponseToolPreferenceParameter:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // 上位コマンドクラスに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
-        [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
-    }
-
 #pragma mark - Call back from ToolHIDHelper
 
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
@@ -266,23 +152,11 @@
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
-            case HID_CMD_BOOTLOADER_MODE:
-                [self doResponseHidBootloaderMode:message CMD:cmd];
-                break;
             case HID_CMD_FIRMWARE_RESET:
                 [self doResponseHidFirmwareReset:message CMD:cmd];
                 break;
-            case HID_CMD_ERASE_BONDS:
-                [self doResponseMaintenanceCommand:message];
-                break;
-            case HID_CMD_TOOL_PREF_PARAM:
-                [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
-                break;
             case HID_CMD_UNKNOWN_ERROR:
                 [self hidHelperDidReceiveUnknownError:message CID:cid CMD:cmd];
-                break;
-            case HID_CMD_GET_VERSION_INFO:
-                [self doResponseHidGetVersionInfo:message];
                 break;
             default:
                 break;
@@ -292,10 +166,6 @@
     - (void)hidHelperDidReceiveUnknownError:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_HID_BOOTLOADER_MODE:
-                // DFU処理クラスに制御を戻す
-                [self doResponseHidBootloaderMode:message CMD:cmd];
-                break;
             case COMMAND_HID_FIRMWARE_RESET:
                 // DFU処理クラスに制御を戻す
                 [self doResponseHidFirmwareReset:message CMD:cmd];

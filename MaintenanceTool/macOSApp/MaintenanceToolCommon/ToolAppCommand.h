@@ -17,17 +17,10 @@
     @property (nonatomic, weak) id<ToolAppCommandDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolAppCommandDelegate>)delegate;
-    - (void)doCommandPairing;
-    - (void)doCommandEraseBond:(NSWindow *)parentWindow;
-    - (void)doCommandBLMode:(NSWindow *)parentWindow;
     - (void)doCommandFirmwareResetForCommandRef:(id)ref;
     - (bool)checkUSBHIDConnection;
 
-    - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pivParamWindowWillOpenWithParent:(NSWindow *)parent;
-    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type;
