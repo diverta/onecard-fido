@@ -8,6 +8,7 @@
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
 #import "BLESettingCommand.h"
+#import "DFUCommand.h"
 #import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
 #import "ToolAppCommand.h"
@@ -33,6 +34,7 @@
     // クラスの参照を保持
     @property (nonatomic) ToolAppCommand        *toolAppCommand;
     @property (nonatomic) BLESettingCommand     *bleSettingCommand;
+    @property (nonatomic) DFUCommand            *dfuCommand;
     @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
     @property (nonatomic) HcheckCommand         *hcheckCommand;
     @property (nonatomic) UtilityCommand        *utilityCommand;
@@ -48,6 +50,7 @@
         // コマンドクラスの初期化
         [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
         [self setBleSettingCommand:[[BLESettingCommand alloc] initWithDelegate:self]];
+        [self setDfuCommand:[[DFUCommand alloc] initWithDelegate:self]];
         [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
         [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
@@ -103,7 +106,7 @@
 
     - (IBAction)buttonDFUDidPress:(id)sender {
         // ファームウェア更新画面を表示
-        [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
+        [[self dfuCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
