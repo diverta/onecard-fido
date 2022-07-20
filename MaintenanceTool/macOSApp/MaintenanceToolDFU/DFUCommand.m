@@ -51,7 +51,8 @@
 
     - (void)notifyCommandTerminated:(Command)command success:(bool)success message:(NSString *)message {
         // メイン画面に制御を戻す
-        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
+        NSString *commandName = (command == COMMAND_NONE) ? nil : [self commandName];
+        [self notifyCommandTerminated:commandName message:message success:success fromWindow:[self parentWindow]];
     }
 
     - (void)notifyMessage:(NSString *)message {
