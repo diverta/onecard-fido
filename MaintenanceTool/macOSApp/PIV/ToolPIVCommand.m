@@ -168,14 +168,11 @@
 
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示（親画面＝メイン画面）
-        if ([[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
-            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
-        }
+        [[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent];
     }
 
     - (void)commandDidClosePreferenceWindow {
         // メイン画面に制御を戻す
-        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods

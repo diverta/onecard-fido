@@ -13,6 +13,8 @@
 #import "HcheckCommand.h"
 #import "ToolAppCommand.h"
 #import "ToolCommonFunc.h"
+#import "ToolPGPCommand.h"
+#import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
@@ -32,12 +34,13 @@
     @property (assign) IBOutlet NSTextView  *textView;
 
     // クラスの参照を保持
-    @property (nonatomic) ToolAppCommand        *toolAppCommand;
     @property (nonatomic) BLESettingCommand     *bleSettingCommand;
     @property (nonatomic) DFUCommand            *dfuCommand;
     @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
     @property (nonatomic) HcheckCommand         *hcheckCommand;
     @property (nonatomic) UtilityCommand        *utilityCommand;
+    @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
+    @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
 
 @end
 
@@ -48,12 +51,13 @@
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 
         // コマンドクラスの初期化
-        [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
         [self setBleSettingCommand:[[BLESettingCommand alloc] initWithDelegate:self]];
         [self setDfuCommand:[[DFUCommand alloc] initWithDelegate:self]];
         [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
         [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
+        [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
+        [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -101,7 +105,7 @@
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        [[self toolAppCommand] pivParamWindowWillOpenWithParent:[self window]];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
@@ -111,7 +115,7 @@
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
         // OpenPGP機能設定画面を表示
-        [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
+        [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
