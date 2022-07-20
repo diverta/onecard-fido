@@ -7,7 +7,6 @@
 #import "AppCommonMessage.h"
 #import "FIDODefines.h"
 #import "ToolAppCommand.h"
-#import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolUSBDFUCommand.h"
@@ -18,12 +17,11 @@
 #import "ToolPopupWindow.h"
 #import "ToolDFUCommand.h"
 
-@interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLECommandDelegate>
+@interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLEDFUCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow              *parentWindow;
     // 下位クラスの参照を保持
-    @property (nonatomic) ToolBLECommand        *toolBLECommand;
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
     @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
@@ -49,7 +47,6 @@
             [self setDelegate:delegate];
             // コマンドクラスの初期化
             [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
-            [self setToolBLECommand:[[ToolBLECommand alloc] initWithDelegate:self]];
             // PIV機能の初期設定
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
@@ -160,7 +157,7 @@
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ファームウェア更新処理を実行
-        [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];
+        [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow];
     }
 
     - (void)pgpParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -244,30 +241,6 @@
         [self setProcessNameOfCommand:nil];
     }
 
-
-#pragma mark - Call back from ToolBLECommand
-
-    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref result:(bool)result response:(NSData *)response {
-        // 下位のコマンドクラスにデータと制御を引き渡す
-        if ([ref isMemberOfClass:[ToolBLEDFUCommand class]]) {
-            ToolBLEDFUCommand *toolBLEDFUCommand = (ToolBLEDFUCommand *)ref;
-            [toolBLEDFUCommand toolBLECommandDidProcess:command success:result response:response];
-        }
-    }
-
-    - (void)bleCommandDidProcess:(Command)command
-                          result:(bool)result message:(NSString *)message {
-        [self commandDidProcess:command result:result message:message];
-    }
-
-    - (void)bleCommandStartedProcess:(Command)command {
-        [self commandStartedProcess:command type:TRANSPORT_BLE];
-    }
-
-    - (void)notifyToolCommandMessage:(NSString *)message {
-        [[self delegate] notifyAppCommandMessage:message];
-    }
-
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response {
@@ -313,6 +286,24 @@
         if (command == COMMAND_USB_DFU) {
             [[self toolUSBDFUCommand] hidCommandDidDetectRemoval:command forCommandRef:ref];
         }
+    }
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        [[self delegate] notifyAppCommandMessage:message];
+    }
+
+#pragma mark - Call back from ToolBLEDFUCommand
+
+    - (void)notifyCommandStarted:(Command)command {
+        [self commandStartedProcess:command type:TRANSPORT_BLE];
+    }
+
+    - (void)notifyCommandTerminated:(Command)command success:(bool)success message:(NSString *)message {
+        [self commandDidProcess:command result:success message:message];
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        [[self delegate] notifyAppCommandMessage:message];
     }
 
 @end
