@@ -13,6 +13,7 @@
 		64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
 		64ED9A901647439300F39EAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
+		7A02D13228890C860090213C /* FirmwareResetCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A02D13128890C860090213C /* FirmwareResetCommand.m */; };
 		7A03A1D9287E87AE00BADBB7 /* U2FHcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
@@ -63,7 +64,6 @@
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
-		7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */; };
 		7AAD79A72818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7AAD79A62818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
@@ -94,7 +94,6 @@
 		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE533BE28765D1D00770A75 /* AppCommand.m */; };
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
-		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
 		7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042B8287CF868009518C3 /* HcheckWindow.xib */; };
 		7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
@@ -121,6 +120,8 @@
 		64ED9A8C1647439300F39EAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		64ED9A8F1647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		64ED9A9C164752C800F39EAE /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		7A02D13028890C6B0090213C /* FirmwareResetCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareResetCommand.h; sourceTree = "<group>"; };
+		7A02D13128890C860090213C /* FirmwareResetCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirmwareResetCommand.m; sourceTree = "<group>"; };
 		7A03A1D7287E879A00BADBB7 /* U2FHcheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = U2FHcheckCommand.h; sourceTree = "<group>"; };
 		7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = U2FHcheckCommand.m; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -206,8 +207,6 @@
 		7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommonFunc.m; sourceTree = "<group>"; };
 		7A92D0E528754F3C0094D2DB /* ToolCommonFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonFunc.h; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
-		7AAD21E52717FD3B00C5CCA4 /* ToolAppCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolAppCommand.h; sourceTree = "<group>"; };
-		7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolAppCommand.m; sourceTree = "<group>"; };
 		7AAD79A62818E6A300F47EE8 /* app_update.PCA10095_01.0.4.6.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095_01.0.4.6.bin; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
@@ -262,8 +261,6 @@
 		7AE533BE28765D1D00770A75 /* AppCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppCommand.m; sourceTree = "<group>"; };
 		7AE6031B2875218100DA5BF3 /* ToolLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolLogFile.m; sourceTree = "<group>"; };
 		7AE6031D287521A800DA5BF3 /* ToolLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolLogFile.h; sourceTree = "<group>"; };
-		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
-		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
 		7AF042B8287CF868009518C3 /* HcheckWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckWindow.xib; sourceTree = "<group>"; };
 		7AF042BA287CFC69009518C3 /* HcheckWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckWindow.m; sourceTree = "<group>"; };
@@ -309,21 +306,21 @@
 			children = (
 				7ACBD8CB2566424D00722984 /* Entitlements.plist */,
 				7A712EBA2570BC9400E45E2D /* tool_crypto */,
-				7A75A6EC25677FDF003AF1A6 /* CCID */,
-				7A6687902575CCA80054F0DE /* PIV */,
-				7AB3C9B4276B139400DEDD0E /* OpenPGP */,
-				7A822075281A80D400FDBFA8 /* OATH */,
-				7AA7464223C2C400001938A7 /* Resources */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
+				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7AB4B156271E6E340099D51B /* ClientPIN */,
-				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
 				7AACA24F288677870093340D /* MaintenanceToolBLE */,
+				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				7ACABD832887CF9000756123 /* MaintenanceToolDFU */,
 				7A199C0E28853ED300AF8B62 /* MaintenanceToolFIDO */,
 				7A830EB92876C69B00DD7BE9 /* MaintenanceToolHcheck */,
 				7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */,
+				7A822075281A80D400FDBFA8 /* OATH */,
+				7AB3C9B4276B139400DEDD0E /* OpenPGP */,
+				7A6687902575CCA80054F0DE /* PIV */,
+				7AA7464223C2C400001938A7 /* Resources */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				64ED9A781647439300F39EAE /* Frameworks */,
 				7ACA8D792251B55100B132E2 /* MaintenanceTool.app */,
@@ -549,12 +546,10 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
+				7A02D13028890C6B0090213C /* FirmwareResetCommand.h */,
+				7A02D13128890C860090213C /* FirmwareResetCommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
 				7A92740A2105AB960062FA89 /* ToolCommon.m */,
-				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
-				7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */,
-				7AAD21E52717FD3B00C5CCA4 /* ToolAppCommand.h */,
-				7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */,
 				7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */,
 				7A667222258ADF6300CAF308 /* ToolInfoWindow.h */,
 				7A667220258ADF5000CAF308 /* ToolInfoWindow.m */,
@@ -757,7 +752,6 @@
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
-				7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */,
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
@@ -767,9 +761,9 @@
 				7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */,
 				7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */,
 				7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */,
-				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */,
 				7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */,
+				7A02D13228890C860090213C /* FirmwareResetCommand.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */,
 				7A199C16288545DB00AF8B62 /* FIDOSettingWindow.m in Sources */,
@@ -920,7 +914,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -947,7 +941,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";

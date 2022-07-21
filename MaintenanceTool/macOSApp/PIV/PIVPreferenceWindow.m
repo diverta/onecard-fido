@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "PIVPreferenceWindow.h"
+#import "ToolCommon.h"
 #import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
 #import "ToolInfoWindow.h"
