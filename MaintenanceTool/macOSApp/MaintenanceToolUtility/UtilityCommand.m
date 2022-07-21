@@ -9,6 +9,7 @@
 #import "FIDODefines.h"
 #import "ToolCommon.h"
 #import "ToolCommonFunc.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolVersionWindow.h"
 #import "UtilityCommand.h"
@@ -206,9 +207,15 @@
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
+        // USB接続検知メッセージを表示／出力（このコマンドで代表して実行）
+        [[self delegate] notifyMessageToMainUI:MSG_HID_CONNECTED];
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
     }
 
     - (void)didDetectRemoval {
+        // USB切断検知メッセージを表示／出力（このコマンドで代表して実行）
+        [[self delegate] notifyMessageToMainUI:MSG_HID_REMOVED];
+        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
     }
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
