@@ -36,6 +36,9 @@ FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリン�
 - <b>[PINコードの設定手順](SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。
 
+- <b>[FIDO認証情報の消去手順](AUTHRESET.md)</b><br>
+FIDO認証器から、FIDO認証情報を消去する手順について掲載しています。
+
 - <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
@@ -45,12 +48,8 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[ファームウェア更新手順（USB）](UPDATEFIRMWARE.md)</b><br>
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
-
 - <b>[ファームウェア更新手順（BLE）](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b><br>
-管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。<br>
-対象ファームウェアのバージョンは「0.4.0」以降となっています。
+管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。
