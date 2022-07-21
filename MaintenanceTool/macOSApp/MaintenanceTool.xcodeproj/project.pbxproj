@@ -13,6 +13,7 @@
 		64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
 		64ED9A901647439300F39EAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
+		7A02D13228890C860090213C /* FirmwareResetCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A02D13128890C860090213C /* FirmwareResetCommand.m */; };
 		7A03A1D9287E87AE00BADBB7 /* U2FHcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
@@ -121,6 +122,8 @@
 		64ED9A8C1647439300F39EAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		64ED9A8F1647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		64ED9A9C164752C800F39EAE /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		7A02D13028890C6B0090213C /* FirmwareResetCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareResetCommand.h; sourceTree = "<group>"; };
+		7A02D13128890C860090213C /* FirmwareResetCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirmwareResetCommand.m; sourceTree = "<group>"; };
 		7A03A1D7287E879A00BADBB7 /* U2FHcheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = U2FHcheckCommand.h; sourceTree = "<group>"; };
 		7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = U2FHcheckCommand.m; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -549,6 +552,8 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
+				7A02D13028890C6B0090213C /* FirmwareResetCommand.h */,
+				7A02D13128890C860090213C /* FirmwareResetCommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
 				7A92740A2105AB960062FA89 /* ToolCommon.m */,
 				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
@@ -770,6 +775,7 @@
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */,
 				7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */,
+				7A02D13228890C860090213C /* FirmwareResetCommand.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */,
 				7A199C16288545DB00AF8B62 /* FIDOSettingWindow.m in Sources */,
