@@ -29,7 +29,6 @@
     - (void)commandDidClosePreferenceWindow;
 
     - (void)commandWillPerformPIVProcess:(Command)command withParameter:(ToolPIVParameter *)parameter;
-    - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPIVSettingDescriptionString;
     - (bool)checkUSBHIDConnection;

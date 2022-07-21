@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "FirmwareResetCommand.h"
 #import "PGPPreferenceWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolPGPCcidCommand.h"
@@ -53,10 +54,12 @@ typedef enum : NSInteger {
 
 @end
 
-@interface ToolPGPCommand () <ToolPGPCcidCommandDelegate>
+@interface ToolPGPCommand () <ToolPGPCcidCommandDelegate, FirmwareResetCommandDelegate>
 
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolPGPCcidCommand           *toolPGPCcidCommand;
+    // ファームウェア再起動コマンドの参照を保持
+    @property (nonatomic) FirmwareResetCommand         *firmwareResetCommand;
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
     // 画面の参照を保持
@@ -101,6 +104,8 @@ typedef enum : NSInteger {
             [self clearCommandParameters];
             // ToolPGPCcidCommandのインスタンスを生成
             [self setToolPGPCcidCommand:[[ToolPGPCcidCommand alloc] initWithDelegate:self]];
+            // ファームウェア再起動コマンドのインスタンスを生成
+            [self setFirmwareResetCommand:[[FirmwareResetCommand alloc] initWithDelegate:self]];
             // OpenPGP設定画面のインスタンスを生成
             [self setPgpPreferenceWindow:[[PGPPreferenceWindow alloc] initWithWindowNibName:@"PGPPreferenceWindow"]];
         }
@@ -139,7 +144,12 @@ typedef enum : NSInteger {
 
 #pragma mark - For reset firmware
 
-    - (void)commandDidResetFirmware:(bool)success {
+    - (void)commandWillResetFirmware {
+        // HIDインターフェース経由でファームウェアをリセット
+        [[self firmwareResetCommand] doRequestFirmwareReset];
+    }
+
+    - (void)FirmwareResetDidCompleted:(bool)success message:(NSString *)message {
         if (success == false) {
             [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
         }
@@ -168,7 +178,7 @@ typedef enum : NSInteger {
         switch (command) {
             case COMMAND_HID_FIRMWARE_RESET:
                 // HIDインターフェース経由でファームウェアをリセット
-                [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+                [self commandWillResetFirmware];
                 break;
             case COMMAND_OPENPGP_INSTALL_KEYS:
                 // 事前に、管理用PIN番号の検証を試行
@@ -1027,7 +1037,7 @@ typedef enum : NSInteger {
 
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
-        return [[self toolAppCommand] checkUSBHIDConnection];
+        return [[self firmwareResetCommand] isUSBHIDConnected];
     }
 
 @end
