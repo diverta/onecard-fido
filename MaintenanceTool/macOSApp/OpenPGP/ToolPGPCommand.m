@@ -8,7 +8,6 @@
 #import "AppDefine.h"
 #import "FirmwareResetCommand.h"
 #import "PGPPreferenceWindow.h"
-#import "ToolAppCommand.h"
 #import "ToolPGPCcidCommand.h"
 #import "ToolPGPCommand.h"
 #import "ToolPGPCommon.h"
@@ -60,8 +59,6 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolPGPCcidCommand           *toolPGPCcidCommand;
     // ファームウェア再起動コマンドの参照を保持
     @property (nonatomic) FirmwareResetCommand         *firmwareResetCommand;
-    // 上位クラスの参照を保持
-    @property (nonatomic, weak) ToolAppCommand         *toolAppCommand;
     // 画面の参照を保持
     @property (nonatomic) PGPPreferenceWindow          *pgpPreferenceWindow;
     // コマンド種別を保持
@@ -100,7 +97,6 @@ typedef enum : NSInteger {
         self = [super init];
         if (self) {
             // 上位クラスの参照を保持
-            [self setToolAppCommand:(ToolAppCommand *)delegate];
             [self clearCommandParameters];
             // ToolPGPCcidCommandのインスタンスを生成
             [self setToolPGPCcidCommand:[[ToolPGPCcidCommand alloc] initWithDelegate:self]];

@@ -11,7 +11,6 @@
 
 #import "AppCommonMessage.h"
 #import "FirmwareResetCommand.h"
-#import "ToolAppCommand.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -50,7 +49,6 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
     @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
     // ファームウェア再起動コマンドの参照を保持
     @property (nonatomic) FirmwareResetCommand  *firmwareResetCommand;
@@ -66,8 +64,6 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            // 画面の参照を保持
-            [self setToolAppCommand:delegate];
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];

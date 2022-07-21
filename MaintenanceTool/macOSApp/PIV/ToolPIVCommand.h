@@ -7,7 +7,7 @@
 #ifndef ToolPIVCommand_h
 #define ToolPIVCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface ToolPIVParameter : NSObject
 

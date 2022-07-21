@@ -11,7 +11,6 @@
 #import "DFUCommand.h"
 #import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
-#import "ToolAppCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolPGPCommand.h"
 #import "ToolPIVCommand.h"
@@ -19,7 +18,7 @@
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
-@interface AppDelegate () <ToolAppCommandDelegate, AppCommandDelegate>
+@interface AppDelegate () <AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonBLESetting;
