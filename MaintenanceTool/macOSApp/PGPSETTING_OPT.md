@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、OpenPGP機能の各種設定を行う手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に対し、OpenPGP機能の各種設定を行う手順を掲載します。
 
 - PIN番号管理
   - PIN番号を変更
@@ -17,9 +17,9 @@
 
 OpenPGP機能の設定は「OpenPGP機能設定画面」上で行います。
 
-まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
+まずは管理ツールを起動し、USBポートにBT40 Dongleを装着します。<br>
 
-<img src="assets/0028.jpg" width="360">
+<img src="assets/0013.jpg" width="360">
 
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「OpenPGP機能設定」ボタンをクリックします。
 

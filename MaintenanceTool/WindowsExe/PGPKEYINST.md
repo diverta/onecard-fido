@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にPGP鍵をインストールする手順について掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)にPGP鍵をインストールする手順について掲載します。
 
 ## ソフトウェアの準備
 
