@@ -452,23 +452,20 @@ namespace MaintenanceToolGUI
 
         void DoCommandPIVStatus()
         {
-            // TODO:
             // PIV設定情報取得
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVStatus, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVStatus, null);
         }
 
         void DoCommandPIVSetChuId()
         {
-            // TODO:
             // CHUID設定機能を実行
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVSetChuId, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVSetChuId, null);
         }
 
         void DoCommandPIVReset()
         {
-            // TODO:
             // PIVリセット機能を実行
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVReset, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVReset, null);
         }
 
         void DoCommandResetFirmware()

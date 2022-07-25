@@ -2,6 +2,24 @@
 
 namespace MaintenanceToolGUI
 {
+    public class ToolPIVConst
+    {
+        public const byte PIV_INS_SELECT = 0xA4;
+    }
+
+    public class ToolPIVParameter
+    {
+        // 鍵作成用パラメーター
+        public string KeySlotId { get; set; }
+        public string PkeyPemPath { get; set; }
+        public string CertPemPath { get; set; }
+        public string AuthPin { get; set; }
+        public string CurrentPin { get; set; }
+        public string RenewalPin { get; set; }
+        public AppCommon.RequestType SelectedPinCommand { get; set; }
+        public string SelectedPinCommandName { get; set; }
+    }
+
     public class ToolPIV
     {
         // PIV機能設定画面
@@ -25,6 +43,9 @@ namespace MaintenanceToolGUI
 
         // コマンドが成功したかどうかを保持
         private bool CommandSuccess;
+
+        // リクエストパラメーターを保持
+        private ToolPIVParameter Parameter = null;
 
         public ToolPIV(MainForm f, HIDMain h)
         {
@@ -73,6 +94,21 @@ namespace MaintenanceToolGUI
             NotifyProcessTerminated(success);
         }
 
+        //
+        // OpenPGP機能設定用関数
+        // 
+        public void DoOpenPIVCommand(AppCommon.RequestType requestType, ToolPIVParameter parameter)
+        {
+            // 画面から引き渡されたパラメーターを退避
+            Parameter = parameter;
+
+            // コマンド開始処理
+            NotifyProcessStarted(requestType);
+
+            // TODO: 仮の実装です。
+            NotifyProcessTerminated(true);
+        }
+
         // 
         // 共通処理
         //
@@ -86,6 +122,15 @@ namespace MaintenanceToolGUI
             switch (RequestType) {
             case AppCommon.RequestType.HidFirmwareReset:
                 NameOfCommand = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
+                break;
+            case AppCommon.RequestType.PIVStatus:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_STATUS;
+                break;
+            case AppCommon.RequestType.PIVSetChuId:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_SET_CHUID;
+                break;
+            case AppCommon.RequestType.PIVReset:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_RESET;
                 break;
             default:
                 NameOfCommand = "";
