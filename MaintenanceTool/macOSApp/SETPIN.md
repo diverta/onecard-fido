@@ -8,9 +8,9 @@
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
@@ -27,11 +27,11 @@
 
 管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
-<img src="assets/0028.jpg" width="400">
-
-管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「PINコード設定」ボタンをクリックします。
-
 <img src="assets/0013.jpg" width="400">
+
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツールのFIDO設定画面で「PINコード設定」ボタンをクリックします。
+
+<img src="assets/0014.jpg" width="400">
 
 「PINコード設定」画面がポップアップ表示されます。
 
@@ -39,12 +39,12 @@
 その下の「新しいPINコード(確認)」欄にも、同じ値を半角数字で入力します。<br>
 その後「新規設定」ボタンをクリックします。
 
-<img src="assets/0014.jpg" width="400">
+<img src="assets/0015.jpg" width="400">
 
 画面上に入力されたPINコードが、認証器に登録されます。<br>
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 
-<img src="assets/0015.jpg" width="400">
+<img src="assets/0016.jpg" width="400">
 
 これで、PINコードの新規設定は完了です。
 
@@ -52,7 +52,7 @@
 
 いったん設定されたPINコードを変更したい場合は、新規設定時と同様「PINコード設定」ボタンをクリックます。
 
-<img src="assets/0013.jpg" width="400">
+<img src="assets/0014.jpg" width="400">
 
 「PINコード設定」画面がポップアップ表示されます。
 
@@ -61,50 +61,11 @@
 最後に「変更前のPINコード」欄に、変更前のPINコードを半角数字で入力します。<br>
 その後「変更」ボタンをクリックします。
 
-<img src="assets/0016.jpg" width="400">
+<img src="assets/0017.jpg" width="400">
 
 画面上に入力された変更後のPINコードが、認証器に登録されます。<br>
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 
-<img src="assets/0017.jpg" width="400">
+<img src="assets/0018.jpg" width="400">
 
 これで、PINコードの変更は完了です。
-
-## PINコードの解除
-
-管理ツールにより、認証器に設定されたPINコード（暗証番号）の解除ができます。
-
-### 注意事項
-
-PINコードを解除する場合は、認証器に登録されているユーザー情報やログイン情報も、同時に削除します。
-
-したがって、PINコード解除後は、U2F／WebAuthnによるサイトへの再ログインができなくなりますので、ご注意ください。
-
-### 解除手順
-
-PINコードを解除したい場合は、管理ツール画面の「PINコード設定」ボタンをクリックます。
-
-<img src="assets/0013.jpg" width="400">
-
-「PINコード設定」画面がポップアップ表示されますので、画面下部の「解除」ボタンをクリックします。
-
-<img src="assets/0024.jpg" width="400">
-
-確認ダイアログが表示されます。<br>
-処理を続行したい場合は「Yes」をクリックします。
-
-<img src="assets/0025.jpg" width="400">
-
-管理ツール画面下部のメッセージ表示欄に、ユーザー確認が必要な旨のガイダンスが表示されます。
-
-<img src="assets/0026.jpg" width="400">
-
-認証器上の赤色LEDが高速点滅するので、認証器上のMAIN SW（タクトスイッチ）を１回プッシュしてください。
-
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0010.jpg" width="300">
-
-程なく、下図のようなポップアップ画面が表示され、処理が完了します。
-
-<img src="assets/0027.jpg" width="400">
-
-これで、PINコードの解除は完了です。
