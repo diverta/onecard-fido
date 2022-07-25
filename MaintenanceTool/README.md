@@ -14,20 +14,6 @@ macOS版と、Windows版を用意しました。
 #### [Windows版](../MaintenanceTool/WindowsExe/MNTTOOL.md)
 <img src="assets/0002.jpg" width="350">
 
-
-#### 機能
-* ペアリング実行／解除
-* PINコード設定
-* CTAP2ヘルスチェック実行
-* U2Fヘルスチェック実行
-* コマンドテスト機能
-* Flash ROM情報取得機能
-* バージョン情報取得機能
-* PIV機能設定（macOS版のみ）
-* OpenPGP機能設定
-* ファームウェア更新機能
-* ログファイル格納ディレクトリー参照機能
-
 ## [FIDO認証器開発ツール](../MaintenanceTool/DEVTOOL.md)
 ベンダー向けのツールです。
 
@@ -36,7 +22,3 @@ macOS版と、Windows版を用意しました。
 
 #### [Windows版](../MaintenanceTool/WindowsExe/DEVTOOL.md)
 <img src="../MaintenanceTool/WindowsExe/assets08/0001.jpg" width="350">
-
-#### 機能
-* FIDO鍵・証明書設定
-* ログファイル格納ディレクトリー参照機能
