@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "DFUCommand.h"
 #import "ToolBLEDFUCommand.h"
+#import "ToolPopupWindow.h"
 
 @interface DFUCommand () <ToolBLEDFUCommandDelegate>
 
@@ -31,8 +32,18 @@
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
+        // DFU処理を開始するかどうかのプロンプトを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_BLE_DFU_PROCESS informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS
+                                                  withObject:self forSelector:@selector(bleDfuCommandPromptDone) parentWindow:[self parentWindow]];
+    }
+
+    - (void)bleDfuCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
         // ファームウェア更新処理を実行
-        [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow];
+        [[self toolBLEDFUCommand] bleDfuProcessWillStart:self parentWindow:[self parentWindow]];
     }
 
 #pragma mark - Perform functions
