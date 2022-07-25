@@ -10,7 +10,7 @@ namespace MaintenanceToolGUI
     public class ToolPIVParameter
     {
         // 鍵作成用パラメーター
-        public string KeySlotId { get; set; }
+        public byte PkeySlotId { get; set; }
         public string PkeyPemPath { get; set; }
         public string CertPemPath { get; set; }
         public string AuthPin { get; set; }
@@ -122,6 +122,9 @@ namespace MaintenanceToolGUI
             switch (RequestType) {
             case AppCommon.RequestType.HidFirmwareReset:
                 NameOfCommand = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
+                break;
+            case AppCommon.RequestType.PIVImportKey:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_IMPORT_KEY;
                 break;
             case AppCommon.RequestType.PIVStatus:
                 NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_STATUS;

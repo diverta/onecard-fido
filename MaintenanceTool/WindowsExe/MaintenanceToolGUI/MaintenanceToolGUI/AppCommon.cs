@@ -211,6 +211,7 @@
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
         public const string PROCESS_NAME_CCID_PIV_RESET = "PIV機能リセット";
+        public const string PROCESS_NAME_CCID_PIV_IMPORT_KEY = "鍵・証明書インストール（PIV機能）";
         public const string PROCESS_NAME_CCID_PIV_SET_CHUID = "PIV CHUID設定";
         public const string PROCESS_NAME_CCID_PIV_STATUS = "PIV設定情報取得";
         public const string PROCESS_NAME_OPENPGP_INSTALL_KEYS = "PGP秘密鍵インストール";
