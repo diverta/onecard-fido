@@ -14,13 +14,14 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 * FIDO認証情報消去
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
-* コマンドテスト機能
+* PINGテスト機能
 * Flash ROM情報取得機能
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
+
 
 #### 画面イメージ
 <img src="../assets/0001.jpg" width="400">
