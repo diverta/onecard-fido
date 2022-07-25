@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
 
 ## ソフトウェアのバージョン確認／インストール
 
@@ -13,7 +13,7 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 また、[GPG Suite](https://gpgtools.org)というツールを、PCに別途インストールする必要があります。
 
 #### 管理ツールのバージョン確認
-まずは[インストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)を参照し、管理ツールをWindowsにインストールします。<br>
+まずは[インストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)を参照し、管理ツールをmacOS環境にインストールします。<br>
 次に、下記手順で管理ツールのバージョン確認を行い、<b>Version 0.1.39以降</b>であるかどうか確認します。
 
 管理ツールのユーティリティー画面で「管理ツールのバージョンを参照」をクリックします。
@@ -27,7 +27,7 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 
 
 #### ファームウェアのバージョン確認
-続いて、下記手順で[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)ファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
+続いて、下記手順でBT40 Dongleファームウェアのバージョン確認を行い、<b>0.3.4以降</b>であるかどうか確認します。<br>
 BT40 DongleをPCのUSBポートに装着した後、管理ツールのユーティリティー画面で「ファームウェアのバージョンを参照」をクリックします。
 
 <img src="assets05/0031.jpg" width="400">

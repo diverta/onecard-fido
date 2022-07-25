@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
 
 ## 認証器の準備
 
@@ -14,7 +14,7 @@
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS）に導入します。<br>
+[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
