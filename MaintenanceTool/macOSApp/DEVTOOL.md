@@ -6,7 +6,7 @@
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行う、ベンダー向けのツールです。
 
 #### 動作環境
-macOS Sierra (Version 10.12.6) 〜
+macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 ## 機能
 * FIDO鍵・証明書設定
