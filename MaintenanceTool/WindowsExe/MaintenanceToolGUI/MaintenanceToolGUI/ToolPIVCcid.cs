@@ -16,8 +16,8 @@ namespace MaintenanceToolGUI
         // リクエストパラメーターを保持
         private ToolPIVParameter Parameter = null;
 
-        // リクエストパラメーターを保持
-        private ToolPIVSettingItem SettingItem = null;
+        // PIV設定情報を保持
+        public ToolPIVSettingItem SettingItem = null;
 
         // CCID I/Fからデータ受信時のイベント
         public delegate void CcidCommandTerminatedEvent(bool success);
@@ -204,14 +204,14 @@ namespace MaintenanceToolGUI
             if (responseSW != CCIDConst.SW_SUCCESS) {
                 // 処理失敗ログを出力（エラーではなく警告扱いとする）
                 AppUtil.OutputLogWarn(string.Format(AppCommon.MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, ObjectIdToFetch));
+                // ブランクデータをPIV設定情報クラスに設定
+                SettingItem.SetDataObject(ObjectIdToFetch, new byte[0]);
 
             } else {
                 // 処理成功ログを出力
                 AppUtil.OutputLogInfo(string.Format(AppCommon.MSG_PIV_DATA_OBJECT_GET, ObjectIdToFetch));
-
-                // TODO: 仮の実装です。
-                string dump = AppUtil.DumpMessage(responseData, responseData.Length);
-                AppUtil.OutputLogDebug(string.Format("{0} bytes\n{1}", responseData.Length, dump));
+                // 取得したデータをPIV設定情報クラスに設定
+                SettingItem.SetDataObject(ObjectIdToFetch, responseData);
             }
 
             // オブジェクトIDに応じて後続処理分岐

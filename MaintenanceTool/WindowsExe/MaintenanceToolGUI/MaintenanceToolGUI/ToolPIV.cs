@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToolGUICommon;
 
@@ -34,6 +35,22 @@ namespace MaintenanceToolGUI
     {
         // PIV設定項目を保持
         public byte Retries { get; set; }
+
+        // PIVデータオブジェクトを保持
+        private Dictionary<UInt32, byte[]> DataObject = new Dictionary<UInt32, byte[]>();
+
+        public void SetDataObject(UInt32 objectId, byte[] objectData)
+        {
+            // データを連想配列にコピー
+            byte[] b = new byte[objectData.Length];
+            Array.Copy(objectData, b, objectData.Length);
+            DataObject[objectId] = b;
+        }
+
+        public byte[] GetDataObject(UInt32 objectId)
+        {
+            return DataObject[objectId];
+        }
     }
 
     public class ToolPIV
