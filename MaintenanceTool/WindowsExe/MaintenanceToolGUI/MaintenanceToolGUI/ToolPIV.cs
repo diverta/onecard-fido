@@ -126,6 +126,15 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVImportKey:
                 NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_IMPORT_KEY;
                 break;
+            case AppCommon.RequestType.PIVChangePin:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_CHANGE_PIN;
+                break;
+            case AppCommon.RequestType.PIVChangePuk:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_CHANGE_PUK;
+                break;
+            case AppCommon.RequestType.PIVUnblockPin:
+                NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_UNBLOCK_PIN;
+                break;
             case AppCommon.RequestType.PIVStatus:
                 NameOfCommand = AppCommon.PROCESS_NAME_CCID_PIV_STATUS;
                 break;

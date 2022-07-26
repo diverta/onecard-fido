@@ -490,9 +490,13 @@ namespace MaintenanceToolGUI
 
         void DoCommandPinManagement()
         {
-            // TODO:
-            // 画面入力内容をパラメーターとして、PIN番号管理コマンドを実行
-            OnCommandProcessTerminated(SelectedPinCommand, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 画面入力内容をパラメーターとして、PIN管理コマンドを実行
+            ToolPIVParameter parameter = new ToolPIVParameter();
+            parameter.CurrentPin = textCurPin.Text;
+            parameter.RenewalPin = textNewPin.Text;
+            parameter.SelectedPinCommand = SelectedPinCommand;
+            parameter.SelectedPinCommandName = SelectedPinCommandName;
+            ToolPIVRef.DoOpenPIVCommand(SelectedPinCommand, parameter);
         }
 
         void DoCommandPIVStatus()

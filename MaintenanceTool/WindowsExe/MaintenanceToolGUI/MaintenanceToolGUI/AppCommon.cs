@@ -210,6 +210,9 @@
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
+        public const string PROCESS_NAME_CCID_PIV_CHANGE_PIN = "PIV PINコード変更";
+        public const string PROCESS_NAME_CCID_PIV_CHANGE_PUK = "PIV PUKコード変更";
+        public const string PROCESS_NAME_CCID_PIV_UNBLOCK_PIN = "PIV PIN解除";
         public const string PROCESS_NAME_CCID_PIV_RESET = "PIV機能リセット";
         public const string PROCESS_NAME_CCID_PIV_IMPORT_KEY = "鍵・証明書インストール（PIV機能）";
         public const string PROCESS_NAME_CCID_PIV_SET_CHUID = "PIV CHUID設定";
