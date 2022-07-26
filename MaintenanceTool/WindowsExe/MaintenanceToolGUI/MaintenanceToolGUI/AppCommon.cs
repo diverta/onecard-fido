@@ -170,7 +170,9 @@
         public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
         public const string MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED = "PIV PINリトライカウンターを取得できませんでした。";
+        public const string MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED = "PIVデータオブジェクトを取得できませんでした（ID=0x{0:x6}）。";
         public const string MSG_PIV_PIN_RETRY_CNT_GET = "PIV PINリトライカウンターを取得しました（残り{0}回試行可能です）。";
+        public const string MSG_PIV_DATA_OBJECT_GET = "PIVデータオブジェクトを取得しました（ID=0x{0:x6}）。";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";

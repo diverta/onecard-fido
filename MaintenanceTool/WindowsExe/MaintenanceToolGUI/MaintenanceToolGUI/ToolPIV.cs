@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -7,7 +8,13 @@ namespace MaintenanceToolGUI
     {
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
+        public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_KEY_PIN = 0x80;
+        public const UInt32 PIV_OBJ_CAPABILITY = 0x5fc107;
+        public const UInt32 PIV_OBJ_CHUID = 0x5fc102;
+        public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
+        public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
+        public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
     }
 
     public class ToolPIVParameter
@@ -21,6 +28,12 @@ namespace MaintenanceToolGUI
         public string RenewalPin { get; set; }
         public AppCommon.RequestType SelectedPinCommand { get; set; }
         public string SelectedPinCommandName { get; set; }
+    }
+
+    public class ToolPIVSettingItem
+    {
+        // PIV設定項目を保持
+        public byte Retries { get; set; }
     }
 
     public class ToolPIV
