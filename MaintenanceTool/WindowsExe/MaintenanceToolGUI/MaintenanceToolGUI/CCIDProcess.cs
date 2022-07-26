@@ -52,7 +52,7 @@ namespace MaintenanceToolGUI
             int sizeAlreadySent = 0;
             int sizeToSend = sendData.Length;
             byte sendCla;
-            byte[] responseData = new byte[0];
+            byte[] responseData = null;
             UInt16 responseSW = 0;
 
             do {
@@ -97,7 +97,12 @@ namespace MaintenanceToolGUI
                 int responseDataSize = received.Length - 2;
                 responseSW = AppUtil.ToUInt16(received, responseDataSize, true);
                 if (responseDataSize > 0) {
-                    responseData.Concat(received.Take(responseDataSize));
+                    if (responseData == null) {
+                        responseData = new byte[responseDataSize];
+                        Array.Copy(received, 0, responseData, 0, responseDataSize);
+                    } else {
+                        responseData.Concat(received.Take(responseDataSize));
+                    }
                 }
 
                 // 送信済みサイズを更新
