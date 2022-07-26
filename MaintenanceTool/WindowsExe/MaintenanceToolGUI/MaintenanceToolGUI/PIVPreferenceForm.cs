@@ -539,6 +539,11 @@ namespace MaintenanceToolGUI
                 name = AppCommon.MSG_PIV_INSTALL_PKEY_CERT;
                 break;
             case AppCommon.RequestType.PIVStatus:
+                if (success) {
+                    // メッセージの代わりに、PIV設定情報を、情報表示画面に表示
+                    CommonDisplayInfoForm.OpenForm(this, AppCommon.PROCESS_NAME_CCID_PIV_STATUS, ToolPIVRef.GetPIVStatusInfoString());
+                    return;
+                }
                 name = AppCommon.MSG_PIV_STATUS;
                 break;
             case AppCommon.RequestType.PIVSetChuId:

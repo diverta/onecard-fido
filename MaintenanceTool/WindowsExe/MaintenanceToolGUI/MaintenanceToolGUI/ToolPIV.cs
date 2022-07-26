@@ -77,6 +77,9 @@ namespace MaintenanceToolGUI
         // コマンドが成功したかどうかを保持
         private bool CommandSuccess;
 
+        // ステータス照会情報を保持
+        private string StatusInfoString;
+
         // リクエストパラメーターを保持
         private ToolPIVParameter Parameter = null;
 
@@ -101,6 +104,11 @@ namespace MaintenanceToolGUI
         {
             // ツール設定画面を表示
             PreferenceForm.ShowDialog();
+        }
+
+        public string GetPIVStatusInfoString()
+        {
+            return StatusInfoString;
         }
 
         public bool CheckUSBDeviceDisconnected()
@@ -128,7 +136,7 @@ namespace MaintenanceToolGUI
         }
 
         //
-        // OpenPGP機能設定用関数
+        // PIV機能設定用関数
         // 
         public void DoPIVCommand(AppCommon.RequestType requestType, ToolPIVParameter parameter)
         {
@@ -168,15 +176,22 @@ namespace MaintenanceToolGUI
 
         private void DoResponsePIVStatus(bool success)
         {
+            // 画面出力情報を編集
             if (success) {
-                // TODO: 仮の実装です。
-                CommandSuccess = true;
-                NotifyProcessTerminated(CommandSuccess);
-
-            } else {
-                // 画面に制御を戻す
-                NotifyProcessTerminated(false);
+                EditDescriptionString();
             }
+
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
+        //
+        // 内部処理
+        //
+        private void EditDescriptionString()
+        {
+            StatusInfoString = string.Format("Device: {0}\n", PIVCcid.GetReaderName());
         }
 
         // 
