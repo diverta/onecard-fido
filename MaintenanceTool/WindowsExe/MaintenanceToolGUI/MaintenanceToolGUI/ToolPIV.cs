@@ -1,4 +1,5 @@
-﻿using ToolGUICommon;
+﻿using System.Threading.Tasks;
+using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
@@ -97,7 +98,7 @@ namespace MaintenanceToolGUI
         //
         // OpenPGP機能設定用関数
         // 
-        public void DoOpenPIVCommand(AppCommon.RequestType requestType, ToolPIVParameter parameter)
+        public void DoPIVCommand(AppCommon.RequestType requestType, ToolPIVParameter parameter)
         {
             // 画面から引き渡されたパラメーターを退避
             Parameter = parameter;
@@ -105,8 +106,45 @@ namespace MaintenanceToolGUI
             // コマンド開始処理
             NotifyProcessStarted(requestType);
 
-            // TODO: 仮の実装です。
-            NotifyProcessTerminated(true);
+            // コマンドを別スレッドで起動
+            Task task = Task.Run(() => {
+                // 処理機能に応じ、以下の処理に分岐
+                RequestType = requestType;
+                switch (RequestType) {
+                case AppCommon.RequestType.PIVStatus:
+                    DoRequestPIVStatus();
+                    break;
+                default:
+                    // 画面に制御を戻す
+                    NotifyProcessTerminated(false);
+                    return;
+                }
+            });
+
+            // 進捗画面を表示
+            CommonProcessingForm.OpenForm(PreferenceForm);
+        }
+
+        //
+        // CCID I/Fコマンド実行関数
+        //
+        private void DoRequestPIVStatus()
+        {
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
+        }
+
+        private void DoResponsePIVStatus(bool success)
+        {
+            if (success) {
+                // TODO: 仮の実装です。
+                CommandSuccess = true;
+                NotifyProcessTerminated(CommandSuccess);
+
+            } else {
+                // 画面に制御を戻す
+                NotifyProcessTerminated(false);
+            }
         }
 
         // 
@@ -194,6 +232,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVStatus:
+                DoResponsePIVStatus(success);
+                break;
             default:
                 NotifyProcessTerminated(false);
                 break;

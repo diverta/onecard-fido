@@ -485,7 +485,7 @@ namespace MaintenanceToolGUI
             parameter.PkeyPemPath = textPkeyFolderPath.Text;
             parameter.CertPemPath = textCertFolderPath.Text;
             parameter.AuthPin = textPin.Text;
-            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVImportKey, parameter);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVImportKey, parameter);
         }
 
         void DoCommandPinManagement()
@@ -496,25 +496,25 @@ namespace MaintenanceToolGUI
             parameter.RenewalPin = textNewPin.Text;
             parameter.SelectedPinCommand = SelectedPinCommand;
             parameter.SelectedPinCommandName = SelectedPinCommandName;
-            ToolPIVRef.DoOpenPIVCommand(SelectedPinCommand, parameter);
+            ToolPIVRef.DoPIVCommand(SelectedPinCommand, parameter);
         }
 
         void DoCommandPIVStatus()
         {
             // PIV設定情報取得
-            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVStatus, null);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVStatus, null);
         }
 
         void DoCommandPIVSetChuId()
         {
             // CHUID設定機能を実行
-            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVSetChuId, null);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVSetChuId, null);
         }
 
         void DoCommandPIVReset()
         {
             // PIVリセット機能を実行
-            ToolPIVRef.DoOpenPIVCommand(AppCommon.RequestType.PIVReset, null);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVReset, null);
         }
 
         void DoCommandResetFirmware()
