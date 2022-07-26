@@ -66,8 +66,12 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_INS_SELECT:
                 DoResponsePIVInsSelectApplication(responseData, responseSW);
                 break;
+            case ToolPIVConst.PIV_INS_VERIFY:
+                DoResponsePIVInsVerify(responseData, responseSW);
+                break;
             default:
                 // 上位クラスに制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 NotifyCommandTerminated(false);
                 break;
             }
@@ -113,8 +117,61 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(true);
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+            case AppCommon.RequestType.PIVStatus:
+                // PINリトライカウンターを照会
+                DoRequestPivInsVerify(null);
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
+        }
+
+        private void DoRequestPivInsVerify(string pinCode)
+        {
+            // コマンドAPDUを生成
+            byte[] apdu = new byte[0];
+
+            // コマンドを実行
+            CommandIns = ToolPIVConst.PIV_INS_VERIFY;
+            Process.SendIns(CommandIns, 0x00, ToolPIVConst.PIV_KEY_PIN, apdu, 0xff);
+        }
+
+        private void DoResponsePIVInsVerify(byte[] responseData, UInt16 responseSW)
+        {
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+            case AppCommon.RequestType.PIVStatus:
+                // PINリトライカウンターを照会
+                DoPivStatusProcessWithPinRetryResponse(responseData, responseSW);
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
+        }
+
+        private void DoPivStatusProcessWithPinRetryResponse(byte[] responseData, UInt16 responseSW)
+        {
+            if ((responseSW >> 8) == 0x63) {
+                // PINリトライカウンターを取得
+                byte retries = (byte)(responseSW & 0x000f);
+                AppUtil.OutputLogDebug(string.Format(AppCommon.MSG_PIV_PIN_RETRY_CNT_GET, retries));
+
+                // TODO: PIV設定情報クラスを生成し、リトライカウンターを格納
+                NotifyCommandTerminated(true);
+
+            } else {
+                // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED);
+                NotifyCommandTerminated(false);
+            }
         }
     }
 }

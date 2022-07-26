@@ -68,15 +68,22 @@ namespace MaintenanceToolGUI
                 }
 
                 // 今回送信分のAPDUデータを抽出し、送信処理を実行
-                byte[] frameToSend = new byte[thisSendSize + 6];
+                int frameToSendSize = thisSendSize + 6;
+                if (sizeToSend == 0) {
+                    frameToSendSize = 5;
+                }
+                byte[] frameToSend = new byte[frameToSendSize];
                 int offset = 0;
                 frameToSend[offset++] = sendCla;
                 frameToSend[offset++] = sendIns;
                 frameToSend[offset++] = sendP1;
                 frameToSend[offset++] = sendP2;
-                frameToSend[offset++] = (byte)thisSendSize;
-                Array.Copy(sendData, sizeAlreadySent, frameToSend, offset, thisSendSize);
-                offset += thisSendSize;
+
+                if (sizeToSend > 0) {
+                    frameToSend[offset++] = (byte)thisSendSize;
+                    Array.Copy(sendData, sizeAlreadySent, frameToSend, offset, thisSendSize);
+                    offset += thisSendSize;
+                }
                 frameToSend[offset] = sendLe;
 
                 if (Device.Transmit(frameToSend) == false) {
