@@ -253,5 +253,10 @@ namespace MaintenanceToolGUI
             apdu[offset++] = (byte)(objectId & 0x000000ff);
             return apdu;
         }
+
+        public string GetReaderName()
+        {
+            return Process.GetReaderName();
+        }
     }
 }

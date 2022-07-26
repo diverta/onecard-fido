@@ -18,6 +18,9 @@ namespace MaintenanceToolGUI
         // CCIDデバイスの参照を保持
         private CCIDDevice Device = null;
 
+        // 接続中のデバイス名
+        private string ConnectedReaderName;
+
         // CCID I/Fからデータ受信時のイベント
         public delegate void DataReceivedEvent(byte[] responseData, UInt16 responseSW);
         public event DataReceivedEvent OnDataReceived;
@@ -28,8 +31,13 @@ namespace MaintenanceToolGUI
 
         public bool Connect()
         {
+            // デバイスに接続
             Device = new CCIDDevice();
-            return Device.ConnectDevice();
+            bool ret = Device.ConnectDevice();
+
+            // 接続中のデバイス名称を保持
+            ConnectedReaderName = Device.GetConnectedReaderName();
+            return ret;
         }
 
         public void Disconnect()
@@ -144,6 +152,11 @@ namespace MaintenanceToolGUI
 
             // コマンドに制御を戻す
             OnDataReceived(responseData, responseSW);
+        }
+
+        public string GetReaderName()
+        {
+            return ConnectedReaderName;
         }
     }
 }
