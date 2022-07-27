@@ -139,10 +139,13 @@ namespace MaintenanceToolGUI
                 PrintableHash = PrintableHashString(h);
 
                 // 証明書の発行者／発行先／期限を取得
-                X509Certificate x509 = new X509Certificate(certData);
+                X509Certificate2 x509 = new X509Certificate2(certData);
                 Subject = x509.Subject;
                 Issuer = x509.Issuer;
                 NotAfter = x509.GetExpirationDateString();
+
+                // 証明書アルゴリズム名を取得
+                AlgName = x509.PublicKey.Oid.FriendlyName;
 
                 return true;
 
