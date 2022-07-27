@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToolGUICommon;
 
@@ -60,8 +61,9 @@ namespace MaintenanceToolGUI
             int sizeAlreadySent = 0;
             int sizeToSend = sendData.Length;
             byte sendCla;
-            byte[] responseData = null;
+            byte[] responseData = new byte[0];
             UInt16 responseSW = 0;
+            IEnumerable<byte> responseBytes;
 
             do {
                 // 送信サイズとCLA値を設定
@@ -105,12 +107,8 @@ namespace MaintenanceToolGUI
                 int responseDataSize = received.Length - 2;
                 responseSW = AppUtil.ToUInt16(received, responseDataSize, true);
                 if (responseDataSize > 0) {
-                    if (responseData == null) {
-                        responseData = new byte[responseDataSize];
-                        Array.Copy(received, 0, responseData, 0, responseDataSize);
-                    } else {
-                        responseData.Concat(received.Take(responseDataSize));
-                    }
+                    responseBytes = responseData.Concat(received.Take(responseDataSize));
+                    responseData = responseBytes.ToArray();
                 }
 
                 // 送信済みサイズを更新
@@ -145,7 +143,8 @@ namespace MaintenanceToolGUI
 
                 // 受信データがある場合は連結
                 if (responseDataSize > 0) {
-                    responseData.Concat(received.Take(responseDataSize));
+                    responseBytes = responseData.Concat(received.Take(responseDataSize));
+                    responseData = responseBytes.ToArray();
                 }
             }
 
