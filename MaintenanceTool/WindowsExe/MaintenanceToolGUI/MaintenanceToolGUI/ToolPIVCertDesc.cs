@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -8,8 +10,10 @@ namespace MaintenanceToolGUI
         // PIV設定情報を保持
         private ToolPIVSettingItem SettingItemRef;
 
+        // 証明書バイナリーデータ格納領域
+        byte[] CertDataBytes = null;
+
         // 証明書データ
-        private byte[] extractedCertData = null;
         private string AlgName;
         private string NotAfter;
         private string Subject;
@@ -60,16 +64,13 @@ namespace MaintenanceToolGUI
             }
 
             // 必要な属性をPIVデータオブジェクトから抽出
-            if (ExtractCertDescriptions(data) == false) {
+            if (ExtractCertDescriptions(CertDataBytes) == false) {
                 AppUtil.OutputLogError(string.Format(AppCommon.MSG_ERROR_PIV_CERT_INFO_GET_FAILED, ErrorMessage));
                 return false;
             }
 
             return true;
         }
-
-        // 証明書データ格納領域
-        byte[] CertDataBytes = null;
 
         private bool ExtractCertFromTLV(byte[] certData)
         {
@@ -131,7 +132,34 @@ namespace MaintenanceToolGUI
 
         private bool ExtractCertDescriptions(byte[] certData)
         {
-            return true;
+            try {
+                // 証明書のSHA-256ハッシュを取得
+                SHA256 sha = new SHA256CryptoServiceProvider();
+                byte[] h = sha.ComputeHash(certData);
+                PrintableHash = PrintableHashString(h);
+
+                // 証明書の発行者／発行先／期限を取得
+                X509Certificate x509 = new X509Certificate(certData);
+                Subject = x509.Subject;
+                Issuer = x509.Issuer;
+                NotAfter = x509.GetExpirationDateString();
+
+                return true;
+
+            } catch (Exception e) {
+                ErrorMessage = e.Message;
+                return false;
+            }
+        }
+
+        public string PrintableHashString(byte[] data)
+        {
+            // データオブジェクトを、表示可能なHEX文字列に変換
+            string hex = "";
+            for (int i = 0; i < data.Length; i++) {
+                hex += string.Format("{0:x2}", data[i]);
+            }
+            return hex;
         }
     }
 }
