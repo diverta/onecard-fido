@@ -191,7 +191,41 @@ namespace MaintenanceToolGUI
         //
         private void EditDescriptionString()
         {
-            StatusInfoString = string.Format("Device: {0}\n", PIVCcid.GetReaderName());
+            string CRLF = "\r\n";
+            StatusInfoString  = string.Format("Device: {0}", PIVCcid.GetReaderName()) + CRLF + CRLF;
+            StatusInfoString += string.Format("CHUID:  {0}", PrintableCHUIDString()) + CRLF;
+            StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString()) + CRLF;
+        }
+
+        private string PrintableCHUIDString()
+        {
+            byte[] chuid = PIVCcid.SettingItem.GetDataObject(ToolPIVConst.PIV_OBJ_CHUID);
+            return PrintableObjectStringWithData(chuid);
+        }
+
+        private string PrintableCCCString()
+        {
+            byte[] ccc = PIVCcid.SettingItem.GetDataObject(ToolPIVConst.PIV_OBJ_CAPABILITY);
+            return PrintableObjectStringWithData(ccc);
+        }
+
+        private string PrintableObjectStringWithData(byte[] data)
+        {
+            // ブランクデータの場合
+            if (data == null || data.Length == 0) {
+                return "No data available";
+            }
+
+            // オブジェクトの先頭２バイト（＝TLVタグ）は不要なので削除
+            int offset = 2;
+            int size = data.Length - offset;
+
+            // データオブジェクトを、表示可能なHEX文字列に変換
+            string hex = "";
+            for (int i = 0; i < size; i++) {
+                hex += string.Format("{0:x2}", data[i + offset]);
+            }
+            return hex;
         }
 
         // 
