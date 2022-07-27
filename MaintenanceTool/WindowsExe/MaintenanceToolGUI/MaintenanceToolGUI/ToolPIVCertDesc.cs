@@ -69,7 +69,7 @@ namespace MaintenanceToolGUI
         }
 
         // 証明書データ格納領域
-        byte[] m_binary_data = new byte[3072];
+        byte[] CertDataBytes = null;
 
         private bool ExtractCertFromTLV(byte[] certData)
         {
@@ -81,11 +81,6 @@ namespace MaintenanceToolGUI
             //   --> cert data: XXXX...XXXX
             //       cert size: 0x038c (908 bytes)
             //
-            // 領域を初期化
-            for (int i = 0; i < m_binary_data.Length; i++) {
-                m_binary_data[i] = 0;
-            }
-
             // 証明書データを格納しているTLVを抽出
             int offset = 1;
             int size = certData.Length;
@@ -97,6 +92,21 @@ namespace MaintenanceToolGUI
                 return false;
             }
 
+            // 証明書データを抽出
+            offset += offset_obj + 1;
+            int offset_val = tlv_get_length(certData, offset, obj_len);
+            if (offset_val == 0) {
+                // 不正なTLVの場合は終了
+                ErrorMessage = "ExtractCertFromTLV: Invalid TLV (object value length)";
+                return false;
+            }
+
+            // 証明書本体の先頭位置
+            offset += offset_val;
+
+            // 領域を確保し、抽出した証明書データを保持
+            CertDataBytes = new byte[obj_len];
+            Array.Copy(certData, offset, CertDataBytes, 0, obj_len);
             return true;
         }
 
