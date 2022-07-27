@@ -121,13 +121,12 @@ namespace MaintenanceToolGUI
             while (responseSW >> 8 == 0x61) {
                 // GET RESPONSE APDU
                 int offset = 0;
-                byte[] FrameToSend = new byte[6];
+                byte[] FrameToSend = new byte[5];
                 FrameToSend[offset++] = 0x00;
                 FrameToSend[offset++] = 0xc0;
                 FrameToSend[offset++] = 0x00;
                 FrameToSend[offset++] = 0x00;
-                FrameToSend[offset++] = 0x00;
-                FrameToSend[offset] = 0xff;
+                FrameToSend[offset] = (byte)(responseSW & 0x00ff);
 
                 if (Device.Transmit(FrameToSend) == false) {
                     // 送信エラーが発生した場合
