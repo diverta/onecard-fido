@@ -191,10 +191,16 @@ namespace MaintenanceToolGUI
         //
         private void EditDescriptionString()
         {
+            ToolPIVCertDesc pivCertDesc = new ToolPIVCertDesc(PIVCcid.SettingItem);
+
             string CRLF = "\r\n";
             StatusInfoString  = string.Format("Device: {0}", PIVCcid.GetReaderName()) + CRLF + CRLF;
             StatusInfoString += string.Format("CHUID:  {0}", PrintableCHUIDString()) + CRLF;
-            StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString()) + CRLF;
+            StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString()) + CRLF + CRLF;
+            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_AUTHENTICATION, "PIV authenticate");
+            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_SIGNATURE, "signature");
+            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT, "key management");
+            StatusInfoString += string.Format("PIN tries left: {0}", PIVCcid.SettingItem.Retries);
         }
 
         private string PrintableCHUIDString()
