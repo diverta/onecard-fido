@@ -145,7 +145,13 @@ namespace MaintenanceToolGUI
                 NotAfter = x509.GetExpirationDateString();
 
                 // 証明書アルゴリズム名を取得
-                AlgName = x509.PublicKey.Oid.FriendlyName;
+                string friendlyName = x509.PublicKey.Oid.FriendlyName;
+                if (friendlyName.Equals("RSA")) {
+                    AlgName = "RSA2048";
+                }
+                if (friendlyName.Equals("ECC")) {
+                    AlgName = "ECCP256";
+                }
 
                 return true;
 
