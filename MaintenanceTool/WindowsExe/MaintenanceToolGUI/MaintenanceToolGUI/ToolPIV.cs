@@ -16,6 +16,9 @@ namespace MaintenanceToolGUI
         public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
         public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
         public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
+        public const byte TAG_DYNAMIC_AUTH_TEMPLATE = 0x7c;
+        public const byte TAG_AUTH_WITNESS = 0x80;
+        public const byte TAG_AUTH_CHALLENGE = 0x81;
     }
 
     public class ToolPIVParameter
