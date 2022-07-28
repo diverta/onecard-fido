@@ -162,11 +162,18 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
         // PIV機能設定関連
-        public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_ERROR_PIV_APPLET_SELECT_FAILED = "PIV機能を使用することができません。";
+        public const string MSG_ERROR_PIV_SELECTING_CARD_FAIL = "PIV機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
         public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
         public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
+        public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED = "PIV PINリトライカウンターを取得できませんでした。";
+        public const string MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED = "PIVデータオブジェクトを取得できませんでした（ID=0x{0:x6}）。";
+        public const string MSG_PIV_PIN_RETRY_CNT_GET = "PIV PINリトライカウンターを取得しました（残り{0}回試行可能です）。";
+        public const string MSG_PIV_DATA_OBJECT_GET = "PIVデータオブジェクトを取得しました（ID=0x{0:x6}）。";
+        public const string MSG_ERROR_PIV_CERT_INFO_GET_FAILED = "PIV証明書からの属性取得処理が失敗しました（{0}）";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";
@@ -210,6 +217,13 @@
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
+        public const string PROCESS_NAME_CCID_PIV_CHANGE_PIN = "PIV PINコード変更";
+        public const string PROCESS_NAME_CCID_PIV_CHANGE_PUK = "PIV PUKコード変更";
+        public const string PROCESS_NAME_CCID_PIV_UNBLOCK_PIN = "PIV PIN解除";
+        public const string PROCESS_NAME_CCID_PIV_RESET = "PIV機能リセット";
+        public const string PROCESS_NAME_CCID_PIV_IMPORT_KEY = "鍵・証明書インストール（PIV機能）";
+        public const string PROCESS_NAME_CCID_PIV_SET_CHUID = "PIV CHUID設定";
+        public const string PROCESS_NAME_CCID_PIV_STATUS = "PIV設定情報取得";
         public const string PROCESS_NAME_OPENPGP_INSTALL_KEYS = "PGP秘密鍵インストール";
         public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報取得";
         public const string PROCESS_NAME_OPENPGP_RESET = "OpenPGP機能リセット";
