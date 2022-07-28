@@ -32,6 +32,8 @@ namespace MaintenanceToolGUI
         public string RenewalPin { get; set; }
         public AppCommon.RequestType SelectedPinCommand { get; set; }
         public string SelectedPinCommandName { get; set; }
+        public byte[] ChuidAPDU { get; set; }
+        public byte[] CccAPDU { get; set; }
     }
 
     public class ToolPIVSettingItem
@@ -154,6 +156,9 @@ namespace MaintenanceToolGUI
                 // 処理機能に応じ、以下の処理に分岐
                 RequestType = requestType;
                 switch (RequestType) {
+                case AppCommon.RequestType.PIVSetChuId:
+                    DoRequestPIVSetChuId();
+                    break;
                 case AppCommon.RequestType.PIVStatus:
                     DoRequestPIVStatus();
                     break;
@@ -171,6 +176,15 @@ namespace MaintenanceToolGUI
         //
         // CCID I/Fコマンド実行関数
         //
+        private void DoRequestPIVSetChuId()
+        {
+            // CHUID／CCCインポート用のAPDUを生成
+            GenerateChuidAndCcc(Parameter);
+
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
+        }
+
         private void DoRequestPIVStatus()
         {
             // 事前にCCID I/F経由で、PIVアプレットをSELECT
@@ -192,6 +206,14 @@ namespace MaintenanceToolGUI
         //
         // 内部処理
         //
+        private void GenerateChuidAndCcc(ToolPIVParameter parameter)
+        {
+            // CHUID／CCCインポート用のAPDUを生成
+            ToolPIVSetId toolPIVSetId = new ToolPIVSetId();
+            parameter.ChuidAPDU = toolPIVSetId.GenerateChuidAPDU();
+            parameter.CccAPDU = toolPIVSetId.GenerateCccAPDU();
+        }
+
         private void EditDescriptionString()
         {
             ToolPIVCertDesc pivCertDesc = new ToolPIVCertDesc(PIVCcid.SettingItem);
