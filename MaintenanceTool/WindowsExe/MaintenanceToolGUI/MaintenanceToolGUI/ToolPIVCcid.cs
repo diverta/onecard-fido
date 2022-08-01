@@ -51,6 +51,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 DoRequestPIVInsSelectApplication();
@@ -126,6 +127,10 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                // TODO: 仮の実装です。
+                NotifyCommandTerminated(true);
+                break;
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoRequestPivInsVerify(null);

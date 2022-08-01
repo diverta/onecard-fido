@@ -188,6 +188,13 @@ namespace MaintenanceToolGUI
             PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
         }
 
+        private void DoResponsePIVSetChuId(bool success)
+        {
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
         private void DoRequestPIVStatus()
         {
             // 事前にCCID I/F経由で、PIVアプレットをSELECT
@@ -347,6 +354,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                DoResponsePIVSetChuId(success);
+                break;
             case AppCommon.RequestType.PIVStatus:
                 DoResponsePIVStatus(success);
                 break;
