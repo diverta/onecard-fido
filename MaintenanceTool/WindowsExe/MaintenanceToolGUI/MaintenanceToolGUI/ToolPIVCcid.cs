@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -12,6 +14,9 @@ namespace MaintenanceToolGUI
         private AppCommon.RequestType RequestType;
         private byte CommandIns;
         private UInt32 ObjectIdToFetch;
+
+        // エラーメッセージを保持
+        private string LastErrorMessageWithException = null;
 
         // リクエストパラメーターを保持
         private ToolPIVParameter Parameter = null;
@@ -171,6 +176,7 @@ namespace MaintenanceToolGUI
             byte[] witness = DecryptPivAdminAuthWitness(encrypted);
             if (witness == null) {
                 // エラーが発生時は制御を戻す
+                OnCcidCommandNotifyErrorMessage(LastErrorMessageWithException);
                 NotifyCommandTerminated(false);
                 return;
             }
@@ -309,12 +315,51 @@ namespace MaintenanceToolGUI
             return Process.GetReaderName();
         }
 
+        //
+        // Triple DES復号化関連
+        //
+        // デフォルトの3DES鍵
+        private byte[] Default3desKey = {
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
+        };
+
         private byte[] DecryptPivAdminAuthWitness(byte[] encrypted)
         {
-            // TODO: 仮の実装です。
-            string dump = AppUtil.DumpMessage(encrypted, encrypted.Length);
-            AppUtil.OutputLogDebug(string.Format("Encrypted witness {0} bytes\n{1}", encrypted.Length, dump));            
-            return new byte[0];
+            // Triple DESで復号化
+            byte[] transformedBytes = null;
+            try {
+                DES des = new DESCryptoServiceProvider();
+                des.Mode = CipherMode.ECB;
+                des.Padding = PaddingMode.None;
+                byte[] src = new byte[8];
+                Array.Copy(encrypted, src, src.Length);
+
+                des.Key = Default3desKey.Take(8).ToArray();
+                ICryptoTransform ct1 = des.CreateDecryptor();
+                transformedBytes = ct1.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+                Array.Copy(transformedBytes, src, src.Length);
+
+                des.Key = Default3desKey.Skip(8).Take(8).ToArray();
+                ICryptoTransform ct2 = des.CreateEncryptor();
+                transformedBytes = ct2.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+                Array.Copy(transformedBytes, src, src.Length);
+
+                des.Key = Default3desKey.Skip(16).Take(8).ToArray();
+                ICryptoTransform ct3 = des.CreateDecryptor();
+                transformedBytes = ct3.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+
+            } catch (Exception e) {
+                // エラーメッセージを保持
+                LastErrorMessageWithException = string.Format(AppCommon.MSG_ERROR_PIV_CERT_INFO_GET_FAILED, e.Message);
+                return null;
+            }
+
+            return transformedBytes;
         }
     }
 }
