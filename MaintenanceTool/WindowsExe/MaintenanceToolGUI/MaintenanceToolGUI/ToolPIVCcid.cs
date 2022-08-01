@@ -91,6 +91,9 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_INS_GET_DATA:
                 DoResponsePIVInsGetData(responseData, responseSW);
                 break;
+            case ToolPIVConst.PIV_INS_PUT_DATA:
+                DoResponsePIVInsPutData(responseData, responseSW);
+                break;
             default:
                 // 上位クラスに制御を戻す
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -249,8 +252,18 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(true);
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                // CHUID／CCC設定処理を実行
+                DoRequestPivSetChuId(responseData, responseSW);
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
         }
 
         private void DoRequestPivInsVerify(string pinCode)
@@ -279,6 +292,48 @@ namespace MaintenanceToolGUI
             }
         }
 
+        //
+        // CHUID／CCC設定
+        //
+        private void DoRequestPivSetChuId(byte[] responseData, UInt16 responseSW)
+        {
+            // CHUIDインポート処理を実行
+            DoRequestPIVInsPutData(ToolPIVConst.PIV_OBJ_CHUID, Parameter.ChuidAPDU);
+        }
+
+        private void DoResponsePivSetChuId(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_IMPORT_CHUID_FAILED);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功ログを出力
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CHUID_IMPORTED);
+
+            // CCCインポート処理を実行
+            DoRequestPIVInsPutData(ToolPIVConst.PIV_OBJ_CAPABILITY, Parameter.CccAPDU);
+        }
+
+        private void DoResponsePivSetCCC(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_IMPORT_CCC_FAILED);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功ログを出力
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CCC_IMPORTED);
+            NotifyCommandTerminated(true);
+        }
+
+        //
+        // PIVステータス照会
+        //
         private void DoPivStatusProcessWithPinRetryResponse(byte[] responseData, UInt16 responseSW)
         {
             if ((responseSW >> 8) == 0x63) {
@@ -302,6 +357,9 @@ namespace MaintenanceToolGUI
             }
         }
 
+        //
+        // PIVデータオブジェクト照会
+        //
         private void DoRequestPIVInsGetData(UInt32 objectId)
         {
             // 取得対象オブジェクトをAPDUに格納
@@ -312,7 +370,6 @@ namespace MaintenanceToolGUI
             CommandIns = ToolPIVConst.PIV_INS_GET_DATA;
             Process.SendIns(CommandIns, 0x3f, 0xff, apdu, 0xff);
         }
-
 
         private void DoResponsePIVInsGetData(byte[] responseData, UInt16 responseSW)
         {
@@ -367,6 +424,35 @@ namespace MaintenanceToolGUI
             apdu[offset++] = (byte)((objectId >> 8) & 0x000000ff);
             apdu[offset++] = (byte)(objectId & 0x000000ff);
             return apdu;
+        }
+
+        //
+        // PIVデータオブジェクト登録
+        //
+        private void DoRequestPIVInsPutData(UInt32 objectId, byte[] apdu)
+        {
+            // コマンドを実行
+            ObjectIdToFetch = objectId;
+            CommandIns = ToolPIVConst.PIV_INS_PUT_DATA;
+            Process.SendIns(CommandIns, 0x3f, 0xff, apdu, 0xff);
+        }
+
+        private void DoResponsePIVInsPutData(byte[] responseData, UInt16 responseSW)
+        {
+            // オブジェクトIDに応じて後続処理分岐
+            switch (ObjectIdToFetch) {
+            case ToolPIVConst.PIV_OBJ_CHUID:
+                // CCC設定処理を実行
+                DoResponsePivSetChuId(responseData, responseSW);
+                break;
+            case ToolPIVConst.PIV_OBJ_CAPABILITY:
+                DoResponsePivSetCCC(responseData, responseSW);
+                break;
+            default:
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
         }
 
         public string GetReaderName()
