@@ -19,6 +19,8 @@ namespace MaintenanceToolGUI
         public const byte TAG_DYNAMIC_AUTH_TEMPLATE = 0x7c;
         public const byte TAG_AUTH_WITNESS = 0x80;
         public const byte TAG_AUTH_CHALLENGE = 0x81;
+        public const byte TAG_DATA_OBJECT = 0x5c;
+        public const byte TAG_DATA_OBJECT_VALUE = 0x53;
     }
 
     public class ToolPIVParameter
