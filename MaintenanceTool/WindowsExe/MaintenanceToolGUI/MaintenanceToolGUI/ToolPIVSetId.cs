@@ -41,24 +41,34 @@ namespace MaintenanceToolGUI
         public byte[] GenerateChuidAPDU()
         {
             // テンプレートをコピー
+            //   先頭５バイトはオブジェクトID
             //   先頭２バイトはTLVのタグ／データ長
-            byte[] template = new byte[2 + ChuidTemplate.Length];
-            Array.Copy(ChuidTemplate, 0, template, 2, ChuidTemplate.Length);
+            int leadingOffset = 5 + 2;
+            byte[] template = new byte[leadingOffset + ChuidTemplate.Length];
+            Array.Copy(ChuidTemplate, 0, template, leadingOffset, ChuidTemplate.Length);
 
             // ランダムなIDを設定
             byte[] randomBytes = new byte[ToolPIVSetIdConst.PIV_CARDID_SIZE];
             GenerateRandomBytes(randomBytes);
-            Array.Copy(randomBytes, 0, template, 2 + ToolPIVSetIdConst.PIV_CARDID_OFFSET, ToolPIVSetIdConst.PIV_CARDID_SIZE);
+            Array.Copy(randomBytes, 0, template, leadingOffset + ToolPIVSetIdConst.PIV_CARDID_OFFSET, ToolPIVSetIdConst.PIV_CARDID_SIZE);
 
             // 有効期限を１年後に設定
             DateTime nowDate = DateTime.Now;
             DateTime expDate = nowDate.AddYears(1);
             byte[] expDateBytes = Encoding.ASCII.GetBytes(expDate.ToString("yyyyMMdd"));
-            Array.Copy(expDateBytes, 0, template, 2 + ToolPIVSetIdConst.PIV_CARDEXP_OFFSET, ToolPIVSetIdConst.PIV_CARDEXP_SIZE);
+            Array.Copy(expDateBytes, 0, template, leadingOffset + ToolPIVSetIdConst.PIV_CARDEXP_OFFSET, ToolPIVSetIdConst.PIV_CARDEXP_SIZE);
+
+            // オブジェクトIDを設定
+            template[0] = ToolPIVConst.TAG_DATA_OBJECT;
+            template[1] = 3;
+            UInt32 objectId = ToolPIVConst.PIV_OBJ_CHUID;
+            template[2] = (byte)((objectId >> 16) & 0xff);
+            template[3] = (byte)((objectId >> 8) & 0xff);
+            template[4] = (byte)(objectId & 0xff);
 
             // タグとデータ長を設定
-            template[0] = ToolPIVConst.TAG_DATA_OBJECT_VALUE;
-            template[1] = (byte)ChuidTemplate.Length;
+            template[5] = ToolPIVConst.TAG_DATA_OBJECT_VALUE;
+            template[6] = (byte)ChuidTemplate.Length;
             return template;
         }
 
