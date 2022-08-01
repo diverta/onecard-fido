@@ -181,6 +181,7 @@ namespace MaintenanceToolGUI
         private void DoRequestPIVSetChuId()
         {
             // CHUID／CCCインポート用のAPDUを生成
+            Parameter = new ToolPIVParameter();
             GenerateChuidAndCcc(Parameter);
 
             // 事前にCCID I/F経由で、PIVアプレットをSELECT
