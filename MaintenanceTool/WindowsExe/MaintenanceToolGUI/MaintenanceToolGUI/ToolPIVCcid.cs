@@ -27,6 +27,9 @@ namespace MaintenanceToolGUI
         // PIV管理機能認証（往路）のチャレンジを保持
         private byte[] PivAuthChallenge = null;
 
+        // 乱数製造用
+        private Random random = new Random();
+
         // CCID I/Fからデータ受信時のイベント
         public delegate void CcidCommandTerminatedEvent(bool success);
         public event CcidCommandTerminatedEvent OnCcidCommandTerminated;
@@ -181,17 +184,73 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(true);
+            // 8バイトのランダムベクターを送信チャレンジに設定
+            PivAuthChallenge = new byte[8];
+            random.NextBytes(PivAuthChallenge);
+
+            // PIV管理機能認証（復路）のリクエストデータを生成
+            byte[] apdu = new byte[22];
+            int offset = 0;
+            apdu[offset++] = ToolPIVConst.TAG_DYNAMIC_AUTH_TEMPLATE;
+            apdu[offset++] = 20;
+            // copy witness
+            apdu[offset++] = ToolPIVConst.TAG_AUTH_WITNESS;
+            apdu[offset++] = (byte)witness.Length;
+            Array.Copy(witness, 0, apdu, offset, witness.Length);
+            // copy challenge
+            offset += witness.Length;
+            apdu[offset++] = ToolPIVConst.TAG_AUTH_CHALLENGE;
+            apdu[offset++] = (byte)PivAuthChallenge.Length;
+            Array.Copy(PivAuthChallenge, 0, apdu, offset, PivAuthChallenge.Length);
+
+            // コマンドを実行
+            // 0x03: CRYPTO_ALG_3DES
+            CommandIns = ToolPIVConst.PIV_INS_AUTHENTICATE;
+            Process.SendIns(CommandIns, 0x03, ToolPIVConst.PIV_KEY_CARDMGM, apdu, 0xff);
         }
 
         private void DoResponsePIVAdminAuth(byte[] responseData, UInt16 responseSW)
         {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                if (PivAuthChallenge == null) {
+                    OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED);
+                } else {
+                    OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED);
+                }
+                NotifyCommandTerminated(false);
+                return;
+            }
+
             if (PivAuthChallenge == null) {
                 // PIV管理機能認証（復路）を実行
                 DoRequestPivAdminAuthSecond(responseData);
                 return;
             }
+
+            // 送受信チャレンジの内容一致チェック
+            // PIV管理機能認証（復路）のレスポンスから、暗号化された受信チャレンジを抽出（５バイト目から８バイト分）
+            byte[] encrypted = new byte[8];
+            Array.Copy(responseData, 4, encrypted, 0, 8);
+
+            // PIV管理パスワードを使用し、受信チャレンジを復号化
+            byte[] witness = DecryptPivAdminAuthWitness(encrypted);
+            if (witness == null) {
+                // エラーが発生時は制御を戻す
+                OnCcidCommandNotifyErrorMessage(LastErrorMessageWithException);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
+            if (PivAuthChallenge.SequenceEqual(witness) == false) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(true);
         }
 
         private void DoRequestPivInsVerify(string pinCode)
