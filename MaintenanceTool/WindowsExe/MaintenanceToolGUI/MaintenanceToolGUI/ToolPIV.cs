@@ -189,6 +189,7 @@ namespace MaintenanceToolGUI
         {
             if (DoProcessImportKey() == false) {
                 NotifyProcessTerminated(CommandSuccess);
+                return;
             }
 
             // TODO: 仮の実装です。
@@ -248,6 +249,13 @@ namespace MaintenanceToolGUI
                 return false;
             }
             if (ReadCertificatePem(Parameter.CertPemPath) == false) {
+                return false;
+            }
+
+            // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+            if (toolPIVPkeyCert.PkeyAlgName != toolPIVPkeyCert.CertAlgName) {
+                NotifyErrorMessage(string.Format(AppCommon.MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                    toolPIVPkeyCert.PkeyAlgName, toolPIVPkeyCert.CertAlgName));
                 return false;
             }
 

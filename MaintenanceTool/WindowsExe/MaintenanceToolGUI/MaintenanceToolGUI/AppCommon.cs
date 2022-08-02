@@ -205,6 +205,7 @@
         public const string MSG_PIV_INSTALL_PKEY_CERT = "鍵・証明書ファイルのインストール";
         public const string MSG_PIV_LOAD_PKEY_FAILED = "鍵ファイルの読込が失敗しました。";
         public const string MSG_PIV_LOAD_CERT_FAILED = "証明書ファイルの読込が失敗しました。";
+        public const string MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM = "鍵アルゴリズム（{0}）と証明書アルゴリズム（{1}）が異なっています。\n正しい組み合わせの鍵・証明書をご使用ください。";
         public const string MSG_PIV_CHANGE_PIN_NUMBER = "PIN番号の変更";
         public const string MSG_PIV_CHANGE_PUK_NUMBER = "PUK番号の変更";
         public const string MSG_PIV_RESET_PIN_NUMBER = "PIN番号のリセット";
