@@ -10,12 +10,20 @@ namespace MaintenanceToolGUI
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
         public const byte PIV_INS_GET_DATA = 0xcb;
+        public const byte PIV_INS_PUT_DATA = 0xdb;
+        public const byte PIV_INS_AUTHENTICATE = 0x87;
         public const byte PIV_KEY_PIN = 0x80;
+        public const byte PIV_KEY_CARDMGM = 0x9b;
         public const UInt32 PIV_OBJ_CAPABILITY = 0x5fc107;
         public const UInt32 PIV_OBJ_CHUID = 0x5fc102;
         public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
         public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
         public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
+        public const byte TAG_DYNAMIC_AUTH_TEMPLATE = 0x7c;
+        public const byte TAG_AUTH_WITNESS = 0x80;
+        public const byte TAG_AUTH_CHALLENGE = 0x81;
+        public const byte TAG_DATA_OBJECT = 0x5c;
+        public const byte TAG_DATA_OBJECT_VALUE = 0x53;
     }
 
     public class ToolPIVParameter
@@ -29,6 +37,8 @@ namespace MaintenanceToolGUI
         public string RenewalPin { get; set; }
         public AppCommon.RequestType SelectedPinCommand { get; set; }
         public string SelectedPinCommandName { get; set; }
+        public byte[] ChuidAPDU { get; set; }
+        public byte[] CccAPDU { get; set; }
     }
 
     public class ToolPIVSettingItem
@@ -151,6 +161,9 @@ namespace MaintenanceToolGUI
                 // 処理機能に応じ、以下の処理に分岐
                 RequestType = requestType;
                 switch (RequestType) {
+                case AppCommon.RequestType.PIVSetChuId:
+                    DoRequestPIVSetChuId();
+                    break;
                 case AppCommon.RequestType.PIVStatus:
                     DoRequestPIVStatus();
                     break;
@@ -168,6 +181,23 @@ namespace MaintenanceToolGUI
         //
         // CCID I/Fコマンド実行関数
         //
+        private void DoRequestPIVSetChuId()
+        {
+            // CHUID／CCCインポート用のAPDUを生成
+            Parameter = new ToolPIVParameter();
+            GenerateChuidAndCcc(Parameter);
+
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
+        }
+
+        private void DoResponsePIVSetChuId(bool success)
+        {
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
         private void DoRequestPIVStatus()
         {
             // 事前にCCID I/F経由で、PIVアプレットをSELECT
@@ -189,6 +219,14 @@ namespace MaintenanceToolGUI
         //
         // 内部処理
         //
+        private void GenerateChuidAndCcc(ToolPIVParameter parameter)
+        {
+            // CHUID／CCCインポート用のAPDUを生成
+            ToolPIVSetId toolPIVSetId = new ToolPIVSetId();
+            parameter.ChuidAPDU = toolPIVSetId.GenerateChuidAPDU();
+            parameter.CccAPDU = toolPIVSetId.GenerateCccAPDU();
+        }
+
         private void EditDescriptionString()
         {
             ToolPIVCertDesc pivCertDesc = new ToolPIVCertDesc(PIVCcid.SettingItem);
@@ -319,6 +357,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                DoResponsePIVSetChuId(success);
+                break;
             case AppCommon.RequestType.PIVStatus:
                 DoResponsePIVStatus(success);
                 break;

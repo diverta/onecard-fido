@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -13,11 +15,20 @@ namespace MaintenanceToolGUI
         private byte CommandIns;
         private UInt32 ObjectIdToFetch;
 
+        // エラーメッセージを保持
+        private string LastErrorMessageWithException = null;
+
         // リクエストパラメーターを保持
         private ToolPIVParameter Parameter = null;
 
         // PIV設定情報を保持
         public ToolPIVSettingItem SettingItem = null;
+
+        // PIV管理機能認証（往路）のチャレンジを保持
+        private byte[] PivAuthChallenge = null;
+
+        // 乱数製造用
+        private Random random = new Random();
 
         // CCID I/Fからデータ受信時のイベント
         public delegate void CcidCommandTerminatedEvent(bool success);
@@ -51,6 +62,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 DoRequestPIVInsSelectApplication();
@@ -70,11 +82,17 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_INS_SELECT:
                 DoResponsePIVInsSelectApplication(responseData, responseSW);
                 break;
+            case ToolPIVConst.PIV_INS_AUTHENTICATE:
+                DoResponsePIVAdminAuth(responseData, responseSW);
+                break;
             case ToolPIVConst.PIV_INS_VERIFY:
                 DoResponsePIVInsVerify(responseData, responseSW);
                 break;
             case ToolPIVConst.PIV_INS_GET_DATA:
                 DoResponsePIVInsGetData(responseData, responseSW);
+                break;
+            case ToolPIVConst.PIV_INS_PUT_DATA:
+                DoResponsePIVInsPutData(responseData, responseSW);
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -126,9 +144,119 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                // PIV管理機能認証（往路）を実行
+                DoRequestPivAdminAuth();
+                break;
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoRequestPivInsVerify(null);
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
+        }
+
+        private void DoRequestPivAdminAuth()
+        {
+            // PIV管理機能認証（往路）のリクエストデータを生成
+            byte[] apdu = { ToolPIVConst.TAG_DYNAMIC_AUTH_TEMPLATE, 2, ToolPIVConst.TAG_AUTH_WITNESS, 0 };
+            PivAuthChallenge = null;
+
+            // コマンドを実行
+            // 0x03: CRYPTO_ALG_3DES
+            CommandIns = ToolPIVConst.PIV_INS_AUTHENTICATE;
+            Process.SendIns(CommandIns, 0x03, ToolPIVConst.PIV_KEY_CARDMGM, apdu, 0xff);
+        }
+
+        private void DoRequestPivAdminAuthSecond(byte[] responseData)
+        {
+            // PIV管理機能認証（往路）のレスポンスから、暗号化された受信チャレンジを抽出（５バイト目から８バイト分）
+            byte[] encrypted = new byte[8];
+            Array.Copy(responseData, 4, encrypted, 0, 8);
+
+            // PIV管理パスワードを使用し、受信チャレンジを復号化
+            byte[] witness = DecryptPivAdminAuthWitness(encrypted);
+            if (witness == null) {
+                // エラーが発生時は制御を戻す
+                OnCcidCommandNotifyErrorMessage(LastErrorMessageWithException);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 8バイトのランダムベクターを送信チャレンジに設定
+            PivAuthChallenge = new byte[8];
+            random.NextBytes(PivAuthChallenge);
+
+            // PIV管理機能認証（復路）のリクエストデータを生成
+            byte[] apdu = new byte[22];
+            int offset = 0;
+            apdu[offset++] = ToolPIVConst.TAG_DYNAMIC_AUTH_TEMPLATE;
+            apdu[offset++] = 20;
+            // copy witness
+            apdu[offset++] = ToolPIVConst.TAG_AUTH_WITNESS;
+            apdu[offset++] = (byte)witness.Length;
+            Array.Copy(witness, 0, apdu, offset, witness.Length);
+            // copy challenge
+            offset += witness.Length;
+            apdu[offset++] = ToolPIVConst.TAG_AUTH_CHALLENGE;
+            apdu[offset++] = (byte)PivAuthChallenge.Length;
+            Array.Copy(PivAuthChallenge, 0, apdu, offset, PivAuthChallenge.Length);
+
+            // コマンドを実行
+            // 0x03: CRYPTO_ALG_3DES
+            CommandIns = ToolPIVConst.PIV_INS_AUTHENTICATE;
+            Process.SendIns(CommandIns, 0x03, ToolPIVConst.PIV_KEY_CARDMGM, apdu, 0xff);
+        }
+
+        private void DoResponsePIVAdminAuth(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                if (PivAuthChallenge == null) {
+                    OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED);
+                } else {
+                    OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED);
+                }
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            if (PivAuthChallenge == null) {
+                // PIV管理機能認証（復路）を実行
+                DoRequestPivAdminAuthSecond(responseData);
+                return;
+            }
+
+            // 送受信チャレンジの内容一致チェック
+            // PIV管理機能認証（復路）のレスポンスから、暗号化された受信チャレンジを抽出（５バイト目から８バイト分）
+            byte[] encrypted = new byte[8];
+            Array.Copy(responseData, 4, encrypted, 0, 8);
+
+            // PIV管理パスワードを使用し、受信チャレンジを復号化
+            byte[] witness = DecryptPivAdminAuthWitness(encrypted);
+            if (witness == null) {
+                // エラーが発生時は制御を戻す
+                OnCcidCommandNotifyErrorMessage(LastErrorMessageWithException);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
+            if (PivAuthChallenge.SequenceEqual(witness) == false) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (RequestType) {
+            case AppCommon.RequestType.PIVSetChuId:
+                // CHUID／CCC設定処理を実行
+                DoRequestPivSetChuId(responseData, responseSW);
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -164,6 +292,48 @@ namespace MaintenanceToolGUI
             }
         }
 
+        //
+        // CHUID／CCC設定
+        //
+        private void DoRequestPivSetChuId(byte[] responseData, UInt16 responseSW)
+        {
+            // CHUIDインポート処理を実行
+            DoRequestPIVInsPutData(ToolPIVConst.PIV_OBJ_CHUID, Parameter.ChuidAPDU);
+        }
+
+        private void DoResponsePivSetChuId(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_IMPORT_CHUID_FAILED);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功ログを出力
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CHUID_IMPORTED);
+
+            // CCCインポート処理を実行
+            DoRequestPIVInsPutData(ToolPIVConst.PIV_OBJ_CAPABILITY, Parameter.CccAPDU);
+        }
+
+        private void DoResponsePivSetCCC(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_IMPORT_CCC_FAILED);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功ログを出力
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CCC_IMPORTED);
+            NotifyCommandTerminated(true);
+        }
+
+        //
+        // PIVステータス照会
+        //
         private void DoPivStatusProcessWithPinRetryResponse(byte[] responseData, UInt16 responseSW)
         {
             if ((responseSW >> 8) == 0x63) {
@@ -187,6 +357,9 @@ namespace MaintenanceToolGUI
             }
         }
 
+        //
+        // PIVデータオブジェクト照会
+        //
         private void DoRequestPIVInsGetData(UInt32 objectId)
         {
             // 取得対象オブジェクトをAPDUに格納
@@ -197,7 +370,6 @@ namespace MaintenanceToolGUI
             CommandIns = ToolPIVConst.PIV_INS_GET_DATA;
             Process.SendIns(CommandIns, 0x3f, 0xff, apdu, 0xff);
         }
-
 
         private void DoResponsePIVInsGetData(byte[] responseData, UInt16 responseSW)
         {
@@ -254,9 +426,85 @@ namespace MaintenanceToolGUI
             return apdu;
         }
 
+        //
+        // PIVデータオブジェクト登録
+        //
+        private void DoRequestPIVInsPutData(UInt32 objectId, byte[] apdu)
+        {
+            // コマンドを実行
+            ObjectIdToFetch = objectId;
+            CommandIns = ToolPIVConst.PIV_INS_PUT_DATA;
+            Process.SendIns(CommandIns, 0x3f, 0xff, apdu, 0xff);
+        }
+
+        private void DoResponsePIVInsPutData(byte[] responseData, UInt16 responseSW)
+        {
+            // オブジェクトIDに応じて後続処理分岐
+            switch (ObjectIdToFetch) {
+            case ToolPIVConst.PIV_OBJ_CHUID:
+                // CCC設定処理を実行
+                DoResponsePivSetChuId(responseData, responseSW);
+                break;
+            case ToolPIVConst.PIV_OBJ_CAPABILITY:
+                DoResponsePivSetCCC(responseData, responseSW);
+                break;
+            default:
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                NotifyCommandTerminated(false);
+                break;
+            }
+        }
+
         public string GetReaderName()
         {
             return Process.GetReaderName();
+        }
+
+        //
+        // Triple DES復号化関連
+        //
+        // デフォルトの3DES鍵
+        private byte[] Default3desKey = {
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
+        };
+
+        private byte[] DecryptPivAdminAuthWitness(byte[] encrypted)
+        {
+            // Triple DESで復号化
+            byte[] transformedBytes = null;
+            try {
+                DES des = new DESCryptoServiceProvider();
+                des.Mode = CipherMode.ECB;
+                des.Padding = PaddingMode.None;
+                byte[] src = new byte[8];
+                Array.Copy(encrypted, src, src.Length);
+
+                des.Key = Default3desKey.Take(8).ToArray();
+                ICryptoTransform ct1 = des.CreateDecryptor();
+                transformedBytes = ct1.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+                Array.Copy(transformedBytes, src, src.Length);
+
+                des.Key = Default3desKey.Skip(8).Take(8).ToArray();
+                ICryptoTransform ct2 = des.CreateEncryptor();
+                transformedBytes = ct2.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+                Array.Copy(transformedBytes, src, src.Length);
+
+                des.Key = Default3desKey.Skip(16).Take(8).ToArray();
+                ICryptoTransform ct3 = des.CreateDecryptor();
+                transformedBytes = ct3.TransformFinalBlock(src, 0, src.Length);
+                des.Clear();
+
+            } catch (Exception e) {
+                // エラーメッセージを保持
+                LastErrorMessageWithException = string.Format(AppCommon.MSG_ERROR_PIV_CERT_INFO_GET_FAILED, e.Message);
+                return null;
+            }
+
+            return transformedBytes;
         }
     }
 }

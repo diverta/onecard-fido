@@ -163,12 +163,20 @@
 
         // PIV機能設定関連
         public const string MSG_ERROR_PIV_APPLET_SELECT_FAILED = "PIV機能を使用することができません。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED = "PIV管理機能認証（往路）が失敗しました。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED = "PIV管理機能認証（復路）が失敗しました。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED = "PIV管理機能認証の内部処理が失敗しました（{0}）";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF = "PIV管理機能認証が失敗しました（チャレンジが一致しません）。";
         public const string MSG_ERROR_PIV_SELECTING_CARD_FAIL = "PIV機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
         public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
         public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_ERROR_PIV_IMPORT_CHUID_FAILED = "PIV CHUIDインポート処理が失敗しました。";
+        public const string MSG_ERROR_PIV_IMPORT_CCC_FAILED = "PIV CCCインポート処理が失敗しました。";
+        public const string MSG_PIV_CHUID_IMPORTED = "PIV CHUIDを正常にインポートしました。";
+        public const string MSG_PIV_CCC_IMPORTED = "PIV CCCを正常にインポートしました。";
         public const string MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED = "PIV PINリトライカウンターを取得できませんでした。";
         public const string MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED = "PIVデータオブジェクトを取得できませんでした（ID=0x{0:x6}）。";
         public const string MSG_PIV_PIN_RETRY_CNT_GET = "PIV PINリトライカウンターを取得しました（残り{0}回試行可能です）。";
