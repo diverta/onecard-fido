@@ -74,6 +74,7 @@ namespace MaintenanceToolGUI
         // 処理クラスの参照を保持
         private HIDMain HidMainRef;
         private ToolPIVCcid PIVCcid;
+        private ToolPIVPkeyCert toolPIVPkeyCert;
 
         // 処理機能を保持
         private AppCommon.RequestType RequestType;
@@ -186,6 +187,10 @@ namespace MaintenanceToolGUI
         //
         private void DoRequestPIVImportKey()
         {
+            if (DoProcessImportKey() == false) {
+                NotifyProcessTerminated(CommandSuccess);
+            }
+
             // TODO: 仮の実装です。
             DoResponsePIVImportKey(true);
         }
@@ -235,6 +240,40 @@ namespace MaintenanceToolGUI
         //
         // 内部処理
         //
+        private bool DoProcessImportKey()
+        {
+            // 秘密鍵ファイル、証明書ファイルを読込
+            toolPIVPkeyCert = new ToolPIVPkeyCert();
+            if (ReadPrivateKeyPem(Parameter.PkeyPemPath) == false) {
+                return false;
+            }
+            if (ReadCertificatePem(Parameter.CertPemPath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ReadPrivateKeyPem(string pkeyPemPath)
+        {
+            if (toolPIVPkeyCert.LoadPrivateKey(pkeyPemPath) == false) {
+                NotifyErrorMessage(AppCommon.MSG_PIV_LOAD_PKEY_FAILED);
+                return false;
+            }
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_PKEY_PEM_LOADED);
+            return true;
+        }
+
+        private bool ReadCertificatePem(string certPemPath)
+        {
+            if (toolPIVPkeyCert.LoadCertificate(certPemPath) == false) {
+                NotifyErrorMessage(AppCommon.MSG_PIV_LOAD_CERT_FAILED);
+                return false;
+            }
+            AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CERT_PEM_LOADED);
+            return true;
+        }
+
         private void GenerateChuidAndCcc(ToolPIVParameter parameter)
         {
             // CHUID／CCCインポート用のAPDUを生成
