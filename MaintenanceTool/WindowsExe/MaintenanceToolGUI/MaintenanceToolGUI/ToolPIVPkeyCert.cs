@@ -12,6 +12,14 @@ namespace MaintenanceToolGUI
         public string PkeyAlgName { get; set; }
         public string CertAlgName { get; set; }
 
+        // RSA鍵のバイナリーイメージ
+        public byte[] RsaEBytes = null;
+        public byte[] RsaPBytes = null;
+        public byte[] RsaQBytes = null;
+        public byte[] RsaDpBytes = null;
+        public byte[] RsaDqBytes = null;
+        public byte[] RsaQinvBytes = null;
+
         // EC鍵のバイナリーイメージ
         public byte[] ECPrivKeyBytes = null;
 
@@ -30,6 +38,9 @@ namespace MaintenanceToolGUI
             // 秘密鍵アルゴリズム名を取得
             if (privateKeyPem.Contains("RSA PRIVATE KEY")) {
                 PkeyAlgName = "RSA2048";
+                if (ParseRSAPrivateKey(privateKeyPem) == false) {
+                    return false;
+                }
             } else if (privateKeyPem.Contains("EC PRIVATE KEY")) {
                 PkeyAlgName = "ECCP256";
                 if (ParseECPrivateKey(privateKeyPem) == false) {
@@ -43,7 +54,112 @@ namespace MaintenanceToolGUI
             return true;
         }
 
-        public bool ParseECPrivateKey(string privateKeyPem)
+        private bool ParseRSAPrivateKey(string privateKeyPem)
+        {
+            // 秘密鍵を抽出（Base64エンコード文字列）
+            string rsaKeyPem = "";
+            bool found = false;
+            foreach (string line in privateKeyPem.Split('\n')) {
+                if (found) {
+                    if (line.Contains("-----END RSA PRIVATE KEY-----")) {
+                        break;
+                    } else {
+                        rsaKeyPem += line;
+                    }
+                } else if (line.Contains("-----BEGIN RSA PRIVATE KEY-----")) {
+                    found = true;
+                }
+            }
+
+            // 秘密鍵が抽出できなかった場合はエラー
+            if (rsaKeyPem.Length == 0) {
+                AppUtil.OutputLogError(string.Format(AppCommon.MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED, "RSA private key not found in PEM file"));
+                return false;
+            }
+
+            try {
+                // 秘密鍵情報をデコード
+                byte[] decodedBytes = Convert.FromBase64String(rsaKeyPem);
+
+                // 先頭から解析
+                //   スキップする７バイト＝ 30 82 04 a3 02 01 00
+                int offset = 7;
+                byte tag = 0;
+                int length = 0;
+                int itemNo = 0;
+                while (offset < decodedBytes.Length) {
+                    if (length > 0) {
+                        if (decodedBytes[offset] == 0x00) {
+                            // 項目の先頭が0x00であれば無視
+                            offset++;
+                            length -= 1;
+                        }
+
+                        // 項目のバイト配列を抽出
+                        byte[] itemBytes = decodedBytes.Skip(offset).Take(length).ToArray();
+
+                        // 該当する項目に設定
+                        switch (itemNo) {
+                        case 1:
+                            RsaEBytes = itemBytes;
+                            break;
+                        case 3:
+                            RsaPBytes = itemBytes;
+                            break;
+                        case 4:
+                            RsaQBytes = itemBytes;
+                            break;
+                        case 5:
+                            RsaDpBytes = itemBytes;
+                            break;
+                        case 6:
+                            RsaDqBytes = itemBytes;
+                            break;
+                        case 7:
+                            RsaQinvBytes = itemBytes;
+                            break;
+                        default:
+                            break;
+                        }
+
+                        // 次の項目に進む
+                        offset += length;
+                        tag = 0;
+                        length = 0;
+                        itemNo++;
+
+                    } else if (tag > 0) {
+                        // 項目の長さを取得
+                        if (decodedBytes[offset] == 0x82) {
+                            length = ((decodedBytes[offset + 1] << 8) & 0xff00) + (decodedBytes[offset + 2] & 0x00ff);
+                            offset += 3;
+                        } else if (decodedBytes[offset] == 0x81) {
+                            length = decodedBytes[offset + 1];
+                            offset += 2;
+                        } else {
+                            length = decodedBytes[offset];
+                            offset++;
+                        }
+
+                    } else if (decodedBytes[offset] == 0x02) {
+                        // 項目の種類を取得
+                        tag = decodedBytes[offset];
+                        offset++;
+
+                    } else {
+                        // 次のバイトに進む
+                        offset++;
+                    }
+                }
+                return true;
+
+            } catch (Exception e) {
+                AppUtil.OutputLogError(string.Format(AppCommon.MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED, e.Message));
+                return false;
+            }
+        }
+
+        private bool ParseECPrivateKey(string privateKeyPem)
         {
             // 秘密鍵を抽出（Base64エンコード文字列）
             string ecKeyPem = "";
