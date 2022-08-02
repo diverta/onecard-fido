@@ -161,6 +161,9 @@ namespace MaintenanceToolGUI
                 // 処理機能に応じ、以下の処理に分岐
                 RequestType = requestType;
                 switch (RequestType) {
+                case AppCommon.RequestType.PIVImportKey:
+                    DoRequestPIVImportKey();
+                    break;
                 case AppCommon.RequestType.PIVSetChuId:
                     DoRequestPIVSetChuId();
                     break;
@@ -181,6 +184,19 @@ namespace MaintenanceToolGUI
         //
         // CCID I/Fコマンド実行関数
         //
+        private void DoRequestPIVImportKey()
+        {
+            // TODO: 仮の実装です。
+            DoResponsePIVImportKey(true);
+        }
+
+        private void DoResponsePIVImportKey(bool success)
+        {
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
         private void DoRequestPIVSetChuId()
         {
             // CHUID／CCCインポート用のAPDUを生成
