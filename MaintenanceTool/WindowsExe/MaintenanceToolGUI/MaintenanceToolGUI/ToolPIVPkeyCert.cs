@@ -8,6 +8,8 @@ namespace MaintenanceToolGUI
 {
     public class ToolPIVPkeyCertConst
     {
+        public const string ALG_NAME_RSA2048 = "RSA2048";
+        public const string ALG_NAME_ECCP256 = "ECCP256";
         public const int RSA2048_PQ_SIZE = 128;
         public const int ECCP256_KEY_SIZE = 32;
         public const byte TAG_CERT = 0x70;
@@ -52,12 +54,12 @@ namespace MaintenanceToolGUI
 
             // 秘密鍵アルゴリズム名を取得
             if (privateKeyPem.Contains("RSA PRIVATE KEY")) {
-                PkeyAlgName = "RSA2048";
+                PkeyAlgName = ToolPIVPkeyCertConst.ALG_NAME_RSA2048;
                 if (ParseRSAPrivateKey(privateKeyPem) == false) {
                     return false;
                 }
             } else if (privateKeyPem.Contains("EC PRIVATE KEY")) {
-                PkeyAlgName = "ECCP256";
+                PkeyAlgName = ToolPIVPkeyCertConst.ALG_NAME_ECCP256;
                 if (ParseECPrivateKey(privateKeyPem) == false) {
                     return false;
                 }
@@ -220,9 +222,9 @@ namespace MaintenanceToolGUI
             // 証明書アルゴリズム名を取得
             string friendlyName = x509.PublicKey.Oid.FriendlyName;
             if (friendlyName.Equals("RSA")) {
-                CertAlgName = "RSA2048";
+                CertAlgName = ToolPIVPkeyCertConst.ALG_NAME_RSA2048;
             } else if (friendlyName.Equals("ECC")) {
-                CertAlgName = "ECCP256";
+                CertAlgName = ToolPIVPkeyCertConst.ALG_NAME_ECCP256;
             } else {
                 CertAlgName = "";
                 return false;
@@ -238,9 +240,9 @@ namespace MaintenanceToolGUI
         //
         public bool GeneratePrivateKeyAPDU()
         {
-            if (PkeyAlgName == "RSA2048") {
+            if (PkeyAlgName == ToolPIVPkeyCertConst.ALG_NAME_RSA2048) {
                 GenerateAPDUDataRsa2048();
-            } else if (PkeyAlgName == "ECCP256") {
+            } else if (PkeyAlgName == ToolPIVPkeyCertConst.ALG_NAME_ECCP256) {
                 GenerateAPDUDataEccp256();
             } else {
                 return false;
