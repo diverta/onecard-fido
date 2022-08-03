@@ -299,7 +299,7 @@ namespace MaintenanceToolGUI
         private void GenerateAPDUDataEccp256()
         {
             // 変数初期化
-            PkeyAPDUBytes = new byte[ToolPIVPkeyCertConst.ECCP256_KEY_SIZE];
+            PkeyAPDUBytes = new byte[ToolPIVPkeyCertConst.ECCP256_KEY_SIZE + 2];
             int offset = 0;
 
             // EC秘密鍵データをTLV形式で設定
