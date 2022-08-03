@@ -27,6 +27,13 @@ namespace MaintenanceToolGUI
         public const byte TAG_AUTH_CHALLENGE = 0x81;
         public const byte TAG_DATA_OBJECT = 0x5c;
         public const byte TAG_DATA_OBJECT_VALUE = 0x53;
+        public const byte TAG_CERT = 0x70;
+        public const byte TAG_CERT_COMPRESS = 0x71;
+        public const byte TAG_CERT_LRC = 0xfe;
+        public const string ALG_NAME_RSA2048 = "RSA2048";
+        public const string ALG_NAME_ECCP256 = "ECCP256";
+        public const int RSA2048_PQ_SIZE = 128;
+        public const int ECCP256_KEY_SIZE = 32;
     }
 
     public class ToolPIVParameter

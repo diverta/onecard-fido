@@ -147,10 +147,10 @@ namespace MaintenanceToolGUI
                 // 証明書アルゴリズム名を取得
                 string friendlyName = x509.PublicKey.Oid.FriendlyName;
                 if (friendlyName.Equals("RSA")) {
-                    AlgName = ToolPIVPkeyCertConst.ALG_NAME_RSA2048;
+                    AlgName = ToolPIVConst.ALG_NAME_RSA2048;
                 }
                 if (friendlyName.Equals("ECC")) {
-                    AlgName = ToolPIVPkeyCertConst.ALG_NAME_ECCP256;
+                    AlgName = ToolPIVConst.ALG_NAME_ECCP256;
                 }
 
                 return true;

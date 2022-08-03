@@ -6,17 +6,6 @@ using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
-    public class ToolPIVPkeyCertConst
-    {
-        public const string ALG_NAME_RSA2048 = "RSA2048";
-        public const string ALG_NAME_ECCP256 = "ECCP256";
-        public const int RSA2048_PQ_SIZE = 128;
-        public const int ECCP256_KEY_SIZE = 32;
-        public const byte TAG_CERT = 0x70;
-        public const byte TAG_CERT_COMPRESS = 0x71;
-        public const byte TAG_CERT_LRC = 0xfe;
-    }
-
     public class ToolPIVPkeyCert
     {
         // 鍵・証明書のアルゴリズムを保持
@@ -54,12 +43,12 @@ namespace MaintenanceToolGUI
 
             // 秘密鍵アルゴリズム名を取得
             if (privateKeyPem.Contains("RSA PRIVATE KEY")) {
-                PkeyAlgName = ToolPIVPkeyCertConst.ALG_NAME_RSA2048;
+                PkeyAlgName = ToolPIVConst.ALG_NAME_RSA2048;
                 if (ParseRSAPrivateKey(privateKeyPem) == false) {
                     return false;
                 }
             } else if (privateKeyPem.Contains("EC PRIVATE KEY")) {
-                PkeyAlgName = ToolPIVPkeyCertConst.ALG_NAME_ECCP256;
+                PkeyAlgName = ToolPIVConst.ALG_NAME_ECCP256;
                 if (ParseECPrivateKey(privateKeyPem) == false) {
                     return false;
                 }
@@ -222,9 +211,9 @@ namespace MaintenanceToolGUI
             // 証明書アルゴリズム名を取得
             string friendlyName = x509.PublicKey.Oid.FriendlyName;
             if (friendlyName.Equals("RSA")) {
-                CertAlgName = ToolPIVPkeyCertConst.ALG_NAME_RSA2048;
+                CertAlgName = ToolPIVConst.ALG_NAME_RSA2048;
             } else if (friendlyName.Equals("ECC")) {
-                CertAlgName = ToolPIVPkeyCertConst.ALG_NAME_ECCP256;
+                CertAlgName = ToolPIVConst.ALG_NAME_ECCP256;
             } else {
                 CertAlgName = "";
                 return false;
@@ -240,9 +229,9 @@ namespace MaintenanceToolGUI
         //
         public bool GeneratePrivateKeyAPDU()
         {
-            if (PkeyAlgName == ToolPIVPkeyCertConst.ALG_NAME_RSA2048) {
+            if (PkeyAlgName == ToolPIVConst.ALG_NAME_RSA2048) {
                 GenerateAPDUDataRsa2048();
-            } else if (PkeyAlgName == ToolPIVPkeyCertConst.ALG_NAME_ECCP256) {
+            } else if (PkeyAlgName == ToolPIVConst.ALG_NAME_ECCP256) {
                 GenerateAPDUDataEccp256();
             } else {
                 return false;
@@ -253,7 +242,7 @@ namespace MaintenanceToolGUI
         private void GenerateAPDUDataRsa2048()
         {
             // 変数初期化
-            int apduSize = (ToolPIVPkeyCertConst.RSA2048_PQ_SIZE + 3) * 5; 
+            int apduSize = (ToolPIVConst.RSA2048_PQ_SIZE + 3) * 5; 
             PkeyAPDUBytes = new byte[apduSize];
             int offset = 0;
 
@@ -266,49 +255,49 @@ namespace MaintenanceToolGUI
             PkeyAPDUBytes[offset++] = 0x01;
             PkeyAPDUBytes[offset++] = itemSizeTag;
             PkeyAPDUBytes[offset++] = itemSize;
-            Array.Copy(RsaPBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
-            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+            Array.Copy(RsaPBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVConst.RSA2048_PQ_SIZE;
 
             // Q
             PkeyAPDUBytes[offset++] = 0x02;
             PkeyAPDUBytes[offset++] = itemSizeTag;
             PkeyAPDUBytes[offset++] = itemSize;
-            Array.Copy(RsaQBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
-            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+            Array.Copy(RsaQBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVConst.RSA2048_PQ_SIZE;
 
             // DP
             PkeyAPDUBytes[offset++] = 0x03;
             PkeyAPDUBytes[offset++] = itemSizeTag;
             PkeyAPDUBytes[offset++] = itemSize;
-            Array.Copy(RsaDpBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
-            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+            Array.Copy(RsaDpBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVConst.RSA2048_PQ_SIZE;
 
             // DQ
             PkeyAPDUBytes[offset++] = 0x04;
             PkeyAPDUBytes[offset++] = itemSizeTag;
             PkeyAPDUBytes[offset++] = itemSize;
-            Array.Copy(RsaDqBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
-            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+            Array.Copy(RsaDqBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVConst.RSA2048_PQ_SIZE;
 
             // QINV
             PkeyAPDUBytes[offset++] = 0x05;
             PkeyAPDUBytes[offset++] = itemSizeTag;
             PkeyAPDUBytes[offset++] = itemSize;
-            Array.Copy(RsaQinvBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
-            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+            Array.Copy(RsaQinvBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVConst.RSA2048_PQ_SIZE;
         }
 
         private void GenerateAPDUDataEccp256()
         {
             // 変数初期化
-            PkeyAPDUBytes = new byte[ToolPIVPkeyCertConst.ECCP256_KEY_SIZE + 2];
+            PkeyAPDUBytes = new byte[ToolPIVConst.ECCP256_KEY_SIZE + 2];
             int offset = 0;
 
             // EC秘密鍵データをTLV形式で設定
             PkeyAPDUBytes[offset++] = 0x06;
-            PkeyAPDUBytes[offset++] = ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
-            Array.Copy(ECPrivKeyBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.ECCP256_KEY_SIZE);
-            offset += ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
+            PkeyAPDUBytes[offset++] = ToolPIVConst.ECCP256_KEY_SIZE;
+            Array.Copy(ECPrivKeyBytes, 0, PkeyAPDUBytes, offset, ToolPIVConst.ECCP256_KEY_SIZE);
+            offset += ToolPIVConst.ECCP256_KEY_SIZE;
         }
 
         public bool GenerateCertificateAPDU(byte slotId)
@@ -365,7 +354,7 @@ namespace MaintenanceToolGUI
             // データオブジェクト部（証明書生データ長＋９バイト）
             //
             // ヘッダー（４バイト）
-            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT;
+            CertAPDUBytes[offset++] = ToolPIVConst.TAG_CERT;
             CertAPDUBytes[offset++] = itemSizeTag;
             CertAPDUBytes[offset++] = itemSizeHigh;
             CertAPDUBytes[offset++] = itemSizeLow;
@@ -376,10 +365,10 @@ namespace MaintenanceToolGUI
 
             // フッター（５バイト）
             // compression info & LRC trailer
-            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT_COMPRESS;
+            CertAPDUBytes[offset++] = ToolPIVConst.TAG_CERT_COMPRESS;
             CertAPDUBytes[offset++] = 0x01;
             CertAPDUBytes[offset++] = 0x00;
-            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT_LRC;
+            CertAPDUBytes[offset++] = ToolPIVConst.TAG_CERT_LRC;
             CertAPDUBytes[offset++] = 0x00;
 
             return true;
