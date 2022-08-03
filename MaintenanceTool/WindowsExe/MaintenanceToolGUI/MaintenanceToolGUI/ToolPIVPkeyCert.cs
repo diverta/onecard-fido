@@ -9,6 +9,7 @@ namespace MaintenanceToolGUI
     public class ToolPIVPkeyCertConst
     {
         public const int RSA2048_PQ_SIZE = 128;
+        public const int ECCP256_KEY_SIZE = 32;
     }
 
     public class ToolPIVPkeyCert
@@ -233,6 +234,8 @@ namespace MaintenanceToolGUI
         {
             if (PkeyAlgName == "RSA2048") {
                 GenerateAPDUDataRsa2048();
+            } else if (PkeyAlgName == "ECCP256") {
+                GenerateAPDUDataEccp256();
             } else {
                 return false;
             }
@@ -285,6 +288,19 @@ namespace MaintenanceToolGUI
             PkeyAPDUBytes[offset++] = itemSize;
             Array.Copy(RsaQinvBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
             offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+        }
+
+        private void GenerateAPDUDataEccp256()
+        {
+            // 変数初期化
+            PkeyAPDUBytes = new byte[ToolPIVPkeyCertConst.ECCP256_KEY_SIZE];
+            int offset = 0;
+
+            // EC秘密鍵データをTLV形式で設定
+            PkeyAPDUBytes[offset++] = 0x06;
+            PkeyAPDUBytes[offset++] = ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
+            Array.Copy(ECPrivKeyBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.ECCP256_KEY_SIZE);
+            offset += ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
         }
     }
 }
