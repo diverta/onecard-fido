@@ -244,7 +244,10 @@ namespace MaintenanceToolGUI
         {
             // 画面出力情報を編集
             if (success) {
-                EditDescriptionString();
+                ToolPIVCertDesc pivCertDesc = new ToolPIVCertDesc();
+                StatusInfoString = pivCertDesc.EditDescriptionString(PIVCcid.SettingItem, PIVCcid.GetReaderName());
+            } else {
+                StatusInfoString = "";
             }
 
             // 画面に制御を戻す
@@ -313,51 +316,6 @@ namespace MaintenanceToolGUI
             ToolPIVSetId toolPIVSetId = new ToolPIVSetId();
             parameter.ChuidAPDU = toolPIVSetId.GenerateChuidAPDU();
             parameter.CccAPDU = toolPIVSetId.GenerateCccAPDU();
-        }
-
-        private void EditDescriptionString()
-        {
-            ToolPIVCertDesc pivCertDesc = new ToolPIVCertDesc(PIVCcid.SettingItem);
-
-            string CRLF = "\r\n";
-            StatusInfoString  = string.Format("Device: {0}", PIVCcid.GetReaderName()) + CRLF + CRLF;
-            StatusInfoString += string.Format("CHUID:  {0}", PrintableCHUIDString()) + CRLF;
-            StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString()) + CRLF + CRLF;
-            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_AUTHENTICATION, "PIV authenticate");
-            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_SIGNATURE, "signature");
-            StatusInfoString += pivCertDesc.EditCertDescription(ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT, "key management");
-            StatusInfoString += string.Format("PIN tries left: {0}", PIVCcid.SettingItem.Retries);
-        }
-
-        private string PrintableCHUIDString()
-        {
-            byte[] chuid = PIVCcid.SettingItem.GetDataObject(ToolPIVConst.PIV_OBJ_CHUID);
-            return PrintableObjectStringWithData(chuid);
-        }
-
-        private string PrintableCCCString()
-        {
-            byte[] ccc = PIVCcid.SettingItem.GetDataObject(ToolPIVConst.PIV_OBJ_CAPABILITY);
-            return PrintableObjectStringWithData(ccc);
-        }
-
-        private string PrintableObjectStringWithData(byte[] data)
-        {
-            // ブランクデータの場合
-            if (data == null || data.Length == 0) {
-                return "No data available";
-            }
-
-            // オブジェクトの先頭２バイト（＝TLVタグ）は不要なので削除
-            int offset = 2;
-            int size = data.Length - offset;
-
-            // データオブジェクトを、表示可能なHEX文字列に変換
-            string hex = "";
-            for (int i = 0; i < size; i++) {
-                hex += string.Format("{0:x2}", data[i + offset]);
-            }
-            return hex;
         }
 
         // 

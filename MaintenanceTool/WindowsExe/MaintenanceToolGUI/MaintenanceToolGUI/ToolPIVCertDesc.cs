@@ -23,13 +23,62 @@ namespace MaintenanceToolGUI
         // エラーメッセージを保持
         private string ErrorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
 
-        public ToolPIVCertDesc(ToolPIVSettingItem item)
+        public ToolPIVCertDesc()
         {
-            // PIV設定情報を保持
-            SettingItemRef = item;
         }
 
-        public string EditCertDescription(UInt32 objectId, string objectName)
+        public string EditDescriptionString(ToolPIVSettingItem item, string readerName)
+        {
+            // 変数をを初期化
+            string StatusInfoString = "";
+            string CRLF = "\r\n";
+
+            // PIV設定情報を保持
+            SettingItemRef = item;
+
+            // 画面表示される文字列を編集
+            StatusInfoString += string.Format("Device: {0}", readerName) + CRLF + CRLF;
+            StatusInfoString += string.Format("CHUID:  {0}", PrintableCHUIDString()) + CRLF;
+            StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString()) + CRLF + CRLF;
+            StatusInfoString += EditCertDescription(ToolPIVConst.PIV_OBJ_AUTHENTICATION, "PIV authenticate");
+            StatusInfoString += EditCertDescription(ToolPIVConst.PIV_OBJ_SIGNATURE, "signature");
+            StatusInfoString += EditCertDescription(ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT, "key management");
+            StatusInfoString += string.Format("PIN tries left: {0}", SettingItemRef.Retries);
+            return StatusInfoString;
+        }
+
+        private string PrintableCHUIDString()
+        {
+            byte[] chuid = SettingItemRef.GetDataObject(ToolPIVConst.PIV_OBJ_CHUID);
+            return PrintableObjectStringWithData(chuid);
+        }
+
+        private string PrintableCCCString()
+        {
+            byte[] ccc = SettingItemRef.GetDataObject(ToolPIVConst.PIV_OBJ_CAPABILITY);
+            return PrintableObjectStringWithData(ccc);
+        }
+
+        private string PrintableObjectStringWithData(byte[] data)
+        {
+            // ブランクデータの場合
+            if (data == null || data.Length == 0) {
+                return "No data available";
+            }
+
+            // オブジェクトの先頭２バイト（＝TLVタグ）は不要なので削除
+            int offset = 2;
+            int size = data.Length - offset;
+
+            // データオブジェクトを、表示可能なHEX文字列に変換
+            string hex = "";
+            for (int i = 0; i < size; i++) {
+                hex += string.Format("{0:x2}", data[i + offset]);
+            }
+            return hex;
+        }
+
+        private string EditCertDescription(UInt32 objectId, string objectName)
         {
             string description = null;
             string CRLF = "\r\n";
