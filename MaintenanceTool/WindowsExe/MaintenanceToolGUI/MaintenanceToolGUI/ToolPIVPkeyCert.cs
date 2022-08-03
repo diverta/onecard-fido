@@ -313,7 +313,7 @@ namespace MaintenanceToolGUI
         {
             // 変数初期化
             int certBytesSize = CertBytes.Length;
-            CertAPDUBytes = new byte[certBytesSize + 15];
+            CertAPDUBytes = new byte[certBytesSize + 18];
             int offset = 0;
 
             // スロットIDからオブジェクトIDを取得
@@ -332,20 +332,36 @@ namespace MaintenanceToolGUI
                 return false;
             }
 
-            // APDUヘッダー（６バイト）
-            // オブジェクトIDの情報を設定
+            //
+            // APDUヘッダー部（９バイト）
+            //
+            // オブジェクトID（５バイト）
             CertAPDUBytes[offset++] = ToolPIVConst.TAG_DATA_OBJECT;
             CertAPDUBytes[offset++] = 3;
             CertAPDUBytes[offset++] = (byte)((objectId >> 16) & 0xff);
             CertAPDUBytes[offset++] = (byte)((objectId >> 8) & 0xff);
             CertAPDUBytes[offset++] = (byte)(objectId & 0xff);
+
+            // オブジェクト長（certBytesSize + 9）を３バイトエンコード
+            int objectSize = certBytesSize + 9;
+            byte itemSizeTag = 0x82;
+            byte itemSizeHigh = (byte)((objectSize >> 8) & 0xff);
+            byte itemSizeLow = (byte)(objectSize & 0xff);
+
+            // オブジェクト長（４バイト）
             CertAPDUBytes[offset++] = ToolPIVConst.TAG_DATA_OBJECT_VALUE;
+            CertAPDUBytes[offset++] = itemSizeTag;
+            CertAPDUBytes[offset++] = itemSizeHigh;
+            CertAPDUBytes[offset++] = itemSizeLow;
 
             // 項目長（certBytesSize）を３バイトエンコード
-            byte itemSizeTag = 0x82;
-            byte itemSizeHigh = (byte)((certBytesSize >> 8) & 0xff);
-            byte itemSizeLow = (byte)(certBytesSize & 0xff);
+            itemSizeTag = 0x82;
+            itemSizeHigh = (byte)((certBytesSize >> 8) & 0xff);
+            itemSizeLow = (byte)(certBytesSize & 0xff);
 
+            //
+            // データオブジェクト部（証明書生データ長＋９バイト）
+            //
             // ヘッダー（４バイト）
             CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT;
             CertAPDUBytes[offset++] = itemSizeTag;
