@@ -32,6 +32,8 @@ namespace MaintenanceToolGUI
         public const byte TAG_CERT_LRC = 0xfe;
         public const string ALG_NAME_RSA2048 = "RSA2048";
         public const string ALG_NAME_ECCP256 = "ECCP256";
+        public const byte CRYPTO_ALG_RSA2048 = 0x07;
+        public const byte CRYPTO_ALG_ECCP256 = 0x11;
         public const int RSA2048_PQ_SIZE = 128;
         public const int ECCP256_KEY_SIZE = 32;
     }
@@ -49,6 +51,12 @@ namespace MaintenanceToolGUI
         public string SelectedPinCommandName { get; set; }
         public byte[] ChuidAPDU { get; set; }
         public byte[] CccAPDU { get; set; }
+        public byte PkeyAlgorithm { get; set; }
+        public byte CertAlgorithm { get; set; }
+        public string PkeyAlgName { get; set; }
+        public string CertAlgName { get; set; }
+        public byte[] PkeyAPDU { get; set; }
+        public byte[] CertAPDU { get; set; }
     }
 
     public class ToolPIVSettingItem
@@ -264,7 +272,7 @@ namespace MaintenanceToolGUI
         private bool DoProcessImportKey()
         {
             // 秘密鍵ファイル、証明書ファイルを読込
-            toolPIVPkeyCert = new ToolPIVPkeyCert();
+            toolPIVPkeyCert = new ToolPIVPkeyCert(Parameter);
             if (ReadPrivateKeyPem(Parameter.PkeyPemPath) == false) {
                 return false;
             }
@@ -273,9 +281,9 @@ namespace MaintenanceToolGUI
             }
 
             // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
-            if (toolPIVPkeyCert.PkeyAlgName != toolPIVPkeyCert.CertAlgName) {
+            if (Parameter.PkeyAlgorithm != Parameter.CertAlgorithm) {
                 NotifyErrorMessage(string.Format(AppCommon.MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
-                    toolPIVPkeyCert.PkeyAlgName, toolPIVPkeyCert.CertAlgName));
+                    Parameter.PkeyAlgName, Parameter.CertAlgName));
                 return false;
             }
 

@@ -9,31 +9,35 @@ namespace MaintenanceToolGUI
     public class ToolPIVPkeyCert
     {
         // 鍵・証明書のアルゴリズムを保持
-        public string PkeyAlgName { get; set; }
-        public string CertAlgName { get; set; }
+        private string PkeyAlgName { get; set; }
+        private string CertAlgName { get; set; }
 
         // 秘密鍵インポート用APDU
-        public byte[] PkeyAPDUBytes = null;
+        private byte[] PkeyAPDUBytes = null;
 
         // 証明書インポート用APDU
-        public byte[] CertAPDUBytes = null;
+        private byte[] CertAPDUBytes = null;
 
         // RSA鍵のバイナリーイメージ
-        public byte[] RsaEBytes = null;
-        public byte[] RsaPBytes = null;
-        public byte[] RsaQBytes = null;
-        public byte[] RsaDpBytes = null;
-        public byte[] RsaDqBytes = null;
-        public byte[] RsaQinvBytes = null;
+        private byte[] RsaEBytes = null;
+        private byte[] RsaPBytes = null;
+        private byte[] RsaQBytes = null;
+        private byte[] RsaDpBytes = null;
+        private byte[] RsaDqBytes = null;
+        private byte[] RsaQinvBytes = null;
 
         // EC鍵のバイナリーイメージ
-        public byte[] ECPrivKeyBytes = null;
+        private byte[] ECPrivKeyBytes = null;
 
         // 証明書のバイナリーイメージ
-        public byte[] CertBytes = null;
+        private byte[] CertBytes = null;
 
-        public ToolPIVPkeyCert()
+        // コマンドパラメーターの参照を保持
+        private ToolPIVParameter ToolPIVParameterRef;
+
+        public ToolPIVPkeyCert(ToolPIVParameter parameter)
         {
+            ToolPIVParameterRef = parameter;
         }
 
         public bool LoadPrivateKey(string pkeyPath)
@@ -56,6 +60,14 @@ namespace MaintenanceToolGUI
                 PkeyAlgName = "";
                 return false;
             }
+
+            // 鍵アルゴリズムを、コマンドパラメーターに設定
+            if (PkeyAlgName.Equals(ToolPIVConst.ALG_NAME_RSA2048)) {
+                ToolPIVParameterRef.PkeyAlgorithm = ToolPIVConst.CRYPTO_ALG_RSA2048;
+            } else if (PkeyAlgName.Equals(ToolPIVConst.ALG_NAME_ECCP256)) {
+                ToolPIVParameterRef.PkeyAlgorithm = ToolPIVConst.CRYPTO_ALG_ECCP256;
+            }
+            ToolPIVParameterRef.PkeyAlgName = PkeyAlgName;
 
             return true;
         }
@@ -219,6 +231,14 @@ namespace MaintenanceToolGUI
                 return false;
             }
 
+            // 証明書アルゴリズムを、コマンドパラメーターに設定
+            if (CertAlgName.Equals(ToolPIVConst.ALG_NAME_RSA2048)) {
+                ToolPIVParameterRef.CertAlgorithm = ToolPIVConst.CRYPTO_ALG_RSA2048;
+            } else if (CertAlgName.Equals(ToolPIVConst.ALG_NAME_ECCP256)) {
+                ToolPIVParameterRef.CertAlgorithm = ToolPIVConst.CRYPTO_ALG_ECCP256;
+            }
+            ToolPIVParameterRef.CertAlgName = CertAlgName;
+
             // 証明書のバイナリーイメージを抽出
             CertBytes = x509.GetRawCertData();
             return true;
@@ -236,6 +256,9 @@ namespace MaintenanceToolGUI
             } else {
                 return false;
             }
+
+            // 生成されたAPDUを、コマンドパラメーターに設定
+            ToolPIVParameterRef.PkeyAPDU = PkeyAPDUBytes;
             return true;
         }
 
@@ -371,6 +394,8 @@ namespace MaintenanceToolGUI
             CertAPDUBytes[offset++] = ToolPIVConst.TAG_CERT_LRC;
             CertAPDUBytes[offset++] = 0x00;
 
+            // 生成されたAPDUを、コマンドパラメーターに設定
+            ToolPIVParameterRef.CertAPDU = CertAPDUBytes;
             return true;
         }
     }
