@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -62,6 +63,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
                 // 機能実行に先立ち、PIVアプレットをSELECT
@@ -144,6 +146,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
                 // PIV管理機能認証（往路）を実行
                 DoRequestPivAdminAuth();
@@ -254,6 +257,10 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                // PIN番号認証を実行
+                DoRequestPivInsVerify(Parameter.AuthPin);
+                break;
             case AppCommon.RequestType.PIVSetChuId:
                 // CHUID／CCC設定処理を実行
                 DoRequestPivSetChuId(responseData, responseSW);
@@ -269,7 +276,23 @@ namespace MaintenanceToolGUI
         private void DoRequestPivInsVerify(string pinCode)
         {
             // コマンドAPDUを生成
-            byte[] apdu = new byte[0];
+            byte[] apdu;
+            if (pinCode == null) {
+                apdu = new byte[0];
+
+            } else {
+                // PINが指定されている場合は、PINを設定
+                // ８文字に足りない場合は、足りない部分を0xffで埋める
+                apdu = new byte[8];
+                byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
+                for (int i = 0; i < apdu.Length; i++) {
+                    if (i < pinCodeBytes.Length) {
+                        apdu[i] = pinCodeBytes[i];
+                    } else {
+                        apdu[i] = 0xff;
+                    }
+                }
+            }
 
             // コマンドを実行
             CommandIns = ToolPIVConst.PIV_INS_VERIFY;
@@ -280,6 +303,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                DoPivImportKeyProcess(responseData, responseSW);
+                break;
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoPivStatusProcessWithPinRetryResponse(responseData, responseSW);
@@ -290,6 +316,19 @@ namespace MaintenanceToolGUI
                 NotifyCommandTerminated(false);
                 break;
             }
+        }
+
+        //
+        // 鍵・証明書インポート
+        //
+        private void DoPivImportKeyProcess(byte[] responseData, UInt16 responseSW)
+        {
+            // for research
+            string dump = AppUtil.DumpMessage(responseData, responseData.Length);
+            AppUtil.OutputLogDebug(string.Format("DoPivImportKeyProcess {0} bytes SW=0x{1:x4}\n{2}", responseData.Length, responseSW, dump));
+
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(true);
         }
 
         //

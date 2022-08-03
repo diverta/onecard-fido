@@ -197,17 +197,20 @@ namespace MaintenanceToolGUI
         //
         private void DoRequestPIVImportKey()
         {
+            // 鍵・証明書をファイルから読込
             if (DoProcessImportKey() == false) {
                 NotifyProcessTerminated(CommandSuccess);
                 return;
             }
+
+            // 鍵・証明書インポート用のAPDUを生成
             if (GenerateImportKeyAPDU(Parameter) == false) {
                 NotifyProcessTerminated(CommandSuccess);
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DoResponsePIVImportKey(true);
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
         }
 
         private void DoResponsePIVImportKey(bool success)
@@ -403,6 +406,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                DoResponsePIVImportKey(success);
+                break;
             case AppCommon.RequestType.PIVSetChuId:
                 DoResponsePIVSetChuId(success);
                 break;
