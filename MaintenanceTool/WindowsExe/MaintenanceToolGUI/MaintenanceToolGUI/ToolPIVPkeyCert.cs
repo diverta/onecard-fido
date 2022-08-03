@@ -6,11 +6,19 @@ using ToolGUICommon;
 
 namespace MaintenanceToolGUI
 {
-    class ToolPIVPkeyCert
+    public class ToolPIVPkeyCertConst
+    {
+        public const int RSA2048_PQ_SIZE = 128;
+    }
+
+    public class ToolPIVPkeyCert
     {
         // 鍵・証明書のアルゴリズムを保持
         public string PkeyAlgName { get; set; }
         public string CertAlgName { get; set; }
+
+        // 秘密鍵インポート用APDU
+        public byte[] PkeyAPDUBytes = null;
 
         // RSA鍵のバイナリーイメージ
         public byte[] RsaEBytes = null;
@@ -216,6 +224,67 @@ namespace MaintenanceToolGUI
             // 証明書のバイナリーイメージを抽出
             CertBytes = x509.GetRawCertData();
             return true;
+        }
+
+        //
+        // APDU生成処理
+        //
+        public bool GeneratePrivateKeyAPDU()
+        {
+            if (PkeyAlgName == "RSA2048") {
+                GenerateAPDUDataRsa2048();
+            } else {
+                return false;
+            }
+            return true;
+        }
+
+        private void GenerateAPDUDataRsa2048()
+        {
+            // 変数初期化
+            int apduSize = (ToolPIVPkeyCertConst.RSA2048_PQ_SIZE + 3) * 5; 
+            PkeyAPDUBytes = new byte[apduSize];
+            int offset = 0;
+
+            // 項目長（128）を２バイトエンコード
+            byte itemSizeTag = 0x81;
+            byte itemSize = 0x80;
+
+            // RSA秘密鍵データをTLV形式で設定
+            // P
+            PkeyAPDUBytes[offset++] = 0x01;
+            PkeyAPDUBytes[offset++] = itemSizeTag;
+            PkeyAPDUBytes[offset++] = itemSize;
+            Array.Copy(RsaPBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+
+            // Q
+            PkeyAPDUBytes[offset++] = 0x02;
+            PkeyAPDUBytes[offset++] = itemSizeTag;
+            PkeyAPDUBytes[offset++] = itemSize;
+            Array.Copy(RsaQBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+
+            // DP
+            PkeyAPDUBytes[offset++] = 0x03;
+            PkeyAPDUBytes[offset++] = itemSizeTag;
+            PkeyAPDUBytes[offset++] = itemSize;
+            Array.Copy(RsaDpBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+
+            // DQ
+            PkeyAPDUBytes[offset++] = 0x04;
+            PkeyAPDUBytes[offset++] = itemSizeTag;
+            PkeyAPDUBytes[offset++] = itemSize;
+            Array.Copy(RsaDqBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
+
+            // QINV
+            PkeyAPDUBytes[offset++] = 0x05;
+            PkeyAPDUBytes[offset++] = itemSizeTag;
+            PkeyAPDUBytes[offset++] = itemSize;
+            Array.Copy(RsaQinvBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.RSA2048_PQ_SIZE);
+            offset += ToolPIVPkeyCertConst.RSA2048_PQ_SIZE;
         }
     }
 }

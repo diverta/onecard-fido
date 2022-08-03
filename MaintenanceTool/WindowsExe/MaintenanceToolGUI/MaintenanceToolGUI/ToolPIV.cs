@@ -191,6 +191,10 @@ namespace MaintenanceToolGUI
                 NotifyProcessTerminated(CommandSuccess);
                 return;
             }
+            if (GenerateImportKeyAPDU(Parameter) == false) {
+                NotifyProcessTerminated(CommandSuccess);
+                return;
+            }
 
             // TODO: 仮の実装です。
             DoResponsePIVImportKey(true);
@@ -279,6 +283,14 @@ namespace MaintenanceToolGUI
                 return false;
             }
             AppUtil.OutputLogInfo(AppCommon.MSG_PIV_CERT_PEM_LOADED);
+            return true;
+        }
+
+        private bool GenerateImportKeyAPDU(ToolPIVParameter parameter)
+        {
+            if (toolPIVPkeyCert.GeneratePrivateKeyAPDU() == false) {
+                return false;
+            }
             return true;
         }
 
