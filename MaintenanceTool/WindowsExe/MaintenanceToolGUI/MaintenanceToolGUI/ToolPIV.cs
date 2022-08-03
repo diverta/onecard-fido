@@ -13,7 +13,10 @@ namespace MaintenanceToolGUI
         public const byte PIV_INS_PUT_DATA = 0xdb;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
         public const byte PIV_KEY_PIN = 0x80;
+        public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
+        public const byte PIV_KEY_SIGNATURE = 0x9c;
+        public const byte PIV_KEY_KEYMGM = 0x9d;
         public const UInt32 PIV_OBJ_CAPABILITY = 0x5fc107;
         public const UInt32 PIV_OBJ_CHUID = 0x5fc102;
         public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
@@ -289,6 +292,9 @@ namespace MaintenanceToolGUI
         private bool GenerateImportKeyAPDU(ToolPIVParameter parameter)
         {
             if (toolPIVPkeyCert.GeneratePrivateKeyAPDU() == false) {
+                return false;
+            }
+            if (toolPIVPkeyCert.GenerateCertificateAPDU(parameter.PkeySlotId) == false) {
                 return false;
             }
             return true;

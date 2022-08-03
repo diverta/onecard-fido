@@ -10,6 +10,9 @@ namespace MaintenanceToolGUI
     {
         public const int RSA2048_PQ_SIZE = 128;
         public const int ECCP256_KEY_SIZE = 32;
+        public const byte TAG_CERT = 0x70;
+        public const byte TAG_CERT_COMPRESS = 0x71;
+        public const byte TAG_CERT_LRC = 0xfe;
     }
 
     public class ToolPIVPkeyCert
@@ -20,6 +23,9 @@ namespace MaintenanceToolGUI
 
         // 秘密鍵インポート用APDU
         public byte[] PkeyAPDUBytes = null;
+
+        // 証明書インポート用APDU
+        public byte[] CertAPDUBytes = null;
 
         // RSA鍵のバイナリーイメージ
         public byte[] RsaEBytes = null;
@@ -301,6 +307,64 @@ namespace MaintenanceToolGUI
             PkeyAPDUBytes[offset++] = ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
             Array.Copy(ECPrivKeyBytes, 0, PkeyAPDUBytes, offset, ToolPIVPkeyCertConst.ECCP256_KEY_SIZE);
             offset += ToolPIVPkeyCertConst.ECCP256_KEY_SIZE;
+        }
+
+        public bool GenerateCertificateAPDU(byte slotId)
+        {
+            // 変数初期化
+            int certBytesSize = CertBytes.Length;
+            CertAPDUBytes = new byte[certBytesSize + 15];
+            int offset = 0;
+
+            // スロットIDからオブジェクトIDを取得
+            UInt32 objectId;
+            switch (slotId) {
+            case ToolPIVConst.PIV_KEY_AUTHENTICATION:
+                objectId = ToolPIVConst.PIV_OBJ_AUTHENTICATION;
+                break;
+            case ToolPIVConst.PIV_KEY_SIGNATURE:
+                objectId = ToolPIVConst.PIV_OBJ_SIGNATURE;
+                break;
+            case ToolPIVConst.PIV_KEY_KEYMGM:
+                objectId = ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT;
+                break;
+            default:
+                return false;
+            }
+
+            // APDUヘッダー（６バイト）
+            // オブジェクトIDの情報を設定
+            CertAPDUBytes[offset++] = ToolPIVConst.TAG_DATA_OBJECT;
+            CertAPDUBytes[offset++] = 3;
+            CertAPDUBytes[offset++] = (byte)((objectId >> 16) & 0xff);
+            CertAPDUBytes[offset++] = (byte)((objectId >> 8) & 0xff);
+            CertAPDUBytes[offset++] = (byte)(objectId & 0xff);
+            CertAPDUBytes[offset++] = ToolPIVConst.TAG_DATA_OBJECT_VALUE;
+
+            // 項目長（certBytesSize）を３バイトエンコード
+            byte itemSizeTag = 0x82;
+            byte itemSizeHigh = (byte)((certBytesSize >> 8) & 0xff);
+            byte itemSizeLow = (byte)(certBytesSize & 0xff);
+
+            // ヘッダー（４バイト）
+            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT;
+            CertAPDUBytes[offset++] = itemSizeTag;
+            CertAPDUBytes[offset++] = itemSizeHigh;
+            CertAPDUBytes[offset++] = itemSizeLow;
+
+            // 証明書の生データをコピー
+            Array.Copy(CertBytes, 0, CertAPDUBytes, offset, certBytesSize);
+            offset += certBytesSize;
+
+            // フッター（５バイト）
+            // compression info & LRC trailer
+            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT_COMPRESS;
+            CertAPDUBytes[offset++] = 0x01;
+            CertAPDUBytes[offset++] = 0x00;
+            CertAPDUBytes[offset++] = ToolPIVPkeyCertConst.TAG_CERT_LRC;
+            CertAPDUBytes[offset++] = 0x00;
+
+            return true;
         }
     }
 }
