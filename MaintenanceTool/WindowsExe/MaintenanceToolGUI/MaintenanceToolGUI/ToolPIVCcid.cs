@@ -323,9 +323,12 @@ namespace MaintenanceToolGUI
         //
         private void DoPivImportKeyProcess(byte[] responseData, UInt16 responseSW)
         {
-            // for research
-            string dump = AppUtil.DumpMessage(responseData, responseData.Length);
-            AppUtil.OutputLogDebug(string.Format("DoPivImportKeyProcess {0} bytes SW=0x{1:x4}\n{2}", responseData.Length, responseSW, dump));
+            // ステータスワードをチェックし、PIN認証の成否を判定
+            if (CheckPivInsReplyUsingPinOrPukWithStatus(responseSW, true) == false) {
+                // PIN認証が失敗した場合は処理終了
+                NotifyCommandTerminated(false);
+                return;
+            }
 
             // TODO: 仮の実装です。
             NotifyCommandTerminated(true);
@@ -545,5 +548,41 @@ namespace MaintenanceToolGUI
 
             return transformedBytes;
         }
+
+        //
+        // PIN認証応答チェック処理
+        //
+        private bool CheckPivInsReplyUsingPinOrPukWithStatus(UInt16 responseSW, bool isPinAuth)
+        {
+            // ステータスワードをチェックし、エラーの種類を判定
+            int retries = 3;
+            bool isPinBlocked = false;
+            if ((responseSW >> 8) == 0x63) {
+                // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+                retries = responseSW & 0x000f;
+                if (retries < 1) {
+                    isPinBlocked = true;
+                }
+
+            } else if (responseSW == CCIDConst.SW_ERR_AUTH_BLOCKED) {
+                // 入力PIN／PUKがすでにブロックされている場合
+                isPinBlocked = true;
+
+            } else if (responseSW != CCIDConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                OnCcidCommandNotifyErrorMessage(string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW));
+            }
+            // PINブロック or リトライカウンターの状態に応じメッセージを編集
+            if (isPinBlocked) {
+                OnCcidCommandNotifyErrorMessage(isPinAuth ? AppCommon.MSG_ERROR_PIV_PIN_LOCKED : AppCommon.MSG_ERROR_PIV_PUK_LOCKED);
+
+            } else if (retries < 3) {
+                string name = isPinAuth ? "PIN" : "PUK";
+                string msg = string.Format(AppCommon.MSG_ERROR_PIV_WRONG_PIN, name, name, retries);
+                OnCcidCommandNotifyErrorMessage(msg);
+            }
+            return (responseSW == CCIDConst.SW_SUCCESS);
+        }
+
     }
 }
