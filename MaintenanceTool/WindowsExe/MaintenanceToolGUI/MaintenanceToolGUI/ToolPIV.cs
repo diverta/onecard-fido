@@ -12,6 +12,7 @@ namespace MaintenanceToolGUI
         public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
+        public const byte YKPIV_INS_IMPORT_ASYMM_KEY = 0xfe;
         public const byte PIV_KEY_PIN = 0x80;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;

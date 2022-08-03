@@ -181,6 +181,8 @@
         public const string MSG_PIV_PKEY_PEM_LOADED = "PIV秘密鍵ファイルを正常に読込みました。";
         public const string MSG_PIV_CERT_PEM_LOADED = "PIV証明書ファイルを正常に読込みました。";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_ERROR_PIV_IMPORT_PKEY_FAILED = "PIV秘密鍵インポート処理が失敗しました（slot=0x{0:x2}, alg=0x{1:x2}）。";
+        public const string MSG_PIV_PKEY_PEM_IMPORTED = "PIV秘密鍵を正常にインポートしました（slot=0x{0:x2}, alg=0x{1:x2}）。";
         public const string MSG_ERROR_PIV_IMPORT_CHUID_FAILED = "PIV CHUIDインポート処理が失敗しました。";
         public const string MSG_ERROR_PIV_IMPORT_CCC_FAILED = "PIV CCCインポート処理が失敗しました。";
         public const string MSG_PIV_CHUID_IMPORTED = "PIV CHUIDを正常にインポートしました。";

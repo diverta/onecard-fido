@@ -96,6 +96,9 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_INS_PUT_DATA:
                 DoResponsePIVInsPutData(responseData, responseSW);
                 break;
+            case ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY:
+                DoResponsePivInsImportKey(responseData, responseSW);
+                break;
             default:
                 // 上位クラスに制御を戻す
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -329,6 +332,31 @@ namespace MaintenanceToolGUI
                 NotifyCommandTerminated(false);
                 return;
             }
+
+            // 秘密鍵インポート処理を実行
+            DoRequestPivInsImportKey(Parameter.PkeyAlgorithm, Parameter.PkeySlotId, Parameter.PkeyAPDU);
+        }
+
+        private void DoRequestPivInsImportKey(byte alg, byte slotId, byte[] apdu)
+        {
+            // コマンドを実行
+            CommandIns = ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY;
+            Process.SendIns(CommandIns, alg, slotId, apdu, 0xff);
+        }
+
+        private void DoResponsePivInsImportKey(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                string msgError = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_PKEY_FAILED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+                OnCcidCommandNotifyErrorMessage(msgError);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功のログを出力
+            string msgSuccess = string.Format(AppCommon.MSG_PIV_PKEY_PEM_IMPORTED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+            AppUtil.OutputLogInfo(msgSuccess);
 
             // TODO: 仮の実装です。
             NotifyCommandTerminated(true);
