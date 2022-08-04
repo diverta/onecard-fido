@@ -66,6 +66,9 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 DoRequestPIVInsSelectApplication();
                 break;
@@ -157,6 +160,11 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoRequestPivInsVerify(null);
+                break;
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+                DoRequestPinManagement();
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -455,6 +463,29 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            // INS、P2を設定
+            byte[] insP2 = GetPinManagementInsP2(RequestType);
+            byte ins = insP2[0];
+            byte p2 = insP2[1];
+
+            // for research
+            AppUtil.OutputLogDebug(string.Format("GetPinManagementINS=0x{0:x2} P2=0x{1:x2}", ins, p2));
+
+            // TODO: 仮の実装です。
+            DoResponsePinManagement(null, 0);
+        }
+
+        private void DoResponsePinManagement(byte[] responseData, UInt16 responseSW)
+        {
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(true);
+        }
+
+        //
         // PIVデータオブジェクト照会
         //
         private void DoRequestPIVInsGetData(UInt32 objectId)
@@ -644,5 +675,32 @@ namespace MaintenanceToolGUI
             return (responseSW == CCIDConst.SW_SUCCESS);
         }
 
+        //
+        // PIN管理コマンド関連
+        //
+        private byte[] GetPinManagementInsP2(AppCommon.RequestType requestType)
+        {
+            // INSとP2を配列で戻す
+            byte[] insP2 = new byte[2];
+            switch (requestType) {
+            case AppCommon.RequestType.PIVChangePin:
+                insP2[0] = ToolPIVConst.PIV_INS_CHANGE_REFERENCE;
+                insP2[1] = ToolPIVConst.PIV_KEY_PIN;
+                break;
+            case AppCommon.RequestType.PIVChangePuk:
+                insP2[0] = ToolPIVConst.PIV_INS_CHANGE_REFERENCE;
+                insP2[1] = ToolPIVConst.PIV_KEY_PUK;
+                break;
+            case AppCommon.RequestType.PIVUnblockPin:
+                insP2[0] = ToolPIVConst.PIV_INS_RESET_RETRY;
+                insP2[1] = ToolPIVConst.PIV_KEY_PIN;
+                break;
+            default:
+                insP2[0] = 0;
+                insP2[1] = 0;
+                break;
+            }
+            return insP2;
+        }
     }
 }
