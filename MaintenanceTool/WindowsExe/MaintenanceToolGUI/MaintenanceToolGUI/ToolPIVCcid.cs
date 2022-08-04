@@ -69,6 +69,7 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVChangePin:
             case AppCommon.RequestType.PIVChangePuk:
             case AppCommon.RequestType.PIVUnblockPin:
+            case AppCommon.RequestType.PIVReset:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 DoRequestPIVInsSelectApplication();
                 break;
@@ -105,6 +106,9 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_INS_CHANGE_REFERENCE:
             case ToolPIVConst.PIV_INS_RESET_RETRY:
                 DoResponsePinManagement(responseData, responseSW);
+                break;
+            case ToolPIVConst.YKPIV_INS_RESET:
+                DoResponsePivReset(responseData, responseSW);
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -169,6 +173,9 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVChangePuk:
             case AppCommon.RequestType.PIVUnblockPin:
                 DoRequestPinManagement();
+                break;
+            case AppCommon.RequestType.PIVReset:
+                DoRequestPivReset();
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -481,6 +488,27 @@ namespace MaintenanceToolGUI
             bool isPinAuth = (RequestType == AppCommon.RequestType.PIVChangePin);
             bool success = CheckPivInsReplyUsingPinOrPukWithStatus(responseSW, isPinAuth);
             NotifyCommandTerminated(success);
+        }
+
+        //
+        // リセット
+        //
+        private void DoRequestPivReset()
+        {
+            // PIVリセットコマンドを実行
+            byte[] apdu = new byte[0];
+            CommandIns = ToolPIVConst.YKPIV_INS_RESET;
+            Process.SendIns(CommandIns, 0x00, 0x00, apdu, 0xff);
+        }
+
+        private void DoResponsePivReset(byte[] responseData, UInt16 responseSW)
+        {
+            // for research
+            string dump = AppUtil.DumpMessage(responseData, responseData.Length);
+            AppUtil.OutputLogDebug(string.Format("DoResponsePivReset {0} bytes SW=0x{1:x4}\n{2}", responseData.Length, responseSW, dump));
+
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(true);
         }
 
         //
