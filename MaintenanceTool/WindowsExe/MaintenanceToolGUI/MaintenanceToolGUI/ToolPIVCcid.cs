@@ -102,6 +102,10 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY:
                 DoResponsePivInsImportKey(responseData, responseSW);
                 break;
+            case ToolPIVConst.PIV_INS_CHANGE_REFERENCE:
+            case ToolPIVConst.PIV_INS_RESET_RETRY:
+                DoResponsePinManagement(responseData, responseSW);
+                break;
             default:
                 // 上位クラスに制御を戻す
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -466,12 +470,9 @@ namespace MaintenanceToolGUI
             // コマンドAPDUを生成
             byte[] apdu = GeneratePinManagementAPDU(Parameter.CurrentPin, Parameter.RenewalPin);
 
-            // for research
-            string dump = AppUtil.DumpMessage(apdu, apdu.Length);
-            AppUtil.OutputLogDebug(string.Format("GetPinManagementINS=0x{0:x2} P2=0x{1:x2} APDU={2} bytes \n{3}", ins, p2, apdu.Length, dump));
-
-            // TODO: 仮の実装です。
-            DoResponsePinManagement(null, 0);
+            // PIN管理コマンドを実行
+            CommandIns = ins;
+            Process.SendIns(CommandIns, 0x00, p2, apdu, 0xff);
         }
 
         private void DoResponsePinManagement(byte[] responseData, UInt16 responseSW)
