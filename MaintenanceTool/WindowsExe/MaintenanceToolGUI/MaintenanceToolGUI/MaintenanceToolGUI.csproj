@@ -196,6 +196,7 @@
     <Compile Include="ToolPIV.cs" />
     <Compile Include="ToolPIVCcid.cs" />
     <Compile Include="ToolPIVCertDesc.cs" />
+    <Compile Include="ToolPIVPkeyCert.cs" />
     <Compile Include="ToolPIVSetId.cs" />
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />

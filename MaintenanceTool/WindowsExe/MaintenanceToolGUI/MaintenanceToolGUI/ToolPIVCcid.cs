@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using ToolGUICommon;
 
 namespace MaintenanceToolGUI
@@ -62,6 +63,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
                 // 機能実行に先立ち、PIVアプレットをSELECT
@@ -93,6 +95,9 @@ namespace MaintenanceToolGUI
                 break;
             case ToolPIVConst.PIV_INS_PUT_DATA:
                 DoResponsePIVInsPutData(responseData, responseSW);
+                break;
+            case ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY:
+                DoResponsePivInsImportKey(responseData, responseSW);
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -144,6 +149,7 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
                 // PIV管理機能認証（往路）を実行
                 DoRequestPivAdminAuth();
@@ -254,6 +260,10 @@ namespace MaintenanceToolGUI
 
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                // PIN番号認証を実行
+                DoRequestPivInsVerify(Parameter.AuthPin);
+                break;
             case AppCommon.RequestType.PIVSetChuId:
                 // CHUID／CCC設定処理を実行
                 DoRequestPivSetChuId(responseData, responseSW);
@@ -269,7 +279,23 @@ namespace MaintenanceToolGUI
         private void DoRequestPivInsVerify(string pinCode)
         {
             // コマンドAPDUを生成
-            byte[] apdu = new byte[0];
+            byte[] apdu;
+            if (pinCode == null) {
+                apdu = new byte[0];
+
+            } else {
+                // PINが指定されている場合は、PINを設定
+                // ８文字に足りない場合は、足りない部分を0xffで埋める
+                apdu = new byte[8];
+                byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
+                for (int i = 0; i < apdu.Length; i++) {
+                    if (i < pinCodeBytes.Length) {
+                        apdu[i] = pinCodeBytes[i];
+                    } else {
+                        apdu[i] = 0xff;
+                    }
+                }
+            }
 
             // コマンドを実行
             CommandIns = ToolPIVConst.PIV_INS_VERIFY;
@@ -280,6 +306,9 @@ namespace MaintenanceToolGUI
         {
             // コマンドに応じ、以下の処理に分岐
             switch (RequestType) {
+            case AppCommon.RequestType.PIVImportKey:
+                DoPivImportKeyProcess(responseData, responseSW);
+                break;
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoPivStatusProcessWithPinRetryResponse(responseData, responseSW);
@@ -290,6 +319,74 @@ namespace MaintenanceToolGUI
                 NotifyCommandTerminated(false);
                 break;
             }
+        }
+
+        //
+        // 鍵・証明書インポート
+        //
+        private void DoPivImportKeyProcess(byte[] responseData, UInt16 responseSW)
+        {
+            // ステータスワードをチェックし、PIN認証の成否を判定
+            if (CheckPivInsReplyUsingPinOrPukWithStatus(responseSW, true) == false) {
+                // PIN認証が失敗した場合は処理終了
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 秘密鍵インポート処理を実行
+            DoRequestPivInsImportKey(Parameter.PkeyAlgorithm, Parameter.PkeySlotId, Parameter.PkeyAPDU);
+        }
+
+        private void DoRequestPivInsImportKey(byte alg, byte slotId, byte[] apdu)
+        {
+            // コマンドを実行
+            CommandIns = ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY;
+            Process.SendIns(CommandIns, alg, slotId, apdu, 0xff);
+        }
+
+        private void DoResponsePivInsImportKey(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                string msgError = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_PKEY_FAILED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+                OnCcidCommandNotifyErrorMessage(msgError);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功のログを出力
+            string msgSuccess = string.Format(AppCommon.MSG_PIV_PKEY_PEM_IMPORTED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+            AppUtil.OutputLogInfo(msgSuccess);
+
+            // 証明書インポート処理を実行
+            DoRequestPivImportCert();
+        }
+
+        private void DoRequestPivImportCert()
+        {
+            // スロットIDからオブジェクトIDを取得
+            UInt32 objectId = ToolPIVPkeyCert.GetObjectIdFromSlotId(Parameter.PkeySlotId);
+
+            // コマンドを実行
+            DoRequestPIVInsPutData(objectId, Parameter.CertAPDU);
+        }
+
+        private void DoResponsePivImportCert(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                string msgError = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_CERT_FAILED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+                OnCcidCommandNotifyErrorMessage(msgError);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功のログを出力
+            string msgSuccess = string.Format(AppCommon.MSG_PIV_CERT_PEM_IMPORTED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+            AppUtil.OutputLogInfo(msgSuccess);
+
+            // 処理成功
+            NotifyCommandTerminated(true);
         }
 
         //
@@ -448,6 +545,11 @@ namespace MaintenanceToolGUI
             case ToolPIVConst.PIV_OBJ_CAPABILITY:
                 DoResponsePivSetCCC(responseData, responseSW);
                 break;
+            case ToolPIVConst.PIV_OBJ_AUTHENTICATION:
+            case ToolPIVConst.PIV_OBJ_SIGNATURE:
+            case ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT:
+                DoResponsePivImportCert(responseData, responseSW);
+                break;
             default:
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 NotifyCommandTerminated(false);
@@ -506,5 +608,41 @@ namespace MaintenanceToolGUI
 
             return transformedBytes;
         }
+
+        //
+        // PIN認証応答チェック処理
+        //
+        private bool CheckPivInsReplyUsingPinOrPukWithStatus(UInt16 responseSW, bool isPinAuth)
+        {
+            // ステータスワードをチェックし、エラーの種類を判定
+            int retries = 3;
+            bool isPinBlocked = false;
+            if ((responseSW >> 8) == 0x63) {
+                // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+                retries = responseSW & 0x000f;
+                if (retries < 1) {
+                    isPinBlocked = true;
+                }
+
+            } else if (responseSW == CCIDConst.SW_ERR_AUTH_BLOCKED) {
+                // 入力PIN／PUKがすでにブロックされている場合
+                isPinBlocked = true;
+
+            } else if (responseSW != CCIDConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                OnCcidCommandNotifyErrorMessage(string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW));
+            }
+            // PINブロック or リトライカウンターの状態に応じメッセージを編集
+            if (isPinBlocked) {
+                OnCcidCommandNotifyErrorMessage(isPinAuth ? AppCommon.MSG_ERROR_PIV_PIN_LOCKED : AppCommon.MSG_ERROR_PIV_PUK_LOCKED);
+
+            } else if (retries < 3) {
+                string name = isPinAuth ? "PIN" : "PUK";
+                string msg = string.Format(AppCommon.MSG_ERROR_PIV_WRONG_PIN, name, name, retries);
+                OnCcidCommandNotifyErrorMessage(msg);
+            }
+            return (responseSW == CCIDConst.SW_SUCCESS);
+        }
+
     }
 }
