@@ -190,6 +190,11 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.PIVStatus:
                     DoRequestPIVStatus();
                     break;
+                case AppCommon.RequestType.PIVChangePin:
+                case AppCommon.RequestType.PIVChangePuk:
+                case AppCommon.RequestType.PIVUnblockPin:
+                    DoRequestPIVPinManagement();
+                    break;
                 default:
                     // 画面に制御を戻す
                     NotifyProcessTerminated(false);
@@ -262,6 +267,19 @@ namespace MaintenanceToolGUI
                 StatusInfoString = "";
             }
 
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
+        private void DoRequestPIVPinManagement()
+        {
+            // TODO: 仮の実装です。
+            DoResponsePIVPinManagement(true);
+        }
+
+        private void DoResponsePIVPinManagement(bool success)
+        {
             // 画面に制御を戻す
             CommandSuccess = success;
             NotifyProcessTerminated(CommandSuccess);
