@@ -331,18 +331,8 @@ namespace MaintenanceToolGUI
             int offset = 0;
 
             // スロットIDからオブジェクトIDを取得
-            UInt32 objectId;
-            switch (slotId) {
-            case ToolPIVConst.PIV_KEY_AUTHENTICATION:
-                objectId = ToolPIVConst.PIV_OBJ_AUTHENTICATION;
-                break;
-            case ToolPIVConst.PIV_KEY_SIGNATURE:
-                objectId = ToolPIVConst.PIV_OBJ_SIGNATURE;
-                break;
-            case ToolPIVConst.PIV_KEY_KEYMGM:
-                objectId = ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT;
-                break;
-            default:
+            UInt32 objectId = GetObjectIdFromSlotId(slotId);
+            if (objectId == 0) {
                 return false;
             }
 
@@ -397,6 +387,27 @@ namespace MaintenanceToolGUI
             // 生成されたAPDUを、コマンドパラメーターに設定
             ToolPIVParameterRef.CertAPDU = CertAPDUBytes;
             return true;
+        }
+
+        public static UInt32 GetObjectIdFromSlotId(byte slotId)
+        {
+            // スロットIDからオブジェクトIDを取得
+            UInt32 objectId;
+            switch (slotId) {
+            case ToolPIVConst.PIV_KEY_AUTHENTICATION:
+                objectId = ToolPIVConst.PIV_OBJ_AUTHENTICATION;
+                break;
+            case ToolPIVConst.PIV_KEY_SIGNATURE:
+                objectId = ToolPIVConst.PIV_OBJ_SIGNATURE;
+                break;
+            case ToolPIVConst.PIV_KEY_KEYMGM:
+                objectId = ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT;
+                break;
+            default:
+                objectId = 0;
+                break;
+            }
+            return objectId;
         }
     }
 }
