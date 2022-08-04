@@ -66,6 +66,10 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVImportKey:
             case AppCommon.RequestType.PIVSetChuId:
             case AppCommon.RequestType.PIVStatus:
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+            case AppCommon.RequestType.PIVReset:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 DoRequestPIVInsSelectApplication();
                 break;
@@ -98,6 +102,13 @@ namespace MaintenanceToolGUI
                 break;
             case ToolPIVConst.YKPIV_INS_IMPORT_ASYMM_KEY:
                 DoResponsePivInsImportKey(responseData, responseSW);
+                break;
+            case ToolPIVConst.PIV_INS_CHANGE_REFERENCE:
+            case ToolPIVConst.PIV_INS_RESET_RETRY:
+                DoResponsePinManagement(responseData, responseSW);
+                break;
+            case ToolPIVConst.YKPIV_INS_RESET:
+                DoResponsePivReset(responseData, responseSW);
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -157,6 +168,14 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.PIVStatus:
                 // PINリトライカウンターを照会
                 DoRequestPivInsVerify(null);
+                break;
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+                DoRequestPinManagement();
+                break;
+            case AppCommon.RequestType.PIVReset:
+                DoRequestPivReset();
                 break;
             default:
                 // 上位クラスに制御を戻す
@@ -282,19 +301,10 @@ namespace MaintenanceToolGUI
             byte[] apdu;
             if (pinCode == null) {
                 apdu = new byte[0];
-
             } else {
                 // PINが指定されている場合は、PINを設定
                 // ８文字に足りない場合は、足りない部分を0xffで埋める
-                apdu = new byte[8];
-                byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
-                for (int i = 0; i < apdu.Length; i++) {
-                    if (i < pinCodeBytes.Length) {
-                        apdu[i] = pinCodeBytes[i];
-                    } else {
-                        apdu[i] = 0xff;
-                    }
-                }
+                apdu = GeneratePinBytes(pinCode);
             }
 
             // コマンドを実行
@@ -452,6 +462,57 @@ namespace MaintenanceToolGUI
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED);
                 NotifyCommandTerminated(false);
             }
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            // INS、P2を設定
+            byte[] insP2 = GetPinManagementInsP2(RequestType);
+            byte ins = insP2[0];
+            byte p2 = insP2[1];
+
+            // コマンドAPDUを生成
+            byte[] apdu = GeneratePinManagementAPDU(Parameter.CurrentPin, Parameter.RenewalPin);
+
+            // PIN管理コマンドを実行
+            CommandIns = ins;
+            Process.SendIns(CommandIns, 0x00, p2, apdu, 0xff);
+        }
+
+        private void DoResponsePinManagement(byte[] responseData, UInt16 responseSW)
+        {
+            // ステータスワードをチェックし、PIN管理コマンドの成否を判定
+            bool isPinAuth = (RequestType == AppCommon.RequestType.PIVChangePin);
+            bool success = CheckPivInsReplyUsingPinOrPukWithStatus(responseSW, isPinAuth);
+            NotifyCommandTerminated(success);
+        }
+
+        //
+        // リセット
+        //
+        private void DoRequestPivReset()
+        {
+            // PIVリセットコマンドを実行
+            byte[] apdu = new byte[0];
+            CommandIns = ToolPIVConst.YKPIV_INS_RESET;
+            Process.SendIns(CommandIns, 0x00, 0x00, apdu, 0xff);
+        }
+
+        private void DoResponsePivReset(byte[] responseData, UInt16 responseSW)
+        {
+            // ステータスワードの内容に応じメッセージを編集
+            if (responseSW == CCIDConst.SW_SEC_STATUS_NOT_SATISFIED) {
+                // PIN／PUKがまだブロックされていない場合
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_RESET_FAIL);
+
+            } else if (responseSW != CCIDConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                OnCcidCommandNotifyErrorMessage(string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW));
+            }
+            NotifyCommandTerminated(responseSW == CCIDConst.SW_SUCCESS);
         }
 
         //
@@ -644,5 +705,56 @@ namespace MaintenanceToolGUI
             return (responseSW == CCIDConst.SW_SUCCESS);
         }
 
+        //
+        // PIN管理コマンド関連
+        //
+        private byte[] GetPinManagementInsP2(AppCommon.RequestType requestType)
+        {
+            // INSとP2を配列で戻す
+            byte[] insP2 = new byte[2];
+            switch (requestType) {
+            case AppCommon.RequestType.PIVChangePin:
+                insP2[0] = ToolPIVConst.PIV_INS_CHANGE_REFERENCE;
+                insP2[1] = ToolPIVConst.PIV_KEY_PIN;
+                break;
+            case AppCommon.RequestType.PIVChangePuk:
+                insP2[0] = ToolPIVConst.PIV_INS_CHANGE_REFERENCE;
+                insP2[1] = ToolPIVConst.PIV_KEY_PUK;
+                break;
+            case AppCommon.RequestType.PIVUnblockPin:
+                insP2[0] = ToolPIVConst.PIV_INS_RESET_RETRY;
+                insP2[1] = ToolPIVConst.PIV_KEY_PIN;
+                break;
+            default:
+                insP2[0] = 0;
+                insP2[1] = 0;
+                break;
+            }
+            return insP2;
+        }
+
+        private byte[] GeneratePinManagementAPDU(string currentPin, string renewalPin)
+        {
+            // 認証用PINコード、更新用PINコードの順で配列にセット
+            byte[] apdu = GeneratePinBytes(currentPin);
+            apdu = apdu.Concat(GeneratePinBytes(renewalPin)).ToArray();
+            return apdu;
+        }
+
+        private byte[] GeneratePinBytes(string pinCode)
+        {
+            // バイト配列に、引数のPINを設定
+            // ８文字に足りない場合は、足りない部分を0xffで埋める
+            byte[] apdu = new byte[8];
+            byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
+            for (int i = 0; i < apdu.Length; i++) {
+                if (i < pinCodeBytes.Length) {
+                    apdu[i] = pinCodeBytes[i];
+                } else {
+                    apdu[i] = 0xff;
+                }
+            }
+            return apdu;
+        }
     }
 }

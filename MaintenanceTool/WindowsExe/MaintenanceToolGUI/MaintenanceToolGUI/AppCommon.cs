@@ -170,6 +170,7 @@
         public const string MSG_ERROR_PIV_WRONG_PIN = "{0}が不正です。正しい{1}を入力してください（残り{2}回試行可能です）。";
         public const string MSG_ERROR_PIV_PIN_LOCKED = "PINがすでに無効です。PIN解除を実行し、新しいPINを登録して下さい。";
         public const string MSG_ERROR_PIV_PUK_LOCKED = "PUKがすでに無効です。PIV機能をリセットする必要があります。";
+        public const string MSG_ERROR_PIV_RESET_FAIL = "PINまたはPUKが未だ無効になっていません。";
         public const string MSG_ERROR_PIV_UNKNOWN = "不明なエラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_ERROR_PIV_SELECTING_CARD_FAIL = "PIV機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";

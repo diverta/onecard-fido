@@ -9,11 +9,15 @@ namespace MaintenanceToolGUI
     {
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
+        public const byte PIV_INS_CHANGE_REFERENCE = 0x24;
+        public const byte PIV_INS_RESET_RETRY = 0x2c;
         public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
+        public const byte YKPIV_INS_RESET = 0xfb;
         public const byte YKPIV_INS_IMPORT_ASYMM_KEY = 0xfe;
         public const byte PIV_KEY_PIN = 0x80;
+        public const byte PIV_KEY_PUK = 0x81;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
         public const byte PIV_KEY_SIGNATURE = 0x9c;
@@ -190,6 +194,14 @@ namespace MaintenanceToolGUI
                 case AppCommon.RequestType.PIVStatus:
                     DoRequestPIVStatus();
                     break;
+                case AppCommon.RequestType.PIVChangePin:
+                case AppCommon.RequestType.PIVChangePuk:
+                case AppCommon.RequestType.PIVUnblockPin:
+                    DoRequestPIVPinManagement();
+                    break;
+                case AppCommon.RequestType.PIVReset:
+                    DoRequestPIVReset();
+                    break;
                 default:
                     // 画面に制御を戻す
                     NotifyProcessTerminated(false);
@@ -262,6 +274,32 @@ namespace MaintenanceToolGUI
                 StatusInfoString = "";
             }
 
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
+        private void DoRequestPIVPinManagement()
+        {
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
+        }
+
+        private void DoResponsePIVPinManagement(bool success)
+        {
+            // 画面に制御を戻す
+            CommandSuccess = success;
+            NotifyProcessTerminated(CommandSuccess);
+        }
+
+        private void DoRequestPIVReset()
+        {
+            // 事前にCCID I/F経由で、PIVアプレットをSELECT
+            PIVCcid.DoPIVCcidCommand(RequestType, Parameter);
+        }
+
+        private void DoResponsePIVReset(bool success)
+        {
             // 画面に制御を戻す
             CommandSuccess = success;
             NotifyProcessTerminated(CommandSuccess);
@@ -423,6 +461,14 @@ namespace MaintenanceToolGUI
                 break;
             case AppCommon.RequestType.PIVStatus:
                 DoResponsePIVStatus(success);
+                break;
+            case AppCommon.RequestType.PIVChangePin:
+            case AppCommon.RequestType.PIVChangePuk:
+            case AppCommon.RequestType.PIVUnblockPin:
+                DoResponsePIVPinManagement(success);
+                break;
+            case AppCommon.RequestType.PIVReset:
+                DoResponsePIVReset(success);
                 break;
             default:
                 NotifyProcessTerminated(false);
