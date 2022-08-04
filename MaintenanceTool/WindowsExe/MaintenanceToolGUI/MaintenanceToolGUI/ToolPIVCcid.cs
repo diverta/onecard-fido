@@ -290,19 +290,10 @@ namespace MaintenanceToolGUI
             byte[] apdu;
             if (pinCode == null) {
                 apdu = new byte[0];
-
             } else {
                 // PINが指定されている場合は、PINを設定
                 // ８文字に足りない場合は、足りない部分を0xffで埋める
-                apdu = new byte[8];
-                byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
-                for (int i = 0; i < apdu.Length; i++) {
-                    if (i < pinCodeBytes.Length) {
-                        apdu[i] = pinCodeBytes[i];
-                    } else {
-                        apdu[i] = 0xff;
-                    }
-                }
+                apdu = GeneratePinBytes(pinCode);
             }
 
             // コマンドを実行
@@ -701,6 +692,22 @@ namespace MaintenanceToolGUI
                 break;
             }
             return insP2;
+        }
+
+        private byte[] GeneratePinBytes(string pinCode)
+        {
+            // バイト配列に、引数のPINを設定
+            // ８文字に足りない場合は、足りない部分を0xffで埋める
+            byte[] apdu = new byte[8];
+            byte[] pinCodeBytes = Encoding.ASCII.GetBytes(pinCode);
+            for (int i = 0; i < apdu.Length; i++) {
+                if (i < pinCodeBytes.Length) {
+                    apdu[i] = pinCodeBytes[i];
+                } else {
+                    apdu[i] = 0xff;
+                }
+            }
+            return apdu;
         }
     }
 }
