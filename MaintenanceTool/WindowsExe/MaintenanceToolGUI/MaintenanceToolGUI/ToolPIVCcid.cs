@@ -503,12 +503,16 @@ namespace MaintenanceToolGUI
 
         private void DoResponsePivReset(byte[] responseData, UInt16 responseSW)
         {
-            // for research
-            string dump = AppUtil.DumpMessage(responseData, responseData.Length);
-            AppUtil.OutputLogDebug(string.Format("DoResponsePivReset {0} bytes SW=0x{1:x4}\n{2}", responseData.Length, responseSW, dump));
+            // ステータスワードの内容に応じメッセージを編集
+            if (responseSW == CCIDConst.SW_SEC_STATUS_NOT_SATISFIED) {
+                // PIN／PUKがまだブロックされていない場合
+                OnCcidCommandNotifyErrorMessage(AppCommon.MSG_ERROR_PIV_RESET_FAIL);
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(true);
+            } else if (responseSW != CCIDConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                OnCcidCommandNotifyErrorMessage(string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW));
+            }
+            NotifyCommandTerminated(responseSW == CCIDConst.SW_SUCCESS);
         }
 
         //
