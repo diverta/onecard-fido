@@ -463,8 +463,12 @@ namespace MaintenanceToolGUI
             byte ins = insP2[0];
             byte p2 = insP2[1];
 
+            // コマンドAPDUを生成
+            byte[] apdu = GeneratePinManagementAPDU(Parameter.CurrentPin, Parameter.RenewalPin);
+
             // for research
-            AppUtil.OutputLogDebug(string.Format("GetPinManagementINS=0x{0:x2} P2=0x{1:x2}", ins, p2));
+            string dump = AppUtil.DumpMessage(apdu, apdu.Length);
+            AppUtil.OutputLogDebug(string.Format("GetPinManagementINS=0x{0:x2} P2=0x{1:x2} APDU={2} bytes \n{3}", ins, p2, apdu.Length, dump));
 
             // TODO: 仮の実装です。
             DoResponsePinManagement(null, 0);
@@ -692,6 +696,14 @@ namespace MaintenanceToolGUI
                 break;
             }
             return insP2;
+        }
+
+        private byte[] GeneratePinManagementAPDU(string currentPin, string renewalPin)
+        {
+            // 認証用PINコード、更新用PINコードの順で配列にセット
+            byte[] apdu = GeneratePinBytes(currentPin);
+            apdu = apdu.Concat(GeneratePinBytes(renewalPin)).ToArray();
+            return apdu;
         }
 
         private byte[] GeneratePinBytes(string pinCode)
