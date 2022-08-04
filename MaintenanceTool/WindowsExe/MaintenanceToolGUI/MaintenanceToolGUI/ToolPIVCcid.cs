@@ -477,8 +477,10 @@ namespace MaintenanceToolGUI
 
         private void DoResponsePinManagement(byte[] responseData, UInt16 responseSW)
         {
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(true);
+            // ステータスワードをチェックし、PIN管理コマンドの成否を判定
+            bool isPinAuth = (RequestType == AppCommon.RequestType.PIVChangePin);
+            bool success = CheckPivInsReplyUsingPinOrPukWithStatus(responseSW, isPinAuth);
+            NotifyCommandTerminated(success);
         }
 
         //
