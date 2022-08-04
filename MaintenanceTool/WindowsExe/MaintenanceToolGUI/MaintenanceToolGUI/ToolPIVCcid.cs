@@ -358,7 +358,34 @@ namespace MaintenanceToolGUI
             string msgSuccess = string.Format(AppCommon.MSG_PIV_PKEY_PEM_IMPORTED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
             AppUtil.OutputLogInfo(msgSuccess);
 
-            // TODO: 仮の実装です。
+            // 証明書インポート処理を実行
+            DoRequestPivImportCert();
+        }
+
+        private void DoRequestPivImportCert()
+        {
+            // スロットIDからオブジェクトIDを取得
+            UInt32 objectId = ToolPIVPkeyCert.GetObjectIdFromSlotId(Parameter.PkeySlotId);
+
+            // コマンドを実行
+            DoRequestPIVInsPutData(objectId, Parameter.CertAPDU);
+        }
+
+        private void DoResponsePivImportCert(byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDConst.SW_SUCCESS) {
+                string msgError = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_CERT_FAILED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+                OnCcidCommandNotifyErrorMessage(msgError);
+                NotifyCommandTerminated(false);
+                return;
+            }
+
+            // 処理成功のログを出力
+            string msgSuccess = string.Format(AppCommon.MSG_PIV_CERT_PEM_IMPORTED, Parameter.PkeySlotId, Parameter.PkeyAlgorithm);
+            AppUtil.OutputLogInfo(msgSuccess);
+
+            // 処理成功
             NotifyCommandTerminated(true);
         }
 
@@ -517,6 +544,11 @@ namespace MaintenanceToolGUI
                 break;
             case ToolPIVConst.PIV_OBJ_CAPABILITY:
                 DoResponsePivSetCCC(responseData, responseSW);
+                break;
+            case ToolPIVConst.PIV_OBJ_AUTHENTICATION:
+            case ToolPIVConst.PIV_OBJ_SIGNATURE:
+            case ToolPIVConst.PIV_OBJ_KEY_MANAGEMENT:
+                DoResponsePivImportCert(responseData, responseSW);
                 break;
             default:
                 OnCcidCommandNotifyErrorMessage(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
