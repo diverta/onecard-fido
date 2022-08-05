@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPGP toolPGP;
+        private ToolPIV toolPIV;
         private ToolBLEDFU toolBLEDFU;
         private ToolDFU toolDFU;
         private string commandTitle = "";
@@ -48,8 +49,9 @@ namespace MaintenanceToolGUI
             commandTimer = new CommandTimer(Name, 30000);
             commandTimer.CommandTimeoutEvent += CommandTimerElapsed;
 
-            // OpenPGP機能設定画面を生成
+            // OpenPGP/PIV機能設定画面を生成
             toolPGP = new ToolPGP(this, hid);
+            toolPIV = new ToolPIV(this, hid);
 
             // パラメーター入力画面を生成
             PinCodeParamFormRef = new PinCodeParamForm();
@@ -326,6 +328,16 @@ namespace MaintenanceToolGUI
                 AppUtil.OutputLogError(formatted);
                 FormUtil.ShowWarningMessage(this, MaintenanceToolTitle, formatted);
             }
+        }
+
+        private void buttonSetPivParam_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // PIV機能設定画面を表示
+            toolPIV.ShowDialog();
         }
 
         private void buttonSetPgpParam_Click(object sender, EventArgs e)

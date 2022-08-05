@@ -7,14 +7,23 @@
 #ifndef ToolBLEDFUCommand_h
 #define ToolBLEDFUCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
+
+@protocol ToolBLEDFUCommandDelegate;
 
 @interface ToolBLEDFUCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef;
+    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)bleDfuProcessingWindowNotifyCancel;
-    - (void)toolBLECommandDidProcess:(Command)command success:(bool)success response:(NSData *)response;
+
+@end
+
+@protocol ToolBLEDFUCommandDelegate <NSObject>
+
+    - (void)notifyCommandStarted:(Command)command;
+    - (void)notifyMessage:(NSString *)message;
+    - (void)notifyCommandTerminated:(Command)command success:(bool)success message:(NSString *)message;
 
 @end
 

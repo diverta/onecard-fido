@@ -7,7 +7,7 @@
 #ifndef ToolPIVCommand_h
 #define ToolPIVCommand_h
 
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface ToolPIVParameter : NSObject
 
@@ -29,7 +29,6 @@
     - (void)commandDidClosePreferenceWindow;
 
     - (void)commandWillPerformPIVProcess:(Command)command withParameter:(ToolPIVParameter *)parameter;
-    - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPIVSettingDescriptionString;
     - (bool)checkUSBHIDConnection;

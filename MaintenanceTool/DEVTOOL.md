@@ -15,7 +15,7 @@ macOS版と、Windows版を用意しました。
 <img src="../MaintenanceTool/macOSApp/assets08/0001.jpg" width="350">
 
 #### 動作環境
-macOS Sierra (Version 10.12.6)〜
+macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 ## [Windows版](../MaintenanceTool/WindowsExe/DEVTOOL.md)
 

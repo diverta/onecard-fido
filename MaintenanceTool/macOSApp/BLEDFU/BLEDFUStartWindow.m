@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/18.
 //
+#import "AppDefine.h"
 #import "BLEDFUStartWindow.h"
 #import "ToolBLEDFUCommand.h"
 

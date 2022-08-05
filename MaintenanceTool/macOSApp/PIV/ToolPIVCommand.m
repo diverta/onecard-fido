@@ -9,11 +9,11 @@
 #import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
 
-#import "ToolAppCommand.h"
+#import "AppCommonMessage.h"
+#import "FirmwareResetCommand.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
-#import "ToolCommonMessage.h"
 #import "ToolInfoWindow.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
@@ -25,7 +25,7 @@
 
 @end
 
-@interface ToolPIVCommand () <ToolCCIDHelperDelegate>
+@interface ToolPIVCommand () <ToolCCIDHelperDelegate, FirmwareResetCommandDelegate>
 
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
@@ -49,8 +49,9 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
     @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
+    // ファームウェア再起動コマンドの参照を保持
+    @property (nonatomic) FirmwareResetCommand  *firmwareResetCommand;
 
 @end
 
@@ -63,11 +64,11 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            // 画面の参照を保持
-            [self setToolAppCommand:delegate];
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
+            // ファームウェア再起動コマンドのインスタンスを生成
+            [self setFirmwareResetCommand:[[FirmwareResetCommand alloc] initWithDelegate:self]];
             // PIV設定画面のインスタンスを生成
             [self setPivPreferenceWindow:[[PIVPreferenceWindow alloc] initWithWindowNibName:@"PIVPreferenceWindow"]];
         }
@@ -154,10 +155,10 @@
     - (void)commandWillResetFirmware {
         // HIDインターフェース経由でファームウェアをリセット
         [self notifyProcessStarted];
-        [[self toolAppCommand] doCommandFirmwareResetForCommandRef:self];
+        [[self firmwareResetCommand] doRequestFirmwareReset];
     }
 
-    - (void)commandDidResetFirmware:(bool)success {
+    - (void)FirmwareResetDidCompleted:(bool)success message:(NSString *)message {
         if (success == false) {
             [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
         }
@@ -168,14 +169,11 @@
 
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
         // PIV機能設定画面を表示（親画面＝メイン画面）
-        if ([[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
-            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
-        }
+        [[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent];
     }
 
     - (void)commandDidClosePreferenceWindow {
         // メイン画面に制御を戻す
-        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods
@@ -914,7 +912,7 @@
 
     - (bool)checkUSBHIDConnection {
         // USBポートに接続されていない場合はfalse
-        return [[self toolAppCommand] checkUSBHIDConnection];
+        return [[self firmwareResetCommand] isUSBHIDConnected];
     }
 
 @end

@@ -4,14 +4,14 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "AppBLECommand.h"
+#import "AppCommonMessage.h"
 #import "BLEDFUDefine.h"
 #import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
-#import "ToolAppCommand.h"
-#import "ToolBLECommand.h"
+#import "FIDODefines.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolBLESMPCommand.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
@@ -33,16 +33,18 @@ typedef enum : NSInteger {
     BLEDFU_ST_CHECK_UPDATE_VERSION,
 } BLEDFUStatus;
 
-@interface ToolBLEDFUCommand () <ToolBLESMPCommandDelegate>
+@interface ToolBLEDFUCommand () <ToolBLESMPCommandDelegate, AppBLECommandDelegate>
 
     // 上位クラスの参照を保持
-    @property (nonatomic, weak) ToolAppCommand     *toolAppCommand;
-    @property (nonatomic, weak) ToolBLECommand     *toolBLECommand;
+    @property (nonatomic, weak) id                  delegate;
     // トランザクションクラスの参照を保持
     @property (nonatomic) ToolBLESMPCommand        *toolBLESMPCommand;
+    @property (nonatomic) AppBLECommand            *appBLECommand;
     // 画面の参照を保持
     @property (nonatomic) BLEDFUStartWindow        *bleDfuStartWindow;
     @property (nonatomic) BLEDFUProcessingWindow   *bleDfuProcessingWindow;
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow                 *parentWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t          mainQueue;
     @property (nonatomic) dispatch_queue_t          subQueue;
@@ -70,13 +72,14 @@ typedef enum : NSInteger {
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            [self setToolAppCommand:(ToolAppCommand *)delegate];
+            [self setDelegate:delegate];
         }
         // 内部保持バージョンをクリア
         [self setCurrentVersion:@""];
         [self setUpdateVersionFromImage:@""];
         // トランザクションクラスを生成
         [self setToolBLESMPCommand:[[ToolBLESMPCommand alloc] initWithDelegate:self]];
+        [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
         // 画面のインスタンスを生成
         [self setBleDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
         [self setBleDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
@@ -88,15 +91,16 @@ typedef enum : NSInteger {
         return self;
     }
 
-    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
+    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 親画面の参照を保持
+        [self setParentWindow:parentWindow];
         // 処理開始／進捗画面に親画面参照をセット
         [[self bleDfuStartWindow] setParentWindow:parentWindow];
         [[self bleDfuProcessingWindow] setParentWindow:parentWindow];
         // ステータスを更新（現在バージョン照会）
         [self setBleDfuStatus:BLEDFU_ST_GET_CURRENT_VERSION];
         // 事前にBLE経由でバージョン情報を取得
-        [self setToolBLECommand:(ToolBLECommand *)toolBLECommandRef];
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
+        [self doRequestBLEGetVersionInfo];
     }
 
     - (void)toolBLECommandDidProcess:(Command)command success:(bool)success response:(NSData *)response {
@@ -126,21 +130,21 @@ typedef enum : NSInteger {
         }
         // 戻りメッセージからバージョン情報を抽出し内部保持
         [self extractVersionAndBoardnameFrom:response];
-        // バージョン情報を比較して終了判定
-        [self compareUpdateVersion];
+        // BLE接続を切る
+        [self getVersionInfoDidCompleted:true message:nil];
     }
 
     - (void)notifyFirmwareVersionForStart:(bool)success response:(NSData *)response {
         if (success == false || response == nil || [response length] < 2) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled) parentWindow:[self parentWindow]];
             return;
         }
         // 戻りメッセージからバージョン情報を抽出し内部保持
         [self extractVersionAndBoardnameFrom:response];
-        // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
-        [self resumeDfuProcessStart];
+        // BLE接続を切る
+        [self getVersionInfoDidCompleted:true message:nil];
     }
 
     - (void)extractVersionAndBoardnameFrom:(NSData *)response {
@@ -203,7 +207,7 @@ typedef enum : NSInteger {
         ToolBLEDFUCommand * __weak weakSelf = self;
         [[[self bleDfuStartWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf dfuStartWindowDidClose:[self toolAppCommand] modalResponse:response];
+            [weakSelf dfuStartWindowDidClose:self modalResponse:response];
         }];
         // バージョン情報を、ダイアログの該当欄に設定
         [[self bleDfuStartWindow] setWindowParameter:self
@@ -238,7 +242,7 @@ typedef enum : NSInteger {
         ToolBLEDFUCommand * __weak weakSelf = self;
         [[[self bleDfuProcessingWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf bleDfuProcessingWindowDidClose:[self toolAppCommand] modalResponse:response];
+            [weakSelf bleDfuProcessingWindowDidClose:self modalResponse:response];
         }];
     }
 
@@ -256,7 +260,7 @@ typedef enum : NSInteger {
                 break;
             case NSModalResponseCancel:
                 // メッセージをポップアップ表示したのち、画面に制御を戻す
-                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled)];
+                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled) parentWindow:[self parentWindow]];
                 break;
             default:
                 break;
@@ -281,7 +285,7 @@ typedef enum : NSInteger {
         [self doConnect];
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
-            [[self toolAppCommand] commandStartedProcess:COMMAND_BLE_DFU type:TRANSPORT_BLE];
+            [[self delegate] notifyCommandStarted:COMMAND_BLE_DFU];
         });
     }
 
@@ -459,7 +463,7 @@ typedef enum : NSInteger {
         // ステータスを更新（バージョン更新判定）
         [self setBleDfuStatus:BLEDFU_ST_CHECK_UPDATE_VERSION];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
+        [self doRequestBLEGetVersionInfo];
     }
 
     - (void)doDisconnectByError:(bool)b {
@@ -516,6 +520,53 @@ typedef enum : NSInteger {
         }
     }
 
+#pragma mark - Getting version info
+
+    - (void)doRequestBLEGetVersionInfo {
+        // BLE経由でバージョン情報を取得
+        unsigned char arr[] = {0x00};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        [[self appBLECommand] doRequestCommand:COMMAND_BLE_GET_VERSION_INFO withCMD:HID_CMD_GET_VERSION_INFO withData:commandData];
+    }
+
+    - (void)getVersionInfoDidCompleted:(bool)success message:(NSString *)message {
+        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
+        [[self appBLECommand] commandDidProcess:true message:nil];
+    }
+
+#pragma mark - Call back from AppBLECommand
+
+    - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self toolBLECommandDidProcess:command success:true response:response];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommandが呼び出される
+                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+    }
+
+    - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        if (success) {
+            // 現在バージョン照会の場合（処理開始画面の表示前）
+            if ([self bleDfuStatus] == BLEDFU_ST_GET_CURRENT_VERSION) {
+                // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+                [self resumeDfuProcessStart];
+            }
+            // バージョン更新判定の場合（ファームウェア反映待ち）
+            if ([self bleDfuStatus] == BLEDFU_ST_CHECK_UPDATE_VERSION) {
+                // バージョン情報を比較して終了判定
+                [self compareUpdateVersion];
+            }
+        } else {
+            // 失敗時の処理を実行
+            [self toolBLECommandDidProcess:command success:false response:nil];
+        }
+    }
+
 #pragma mark - Private methods
 
     - (bool)readDFUImageFile {
@@ -523,7 +574,7 @@ typedef enum : NSInteger {
         NSString *binFileNamePrefix = [NSString stringWithFormat:@"app_update.%@.", [self currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:binFileNamePrefix] == false) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         return true;
@@ -558,7 +609,7 @@ typedef enum : NSInteger {
         NSString *update = [[NSString alloc] initWithUTF8String:mcumgr_app_image_bin_version()];
         // バージョンが取得できなかった場合は利用不可
         if ([update length] == 0) {
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
@@ -567,13 +618,13 @@ typedef enum : NSInteger {
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
         if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, update];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             return false;
         }
         // 更新バージョンを保持
@@ -681,21 +732,21 @@ typedef enum : NSInteger {
     - (void)notifyProcessTerminated:(bool)success {
         dispatch_async([self mainQueue], ^{
             // メイン画面に制御を戻す
-            [[self toolAppCommand] commandDidProcess:COMMAND_BLE_DFU result:success message:nil];
+            [[self delegate] notifyCommandTerminated:COMMAND_BLE_DFU success:success message:nil];
         });
     }
 
     - (void)notifyProcessCanceled {
         dispatch_async([self mainQueue], ^{
             // メイン画面に制御を戻す
-            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+            [[self delegate] notifyCommandTerminated:COMMAND_NONE success:true message:nil];
         });
     }
 
     - (void)notifyToolCommandMessage:(NSString *)message {
         // メイン画面にメッセージ文字列を表示する
         dispatch_async([self mainQueue], ^{
-            [[[self toolAppCommand] delegate] notifyAppCommandMessage:message];
+            [[self delegate] notifyMessage:message];
         });
     }
 

@@ -32,7 +32,6 @@
     - (void)commandDidClosePreferenceWindow;
 
     - (void)commandWillPerformPGPProcess:(Command)command withParameter:(ToolPGPParameter *)parameter;
-    - (void)commandDidResetFirmware:(bool)success;
 
     - (NSString *)getPGPStatusInfoString;
     - (bool)checkUSBHIDConnection;

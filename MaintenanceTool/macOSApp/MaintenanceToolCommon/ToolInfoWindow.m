@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2020/12/17.
 //
+#import "AppDefine.h"
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
 

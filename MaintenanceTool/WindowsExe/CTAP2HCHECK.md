@@ -31,7 +31,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 （最新ファームウェアは、FIDO認証器管理ツールに同梱されています）<br>
 以下の手順書をご参照願います。
 
-* <b>[ファームウェア更新手順書](../../MaintenanceTool/WindowsExe/SETPIN.md)</b>
+* <b>[ファームウェア更新手順書](../../MaintenanceTool/WindowsExe/UPDATEFW_BLE.md)</b>
 
 #### PIN設定
 
