@@ -9,6 +9,7 @@
 #include <sys/byteorder.h>
 #include <usb/usb_device.h>
 #include <usb/bos.h>
+#include "app_usb_ccid_define.h"
 
 //
 // OSディスクリプターを保持
@@ -30,7 +31,7 @@ static const uint8_t msos2_descriptor[] = {
     // Microsoft OS 2.0 function subset header
     0x08, 0x00,             // Descriptor size (8 bytes)
     0x02, 0x00,             // MS OS 2.0 function subset header
-    0x01,                   // First interface number
+    CCID_INTERFACE_NUMBER,  // First interface number
     0x00,                   // Reserved
     0xA0, 0x00,             // Size, MS OS 2.0 function subset
 

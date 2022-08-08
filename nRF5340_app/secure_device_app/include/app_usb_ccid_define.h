@@ -32,6 +32,11 @@ extern "C" {
 #define CCID_BULK_EP_MPS            64
 
 //
+// CCID I/Fの構成記述子内で使用するインターフェース番号
+//
+#define CCID_INTERFACE_NUMBER       2
+
+//
 // CCID I/F用デスクリプター
 //
 struct usb_ccid_descriptor {

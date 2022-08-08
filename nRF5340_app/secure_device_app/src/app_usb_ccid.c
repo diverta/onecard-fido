@@ -29,7 +29,7 @@ static size_t  m_rx_buf_size;
 //
 // CCID I/F用デスクリプター
 //
-USBD_CLASS_DESCR_DEFINE(primary, 1) struct usb_ccid_config usb_ccid_cfg = {
+USBD_CLASS_DESCR_DEFINE(primary, CCID_INTERFACE_NUMBER) struct usb_ccid_config usb_ccid_cfg = {
     // Interface descriptor
     .if0 = {
         .bLength = sizeof(struct usb_if_descriptor),
