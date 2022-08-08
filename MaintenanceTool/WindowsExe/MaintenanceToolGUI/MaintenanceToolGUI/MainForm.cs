@@ -142,7 +142,7 @@ namespace MaintenanceToolGUI
         private void doCommand(object sender)
         {
             // ボタンを押下不可とする
-            enableButtons(false);
+            EnableButtons(false);
 
             // コマンドタイムアウト監視開始
             commandTimer.Start();
@@ -235,7 +235,7 @@ namespace MaintenanceToolGUI
         private void DoCommandHealthCheck(object sender, EventArgs e)
         {
             // ボタンを押下不可とする
-            enableButtons(false);
+            EnableButtons(false);
 
             if (commandTitle.Equals(AppCommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK)) {
                 // BLE CTAP2ヘルスチェック
@@ -268,7 +268,7 @@ namespace MaintenanceToolGUI
 
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
-            enableButtons(true);
+            EnableButtons(true);
         }
 
         public void OnBLEConnectionDisabled()
@@ -290,11 +290,12 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private void enableButtons(bool enabled)
+        private void EnableButtons(bool enabled)
         {
             buttonBLE.Enabled = enabled;
             buttonFIDO.Enabled = enabled;
             buttonDFU.Enabled = enabled;
+            buttonSetPivParam.Enabled = enabled;
             buttonSetPgpParam.Enabled = enabled;
             buttonHealthCheck.Enabled = enabled;
             buttonUtility.Enabled = enabled;
@@ -363,7 +364,7 @@ namespace MaintenanceToolGUI
             }
 
             // ボタンを押下不可とする
-            enableButtons(false);
+            EnableButtons(false);
             // 開始メッセージを取得
             commandTitle = f.CommandTitle;
 
@@ -393,7 +394,7 @@ namespace MaintenanceToolGUI
             }
 
             // ボタンを押下不可とする
-            enableButtons(false);
+            EnableButtons(false);
             // 開始メッセージを表示
             commandTitle = f.CommandTitle;
             DisplayStartMessage(commandTitle);
@@ -493,7 +494,7 @@ namespace MaintenanceToolGUI
             }
 
             // ボタンを押下不可とする
-            enableButtons(false);
+            EnableButtons(false);
             // 開始メッセージを取得
             commandTitle = AppCommon.PROCESS_NAME_BLE_DFU;
 
@@ -519,7 +520,7 @@ namespace MaintenanceToolGUI
         public void OnDFUCanceled()
         {
             // ボタンを押下可能とする
-            enableButtons(true);
+            EnableButtons(true);
         }
 
         protected override void WndProc(ref Message m)
