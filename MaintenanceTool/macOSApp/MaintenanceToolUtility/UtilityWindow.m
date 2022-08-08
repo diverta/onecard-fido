@@ -7,6 +7,7 @@
 #import "AppDefine.h"
 #import "UtilityCommand.h"
 #import "UtilityWindow.h"
+#import "ToolCommonFunc.h"
 
 @interface UtilityWindow ()
 
@@ -19,7 +20,7 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
     // コマンドクラスの参照を保持
-    @property (nonatomic, weak) UtilityCommand             *utilityCommand;
+    @property (nonatomic, weak) id                          utilityCommandRef;
     // 実行するコマンドを保持
     @property (nonatomic) Command                           command;
 
@@ -38,12 +39,12 @@
 
     - (void)setCommandRef:(id)ref {
         // コマンドクラスの参照を保持
-        [self setUtilityCommand:(UtilityCommand *)ref];
+        [self setUtilityCommandRef:ref];
     }
 
     - (IBAction)buttonFlashROMInfoDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
-        if ([[self utilityCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // このウィンドウを終了
@@ -52,7 +53,7 @@
 
     - (IBAction)buttonFWVersionInfoDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
-        if ([[self utilityCommand] checkUSBHIDConnectionOnWindow:[self window]] == false) {
+        if ([self checkUSBHIDConnection] == false) {
             return;
         }
         // このウィンドウを終了
@@ -79,6 +80,12 @@
         [self setCommand:command];
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合は処理中止
+        UtilityCommand *command = (UtilityCommand *)[self utilityCommandRef];
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[command isUSBHIDConnected]];
     }
 
 #pragma mark - Interface for parameters

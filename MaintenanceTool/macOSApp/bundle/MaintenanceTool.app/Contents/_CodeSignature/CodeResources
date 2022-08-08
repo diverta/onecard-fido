@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		8h6Do5OBScg4mDB+c9SAzJb+L/U=
+		RPSohYaDeUt6VQ/ywC+6KiRN5uk=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -20,21 +20,29 @@
 		<data>
 		eqGG43tYRTW77o7OOxEzaQ8Y8gU=
 		</data>
-		<key>Resources/DFUProcessingWindow.nib</key>
+		<key>Resources/BLESettingWindow.nib</key>
 		<data>
-		5s0MR9vHNmxcGxV1smnv2Fhsm6I=
-		</data>
-		<key>Resources/DFUStartWindow.nib</key>
-		<data>
-		MAFIjxKpigHDlIO4B1kXYX1rWh4=
+		g6UopkcXweYBTNrjhz6ph7OLHAk=
 		</data>
 		<key>Resources/Entitlements.plist</key>
 		<data>
 		yFypNR3sHIGjuUsxo3PSqtX1S5Y=
 		</data>
-		<key>Resources/FIDOAttestationWindow.nib</key>
+		<key>Resources/FIDOPinSettingWindow.nib</key>
 		<data>
-		3Wk+Uc3JPHNZim5IgwhIHY7R8cQ=
+		8X44bx73X+5+kpn74N6uvGSsOX4=
+		</data>
+		<key>Resources/FIDOSettingWindow.nib</key>
+		<data>
+		MD6ZoV/K+SN5JpRYGxqsL8ajDXc=
+		</data>
+		<key>Resources/HcheckPinWindow.nib</key>
+		<data>
+		nQL9agMJYNC2xYFHMVsDeE2ApV0=
+		</data>
+		<key>Resources/HcheckWindow.nib</key>
+		<data>
+		xGbmORX3rIrqbk6bNe4OgqJsbm0=
 		</data>
 		<key>Resources/PGPPreferenceWindow.nib</key>
 		<data>
@@ -44,29 +52,21 @@
 		<data>
 		QXepzPzBUAZZaZmTtMXSD29xSJk=
 		</data>
-		<key>Resources/PinCodeParamWindow.nib</key>
-		<data>
-		auQvdNZDJX9LVnkE308ZI1/skKM=
-		</data>
-		<key>Resources/SetPinParamWindow.nib</key>
-		<data>
-		zHYCfmUplxJLofoINisEc1Y9g+k=
-		</data>
-		<key>Resources/ToolDFUWindow.nib</key>
-		<data>
-		jiUNLTEzEh7E8omp3kbuHswVC4w=
-		</data>
 		<key>Resources/ToolInfoWindow.nib</key>
 		<data>
 		N64x8R+YqlNadipRaLi8xZ5MTgQ=
 		</data>
-		<key>Resources/ToolPreferenceWindow.nib</key>
-		<data>
-		jnbnPO9bJ0IbIV7XK8caLFDhjPE=
-		</data>
 		<key>Resources/ToolProcessingWindow.nib</key>
 		<data>
 		KM7Aj5kLMzWRRYEFVswcNyv8XWg=
+		</data>
+		<key>Resources/ToolVersionWindow.nib</key>
+		<data>
+		dgD8QrqMejUTH5Rjuy/O0mw+CQs=
+		</data>
+		<key>Resources/UtilityWindow.nib</key>
+		<data>
+		cl6y4pCkd+pJ8IoTtiBTUizNIXk=
 		</data>
 		<key>Resources/add_sub_key.param</key>
 		<data>
@@ -76,17 +76,9 @@
 		<data>
 		RsqlGTJBKY0KYFwYxvxE6lXDzBc=
 		</data>
-		<key>Resources/app_update.PCA10095.0.4.5.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.7.bin</key>
 		<data>
-		o1lAkp8OVxDMLrvr7Pf3Vm5cBL4=
-		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.5.zip</key>
-		<data>
-		HX+dsNtL0JNngO1Z1H+F2hlxcdc=
-		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.5.zip</key>
-		<data>
-		9FLExrAcW0Xw2jPMDyQyS1grIPY=
+		sO9btJVOMXrNP4fbWGkJdfpDUmw=
 		</data>
 		<key>Resources/card_edit_passwd.param</key>
 		<data>
@@ -125,7 +117,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3TDbkfGJvGdIAvjj56aHubePveM=
+			ObzJhlAZrCKh7tmrH/hR/YiCxZc=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -141,6 +133,10 @@
 		<key>Resources/generate_main_key.sh</key>
 		<data>
 		gcaEPr0JMcWdXq09f4XX3p6sXpo=
+		</data>
+		<key>Resources/icon.png</key>
+		<data>
+		HMU7W0bMHFlmEQnRKFTUH0kg28w=
 		</data>
 		<key>Resources/transfer_subkey_to_card.param</key>
 		<data>
@@ -164,7 +160,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			OgJn+52qg+o8oSVjIhhrcXaIeMooblPWOxBxi5lc6E4=
+			vmwMxDWWRpRSw3/qIF3znzdNz0RQ9PRHrDyAvZhrMBU=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -181,18 +177,11 @@
 			y0fUDSYprfOYZ0E3DFqmIpu/NIL2BkeOJhdRuvVh8JM=
 			</data>
 		</dict>
-		<key>Resources/DFUProcessingWindow.nib</key>
+		<key>Resources/BLESettingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+37jbLkhCIXAERH3T08AWK9bjgj61qhrAISrSWtwEk0=
-			</data>
-		</dict>
-		<key>Resources/DFUStartWindow.nib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			esVJy3s+AZyKeImVHXeVoYIRUQ+cAccDyO6M+bu2ht8=
+			0yzt8f6K8igiKTNMOT4UAODe8GSooR6hhfl5WZ/zcuY=
 			</data>
 		</dict>
 		<key>Resources/Entitlements.plist</key>
@@ -202,11 +191,32 @@
 			FZcEg0mSwCWu8v6Naf0pDGzx9OkpZafJvaOqhPjVJvI=
 			</data>
 		</dict>
-		<key>Resources/FIDOAttestationWindow.nib</key>
+		<key>Resources/FIDOPinSettingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			i0bswD7wZquE7xznuhx2EJy0b2VYoDJWCJN/tLrNak8=
+			zf2XoQt8IB6wt9mSPvcnlKyFPWtuDiG6ifszmBQw/JQ=
+			</data>
+		</dict>
+		<key>Resources/FIDOSettingWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			0FtnWhUrghqnbuSGeEJGFiN4flBO+sHjoHNDjVW2Oa8=
+			</data>
+		</dict>
+		<key>Resources/HcheckPinWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			KBVO2ETHmeWbC65XwQ+f9Bd+CBvziIbTxpP7qiG6Thc=
+			</data>
+		</dict>
+		<key>Resources/HcheckWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			bZEBsTp+31GBFEyBO83znVoE3hS3iIf2nHbcmg0UmcE=
 			</data>
 		</dict>
 		<key>Resources/PGPPreferenceWindow.nib</key>
@@ -223,27 +233,6 @@
 			cx212HZLbpyoKV2x9T7U+WrQr+4fI2wIhPKD3hBJX98=
 			</data>
 		</dict>
-		<key>Resources/PinCodeParamWindow.nib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			ThOn3nzGlHgYCHtM/rMzo4MaQC4za2KvIso/HiBRG7s=
-			</data>
-		</dict>
-		<key>Resources/SetPinParamWindow.nib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			wdw4QBYuhSdSR9aaI9Pb4gYPQ18a8uQi+3T7bj8Usb4=
-			</data>
-		</dict>
-		<key>Resources/ToolDFUWindow.nib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			vijJ63mXk0a/Me1UatwapHa4xBlvRLyHhd9iqcRSuMA=
-			</data>
-		</dict>
 		<key>Resources/ToolInfoWindow.nib</key>
 		<dict>
 			<key>hash2</key>
@@ -251,18 +240,25 @@
 			kL3X2cpX4L6KmGtgXnVhKmVwY85J8veqILU3j6GStqI=
 			</data>
 		</dict>
-		<key>Resources/ToolPreferenceWindow.nib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			bbcJ5Oy3A7czEyzg5Q0MbZ1yE0ALXkhUUmsw3OBWEco=
-			</data>
-		</dict>
 		<key>Resources/ToolProcessingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
 			s9rW5tAblIi+nRgB6EMF1OmTTCMahvomERG5h/Yg55U=
+			</data>
+		</dict>
+		<key>Resources/ToolVersionWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			DDnJsMtye8BYd0W/gEris3E4+mEK8jj/T4EN2PqCCjc=
+			</data>
+		</dict>
+		<key>Resources/UtilityWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			h/88LBjxNTHMclUNavar3KFCd9eukfDyQXk2qOHgnMM=
 			</data>
 		</dict>
 		<key>Resources/add_sub_key.param</key>
@@ -279,25 +275,11 @@
 			MvXLJt12u/aCuerb+Uj7kd/e3OGo7nz/aM3MMLvjYM0=
 			</data>
 		</dict>
-		<key>Resources/app_update.PCA10095.0.4.5.bin</key>
+		<key>Resources/app_update.PCA10095.0.4.7.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			QbSZQOy2YQx2B3f3UHYm4KIRXCSw8vJSSAPggYftU18=
-			</data>
-		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.5.zip</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			OrSxieW6TNLAQIhesytupD+T3k+v8B9NPvb8VewFxiw=
-			</data>
-		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.5.zip</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			MEWrUzImCE3PnRddy0Xho5YFFM+xRrIxbT0bbxr8PuY=
+			y2aunvK8Rw0+NgzmwXgQ6cS0vMfgzfGcnEk17luCGes=
 			</data>
 		</dict>
 		<key>Resources/card_edit_passwd.param</key>
@@ -355,7 +337,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			kY2fiL5ljhET3oJOeuYSlC4xOiAt1OdiQ0VVF91hqL8=
+			bVOrsj7JnK/l6MoANvLVwIaszHH/t7undp3FI/pBQJs=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -379,6 +361,13 @@
 			<key>hash2</key>
 			<data>
 			p96kycL9pj2+rUeF2ZFEQQOLr4l491N7EV3n0fdtoH0=
+			</data>
+		</dict>
+		<key>Resources/icon.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			+1i0eX09Ybw8JSLW+CzdBWkz0LMl8dwqVRS6jgUEFF4=
 			</data>
 		</dict>
 		<key>Resources/transfer_subkey_to_card.param</key>

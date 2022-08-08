@@ -566,6 +566,10 @@ namespace MaintenanceToolGUI
                 ToolPGP toolPGP = (ToolPGP)ToolCommandRef;
                 toolPGP.DoResponseResetFirmware(success);
             }
+            if (ToolCommandRef is ToolPIV) {
+                ToolPIV toolPIV = (ToolPIV)ToolCommandRef;
+                toolPIV.DoResponseResetFirmware(success);
+            }
 
             // 実行コマンドクラスの参照を初期化
             ToolCommandRef = null;
@@ -591,7 +595,7 @@ namespace MaintenanceToolGUI
             if (NeedNotifyDetectConnectRef is ToolDFU) {
                 ToolDFURef.OnUSBDeviceArrival();
 
-            } else if (NeedNotifyDetectConnectRef is ToolPGP) {
+            } else if (NeedNotifyDetectConnectRef is ToolPGP || NeedNotifyDetectConnectRef is ToolPIV) {
                 if (requestType == AppCommon.RequestType.HidFirmwareReset) {
                     CompletedResetFirmware(true);
                 }

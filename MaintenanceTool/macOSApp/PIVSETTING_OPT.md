@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、PIV機能の各種設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に対し、PIV機能の各種設定を行う手順を掲載します。
 
 - PIN番号管理
   - PIN番号の変更
@@ -14,9 +14,9 @@
 
 PIV機能の設定は「PIV機能設定画面」上で行います。
 
-まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
+まずは管理ツールを起動し、USBポートにBT40 Dongleを装着します。<br>
 
-<img src="assets/0028.jpg" width="400">
+<img src="assets/0013.jpg" width="400">
 
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「PIV機能設定」ボタンをクリックします。
 
@@ -104,7 +104,7 @@ PIN番号リセット処理が実行されます。<br>
 万が一、PUK番号を３回連続で間違えて指定した場合は、認証がブロックされ、PIN番号管理機能が利用できなくなります。<br>
 他方、PUK番号のリセット機能は存在しません。
 
-したがって、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)において、再びPUK番号が利用できるようにするためには、いったんPIV機能設定情報を全て消去する必要があります。[注1]<br>
+したがって、BT40 Dongleにおいて、再びPUK番号が利用できるようにするためには、いったんPIV機能設定情報を全て消去する必要があります。[注1]<br>
 この場合、PIV機能に関連する以下の設定情報が全て消去されてしまいますので、ご注意ください。
 
 - ID情報（CHUID、CCC）

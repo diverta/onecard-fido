@@ -19,4 +19,8 @@
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 #define MSG_PROMPT_USB_PORT_SET                 @"FIDO認証器をUSBポートに装着してから実行してください。"
 
+#pragma mark - BLE関連
+#define MSG_U2F_DEVICE_SCAN_START               @"FIDO認証器のスキャンを開始します。"
+#define MSG_U2F_DEVICE_SCAN_STOPPED             @"FIDO認証器のスキャンを停止しました。"
+
 #endif /* ToolCommonMessage_h */
