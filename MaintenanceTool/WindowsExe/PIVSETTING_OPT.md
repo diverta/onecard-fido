@@ -14,7 +14,7 @@
 
 ## PIV機能設定画面の表示
 
-まずは管理ツールを起動し、USBポートに[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)を装着します。<br>
+まずは管理ツールを起動し、USBポートにBT40 Dongleを装着します。<br>
 
 <img src="../../MaintenanceTool/WindowsExe/assets/0020.jpg" width="400">
 
