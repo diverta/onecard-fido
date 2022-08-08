@@ -56,6 +56,9 @@ FIDO認証器から、FIDO認証情報を消去する手順について掲載し
 - <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
+- <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
+[PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
+
 - <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
