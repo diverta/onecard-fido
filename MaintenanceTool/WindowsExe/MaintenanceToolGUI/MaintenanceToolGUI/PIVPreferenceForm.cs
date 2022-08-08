@@ -24,6 +24,21 @@ namespace MaintenanceToolGUI
             ToolPIVRef = toolPIV;
         }
 
+        private void radioPkeySlotId1_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPkeySlotIdValue(sender);
+        }
+
+        private void radioPkeySlotId2_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPkeySlotIdValue(sender);
+        }
+
+        private void radioPkeySlotId3_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSelectedPkeySlotIdValue(sender);
+        }
+
         private void buttonPkeyFolderPath_Click(object sender, EventArgs e)
         {
             // ファイルを選択
@@ -185,11 +200,23 @@ namespace MaintenanceToolGUI
         //
         // 鍵・証明書管理タブ関連の処理
         //
+        private byte SelectedPkeySlotId { get; set; }
+
         private void InitTabPkeyCertManagement()
         {
+            // ラジオボタンの初期化
+            InitButtonPkeySlotIdWithDefault(radioPkeySlotId1);
+
             // テキストボックスの初期化
             InitTabPkeyCertPathFields();
             InitTabPkeyCertEntryFields();
+        }
+
+        private void InitButtonPkeySlotIdWithDefault(RadioButton radioButton)
+        {
+            // 「インストールする鍵・証明書」のラジオボタン「PIV認証用」を選択状態にする
+            radioButton.Checked = true;
+            GetSelectedPkeySlotIdValue(radioButton);
         }
 
         private void InitTabPkeyCertPathFields()
@@ -216,6 +243,20 @@ namespace MaintenanceToolGUI
             groupBoxFilePathText.Enabled = enabled;
             groupBoxAuthPinText.Enabled = enabled;
             buttonInstallPkeyCert.Enabled = enabled;
+        }
+
+        private void GetSelectedPkeySlotIdValue(object sender)
+        {
+            // ラジオボタンの選択状態に応じ、スロットIDを変更
+            if (sender.Equals(radioPkeySlotId1)) {
+                SelectedPkeySlotId = 0x9a;
+            } else if (sender.Equals(radioPkeySlotId2)) {
+                SelectedPkeySlotId = 0x9c;
+            } else if (sender.Equals(radioPkeySlotId3)) {
+                SelectedPkeySlotId = 0x9d;
+            } else {
+                SelectedPkeySlotId = 0x00;
+            }
         }
 
         //
@@ -438,37 +479,42 @@ namespace MaintenanceToolGUI
         //
         void DoCommandInstallPKeyCert()
         {
-            // TODO:
             // 画面入力内容をパラメーターとして、鍵／証明書インストール処理を実行
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVImportKey, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVParameter parameter = new ToolPIVParameter();
+            parameter.PkeySlotId = SelectedPkeySlotId;
+            parameter.PkeyPemPath = textPkeyFolderPath.Text;
+            parameter.CertPemPath = textCertFolderPath.Text;
+            parameter.AuthPin = textPin.Text;
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVImportKey, parameter);
         }
 
         void DoCommandPinManagement()
         {
-            // TODO:
-            // 画面入力内容をパラメーターとして、PIN番号管理コマンドを実行
-            OnCommandProcessTerminated(SelectedPinCommand, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 画面入力内容をパラメーターとして、PIN管理コマンドを実行
+            ToolPIVParameter parameter = new ToolPIVParameter();
+            parameter.CurrentPin = textCurPin.Text;
+            parameter.RenewalPin = textNewPin.Text;
+            parameter.SelectedPinCommand = SelectedPinCommand;
+            parameter.SelectedPinCommandName = SelectedPinCommandName;
+            ToolPIVRef.DoPIVCommand(SelectedPinCommand, parameter);
         }
 
         void DoCommandPIVStatus()
         {
-            // TODO:
             // PIV設定情報取得
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVStatus, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVStatus, null);
         }
 
         void DoCommandPIVSetChuId()
         {
-            // TODO:
             // CHUID設定機能を実行
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVSetChuId, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVSetChuId, null);
         }
 
         void DoCommandPIVReset()
         {
-            // TODO:
             // PIVリセット機能を実行
-            OnCommandProcessTerminated(AppCommon.RequestType.PIVReset, false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            ToolPIVRef.DoPIVCommand(AppCommon.RequestType.PIVReset, null);
         }
 
         void DoCommandResetFirmware()
@@ -493,6 +539,11 @@ namespace MaintenanceToolGUI
                 name = AppCommon.MSG_PIV_INSTALL_PKEY_CERT;
                 break;
             case AppCommon.RequestType.PIVStatus:
+                if (success) {
+                    // メッセージの代わりに、PIV設定情報を、情報表示画面に表示
+                    CommonDisplayInfoForm.OpenForm(this, AppCommon.PROCESS_NAME_CCID_PIV_STATUS, ToolPIVRef.GetPIVStatusInfoString());
+                    return;
+                }
                 name = AppCommon.MSG_PIV_STATUS;
                 break;
             case AppCommon.RequestType.PIVSetChuId:

@@ -7,47 +7,56 @@
 #import "AppCommand.h"
 #import "AppCommonMessage.h"
 #import "AppDelegate.h"
-#import "ToolAppCommand.h"
+#import "BLESettingCommand.h"
+#import "DFUCommand.h"
+#import "FIDOSettingCommand.h"
+#import "HcheckCommand.h"
 #import "ToolCommonFunc.h"
-#import "ToolContext.h"
+#import "ToolPGPCommand.h"
+#import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
 
-@interface AppDelegate () <ToolAppCommandDelegate, AppCommandDelegate>
+@interface AppDelegate () <AppCommandDelegate>
 
     @property (assign) IBOutlet NSWindow    *window;
-    @property (assign) IBOutlet NSButton    *buttonPairing;
-    @property (assign) IBOutlet NSButton    *buttonUnpairing;
-    @property (assign) IBOutlet NSButton    *buttonSetPinParam;
+    @property (assign) IBOutlet NSButton    *buttonBLESetting;
+    @property (assign) IBOutlet NSButton    *buttonFIDOSetting;
+    @property (assign) IBOutlet NSButton    *buttonOATHSetting;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
     @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonSetPgpParam;
+    @property (assign) IBOutlet NSButton    *buttonHealthCheck;
     @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-
     // クラスの参照を保持
-    @property (nonatomic) ToolAppCommand    *toolAppCommand;
-    @property (nonatomic) UtilityCommand    *utilityCommand;
+    @property (nonatomic) BLESettingCommand     *bleSettingCommand;
+    @property (nonatomic) DFUCommand            *dfuCommand;
+    @property (nonatomic) FIDOSettingCommand    *fidoSettingCommand;
+    @property (nonatomic) HcheckCommand         *hcheckCommand;
+    @property (nonatomic) UtilityCommand        *utilityCommand;
+    @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
+    @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
 
 @end
 
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        // 共有情報にアプリケーションの参照を設定
-        [[ToolContext instance] setAppDelegateRef:self];
-
         // アプリケーション開始ログを出力
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommonFunc getAppVersionString]];
 
         // コマンドクラスの初期化
-        [self setToolAppCommand:[[ToolAppCommand alloc] initWithDelegate:self]];
+        [self setBleSettingCommand:[[BLESettingCommand alloc] initWithDelegate:self]];
+        [self setDfuCommand:[[DFUCommand alloc] initWithDelegate:self]];
+        [self setFidoSettingCommand:[[FIDOSettingCommand alloc] initWithDelegate:self]];
+        [self setHcheckCommand:[[HcheckCommand alloc] initWithDelegate:self]];
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
+        [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
+        [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -70,46 +79,42 @@
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [[self buttonPairing] setEnabled:enabled];
-        [[self buttonUnpairing] setEnabled:enabled];
-        [[self buttonSetPinParam] setEnabled:enabled];
+        [[self buttonBLESetting] setEnabled:enabled];
+        [[self buttonFIDOSetting] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
-        [[self menuItemTestUSB] setEnabled:enabled];
-        [[self menuItemTestBLE] setEnabled:enabled];
     }
 
-    - (IBAction)buttonPairingDidPress:(id)sender {
-        // ペアリング実行
-        [[self toolAppCommand] doCommandPairing];
+    - (IBAction)buttonBLESettingDidPress:(id)sender {
+        // BLE設定画面を開く
+        [[self bleSettingCommand] bleSettingWindowWillOpen:self parentWindow:[self window]];
     }
 
-    - (IBAction)buttonUnpairingDidPress:(id)sender {
-        // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond:[self window]];
+    - (IBAction)buttonFIDOSettingDidPress:(id)sender {
+        // FIDO設定画面を開く
+        [[self fidoSettingCommand] fidoSettingWindowWillOpen:self parentWindow:[self window]];
     }
 
-    - (IBAction)buttonSetPinParamDidPress:(id)sender {
-        // PINコード設定画面を開く
-        [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+    - (IBAction)buttonOATHSettingDidPress:(id)sender {
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
         // PIV機能設定画面を表示
-        [[self toolAppCommand] pivParamWindowWillOpenWithParent:[self window]];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)buttonDFUDidPress:(id)sender {
         // ファームウェア更新画面を表示
-        [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
+        [[self dfuCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
         // OpenPGP機能設定画面を表示
-        [[self toolAppCommand] pgpParamWindowWillOpen:self parentWindow:[self window]];
+        [[self toolPGPCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -122,34 +127,9 @@
         return YES;
     }
 
-    - (IBAction)menuItemTestHID1DidSelect:(id)sender {
-        // HID CTAP2ヘルスチェック実行
-        [[self toolAppCommand] doCommandHidCtap2HealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID2DidSelect:(id)sender {
-        // HID U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandHidU2fHealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestHID3DidSelect:(id)sender {
-        // PINGテスト実行
-        [[self toolAppCommand] doCommandTestCtapHidPing:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
-        // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
-        [[self toolAppCommand] doCommandBleCtap2HealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
-        // BLE U2Fヘルスチェック実行
-        [[self toolAppCommand] doCommandBleU2fHealthCheck:[self window]];
-    }
-
-    - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
-        // BLE PINGテスト実行
-        [[self toolAppCommand] doCommandTestBlePing];
+    - (IBAction)buttonHealthCheckDidPress:(id)sender {
+        // ヘルスチェック実行画面を開く
+        [[self hcheckCommand] hcheckWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonUtilityDidPress:(id)sender {

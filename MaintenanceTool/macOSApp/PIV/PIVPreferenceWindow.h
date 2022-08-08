@@ -8,7 +8,7 @@
 #define PIVPreferenceWindow_h
 
 #import <Cocoa/Cocoa.h>
-#import "ToolCommon.h"
+#import "AppDefine.h"
 
 @interface PIVPreferenceWindow : NSWindowController
 

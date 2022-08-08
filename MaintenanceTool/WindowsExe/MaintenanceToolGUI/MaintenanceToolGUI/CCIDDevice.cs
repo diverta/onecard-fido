@@ -238,5 +238,13 @@ namespace MaintenanceToolGUI
             ReaderName = null;
             RecvLength = 0;
         }
+
+        public string GetConnectedReaderName()
+        {
+            if (ReaderName == null) {
+                return "";
+            }
+            return string.Copy(ReaderName);
+        }
     }
 }

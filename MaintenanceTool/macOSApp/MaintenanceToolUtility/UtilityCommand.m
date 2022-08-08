@@ -9,6 +9,7 @@
 #import "FIDODefines.h"
 #import "ToolCommon.h"
 #import "ToolCommonFunc.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolVersionWindow.h"
 #import "UtilityCommand.h"
@@ -58,10 +59,9 @@
         }];
     }
 
-    - (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window {
+    - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        bool connected = [[self appHIDCommand] checkUSBHIDConnection];
-        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:window connected:connected];
+        return [[self appHIDCommand] checkUSBHIDConnection];
     }
 
 #pragma mark - Perform functions
@@ -207,15 +207,28 @@
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
+        // USB接続検知メッセージを表示／出力（このコマンドで代表して実行）
+        [[self delegate] notifyMessageToMainUI:MSG_HID_CONNECTED];
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
     }
 
     - (void)didDetectRemoval {
+        // USB切断検知メッセージを表示／出力（このコマンドで代表して実行）
+        [[self delegate] notifyMessageToMainUI:MSG_HID_REMOVED];
+        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
     }
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
         // 即時でアプリケーションに制御を戻す
         if (success == false) {
             [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+            return;
+        }
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [self notifyCommandTerminated:[self commandName] message:MSG_OCCUR_UNKNOWN_ERROR success:false fromWindow:[self parentWindow]];
             return;
         }
         // 実行コマンドにより処理分岐

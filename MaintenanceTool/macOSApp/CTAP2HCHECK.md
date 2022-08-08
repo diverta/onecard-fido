@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -14,40 +14,39 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
+* <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b>
 
 #### ファームウェアを更新
 
-最新ファームウェアを、MDBT50Q Dongleに書込み、ファームウェアを更新します。<br>
-（最新ファームウェアは、FIDO認証器管理ツールに同梱されています）
-
-ファームウェアの更新手順につきましては、<b>[ファームウェア更新手順書](UPDATEFIRMWARE.md)</b>をご参照ください。
-
-#### 鍵・証明書導入／PIN設定
-
-PC環境に導入した管理ツールを使用し、鍵・証明書のインストール、およびPINコード（暗証番号）の設定をします。<br>
+最新ファームウェアを、FIDO2認証器に書込み、ファームウェアを更新します。<br>
+（最新ファームウェアは、FIDO認証器管理ツールに同梱されています）<br>
 以下の手順書をご参照願います。
 
-* <b>[鍵・証明書の導入手順（macOS版）](INSTALLKEYCRT.md) </b>
+* <b>[ファームウェア更新手順書](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b>
 
-* <b>[PINコードの設定手順（macOS版）](SETPIN.md) </b>
+#### PIN設定
+
+PC環境に導入した管理ツールを使用し、PINコード（暗証番号）の設定をします。<br>
+以下の手順書をご参照願います。
+
+* <b>[PINコードの設定手順（macOS版）](../../MaintenanceTool/macOSApp/SETPIN.md) </b>
 
 ## CTAP2ヘルスチェックの実行
 
 管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
-<img src="assets/0028.jpg" width="400">
+<img src="assets/0013.jpg" width="400">
 
-管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面のメニューから「Test」-->「USB」-->「CTAP2ヘルスチェック実行」を選択します。
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツールのヘルスチェック実行画面で「USB > CTAP2ヘルスチェック実行」をクリックします。
 
 <img src="assets/0020.jpg" width="400">
 

@@ -234,6 +234,7 @@
             this.radioPkeySlotId3.TabIndex = 10;
             this.radioPkeySlotId3.Text = "管理機能用";
             this.radioPkeySlotId3.UseVisualStyleBackColor = true;
+            this.radioPkeySlotId3.CheckedChanged += new System.EventHandler(this.radioPkeySlotId3_CheckedChanged);
             // 
             // radioPkeySlotId2
             // 
@@ -244,6 +245,7 @@
             this.radioPkeySlotId2.TabIndex = 9;
             this.radioPkeySlotId2.Text = "電子署名用";
             this.radioPkeySlotId2.UseVisualStyleBackColor = true;
+            this.radioPkeySlotId2.CheckedChanged += new System.EventHandler(this.radioPkeySlotId2_CheckedChanged);
             // 
             // radioPkeySlotId1
             // 
@@ -256,6 +258,7 @@
             this.radioPkeySlotId1.TabStop = true;
             this.radioPkeySlotId1.Text = "PIV認証用";
             this.radioPkeySlotId1.UseVisualStyleBackColor = true;
+            this.radioPkeySlotId1.CheckedChanged += new System.EventHandler(this.radioPkeySlotId1_CheckedChanged);
             // 
             // buttonInstallPkeyCert
             // 
