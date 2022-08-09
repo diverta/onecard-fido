@@ -100,14 +100,14 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_oath_object_account_delete(char *account_name)
+uint16_t ccid_oath_object_account_delete(char *account_name, uint8_t account_name_size)
 {
     //
     // Flash ROMから該当レコードを削除
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 

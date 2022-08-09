@@ -26,6 +26,7 @@ fido_log_module_register(ccid_oath_account);
 // アカウントデータ格納用
 //
 static char    m_account_name[MAX_NAME_LEN];
+static uint8_t m_account_name_size;
 static char    m_secret[MAX_KEY_LEN];
 static uint8_t m_property;
 static uint8_t m_challange[MAX_CHALLENGE_LEN];
@@ -215,8 +216,8 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->data[offset++] != OATH_TAG_NAME) {
         return SW_WRONG_DATA;
     }
-    uint8_t name_len = capdu->data[offset++];
-    if (name_len > MAX_NAME_LEN || name_len == 0) {
+    m_account_name_size = capdu->data[offset++];
+    if (m_account_name_size > MAX_NAME_LEN || m_account_name_size == 0) {
         return SW_WRONG_DATA;
     }
     uint8_t name_offset = offset;
@@ -225,7 +226,7 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウントデータをFlash ROMから削除
-    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset);
+    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset, m_account_name_size);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         ccid_process_resume_prepare(capdu, rapdu);
@@ -263,7 +264,7 @@ void ccid_oath_account_retry(void)
     }
     if (m_flash_func == ccid_oath_account_delete) {
         // アカウントデータをFlash ROMから削除
-        sw = ccid_oath_object_account_delete(m_account_name);
+        sw = ccid_oath_object_account_delete(m_account_name, m_account_name_size);
     }
     if (m_flash_func == ccid_oath_account_reset) {
         // アカウントデータをFlash ROMから全て削除
