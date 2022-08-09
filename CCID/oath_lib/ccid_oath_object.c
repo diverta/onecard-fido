@@ -49,7 +49,7 @@ static bool write_account_object(uint8_t *write_buff, size_t write_size, uint16_
     return true;
 }
 
-uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t property, uint8_t *challange)
+uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t property, uint8_t *challenge)
 {
     // Flash ROMに登録するオブジェクトデータを生成
     // バイトイメージ（139バイト固定）
@@ -73,7 +73,7 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     account_write_buff[offset++] = property;
 
     // Challenge
-    memcpy(account_write_buff + offset, challange, MAX_CHALLENGE_LEN);
+    memcpy(account_write_buff + offset, challenge, MAX_CHALLENGE_LEN);
     offset += MAX_CHALLENGE_LEN;
 
     //
@@ -143,13 +143,13 @@ uint16_t ccid_oath_object_delete_all(void)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_oath_object_account_read(char *account_name, char *secret, uint8_t *property, uint8_t *challange, bool *exist)
+uint16_t ccid_oath_object_account_read(char *account_name, size_t account_name_size, char *secret, uint8_t *property, uint8_t *challenge, bool *exist)
 {
     //
     // Flash ROMから対象レコードを検索
     //
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -188,8 +188,8 @@ uint16_t ccid_oath_object_account_read(char *account_name, char *secret, uint8_t
     offset++;
 
     // Challenge
-    if (challange != NULL) {
-        memcpy(challange, account_read_buff + offset, MAX_CHALLENGE_LEN);
+    if (challenge != NULL) {
+        memcpy(challenge, account_read_buff + offset, MAX_CHALLENGE_LEN);
     }
     offset += MAX_CHALLENGE_LEN;
 

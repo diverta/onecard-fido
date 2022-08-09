@@ -22,9 +22,9 @@ fido_log_module_register(ccid_oath_calculate);
 // アカウントデータ格納用
 //
 static char    m_account_name[MAX_NAME_LEN];
-static char    m_secret[MAX_KEY_LEN];
+static uint8_t m_secret[MAX_KEY_LEN];
 static uint8_t m_property;
-static uint8_t m_challange[MAX_CHALLENGE_LEN];
+static uint8_t m_challenge[MAX_CHALLENGE_LEN];
 
 uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
@@ -54,8 +54,6 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウント名をバッファにコピー
-    //   ccid_oath_object_account_read において、
-    //   アカウント名を64バイトの完全一致で検索させるための措置）
     memset(m_account_name, 0, sizeof(m_account_name));
     memcpy(m_account_name, capdu->data + name_offset, name_len);
 
@@ -63,12 +61,12 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     // アカウントデータを取得
     //
     bool exist = false;
-    uint16_t sw = ccid_oath_object_account_read(m_account_name, m_secret, &m_property, m_challange, &exist);
+    uint16_t sw = ccid_oath_object_account_read(m_account_name, name_len, m_secret, &m_property, m_challenge, &exist);
 
 #if LOG_ACCOUNT_EXIST_AND_READ
     fido_log_debug("account record(%s): exist=%d", log_strdup(m_account_name), exist);
     fido_log_print_hexdump_debug(m_secret, MAX_KEY_LEN, "secret");
-    fido_log_print_hexdump_debug(m_challange, MAX_CHALLENGE_LEN, "challange");
+    fido_log_print_hexdump_debug(m_challenge, MAX_CHALLENGE_LEN, "challenge");
 #endif
     if (exist == false) {
         return SW_DATA_INVALID;
