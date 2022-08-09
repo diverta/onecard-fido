@@ -46,6 +46,11 @@ extern "C" {
 #define MAX_KEY_LEN                 66
 #define MAX_CHALLENGE_LEN           8
 
+#define SHA1_BLOCK_LENGTH           64
+#define SHA1_DIGEST_LENGTH          20
+#define SHA256_BLOCK_LENGTH         64
+#define SHA256_DIGEST_LENGTH        32
+
 #ifdef __cplusplus
 }
 #endif
