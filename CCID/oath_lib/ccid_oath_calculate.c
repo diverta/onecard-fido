@@ -61,11 +61,12 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     // アカウントデータを取得
     //
     bool exist = false;
-    uint16_t sw = ccid_oath_object_account_read(m_account_name, name_len, m_secret, &m_property, m_challenge, &exist);
+    uint8_t secret_size;
+    uint16_t sw = ccid_oath_object_account_read(m_account_name, name_len, m_secret, &secret_size, &m_property, m_challenge, &exist);
 
 #if LOG_ACCOUNT_EXIST_AND_READ
     fido_log_debug("account record(%s): exist=%d", log_strdup(m_account_name), exist);
-    fido_log_print_hexdump_debug(m_secret, MAX_KEY_LEN, "secret");
+    fido_log_print_hexdump_debug(m_secret, secret_size, "secret");
     fido_log_print_hexdump_debug(m_challenge, MAX_CHALLENGE_LEN, "challenge");
 #endif
     if (exist == false) {
