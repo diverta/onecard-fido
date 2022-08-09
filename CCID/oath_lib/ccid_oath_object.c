@@ -27,7 +27,7 @@ static void *m_flash_func = NULL;
 // アカウント登録
 //
 static uint8_t account_read_buff[160];
-static uint8_t account_write_buff[140];
+static uint8_t account_write_buff[160];
 
 static bool write_account_object(uint8_t *write_buff, size_t write_size, uint16_t serial)
 {
@@ -49,25 +49,29 @@ static bool write_account_object(uint8_t *write_buff, size_t write_size, uint16_
     return true;
 }
 
-uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t property, uint8_t *challenge)
+uint16_t ccid_oath_object_account_set(char *account_name, uint8_t account_name_size, char *secret, uint8_t secret_size, uint8_t property, uint8_t *challenge)
 {
     // Flash ROMに登録するオブジェクトデータを生成
-    // バイトイメージ（139バイト固定）
+    // バイトイメージ（141バイト固定）
     //   0   : アカウント（64バイト）
-    //   64  : アルゴリズム（1バイト）
-    //   65  : OTP桁数（1バイト）
-    //   66  : Secret（64バイト）
-    //   130 : オプション属性（1バイト）
-    //   131 : Challenge（8バイト）
+    //   64  : アカウント長（1バイト）
+    //   65  : アルゴリズム（1バイト）
+    //   66  : OTP桁数（1バイト）
+    //   67  : Secret（64バイト）
+    //   131 : Secret長（1バイト）
+    //   132 : オプション属性（1バイト）
+    //   133 : Challenge（8バイト）
     uint8_t offset = 0;
     
     // アカウント
     memcpy(account_write_buff + offset, account_name, MAX_NAME_LEN);
     offset += MAX_NAME_LEN;
+    account_write_buff[offset++] = account_name_size;
 
     // アルゴリズム、OTP桁数、Secret
     memcpy(account_write_buff + offset, secret, MAX_KEY_LEN);
     offset += MAX_KEY_LEN;
+    account_write_buff[offset++] = secret_size;
 
     // オプション属性
     account_write_buff[offset++] = property;
@@ -83,7 +87,7 @@ uint16_t ccid_oath_object_account_set(char *account_name, char *secret, uint8_t 
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, MAX_NAME_LEN, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -143,7 +147,7 @@ uint16_t ccid_oath_object_delete_all(void)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_oath_object_account_read(char *account_name, size_t account_name_size, char *secret, uint8_t *property, uint8_t *challenge, bool *exist)
+uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_size, char *secret, uint8_t *secret_size, uint8_t *property, uint8_t *challenge, bool *exist)
 {
     //
     // Flash ROMから対象レコードを検索
@@ -156,15 +160,17 @@ uint16_t ccid_oath_object_account_read(char *account_name, size_t account_name_s
 #if LOG_ACCOUNT_READ
     // account_read_buff の内容（143バイト）：
     //  レコード長（4バイト）
-    //  バイトイメージ（139バイト固定）
+    //  バイトイメージ（141バイト固定）
     //   0   : アカウント（64バイト）
-    //   64  : アルゴリズム（1バイト）
-    //   65  : OTP桁数（1バイト）
-    //   66  : Secret（64バイト）
-    //   130 : オプション属性（1バイト）
-    //   131 : Challenge（8バイト）
+    //   64  : アカウント長（1バイト）
+    //   65  : アルゴリズム（1バイト）
+    //   66  : OTP桁数（1バイト）
+    //   67  : Secret（64バイト）
+    //   131 : Secret長（1バイト）
+    //   132 : オプション属性（1バイト）
+    //   133 : Challenge（8バイト）
     fido_log_debug("account record(%s): exist=%d", log_strdup(account_name), *exist);
-    fido_log_print_hexdump_debug(account_read_buff + 68 , 75, "record bytes");
+    fido_log_print_hexdump_debug(account_read_buff + 4 + 65 , 76, "record bytes");
 #endif
 
     // 既存データがない場合はここで終了
@@ -173,13 +179,17 @@ uint16_t ccid_oath_object_account_read(char *account_name, size_t account_name_s
     }
 
     // 取得したデータを、引数の領域に格納
-    uint8_t offset = 4 + MAX_NAME_LEN;
+    uint8_t offset = 4 + MAX_NAME_LEN + 1;
 
     // アルゴリズム、OTP桁数、Secret
     if (secret != NULL) {
         memcpy(secret, account_read_buff + offset, MAX_KEY_LEN);
     }
     offset += MAX_KEY_LEN;
+    if (secret_size != NULL) {
+        *secret_size = account_read_buff[offset];
+    }
+    offset++;
 
     // オプション属性
     if (property != NULL) {
