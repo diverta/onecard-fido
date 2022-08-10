@@ -13,6 +13,7 @@ extern "C" {
 
 #define OATH_INS_PUT                0x01
 #define OATH_INS_DELETE             0x02
+#define OATH_INS_CALCULATE          0x04
 #define OATH_INS_SELECT             0xA4
 #define OATH_INS_RESET              0xAF
 
@@ -44,6 +45,11 @@ extern "C" {
 #define MAX_NAME_LEN                64
 #define MAX_KEY_LEN                 66
 #define MAX_CHALLENGE_LEN           8
+
+#define SHA1_BLOCK_LENGTH           64
+#define SHA1_DIGEST_LENGTH          20
+#define SHA256_BLOCK_LENGTH         64
+#define SHA256_DIGEST_LENGTH        32
 
 #ifdef __cplusplus
 }

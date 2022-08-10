@@ -26,7 +26,9 @@ fido_log_module_register(ccid_oath_account);
 // アカウントデータ格納用
 //
 static char    m_account_name[MAX_NAME_LEN];
+static uint8_t m_account_name_size;
 static char    m_secret[MAX_KEY_LEN];
+static uint8_t m_secret_size;
 static uint8_t m_property;
 static uint8_t m_challange[MAX_CHALLENGE_LEN];
 
@@ -60,8 +62,8 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->data[offset++] != OATH_TAG_NAME) {
         return SW_WRONG_DATA;
     }
-    uint8_t name_len = capdu->data[offset++];
-    if (name_len > MAX_NAME_LEN || name_len == 0) {
+    m_account_name_size = capdu->data[offset++];
+    if (m_account_name_size > MAX_NAME_LEN || m_account_name_size == 0) {
         return SW_WRONG_DATA;
     }
     uint8_t name_offset = offset;
@@ -70,12 +72,13 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウント名を保持
-    memcpy(m_account_name, capdu->data + name_offset, name_len);
-    offset += name_len;
+    memcpy(m_account_name, capdu->data + name_offset, m_account_name_size);
+    offset += m_account_name_size;
 
     //
     // Secretを抽出
     //
+    uint8_t m_secret_size = 0;
     if (capdu->data[offset] == OATH_TAG_KEY) {
         offset++;
 
@@ -83,8 +86,8 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
         if (offset >= capdu->lc) {
             return SW_WRONG_LENGTH;
         }
-        uint8_t key_len = capdu->data[offset++];
-        if (key_len > MAX_KEY_LEN || key_len <= 2) {
+        m_secret_size = capdu->data[offset++];
+        if (m_secret_size > MAX_KEY_LEN || m_secret_size <= 2) {
             // 2 for algo & digits
             return SW_WRONG_DATA;
         }
@@ -110,8 +113,8 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
         }
 
         // Secretを保持
-        memcpy(m_secret, capdu->data + key_offset, key_len);
-        offset += key_len;
+        memcpy(m_secret, capdu->data + key_offset, m_secret_size);
+        offset += m_secret_size;
     }
 
     //
@@ -189,7 +192,7 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
 #endif
 
     // 受領データをFlash ROMに設定
-    uint16_t sw = ccid_oath_object_account_set(m_account_name, m_secret, m_property, m_challange);
+    uint16_t sw = ccid_oath_object_account_set(m_account_name, m_account_name_size, m_secret, m_secret_size, m_property, m_challange);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         ccid_process_resume_prepare(capdu, rapdu);
@@ -215,8 +218,8 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->data[offset++] != OATH_TAG_NAME) {
         return SW_WRONG_DATA;
     }
-    uint8_t name_len = capdu->data[offset++];
-    if (name_len > MAX_NAME_LEN || name_len == 0) {
+    m_account_name_size = capdu->data[offset++];
+    if (m_account_name_size > MAX_NAME_LEN || m_account_name_size == 0) {
         return SW_WRONG_DATA;
     }
     uint8_t name_offset = offset;
@@ -225,7 +228,7 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウントデータをFlash ROMから削除
-    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset);
+    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset, m_account_name_size);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         ccid_process_resume_prepare(capdu, rapdu);
@@ -259,11 +262,11 @@ void ccid_oath_account_retry(void)
     uint16_t sw = SW_NO_ERROR;
     if (m_flash_func == ccid_oath_account_add) {
         // 受領データをFlash ROMに設定
-        sw = ccid_oath_object_account_set(m_account_name, m_secret, m_property, m_challange);
+        sw = ccid_oath_object_account_set(m_account_name, m_account_name_size, m_secret, m_secret_size, m_property, m_challange);
     }
     if (m_flash_func == ccid_oath_account_delete) {
         // アカウントデータをFlash ROMから削除
-        sw = ccid_oath_object_account_delete(m_account_name);
+        sw = ccid_oath_object_account_delete(m_account_name, m_account_name_size);
     }
     if (m_flash_func == ccid_oath_account_reset) {
         // アカウントデータをFlash ROMから全て削除

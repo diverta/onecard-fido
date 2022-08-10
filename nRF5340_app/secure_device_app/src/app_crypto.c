@@ -184,35 +184,35 @@ bool app_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *h
 //
 static mbedtls_md_context_t md_context;
 
-static bool generate_hmac_sha256_terminate(bool b)
+static bool calculate_md_hmac_terminate(bool b)
 {
     mbedtls_md_free(&md_context);
     return b;
 }
 
-bool app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *hash_digest)
+bool calculate_md_hmac(mbedtls_md_type_t md_type, uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *hash_digest)
 {
     // 初期化
     mbedtls_md_init(&md_context);
-    const mbedtls_md_info_t *p_md_info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
+    const mbedtls_md_info_t *p_md_info = mbedtls_md_info_from_type(md_type);
     int ret = mbedtls_md_setup(&md_context, p_md_info, 1);
     if (ret != 0) {
         LOG_ERR("mbedtls_md_setup returns %d", ret);
-        return generate_hmac_sha256_terminate(false);
+        return calculate_md_hmac_terminate(false);
     }
 
     // HMACハッシュ計算には、引数のkey_dataを使用
     ret = mbedtls_md_hmac_starts(&md_context, key_data, key_data_size);
     if (ret != 0) {
         LOG_ERR("mbedtls_md_hmac_starts returns %d", ret);
-        return generate_hmac_sha256_terminate(false);
+        return calculate_md_hmac_terminate(false);
     }
 
     // 引数を計算対象に設定
     ret = mbedtls_md_hmac_update(&md_context, src_data, src_data_size);
     if (ret != 0) {
         LOG_ERR("mbedtls_md_hmac_update(1) returns %d", ret);
-        return generate_hmac_sha256_terminate(false);
+        return calculate_md_hmac_terminate(false);
     }
 
     // 2番目の引数を計算対象に設定
@@ -220,7 +220,7 @@ bool app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, ui
         ret = mbedtls_md_hmac_update(&md_context, src_data_2, src_data_2_size);
         if (ret != 0) {
             LOG_ERR("mbedtls_md_hmac_update(2) returns %d", ret);
-            return generate_hmac_sha256_terminate(false);
+            return calculate_md_hmac_terminate(false);
         }
     }
 
@@ -228,7 +228,7 @@ bool app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, ui
     ret = mbedtls_md_hmac_finish(&md_context, hash_digest);
     if (ret != 0) {
         LOG_ERR("mbedtls_md_hmac_finish returns %d", ret);
-        return generate_hmac_sha256_terminate(false);
+        return calculate_md_hmac_terminate(false);
     }
 
 #if LOG_DEBUG_SHA256_HASH_DATA
@@ -236,7 +236,17 @@ bool app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, ui
     LOG_HEXDUMP_DBG(hash_digest, SHA256_HASH_SIZE, "HMAC SHA-256 hash data");
 #endif
 
-    return generate_hmac_sha256_terminate(true);
+    return calculate_md_hmac_terminate(true);
+}
+
+bool app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *hash_digest)
+{
+    return calculate_md_hmac(MBEDTLS_MD_SHA256, key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, hash_digest);
+}
+
+bool app_crypto_generate_hmac_sha1(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *hash_digest)
+{
+    return calculate_md_hmac(MBEDTLS_MD_SHA1, key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, hash_digest);
 }
 
 //

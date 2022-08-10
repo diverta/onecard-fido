@@ -5,8 +5,9 @@
  * Created on 2022/04/29, 10:42
  */
 #include "ccid_oath.h"
-#include "ccid_oath_define.h"
 #include "ccid_oath_account.h"
+#include "ccid_oath_calculate.h"
+#include "ccid_oath_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -48,6 +49,11 @@ static uint16_t oath_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
     return ccid_oath_account_reset(capdu, rapdu);
 }
 
+static uint16_t oath_ins_calculate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_oath_calculate(capdu, rapdu);
+}
+
 void ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -72,6 +78,9 @@ void ccid_oath_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OATH_INS_RESET:
             rapdu->sw = oath_ins_reset(capdu, rapdu);
+            break;
+        case OATH_INS_CALCULATE:
+            rapdu->sw = oath_ins_calculate(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
