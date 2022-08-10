@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MaintenanceToolApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="FIDO認証器管理ツール" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="53*"/>
+            <ColumnDefinition Width="747*"/>
+        </Grid.ColumnDefinitions>
 
     </Grid>
 </Window>
