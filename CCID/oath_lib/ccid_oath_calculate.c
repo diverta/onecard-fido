@@ -128,10 +128,21 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 static void calculate_hmac_sha1(uint8_t *secret, uint8_t secret_size, uint8_t *challenge, uint8_t challenge_size, uint8_t *digest)
 {
+#if LOG_CALCULATED_DIGEST
+    fido_log_print_hexdump_debug(secret, secret_size, "Secret for HMAC SHA-1");
+    fido_log_print_hexdump_debug(challenge, challenge_size, "Challenge for HMAC SHA-1");
+#endif
+
+    fido_crypto_calculate_hmac_sha1(secret, secret_size, challenge, challenge_size, NULL, 0, digest);
 }
 
 static void calculate_hmac_sha256(uint8_t *secret, uint8_t secret_size, uint8_t *challenge, uint8_t challenge_size, uint8_t *digest)
 {
+#if LOG_CALCULATED_DIGEST
+    fido_log_print_hexdump_debug(secret, secret_size, "Secret for HMAC SHA-256");
+    fido_log_print_hexdump_debug(challenge, challenge_size, "Challenge for HMAC SHA-256");
+#endif
+
     fido_crypto_calculate_hmac_sha256(secret, secret_size, challenge, challenge_size, NULL, 0, digest);
 }
 
@@ -162,8 +173,6 @@ void ccid_oath_calculate_digest(uint8_t *secret, uint8_t secret_size, uint8_t *c
     memcpy(buffer, m_digest + offset, 4);
 
 #if LOG_CALCULATED_DIGEST
-    fido_log_print_hexdump_debug(secret, secret_size, "Secret for HMAC");
-    fido_log_print_hexdump_debug(challenge, challenge_size, "Challenge for HMAC");
     fido_log_print_hexdump_debug(m_digest, digest_length, "Calculated HMAC value");
     fido_log_print_hexdump_debug(buffer, 4, "Calculated OTP digest value");
 #endif
