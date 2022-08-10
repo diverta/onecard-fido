@@ -5,6 +5,7 @@
  * Created on 2022/07/11, 17:03
  */
 #include "ccid_oath.h"
+#include "ccid_oath_calculate.h"
 #include "ccid_oath_define.h"
 #include "ccid_oath_object.h"
 
@@ -125,18 +126,27 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     return sw;
 }
 
+static void calculate_hmac_sha1(uint8_t *secret, uint8_t secret_size, uint8_t *challenge, uint8_t challenge_size, uint8_t *digest)
+{
+}
+
+static void calculate_hmac_sha256(uint8_t *secret, uint8_t secret_size, uint8_t *challenge, uint8_t challenge_size, uint8_t *digest)
+{
+    fido_crypto_calculate_hmac_sha256(secret, secret_size, challenge, challenge_size, NULL, 0, digest);
+}
+
 void ccid_oath_calculate_digest(uint8_t *secret, uint8_t secret_size, uint8_t *challenge, uint8_t challenge_size, uint8_t *buffer) 
 {
     // ハッシュ値を計算
     uint8_t digest_length;
     if ((secret[0] & OATH_ALG_MASK) == OATH_ALG_SHA1) {
-        // TODO: 後日実装予定
-        // hmac_sha1(m_secret + 2, secret_size - 2, challenge, challenge_size, m_digest);
+        // SHA-1ハッシュを計算
+        calculate_hmac_sha1(m_secret + 2, secret_size - 2, challenge, challenge_size, m_digest);
         digest_length = SHA1_DIGEST_LENGTH;
 
     } else {
-        // TODO: 後日実装予定
-        // hmac_sha256(m_secret + 2, secret_size - 2, challenge, challenge_size, m_digest);
+        // SHA-256ハッシュを計算
+        calculate_hmac_sha256(m_secret + 2, secret_size - 2, challenge, challenge_size, m_digest);
         digest_length = SHA256_DIGEST_LENGTH;
     }
 
