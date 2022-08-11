@@ -14,7 +14,7 @@
         <Button x:Name="buttonSetPgpParam"  Content="OpenPGP設定" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonOATH"  Content="OATH設定" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonQuit"  Content="終了" 
-                Command="{Binding MainWindowCommandRef}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Command="{Binding MainWindowQuitCommandRef}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                 HorizontalAlignment="Right" Margin="0,20,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonHealthCheck" Content="ヘルスチェック実行" HorizontalAlignment="Right" Margin="0,60,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonUtility"  Content="ユーティリティー" HorizontalAlignment="Right" Margin="0,100,25,0" VerticalAlignment="Top" Height="25" Width="200"/>

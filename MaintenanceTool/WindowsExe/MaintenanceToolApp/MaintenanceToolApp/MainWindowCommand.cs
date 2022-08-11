@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MaintenanceToolApp
 {
-    public class MainWindowCommand : ICommand
+    public class MainWindowQuitCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged
         {
