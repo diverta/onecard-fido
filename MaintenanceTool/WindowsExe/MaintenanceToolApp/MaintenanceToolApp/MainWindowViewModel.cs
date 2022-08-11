@@ -8,10 +8,16 @@ namespace MaintenanceToolApp
         public string Title { get; set; }
         public string MaintenanceToolVersion { get; set; }
 
+        // コマンドクラスの参照を保持
+        public MainWindowCommand MainWindowCommandRef { get; set; }
+
         public MainWindowViewModel()
         {
             // メイン画面のタイトル
             Title = AppCommon.MSG_TOOL_TITLE;
+
+            // コマンドクラスを生成
+            MainWindowCommandRef = new MainWindowCommand();
 
             // ツールのバージョンを取得
             MaintenanceToolVersion = string.Format("Version {0}", GetMaintenanceToolVersion());
