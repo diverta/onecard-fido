@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MaintenanceToolApp"
         mc:Ignorable="d"
-        Title="FIDO認証器管理ツール" Height="450" Width="800">
+        Title="FIDO認証器管理ツール" Height="500" Width="700" ResizeMode="CanMinimize">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="53*"/>
-            <ColumnDefinition Width="747*"/>
-        </Grid.ColumnDefinitions>
-
+        <Button x:Name="buttonBLE"  Content="BLE設定" HorizontalAlignment="Left" Margin="25,20,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonFIDO" Content="FIDO設定" HorizontalAlignment="Left" Margin="25,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonDFU"  Content="ファームウェア更新" HorizontalAlignment="Left" Margin="25,100,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonSetPivParam"  Content="PIV設定" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonSetPgpParam"  Content="OpenPGP設定" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonOATH"  Content="OATH設定" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonQuit"  Content="終了" HorizontalAlignment="Right" Margin="0,20,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonHealthCheck" Content="ヘルスチェック実行" HorizontalAlignment="Right" Margin="0,60,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonUtility"  Content="ユーティリティー" HorizontalAlignment="Right" Margin="0,100,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <TextBox x:Name="textBox1" Margin="25,145,25,20" TextWrapping="Wrap" Text="" FontSize="14"/>
     </Grid>
 </Window>
