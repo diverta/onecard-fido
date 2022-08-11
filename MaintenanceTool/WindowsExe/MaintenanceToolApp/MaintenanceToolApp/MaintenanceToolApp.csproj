@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\ToolAppCommon\AppLogUtil.cs" Link="ToolAppCommon\AppLogUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ToolAppCommon\" />
   </ItemGroup>
 
 </Project>
