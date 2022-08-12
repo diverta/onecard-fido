@@ -8,11 +8,11 @@ namespace MaintenanceToolApp
 {
     public class DialogUtil
     {
-        public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
-        public delegate void TimerProc(IntPtr hWnd, uint uMsg, UIntPtr nIDEvent, uint dwTime);
+        private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        private delegate void TimerProc(IntPtr hWnd, uint uMsg, UIntPtr nIDEvent, uint dwTime);
 
-        public const int WH_CALLWNDPROCRET = 12;
-        public enum CbtHookAction : int
+        private const int WH_CALLWNDPROCRET = 12;
+        private enum CbtHookAction : int
         {
             HCBT_MOVESIZE = 0,
             HCBT_MINMAX = 1,
@@ -33,19 +33,19 @@ namespace MaintenanceToolApp
         private static extern int MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
+        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
 
         [DllImport("user32.dll")]
-        public static extern int UnhookWindowsHookEx(IntPtr idHook);
+        private static extern int UnhookWindowsHookEx(IntPtr idHook);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetCurrentThreadId();
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct CWPRETSTRUCT
+        private struct CWPRETSTRUCT
         {
             public IntPtr lResult;
             public IntPtr lParam;
@@ -120,7 +120,7 @@ namespace MaintenanceToolApp
             MoveWindow(hChildWnd, ptStart.X, ptStart.Y, width, height, false);
         }
 
-        public static MessageBoxResult Show(Window owner, string text, string caption, MessageBoxButton buttons, MessageBoxImage icon)
+        private static MessageBoxResult Show(Window owner, string text, string caption, MessageBoxButton buttons, MessageBoxImage icon)
         {
             _owner = new WindowInteropHelper(owner).Handle;
             Initialize();
