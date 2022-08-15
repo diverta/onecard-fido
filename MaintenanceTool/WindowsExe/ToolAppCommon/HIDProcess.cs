@@ -8,9 +8,18 @@ namespace ToolAppCommon
         // このクラスのインスタンス
         private static readonly HIDProcess Instance = new HIDProcess();
 
+        // HID接続完了時のイベント
+        public delegate void HandlerOnConnectHIDDevice(bool connected);
+        public event HandlerOnConnectHIDDevice OnConnectHIDDevice = null!;
+
         //
         // 外部公開用
         //
+        public static void RegisterHandlerOnConnectHIDDevice(HandlerOnConnectHIDDevice handler)
+        {
+            Instance.OnConnectHIDDevice += handler;
+        }
+
         public static void ConnectHIDDevice()
         {
             //
@@ -62,6 +71,9 @@ namespace ToolAppCommon
             // デバイスを初期化
             device = new HIDDevice(devicePath);
             AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
+
+            // ハンドラー経由で接続通知
+            OnConnectHIDDevice(true);
         }
 
         private static string GetHIDDevicePath()
@@ -89,6 +101,9 @@ namespace ToolAppCommon
             device.Close();
             device = null!;
             AppLogUtil.OutputLogInfo(AppCommon.MSG_HID_REMOVED);
+
+            // ハンドラー経由で接続切断通知
+            OnConnectHIDDevice(false);
         }
     }
 }

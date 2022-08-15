@@ -26,7 +26,12 @@ namespace MaintenanceToolApp
             USBDevice.StartUSBDeviceNotification(this);
 
             // USBデバイスの接続試行
+            HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDevice);
             HIDProcess.ConnectHIDDevice();
+        }
+
+        void OnConnectHIDDevice(bool connected)
+        {
         }
     }
 }
