@@ -24,6 +24,22 @@ namespace MaintenanceToolApp
 
             // USBデバイスの脱着検知を開始
             USBDevice.StartUSBDeviceNotification(this);
+
+            // USBデバイスの接続試行
+            HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDevice);
+            HIDProcess.ConnectHIDDevice();
+        }
+
+        void OnConnectHIDDevice(bool connected)
+        {
+            if (DataContext is MainWindowViewModel model) {
+                // 接続／切断検知結果をテキストボックス上に表示
+                string messageText = connected ? AppCommon.MSG_HID_CONNECTED : AppCommon.MSG_HID_REMOVED;
+                model.MessageText += messageText + "\r\n";
+
+                // テキストボックスの現在位置を末尾に移動
+                textBox1.ScrollToEnd();
+            }
         }
     }
 }

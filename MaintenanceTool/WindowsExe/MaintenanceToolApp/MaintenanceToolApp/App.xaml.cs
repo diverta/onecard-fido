@@ -43,6 +43,12 @@ namespace MaintenanceToolApp
 
         protected override void OnExit(ExitEventArgs e)
         {
+            // USB接続を解放
+            HIDProcess.DisconnectHIDDevice();
+
+            // USBデバイスの脱着検知を終了
+            USBDevice.TerminateUSBDeviceNotification();
+
             // アプリケーション終了ログを出力
             AppLogUtil.OutputLogInfo(string.Format("{0}を終了しました", AppCommon.MSG_TOOL_TITLE));
 
