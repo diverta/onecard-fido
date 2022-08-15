@@ -19,6 +19,11 @@ namespace MaintenanceToolApp
             }
         }
 
+        public static void TerminateUSBDeviceNotification()
+        {
+            UsbNotification.UnregisterUsbDeviceNotification();
+        }
+
         private static IntPtr HwndHandler(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
             if (msg == UsbNotification.WmDevicechange) {
@@ -69,12 +74,20 @@ namespace MaintenanceToolApp
             Marshal.StructureToPtr(dbi, buffer, true);
 
             notificationHandle = RegisterDeviceNotification(windowHandle, buffer, 0);
+            if (notificationHandle == IntPtr.Zero) {
+                AppLogUtil.OutputLogError(AppCommon.MSG_USB_DETECT_FAILED);
+            } else {
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_USB_DETECT_STARTED);
+            }
         }
 
         public static void UnregisterUsbDeviceNotification()
         {
             // Unregisters the window for USB device notifications
-            UnregisterDeviceNotification(notificationHandle);
+            if (notificationHandle != IntPtr.Zero) {
+                UnregisterDeviceNotification(notificationHandle);
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_USB_DETECT_END);
+            }
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
