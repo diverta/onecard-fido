@@ -29,13 +29,13 @@ namespace MaintenanceToolApp
             if (msg == UsbNotification.WmDevicechange) {
                 switch ((int)wparam) {
                 case UsbNotification.DbtDeviceremovecomplete:
-                    // TODO: 仮の実装です。
-                    AppLogUtil.OutputLogInfo(String.Format("DbtDeviceremovecomplete 0x{0:x4}", (int)wparam));
+                    // USB接続を解放
+                    HIDProcess.DisconnectHIDDevice();
                     break;
 
                 case UsbNotification.DbtDevicearrival:
-                    // TODO: 仮の実装です。
-                    AppLogUtil.OutputLogInfo(String.Format("DbtDevicearrival 0x{0:x4}", (int)wparam));
+                    // USBデバイスの接続試行
+                    HIDProcess.ConnectHIDDevice();
                     break;
                 }
             }
