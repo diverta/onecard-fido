@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MaintenanceToolApp"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="500" Width="700" ResizeMode="CanMinimize">
+        Title="{Binding Path=Title}" Height="500" Width="700" ResizeMode="CanMinimize">
     <Grid>
         <Button x:Name="buttonBLE"  Content="BLE設定" HorizontalAlignment="Left" Margin="25,20,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonFIDO" Content="FIDO設定" HorizontalAlignment="Left" Margin="25,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
@@ -14,11 +14,11 @@
         <Button x:Name="buttonSetPgpParam"  Content="OpenPGP設定" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonOATH"  Content="OATH設定" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonQuit"  Content="終了" 
-                Command="{Binding MainWindowQuitCommandRef}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                Command="{Binding Path=MainWindowQuitCommandRef}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                 HorizontalAlignment="Right" Margin="0,20,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonHealthCheck" Content="ヘルスチェック実行" HorizontalAlignment="Right" Margin="0,60,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonUtility"  Content="ユーティリティー" HorizontalAlignment="Right" Margin="0,100,25,0" VerticalAlignment="Top" Height="25" Width="200"/>
-        <TextBox x:Name="textBox1" Margin="25,145,25,20" TextWrapping="Wrap" Text="" FontSize="14"/>
+        <TextBox x:Name="textBox1" Text="{Binding Path=MessageText}" Margin="25,145,25,20" TextWrapping="Wrap" FontSize="14" VerticalScrollBarVisibility="Visible"/>
     </Grid>
     <Window.DataContext>
         <local:MainWindowViewModel />
