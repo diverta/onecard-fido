@@ -24,6 +24,9 @@ namespace MaintenanceToolApp
 
             // USBデバイスの脱着検知を開始
             USBDevice.StartUSBDeviceNotification(this);
+
+            // USBデバイスの接続試行
+            HIDProcess.ConnectHIDDevice();
         }
     }
 }
