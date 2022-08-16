@@ -32,9 +32,15 @@ namespace MaintenanceToolApp
 
         void OnConnectHIDDevice(bool connected)
         {
+            // 接続／切断検知結果をテキストボックス上に表示
+            string messageText = connected ? AppCommon.MSG_HID_CONNECTED : AppCommon.MSG_HID_REMOVED;
+            AppendMessageText(messageText);
+        }
+
+        void AppendMessageText(string messageText)
+        {
             if (DataContext is MainWindowViewModel model) {
-                // 接続／切断検知結果をテキストボックス上に表示
-                string messageText = connected ? AppCommon.MSG_HID_CONNECTED : AppCommon.MSG_HID_REMOVED;
+                // 引数の文字列を、テキストボックス上に表示し改行
                 model.MessageText += messageText + "\r\n";
 
                 // テキストボックスの現在位置を末尾に移動
