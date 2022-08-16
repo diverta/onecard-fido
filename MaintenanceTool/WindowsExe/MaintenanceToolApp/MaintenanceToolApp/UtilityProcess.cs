@@ -50,12 +50,12 @@ namespace MaintenanceToolApp
                     Process.Start(procInfo);
 
                 } catch (Exception e) {
-                    AppLogUtil.OutputLogError(String.Format("管理ツールのログファイル格納フォルダーを参照できませんでした。{0}", e.Message));
+                    AppLogUtil.OutputLogError(String.Format(AppCommon.MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR, e.Message));
                 }
 
             } else {
                 // 処理完了を通知
-                OnNotifyMessageToMainUI("これは仮の実装です。");
+                OnNotifyMessageToMainUI(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
             }
         }
     }

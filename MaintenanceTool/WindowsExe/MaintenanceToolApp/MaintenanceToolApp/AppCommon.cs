@@ -18,5 +18,8 @@
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
         public const string PROCESS_NAME_NONE = "";
+
+        // ユーティリティー機能
+        public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";
     }
 }
