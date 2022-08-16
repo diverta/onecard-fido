@@ -24,10 +24,8 @@ namespace MaintenanceToolApp
             }
 
             // ユーティリティー画面を開き、実行コマンド種別をモデルに設定
-            Window pw = (Window)parameter;
             UtilityWindow w = new UtilityWindow();
-            w.Owner = pw;
-            w.ShowDialog();
+            w.ShowDialogWithOwner((Window)parameter);
         }
     }
 }

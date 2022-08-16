@@ -11,5 +11,12 @@ namespace MaintenanceToolApp
         {
             InitializeComponent();
         }
+
+        public void ShowDialogWithOwner(Window ownerWindow)
+        {
+            // ユーティリティー画面を、オーナー画面の中央にモード付きで表示
+            Owner = ownerWindow;
+            ShowDialog();
+        }
     }
 }
