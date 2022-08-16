@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MaintenanceToolApp
 {
-    public class MainWindowUtilityCommand : ICommand
+    public class CommonWindowCancelCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged
         {
@@ -23,9 +23,9 @@ namespace MaintenanceToolApp
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            // TODO: 仮の実装です。
+            // 画面を閉じる
             Window w = (Window)parameter;
-            DialogUtil.ShowWarningMessage(w, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            w.Close();
         }
     }
 }
