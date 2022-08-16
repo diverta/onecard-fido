@@ -30,7 +30,7 @@ namespace MaintenanceToolApp
             HIDProcess.ConnectHIDDevice();
 
             // 機能クラスからのコールバックを登録
-            UtilityProcess.RegisterHandlerOnNotifyMessageText(AppendMessageText);
+            UtilityProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
         }
 
         void OnConnectHIDDevice(bool connected)

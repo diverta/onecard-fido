@@ -9,15 +9,15 @@
         private string CommandTitle = string.Empty;
 
         // HID接続完了時のイベント
-        public delegate void HandlerOnNotifyMessageText(string messageText);
-        public event HandlerOnNotifyMessageText OnNotifyMessageText = null!;
+        public delegate void HandlerOnNotifyMessageToMainUI(string messageText);
+        public event HandlerOnNotifyMessageToMainUI OnNotifyMessageToMainUI = null!;
 
         //
         // 外部公開用
         //
-        public static void RegisterHandlerOnNotifyMessageText(HandlerOnNotifyMessageText handler)
+        public static void RegisterHandlerOnNotifyMessageToMainUI(HandlerOnNotifyMessageToMainUI handler)
         {
-            Instance.OnNotifyMessageText += handler;
+            Instance.OnNotifyMessageToMainUI += handler;
         }
 
         public static void SetCommandTitle(string commandTitle)
