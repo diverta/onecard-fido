@@ -23,9 +23,11 @@ namespace MaintenanceToolApp
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            // TODO: 仮の実装です。
-            Window w = (Window)parameter;
-            DialogUtil.ShowWarningMessage(w, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // ユーティリティー画面を開き、実行コマンド種別をモデルに設定
+            Window pw = (Window)parameter;
+            UtilityWindow w = new UtilityWindow();
+            w.Owner = pw;
+            w.ShowDialog();
         }
     }
 }
