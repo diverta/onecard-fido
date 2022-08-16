@@ -14,5 +14,9 @@
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
         public const string MSG_HID_REMOVED = "USB HIDデバイスが取り外されました。";
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
+
+        // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
+        public const string PROCESS_NAME_NONE = "";
     }
 }
