@@ -1,4 +1,8 @@
-﻿namespace MaintenanceToolApp
+﻿using System;
+using System.Diagnostics;
+using ToolAppCommon;
+
+namespace MaintenanceToolApp
 {
     internal class UtilityProcess
     {
@@ -35,13 +39,24 @@
         //
         public void DoUtilityProcess()
         {
-            switch (CommandTitle) {
-            default:
-                break;
-            }
+            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+                // 管理ツールのログファイルを格納している
+                // フォルダーを、Windowsのエクスプローラで参照
+                try {
+                    var procInfo = new ProcessStartInfo {
+                        FileName = AppLogUtil.OutputLogFileDirectoryPath(),
+                        UseShellExecute = true
+                    };
+                    Process.Start(procInfo);
 
-            // 処理完了を通知
-            OnNotifyMessageText("これは仮の実装です。");
+                } catch (Exception e) {
+                    AppLogUtil.OutputLogError(String.Format("管理ツールのログファイル格納フォルダーを参照できませんでした。{0}", e.Message));
+                }
+
+            } else {
+                // 処理完了を通知
+                OnNotifyMessageToMainUI("これは仮の実装です。");
+            }
         }
     }
 }
