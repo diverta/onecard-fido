@@ -10,12 +10,7 @@
         <Button x:Name="buttonFlashROMInfo"  Content="Flash ROMの情報を参照" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
         <Button x:Name="buttonFWVersionInfo"  Content="ファームウェアのバージョンを参照" HorizontalAlignment="Center" Margin="0,85,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
         <Button x:Name="buttonToolVersionInfo"  Content="管理ツールのバージョンを参照" HorizontalAlignment="Center" Margin="0,140,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
-        <Button x:Name="buttonViewLogFile"  Content="管理ツールのログを参照" HorizontalAlignment="Center" Margin="0,195,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
-        <Button x:Name="buttonCancel"  Content="Cancel" 
-                Command="{Binding Path=UtilityWindowCancelCommandRef}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                HorizontalAlignment="Center" Margin="0,250,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
+        <Button x:Name="buttonViewLogFile"  Content="管理ツールのログを参照" HorizontalAlignment="Center" Margin="0,195,0,0" VerticalAlignment="Top" Height="25" Width="250" Click="buttonViewLogFile_Click"/>
+        <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,250,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
     </Grid>
-    <Window.DataContext>
-        <local:UtilityWindowViewModel />
-    </Window.DataContext>
 </Window>
