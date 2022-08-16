@@ -23,9 +23,13 @@ namespace MaintenanceToolApp
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            // ユーティリティー画面を開き、実行コマンド種別をモデルに設定
+            // ユーティリティー画面を開き、実行コマンド種別を設定
             UtilityWindow w = new UtilityWindow();
-            w.ShowDialogWithOwner((Window)parameter);
+            bool b = w.ShowDialogWithOwner((Window)parameter);
+            if (b) {
+                // ユーティリティー機能を実行
+                UtilityProcess.DoProcess();
+            }
         }
     }
 }
