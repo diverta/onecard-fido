@@ -13,14 +13,12 @@ namespace MaintenanceToolApp
         }
 
         // コマンドクラスの参照を保持
-        public CommonWindowCancelCommand MainWindowQuitCommandRef { get; set; }
         public MainWindowUtilityCommand MainWindowUtilityCommandRef { get; set; }
 
         public MainWindowViewModel()
         {
             // コマンドクラスを生成
             MainWindowUtilityCommandRef = new MainWindowUtilityCommand();
-            MainWindowQuitCommandRef = new CommonWindowCancelCommand();
         }
 
         // メイン画面のタイトル

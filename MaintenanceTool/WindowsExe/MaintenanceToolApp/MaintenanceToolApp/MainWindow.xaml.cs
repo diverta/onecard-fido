@@ -50,5 +50,14 @@ namespace MaintenanceToolApp
                 textBox1.ScrollToEnd();
             }
         }
+
+        //
+        // イベント処理部
+        // 
+        private void buttonQuit_Click(object sender, RoutedEventArgs e)
+        {
+            // 画面を閉じる
+            Close();
+        }
     }
 }
