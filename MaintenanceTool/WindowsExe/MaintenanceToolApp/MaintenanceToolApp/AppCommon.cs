@@ -21,6 +21,12 @@
         public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
         public const string PROCESS_NAME_NONE = "";
 
+        // ホーム画面
+        public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
+        public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
+        public const string MSG_SUCCESS = "成功";
+        public const string MSG_FAILURE = "失敗";
+
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
         public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";

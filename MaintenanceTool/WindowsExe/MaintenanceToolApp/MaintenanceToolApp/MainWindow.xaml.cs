@@ -33,6 +33,7 @@ namespace MaintenanceToolApp
             HIDProcess.ConnectHIDDevice();
 
             // 機能クラスからのコールバックを登録
+            UtilityProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
             UtilityProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
         }
 
@@ -41,6 +42,20 @@ namespace MaintenanceToolApp
             // 接続／切断検知結果をテキストボックス上に表示
             string messageText = connected ? AppCommon.MSG_HID_CONNECTED : AppCommon.MSG_HID_REMOVED;
             AppendMessageText(messageText);
+        }
+
+        void EnableButtons(bool enable)
+        {
+            // ボタンや入力欄の使用可能／不可制御
+            buttonBLE.IsEnabled = enable;
+            buttonFIDO.IsEnabled = enable;
+            buttonDFU.IsEnabled = enable;
+            buttonSetPivParam.IsEnabled = enable;
+            buttonSetPgpParam.IsEnabled = enable;
+            buttonOATH.IsEnabled = enable;
+            buttonQuit.IsEnabled = enable;
+            buttonHealthCheck.IsEnabled = enable;
+            buttonUtility.IsEnabled = enable;
         }
 
         void AppendMessageText(string messageText)
