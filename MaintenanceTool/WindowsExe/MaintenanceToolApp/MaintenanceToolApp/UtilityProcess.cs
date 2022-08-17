@@ -13,6 +13,9 @@ namespace MaintenanceToolApp
         // 処理実行のためのプロパティー
         private string CommandTitle = string.Empty;
 
+        // 親ウィンドウの参照を保持
+        private readonly Window ParentWindow = App.Current.MainWindow;
+
         // HID接続完了時のイベント
         public delegate void HandlerOnNotifyMessageToMainUI(string messageText);
         public event HandlerOnNotifyMessageToMainUI OnNotifyMessageToMainUI = null!;
@@ -43,8 +46,7 @@ namespace MaintenanceToolApp
             if (CommandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
                 // メイン画面を親ウィンドウとし、バージョン参照画面を開く
                 ToolVersionWindow w = new ToolVersionWindow();
-                Window parentWindow = App.Current.MainWindow;
-                w.ShowDialogWithOwner(parentWindow);
+                w.ShowDialogWithOwner(ParentWindow);
 
             } else if (CommandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
                 // 管理ツールのログファイルを格納している
@@ -61,8 +63,8 @@ namespace MaintenanceToolApp
                 }
 
             } else {
-                // 処理完了を通知
-                OnNotifyMessageToMainUI(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+                // エラーメッセージをポップアップ表示
+                DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
             }
         }
     }
