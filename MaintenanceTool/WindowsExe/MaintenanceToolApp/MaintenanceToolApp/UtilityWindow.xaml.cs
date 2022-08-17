@@ -24,6 +24,13 @@ namespace MaintenanceToolApp
             }
         }
 
+        private void DoToolVersionInfo()
+        {
+            // バージョン参照画面を開き、実行コマンド種別を設定
+            ToolVersionWindow w = new ToolVersionWindow();
+            w.ShowDialogWithOwner(this);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -47,6 +54,11 @@ namespace MaintenanceToolApp
         {
             // 画面を閉じる
             TerminateWindow(false);
+        }
+
+        private void buttonToolVersionInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoToolVersionInfo();
         }
     }
 }
