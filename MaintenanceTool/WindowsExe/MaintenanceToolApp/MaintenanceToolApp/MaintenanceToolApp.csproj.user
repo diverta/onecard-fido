@@ -7,12 +7,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="ToolVersionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UtilityWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ToolVersionWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UtilityWindow.xaml">

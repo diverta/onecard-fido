@@ -7,6 +7,9 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <Version>0.3.0</Version>
+    <Copyright>Copyright © 2017-2022 Diverta Inc.</Copyright>
+    <Company>Diverta Inc.</Company>
+    <Product>MaintenanceTool</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +23,10 @@
 
   <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icon_128.png" />
   </ItemGroup>
 
   <ItemGroup>
