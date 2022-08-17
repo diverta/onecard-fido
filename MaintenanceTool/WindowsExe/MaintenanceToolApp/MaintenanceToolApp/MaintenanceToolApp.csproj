@@ -19,6 +19,7 @@
     <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
     <Compile Include="..\..\ToolAppCommon\HIDProcess.cs" Link="ToolAppCommon\HIDProcess.cs" />
     <Compile Include="..\..\ToolAppCommon\USBDevice.cs" Link="ToolAppCommon\USBDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\WindowUtil.cs" Link="ToolAppCommon\WindowUtil.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@
         public const string MSG_TOOL_TITLE = "FIDO認証器管理ツール";
         public const string MSG_INVALID_USER_ROLL = "このツールは、管理者として実行してください。\n\nプログラムアイコンを右クリックして、\nメニューから「管理者として実行」を選択します。";
         public const string MSG_ERROR_DOUBLE_START = "既に起動されています。";
+        public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
 
         // メッセージリソース
