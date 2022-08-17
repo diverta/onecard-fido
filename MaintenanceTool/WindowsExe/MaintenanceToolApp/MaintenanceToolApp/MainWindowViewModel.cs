@@ -12,13 +12,8 @@ namespace MaintenanceToolApp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // コマンドクラスの参照を保持
-        public MainWindowUtilityCommand MainWindowUtilityCommandRef { get; set; }
-
         public MainWindowViewModel()
         {
-            // コマンドクラスを生成
-            MainWindowUtilityCommandRef = new MainWindowUtilityCommand();
         }
 
         // メイン画面のタイトル

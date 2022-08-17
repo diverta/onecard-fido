@@ -51,13 +51,34 @@ namespace MaintenanceToolApp
             }
         }
 
-        //
-        // イベント処理部
-        // 
-        private void buttonQuit_Click(object sender, RoutedEventArgs e)
+        private void DoUtility()
+        {
+            // ユーティリティー画面を開き、実行コマンド種別を設定
+            UtilityWindow w = new UtilityWindow();
+            bool b = w.ShowDialogWithOwner(this);
+            if (b) {
+                // ユーティリティー機能を実行
+                UtilityProcess.DoProcess();
+            }
+        }
+
+        private void TerminateWindow()
         {
             // 画面を閉じる
             Close();
+        }
+
+        //
+        // イベント処理部
+        // 
+        private void buttonUtility_Click(object sender, RoutedEventArgs e)
+        {
+            DoUtility();
+        }
+
+        private void buttonQuit_Click(object sender, RoutedEventArgs e)
+        {
+            TerminateWindow();
         }
     }
 }
