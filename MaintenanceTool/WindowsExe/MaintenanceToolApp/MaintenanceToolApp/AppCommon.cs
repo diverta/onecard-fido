@@ -16,6 +16,7 @@
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
 
         // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
         public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
         public const string PROCESS_NAME_NONE = "";
 
