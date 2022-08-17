@@ -26,12 +26,9 @@ namespace MaintenanceToolApp
 
         private void DoToolVersionInfo()
         {
-            // バージョン参照画面を開く
-            ToolVersionWindow w = new ToolVersionWindow();
-            w.ShowDialogWithOwner(this);
-
-            // 画面を閉じる
-            TerminateWindow(false);
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO);
+            TerminateWindow(true);
         }
 
         private void DoViewLogFile()

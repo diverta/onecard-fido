@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp
@@ -39,7 +40,13 @@ namespace MaintenanceToolApp
         //
         public void DoUtilityProcess()
         {
-            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
+            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+                // メイン画面を親ウィンドウとし、バージョン参照画面を開く
+                ToolVersionWindow w = new ToolVersionWindow();
+                Window parentWindow = App.Current.MainWindow;
+                w.ShowDialogWithOwner(parentWindow);
+
+            } else if (CommandTitle.Equals(AppCommon.PROCESS_NAME_VIEW_LOG_FILE)) {
                 // 管理ツールのログファイルを格納している
                 // フォルダーを、Windowsのエクスプローラで参照
                 try {
