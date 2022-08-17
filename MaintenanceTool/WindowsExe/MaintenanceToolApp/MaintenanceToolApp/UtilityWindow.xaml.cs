@@ -26,9 +26,19 @@ namespace MaintenanceToolApp
 
         private void DoToolVersionInfo()
         {
-            // バージョン参照画面を開き、実行コマンド種別を設定
+            // バージョン参照画面を開く
             ToolVersionWindow w = new ToolVersionWindow();
             w.ShowDialogWithOwner(this);
+
+            // 画面を閉じる
+            TerminateWindow(false);
+        }
+
+        private void DoViewLogFile()
+        {
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_VIEW_LOG_FILE);
+            TerminateWindow(true);
         }
 
         private void TerminateWindow(bool dialogResult)
@@ -41,24 +51,20 @@ namespace MaintenanceToolApp
         //
         // イベント処理部
         // 
-        private void buttonViewLogFile_Click(object sender, RoutedEventArgs e)
-        {
-            // 処理パラメーターを設定
-            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_VIEW_LOG_FILE);
-
-            // 画面を閉じる
-            TerminateWindow(true);
-        }
-
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            // 画面を閉じる
-            TerminateWindow(false);
-        }
 
         private void buttonToolVersionInfo_Click(object sender, RoutedEventArgs e)
         {
             DoToolVersionInfo();
+        }
+
+        private void buttonViewLogFile_Click(object sender, RoutedEventArgs e)
+        {
+            DoViewLogFile();
+        }
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            TerminateWindow(false);
         }
     }
 }
