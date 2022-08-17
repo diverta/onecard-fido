@@ -1,16 +1,19 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace ToolAppCommon
 {
     public class AppUtil
     {
         private static AppUtil Instance = new AppUtil();
-        private string AppVersion;
+        private readonly string AppVersion;
+        private readonly string AppCopyright;
 
         private AppUtil()
         {
-            // ツールのバージョンを取得
+            // ツールのバージョン、著作権情報を取得
             AppVersion = string.Format("Version {0}", GetAppVersion());
+            AppCopyright = GetAppCopyright();
         }
 
         private static string GetAppVersion()
@@ -26,12 +29,29 @@ namespace ToolAppCommon
             }
         }
 
+        private static string GetAppCopyright()
+        {
+            // 著作権情報を戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            Attribute? attribute = Attribute.GetCustomAttribute(asm, typeof(AssemblyCopyrightAttribute));
+            if (attribute == null) {
+                return "";
+            }
+            AssemblyCopyrightAttribute copyright = (AssemblyCopyrightAttribute)attribute;
+            return copyright.Copyright;
+        }
+
         //
         // 公開用メソッド
         //
         public static string GetAppVersionString()
         {
             return Instance.AppVersion;
+        }
+
+        public static string GetAppCopyrightString()
+        {
+            return Instance.AppCopyright;
         }
     }
 }

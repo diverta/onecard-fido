@@ -21,6 +21,7 @@
         public const string PROCESS_NAME_NONE = "";
 
         // ユーティリティー機能
+        public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
         public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";
     }
 }
