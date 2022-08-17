@@ -18,6 +18,9 @@ namespace MaintenanceToolApp
         {
             base.OnSourceInitialized(e);
 
+            // メイン画面のタイトルを設定
+            Title = AppCommon.MSG_TOOL_TITLE;
+
             // アプリケーション開始ログを出力
             AppLogUtil.SetOutputLogApplName("MaintenanceToolApp");
             AppLogUtil.OutputLogInfo(string.Format("{0}を起動しました: {1}", AppCommon.MSG_TOOL_TITLE, AppUtil.GetAppVersionString()));
@@ -42,13 +45,11 @@ namespace MaintenanceToolApp
 
         void AppendMessageText(string messageText)
         {
-            if (DataContext is MainWindowViewModel model) {
-                // 引数の文字列を、テキストボックス上に表示し改行
-                model.MessageText += messageText + "\r\n";
+            // 引数の文字列を、テキストボックス上に表示し改行
+            textBoxMessage.Text += messageText + "\r\n";
 
-                // テキストボックスの現在位置を末尾に移動
-                textBox1.ScrollToEnd();
-            }
+            // テキストボックスの現在位置を末尾に移動
+            textBoxMessage.ScrollToEnd();
         }
 
         private void DoUtility()
