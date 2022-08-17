@@ -51,7 +51,15 @@ namespace MaintenanceToolApp
         //
         public void DoUtilityProcess()
         {
-            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
+            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_FLASH_STAT) ||
+                CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_VERSION_INFO)) {
+                // 処理開始メッセージを表示
+                NotifyCommandStarted(CommandTitle);
+
+                // TODO: 仮の実装です。
+                NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+            
+            } else if (CommandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
                 // メイン画面を親ウィンドウとし、バージョン参照画面を開く
                 ToolVersionWindow w = new ToolVersionWindow();
                 w.ShowDialogWithOwner(ParentWindow);

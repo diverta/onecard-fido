@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp
 {
@@ -22,6 +23,30 @@ namespace MaintenanceToolApp
             } else {
                 return (bool)b;
             }
+        }
+
+        private void DoFlashROMInfo()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_GET_FLASH_STAT);
+            TerminateWindow(true);
+        }
+
+        private void DoFWVersionInfo()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_GET_VERSION_INFO);
+            TerminateWindow(true);
         }
 
         private void DoToolVersionInfo()
@@ -48,6 +73,15 @@ namespace MaintenanceToolApp
         //
         // イベント処理部
         // 
+        private void buttonFlashROMInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoFlashROMInfo();
+        }
+
+        private void buttonFWVersionInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoFWVersionInfo();
+        }
 
         private void buttonToolVersionInfo_Click(object sender, RoutedEventArgs e)
         {

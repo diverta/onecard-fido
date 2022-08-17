@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="ユーティリティー" Width="350" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
     <Grid Height="305">
-        <Button x:Name="buttonFlashROMInfo"  Content="Flash ROMの情報を参照" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
-        <Button x:Name="buttonFWVersionInfo"  Content="ファームウェアのバージョンを参照" HorizontalAlignment="Center" Margin="0,85,0,0" VerticalAlignment="Top" Height="25" Width="250"/>
+        <Button x:Name="buttonFlashROMInfo"  Content="Flash ROMの情報を参照" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Top" Height="25" Width="250" Click="buttonFlashROMInfo_Click"/>
+        <Button x:Name="buttonFWVersionInfo"  Content="ファームウェアのバージョンを参照" HorizontalAlignment="Center" Margin="0,85,0,0" VerticalAlignment="Top" Height="25" Width="250" Click="buttonFWVersionInfo_Click"/>
         <Button x:Name="buttonToolVersionInfo"  Content="管理ツールのバージョンを参照" HorizontalAlignment="Center" Margin="0,140,0,0" VerticalAlignment="Top" Height="25" Width="250" Click="buttonToolVersionInfo_Click"/>
         <Button x:Name="buttonViewLogFile"  Content="管理ツールのログを参照" HorizontalAlignment="Center" Margin="0,195,0,0" VerticalAlignment="Top" Height="25" Width="250" Click="buttonViewLogFile_Click"/>
         <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,250,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
