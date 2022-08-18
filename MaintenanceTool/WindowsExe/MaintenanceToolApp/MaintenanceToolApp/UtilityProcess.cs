@@ -12,7 +12,7 @@ namespace MaintenanceToolApp
         // このクラスのインスタンス
         private static readonly UtilityProcess Instance = new UtilityProcess();
 
-        private UtilityProcess ()
+        private UtilityProcess()
         {
             // HIDインターフェースからデータ受信時のコールバックを登録
             HIDProcess.RegisterHandlerOnReceivedResponse(OnReceivedResponse);
@@ -59,14 +59,20 @@ namespace MaintenanceToolApp
         //
         public void DoUtilityProcess()
         {
-            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_FLASH_STAT) ||
-                CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_VERSION_INFO)) {
+            if (CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_FLASH_STAT)) {
+                // 処理開始メッセージを表示
+                NotifyCommandStarted(CommandTitle);
+
+                // Flash ROM情報照会を実行
+                DoRequestHIDGetFlashStat();
+
+            } else if (CommandTitle.Equals(AppCommon.PROCESS_NAME_GET_VERSION_INFO)) {
                 // 処理開始メッセージを表示
                 NotifyCommandStarted(CommandTitle);
 
                 // TODO: 仮の実装です。
                 NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
-            
+
             } else if (CommandTitle.Equals(AppCommon.PROCESS_NAME_TOOL_VERSION_INFO)) {
                 // メイン画面を親ウィンドウとし、バージョン参照画面を開く
                 ToolVersionWindow w = new ToolVersionWindow();
@@ -90,6 +96,18 @@ namespace MaintenanceToolApp
                 // エラーメッセージをポップアップ表示
                 DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
             }
+        }
+
+        public void DoRequestHIDGetFlashStat()
+        {
+            // コマンドバイトだけを送信する
+            DoRequestCommand(Command.COMMAND_HID_GET_FLASH_STAT, HIDProcessConst.HID_CMD_GET_FLASH_STAT, new byte[0]);
+        }
+
+        private void DoResponseHIDGetFlashStat(byte[] responseData)
+        {
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
         }
 
         //
@@ -162,6 +180,9 @@ namespace MaintenanceToolApp
 
             // 実行コマンドにより処理分岐
             switch (command) {
+            case Command.COMMAND_HID_GET_FLASH_STAT:
+                DoResponseHIDGetFlashStat(responseData);
+                break;
             default:
                 // メイン画面に制御を戻す
                 NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
@@ -172,8 +193,20 @@ namespace MaintenanceToolApp
         //
         // HID関連共通処理
         //
+        // ダミーCID
+        private static readonly byte[] InitialCidBytes = new byte[] { 0xff, 0xff, 0xff, 0xff };
+
         // リクエスト送信時のコマンド種別を保持
         private Command CommandRef = Command.COMMAND_NONE;
+
+        private void DoRequestCommand(Command command, byte CMD, byte[] data)
+        {
+            // 実行コマンドを保持
+            CommandRef = command;
+
+            // HIDコマンド／データを送信（CIDはダミーを使用する）
+            HIDProcess.DoRequestCommand(InitialCidBytes, CMD, data);
+        }
 
         private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
         {
