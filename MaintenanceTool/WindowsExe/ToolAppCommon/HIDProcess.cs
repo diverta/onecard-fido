@@ -34,6 +34,10 @@ namespace ToolAppCommon
         public delegate void HandlerOnConnectHIDDevice(bool connected);
         public event HandlerOnConnectHIDDevice OnConnectHIDDevice = null!;
 
+        // HID接続完了時のイベント
+        public delegate void HandlerOnReceivedResponse(byte[] cid, byte CMD, byte[] data);
+        public event HandlerOnReceivedResponse OnReceivedResponse = null!;
+
         //
         // 外部公開用
         //
@@ -68,6 +72,16 @@ namespace ToolAppCommon
         public static bool IsUSBDeviceDisconnected()
         {
             return (Instance.device == null);
+        }
+
+        public static void RegisterHandlerOnReceivedResponse(HandlerOnReceivedResponse handler)
+        {
+            Instance.OnReceivedResponse += handler;
+        }
+
+        public static void DoRequestCommand(byte[] cid, byte CMD, byte[] data)
+        {
+            Instance.SendHIDMessage(cid, CMD, data);
         }
 
         //
@@ -352,6 +366,7 @@ namespace ToolAppCommon
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータを転送
                 AppLogUtil.OutputLogText(ReceivedLogBuffer);
+                OnReceivedResponse(receivedCID, receivedCMD, receivedMessage);
             }
         }
 
