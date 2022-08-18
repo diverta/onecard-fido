@@ -265,16 +265,16 @@ namespace ToolAppCommon
         //
         // データ受信
         //
+        // 受信データを保持
+        byte[] ReceivedMessage = new byte[0];
+        int ReceivedMessageLen = 0;
+        int Received = 0;
+
         // 送信ログを保持
         private string ReceivedLogBuffer = "";
 
         private void ReceiveHIDMessage(byte[] message)
         {
-            // 受信データを保持
-            byte[] receivedMessage = new byte[0];
-            int receivedMessageLen = 0;
-            int received = 0;
-
             // フレームデータを保持
             byte[] frameData = new byte[HIDProcessConst.HID_FRAME_LEN];
 
@@ -323,31 +323,31 @@ namespace ToolAppCommon
                 receivedCMD = frameData[4];
                 byte cnth = frameData[5];
                 byte cntl = frameData[6];
-                receivedMessageLen = cnth * 256 + cntl;
-                receivedMessage = new byte[receivedMessageLen];
-                received = 0;
+                ReceivedMessageLen = cnth * 256 + cntl;
+                ReceivedMessage = new byte[ReceivedMessageLen];
+                Received = 0;
 
                 // データをコピー
-                int dataLenInFrame = (receivedMessageLen < hid_init_data_len) ? receivedMessageLen : hid_init_data_len;
+                int dataLenInFrame = (ReceivedMessageLen < hid_init_data_len) ? ReceivedMessageLen : hid_init_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[received++] = frameData[HIDProcessConst.HID_INIT_HEADER_LEN + i];
+                    ReceivedMessage[Received++] = frameData[HIDProcessConst.HID_INIT_HEADER_LEN + i];
                 }
 
                 ReceivedLogBuffer = "";
                 string dump = AppLogUtil.DumpMessage(frameData, dataLenInFrame + HIDProcessConst.HID_INIT_HEADER_LEN);
                 AppendLogToBuffer(string.Format(
                     "HID Recv INIT frame: data size={0} length={1}\r\n{2}",
-                    receivedMessageLen, dataLenInFrame, dump));
+                    ReceivedMessageLen, dataLenInFrame, dump));
 
             } else {
                 // CONTフレームであると判断
                 int seq = frameData[4];
 
                 // データをコピー
-                int remaining = receivedMessageLen - received;
+                int remaining = ReceivedMessageLen - Received;
                 int dataLenInFrame = (remaining < hid_cont_data_len) ? remaining : hid_cont_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[received++] = frameData[HIDProcessConst.HID_CONT_HEADER_LEN + i];
+                    ReceivedMessage[Received++] = frameData[HIDProcessConst.HID_CONT_HEADER_LEN + i];
                 }
 
                 string dump = AppLogUtil.DumpMessage(frameData, dataLenInFrame + HIDProcessConst.HID_CONT_HEADER_LEN);
@@ -361,12 +361,12 @@ namespace ToolAppCommon
                 return;
             }
 
-            if (received == receivedMessageLen) {
+            if (Received == ReceivedMessageLen) {
                 // 全フレームを受信できたら、
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータを転送
                 AppLogUtil.OutputLogText(ReceivedLogBuffer);
-                OnReceivedResponse(receivedCID, receivedCMD, receivedMessage);
+                OnReceivedResponse(receivedCID, receivedCMD, ReceivedMessage);
             }
         }
 
