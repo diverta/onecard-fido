@@ -28,6 +28,7 @@
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         public const string MSG_SUCCESS = "成功";
         public const string MSG_FAILURE = "失敗";
+        public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
 
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";

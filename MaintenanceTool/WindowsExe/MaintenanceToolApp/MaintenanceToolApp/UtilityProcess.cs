@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MaintenanceToolApp.ToolAppCommon;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
 {
@@ -9,6 +11,12 @@ namespace MaintenanceToolApp
     {
         // このクラスのインスタンス
         private static readonly UtilityProcess Instance = new UtilityProcess();
+
+        private UtilityProcess ()
+        {
+            // HIDインターフェースからデータ受信時のコールバックを登録
+            HIDProcess.RegisterHandlerOnReceivedResponse(OnReceivedResponse);
+        }
 
         // 処理実行のためのプロパティー
         private string CommandTitle = string.Empty;
@@ -135,6 +143,45 @@ namespace MaintenanceToolApp
 
             // ボタンを活性化
             OnEnableButtonsOfMainUI(true);
+        }
+
+        private void OnCommandResponse(Command command, byte[] responseData, bool success, string errorMessage)
+        {
+            // 即時でアプリケーションに制御を戻す
+            if (success == false) {
+                NotifyCommandTerminated(CommandTitle, errorMessage, success, ParentWindow);
+                return;
+            }
+
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] != FIDODefine.CTAP1_ERR_SUCCESS) {
+                // エラーの場合は画面に制御を戻す
+                NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                return;
+            }
+
+            // 実行コマンドにより処理分岐
+            switch (command) {
+            default:
+                // メイン画面に制御を戻す
+                NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                break;
+            }
+        }
+
+        //
+        // HID関連共通処理
+        //
+        // リクエスト送信時のコマンド種別を保持
+        private Command CommandRef = Command.COMMAND_NONE;
+
+        private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
+        {
+            // 正常終了扱い
+            // 以降の処理を、UIスレッドに引き戻す
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                OnCommandResponse(CommandRef, data, true, "");
+            }));
         }
     }
 }
