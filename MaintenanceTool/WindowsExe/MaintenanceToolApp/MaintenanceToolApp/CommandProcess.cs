@@ -49,6 +49,14 @@ namespace MaintenanceToolApp
             Instance.OnCommandResponse -= handler;
         }
 
+        //
+        // 画面関連共通処理
+        //
+        public static void NotifyMessageToMainUI(string message)
+        {
+            Instance.OnNotifyMessageToMainUI(message);
+        }
+
         public static void NotifyCommandStarted(string commandName)
         {
             // ボタンを不活性化
