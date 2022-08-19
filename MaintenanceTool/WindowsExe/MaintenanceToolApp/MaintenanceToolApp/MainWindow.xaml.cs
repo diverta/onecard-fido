@@ -33,8 +33,8 @@ namespace MaintenanceToolApp
             HIDProcess.ConnectHIDDevice();
 
             // 機能クラスからのコールバックを登録
-            UtilityProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
-            UtilityProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
+            CommandProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
+            CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
         }
 
         void OnConnectHIDDevice(bool connected)
@@ -70,11 +70,12 @@ namespace MaintenanceToolApp
         private void DoUtility()
         {
             // ユーティリティー画面を開き、実行コマンド種別を設定
-            UtilityWindow w = new UtilityWindow();
+            UtilityProcess p = new UtilityProcess();
+            UtilityWindow w = new UtilityWindow(p);
             bool b = w.ShowDialogWithOwner(this);
             if (b) {
                 // ユーティリティー機能を実行
-                UtilityProcess.DoProcess();
+                p.DoProcess();
             }
         }
 
