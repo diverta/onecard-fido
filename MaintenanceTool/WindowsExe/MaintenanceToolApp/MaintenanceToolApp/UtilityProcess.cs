@@ -83,7 +83,47 @@ namespace MaintenanceToolApp
 
         private void DoResponseHIDGetFlashStat(byte[] responseData)
         {
-            // TODO: 仮の実装です。
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] != 0x00) {
+                // エラーの場合は画面に制御を戻す
+                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                return;
+            }
+            // 戻りメッセージから、取得情報CSVを抽出
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(responseData, responseData.Length);
+            string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
+            AppLogUtil.OutputLogDebug("Flash ROM statistics: " + responseCSV);
+
+            // 情報取得CSVから空き領域に関する情報を抽出
+            string[] vars = responseCSV.Split(',');
+            string strUsed = "";
+            string strAvail = "";
+            string strCorrupt = "";
+            foreach (string v in vars) {
+                if (v.StartsWith("words_used=")) {
+                    strUsed = v.Split('=')[1];
+                } else if (v.StartsWith("words_available=")) {
+                    strAvail = v.Split('=')[1];
+                } else if (v.StartsWith("corruption=")) {
+                    strCorrupt = v.Split('=')[1];
+                }
+            }
+
+            // 空き容量、破損状況を画面に表示
+            string rateText;
+            if (strUsed.Length > 0 && strAvail.Length > 0) {
+                float avail = float.Parse(strAvail);
+                float remaining = avail - float.Parse(strUsed);
+                float rate = remaining / avail * 100;
+                rateText = string.Format(AppCommon.MSG_FSTAT_REMAINING_RATE, rate);
+            } else {
+                rateText = AppCommon.MSG_FSTAT_NON_REMAINING_RATE;
+            }
+            string corruptText = (strCorrupt.Equals("0")) ?
+                AppCommon.MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : AppCommon.MSG_FSTAT_CORRUPTING_AREA_EXIST;
+
+            // 画面に制御を戻す
+            CommandProcess.NotifyMessageToMainUI(string.Format("  {0}{1}", rateText, corruptText));
             CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
         }
 

@@ -33,5 +33,11 @@
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
         public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";
+
+        // Flash ROM情報取得関連メッセージ
+        public const string MSG_FSTAT_REMAINING_RATE = "Flash ROMの空き容量は{0:0.0}％です。";
+        public const string MSG_FSTAT_NON_REMAINING_RATE = "Flash ROMの空き容量を取得できませんでした。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST = "破損している領域は存在しません。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_EXIST = "破損している領域が存在します。";
     }
 }
