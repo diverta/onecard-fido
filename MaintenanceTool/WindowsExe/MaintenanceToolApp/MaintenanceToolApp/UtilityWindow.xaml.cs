@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
 {
@@ -7,9 +9,12 @@ namespace MaintenanceToolApp
     /// </summary>
     public partial class UtilityWindow : Window
     {
-        public UtilityWindow()
+        private readonly UtilityProcess UtilityProcessRef;
+
+        public UtilityWindow(UtilityProcess utilityProcess)
         {
             InitializeComponent();
+            UtilityProcessRef = utilityProcess;
         }
 
         public bool ShowDialogWithOwner(Window ownerWindow)
@@ -24,6 +29,44 @@ namespace MaintenanceToolApp
             }
         }
 
+        private void DoFlashROMInfo()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcessRef.SetCommand(Command.COMMAND_HID_GET_FLASH_STAT);
+            TerminateWindow(true);
+        }
+
+        private void DoFWVersionInfo()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcessRef.SetCommand(Command.COMMAND_HID_GET_VERSION_INFO);
+            TerminateWindow(true);
+        }
+
+        private void DoToolVersionInfo()
+        {
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcessRef.SetCommand(Command.COMMAND_VIEW_APP_VERSION);
+            TerminateWindow(true);
+        }
+
+        private void DoViewLogFile()
+        {
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            UtilityProcessRef.SetCommand(Command.COMMAND_VIEW_LOG_FILE);
+            TerminateWindow(true);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -34,18 +77,28 @@ namespace MaintenanceToolApp
         //
         // イベント処理部
         // 
+        private void buttonFlashROMInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoFlashROMInfo();
+        }
+
+        private void buttonFWVersionInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoFWVersionInfo();
+        }
+
+        private void buttonToolVersionInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DoToolVersionInfo();
+        }
+
         private void buttonViewLogFile_Click(object sender, RoutedEventArgs e)
         {
-            // 処理パラメーターを設定
-            UtilityProcess.SetCommandTitle(AppCommon.PROCESS_NAME_VIEW_LOG_FILE);
-
-            // 画面を閉じる
-            TerminateWindow(true);
+            DoViewLogFile();
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            // 画面を閉じる
             TerminateWindow(false);
         }
     }
