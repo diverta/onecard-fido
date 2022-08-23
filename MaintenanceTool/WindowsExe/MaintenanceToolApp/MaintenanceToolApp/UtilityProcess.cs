@@ -48,8 +48,8 @@ namespace MaintenanceToolApp
                 CommandTitle = AppCommon.PROCESS_NAME_GET_VERSION_INFO;
                 CommandProcess.NotifyCommandStarted(CommandTitle);
 
-                // TODO: 仮の実装です。
-                CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+                // バージョン情報取得処理を実行
+                DoRequestHIDGetVersionInfo();
                 break;
 
             case Command.COMMAND_VIEW_APP_VERSION:
@@ -127,6 +127,30 @@ namespace MaintenanceToolApp
             CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
         }
 
+        private void DoRequestHIDGetVersionInfo()
+        {
+            // コマンドバイトだけを送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[0]);
+        }
+
+        private void DoResponseHIDGetVersionInfo(byte[] responseData)
+        {
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] != 0x00) {
+                // エラーの場合は画面に制御を戻す
+                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                return;
+            }
+            // 戻りメッセージから、取得情報CSVを抽出
+            byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(responseData, responseData.Length);
+            string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
+            AppLogUtil.OutputLogDebug("Version info: " + responseCSV);
+
+            // 画面に制御を戻す
+            CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+        }
+
         private void ViewLogFile()
         {
             // 管理ツールのログファイルを格納している
@@ -168,6 +192,9 @@ namespace MaintenanceToolApp
             switch (CommandRef) {
             case Command.COMMAND_HID_GET_FLASH_STAT:
                 DoResponseHIDGetFlashStat(responseData);
+                break;
+            case Command.COMMAND_HID_GET_VERSION_INFO:
+                DoResponseHIDGetVersionInfo(responseData);
                 break;
             default:
                 // メイン画面に制御を戻す
