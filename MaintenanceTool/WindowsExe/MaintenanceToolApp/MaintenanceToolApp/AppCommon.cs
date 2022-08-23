@@ -39,5 +39,13 @@
         public const string MSG_FSTAT_NON_REMAINING_RATE = "Flash ROMの空き容量を取得できませんでした。";
         public const string MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST = "破損している領域は存在しません。";
         public const string MSG_FSTAT_CORRUPTING_AREA_EXIST = "破損している領域が存在します。";
+
+        // バージョン情報取得関連メッセージ
+        public const string MSG_VERSION_INFO_HEADER = "FIDO認証器のバージョン情報";
+        public const string MSG_VERSION_INFO_DEVICE_NAME = "  デバイス名: {0}";
+        public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_SECURE_IC_AVAIL = "  セキュアIC: 搭載";
+        public const string MSG_VERSION_INFO_SECURE_IC_UNAVAIL = "  セキュアIC: 非搭載";
     }
 }

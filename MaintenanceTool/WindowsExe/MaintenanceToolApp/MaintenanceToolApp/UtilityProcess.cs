@@ -142,13 +142,55 @@ namespace MaintenanceToolApp
                 CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 return;
             }
+
             // 戻りメッセージから、取得情報CSVを抽出
             byte[] responseBytes = AppUtil.ExtractCBORBytesFromResponse(responseData, responseData.Length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
-            AppLogUtil.OutputLogDebug("Version info: " + responseCSV);
+
+            // 情報取得CSVからバージョン情報を抽出
+            string[] array = ExtractValuesFromVersionInfo(responseCSV);
+            string strDeviceName = array[0];
+            string strFWRev = array[1];
+            string strHWRev = array[2];
+            string strSecic = array[3];
+
+            // 画面に制御を戻す
+            CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_HEADER);
+            CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_DEVICE_NAME, strDeviceName));
+            CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev));
+            CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_HW_REV, strHWRev));
+
+            // セキュアICの搭載有無を表示
+            if (strSecic.Length > 0) {
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_SECURE_IC_AVAIL);
+            } else {
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_SECURE_IC_UNAVAIL);
+            }
 
             // 画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+        }
+
+        private string[] ExtractValuesFromVersionInfo(string responseCSV)
+        {
+            // 情報取得CSVからバージョンに関する情報を抽出
+            string[] vars = responseCSV.Split(',');
+            string strDeviceName = "";
+            string strFWRev = "";
+            string strHWRev = "";
+            string strSecic = "";
+            foreach (string v in vars) {
+                if (v.StartsWith("DEVICE_NAME=")) {
+                    strDeviceName = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("FW_REV=")) {
+                    strFWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("HW_REV=")) {
+                    strHWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("ATECC608A=")) {
+                    strSecic = v.Split('=')[1].Replace("\"", "");
+                }
+            }
+            return new string[] { strDeviceName, strFWRev, strHWRev, strSecic };
         }
 
         private void ViewLogFile()
