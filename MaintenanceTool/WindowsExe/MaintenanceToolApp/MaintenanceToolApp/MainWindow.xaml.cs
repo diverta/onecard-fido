@@ -88,6 +88,10 @@ namespace MaintenanceToolApp
         //
         // イベント処理部
         // 
+        private void buttonHealthCheck_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
         private void buttonUtility_Click(object sender, RoutedEventArgs e)
         {
             DoUtility();
