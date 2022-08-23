@@ -13,6 +13,12 @@
 "SccProvider" = "8:"
     "Hierarchy"
     {
+        "Entry"
+        {
+        "MsmKey" = "8:_8446F57A5A2B46A6B31967E2F41C3ADE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -31,6 +37,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -56,6 +70,11 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    {
+                    "Name" = "8:.NET ランタイム 6.0.7 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.6.0.x64"
                     {
                     "Name" = "8:.NET デスクトップ ランタイム 6.0.7 (x64)"
@@ -80,6 +99,16 @@
         {
             "LaunchCondition"
             {
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_93CB7F1AA1214A46A0FC58D5F55068E8"
+                {
+                "Name" = "8:.NET Core"
+                "Message" = "8:[VSDNETCOREMSG]"
+                "AllowLaterVersions" = "11:FALSE"
+                "InstallUrl" = "8:https://dotnet.microsoft.com/download/dotnet-core/[NetCoreVerMajorDotMinor]"
+                "IsNETCore" = "11:TRUE"
+                "Architecture" = "2:0"
+                "Runtime" = "2:0"
+                }
             }
         }
         "File"
@@ -99,6 +128,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_45C81132CA064D6F9659940E44D7BC8B"
+                    {
+                    "Name" = "8:FIDO Authenticator Tools"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_70947E29844F4FFE949E1FFC4D5D6E34"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_20E4BED8E3014395A058DAEB1401FD49"
@@ -141,7 +181,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SetupWizard"
         "ProductCode" = "8:{0F5F5172-D9D7-4656-8A43-A2DDFC7DC788}"
-        "PackageCode" = "8:{04BE4C7B-510E-4001-B9A6-900ADC057C05}"
+        "PackageCode" = "8:{7948BA21-84DB-4AB5-ABF3-A7A991ED4240}"
         "UpgradeCode" = "8:{5B054CE5-464D-4354-9A06-7CEE67D4CEF3}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -261,6 +301,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B5EE55399BD245F78172571AB86AF9A9"
+            {
+            "Name" = "8:FIDO Authenticator Maintenance Tool"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_8446F57A5A2B46A6B31967E2F41C3ADE"
+            "Folder" = "8:_45C81132CA064D6F9659940E44D7BC8B"
+            "WorkingFolder" = "8:_DDD110837E1848B4ACECA4AF09FDEECD"
+            "Icon" = "8:_8446F57A5A2B46A6B31967E2F41C3ADE"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -660,6 +714,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8446F57A5A2B46A6B31967E2F41C3ADE"
+            {
+            "SourcePath" = "8:..\\MaintenanceToolApp\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DDD110837E1848B4ACECA4AF09FDEECD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{C793C87E-FD77-4823-9C56-594BF5151A90}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
         }
     }
 }
