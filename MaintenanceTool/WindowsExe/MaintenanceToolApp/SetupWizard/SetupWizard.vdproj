@@ -37,7 +37,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\SetupWizard.msi"
+        "OutputFilename" = "8:..\\..\\MaintenanceToolWin\\SetupWizard.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -47,6 +47,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.6.0.x64"
+                    {
+                    "Name" = "8:.NET デスクトップ ランタイム 6.0.7 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.6.0.x64"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -125,7 +141,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SetupWizard"
         "ProductCode" = "8:{0F5F5172-D9D7-4656-8A43-A2DDFC7DC788}"
-        "PackageCode" = "8:{68BEE60A-7AB7-4274-B89B-86C69DAA2D35}"
+        "PackageCode" = "8:{04BE4C7B-510E-4001-B9A6-900ADC057C05}"
         "UpgradeCode" = "8:{5B054CE5-464D-4354-9A06-7CEE67D4CEF3}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
