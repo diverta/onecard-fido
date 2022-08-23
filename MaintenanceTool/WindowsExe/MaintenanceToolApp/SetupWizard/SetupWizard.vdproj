@@ -44,6 +44,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -179,22 +187,22 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SetupWizard"
-        "ProductCode" = "8:{0F5F5172-D9D7-4656-8A43-A2DDFC7DC788}"
-        "PackageCode" = "8:{7948BA21-84DB-4AB5-ABF3-A7A991ED4240}"
+        "ProductName" = "8:FIDO Authenticator Maintenance Tool"
+        "ProductCode" = "8:{65E74358-A4EA-4CEF-99B2-37387DA421C9}"
+        "PackageCode" = "8:{BAB02FB5-A8BE-4F77-9E37-C88021DC63D2}"
         "UpgradeCode" = "8:{5B054CE5-464D-4354-9A06-7CEE67D4CEF3}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:makmorit@outlook.com"
+        "ProductVersion" = "8:0.3.0"
+        "Manufacturer" = "8:Diverta Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:SetupWizard"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:makmorit@outlook.com"
+        "ARPCONTACT" = "8:Diverta Inc."
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
