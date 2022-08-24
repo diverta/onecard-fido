@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <Version>0.3.0</Version>
+    <Copyright>Copyright © 2017-2022 Diverta Inc.</Copyright>
+    <Company>Diverta Inc.</Company>
+    <Product>MaintenanceTool</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
+    <Compile Include="..\..\ToolAppCommon\AppLogUtil.cs" Link="ToolAppCommon\AppLogUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\AppUtil.cs" Link="ToolAppCommon\AppUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\DialogUtil.cs" Link="ToolAppCommon\DialogUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\FIDODefine.cs" Link="ToolAppCommon\FIDODefine.cs" />
+    <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\HIDProcess.cs" Link="ToolAppCommon\HIDProcess.cs" />
+    <Compile Include="..\..\ToolAppCommon\USBDevice.cs" Link="ToolAppCommon\USBDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\WindowUtil.cs" Link="ToolAppCommon\WindowUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icon_128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ToolAppCommon\" />
+  </ItemGroup>
+
+</Project>
