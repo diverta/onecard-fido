@@ -43,6 +43,19 @@ namespace MaintenanceToolApp
 
         protected override void OnExit(ExitEventArgs e)
         {
+            // 業務終了時の処理
+            OnMainWindowTerminate();
+
+            // Mutexを解放
+            if (MutexRef != null) {
+                MutexRef.ReleaseMutex();
+                MutexRef.Close();
+            }
+            base.OnExit(e);
+        }
+
+        void OnMainWindowTerminate()
+        {
             // USB接続を解放
             HIDProcess.DisconnectHIDDevice();
 
@@ -51,13 +64,6 @@ namespace MaintenanceToolApp
 
             // アプリケーション終了ログを出力
             AppLogUtil.OutputLogInfo(string.Format("{0}を終了しました", AppCommon.MSG_TOOL_TITLE));
-
-            // Mutexを解放
-            if (MutexRef != null) {
-                MutexRef.ReleaseMutex();
-                MutexRef.Close();
-            }
-            base.OnExit(e);
         }
     }
 }
