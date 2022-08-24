@@ -2,7 +2,6 @@
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
-using ToolAppCommon;
 
 namespace MaintenanceToolApp
 {
@@ -44,7 +43,7 @@ namespace MaintenanceToolApp
         protected override void OnExit(ExitEventArgs e)
         {
             // 業務終了時の処理
-            OnMainWindowTerminate();
+            CommandProcess.OnMainWindowTerminated();
 
             // Mutexを解放
             if (MutexRef != null) {
@@ -52,18 +51,6 @@ namespace MaintenanceToolApp
                 MutexRef.Close();
             }
             base.OnExit(e);
-        }
-
-        void OnMainWindowTerminate()
-        {
-            // USB接続を解放
-            HIDProcess.DisconnectHIDDevice();
-
-            // USBデバイスの脱着検知を終了
-            USBDevice.TerminateUSBDeviceNotification();
-
-            // アプリケーション終了ログを出力
-            AppLogUtil.OutputLogInfo(string.Format("{0}を終了しました", AppCommon.MSG_TOOL_TITLE));
         }
     }
 }
