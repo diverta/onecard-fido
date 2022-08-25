@@ -29,18 +29,23 @@ namespace MaintenanceToolApp.OATH
             }
         }
 
-        public void SaveBitmapScreenShotToFile()
+        public bool SaveBitmapScreenShotToFile()
         {
+            // 例外抑止
+            if (BitmapScreenShot == null) {
+                AppLogUtil.OutputLogError("SaveBitmapFileOfScreenShot fail: Screenshot bitmap not exist");
+                return false;
+            }
+
             try {
                 // アプリケーションのログディレクトリー配下に、スクリーンショットの画像ファイルを出力
-                if (BitmapScreenShot == null) {
-                    return;
-                }
                 string tempFileName = string.Format("{0}\\{1}{2}.jpg", AppLogUtil.OutputLogFileDirectoryPath(), DateTime.Now.ToString("hhmmss"), DateTime.Now.Millisecond.ToString());
                 BitmapScreenShot.Save(tempFileName, ImageFormat.Jpeg);
+                return true;
 
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("SaveBitmapFileOfScreenShot fail: {0}", e.Message));
+                return false;
             }
         }
 
