@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
@@ -11,6 +13,9 @@ namespace MaintenanceToolApp.OATH
     {
         // スクリーンショット画像を保持
         private Bitmap? BitmapScreenShot { get; set; }
+
+        // スキャンしたQRコードを保持
+        private string? QRCodeString { get; set; }
 
         public bool TakeScreenShotFromRectangle(Rectangle rectangle)
         {
@@ -52,7 +57,7 @@ namespace MaintenanceToolApp.OATH
         public static Rectangle GetFullScreenRectangle()
         {
             // メイン画面のウィンドウ
-            Window MainWindow = Application.Current.MainWindow;
+            System.Windows.Window MainWindow = Application.Current.MainWindow;
 
             // DIPを物理的なピクセルに変換するための係数を取得
             PresentationSource MainWindowPresentationSource = PresentationSource.FromVisual(MainWindow);
@@ -67,6 +72,26 @@ namespace MaintenanceToolApp.OATH
             // 画面全体の矩形領域を取得
             Rectangle rectangle = new Rectangle(0, 0, (int)ScreenWidth, (int)ScreenHeight);
             return rectangle;
+        }
+
+        public bool ExtractQRMessage()
+        {
+            // 例外抑止
+            if (BitmapScreenShot == null) {
+                AppLogUtil.OutputLogError("ExtractQRMessage fail: Screenshot bitmap not exist");
+                return false;
+            }
+            try {
+                // QRコードを解析し、テキストを取得
+                Mat qrImage = BitmapConverter.ToMat(BitmapScreenShot);
+                QRCodeDetector detector = new QRCodeDetector();
+                QRCodeString = detector.DetectAndDecode(qrImage, out Point2f[] points);
+                return true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("ExtractQRMessage fail: {0}", e.Message));
+                return false;
+            }
         }
     }
 }
