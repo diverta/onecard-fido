@@ -150,8 +150,18 @@ namespace MaintenanceToolApp.OATH
 
         private void ExtractParameter(string paramString, int paramNumber, Dictionary<string, string> dictionary)
         {
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(string.Format("ExtractParameter {0}:{1}", paramNumber, paramString));
+            switch (paramNumber) {
+            case 0:
+                // protocol
+                dictionary.Add("protocol", paramString);
+                break;
+            case 1:
+                // OATH method
+                dictionary.Add("method", paramString);
+                break;
+            default:
+                break;
+            }
         }
     }
 }
