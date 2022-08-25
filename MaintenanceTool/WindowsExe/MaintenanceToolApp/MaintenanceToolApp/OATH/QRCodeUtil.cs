@@ -91,6 +91,14 @@ namespace MaintenanceToolApp.OATH
                 Mat qrImage = BitmapConverter.ToMat(BitmapScreenShot);
                 QRCodeDetector detector = new QRCodeDetector();
                 QRCodeString = detector.DetectAndDecode(qrImage, out Point2f[] points);
+
+                // テキストが取得できない場合は false
+                if (QRCodeString.Equals(string.Empty)) {
+                    AppLogUtil.OutputLogDebug("QR code not detected");
+                    return false;
+                }
+
+                AppLogUtil.OutputLogDebug("QR code detected from screen");
                 return true;
 
             } catch (Exception e) {
