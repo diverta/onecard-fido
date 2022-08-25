@@ -245,6 +245,27 @@ bool ccid_flash_oath_object_delete_all(void)
 }
 
 //
+// データ読込（Fetch）
+//
+bool ccid_flash_oath_object_fetch(uint16_t obj_tag, int (*_fetch_func)(const char *key, void *data, size_t size))
+{
+    // 引数からファイル名、レコードキーを取得
+    uint16_t file_id;
+    uint16_t record_key;
+    if (get_record_key_by_tag(obj_tag, &file_id, &record_key) == false) {
+        return false;
+    }
+
+    // Flash ROMから既存データを走査
+    APP_SETTINGS_KEY key = {file_id, record_key, false, 0};
+    if (app_settings_fetch(&key, _fetch_func) == false) {
+        return false;
+    }
+
+    return true;
+}
+
+//
 // コールバック関数群
 //
 void ccid_flash_oath_object_record_updated(void)

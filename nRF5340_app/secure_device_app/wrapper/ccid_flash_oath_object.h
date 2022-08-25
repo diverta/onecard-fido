@@ -22,6 +22,7 @@ bool        ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, si
 bool        ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial);
 bool        ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial);
 bool        ccid_flash_oath_object_delete_all(void);
+bool        ccid_flash_oath_object_fetch(uint16_t obj_tag, int (*_fetch_func)(const char *key, void *data, size_t size));
 
 //
 // コールバック関数群
