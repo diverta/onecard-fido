@@ -159,9 +159,25 @@ namespace MaintenanceToolApp.OATH
                 // OATH method
                 dictionary.Add("method", paramString);
                 break;
+            case 2:
+                // OATH account
+                ExtractAccountParameter(paramString, dictionary);
+                break;
             default:
                 break;
             }
+        }
+
+        private void ExtractAccountParameter(string paramString, Dictionary<string, string> dictionary)
+        {
+            string[] parameter = paramString.Split(":");
+            string value;
+            if (parameter.Length > 1) {
+                value = parameter[1];
+            } else {
+                value = parameter[0];
+            }
+            dictionary.Add("account", value);
         }
     }
 }
