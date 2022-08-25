@@ -19,10 +19,7 @@ namespace MaintenanceToolApp.OATH
         private string? QRCodeString { get; set; }
 
         // QRコードの解析結果を保持
-        private Dictionary<string, string> ParsedQRCodeInfo { get; set; }
-
-        // 解析時の検索開始インデックスを保持
-        private int Offset = 0;
+        private Dictionary<string, string> ParsedQRCodeInfo { get; set; } = new Dictionary<string, string>();
 
         public bool TakeScreenShotFromRectangle(Rectangle rectangle)
         {
@@ -111,25 +108,25 @@ namespace MaintenanceToolApp.OATH
             }
 
             // 配列を初期化
-            ParsedQRCodeInfo = new Dictionary<string, string>();
+            ParsedQRCodeInfo.Clear();
 
             // offsetを検索対象文字列の先頭に設定
-            Offset = 0;
+            int offset = 0;
 
             // 検索用区切り文字列を設定
             string[] strings = { "://", "/", "?", "&" };
             int i = 0;
-            while (i < strings.Length && Offset < QRCodeString.Length) {
+            while (i < strings.Length && offset < QRCodeString.Length) {
                 // 検索用区切り文字が出現するまでの範囲を取得
                 string separator = strings[i];
-                int endIndex = GetEndIndex(QRCodeString, Offset, separator);
+                int endIndex = GetEndIndex(QRCodeString, offset, separator);
 
                 // 部分文字列を抽出し、連想配列に設定
-                string substring = QRCodeString.Substring(Offset, endIndex - Offset);
+                string substring = QRCodeString.Substring(offset, endIndex - offset);
                 ExtractParameter(substring, i, ParsedQRCodeInfo);
 
                 // offsetを検索対象文字列の位置に更新
-                Offset = endIndex + separator.Length;
+                offset = endIndex + separator.Length;
 
                 // & の場合は見つからなくなるまで検索を続ける
                 if (separator.Equals("&") == false) {
