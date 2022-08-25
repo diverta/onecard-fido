@@ -85,6 +85,8 @@
       <itemPath>../../CCID/oath_lib/ccid_oath_calculate.c</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_calculate.h</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_define.h</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_list.c</itemPath>
+      <itemPath>../../CCID/oath_lib/ccid_oath_list.h</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_object.c</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_object.h</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_totp.c</itemPath>
@@ -316,6 +318,16 @@
             flavor2="0">
       </item>
       <item path="../../CCID/oath_lib/ccid_oath_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_list.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/ccid_oath_list.h"
             ex="false"
             tool="3"
             flavor2="0">
