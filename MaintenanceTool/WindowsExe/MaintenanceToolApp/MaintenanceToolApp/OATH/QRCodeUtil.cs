@@ -164,6 +164,8 @@ namespace MaintenanceToolApp.OATH
                 ExtractAccountParameter(paramString, dictionary);
                 break;
             default:
+                // OATH parameter
+                ExtractOathParameter(paramString, dictionary);
                 break;
             }
         }
@@ -178,6 +180,39 @@ namespace MaintenanceToolApp.OATH
                 value = parameter[0];
             }
             dictionary.Add("account", value);
+        }
+
+        private void ExtractOathParameter(string paramString, Dictionary<string, string> dictionary)
+        {
+            // キーと値のペアでない場合は何もしない
+            string[] parameter = GetSeparatedParameter(paramString, "=");
+            if (parameter.Length != 2) {
+                return;
+            }
+
+            // キーと値のペアを連想配列に設定
+            dictionary.Add(parameter[0], parameter[1]);
+        }
+
+        private string[] GetSeparatedParameter(string parameterString, string separator)
+        {
+            // 戻り値の配列
+            string[] parameters;
+
+            // 区切り文字の位置を取得
+            int endIndex = parameterString.IndexOf(separator);
+            if (endIndex == -1) {
+                // 区切り文字列が無い場合は単一値を戻す
+                parameters = new string[] { parameterString };
+
+            } else {
+                // 区切り文字列の前後を配列で戻す
+                string key = parameterString.Substring(0, endIndex);
+                string value = parameterString.Substring(endIndex + separator.Length);
+                parameters = new string[] { key, value };
+            }
+
+            return parameters;
         }
     }
 }
