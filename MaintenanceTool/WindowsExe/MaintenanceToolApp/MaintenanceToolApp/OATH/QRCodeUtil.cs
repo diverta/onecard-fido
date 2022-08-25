@@ -21,6 +21,29 @@ namespace MaintenanceToolApp.OATH
         // QRコードの解析結果を保持
         private Dictionary<string, string> ParsedQRCodeInfo { get; set; } = new Dictionary<string, string>();
 
+        //
+        // 公開用関数
+        //
+        public bool ScanQRCodeFromScreenShot()
+        {
+            // デスクトップのスクリーンショットを取得し、イメージを抽出
+            if (TakeScreenShotFromRectangle(QRCodeUtil.GetFullScreenRectangle()) == false) {
+                return false;
+            }
+
+            // イメージからQRコードをキャプチャーし、メッセージを抽出
+            if (ExtractQRMessage() == false) {
+                return false;
+            }
+
+            // 抽出されたメッセージを解析
+            if (ParseQRMessage() == false) {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool TakeScreenShotFromRectangle(Rectangle rectangle)
         {
             try {
@@ -78,7 +101,10 @@ namespace MaintenanceToolApp.OATH
             return rectangle;
         }
 
-        public bool ExtractQRMessage()
+        //
+        // 内部処理
+        //
+        private bool ExtractQRMessage()
         {
             // 例外抑止
             if (BitmapScreenShot == null) {
@@ -107,7 +133,7 @@ namespace MaintenanceToolApp.OATH
             }
         }
 
-        public bool ParseQRMessage()
+        private bool ParseQRMessage()
         {
             // 例外抑止
             if (QRCodeString == null || QRCodeString.Equals(string.Empty)) {
