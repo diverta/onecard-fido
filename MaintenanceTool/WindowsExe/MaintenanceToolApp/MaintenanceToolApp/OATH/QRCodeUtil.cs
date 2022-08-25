@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
@@ -16,6 +17,12 @@ namespace MaintenanceToolApp.OATH
 
         // スキャンしたQRコードを保持
         private string? QRCodeString { get; set; }
+
+        // QRコードの解析結果を保持
+        private Dictionary<string, string> ParsedQRCodeInfo { get; set; }
+
+        // 解析時の検索開始インデックスを保持
+        private int Offset = 0;
 
         public bool TakeScreenShotFromRectangle(Rectangle rectangle)
         {
@@ -81,6 +88,7 @@ namespace MaintenanceToolApp.OATH
                 AppLogUtil.OutputLogError("ExtractQRMessage fail: Screenshot bitmap not exist");
                 return false;
             }
+
             try {
                 // QRコードを解析し、テキストを取得
                 Mat qrImage = BitmapConverter.ToMat(BitmapScreenShot);
@@ -92,6 +100,58 @@ namespace MaintenanceToolApp.OATH
                 AppLogUtil.OutputLogError(string.Format("ExtractQRMessage fail: {0}", e.Message));
                 return false;
             }
+        }
+
+        public bool ParseQRMessage()
+        {
+            // 例外抑止
+            if (QRCodeString == null || QRCodeString.Equals(string.Empty)) {
+                AppLogUtil.OutputLogError("ParseQRMessage fail: QR message text not exist");
+                return false;
+            }
+
+            // 配列を初期化
+            ParsedQRCodeInfo = new Dictionary<string, string>();
+
+            // offsetを検索対象文字列の先頭に設定
+            Offset = 0;
+
+            // 検索用区切り文字列を設定
+            string[] strings = { "://", "/", "?", "&" };
+            int i = 0;
+            while (i < strings.Length && Offset < QRCodeString.Length) {
+                // 検索用区切り文字が出現するまでの範囲を取得
+                string separator = strings[i];
+                int endIndex = GetEndIndex(QRCodeString, Offset, separator);
+
+                // 部分文字列を抽出し、連想配列に設定
+                string substring = QRCodeString.Substring(Offset, endIndex - Offset);
+                ExtractParameter(substring, i, ParsedQRCodeInfo);
+
+                // offsetを検索対象文字列の位置に更新
+                Offset = endIndex + separator.Length;
+
+                // & の場合は見つからなくなるまで検索を続ける
+                if (separator.Equals("&") == false) {
+                    i++;
+                }
+            }
+            return true;
+        }
+
+        private int GetEndIndex(string message, int startIndex, string terminator)
+        {
+            int endIndex = message.IndexOf(terminator, startIndex);
+            if (endIndex == -1) {
+                endIndex = message.Length;
+            }
+            return endIndex;
+        }
+
+        private void ExtractParameter(string paramString, int paramNumber, Dictionary<string, string> dictionary)
+        {
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(string.Format("ExtractParameter {0}:{1}", paramNumber, paramString));
         }
     }
 }
