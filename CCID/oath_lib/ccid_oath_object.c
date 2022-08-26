@@ -170,7 +170,7 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
     //   132 : オプション属性（1バイト）
     //   133 : Challenge（8バイト）
     fido_log_debug("account record(%s): exist=%d", log_strdup(account_name), *exist);
-    fido_log_print_hexdump_debug(account_read_buff + 4 + 65 , 76, "record bytes");
+    fido_log_print_hexdump_debug(account_read_buff + 4 , 65 + 76, "record bytes");
 #endif
 
     // 既存データがない場合はここで終了
