@@ -67,6 +67,13 @@ namespace MaintenanceToolApp
             textBoxMessage.ScrollToEnd();
         }
 
+        private void DoHealthCheck()
+        {
+            // ヘルスチェック実行画面を開き、実行コマンド種別を設定
+            HealthCheckWindow w = new HealthCheckWindow();
+            bool b = w.ShowDialogWithOwner(this);
+        }
+
         private void DoUtility()
         {
             // ユーティリティー画面を開き、実行コマンド種別を設定
@@ -90,6 +97,7 @@ namespace MaintenanceToolApp
         // 
         private void buttonHealthCheck_Click(object sender, RoutedEventArgs e)
         {
+            DoHealthCheck();
         }
 
         private void buttonUtility_Click(object sender, RoutedEventArgs e)
