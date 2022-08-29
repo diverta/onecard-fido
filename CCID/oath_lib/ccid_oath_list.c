@@ -25,20 +25,16 @@ static size_t           m_offset;
 
 static int fetch_account_data(uint8_t *data, size_t size)
 {
+    //
     // data の内容
     //   0   : アカウント（64バイト）
     //   64  : アカウント長（1バイト）
     //   65  : アルゴリズム（1バイト）
     //   66  : OTP桁数（1バイト）
+    //
+    // アカウント長
     size_t name_size = data[64];
-    size_t record_size = 2 + name_size + 4;
-    if (m_offset + record_size > m_capdu->le) {
-        // レスポンス長の上限に達した場合は、
-        // アカウントをこれ以上レスポンスしない
-        m_rapdu->sw = 0x61ff;
-        return 0;
-    }
-    
+
     // レスポンスデータを生成
     m_rapdu->data[m_offset++] = OATH_TAG_NAME;
     m_rapdu->data[m_offset++] = name_size;
