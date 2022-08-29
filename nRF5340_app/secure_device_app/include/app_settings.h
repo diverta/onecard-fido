@@ -33,6 +33,7 @@ bool        app_settings_find(APP_SETTINGS_KEY *key, bool *exist, void *value, s
 bool        app_settings_search(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size, bool (*_condition_func)(const char *key, void *data, size_t size));
 bool        app_settings_delete(APP_SETTINGS_KEY *key);
 bool        app_settings_delete_multi(APP_SETTINGS_KEY *key);
+bool        app_settings_fetch(APP_SETTINGS_KEY *key, int (*_fetch_func)(const char *key, void *data, size_t size));
 
 #ifdef __cplusplus
 }
