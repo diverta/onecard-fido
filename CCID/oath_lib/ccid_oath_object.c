@@ -15,6 +15,7 @@
 // for debug
 #define LOG_ACCOUNT_EXIST_AND_SERIAL    false
 #define LOG_ACCOUNT_READ                false
+#define LOG_ACCOUNT_FETCH               false
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_oath_object);
@@ -170,7 +171,7 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
     //   132 : オプション属性（1バイト）
     //   133 : Challenge（8バイト）
     fido_log_debug("account record(%s): exist=%d", log_strdup(account_name), *exist);
-    fido_log_print_hexdump_debug(account_read_buff + 4 + 65 , 76, "record bytes");
+    fido_log_print_hexdump_debug(account_read_buff + 4 , 65 + 76, "record bytes");
 #endif
 
     // 既存データがない場合はここで終了
@@ -202,6 +203,61 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
         memcpy(challenge, account_read_buff + offset, MAX_CHALLENGE_LEN);
     }
     offset += MAX_CHALLENGE_LEN;
+
+    // 処理成功
+    return SW_NO_ERROR;
+}
+
+//
+// アカウントデータを読込
+//
+// 使用する関数の参照を保持
+static int (*account_fetch_func)(uint8_t *data, size_t size);
+
+static int fetch_account_data(const char *settings_key, void *account_buff, size_t account_buff_size)
+{
+    // データのサイズを取得
+    (void)account_buff_size;
+    uint32_t size32_t;
+    memcpy(&size32_t, account_buff, sizeof(uint32_t));
+    size_t size = (size_t)size32_t;
+    
+    // データの先頭アドレスを取得
+    uint8_t *data = (uint8_t *)account_buff + 4;
+    
+#if LOG_ACCOUNT_FETCH
+    // account_read_buff の内容（143バイト）：
+    //  レコード長（4バイト）
+    //  バイトイメージ（141バイト固定）
+    //   0   : アカウント（64バイト）
+    //   64  : アカウント長（1バイト）
+    //   65  : アルゴリズム（1バイト）
+    //   66  : OTP桁数（1バイト）
+    //   67  : Secret（64バイト）
+    //   131 : Secret長（1バイト）
+    //   132 : オプション属性（1バイト）
+    //   133 : Challenge（8バイト）
+    fido_log_debug("account record(%s)", log_strdup(settings_key));
+    fido_log_print_hexdump_debug(data, size, "record bytes");
+#endif
+
+    return (*account_fetch_func)(data, size);
+}
+
+uint16_t ccid_oath_object_account_fetch(int (*_fetch_func)(uint8_t *data, size_t size))
+{
+    // 例外抑止
+    if (_fetch_func == NULL) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    
+    // 関数の参照を保持
+    account_fetch_func = _fetch_func;
+    
+    // Flash ROMからレコードを読込
+    if (ccid_flash_oath_object_fetch(OATH_TAG_NAME, fetch_account_data) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
 
     // 処理成功
     return SW_NO_ERROR;

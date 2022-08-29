@@ -45,12 +45,25 @@ static uint8_t get_oath_alg(uint8_t alg_byte)
     return (alg_byte & OATH_ALG_MASK);
 }
 
+static void clear_buffers(void)
+{
+    //
+    // バッファを初期化
+    //
+    memset(m_account_name, 0, sizeof(m_account_name));
+    memset(m_secret, 0, sizeof(m_secret));
+    memset(m_challange, 0, sizeof(m_challange));
+}
+
 uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // パラメーターのチェック
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
+
+    // 事前にバッファを初期化
+    clear_buffers();
 
     //
     // アカウント名を抽出
@@ -173,10 +186,6 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
         // カウンターを保持
         memcpy(m_challange + 4, capdu->data + counter_offset, counter_len);
         offset += counter_len;
-
-    } else {
-        // カウンターを未設定状態にする
-        memset(m_challange, 0, sizeof(m_challange));
     }
 
     // 全体データ長のチェック
@@ -207,6 +216,9 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
+
+    // 事前にバッファを初期化
+    clear_buffers();
 
     //
     // アカウント名を抽出

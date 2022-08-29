@@ -29,10 +29,15 @@ static uint8_t settings_key_temp[32];
 // app_settings_loadで指定された検索キーを保持
 static const char *settings_key_to_find   = NULL;
 static const char *settings_key_to_delete = NULL;
+static const char *settings_key_to_fetch  = NULL;
 
 // h_set内でデータ内容を比較するために
 // 使用する関数の参照を保持
 static bool (*settings_condition_func)(const char *key, void *data, size_t size);
+
+// h_set内で読込データについて処理を実行させるために
+// 使用する関数の参照を保持
+static int (*settings_fetch_func)(const char *key, void *data, size_t size);
 
 // サブツリー設定
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg);
@@ -99,6 +104,29 @@ static int delete_setting(const char *key)
     return rc;
 }
 
+static int fetch_setting(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+    // キーが読込対象でない場合は終了
+    if (strncmp(key, settings_key_to_fetch, strlen(settings_key_to_fetch)) != 0) {
+        return 0;
+    }
+
+    // バッファ長を上限として、検索対象のデータを読込
+    size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
+    int read_len = read_cb(cb_arg, settings_buf, max);
+    if (read_len < 0) {
+        LOG_ERR("Failed to read from storage: read_cb returns %d", read_len);
+        return read_len;
+    }
+
+    // 指定されたコールバックを実行
+    int rc = 0;
+    if (settings_fetch_func != NULL) {
+        rc = (*settings_fetch_func)(key, settings_buf, read_len);
+    }
+    return rc;
+}
+
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
 #if LOG_SETTINGS_EXIST_KEY
@@ -115,6 +143,11 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
         return delete_setting(key);
     }
 
+    // キーが読込対象であれば、対象のデータを読込
+    if (settings_key_to_fetch != NULL) {
+        return fetch_setting(key, len, read_cb, cb_arg);
+    }
+
     return 0;
 }
 
@@ -127,6 +160,7 @@ static int h_commit(void)
     // 検索キーをクリア
     settings_key_to_find   = NULL;
     settings_key_to_delete = NULL;
+    settings_key_to_fetch  = NULL;
     return 0;
 }
 
@@ -258,6 +292,19 @@ bool app_settings_delete_multi(APP_SETTINGS_KEY *key)
     // 指定されたキーの配下に属するデータを
     // サブツリーから全て削除
     if (app_settings_load(key, &settings_key_to_delete) == false) {
+        return false;
+    }
+
+    return true;
+}
+
+bool app_settings_fetch(APP_SETTINGS_KEY *key, int (*_fetch_func)(const char *key, void *data, size_t size))
+{
+    // 読込レコード処理用関数の参照を保持
+    settings_fetch_func = _fetch_func;
+
+    // サブツリーをロード
+    if (app_settings_load(key, &settings_key_to_fetch) == false) {
         return false;
     }
 

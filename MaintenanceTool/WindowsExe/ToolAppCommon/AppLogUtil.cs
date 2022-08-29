@@ -47,15 +47,14 @@ namespace ToolAppCommon
 
         public static void OutputLogText(string logText)
         {
-            // ログファイルにメッセージを出力する
-            string fname = OutputLogFilePath();
-            OutputLogText(logText, fname);
-        }
+            // アプリケーション名が未設定の場合はログを出力させない
+            if (GetApplicationName().Length == 0) {
+                return;
+            }
 
-        private static string OutputLogFilePath()
-        {
-            // ファイル名を連結して戻す
-            return string.Format("{0}\\{1}.log", OutputLogFileDirectoryPath(), GetApplicationName());
+            // ログファイルにメッセージを出力する
+            string fname = string.Format("{0}\\{1}.log", OutputLogFileDirectoryPath(), GetApplicationName());
+            OutputLogText(logText, fname);
         }
 
         public static string OutputLogFileDirectoryPath()
