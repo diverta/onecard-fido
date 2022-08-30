@@ -63,5 +63,13 @@
             COMMAND_CTAP2_GET_KEY_AGREEMENT,
             COMMAND_CTAP2_GET_PIN_TOKEN,
         }
+
+        // トランスポート種別
+        public enum Transport
+        {
+            TRANSPORT_NONE = 0,
+            TRANSPORT_BLE,
+            TRANSPORT_HID,
+        }
     }
 }

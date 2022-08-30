@@ -41,6 +41,7 @@ namespace MaintenanceToolApp
 
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_BLE_CTAP2_HCHECK;
+            Parameter.Transport = Transport.TRANSPORT_BLE;
             TerminateWindow(true);
         }
 
@@ -48,6 +49,7 @@ namespace MaintenanceToolApp
         {
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_BLE_U2F_HCHECK;
+            Parameter.Transport = Transport.TRANSPORT_BLE;
             TerminateWindow(true);
         }
 
@@ -55,6 +57,7 @@ namespace MaintenanceToolApp
         {
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_TEST_BLE_PING;
+            Parameter.Transport = Transport.TRANSPORT_BLE;
             TerminateWindow(true);
         }
 
@@ -73,6 +76,7 @@ namespace MaintenanceToolApp
 
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_HID_CTAP2_HCHECK;
+            Parameter.Transport = Transport.TRANSPORT_HID;
             TerminateWindow(true);
         }
 
@@ -85,6 +89,7 @@ namespace MaintenanceToolApp
 
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_HID_U2F_HCHECK;
+            Parameter.Transport = Transport.TRANSPORT_HID;
             TerminateWindow(true);
         }
 
@@ -97,6 +102,7 @@ namespace MaintenanceToolApp
 
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_TEST_CTAPHID_PING;
+            Parameter.Transport = Transport.TRANSPORT_HID;
             TerminateWindow(true);
         }
 
