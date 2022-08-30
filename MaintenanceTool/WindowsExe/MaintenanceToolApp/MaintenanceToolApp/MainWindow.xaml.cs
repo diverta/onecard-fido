@@ -81,12 +81,11 @@ namespace MaintenanceToolApp
         private void DoUtility()
         {
             // ユーティリティー画面を開き、実行コマンド種別を設定
-            UtilityProcess p = new UtilityProcess();
-            UtilityWindow w = new UtilityWindow(p);
-            bool b = w.ShowDialogWithOwner(this);
+            UtilityParameter param = new UtilityParameter();
+            bool b = new UtilityWindow(param).ShowDialogWithOwner(this);
             if (b) {
                 // ユーティリティー機能を実行
-                p.DoProcess();
+                new UtilityProcess(param).DoProcess();
             }
         }
 

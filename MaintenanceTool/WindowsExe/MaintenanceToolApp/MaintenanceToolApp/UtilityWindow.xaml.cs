@@ -9,12 +9,14 @@ namespace MaintenanceToolApp
     /// </summary>
     public partial class UtilityWindow : Window
     {
-        private readonly UtilityProcess UtilityProcessRef;
+        // 処理実行のためのプロパティー
+        private readonly UtilityParameter Parameter;
 
-        public UtilityWindow(UtilityProcess utilityProcess)
+        public UtilityWindow(UtilityParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
-            UtilityProcessRef = utilityProcess;
         }
 
         public bool ShowDialogWithOwner(Window ownerWindow)
@@ -37,7 +39,7 @@ namespace MaintenanceToolApp
             }
 
             // 実行するユーティリティー機能の名称を設定し、画面を閉じる
-            UtilityProcessRef.SetCommand(Command.COMMAND_HID_GET_FLASH_STAT);
+            Parameter.Command = Command.COMMAND_HID_GET_FLASH_STAT;
             TerminateWindow(true);
         }
 
@@ -49,21 +51,21 @@ namespace MaintenanceToolApp
             }
 
             // 実行するユーティリティー機能の名称を設定し、画面を閉じる
-            UtilityProcessRef.SetCommand(Command.COMMAND_HID_GET_VERSION_INFO);
+            Parameter.Command = Command.COMMAND_HID_GET_VERSION_INFO;
             TerminateWindow(true);
         }
 
         private void DoToolVersionInfo()
         {
             // 実行するユーティリティー機能の名称を設定し、画面を閉じる
-            UtilityProcessRef.SetCommand(Command.COMMAND_VIEW_APP_VERSION);
+            Parameter.Command = Command.COMMAND_VIEW_APP_VERSION;
             TerminateWindow(true);
         }
 
         private void DoViewLogFile()
         {
             // 実行するユーティリティー機能の名称を設定し、画面を閉じる
-            UtilityProcessRef.SetCommand(Command.COMMAND_VIEW_LOG_FILE);
+            Parameter.Command = Command.COMMAND_VIEW_LOG_FILE;
             TerminateWindow(true);
         }
 
