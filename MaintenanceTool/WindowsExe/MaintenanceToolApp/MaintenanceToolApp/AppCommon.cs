@@ -36,6 +36,10 @@
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
 
+        // ヘルスチェック機能
+        public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
+        public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
+
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
         public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";
