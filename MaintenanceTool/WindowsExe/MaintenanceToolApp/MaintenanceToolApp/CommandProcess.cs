@@ -134,12 +134,9 @@ namespace MaintenanceToolApp
         private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
         {
             // HIDデバイスからメッセージ受信時の処理を行う
-            switch (CMD) {
-            case HIDProcessConst.HID_CMD_CTAPHID_INIT:
+            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
                 DoResponseCtapHidInit(CMD, data);
-                break;
-            default:
-                break;
+                return;
             }
 
             // 正常終了扱い
