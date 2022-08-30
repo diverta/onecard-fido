@@ -33,8 +33,13 @@ namespace MaintenanceToolApp
 
         private void DoBLECtap2HealthCheck()
         {
+            // PINコード入力画面を表示
+            HealthCheckPinWindow w = new HealthCheckPinWindow(Parameter);
+            if (w.ShowDialogWithOwner(this) == false) {
+                return;
+            }
+
             // 実行機能を設定し、画面を閉じる
-            // TODO: 仮の実装です。
             Parameter.Command = Command.COMMAND_BLE_CTAP2_HCHECK;
             TerminateWindow(true);
         }
@@ -60,8 +65,13 @@ namespace MaintenanceToolApp
                 return;
             }
 
+            // PINコード入力画面を表示
+            HealthCheckPinWindow w = new HealthCheckPinWindow(Parameter);
+            if (w.ShowDialogWithOwner(this) == false) {
+                return;
+            }
+
             // 実行機能を設定し、画面を閉じる
-            // TODO: 仮の実装です。
             Parameter.Command = Command.COMMAND_HID_CTAP2_HCHECK;
             TerminateWindow(true);
         }
