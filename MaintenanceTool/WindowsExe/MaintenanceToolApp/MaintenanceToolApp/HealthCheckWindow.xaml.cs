@@ -7,8 +7,13 @@ namespace MaintenanceToolApp
     /// </summary>
     public partial class HealthCheckWindow : Window
     {
-        public HealthCheckWindow()
+        // 処理実行のためのプロパティー
+        private readonly HealthCheckParameter Parameter;
+
+        public HealthCheckWindow(HealthCheckParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 

@@ -70,8 +70,12 @@ namespace MaintenanceToolApp
         private void DoHealthCheck()
         {
             // ヘルスチェック実行画面を開き、実行コマンド種別を設定
-            HealthCheckWindow w = new HealthCheckWindow();
-            bool b = w.ShowDialogWithOwner(this);
+            HealthCheckParameter param = new HealthCheckParameter();
+            bool b = new HealthCheckWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // ユーティリティー機能を実行
+                new HealthCheckProcess(param).DoProcess();
+            }
         }
 
         private void DoUtility()
