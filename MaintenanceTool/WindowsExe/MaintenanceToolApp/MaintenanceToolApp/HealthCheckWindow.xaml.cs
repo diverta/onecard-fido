@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
 {
@@ -31,37 +33,60 @@ namespace MaintenanceToolApp
 
         private void DoBLECtap2HealthCheck()
         {
+            // 実行機能を設定し、画面を閉じる
             // TODO: 仮の実装です。
+            Parameter.Command = Command.COMMAND_BLE_CTAP2_HCHECK;
             TerminateWindow(true);
         }
 
         private void DoBLEU2FHealthCheck()
         {
-            // TODO: 仮の実装です。
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_BLE_U2F_HCHECK;
             TerminateWindow(true);
         }
 
         private void DoBLEPingTest()
         {
-            // TODO: 仮の実装です。
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_TEST_BLE_PING;
             TerminateWindow(true);
         }
 
         private void DoHIDCtap2HealthCheck()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行機能を設定し、画面を閉じる
             // TODO: 仮の実装です。
+            Parameter.Command = Command.COMMAND_HID_CTAP2_HCHECK;
             TerminateWindow(true);
         }
 
         private void DoHIDU2FHealthCheck()
         {
-            // TODO: 仮の実装です。
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_HID_U2F_HCHECK;
             TerminateWindow(true);
         }
 
         private void DoHIDPingTest()
         {
-            // TODO: 仮の実装です。
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_TEST_CTAPHID_PING;
             TerminateWindow(true);
         }
 
