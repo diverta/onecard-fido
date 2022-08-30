@@ -17,6 +17,11 @@ namespace MaintenanceToolApp
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Command:{0} CommandTitle:{1}", Command, CommandTitle);
+        }
     }
 
     public class UtilityProcess

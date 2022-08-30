@@ -16,6 +16,11 @@ namespace MaintenanceToolApp
             Command = Command.COMMAND_NONE;
             Pin = string.Empty;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Command:{0} CommandTitle:{1} Pin:{2}", Command, CommandTitle, Pin);
+        }
     }
 
     public class HealthCheckProcess
