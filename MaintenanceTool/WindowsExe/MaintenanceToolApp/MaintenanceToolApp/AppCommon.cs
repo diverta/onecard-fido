@@ -17,6 +17,12 @@
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
 
         // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
+        public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
+        public const string PROCESS_NAME_TEST_BLE_PING = "BLE PINGテスト";
+        public const string PROCESS_NAME_HID_CTAP2_HEALTHCHECK = "HID CTAP2ヘルスチェック";
+        public const string PROCESS_NAME_HID_U2F_HEALTHCHECK = "HID U2Fヘルスチェック";
+        public const string PROCESS_NAME_TEST_CTAPHID_PING = "HID PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
         public const string PROCESS_NAME_GET_VERSION_INFO = "ファームウェアバージョン情報取得";
         public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
@@ -29,6 +35,10 @@
         public const string MSG_SUCCESS = "成功";
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+
+        // ヘルスチェック機能
+        public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
+        public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
 
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";

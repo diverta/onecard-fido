@@ -7,11 +7,27 @@ using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
 {
+    public class UtilityParameter
+    {
+        public string CommandTitle { get; set; }
+        public Command Command { get; set; }
+
+        public UtilityParameter()
+        {
+            CommandTitle = string.Empty;
+            Command = Command.COMMAND_NONE;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Command:{0} CommandTitle:{1}", Command, CommandTitle);
+        }
+    }
+
     public class UtilityProcess
     {
         // 処理実行のためのプロパティー
-        private string CommandTitle = string.Empty;
-        private Command CommandRef = Command.COMMAND_NONE;
+        private readonly UtilityParameter Parameter;
 
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow = App.Current.MainWindow;
@@ -19,25 +35,23 @@ namespace MaintenanceToolApp
         // HIDインターフェースからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
-        public UtilityProcess()
+        public UtilityProcess(UtilityParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
+
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
-        }
-
-        public void SetCommand(Command command)
-        {
-            CommandRef = command;
         }
 
         public void DoProcess()
         {
             // 実行コマンドにより処理分岐
-            switch (CommandRef) {
+            switch (Parameter.Command) {
             case Command.COMMAND_HID_GET_FLASH_STAT:
                 // 処理開始メッセージを表示
-                CommandTitle = AppCommon.PROCESS_NAME_GET_FLASH_STAT;
-                CommandProcess.NotifyCommandStarted(CommandTitle);
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_GET_FLASH_STAT;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
 
                 // Flash ROM情報照会を実行
                 DoRequestHIDGetFlashStat();
@@ -45,8 +59,8 @@ namespace MaintenanceToolApp
 
             case Command.COMMAND_HID_GET_VERSION_INFO:
                 // 処理開始メッセージを表示
-                CommandTitle = AppCommon.PROCESS_NAME_GET_VERSION_INFO;
-                CommandProcess.NotifyCommandStarted(CommandTitle);
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_GET_VERSION_INFO;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
 
                 // バージョン情報取得処理を実行
                 DoRequestHIDGetVersionInfo();
@@ -86,7 +100,7 @@ namespace MaintenanceToolApp
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
                 // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 return;
             }
             // 戻りメッセージから、取得情報CSVを抽出
@@ -124,7 +138,7 @@ namespace MaintenanceToolApp
 
             // 画面に制御を戻す
             CommandProcess.NotifyMessageToMainUI(string.Format("  {0}{1}", rateText, corruptText));
-            CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
         }
 
         private void DoRequestHIDGetVersionInfo()
@@ -139,7 +153,7 @@ namespace MaintenanceToolApp
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
                 // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 return;
             }
 
@@ -168,7 +182,7 @@ namespace MaintenanceToolApp
             }
 
             // 画面に制御を戻す
-            CommandProcess.NotifyCommandTerminated(CommandTitle, "", true, ParentWindow);
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
         }
 
         private string[] ExtractValuesFromVersionInfo(string responseCSV)
@@ -219,19 +233,19 @@ namespace MaintenanceToolApp
 
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
-                CommandProcess.NotifyCommandTerminated(CommandTitle, errorMessage, success, ParentWindow);
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success, ParentWindow);
                 return;
             }
 
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != FIDODefine.CTAP1_ERR_SUCCESS) {
                 // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 return;
             }
 
             // 実行コマンドにより処理分岐
-            switch (CommandRef) {
+            switch (Parameter.Command) {
             case Command.COMMAND_HID_GET_FLASH_STAT:
                 DoResponseHIDGetFlashStat(responseData);
                 break;
@@ -240,7 +254,7 @@ namespace MaintenanceToolApp
                 break;
             default:
                 // メイン画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 break;
             }
         }

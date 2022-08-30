@@ -1,0 +1,19 @@
+﻿<Window x:Class="MaintenanceToolApp.HealthCheckWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="ヘルスチェック実行" Width="360" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
+    <Grid Height="415">
+        <GroupBox x:Name="groupBox1" Header="BLE" Margin="25,15,25,245"/>
+        <GroupBox x:Name="groupBox2" Header="USB" Margin="25,180,25,80"/>
+        <Button x:Name="buttonBLECtap2HealthCheck" Content="CTAP2ヘルスチェック実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,45,0,0" Click="buttonBLECtap2HealthCheck_Click"/>
+        <Button x:Name="buttonBLEU2FHealthCheck" Content="U2Fヘルスチェック実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,85,0,0" Click="buttonBLEU2FHealthCheck_Click"/>
+        <Button x:Name="buttonBLEPingTest" Content="PINGテスト実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,125,0,0" Click="buttonBLEPingTest_Click"/>
+        <Button x:Name="buttonHIDCtap2HealthCheck" Content="CTAP2ヘルスチェック実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,210,0,0" Click="buttonHIDCtap2HealthCheck_Click"/>
+        <Button x:Name="buttonHIDU2FHealthCheck" Content="U2Fヘルスチェック実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,250,0,0" Click="buttonHIDU2FHealthCheck_Click"/>
+        <Button x:Name="buttonHIDPingTest" Content="PINGテスト実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,290,0,0" Click="buttonHIDPingTest_Click"/>
+        <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,360,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
+    </Grid>
+</Window>
