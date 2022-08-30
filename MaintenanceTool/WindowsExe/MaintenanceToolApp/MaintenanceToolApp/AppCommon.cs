@@ -17,6 +17,12 @@
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
 
         // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
+        public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
+        public const string PROCESS_NAME_TEST_BLE_PING = "BLE PINGテスト";
+        public const string PROCESS_NAME_HID_CTAP2_HEALTHCHECK = "HID CTAP2ヘルスチェック";
+        public const string PROCESS_NAME_HID_U2F_HEALTHCHECK = "HID U2Fヘルスチェック";
+        public const string PROCESS_NAME_TEST_CTAPHID_PING = "HID PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
         public const string PROCESS_NAME_GET_VERSION_INFO = "ファームウェアバージョン情報取得";
         public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
