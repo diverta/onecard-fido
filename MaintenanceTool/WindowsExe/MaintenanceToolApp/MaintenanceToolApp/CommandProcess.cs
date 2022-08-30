@@ -23,7 +23,7 @@ namespace MaintenanceToolApp
         public event HandlerOnNotifyMessageToMainUI OnNotifyMessageToMainUI = null!;
 
         // コマンド機能クラスに対するイベント通知
-        public delegate void HandlerOnCommandResponse(byte[] responseData, bool success, string errorMessage);
+        public delegate void HandlerOnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         public event HandlerOnCommandResponse OnCommandResponse = null!;
 
         //
@@ -133,11 +133,78 @@ namespace MaintenanceToolApp
 
         private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
         {
+            // HIDデバイスからメッセージ受信時の処理を行う
+            switch (CMD) {
+            case HIDProcessConst.HID_CMD_CTAPHID_INIT:
+                DoResponseCtapHidInit(CMD, data);
+                break;
+            default:
+                break;
+            }
+
             // 正常終了扱い
             // 以降の処理を、UIスレッドに引き戻す
+            OnCommandResponseToMainThread(CMD, data, true, "");
+        }
+
+        private void OnCommandResponseToMainThread(byte CMD, byte[] responseData, bool success, string errorMessage)
+        {
             Application.Current.Dispatcher.Invoke(new Action(() => {
-                OnCommandResponse(data, true, "");
+                OnCommandResponse(CMD, responseData, success, errorMessage);
             }));
+        }
+
+        //
+        // CTAP2HID_INITコマンド関連処理
+        //
+        // nonceを保持
+        private readonly byte[] NonceBytes = new byte[8];
+
+        // INITコマンドで受信したCIDを保持
+        private byte[] ReceivedCIDBytes = new byte[0];
+
+        public static void DoRequestCtapHidInit()
+        {
+            // 8バイトのランダムデータを生成
+            Instance.GenerateNonceBytes();
+
+            // HIDコマンド／データを送信（CIDはダミーを使用する）
+            // INITコマンドを実行し、nonce を送信する
+            HIDProcess.DoRequestCommand(InitialCidBytes, HIDProcessConst.HID_CMD_CTAPHID_INIT, Instance.NonceBytes);
+        }
+
+        private void DoResponseCtapHidInit(byte CMD, byte[] response)
+        {
+            // nonceの一致チェック
+            for (int i = 0; i < NonceBytes.Length; i++) {
+                if (NonceBytes[i] != response[i]) {
+                    // nonceが一致しない場合は異常終了
+                    OnCommandResponseToMainThread(CMD, response, false, AppCommon.MSG_CMDTST_INVALID_NONCE);
+                    return;
+                }
+            }
+
+            // レスポンスされたCIDを抽出し、クラス内で保持
+            ReceivedCIDBytes = ExtractReceivedCIDBytes(response);
+
+            // 上位クラスに制御を戻す
+            OnCommandResponseToMainThread(CMD, response, true, "");
+        }
+
+        private void GenerateNonceBytes()
+        {
+            // 8バイトのランダムデータを生成
+            new Random().NextBytes(NonceBytes);
+        }
+
+        private byte[] ExtractReceivedCIDBytes(byte[] message)
+        {
+            // メッセージからCIDを抽出して戻す
+            byte[] receivedCID = new byte[4];
+            for (int j = 0; j < receivedCID.Length; j++) {
+                receivedCID[j] = message[8 + j];
+            }
+            return receivedCID;
         }
     }
 }

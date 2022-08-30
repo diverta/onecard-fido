@@ -1,5 +1,5 @@
-﻿using MaintenanceToolApp.ToolAppCommon;
-using System.Windows;
+﻿using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
@@ -8,18 +8,20 @@ namespace MaintenanceToolApp
     {
         public string CommandTitle { get; set; }
         public Command Command { get; set; }
+        public Transport Transport { get; set; }
         public string Pin { get; set; }
 
         public HealthCheckParameter() 
         {
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
+            Transport = Transport.TRANSPORT_NONE;
             Pin = string.Empty;
         }
 
         public override string ToString()
         {
-            return string.Format("Command:{0} CommandTitle:{1} Pin:{2}", Command, CommandTitle, Pin);
+            return string.Format("Command:{0} CommandTitle:{1} Transport:{2} Pin:{3}", Command, CommandTitle, Transport, Pin);
         }
     }
 
@@ -130,14 +132,15 @@ namespace MaintenanceToolApp
 
         private void DoRequestTestCtapHidPing()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // INITコマンドを実行し、nonce を送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidInit();
         }
 
         //
         // HIDからのレスポンス振分け処理
         //
-        private void OnCommandResponse(byte[] responseData, bool success, string errorMessage)
+        private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
@@ -148,10 +151,9 @@ namespace MaintenanceToolApp
                 return;
             }
 
-            // レスポンスメッセージの１バイト目（ステータスコード）を確認
-            if (responseData[0] != FIDODefine.CTAP1_ERR_SUCCESS) {
-                // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+            // INITからの戻りの場合
+            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
+                DoResponseHidInit(responseData);
                 return;
             }
 
@@ -162,6 +164,12 @@ namespace MaintenanceToolApp
                 CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 break;
             }
+        }
+
+        private void DoResponseHidInit(byte[] message)
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
         }
     }
 }
