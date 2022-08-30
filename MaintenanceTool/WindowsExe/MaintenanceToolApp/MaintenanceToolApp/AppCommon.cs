@@ -39,6 +39,8 @@
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
         public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
+        public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
 
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
