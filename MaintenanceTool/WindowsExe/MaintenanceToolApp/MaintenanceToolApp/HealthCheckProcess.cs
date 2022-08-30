@@ -40,11 +40,91 @@ namespace MaintenanceToolApp
         {
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_BLE_CTAP2_HCHECK:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestBleCtap2Hcheck();
+                break;
+
+            case Command.COMMAND_BLE_U2F_HCHECK:
+                // 処理開始メッセージを表示
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestBleU2fHcheck();
+                break;
+
+            case Command.COMMAND_TEST_BLE_PING:
+                // 処理開始メッセージを表示
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_TEST_BLE_PING;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestTestBlePing();
+                break;
+
+            case Command.COMMAND_HID_CTAP2_HCHECK:
+                // 処理開始メッセージを表示
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestHidCtap2Hcheck();
+                break;
+
+            case Command.COMMAND_HID_U2F_HCHECK:
+                // 処理開始メッセージを表示
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestHidU2fHcheck();
+                break;
+
+            case Command.COMMAND_TEST_CTAPHID_PING:
+                // 処理開始メッセージを表示
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_TEST_CTAPHID_PING;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestTestCtapHidPing();
+                break;
+
             default:
                 // エラーメッセージをポップアップ表示
                 DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
                 break;
             }
+        }
+
+        //
+        // 内部処理
+        //
+        private void DoRequestBleCtap2Hcheck()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+        }
+
+        private void DoRequestBleU2fHcheck()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+        }
+
+        private void DoRequestTestBlePing()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+        }
+
+        private void DoRequestHidCtap2Hcheck()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+        }
+
+        private void DoRequestHidU2fHcheck()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+        }
+
+        private void DoRequestTestCtapHidPing()
+        {
+            // TODO:仮の実装です。
+            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
         }
 
         //
