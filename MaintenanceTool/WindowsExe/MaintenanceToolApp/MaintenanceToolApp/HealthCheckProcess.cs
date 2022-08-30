@@ -8,11 +8,13 @@ namespace MaintenanceToolApp
     {
         public string CommandTitle { get; set; }
         public Command Command { get; set; }
+        public string Pin { get; set; }
 
         public HealthCheckParameter() 
         {
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
+            Pin = string.Empty;
         }
     }
 
