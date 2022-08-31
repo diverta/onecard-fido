@@ -1,8 +1,7 @@
-﻿using MaintenanceToolApp.HealthCheck;
-using System.Windows;
+﻿using System.Windows;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.HealthCheck
 {
     public class HealthCheckParameter
     {

@@ -2,7 +2,7 @@
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.HealthCheck
 {
     /// <summary>
     /// HealthCheckWindow.xaml の相互作用ロジック
