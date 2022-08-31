@@ -44,4 +44,24 @@
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="HealthCheck\HealthCheckPinWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="HealthCheck\HealthCheckWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="HealthCheck\HealthCheckPinWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="HealthCheck\HealthCheckWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>
