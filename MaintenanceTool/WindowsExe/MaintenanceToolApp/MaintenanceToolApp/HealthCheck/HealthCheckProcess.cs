@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using ToolAppCommon;
+﻿using MaintenanceToolApp.HealthCheck;
+using System.Windows;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
@@ -33,16 +33,10 @@ namespace MaintenanceToolApp
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow = App.Current.MainWindow;
 
-        // HIDインターフェースからデータ受信時のコールバック参照
-        private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
-
         public HealthCheckProcess(HealthCheckParameter param)
         {
             // パラメーターの参照を保持
             Parameter = param;
-
-            // コールバック参照を初期化
-            OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
         }
 
         public void DoProcess()
@@ -132,58 +126,17 @@ namespace MaintenanceToolApp
 
         private void DoRequestTestCtapHidPing()
         {
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            // HID I/F経由でPINGテストを実行
+            new U2FHealthCheckProcess(Parameter).DoRequestHidPingTest(DoResponseU2fHealthCheck);
         }
 
         //
-        // INITコマンド関連処理
+        // 下位クラスからのコールバック
         //
-        private void DoRequestCtapHidInit()
+        private void DoResponseU2fHealthCheck(string commandTitle, string errorMessage, bool success)
         {
-            // INITコマンドを実行し、nonce を送信する
-            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidInit();
-        }
-
-        private void DoResponseCtapHidInit()
-        {
-            // CTAPHID_INIT応答後の処理を実行
-            switch (Parameter.Command) {
-            default:
-                // メイン画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
-                break;
-            }
-        }
-
-        //
-        // HIDからのレスポンス振分け処理
-        //
-        private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
-        {
-            // イベントを解除
-            CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
-
-            // 即時でアプリケーションに制御を戻す
-            if (success == false) {
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success, ParentWindow);
-                return;
-            }
-
-            // INITからの戻りの場合
-            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
-                DoResponseCtapHidInit();
-                return;
-            }
-
-            // 実行コマンドにより処理分岐
-            switch (Parameter.Command) {
-            default:
-                // メイン画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
-                break;
-            }
+            // メイン画面に制御を戻す
+            CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
     }
 }
