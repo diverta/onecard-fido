@@ -2,7 +2,7 @@
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.Utility
 {
     /// <summary>
     /// UtilityWindow.xaml の相互作用ロジック

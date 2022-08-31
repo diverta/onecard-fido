@@ -1,11 +1,10 @@
-﻿using MaintenanceToolApp.ToolAppCommon;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.Utility
 {
     public class UtilityParameter
     {
@@ -226,7 +225,7 @@ namespace MaintenanceToolApp
         //
         // HIDからのレスポンス振分け処理
         //
-        private void OnCommandResponse(byte[] responseData, bool success, string errorMessage)
+        private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
@@ -234,13 +233,6 @@ namespace MaintenanceToolApp
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success, ParentWindow);
-                return;
-            }
-
-            // レスポンスメッセージの１バイト目（ステータスコード）を確認
-            if (responseData[0] != FIDODefine.CTAP1_ERR_SUCCESS) {
-                // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 return;
             }
 

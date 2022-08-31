@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using ToolAppCommon;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.Utility
 {
     /// <summary>
     /// ToolVersionWindow.xaml の相互作用ロジック

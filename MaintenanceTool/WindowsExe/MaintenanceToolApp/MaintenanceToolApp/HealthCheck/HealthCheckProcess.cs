@@ -1,25 +1,26 @@
-﻿using MaintenanceToolApp.ToolAppCommon;
-using System.Windows;
+﻿using System.Windows;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.HealthCheck
 {
     public class HealthCheckParameter
     {
         public string CommandTitle { get; set; }
         public Command Command { get; set; }
+        public Transport Transport { get; set; }
         public string Pin { get; set; }
 
         public HealthCheckParameter() 
         {
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
+            Transport = Transport.TRANSPORT_NONE;
             Pin = string.Empty;
         }
 
         public override string ToString()
         {
-            return string.Format("Command:{0} CommandTitle:{1} Pin:{2}", Command, CommandTitle, Pin);
+            return string.Format("Command:{0} CommandTitle:{1} Transport:{2} Pin:{3}", Command, CommandTitle, Transport, Pin);
         }
     }
 
@@ -31,16 +32,10 @@ namespace MaintenanceToolApp
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow = App.Current.MainWindow;
 
-        // HIDインターフェースからデータ受信時のコールバック参照
-        private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
-
         public HealthCheckProcess(HealthCheckParameter param)
         {
             // パラメーターの参照を保持
             Parameter = param;
-
-            // コールバック参照を初期化
-            OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
         }
 
         public void DoProcess()
@@ -130,38 +125,17 @@ namespace MaintenanceToolApp
 
         private void DoRequestTestCtapHidPing()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // HID I/F経由でPINGテストを実行
+            new U2FHealthCheckProcess(Parameter).DoRequestHidPingTest(DoResponseU2fHealthCheck);
         }
 
         //
-        // HIDからのレスポンス振分け処理
+        // 下位クラスからのコールバック
         //
-        private void OnCommandResponse(byte[] responseData, bool success, string errorMessage)
+        private void DoResponseU2fHealthCheck(string commandTitle, string errorMessage, bool success)
         {
-            // イベントを解除
-            CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
-
-            // 即時でアプリケーションに制御を戻す
-            if (success == false) {
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success, ParentWindow);
-                return;
-            }
-
-            // レスポンスメッセージの１バイト目（ステータスコード）を確認
-            if (responseData[0] != FIDODefine.CTAP1_ERR_SUCCESS) {
-                // エラーの場合は画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
-                return;
-            }
-
-            // 実行コマンドにより処理分岐
-            switch (Parameter.Command) {
-            default:
-                // メイン画面に制御を戻す
-                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
-                break;
-            }
+            // メイン画面に制御を戻す
+            CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
     }
 }
