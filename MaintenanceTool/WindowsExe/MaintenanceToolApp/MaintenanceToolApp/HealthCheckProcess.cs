@@ -133,8 +133,28 @@ namespace MaintenanceToolApp
         private void DoRequestTestCtapHidPing()
         {
             // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
+        }
+
+        //
+        // INITコマンド関連処理
+        //
+        private void DoRequestCtapHidInit()
+        {
+            // INITコマンドを実行し、nonce を送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
             CommandProcess.DoRequestCtapHidInit();
+        }
+
+        private void DoResponseCtapHidInit()
+        {
+            // CTAPHID_INIT応答後の処理を実行
+            switch (Parameter.Command) {
+            default:
+                // メイン画面に制御を戻す
+                CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
+                break;
+            }
         }
 
         //
@@ -153,7 +173,7 @@ namespace MaintenanceToolApp
 
             // INITからの戻りの場合
             if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
-                DoResponseHidInit(responseData);
+                DoResponseCtapHidInit();
                 return;
             }
 
@@ -164,12 +184,6 @@ namespace MaintenanceToolApp
                 CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false, ParentWindow);
                 break;
             }
-        }
-
-        private void DoResponseHidInit(byte[] message)
-        {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
         }
     }
 }
