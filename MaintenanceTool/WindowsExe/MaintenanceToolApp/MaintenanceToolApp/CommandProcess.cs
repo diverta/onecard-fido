@@ -203,5 +203,11 @@ namespace MaintenanceToolApp
             }
             return receivedCID;
         }
+
+        public static void DoRequestCtapHidCommand(byte CMD, byte[] data)
+        {
+            // CTAPHID_INITから応答されたCIDを使用し、HIDコマンド／データを送信
+            HIDProcess.DoRequestCommand(Instance.ReceivedCIDBytes, CMD, data);
+        }
     }
 }

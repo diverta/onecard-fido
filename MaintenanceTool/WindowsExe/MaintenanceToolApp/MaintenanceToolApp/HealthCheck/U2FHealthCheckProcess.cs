@@ -1,4 +1,6 @@
-﻿using ToolAppCommon;
+﻿using System;
+using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.HealthCheck
 {
@@ -49,11 +51,51 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
+            case Command.COMMAND_TEST_CTAPHID_PING:
+                DoRequestPing();
+                break;
             default:
                 // メイン画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
+        }
+
+        //
+        // PINGコマンド関連処理
+        //
+        // PINGバイトを保持
+        private readonly byte[] PingBytes = new byte[100];
+
+        public void DoRequestPing()
+        {
+            // 100バイトのランダムデータを生成
+            new Random().NextBytes(PingBytes);
+
+            // PINGコマンドを実行する
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_PING, PingBytes);
+                break;
+            default:
+                break;
+            }
+        }
+
+        public void DoResponsePing(byte[] responseData)
+        {
+            // PINGバイトの一致チェック
+            for (int i = 0; i < PingBytes.Length; i++) {
+                if (PingBytes[i] != responseData[i]) {
+                    // 画面のテキストエリアにメッセージを表示
+                    NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_INVALID_PING, false);
+                    return;
+                }
+            }
+
+            // 画面に制御を戻す
+            NotifyCommandTerminated(Parameter.CommandTitle, "", true);
         }
 
         //
@@ -78,6 +120,9 @@ namespace MaintenanceToolApp.HealthCheck
 
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_TEST_CTAPHID_PING:
+                DoResponsePing(responseData);
+                break;
             default:
                 // メイン画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
