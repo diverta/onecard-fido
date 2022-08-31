@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -34,7 +35,9 @@ namespace MaintenanceToolApp.HealthCheck
             NotifyCommandTerminated = handler;
 
             // TODO: 仮の実装です。
-            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+            BLEProcess.RegisterHandlerOnReceivedResponse(OnBLECommandResponse);
+            byte[] message = new byte[] { HIDProcessConst.HID_CMD_CTAPHID_PING, 0x00, 0x01, 0xff };
+            BLEProcess.DoRequestCommand(message);
         }
 
         public void DoRequestHidPingTest(HandlerOnNotifyCommandTerminated handler)
@@ -137,6 +140,23 @@ namespace MaintenanceToolApp.HealthCheck
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
+        }
+
+        //
+        // BLEからのレスポンス振分け処理
+        //
+        private void OnBLECommandResponse(byte[] responseData, bool success, string errorMessage)
+        {
+            // for debug
+            if (success) {
+                string dump = AppLogUtil.DumpMessage(responseData, responseData.Length);
+                AppLogUtil.OutputLogDebug(dump);
+            }
+
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // TODO: 仮の実装です。
+                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
+            }));
         }
     }
 }

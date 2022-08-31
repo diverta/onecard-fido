@@ -5,6 +5,29 @@ namespace ToolAppCommon
 {
     public class BLEProcess
     {
+        // このクラスのインスタンス
+        private static readonly BLEProcess Instance = new BLEProcess();
+
+        // BLEメッセージ受信時のイベント
+        public delegate void HandlerOnReceivedResponse(byte[] responseData, bool success, string errorMessage);
+        private event HandlerOnReceivedResponse OnReceivedResponse = null!;
+
+        //
+        // 外部公開用
+        //
+        public static void RegisterHandlerOnReceivedResponse(HandlerOnReceivedResponse handler)
+        {
+            Instance.OnReceivedResponse += handler;
+        }
+
+        public static void DoRequestCommand(byte[] data)
+        {
+            Instance.DoXferMessage(data);
+        }
+
+        //
+        // 内部処理
+        //
         public const int MSG_HEADER_LEN = 3;
 
         internal static class Const
@@ -17,23 +40,11 @@ namespace ToolAppCommon
         // BLEデバイス関連
         private BLEService bleService = new BLEService();
 
-        // メッセージテキスト送信用のイベント
-        public delegate void MessageTextEventHandler(string messageText);
-        public event MessageTextEventHandler MessageTextEvent = null!;
-
-        // BLEメッセージ受信時のイベント
-        public delegate void ReceiveBLEMessageEventHandler(byte[] receivedMessage, int receivedLen);
-        public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent = null!;
-
-        // BLEメッセージ受信失敗時のイベント
-        public delegate void ReceiveBLEFailedEventHandler(bool critical, byte reserved);
-        public event ReceiveBLEFailedEventHandler ReceiveBLEFailedEvent = null!;
-
         // ペアリング完了時のイベント
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
         public event FIDOPeripheralPairedEvent FIDOPeripheralPaired = null!;
 
-        public BLEProcess()
+        private BLEProcess()
         {
             // BLEデバイスのイベントを登録
             bleService.OnDataReceived += new BLEService.DataReceivedEvent(OnDataReceived);
@@ -42,7 +53,7 @@ namespace ToolAppCommon
             bleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
         }
 
-        public void PairWithFIDOPeripheral(string passkey)
+        private void PairWithFIDOPeripheral(string passkey)
         {
             bleService.Pair(passkey);
         }
@@ -57,11 +68,11 @@ namespace ToolAppCommon
             FIDOPeripheralPaired(success, messageOnFail);
         }
 
-        public async void DoXferMessage(byte[] message, int length)
+        private async void DoXferMessage(byte[] message)
         {
             // メッセージがない場合は終了
-            if (message == null || length == 0) {
-                ReceiveBLEFailedEvent(false, 0);
+            if (message == null || message.Length == 0) {
+                OnReceivedResponse(new byte[0], false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 return;
             }
 
@@ -69,21 +80,20 @@ namespace ToolAppCommon
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
                     AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
+                    OnReceivedResponse(new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     return;
                 }
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
-            SendBLEMessageFrames(message, length);
+            SendBLEMessageFrames(message);
 
             // リクエスト送信完了メッセージを出力
             AppLogUtil.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
         }
 
-        private void SendBLEMessageFrames(byte[] message, int length)
+        private void SendBLEMessageFrames(byte[] message)
         {
             // 正しいAPDUの長さをメッセージ・ヘッダーから取得
             int transferMessageLen = message[1] * 256 + message[2];
@@ -160,7 +170,7 @@ namespace ToolAppCommon
         }
 
         // 受信データを保持
-        private byte[] receivedMessage = new byte[1024];
+        private byte[] receivedMessage = new byte[0];
         private int receivedMessageLen = 0;
         private int received = 0;
 
@@ -191,6 +201,7 @@ namespace ToolAppCommon
                 byte cnth = message[1];
                 byte cntl = message[2];
                 receivedMessageLen = cnth * 256 + cntl;
+                receivedMessage = new byte[Const.INIT_HEADER_LEN + receivedMessageLen];
                 received = 0;
 
                 // ヘッダーをコピー
@@ -239,18 +250,17 @@ namespace ToolAppCommon
 
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
-                ReceiveBLEMessageEvent(receivedMessage, messageLength);
+                OnReceivedResponse(receivedMessage, true, "");
             }
         }
 
         private void OnTransactionFailed()
         {
             // 送信失敗時
-            MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
-            ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
+            OnReceivedResponse(new byte[0], false, AppCommon.MSG_REQUEST_SEND_FAILED);
         }
 
-        public void DisconnectBLE()
+        private void DisconnectBLE()
         {
             if (bleService.IsConnected()) {
                 // 接続ずみの場合はBLEデバイスを切断
