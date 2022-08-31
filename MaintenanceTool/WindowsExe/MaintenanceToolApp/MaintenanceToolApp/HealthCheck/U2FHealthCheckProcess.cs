@@ -28,6 +28,15 @@ namespace MaintenanceToolApp.HealthCheck
         //
         // 外部公開用
         //
+        public void DoRequestBlePingTest(HandlerOnNotifyCommandTerminated handler)
+        {
+            // 戻り先の関数を保持
+            NotifyCommandTerminated = handler;
+
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+        }
+
         public void DoRequestHidPingTest(HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
