@@ -13,9 +13,9 @@ namespace ToolAppCommon
 {
     public class BLEService
     {
-        private GattDeviceService BLEservice;
-        private GattCharacteristic U2FControlPointChar;
-        private GattCharacteristic U2FStatusChar;
+        private GattDeviceService? BLEservice;
+        private GattCharacteristic? U2FControlPointChar;
+        private GattCharacteristic? U2FStatusChar;
 
         private Guid U2F_BLE_SERVICE_UUID = new Guid("0000FFFD-0000-1000-8000-00805f9b34fb");
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
@@ -25,16 +25,16 @@ namespace ToolAppCommon
         private ulong BluetoothAddress;
 
         public delegate void DataReceivedEvent(byte[] receivedData);
-        public event DataReceivedEvent OnDataReceived;
+        public event DataReceivedEvent OnDataReceived = null!;
 
         public delegate void TransactionFailedEvent();
-        public event TransactionFailedEvent OnTransactionFailed;
+        public event TransactionFailedEvent OnTransactionFailed = null!;
 
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
-        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
+        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired = null!;
 
         public delegate void FIDOPeripheralFoundEvent();
-        public event FIDOPeripheralFoundEvent FIDOPeripheralFound;
+        public event FIDOPeripheralFoundEvent FIDOPeripheralFound = null!;
 
         // 例外が発生したかどうかを保持
         private bool critical;
@@ -43,7 +43,7 @@ namespace ToolAppCommon
         private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
 
         // ペアリングに使用するパスキー（PIN）を保持
-        private string Passkey = null;
+        private string? Passkey = null;
 
         public BLEService()
         {
@@ -76,9 +76,14 @@ namespace ToolAppCommon
                 }
 
                 // リクエストを実行（U2F Control Pointに書込）
-                GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
-                if (result != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
+                if (U2FControlPointChar != null) {
+                    GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
+                    if (result != GattCommunicationStatus.Success) {
+                        AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
+                        OnTransactionFailed();
+                    }
+                } else {
+                    AppLogUtil.OutputLogError(string.Format("BLEService.Send: U2F control point characteristic is null"));
                     OnTransactionFailed();
                 }
 
@@ -160,7 +165,7 @@ namespace ToolAppCommon
 
         private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
         {
-            if (args.PairingKind == DevicePairingKinds.ProvidePin) {
+            if (args.PairingKind == DevicePairingKinds.ProvidePin && Passkey != null) {
                 AppLogUtil.OutputLogInfo("指定のパスキーを使用し、FIDO認証器とのペアリングを実行します。");
                 args.Accept(Passkey);
 
@@ -176,7 +181,7 @@ namespace ToolAppCommon
             string messageOnFail = "";
             try {
                 // デバイス情報を取得
-                BluetoothLEDevice device = await BluetoothLEDevice.FromBluetoothAddressAsync(BluetoothAddress);
+                BluetoothLEDevice? device = await BluetoothLEDevice.FromBluetoothAddressAsync(BluetoothAddress);
                 DeviceInformation deviceInfoForPair = device.DeviceInformation;
 
                 // ペアリング実行

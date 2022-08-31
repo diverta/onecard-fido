@@ -19,19 +19,19 @@ namespace ToolAppCommon
 
         // メッセージテキスト送信用のイベント
         public delegate void MessageTextEventHandler(string messageText);
-        public event MessageTextEventHandler MessageTextEvent;
+        public event MessageTextEventHandler MessageTextEvent = null!;
 
         // BLEメッセージ受信時のイベント
         public delegate void ReceiveBLEMessageEventHandler(byte[] receivedMessage, int receivedLen);
-        public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent;
+        public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent = null!;
 
         // BLEメッセージ受信失敗時のイベント
         public delegate void ReceiveBLEFailedEventHandler(bool critical, byte reserved);
-        public event ReceiveBLEFailedEventHandler ReceiveBLEFailedEvent;
+        public event ReceiveBLEFailedEventHandler ReceiveBLEFailedEvent = null!;
 
         // ペアリング完了時のイベント
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
-        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
+        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired = null!;
 
         public BLEProcess()
         {
