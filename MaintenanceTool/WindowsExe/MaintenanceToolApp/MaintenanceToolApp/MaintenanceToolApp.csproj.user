@@ -9,14 +9,6 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="ToolVersionWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="UtilityWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="HealthCheck\HealthCheckPinWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -26,10 +18,10 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ToolVersionWindow.xaml">
+    <Page Update="Utility\ToolVersionWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UtilityWindow.xaml">
+    <Page Update="Utility\UtilityWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
