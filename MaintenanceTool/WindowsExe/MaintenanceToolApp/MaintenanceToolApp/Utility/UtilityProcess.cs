@@ -1,11 +1,10 @@
-﻿using MaintenanceToolApp.ToolAppCommon;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp
+namespace MaintenanceToolApp.Utility
 {
     public class UtilityParameter
     {
