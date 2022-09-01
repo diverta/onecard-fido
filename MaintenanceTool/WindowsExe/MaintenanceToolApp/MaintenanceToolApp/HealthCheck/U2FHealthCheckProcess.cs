@@ -119,7 +119,7 @@ namespace MaintenanceToolApp.HealthCheck
         private readonly byte[] AppidBytes = new byte[U2FProcessConst.U2F_APPID_SIZE];
         private readonly Random RandomInst = new Random();
 
-        public void DoRequestCommandRegister()
+        private void DoRequestCommandRegister()
         {
             // チャレンジにランダム値を設定
             RandomInst.NextBytes(NonceBytes);
@@ -178,8 +178,58 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoResponseRegister(byte[] message)
         {
+            string errorMessage;
+            if (CheckStatusWord(message, out errorMessage) == false) {
+                // 処理結果が不正の場合は画面に制御を戻す
+                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
+                return;
+            }
+
             // TODO: 仮の実装です。 
             NotifyCommandTerminated(Parameter.CommandTitle, "TODO: 仮の実装です。", false);
+        }
+
+        private bool CheckStatusWord(byte[] receivedMessage, out string errorMessage)
+        {
+            //
+            // U2F関連コマンドの場合は
+            // ステータスワードチェックを行う。
+            //
+            int receivedLen = receivedMessage.Length;
+            byte[] statusBytes = new byte[2];
+            Array.Copy(receivedMessage, receivedLen - 2, statusBytes, 0, 2);
+            if (BitConverter.IsLittleEndian) {
+                Array.Reverse(statusBytes);
+            }
+
+            ushort statusWord = BitConverter.ToUInt16(statusBytes, 0);
+            errorMessage = "";
+
+            if (statusWord == 0x6985) {
+                // キーハンドルチェックの場合は成功とみなす
+                return true;
+            }
+            if (statusWord == 0x6a80) {
+                // invalid keyhandleエラーである場合はその旨を通知
+                errorMessage = AppCommon.MSG_OCCUR_KEYHANDLE_ERROR;
+                return false;
+            }
+            if (statusWord == 0x9402) {
+                // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+                errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
+                return false;
+            }
+            if (statusWord == 0x9601) {
+                // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
+                errorMessage = AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR;
+                return false;
+            }
+            if (statusWord != 0x9000) {
+                // U2Fサービスの戻りコマンドが不正の場合はエラー
+                errorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
+                return false;
+            }
+            return true;
         }
 
         //
@@ -188,7 +238,7 @@ namespace MaintenanceToolApp.HealthCheck
         // PINGバイトを保持
         private readonly byte[] PingBytes = new byte[100];
 
-        public void DoRequestPing()
+        private void DoRequestPing()
         {
             // 100バイトのランダムデータを生成
             RandomInst.NextBytes(PingBytes);
@@ -208,7 +258,7 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        public void DoResponsePing(byte[] responseData)
+        private void DoResponsePing(byte[] responseData)
         {
             // レスポンスデータのチェック
             if (responseData == null || responseData.Length == 0) {
