@@ -119,6 +119,11 @@ namespace MaintenanceToolApp.HealthCheck
         private readonly byte[] AppidBytes = new byte[U2FProcessConst.U2F_APPID_SIZE];
         private readonly Random RandomInst = new Random();
 
+        // U2Fキーハンドルデータを保持
+        // (ヘルスチェック処理で使用)
+        private byte[] U2FKeyhandleData = new byte[128];
+        private int U2FKeyhandleSize;
+
         private void DoRequestCommandRegister()
         {
             // チャレンジにランダム値を設定
@@ -184,6 +189,16 @@ namespace MaintenanceToolApp.HealthCheck
                 NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
                 return;
             }
+
+            // Registerレスポンスからキーハンドル長(67バイト目)を取得
+            U2FKeyhandleSize = message[66];
+
+            // Registerレスポンスからキーハンドル
+            // (68バイト目以降)を切り出して保持
+            Array.Copy(message, 67, U2FKeyhandleData, 0, U2FKeyhandleSize);
+
+            // ヘルスチェックの進捗をメイン画面に表示させる
+            CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
 
             // TODO: 仮の実装です。 
             NotifyCommandTerminated(Parameter.CommandTitle, "TODO: 仮の実装です。", false);
