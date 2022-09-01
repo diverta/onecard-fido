@@ -28,8 +28,6 @@ namespace ToolAppCommon
         //
         // 内部処理
         //
-        public const int MSG_HEADER_LEN = 3;
-
         internal static class Const
         {
             public const int INIT_HEADER_LEN = 3;
@@ -38,7 +36,7 @@ namespace ToolAppCommon
         }
 
         // BLEデバイス関連
-        private BLEService bleService = new BLEService();
+        private BLEService BleService = new BLEService();
 
         // ペアリング完了時のイベント
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
@@ -47,20 +45,20 @@ namespace ToolAppCommon
         private BLEProcess()
         {
             // BLEデバイスのイベントを登録
-            bleService.OnDataReceived += new BLEService.DataReceivedEvent(OnDataReceived);
-            bleService.OnTransactionFailed += new BLEService.TransactionFailedEvent(OnTransactionFailed);
-            bleService.FIDOPeripheralFound += new BLEService.FIDOPeripheralFoundEvent(OnFIDOPeripheralFound);
-            bleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
+            BleService.OnDataReceived += new BLEService.DataReceivedEvent(OnDataReceived);
+            BleService.OnTransactionFailed += new BLEService.TransactionFailedEvent(OnTransactionFailed);
+            BleService.FIDOPeripheralFound += new BLEService.FIDOPeripheralFoundEvent(OnFIDOPeripheralFound);
+            BleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
         }
 
         private void PairWithFIDOPeripheral(string passkey)
         {
-            bleService.Pair(passkey);
+            BleService.Pair(passkey);
         }
 
         private void OnFIDOPeripheralFound()
         {
-            bleService.PairWithFIDOPeripheral();
+            BleService.PairWithFIDOPeripheral();
         }
 
         private void OnFIDOPeripheralPaired(bool success, string messageOnFail)
@@ -76,9 +74,9 @@ namespace ToolAppCommon
                 return;
             }
 
-            if (bleService.IsConnected() == false) {
+            if (BleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
-                if (await bleService.StartCommunicate() == false) {
+                if (await BleService.StartCommunicate() == false) {
                     AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     OnReceivedResponse(new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     return;
@@ -163,14 +161,14 @@ namespace ToolAppCommon
                 }
 
                 // BLEデバイスにフレームを送信
-                bleService.Send(frameData.Take(frameLen).ToArray());
+                BleService.Send(frameData.Take(frameLen).ToArray());
             }
         }
 
         // 受信データを保持
-        private byte[] receivedMessage = new byte[0];
-        private int receivedMessageLen = 0;
-        private int received = 0;
+        private byte[] ReceivedMessage = new byte[0];
+        private int ReceivedMessageLen = 0;
+        private int ReceivedSize = 0;
 
         private void OnDataReceived(byte[] message)
         {
@@ -198,27 +196,27 @@ namespace ToolAppCommon
                 // INITフレームであると判断
                 byte cnth = message[1];
                 byte cntl = message[2];
-                receivedMessageLen = cnth * 256 + cntl;
-                receivedMessage = new byte[Const.INIT_HEADER_LEN + receivedMessageLen];
-                received = 0;
+                ReceivedMessageLen = cnth * 256 + cntl;
+                ReceivedMessage = new byte[Const.INIT_HEADER_LEN + ReceivedMessageLen];
+                ReceivedSize = 0;
 
                 // ヘッダーをコピー
                 for (int i = 0; i < Const.INIT_HEADER_LEN; i++) {
-                    receivedMessage[i] = message[i];
+                    ReceivedMessage[i] = message[i];
                 }
 
                 // データをコピー
-                int dataLenInFrame = (receivedMessageLen < bleInitDataLen) ? receivedMessageLen : bleInitDataLen;
+                int dataLenInFrame = (ReceivedMessageLen < bleInitDataLen) ? ReceivedMessageLen : bleInitDataLen;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.INIT_HEADER_LEN + i];
+                    ReceivedMessage[Const.INIT_HEADER_LEN + ReceivedSize++] = message[Const.INIT_HEADER_LEN + i];
                 }
 
-                if (receivedMessage[0] != 0x82) {
+                if (ReceivedMessage[0] != 0x82) {
                     // キープアライブ以外の場合はログを出力
                     string dump = AppLogUtil.DumpMessage(message, message.Length);
                     AppLogUtil.OutputLogDebug(string.Format(
                         "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
-                        receivedMessageLen, dataLenInFrame, dump));
+                        ReceivedMessageLen, dataLenInFrame, dump));
                 }
 
             } else {
@@ -226,10 +224,10 @@ namespace ToolAppCommon
                 int seq = message[0];
 
                 // データをコピー
-                int remaining = receivedMessageLen - received;
+                int remaining = ReceivedMessageLen - ReceivedSize;
                 int dataLenInFrame = (remaining < bleContDataLen) ? remaining : bleContDataLen;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.CONT_HEADER_LEN + i];
+                    ReceivedMessage[Const.INIT_HEADER_LEN + ReceivedSize++] = message[Const.CONT_HEADER_LEN + i];
                 }
 
                 string dump = AppLogUtil.DumpMessage(message, message.Length);
@@ -239,16 +237,16 @@ namespace ToolAppCommon
             }
 
             // 全フレームがそろった場合
-            if (received == receivedMessageLen) {
-                if (receivedMessage[0] == 0x82) {
+            if (ReceivedSize == ReceivedMessageLen) {
+                if (ReceivedMessage[0] == 0x82) {
                     // キープアライブの場合は引き続き次のレスポンスを待つ
                     return;
                 }
-                int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
+                int messageLength = Const.INIT_HEADER_LEN + ReceivedMessageLen;
 
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
-                OnReceivedResponse(receivedMessage, true, "");
+                OnReceivedResponse(ReceivedMessage, true, "");
             }
         }
 
@@ -260,9 +258,9 @@ namespace ToolAppCommon
 
         private void DisconnectBLE()
         {
-            if (bleService.IsConnected()) {
+            if (BleService.IsConnected()) {
                 // 接続ずみの場合はBLEデバイスを切断
-                bleService.Disconnect();
+                BleService.Disconnect();
             }
         }
     }
