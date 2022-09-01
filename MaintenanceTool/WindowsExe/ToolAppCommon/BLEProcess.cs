@@ -3,6 +3,14 @@ using System.Linq;
 
 namespace ToolAppCommon
 {
+    internal static class BLEProcessConst
+    {
+        // BLEフレームに関する定義
+        public const int INIT_HEADER_LEN = 3;
+        public const int CONT_HEADER_LEN = 1;
+        public const int BLE_FRAME_LEN = 64;
+    }
+
     public class BLEProcess
     {
         // このクラスのインスタンス
@@ -28,14 +36,7 @@ namespace ToolAppCommon
         //
         // 内部処理
         //
-        internal static class Const
-        {
-            public const int INIT_HEADER_LEN = 3;
-            public const int CONT_HEADER_LEN = 1;
-            public const int BLE_FRAME_LEN = 64;
-        }
-
-        // BLEデバイス関連
+        // BLEデバイス
         private BLEService BleService = new BLEService();
 
         // ペアリング完了時のイベント
@@ -108,7 +109,7 @@ namespace ToolAppCommon
             //  1     バイト目: シーケンス
             //  残りのバイト  : データ部（64 - 1 = 63）
             // 
-            byte[] frameData = new byte[Const.BLE_FRAME_LEN];
+            byte[] frameData = new byte[BLEProcessConst.BLE_FRAME_LEN];
             int frameLen = 0;
             int transferred = 0;
             int seq = 0;
@@ -126,14 +127,14 @@ namespace ToolAppCommon
                     frameData[2] = (byte)(transferMessageLen % 256);
 
                     // データをコピー
-                    int maxLen = Const.BLE_FRAME_LEN - Const.INIT_HEADER_LEN;
+                    int maxLen = BLEProcessConst.BLE_FRAME_LEN - BLEProcessConst.INIT_HEADER_LEN;
                     int dataLenInFrame = (transferMessageLen < maxLen) ? transferMessageLen : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.INIT_HEADER_LEN + i] = message[transferred++];
+                        frameData[BLEProcessConst.INIT_HEADER_LEN + i] = message[transferred++];
                     }
 
                     // フレーム長を取得
-                    frameLen = Const.INIT_HEADER_LEN + dataLenInFrame;
+                    frameLen = BLEProcessConst.INIT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppLogUtil.DumpMessage(frameData, frameLen);
                     AppLogUtil.OutputLogDebug(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
@@ -146,14 +147,14 @@ namespace ToolAppCommon
 
                     // データをコピー
                     int remaining = transferMessageLen - transferred;
-                    int maxLen = Const.BLE_FRAME_LEN - Const.CONT_HEADER_LEN;
+                    int maxLen = BLEProcessConst.BLE_FRAME_LEN - BLEProcessConst.CONT_HEADER_LEN;
                     int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.CONT_HEADER_LEN + i] = message[transferred++];
+                        frameData[BLEProcessConst.CONT_HEADER_LEN + i] = message[transferred++];
                     }
 
                     // フレーム長を取得
-                    frameLen = Const.CONT_HEADER_LEN + dataLenInFrame;
+                    frameLen = BLEProcessConst.CONT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppLogUtil.DumpMessage(frameData, frameLen);
                     AppLogUtil.OutputLogDebug(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
@@ -189,26 +190,26 @@ namespace ToolAppCommon
             //  1     バイト目: シーケンス
             //  残りのバイト  : データ部（64 - 1 = 63）
             // 
-            int bleInitDataLen = Const.BLE_FRAME_LEN - Const.INIT_HEADER_LEN;
-            int bleContDataLen = Const.BLE_FRAME_LEN - Const.CONT_HEADER_LEN;
+            int bleInitDataLen = BLEProcessConst.BLE_FRAME_LEN - BLEProcessConst.INIT_HEADER_LEN;
+            int bleContDataLen = BLEProcessConst.BLE_FRAME_LEN - BLEProcessConst.CONT_HEADER_LEN;
             byte cmd = message[0];
             if (cmd > 127) {
                 // INITフレームであると判断
                 byte cnth = message[1];
                 byte cntl = message[2];
                 ReceivedMessageLen = cnth * 256 + cntl;
-                ReceivedMessage = new byte[Const.INIT_HEADER_LEN + ReceivedMessageLen];
+                ReceivedMessage = new byte[BLEProcessConst.INIT_HEADER_LEN + ReceivedMessageLen];
                 ReceivedSize = 0;
 
                 // ヘッダーをコピー
-                for (int i = 0; i < Const.INIT_HEADER_LEN; i++) {
+                for (int i = 0; i < BLEProcessConst.INIT_HEADER_LEN; i++) {
                     ReceivedMessage[i] = message[i];
                 }
 
                 // データをコピー
                 int dataLenInFrame = (ReceivedMessageLen < bleInitDataLen) ? ReceivedMessageLen : bleInitDataLen;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    ReceivedMessage[Const.INIT_HEADER_LEN + ReceivedSize++] = message[Const.INIT_HEADER_LEN + i];
+                    ReceivedMessage[BLEProcessConst.INIT_HEADER_LEN + ReceivedSize++] = message[BLEProcessConst.INIT_HEADER_LEN + i];
                 }
 
                 if (ReceivedMessage[0] != 0x82) {
@@ -227,7 +228,7 @@ namespace ToolAppCommon
                 int remaining = ReceivedMessageLen - ReceivedSize;
                 int dataLenInFrame = (remaining < bleContDataLen) ? remaining : bleContDataLen;
                 for (int i = 0; i < dataLenInFrame; i++) {
-                    ReceivedMessage[Const.INIT_HEADER_LEN + ReceivedSize++] = message[Const.CONT_HEADER_LEN + i];
+                    ReceivedMessage[BLEProcessConst.INIT_HEADER_LEN + ReceivedSize++] = message[BLEProcessConst.CONT_HEADER_LEN + i];
                 }
 
                 string dump = AppLogUtil.DumpMessage(message, message.Length);
@@ -242,7 +243,7 @@ namespace ToolAppCommon
                     // キープアライブの場合は引き続き次のレスポンスを待つ
                     return;
                 }
-                int messageLength = Const.INIT_HEADER_LEN + ReceivedMessageLen;
+                int messageLength = BLEProcessConst.INIT_HEADER_LEN + ReceivedMessageLen;
 
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
