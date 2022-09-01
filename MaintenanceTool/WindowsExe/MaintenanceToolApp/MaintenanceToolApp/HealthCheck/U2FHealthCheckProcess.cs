@@ -49,8 +49,8 @@ namespace MaintenanceToolApp.HealthCheck
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+            // U2F Registerから実行
+            DoRequestCommandRegister();
         }
 
         public void DoRequestHidU2fHealthCheck(HandlerOnNotifyCommandTerminated handler)
