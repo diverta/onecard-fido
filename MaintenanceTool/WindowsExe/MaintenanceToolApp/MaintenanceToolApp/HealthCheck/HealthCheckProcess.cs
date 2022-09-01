@@ -101,8 +101,8 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoRequestBleU2fHcheck()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // BLE経由でU2Fヘルスチェックを実行
+            new U2FHealthCheckProcess(Parameter).DoRequestBleU2fHealthCheck(DoResponseU2fHealthCheck);
         }
 
         private void DoRequestTestBlePing()
@@ -119,8 +119,8 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoRequestHidU2fHcheck()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // HID I/F経由でU2Fヘルスチェックを実行
+            new U2FHealthCheckProcess(Parameter).DoRequestHidU2fHealthCheck(DoResponseU2fHealthCheck);
         }
 
         private void DoRequestTestCtapHidPing()
