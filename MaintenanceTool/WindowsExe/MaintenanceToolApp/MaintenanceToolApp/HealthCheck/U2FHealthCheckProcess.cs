@@ -97,6 +97,10 @@ namespace MaintenanceToolApp.HealthCheck
             case Command.COMMAND_HID_U2F_HCHECK:
                 DoRequestCommandRegister();
                 break;
+            case Command.COMMAND_TEST_AUTH_CHECK:
+            case Command.COMMAND_TEST_AUTH_USER_PRESENCE:
+                DoRequestAuthenticate();
+                break;
             case Command.COMMAND_TEST_CTAPHID_PING:
                 DoRequestPing();
                 break;
@@ -200,10 +204,140 @@ namespace MaintenanceToolApp.HealthCheck
             // ヘルスチェックの進捗をメイン画面に表示させる
             CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
 
-            // TODO: 仮の実装です。 
-            NotifyCommandTerminated(Parameter.CommandTitle, "TODO: 仮の実装です。", false);
+            // 実行するコマンドを退避
+            Parameter.Command = Command.COMMAND_TEST_AUTH_CHECK;
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                // INITコマンドを実行し、nonce を送信する
+                DoRequestCtapHidInit();
+                break;
+            case Transport.TRANSPORT_BLE:
+                // U2F Authenticateコマンドを実行
+                DoRequestAuthenticate();
+                break;
+            default:
+                break;
+            }
         }
 
+        //
+        // U2F Authenticateコマンド関連処理
+        //
+        public void DoRequestAuthenticate()
+        {
+            // チャレンジにランダム値を設定
+            RandomInst.NextBytes(NonceBytes);
+
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+            int length = GenerateU2FAuthenticateBytes(U2FRequestData, GetAuthOption());
+            byte[] requestBytes = U2FRequestData.Take(length).ToArray();
+
+            if (Parameter.Command == Command.COMMAND_TEST_AUTH_USER_PRESENCE) {
+                // リクエスト転送の前に、
+                // FIDO認証器のMAIN SWを押してもらうように促す
+                // メッセージを画面表示
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_START);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT1);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT2);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT3);
+            }
+
+            // U2F Authenticateコマンドを実行
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private int GenerateU2FAuthenticateBytes(byte[] u2fRequestData, byte authOption)
+        {
+            int pos;
+
+            // リクエストデータを配列にセット
+            u2fRequestData[0] = 0x00;
+            u2fRequestData[1] = U2FProcessConst.U2F_INS_AUTHENTICATE;
+            u2fRequestData[2] = authOption;
+            u2fRequestData[3] = 0x00;
+            u2fRequestData[4] = 0x00;
+            u2fRequestData[5] = 0x00;
+            u2fRequestData[6] = (byte)(U2FProcessConst.U2F_NONCE_SIZE + U2FProcessConst.U2F_APPID_SIZE + U2FKeyhandleSize + 1);
+
+            // challengeを設定
+            pos = 7;
+            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_NONCE_SIZE);
+            pos += U2FProcessConst.U2F_NONCE_SIZE;
+
+            // appIdを設定
+            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_APPID_SIZE);
+            pos += U2FProcessConst.U2F_APPID_SIZE;
+
+            // キーハンドル長を設定
+            u2fRequestData[pos++] = (byte)U2FKeyhandleSize;
+
+            // キーハンドルを設定
+            Array.Copy(U2FKeyhandleData, 0, U2FRequestData, pos, U2FKeyhandleSize);
+            pos += U2FKeyhandleSize;
+
+            // Leを設定
+            u2fRequestData[pos++] = 0x00;
+            u2fRequestData[pos++] = 0x00;
+
+            return pos;
+        }
+
+        private byte GetAuthOption()
+        {
+            // 処理区分からオプションを設定
+            if (Parameter.Command == Command.COMMAND_TEST_AUTH_CHECK) {
+                return U2FProcessConst.U2F_AUTH_CHECK_ONLY;
+            } else {
+                return U2FProcessConst.U2F_AUTH_ENFORCE;
+            }
+        }
+
+        private void DoResponseAuthenticate(byte[] message)
+        {
+            string errorMessage;
+            if (CheckStatusWord(message, out errorMessage) == false) {
+                // 処理結果が不正の場合は画面に制御を戻す
+                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
+                return;
+            }
+
+            if (Parameter.Command == Command.COMMAND_TEST_AUTH_USER_PRESENCE) {
+                // 画面に制御を戻す
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_SUCCESS);
+                NotifyCommandTerminated(Parameter.CommandTitle, "", true);
+                return;
+            }
+
+            // 実行するコマンドを退避
+            Parameter.Command = Command.COMMAND_TEST_AUTH_USER_PRESENCE;
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                // INITコマンドを実行し、nonce を送信する
+                DoRequestCtapHidInit();
+                break;
+            case Transport.TRANSPORT_BLE:
+                // U2F Authenticateコマンドを実行
+                DoRequestAuthenticate();
+                break;
+            default:
+                break;
+            }
+        }
+
+        //
+        // U2F共通処理
+        // 
         private bool CheckStatusWord(byte[] receivedMessage, out string errorMessage)
         {
             //
@@ -318,6 +452,10 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_REGISTER:
                 DoResponseRegister(responseData);
+                break;
+            case Command.COMMAND_TEST_AUTH_CHECK:
+            case Command.COMMAND_TEST_AUTH_USER_PRESENCE:
+                DoResponseAuthenticate(responseData);
                 break;
             case Command.COMMAND_TEST_CTAPHID_PING:
             case Command.COMMAND_TEST_BLE_PING:
