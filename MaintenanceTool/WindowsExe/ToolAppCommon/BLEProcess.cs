@@ -41,16 +41,16 @@ namespace ToolAppCommon
         private BLEService BleService = new BLEService();
 
         // ペアリング完了時のイベント
-        public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
-        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired = null!;
+        public delegate void HandlerOnPairingCompleted(bool success, string messageOnFail);
+        public event HandlerOnPairingCompleted OnPairingCompleted = null!;
 
         private BLEProcess()
         {
             // BLEデバイスのイベントを登録
-            BleService.OnDataReceived += new BLEService.DataReceivedEvent(OnDataReceived);
-            BleService.OnTransactionFailed += new BLEService.TransactionFailedEvent(OnTransactionFailed);
-            BleService.FIDOPeripheralFound += new BLEService.FIDOPeripheralFoundEvent(OnFIDOPeripheralFound);
-            BleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
+            BleService.OnDataReceived += new BLEService.HandlerOnDataReceived(OnDataReceived);
+            BleService.OnTransactionFailed += new BLEService.HandlerOnTransactionFailed(OnTransactionFailed);
+            BleService.OnFIDOPeripheralFound += new BLEService.HandlerOnFIDOPeripheralFound(OnFIDOPeripheralFound);
+            BleService.OnFIDOPeripheralPaired += new BLEService.HandlerOnFIDOPeripheralPaired(OnFIDOPeripheralPaired);
         }
 
         private void PairWithFIDOPeripheral(string passkey)
@@ -65,7 +65,7 @@ namespace ToolAppCommon
 
         private void OnFIDOPeripheralPaired(bool success, string messageOnFail)
         {
-            FIDOPeripheralPaired(success, messageOnFail);
+            OnPairingCompleted(success, messageOnFail);
         }
 
         private async void SendBLEMessage(byte CMD, byte[] message)

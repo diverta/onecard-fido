@@ -13,34 +13,9 @@ namespace ToolAppCommon
 {
     public class BLEService
     {
-        private GattDeviceService? BLEservice;
-        private GattCharacteristic? U2FControlPointChar;
-        private GattCharacteristic? U2FStatusChar;
-
         private Guid U2F_BLE_SERVICE_UUID = new Guid("0000FFFD-0000-1000-8000-00805f9b34fb");
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
         private Guid U2F_STATUS_CHAR_UUID = new Guid("F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB");
-
-        private BluetoothLEAdvertisementWatcher watcher;
-        private ulong BluetoothAddress;
-
-        public delegate void DataReceivedEvent(byte[] receivedData);
-        public event DataReceivedEvent OnDataReceived = null!;
-
-        public delegate void TransactionFailedEvent();
-        public event TransactionFailedEvent OnTransactionFailed = null!;
-
-        public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
-        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired = null!;
-
-        public delegate void FIDOPeripheralFoundEvent();
-        public event FIDOPeripheralFoundEvent FIDOPeripheralFound = null!;
-
-        // サービスをディスカバーできたデバイスを保持
-        private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
-
-        // ペアリングに使用するパスキー（PIN）を保持
-        private string? Passkey = null;
 
         public BLEService()
         {
@@ -48,6 +23,24 @@ namespace ToolAppCommon
             watcher.Received += OnAdvertisementReceived;
             FreeResources();
         }
+
+        //
+        // BLEペアリング関連
+        //
+        private BluetoothLEAdvertisementWatcher watcher;
+        private ulong BluetoothAddress;
+
+        // ペアリングに使用するパスキー（PIN）を保持
+        private string? Passkey = null;
+
+        //
+        // BLEペアリング関連イベント
+        //
+        public delegate void HandlerOnFIDOPeripheralPaired(bool success, string messageOnFail);
+        public event HandlerOnFIDOPeripheralPaired OnFIDOPeripheralPaired = null!;
+
+        public delegate void HandlerOnFIDOPeripheralFound();
+        public event HandlerOnFIDOPeripheralFound OnFIDOPeripheralFound = null!;
 
         public async void Pair(string passkey)
         {
@@ -74,7 +67,7 @@ namespace ToolAppCommon
 
             if (!bton) {
                 // 画面スレッドに失敗を通知
-                FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
+                OnFIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
                 AppLogUtil.OutputLogError("Bluetoothはオフです。");
                 return;
             }
@@ -94,10 +87,10 @@ namespace ToolAppCommon
 
             if (BluetoothAddress != 0) {
                 // FIDO認証器が見つかった場合はペアリング実行
-                FIDOPeripheralFound();
+                OnFIDOPeripheralFound();
             } else {
                 // 画面スレッドに失敗を通知
-                FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
+                OnFIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
                 AppLogUtil.OutputLogError("FIDO認証器とのペアリングがタイムアウトしました。");
             }
         }
@@ -179,8 +172,26 @@ namespace ToolAppCommon
             }
 
             // 画面スレッドに成否を通知
-            FIDOPeripheralPaired(success, messageOnFail);
+            OnFIDOPeripheralPaired(success, messageOnFail);
         }
+
+        //
+        // BLE接続／送受信関連
+        //
+        // サービスをディスカバーできたデバイスを保持
+        private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
+        private GattDeviceService? BLEservice;
+        private GattCharacteristic? U2FControlPointChar;
+        private GattCharacteristic? U2FStatusChar;
+
+        //
+        // BLE送受信関連イベント
+        //
+        public delegate void HandlerOnDataReceived(byte[] receivedData);
+        public event HandlerOnDataReceived OnDataReceived = null!;
+
+        public delegate void HandlerOnTransactionFailed();
+        public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
         public async Task<bool> StartCommunicate()
         {
@@ -211,7 +222,7 @@ namespace ToolAppCommon
             }
         }
 
-        public async Task<bool> DiscoverBLEService()
+        private async Task<bool> DiscoverBLEService()
         {
             try {
                 AppLogUtil.OutputLogInfo(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
@@ -241,7 +252,7 @@ namespace ToolAppCommon
             }
         }
 
-        public async Task<bool> StartBLENotification(GattDeviceService service)
+        private async Task<bool> StartBLENotification(GattDeviceService service)
         {
             try {
                 U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
