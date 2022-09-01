@@ -1,10 +1,24 @@
 ﻿using System;
-using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.HealthCheck
 {
+    internal static class U2FProcessConst
+    {
+        // U2F処理に関する定義
+        public const int U2F_INS_REGISTER = 0x01;
+        public const int U2F_INS_AUTHENTICATE = 0x02;
+        public const int U2F_INS_VERSION = 0x03;
+        public const int U2F_AUTH_ENFORCE = 0x03;
+        public const int U2F_AUTH_CHECK_ONLY = 0x07;
+        public const int U2F_APPID_SIZE = 32;
+        public const int U2F_NONCE_SIZE = 32;
+
+        // U2Fコマンドバイトに関する定義
+        public const byte U2F_CMD_MSG = 0x83;
+    }
+
     internal class U2FHealthCheckProcess
     {
         // 処理実行のためのプロパティー
@@ -137,7 +151,7 @@ namespace MaintenanceToolApp.HealthCheck
         }
 
         //
-        // HIDからのレスポンス振分け処理
+        // HID／BLEからのレスポンス振分け処理
         //
         private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
@@ -167,23 +181,6 @@ namespace MaintenanceToolApp.HealthCheck
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
-        }
-
-        //
-        // BLEからのレスポンス振分け処理
-        //
-        private void OnBLECommandResponse(byte[] responseData, bool success, string errorMessage)
-        {
-            // for debug
-            if (success) {
-                string dump = AppLogUtil.DumpMessage(responseData, responseData.Length);
-                AppLogUtil.OutputLogDebug(dump);
-            }
-
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // TODO: 仮の実装です。
-                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
-            }));
         }
     }
 }
