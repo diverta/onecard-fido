@@ -36,9 +36,6 @@ namespace ToolAppCommon
         public delegate void FIDOPeripheralFoundEvent();
         public event FIDOPeripheralFoundEvent FIDOPeripheralFound = null!;
 
-        // 例外が発生したかどうかを保持
-        private bool critical;
-
         // サービスをディスカバーできたデバイスを保持
         private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
 
@@ -50,47 +47,6 @@ namespace ToolAppCommon
             watcher = new BluetoothLEAdvertisementWatcher();
             watcher.Received += OnAdvertisementReceived;
             FreeResources();
-        }
-
-        public void Disconnect()
-        {
-            // 切断
-            StopCommunicate();
-            AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
-        }
-
-        public async void Send(byte[] requestData)
-        {
-            if (BLEservice == null) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.Send: service is null"));
-                critical = true;
-                OnTransactionFailed();
-            }
-
-            critical = false;
-            try {
-                // リクエストデータを生成
-                DataWriter writer = new DataWriter();
-                for (int i = 0; i < requestData.Length; i++) {
-                    writer.WriteByte(requestData[i]);
-                }
-
-                // リクエストを実行（U2F Control Pointに書込）
-                if (U2FControlPointChar != null) {
-                    GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
-                    if (result != GattCommunicationStatus.Success) {
-                        AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                        OnTransactionFailed();
-                    }
-                } else {
-                    AppLogUtil.OutputLogError(string.Format("BLEService.Send: U2F control point characteristic is null"));
-                    OnTransactionFailed();
-                }
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.Send: {0}", e.Message));
-                OnTransactionFailed();
-            }
         }
 
         public async void Pair(string passkey)
@@ -228,7 +184,6 @@ namespace ToolAppCommon
 
         public async Task<bool> StartCommunicate()
         {
-            critical = false;
             try {
                 if (BLEServices.Count == 0) {
                     // サービスをディスカバー
@@ -252,14 +207,12 @@ namespace ToolAppCommon
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("BLEService.StartCommunicate: {0}", e.Message));
                 FreeResources();
-                critical = true;
                 return false;
             }
         }
 
         public async Task<bool> DiscoverBLEService()
         {
-            critical = false;
             try {
                 AppLogUtil.OutputLogInfo(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
@@ -284,14 +237,12 @@ namespace ToolAppCommon
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("BLEService.DiscoverBLEService: {0}", e.Message));
                 FreeResources();
-                critical = true;
                 return false;
             }
         }
 
         public async Task<bool> StartBLENotification(GattDeviceService service)
         {
-            critical = false;
             try {
                 U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
 
@@ -312,7 +263,6 @@ namespace ToolAppCommon
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("BLEService.StartBLENotification: {0}", e.Message));
                 FreeResources();
-                critical = true;
                 return false;
             }
         }
@@ -332,6 +282,45 @@ namespace ToolAppCommon
                 AppLogUtil.OutputLogError(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
                 OnTransactionFailed();
             }
+        }
+
+        public async void Send(byte[] requestData)
+        {
+            if (BLEservice == null) {
+                AppLogUtil.OutputLogError(string.Format("BLEService.Send: service is null"));
+                OnTransactionFailed();
+            }
+
+            try {
+                // リクエストデータを生成
+                DataWriter writer = new DataWriter();
+                for (int i = 0; i < requestData.Length; i++) {
+                    writer.WriteByte(requestData[i]);
+                }
+
+                // リクエストを実行（U2F Control Pointに書込）
+                if (U2FControlPointChar != null) {
+                    GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
+                    if (result != GattCommunicationStatus.Success) {
+                        AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
+                        OnTransactionFailed();
+                    }
+                } else {
+                    AppLogUtil.OutputLogError(string.Format("BLEService.Send: U2F control point characteristic is null"));
+                    OnTransactionFailed();
+                }
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("BLEService.Send: {0}", e.Message));
+                OnTransactionFailed();
+            }
+        }
+
+        public void Disconnect()
+        {
+            // 切断
+            StopCommunicate();
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
         }
 
         private void StopCommunicate()
@@ -366,11 +355,6 @@ namespace ToolAppCommon
 
             // BLE接続されている場合は true
             return true;
-        }
-
-        public bool IsCritical()
-        {
-            return critical;
         }
 
         private void FreeResources()
