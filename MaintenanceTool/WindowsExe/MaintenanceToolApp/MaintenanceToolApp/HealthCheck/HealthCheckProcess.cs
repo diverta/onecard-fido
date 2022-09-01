@@ -107,8 +107,8 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoRequestTestBlePing()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // BLE経由でPINGテストを実行
+            new U2FHealthCheckProcess(Parameter).DoRequestBlePingTest(DoResponseU2fHealthCheck);
         }
 
         private void DoRequestHidCtap2Hcheck()

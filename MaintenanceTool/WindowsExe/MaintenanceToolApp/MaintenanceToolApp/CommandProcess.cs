@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using ToolAppCommon;
 
@@ -13,6 +14,9 @@ namespace MaintenanceToolApp
         {
             // HIDインターフェースからデータ受信時のコールバックを登録
             HIDProcess.RegisterHandlerOnReceivedResponse(OnReceivedResponse);
+
+            // BLEからデータ受信時のコールバックを登録
+            BLEProcess.RegisterHandlerOnReceivedResponse(OnReceivedBleResponse);
         }
 
         // 親画面に対するイベント通知
@@ -208,6 +212,21 @@ namespace MaintenanceToolApp
         {
             // CTAPHID_INITから応答されたCIDを使用し、HIDコマンド／データを送信
             HIDProcess.DoRequestCommand(Instance.ReceivedCIDBytes, CMD, data);
+        }
+
+        //
+        // BLE関連共通処理
+        //
+        public static void DoRequestBleCommand(byte CMD, byte[] data)
+        {
+            // CTAPHID_INITから応答されたCIDを使用し、HIDコマンド／データを送信
+            BLEProcess.DoRequestCommand(CMD, data);
+        }
+
+        private void OnReceivedBleResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
+        {
+            // 上位クラスに制御を戻す
+            OnCommandResponseToMainThread(CMD, responseData, success, errorMessage);
         }
     }
 }

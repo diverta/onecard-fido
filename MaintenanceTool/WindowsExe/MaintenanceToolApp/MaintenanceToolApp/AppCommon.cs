@@ -59,5 +59,26 @@
         public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
         public const string MSG_VERSION_INFO_SECURE_IC_AVAIL = "  セキュアIC: 搭載";
         public const string MSG_VERSION_INFO_SECURE_IC_UNAVAIL = "  セキュアIC: 非搭載";
+
+        // Windows版固有のメッセージ文言
+        // BLE関連のメッセージ文言
+        public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
+        public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";
+        public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO認証器の接続に失敗しました。";
+        public const string MSG_U2F_DEVICE_CONNECTED = "FIDO認証器に接続しました。";
+        public const string MSG_U2F_DEVICE_DISCONNECTED = "FIDO認証器の接続が切断されました。";
+        public const string MSG_BLE_CHARACT_NOT_DISCOVERED = "FIDO BLEサービスと通信できません。";
+        public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLEサービスからデータを受信できません。";
+        public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
+        public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
+        public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
+        public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
+        public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
+
+        // BLEペアリング関連のメッセージ文言
+        public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
+        public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
+        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
+        public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
     }
 }

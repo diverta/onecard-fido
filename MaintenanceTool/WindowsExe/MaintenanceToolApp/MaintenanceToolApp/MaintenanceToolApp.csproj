@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -17,6 +18,8 @@
     <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
     <Compile Include="..\..\ToolAppCommon\AppLogUtil.cs" Link="ToolAppCommon\AppLogUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\AppUtil.cs" Link="ToolAppCommon\AppUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\BLEProcess.cs" Link="ToolAppCommon\BLEProcess.cs" />
+    <Compile Include="..\..\ToolAppCommon\BLEService.cs" Link="ToolAppCommon\BLEService.cs" />
     <Compile Include="..\..\ToolAppCommon\DialogUtil.cs" Link="ToolAppCommon\DialogUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\FIDODefine.cs" Link="ToolAppCommon\FIDODefine.cs" />
     <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
@@ -42,6 +45,7 @@
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.6.0.20220608" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.6.0.20220608" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
