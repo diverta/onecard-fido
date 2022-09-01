@@ -34,10 +34,8 @@ namespace MaintenanceToolApp.HealthCheck
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
 
-            // TODO: 仮の実装です。
-            BLEProcess.RegisterHandlerOnReceivedResponse(OnBLECommandResponse);
-            byte[] message = new byte[] { 0x01, 0x02, 0x03 };
-            BLEProcess.DoRequestCommand(HIDProcessConst.HID_CMD_CTAPHID_PING, message);
+            // PING処理を実行
+            DoRequestPing();
         }
 
         public void DoRequestHidPingTest(HandlerOnNotifyCommandTerminated handler)
@@ -90,6 +88,10 @@ namespace MaintenanceToolApp.HealthCheck
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
                 CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_PING, PingBytes);
                 break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(HIDProcessConst.HID_CMD_CTAPHID_PING, PingBytes);
+                break;
             default:
                 break;
             }
@@ -97,6 +99,12 @@ namespace MaintenanceToolApp.HealthCheck
 
         public void DoResponsePing(byte[] responseData)
         {
+            // レスポンスデータのチェック
+            if (responseData == null || responseData.Length == 0) {
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_INVALID_PING, false);
+                return;
+            }
+
             // PINGバイトの一致チェック
             for (int i = 0; i < PingBytes.Length; i++) {
                 if (PingBytes[i] != responseData[i]) {
@@ -133,6 +141,7 @@ namespace MaintenanceToolApp.HealthCheck
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_CTAPHID_PING:
+            case Command.COMMAND_TEST_BLE_PING:
                 DoResponsePing(responseData);
                 break;
             default:
