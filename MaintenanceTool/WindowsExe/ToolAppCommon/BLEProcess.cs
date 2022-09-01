@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ToolAppCommon
 {
@@ -76,13 +77,21 @@ namespace ToolAppCommon
             }
 
             if (BleService.IsConnected() == false) {
-                // 未接続の場合はFIDO認証器とのBLE通信を開始
-                if (await BleService.StartCommunicate() == false) {
-                    AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    OnReceivedResponse(new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    return;
+                for (int i = 0; i < 3; i++) {
+                    // 未接続の場合はFIDO認証器とのBLE通信を開始
+                    if (await BleService.StartCommunicate()) {
+                        AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+                        break;
+                    }
+                    AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i + 1));
+                    await Task.Run(() => System.Threading.Thread.Sleep(250));
                 }
-                AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+            }
+
+            if (BleService.IsConnected() == false) {
+                AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                OnReceivedResponse(new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                return;
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
