@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -57,8 +58,8 @@ namespace MaintenanceToolApp.HealthCheck
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+            // CTAPHID_INITから実行
+            DoRequestCtapHidInit();
         }
 
         public void DoRequestBlePingTest(HandlerOnNotifyCommandTerminated handler)
@@ -93,6 +94,9 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
+            case Command.COMMAND_HID_U2F_HCHECK:
+                DoRequestCommandRegister();
+                break;
             case Command.COMMAND_TEST_CTAPHID_PING:
                 DoRequestPing();
                 break;
@@ -104,6 +108,81 @@ namespace MaintenanceToolApp.HealthCheck
         }
 
         //
+        // U2F Registerコマンド関連処理
+        //
+        // リクエストデータ格納領域
+        private readonly byte[] U2FRequestData = new byte[1024];
+
+        // 生成されたランダムなチャレンジ、AppIDを保持
+        // (ヘルスチェック処理で使用)
+        private readonly byte[] NonceBytes = new byte[U2FProcessConst.U2F_NONCE_SIZE];
+        private readonly byte[] AppidBytes = new byte[U2FProcessConst.U2F_APPID_SIZE];
+        private readonly Random RandomInst = new Random();
+
+        public void DoRequestCommandRegister()
+        {
+            // チャレンジにランダム値を設定
+            RandomInst.NextBytes(NonceBytes);
+
+            // AppIDにランダム値を設定
+            RandomInst.NextBytes(AppidBytes);
+
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+            int length = GenerateU2FRegisterBytes(U2FRequestData);
+            byte[] requestBytes = U2FRequestData.Take(length).ToArray();
+
+            // U2F Registerコマンドを実行
+            Parameter.Command = Command.COMMAND_TEST_REGISTER;
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private int GenerateU2FRegisterBytes(byte[] u2fRequestData)
+        {
+            int pos;
+
+            // リクエストデータを配列にセット
+            u2fRequestData[0] = 0x00;
+            u2fRequestData[1] = U2FProcessConst.U2F_INS_REGISTER;
+            u2fRequestData[2] = 0x00;
+            u2fRequestData[3] = 0x00;
+            u2fRequestData[4] = 0x00;
+            u2fRequestData[5] = 0x00;
+            u2fRequestData[6] = U2FProcessConst.U2F_NONCE_SIZE + U2FProcessConst.U2F_APPID_SIZE;
+
+            // challengeを設定
+            pos = 7;
+            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_NONCE_SIZE);
+            pos += U2FProcessConst.U2F_NONCE_SIZE;
+
+            // appIdを設定
+            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_APPID_SIZE);
+            pos += U2FProcessConst.U2F_APPID_SIZE;
+
+            // Leを設定
+            u2fRequestData[pos++] = 0x00;
+            u2fRequestData[pos++] = 0x00;
+
+            return pos;
+        }
+
+        private void DoResponseRegister(byte[] message)
+        {
+            // TODO: 仮の実装です。 
+            NotifyCommandTerminated(Parameter.CommandTitle, "TODO: 仮の実装です。", false);
+        }
+
+        //
         // PINGコマンド関連処理
         //
         // PINGバイトを保持
@@ -112,7 +191,7 @@ namespace MaintenanceToolApp.HealthCheck
         public void DoRequestPing()
         {
             // 100バイトのランダムデータを生成
-            new Random().NextBytes(PingBytes);
+            RandomInst.NextBytes(PingBytes);
 
             // PINGコマンドを実行する
             switch (Parameter.Transport) {
@@ -172,6 +251,9 @@ namespace MaintenanceToolApp.HealthCheck
 
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_TEST_REGISTER:
+                DoResponseRegister(responseData);
+                break;
             case Command.COMMAND_TEST_CTAPHID_PING:
             case Command.COMMAND_TEST_BLE_PING:
                 DoResponsePing(responseData);
