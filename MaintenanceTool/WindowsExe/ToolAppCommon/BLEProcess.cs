@@ -20,9 +20,9 @@ namespace ToolAppCommon
             Instance.OnReceivedResponse += handler;
         }
 
-        public static void DoRequestCommand(byte[] data)
+        public static void DoRequestCommand(byte CMD, byte[] data)
         {
-            Instance.DoXferMessage(data);
+            Instance.SendBLEMessage(CMD, data);
         }
 
         //
@@ -68,7 +68,7 @@ namespace ToolAppCommon
             FIDOPeripheralPaired(success, messageOnFail);
         }
 
-        private async void DoXferMessage(byte[] message)
+        private async void SendBLEMessage(byte CMD, byte[] message)
         {
             // メッセージがない場合は終了
             if (message == null || message.Length == 0) {
@@ -87,16 +87,16 @@ namespace ToolAppCommon
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
-            SendBLEMessageFrames(message);
+            SendBLEMessageFrames(CMD, message);
 
             // リクエスト送信完了メッセージを出力
             AppLogUtil.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
         }
 
-        private void SendBLEMessageFrames(byte[] message)
+        private void SendBLEMessageFrames(byte CMD, byte[] message)
         {
-            // 正しいAPDUの長さをメッセージ・ヘッダーから取得
-            int transferMessageLen = message[1] * 256 + message[2];
+            // APDUの長さを取得
+            int transferMessageLen = message.Length;
 
             // 
             // 送信データをフレーム分割
@@ -123,16 +123,15 @@ namespace ToolAppCommon
                 if (transferred == 0) {
                     // INITフレーム
                     // ヘッダーをコピー
-                    frameData[0] = message[0];
-                    frameData[1] = message[1];
-                    frameData[2] = message[2];
+                    frameData[0] = CMD;
+                    frameData[1] = (byte)(transferMessageLen / 256);
+                    frameData[2] = (byte)(transferMessageLen % 256);
 
                     // データをコピー
                     int maxLen = Const.BLE_FRAME_LEN - Const.INIT_HEADER_LEN;
                     int dataLenInFrame = (transferMessageLen < maxLen) ? transferMessageLen : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.INIT_HEADER_LEN + i] =
-                            message[MSG_HEADER_LEN + transferred++];
+                        frameData[Const.INIT_HEADER_LEN + i] = message[transferred++];
                     }
 
                     // フレーム長を取得
@@ -152,8 +151,7 @@ namespace ToolAppCommon
                     int maxLen = Const.BLE_FRAME_LEN - Const.CONT_HEADER_LEN;
                     int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[Const.CONT_HEADER_LEN + i] =
-                            message[MSG_HEADER_LEN + transferred++];
+                        frameData[Const.CONT_HEADER_LEN + i] = message[transferred++];
                     }
 
                     // フレーム長を取得

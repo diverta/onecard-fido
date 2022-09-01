@@ -36,8 +36,8 @@ namespace MaintenanceToolApp.HealthCheck
 
             // TODO: 仮の実装です。
             BLEProcess.RegisterHandlerOnReceivedResponse(OnBLECommandResponse);
-            byte[] message = new byte[] { HIDProcessConst.HID_CMD_CTAPHID_PING, 0x00, 0x01, 0xff };
-            BLEProcess.DoRequestCommand(message);
+            byte[] message = new byte[] { 0x01, 0x02, 0x03 };
+            BLEProcess.DoRequestCommand(HIDProcessConst.HID_CMD_CTAPHID_PING, message);
         }
 
         public void DoRequestHidPingTest(HandlerOnNotifyCommandTerminated handler)
