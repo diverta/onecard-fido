@@ -18,7 +18,7 @@ namespace ToolAppCommon
         private static readonly BLEProcess Instance = new BLEProcess();
 
         // BLEメッセージ受信時のイベント
-        public delegate void HandlerOnReceivedResponse(byte[] responseData, bool success, string errorMessage);
+        public delegate void HandlerOnReceivedResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         private event HandlerOnReceivedResponse OnReceivedResponse = null!;
 
         //
@@ -68,16 +68,22 @@ namespace ToolAppCommon
             OnPairingCompleted(success, messageOnFail);
         }
 
+        // 当初送信コマンドを保持
+        private byte CMDToSend { get; set; }
+
         private async void SendBLEMessage(byte CMD, byte[] message)
         {
+            // 送信コマンドを保持
+            CMDToSend = CMD;
+
             // メッセージがない場合は終了
             if (message == null || message.Length == 0) {
-                OnReceivedResponse(new byte[0], false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 return;
             }
 
             if (BleService.IsConnected() == false) {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 2; i++) {
                     // 未接続の場合はFIDO認証器とのBLE通信を開始
                     if (await BleService.StartCommunicate()) {
                         AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
@@ -90,7 +96,7 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                OnReceivedResponse(new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                 return;
             }
 
@@ -248,22 +254,29 @@ namespace ToolAppCommon
 
             // 全フレームがそろった場合
             if (ReceivedSize == ReceivedMessageLen) {
-                if (ReceivedMessage[0] == 0x82) {
+                // CMDを抽出
+                byte CMD = ReceivedMessage[0];
+                if (CMD == 0x82) {
                     // キープアライブの場合は引き続き次のレスポンスを待つ
                     return;
                 }
-                int messageLength = BLEProcessConst.INIT_HEADER_LEN + ReceivedMessageLen;
 
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
-                OnReceivedResponse(ReceivedMessage, true, "");
+                if (ReceivedMessageLen == 0) {
+                    OnReceivedResponse(CMD, new byte[0], true, "");
+
+                } else {
+                    byte[] response = ReceivedMessage.Skip(BLEProcessConst.INIT_HEADER_LEN).ToArray();
+                    OnReceivedResponse(CMD, response, true, "");
+                }
             }
         }
 
         private void OnTransactionFailed()
         {
             // 送信失敗時
-            OnReceivedResponse(new byte[0], false, AppCommon.MSG_REQUEST_SEND_FAILED);
+            OnReceivedResponse(CMDToSend, new byte[0], false, AppCommon.MSG_REQUEST_SEND_FAILED);
         }
 
         private void DisconnectBLE()
