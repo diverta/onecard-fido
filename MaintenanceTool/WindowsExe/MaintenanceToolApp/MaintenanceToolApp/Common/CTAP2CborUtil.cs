@@ -56,11 +56,7 @@ namespace MaintenanceToolApp.Common
 
     internal class CBORDecoder
     {
-        public CBORDecoder()
-        {
-        }
-
-        public KeyAgreement GetKeyAgreement(byte[] cborBytes)
+        public static KeyAgreement GetKeyAgreement(byte[] cborBytes)
         {
             KeyAgreement AgreementKey = new KeyAgreement();
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
@@ -73,7 +69,7 @@ namespace MaintenanceToolApp.Common
             return AgreementKey;
         }
 
-        private void ParseCOSEkey(CBORObject cbor, KeyAgreement AgreementKey)
+        private static void ParseCOSEkey(CBORObject cbor, KeyAgreement AgreementKey)
         {
             foreach (CBORObject key in cbor.Keys) {
                 short keyVal = key.AsInt16();
@@ -89,6 +85,20 @@ namespace MaintenanceToolApp.Common
                     AgreementKey.Y = cbor[key].GetByteString();
                 }
             }
+        }
+
+        public static byte[] GetPinTokenEnc(byte[] cborBytes)
+        {
+            // 暗号化されているpinTokenを抽出
+            byte[] pinTokenEnc = new byte[0];
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                byte keyVal = key.AsByte();
+                if (keyVal == 0x02) {
+                    pinTokenEnc = cbor[key].GetByteString();
+                }
+            }
+            return pinTokenEnc;
         }
     }
 }

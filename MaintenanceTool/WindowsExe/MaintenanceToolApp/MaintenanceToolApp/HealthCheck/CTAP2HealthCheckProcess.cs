@@ -147,7 +147,7 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // CBORをデコードして公開鍵を抽出
             CBORDecoder cborDecoder = new CBORDecoder();
-            HCheckParameter.AgreementPublicKey = cborDecoder.GetKeyAgreement(cborBytes);
+            HCheckParameter.AgreementPublicKey = CBORDecoder.GetKeyAgreement(cborBytes);
 
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_MAKE_CREDENTIAL:
@@ -200,6 +200,20 @@ namespace MaintenanceToolApp.HealthCheck
 
         public void DoResponseCommandGetPinToken(byte[] cborBytes)
         {
+            // PinTokenをCBORから抽出
+            byte[] pinTokenEnc = CBORDecoder.GetPinTokenEnc(cborBytes);
+            if (pinTokenEnc.Length == 0) {
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_PIN_AUTH_TOKEN_GET, false);
+                return;
+            }
+
+            // PinTokenを共通鍵で復号化
+            byte[] pinToken = CTAP2Util.AES256CBCDecrypt(pinTokenEnc, HCheckParameter.SharedSecretKey);
+
+            // for debug
+            AppLogUtil.OutputLogDebug(string.Format(
+                "pinToken: \n{0}", AppLogUtil.DumpMessage(pinToken, pinToken.Length)));
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
