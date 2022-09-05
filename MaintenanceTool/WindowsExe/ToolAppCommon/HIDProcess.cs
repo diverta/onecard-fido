@@ -266,10 +266,10 @@ namespace ToolAppCommon
         // データ受信
         //
         // 受信データを保持
-        byte[] ReceivedMessage = new byte[0];
-        int ReceivedMessageLen = 0;
-        int Received = 0;
-        byte ReceivedCMD = 0;
+        private byte[] ReceivedMessage = new byte[0];
+        private int ReceivedMessageLen = 0;
+        private int Received = 0;
+        private byte ReceivedCMD = 0;
 
         // 送信ログを保持
         private string ReceivedLogBuffer = "";
