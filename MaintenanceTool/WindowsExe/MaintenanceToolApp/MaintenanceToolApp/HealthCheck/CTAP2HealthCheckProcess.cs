@@ -5,6 +5,13 @@ using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.HealthCheck
 {
+    internal class CTAP2HealthCheckParameter
+    {
+        // 実行中のサブコマンドを保持
+        public byte CborCommand { get; set; }
+        public byte CborSubCommand { get; set; }
+    }
+
     internal class CTAP2HealthCheckProcess
     {
         // 処理実行のためのプロパティー
@@ -48,6 +55,12 @@ namespace MaintenanceToolApp.HealthCheck
         }
 
         //
+        // 内部処理
+        //
+        // CTAP2ヘルスチェック処理で必要なパラメーターを保持
+        readonly CTAP2HealthCheckParameter HCheckParameter = new CTAP2HealthCheckParameter();
+
+        //
         // INITコマンド関連処理
         //
         private void DoRequestCtapHidInit()
@@ -77,12 +90,12 @@ namespace MaintenanceToolApp.HealthCheck
         private void DoRequestCommandGetKeyAgreement()
         {
             // 実行するコマンドを保持
-            CborCommand = CTAP2_CBORCMD_CLIENT_PIN;
-            CborSubCommand = CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
+            HCheckParameter.CborCommand = CTAP2_CBORCMD_CLIENT_PIN;
+            HCheckParameter.CborSubCommand = CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
 
             // GetAgreementコマンドバイトを生成
             CBOREncoder cborEncoder = new CBOREncoder();
-            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(CborCommand, CborSubCommand);
+            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(HCheckParameter.CborCommand, HCheckParameter.CborSubCommand);
 
             // GetAgreementコマンドを実行
             switch (Parameter.Transport) {
@@ -108,10 +121,6 @@ namespace MaintenanceToolApp.HealthCheck
         //
         // CBORコマンド関連処理
         //
-        // 実行中のサブコマンドを保持
-        private byte CborCommand;
-        private byte CborSubCommand;
-
         public void DoResponseCtapHidCbor(byte[] message)
         {
             // ステータスバイトをチェック
@@ -122,7 +131,7 @@ namespace MaintenanceToolApp.HealthCheck
                 return;
             }
 
-            switch (CborCommand) {
+            switch (HCheckParameter.CborCommand) {
             case CTAP2_CBORCMD_CLIENT_PIN:
                 DoResponseCommandClientPin(message);
                 break;
@@ -154,6 +163,7 @@ namespace MaintenanceToolApp.HealthCheck
                 errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
                 break;
             default:
+                errorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
                 break;
             }
             return false;
@@ -164,7 +174,7 @@ namespace MaintenanceToolApp.HealthCheck
             // レスポンスされたCBORを抽出
             byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, message.Length);
 
-            switch (CborSubCommand) {
+            switch (HCheckParameter.CborSubCommand) {
             case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 DoResponseCommandGetKeyAgreement(cborBytes);
                 break;
