@@ -10,6 +10,14 @@ namespace MaintenanceToolApp.HealthCheck
         // 実行中のサブコマンドを保持
         public byte CborCommand { get; set; }
         public byte CborSubCommand { get; set; }
+
+        // 公開鍵を保持
+        public KeyAgreement AgreementPublicKey { get; set; }
+
+        public CTAP2HealthCheckParameter()
+        {
+            AgreementPublicKey = new KeyAgreement();
+        }
     }
 
     internal class CTAP2HealthCheckProcess
@@ -41,6 +49,9 @@ namespace MaintenanceToolApp.HealthCheck
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
 
+            // 実行コマンドを設定
+            Parameter.Command = Command.COMMAND_TEST_MAKE_CREDENTIAL;
+
             // getKeyAgreementサブコマンドから実行
             DoRequestCommandGetKeyAgreement();
         }
@@ -50,6 +61,9 @@ namespace MaintenanceToolApp.HealthCheck
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
 
+            // 実行コマンドを設定
+            Parameter.Command = Command.COMMAND_TEST_MAKE_CREDENTIAL;
+
             // CTAPHID_INITから実行
             DoRequestCtapHidInit();
         }
@@ -58,7 +72,7 @@ namespace MaintenanceToolApp.HealthCheck
         // 内部処理
         //
         // CTAP2ヘルスチェック処理で必要なパラメーターを保持
-        readonly CTAP2HealthCheckParameter HCheckParameter = new CTAP2HealthCheckParameter();
+        private readonly CTAP2HealthCheckParameter HCheckParameter = new CTAP2HealthCheckParameter();
 
         //
         // INITコマンド関連処理
@@ -74,7 +88,7 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
-            case Command.COMMAND_HID_CTAP2_HCHECK:
+            case Command.COMMAND_TEST_MAKE_CREDENTIAL:
                 DoRequestCommandGetKeyAgreement();
                 break;
             default:
@@ -112,8 +126,12 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        private void DoResponseCommandGetKeyAgreement(byte[] responseData)
+        private void DoResponseCommandGetKeyAgreement(byte[] cborBytes)
         {
+            // CBORをデコードして公開鍵を抽出
+            CBORDecoder cborDecoder = new CBORDecoder();
+            HCheckParameter.AgreementPublicKey = cborDecoder.GetKeyAgreement(cborBytes);
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }

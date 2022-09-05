@@ -23,6 +23,43 @@ namespace MaintenanceToolApp.Common
             // エンコードされたCBORバイト配列を戻す
             return encoded;
         }
+    }
 
+    internal class CBORDecoder
+    {
+        public CBORDecoder()
+        {
+        }
+
+        public KeyAgreement GetKeyAgreement(byte[] cborBytes)
+        {
+            KeyAgreement AgreementKey = new KeyAgreement();
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                byte keyVal = key.AsByte();
+                if (keyVal == 0x01) {
+                    ParseCOSEkey(cbor[key], AgreementKey);
+                }
+            }
+            return AgreementKey;
+        }
+
+        private void ParseCOSEkey(CBORObject cbor, KeyAgreement AgreementKey)
+        {
+            foreach (CBORObject key in cbor.Keys) {
+                short keyVal = key.AsInt16();
+                if (keyVal == 1) {
+                    AgreementKey.Kty = cbor[key].AsInt16();
+                } else if (keyVal == 3) {
+                    AgreementKey.Alg = cbor[key].AsInt16();
+                } else if (keyVal == -1) {
+                    AgreementKey.Crv = cbor[key].AsInt16();
+                } else if (keyVal == -2) {
+                    AgreementKey.X = cbor[key].GetByteString();
+                } else if (keyVal == -3) {
+                    AgreementKey.Y = cbor[key].GetByteString();
+                }
+            }
+        }
     }
 }
