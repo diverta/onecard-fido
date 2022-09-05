@@ -269,6 +269,7 @@ namespace ToolAppCommon
         byte[] ReceivedMessage = new byte[0];
         int ReceivedMessageLen = 0;
         int Received = 0;
+        byte ReceivedCMD = 0;
 
         // 送信ログを保持
         private string ReceivedLogBuffer = "";
@@ -280,7 +281,6 @@ namespace ToolAppCommon
 
             // 受信したCID、コマンドを保持
             byte[] receivedCID = new byte[4];
-            byte receivedCMD = 0;
 
             // メッセージは最低 8 バイト
             if (message.Length < 8) {
@@ -320,7 +320,7 @@ namespace ToolAppCommon
             int hid_cont_data_len = 59;
             if (frameData[4] > 127) {
                 // INITフレームであると判断
-                receivedCMD = frameData[4];
+                ReceivedCMD = frameData[4];
                 byte cnth = frameData[5];
                 byte cntl = frameData[6];
                 ReceivedMessageLen = cnth * 256 + cntl;
@@ -357,7 +357,7 @@ namespace ToolAppCommon
             }
 
             // キープアライブレスポンスの場合は無視
-            if (receivedCMD == 0xbb) {
+            if (ReceivedCMD == 0xbb) {
                 return;
             }
 
@@ -366,7 +366,7 @@ namespace ToolAppCommon
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータを転送
                 AppLogUtil.OutputLogText(ReceivedLogBuffer);
-                OnReceivedResponse(receivedCID, receivedCMD, ReceivedMessage);
+                OnReceivedResponse(receivedCID, ReceivedCMD, ReceivedMessage);
             }
         }
 
