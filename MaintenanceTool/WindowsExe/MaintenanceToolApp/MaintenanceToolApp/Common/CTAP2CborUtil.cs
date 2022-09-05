@@ -1,5 +1,6 @@
 ﻿using PeterO.Cbor;
 using System.Linq;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.Common
 {
@@ -15,6 +16,38 @@ namespace MaintenanceToolApp.Common
             cbor.Add(0x02, subCommand);
             byte[] payload = cbor.EncodeToBytes();
             byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        public static byte[] GenerateGetPinTokenCbor(byte cborCommand, byte subCommand, KeyAgreement publicKey, byte[] pinHashEnc)
+        {
+            // 送信データを生成
+            //   0x01: pinProtocol
+            //   0x02: subCommand
+            //   0x03: keyAgreement
+            //   0x06: pinHashEnc
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, 1);
+            cbor.Add(0x02, subCommand);
+
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, publicKey.Kty);
+            keyParam.Add(3, publicKey.Alg);
+            keyParam.Add(-1, publicKey.Crv);
+            keyParam.Add(-2, publicKey.X);
+            keyParam.Add(-3, publicKey.Y);
+            cbor.Add(0x03, keyParam);
+            cbor.Add(0x06, pinHashEnc);
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            AppLogUtil.OutputLogDebug(string.Format(
+                "Encoded CBOR request: \n{0}", AppLogUtil.DumpMessage(encoded, encoded.Length)));
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;

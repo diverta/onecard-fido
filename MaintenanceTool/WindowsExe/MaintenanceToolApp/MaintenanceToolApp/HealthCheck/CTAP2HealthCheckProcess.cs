@@ -152,7 +152,7 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_MAKE_CREDENTIAL:
                 // PINトークン取得処理を続行
-                DoGetPinToken();
+                DoRequestCommandGetPinToken();
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -161,7 +161,7 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        public void DoGetPinToken()
+        public void DoRequestCommandGetPinToken()
         {
             // 実行するコマンドを退避
             HCheckParameter.CborCommand = CTAP2_CBORCMD_CLIENT_PIN;
@@ -177,6 +177,29 @@ namespace MaintenanceToolApp.HealthCheck
             // PinHashEncを生成
             util.GeneratePinHashEnc(Parameter.Pin, HCheckParameter);
 
+            // GetPinTokenコマンドバイトを生成
+            CBOREncoder cborEncoder = new CBOREncoder();
+            byte[] getPinTokenCbor = CBOREncoder.GenerateGetPinTokenCbor(
+                HCheckParameter.CborCommand, HCheckParameter.CborSubCommand,
+                HCheckParameter.AgreementPublicKey, HCheckParameter.PinHashEnc);
+
+            // GetPinTokenコマンドを実行
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, getPinTokenCbor);
+                break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, getPinTokenCbor);
+                break;
+            default:
+                break;
+            }
+        }
+
+        public void DoResponseCommandGetPinToken(byte[] cborBytes)
+        {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
@@ -240,6 +263,9 @@ namespace MaintenanceToolApp.HealthCheck
             switch (HCheckParameter.CborSubCommand) {
             case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 DoResponseCommandGetKeyAgreement(cborBytes);
+                break;
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
+                DoResponseCommandGetPinToken(cborBytes);
                 break;
             default:
                 break;
