@@ -101,9 +101,6 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoResponseCommandGetKeyAgreement(byte[] responseData)
         {
-            string dump = AppLogUtil.DumpMessage(responseData, responseData.Length);
-            AppLogUtil.OutputLogDebug(dump);
-
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
@@ -130,8 +127,6 @@ namespace MaintenanceToolApp.HealthCheck
                 DoResponseCommandClientPin(message);
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
         }
@@ -174,8 +169,6 @@ namespace MaintenanceToolApp.HealthCheck
                 DoResponseCommandGetKeyAgreement(cborBytes);
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
         }
