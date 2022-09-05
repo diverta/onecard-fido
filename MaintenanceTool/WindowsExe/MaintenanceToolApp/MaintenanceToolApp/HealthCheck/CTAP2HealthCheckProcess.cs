@@ -14,9 +14,26 @@ namespace MaintenanceToolApp.HealthCheck
         // 公開鍵を保持
         public KeyAgreement AgreementPublicKey { get; set; }
 
+        // 共通鍵を退避
+        //   getPinToken時に生成した共通鍵を、
+        //   makeCredential、getAssertion実行時まで保持しておく
+        public byte[] SharedSecretKey { get; set; }
+
+        // pinHashEnc: 
+        //   Encrypted first 16 bytes of SHA-256 hash of curPin 
+        //   using sharedSecret
+        //   AES256-CBC(sharedSecret, IV= 0, LEFT(SHA-256(curPin),16))
+        public byte[] PinHashEnc { get; set; }
+
+        // 生成されたPinToken
+        public byte[] PinTokenCbor { get; set; }
+
         public CTAP2HealthCheckParameter()
         {
             AgreementPublicKey = new KeyAgreement();
+            SharedSecretKey = new byte[0];
+            PinHashEnc = new byte[0];
+            PinTokenCbor = new byte[0];
         }
     }
 
@@ -131,6 +148,34 @@ namespace MaintenanceToolApp.HealthCheck
             // CBORをデコードして公開鍵を抽出
             CBORDecoder cborDecoder = new CBORDecoder();
             HCheckParameter.AgreementPublicKey = cborDecoder.GetKeyAgreement(cborBytes);
+
+            switch (Parameter.Command) {
+            case Command.COMMAND_TEST_MAKE_CREDENTIAL:
+                // PINトークン取得処理を続行
+                DoGetPinToken();
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+                break;
+            }
+        }
+
+        public void DoGetPinToken()
+        {
+            // 実行するコマンドを退避
+            HCheckParameter.CborCommand = CTAP2_CBORCMD_CLIENT_PIN;
+            HCheckParameter.CborSubCommand = CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
+
+            // 共通鍵を生成
+            CTAP2Util util = new CTAP2Util();
+            if (util.GenerateSharedSecretKey(HCheckParameter) == false) {
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_PIN_AUTH_SSKEY_GENERATE, false);
+                return;
+            }
+
+            // PinHashEncを生成
+            util.GeneratePinHashEnc(Parameter.Pin, HCheckParameter);
 
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);

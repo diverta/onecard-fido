@@ -1,4 +1,11 @@
-﻿namespace MaintenanceToolApp.Common
+﻿using MaintenanceToolApp.HealthCheck;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using ToolAppCommon;
+
+namespace MaintenanceToolApp.Common
 {
     internal class KeyAgreement
     {
@@ -23,6 +30,104 @@
             Y = new byte[32];
             x.CopyTo(X, 0);
             y.CopyTo(Y, 0);
+        }
+    }
+
+    internal class CTAP2Util
+    {
+        //
+        // PinToken生成
+        // 
+        public bool GenerateSharedSecretKey(CTAP2HealthCheckParameter parameter)
+        {
+            // 公開鍵を抽出
+            KeyAgreement agreementKey = parameter.AgreementPublicKey;
+            byte[] aG_x = agreementKey.X;
+            byte[] aG_y = agreementKey.Y;
+
+            // for debug
+            AppLogUtil.OutputLogDebug(string.Format(
+                "Public key: \n{0}\n{1}", 
+                AppLogUtil.DumpMessage(aG_x, aG_x.Length), 
+                AppLogUtil.DumpMessage(aG_y, aG_y.Length)));
+
+            // ECDHキーペアを新規作成
+            // COSE ES256 (ECDSA over P-256 with SHA-256) P-256
+            ECDiffieHellmanCng ecdh = new ECDiffieHellmanCng(256) {
+                KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
+                HashAlgorithm = CngAlgorithm.Sha256
+            };
+
+            // 公開鍵を生成
+            byte[] newPublicKey = ecdh.PublicKey.ToByteArray();
+            if (newPublicKey.Length != 72) {
+                return false;
+            }
+
+            // ヘッダー（8バイト）を除去し公開鍵を抽出
+            List<byte> pkey = newPublicKey.ToList().Skip(8).Take(64).ToList();
+            byte[] bG_x = pkey.Take(32).ToArray();
+            byte[] bG_y = pkey.Skip(32).Take(32).ToArray();
+
+            // 公開鍵をパラメーターに保持
+            parameter.AgreementPublicKey = new KeyAgreement(2, -7, 1, bG_x, bG_y);
+
+            // ヘッダーと公開鍵のx, yを連結し、
+            // CngKeyを作成するための公開鍵を生成
+            byte[] header = new byte[] { 0x45, 0x43, 0x4b, 0x31, 0x20, 0x00, 0x00, 0x00 }; // 'ECK1'
+            byte[] publicKeyforChgKey = header.Concat(aG_x).Concat(aG_y).ToArray();
+
+            // 共通鍵を生成し、パラメーターに保持
+            byte[] sharedSecretKey = ecdh.DeriveKeyMaterial(CngKey.Import(publicKeyforChgKey, CngKeyBlobFormat.EccPublicBlob));
+            if (sharedSecretKey.Length != 32) {
+                return false;
+            }
+            parameter.SharedSecretKey = sharedSecretKey;
+            return true;
+        }
+
+        public void GeneratePinHashEnc(string curPin, CTAP2HealthCheckParameter parameter)
+        {
+            // curPin のハッシュを生成  SHA-256(curPin)
+            byte[] pinbyte = Encoding.ASCII.GetBytes(curPin);
+            SHA256 sha = new SHA256CryptoServiceProvider();
+            byte[] pinsha = sha.ComputeHash(pinbyte);
+
+            // 先頭16バイトを抽出  LEFT(SHA-256(curPin),16)
+            byte[] pinsha16 = pinsha.ToList().Skip(0).Take(16).ToArray();
+
+            // for debug
+            AppLogUtil.OutputLogDebug(string.Format(
+                "pinHash: \n{0}", AppLogUtil.DumpMessage(pinsha16, pinsha16.Length)));
+
+            // AES256-CBCで暗号化  
+            //   AES256-CBC(sharedSecret, IV=0, LEFT(SHA-256(curPin),16))
+            byte[] pinHashEnc = AES256CBCEncrypt(parameter.SharedSecretKey, pinsha16);
+
+            // for debug
+            AppLogUtil.OutputLogDebug(string.Format(
+                "pinHashEnc: \n{0}", AppLogUtil.DumpMessage(pinHashEnc, pinHashEnc.Length)));
+
+            // 生成されたPinHashEncを、パラメーターに保持
+            parameter.PinHashEnc = pinHashEnc;
+        }
+
+        private static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
+        {
+            // AES256-CBCにより暗号化
+            //   鍵の長さ: 256（32バイト）
+            //   ブロックサイズ: 128（16バイト）
+            //   暗号利用モード: CBC
+            //   初期化ベクター: 0
+            AesManaged aes = new AesManaged {
+                KeySize = 256,
+                BlockSize = 128,
+                Mode = CipherMode.CBC,
+                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Key = key,
+                Padding = PaddingMode.None
+            };
+            return aes.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
         }
     }
 }
