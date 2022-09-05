@@ -5,11 +5,7 @@ namespace MaintenanceToolApp.Common
 {
     internal class CBOREncoder
     {
-        public CBOREncoder()
-        {
-        }
-
-        public byte[] GetKeyAgreement(byte cborCommand, byte subCommand)
+        public static byte[] GenerateGetKeyAgreementCbor(byte cborCommand, byte subCommand)
         {
             // 送信データを生成
             //   0x01: pinProtocol = 1

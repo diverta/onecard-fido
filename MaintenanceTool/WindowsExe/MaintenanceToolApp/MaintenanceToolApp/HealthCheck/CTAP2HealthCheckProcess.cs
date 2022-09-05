@@ -126,7 +126,7 @@ namespace MaintenanceToolApp.HealthCheck
 
             // GetAgreementコマンドバイトを生成
             CBOREncoder cborEncoder = new CBOREncoder();
-            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(HCheckParameter.CborCommand, HCheckParameter.CborSubCommand);
+            byte[] getAgreementCbor = CBOREncoder.GenerateGetKeyAgreementCbor(HCheckParameter.CborCommand, HCheckParameter.CborSubCommand);
 
             // GetAgreementコマンドを実行
             switch (Parameter.Transport) {
