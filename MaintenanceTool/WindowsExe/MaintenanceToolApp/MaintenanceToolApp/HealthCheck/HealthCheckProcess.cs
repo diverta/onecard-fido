@@ -95,8 +95,8 @@ namespace MaintenanceToolApp.HealthCheck
         //
         private void DoRequestBleCtap2Hcheck()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // BLE経由でCTAP2ヘルスチェックを実行
+            new CTAP2HealthCheckProcess(Parameter).DoRequestBleCtap2HealthCheck(DoResponseU2fHealthCheck);
         }
 
         private void DoRequestBleU2fHcheck()
@@ -113,8 +113,8 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoRequestHidCtap2Hcheck()
         {
-            // TODO:仮の実装です。
-            CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
+            // HID I/F経由でCTAP2ヘルスチェックを実行
+            new CTAP2HealthCheckProcess(Parameter).DoRequestHidCtap2HealthCheck(DoResponseU2fHealthCheck);
         }
 
         private void DoRequestHidU2fHcheck()
