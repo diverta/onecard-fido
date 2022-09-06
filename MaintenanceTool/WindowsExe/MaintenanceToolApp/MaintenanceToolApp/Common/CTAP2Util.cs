@@ -33,6 +33,24 @@ namespace MaintenanceToolApp.Common
         }
     }
 
+    internal class MakeCredentialParameter
+    {
+        public string RpId { get; set; }
+        public string RpName { get; set; }
+        public byte[] UserId { get; set; }
+        public string UserName { get; set; }
+        public string DisplayName { get; set; }
+
+        public MakeCredentialParameter(string rpId, string rpName, byte[] userId, string userName, string displayName)
+        {
+            RpId = rpId;
+            RpName = rpName;
+            UserId = userId;
+            UserName = userName;
+            DisplayName = displayName;
+        }
+    }
+
     internal class CTAP2Util
     {
         //

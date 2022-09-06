@@ -28,7 +28,7 @@ namespace MaintenanceToolApp.HealthCheck
         public byte[] PinHashEnc { get; set; }
 
         // ヘルスチェック実行用テストデータを保持
-        public readonly CTAP2HealthCheckTestData TestData = new CTAP2HealthCheckTestData();
+        public CTAP2HealthCheckTestData TestData = null!;
 
         public CTAP2HealthCheckParameter()
         {
@@ -215,6 +215,26 @@ namespace MaintenanceToolApp.HealthCheck
             AppLogUtil.OutputLogDebug(string.Format(
                 "pinToken: \n{0}", AppLogUtil.DumpMessage(pinToken, pinToken.Length)));
 
+            switch (Parameter.Command) {
+            case Command.COMMAND_TEST_MAKE_CREDENTIAL:
+                // MakeCredentialコマンドを実行
+                DoRequestCommandMakeCredential(pinToken);
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
+                break;
+            }
+        }
+
+        //
+        // MakeCredentialコマンド関連
+        //
+        private void DoRequestCommandMakeCredential(byte[] pinToken)
+        {
+            // テストデータを生成
+            HCheckParameter.TestData = new CTAP2HealthCheckTestData();
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
@@ -328,12 +348,10 @@ namespace MaintenanceToolApp.HealthCheck
         //
         // ヘルスチェック実行用のテストデータ
         // 
+        // MakeCredentialパラメーター
+        public MakeCredentialParameter MakeCredentialParameter { get; set; }
+
         public byte[] Challenge = Encoding.ASCII.GetBytes("This is challenge");
-        public string RpId = "diverta.co.jp";
-        public string RpName = "Diverta inc.";
-        public byte[] UserId = Encoding.ASCII.GetBytes("1234567890123456");
-        public string UserName = "username";
-        public string DisplayName = "User Name";
 
         // hmac-secret機能で使用するsaltを保持
         private readonly Random random = new Random();
@@ -343,6 +361,11 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // hmac-secret機能で使用する64バイト salt（ランダム値）を生成しておく
             random.NextBytes(Salt);
+
+            // テストデータ項目を設定
+            byte[] UserId = Encoding.ASCII.GetBytes("1234567890123456");
+            MakeCredentialParameter = new MakeCredentialParameter(
+                "diverta.co.jp", "Diverta inc.", UserId, "username", "User Name");
         }
     }
 }
