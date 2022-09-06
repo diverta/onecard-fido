@@ -161,7 +161,7 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        public void DoRequestCommandGetPinToken()
+        private void DoRequestCommandGetPinToken()
         {
             // 実行するコマンドを退避
             HCheckParameter.CborCommand = CTAP2_CBORCMD_CLIENT_PIN;
@@ -198,7 +198,7 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        public void DoResponseCommandGetPinToken(byte[] cborBytes)
+        private void DoResponseCommandGetPinToken(byte[] cborBytes)
         {
             // PinTokenをCBORから抽出
             byte[] pinTokenEnc = CBORDecoder.GetPinTokenEnc(cborBytes);
@@ -221,7 +221,7 @@ namespace MaintenanceToolApp.HealthCheck
         //
         // CBORコマンド関連処理
         //
-        public void DoResponseCtapHidCbor(byte[] message)
+        private void DoResponseCtapHidCbor(byte[] message)
         {
             // ステータスバイトをチェック
             string errorMessage;

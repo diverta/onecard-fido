@@ -36,7 +36,7 @@ namespace MaintenanceToolApp.Common
     internal class CTAP2Util
     {
         //
-        // PinToken生成
+        // PinToken生成関連
         // 
         public bool GenerateSharedSecretKey(CTAP2HealthCheckParameter parameter)
         {
@@ -112,7 +112,10 @@ namespace MaintenanceToolApp.Common
             parameter.PinHashEnc = pinHashEnc;
         }
 
-        private static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
+        //
+        // 共通関数
+        //
+        public static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
         {
             // AES256-CBCにより暗号化
             //   鍵の長さ: 256（32バイト）
