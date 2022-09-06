@@ -241,6 +241,10 @@ namespace MaintenanceToolApp.HealthCheck
             // pinAuthを生成
             byte[] pinAuth = CTAP2Util.GenerateClientPinAuth(pinToken, clientDataHash);
 
+            // MakeCredentialコマンドバイトを生成
+            byte[] makeCredentialCbor = CBOREncoder.GenerateMakeCredentialCbor(
+                HCheckParameter.CborCommand, HCheckParameter.TestData.MakeCredentialParameter, clientDataHash, pinAuth);
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
