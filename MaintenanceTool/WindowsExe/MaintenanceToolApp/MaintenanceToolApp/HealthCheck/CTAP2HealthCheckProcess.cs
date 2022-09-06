@@ -232,6 +232,9 @@ namespace MaintenanceToolApp.HealthCheck
         //
         private void DoRequestCommandMakeCredential(byte[] pinToken)
         {
+            // 実行するコマンドを設定
+            HCheckParameter.CborCommand = CTAP2_CBORCMD_MAKE_CREDENTIAL;
+
             // テストデータを生成
             HCheckParameter.TestData = new CTAP2HealthCheckTestData();
 
@@ -245,6 +248,23 @@ namespace MaintenanceToolApp.HealthCheck
             byte[] makeCredentialCbor = CBOREncoder.GenerateMakeCredentialCbor(
                 HCheckParameter.CborCommand, HCheckParameter.TestData.MakeCredentialParameter, clientDataHash, pinAuth);
 
+            // MakeCredentialコマンドを実行
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, makeCredentialCbor);
+                break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, makeCredentialCbor);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void DoResponseCommandMakeCredential(byte[] cborBytes)
+        {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
@@ -265,6 +285,9 @@ namespace MaintenanceToolApp.HealthCheck
             switch (HCheckParameter.CborCommand) {
             case CTAP2_CBORCMD_CLIENT_PIN:
                 DoResponseCommandClientPin(message);
+                break;
+            case CTAP2_CBORCMD_MAKE_CREDENTIAL:
+                DoResponseCommandMakeCredential(message);
                 break;
             default:
                 break;
@@ -294,7 +317,7 @@ namespace MaintenanceToolApp.HealthCheck
                 errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
                 break;
             default:
-                errorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
+                errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x2}", receivedMessage[0]) ;
                 break;
             }
             return false;
@@ -341,7 +364,6 @@ namespace MaintenanceToolApp.HealthCheck
                 DoResponseCtapHidCbor(responseData);
                 return;
             }
-
 
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
