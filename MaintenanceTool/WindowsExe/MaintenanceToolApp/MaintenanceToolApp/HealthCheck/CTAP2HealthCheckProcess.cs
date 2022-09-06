@@ -45,6 +45,9 @@ namespace MaintenanceToolApp.HealthCheck
 
     internal class CTAP2HealthCheckProcess
     {
+        // デバッグログ出力
+        private static readonly bool OutputDebugLog = false;
+
         // 処理実行のためのプロパティー
         private readonly HealthCheckParameter Parameter;
 
@@ -215,9 +218,10 @@ namespace MaintenanceToolApp.HealthCheck
             // PinTokenを共通鍵で復号化
             byte[] pinToken = CTAP2Util.AES256CBCDecrypt(HCheckParameter.SharedSecretKey, pinTokenEnc);
 
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "pinToken: \n{0}", AppLogUtil.DumpMessage(pinToken, pinToken.Length)));
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "pinToken: \n{0}", AppLogUtil.DumpMessage(pinToken, pinToken.Length)));
+            }
 
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_MAKE_CREDENTIAL:

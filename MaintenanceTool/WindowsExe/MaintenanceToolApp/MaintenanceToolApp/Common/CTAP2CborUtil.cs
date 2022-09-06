@@ -6,6 +6,9 @@ namespace MaintenanceToolApp.Common
 {
     internal class CBOREncoder
     {
+        // デバッグログ出力
+        private static readonly bool OutputDebugLog = false;
+
         public static byte[] GenerateGetKeyAgreementCbor(byte cborCommand, byte subCommand)
         {
             // 送信データを生成
@@ -45,9 +48,10 @@ namespace MaintenanceToolApp.Common
             byte[] payload = cbor.EncodeToBytes();
             byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
 
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "Encoded CBOR request: \n{0}", AppLogUtil.DumpMessage(encoded, encoded.Length)));
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "Encoded CBOR request: \n{0}", AppLogUtil.DumpMessage(encoded, encoded.Length)));
+            }
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;
@@ -98,9 +102,10 @@ namespace MaintenanceToolApp.Common
             byte[] payload = cbor.EncodeToBytes();
             byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
 
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "Encoded CBOR request(MakeCredential): \n{0}", AppLogUtil.DumpMessage(encoded, encoded.Length)));
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "Encoded CBOR request(MakeCredential): \n{0}", AppLogUtil.DumpMessage(encoded, encoded.Length)));
+            }
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;

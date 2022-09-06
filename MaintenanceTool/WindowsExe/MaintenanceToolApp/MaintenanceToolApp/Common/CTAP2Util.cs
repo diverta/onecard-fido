@@ -97,6 +97,9 @@ namespace MaintenanceToolApp.Common
 
     internal class CTAP2Util
     {
+        // デバッグログ出力
+        private static readonly bool OutputDebugLog = false;
+
         //
         // PinToken生成関連
         // 
@@ -106,12 +109,13 @@ namespace MaintenanceToolApp.Common
             KeyAgreement agreementKey = parameter.AgreementPublicKey;
             byte[] aG_x = agreementKey.X;
             byte[] aG_y = agreementKey.Y;
-
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "Public key: \n{0}\n{1}", 
-                AppLogUtil.DumpMessage(aG_x, aG_x.Length), 
-                AppLogUtil.DumpMessage(aG_y, aG_y.Length)));
+            
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "Public key: \n{0}\n{1}",
+                    AppLogUtil.DumpMessage(aG_x, aG_x.Length),
+                    AppLogUtil.DumpMessage(aG_y, aG_y.Length)));
+            }
 
             // ECDHキーペアを新規作成
             // COSE ES256 (ECDSA over P-256 with SHA-256) P-256
@@ -158,17 +162,19 @@ namespace MaintenanceToolApp.Common
             // 先頭16バイトを抽出  LEFT(SHA-256(curPin),16)
             byte[] pinsha16 = pinsha.ToList().Skip(0).Take(16).ToArray();
 
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "pinHash: \n{0}", AppLogUtil.DumpMessage(pinsha16, pinsha16.Length)));
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "pinHash: \n{0}", AppLogUtil.DumpMessage(pinsha16, pinsha16.Length)));
+            }
 
             // AES256-CBCで暗号化  
             //   AES256-CBC(sharedSecret, IV=0, LEFT(SHA-256(curPin),16))
             byte[] pinHashEnc = AES256CBCEncrypt(parameter.SharedSecretKey, pinsha16);
 
-            // for debug
-            AppLogUtil.OutputLogDebug(string.Format(
-                "pinHashEnc: \n{0}", AppLogUtil.DumpMessage(pinHashEnc, pinHashEnc.Length)));
+            if (OutputDebugLog) {
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "pinHashEnc: \n{0}", AppLogUtil.DumpMessage(pinHashEnc, pinHashEnc.Length)));
+            }
 
             // 生成されたPinHashEncを、パラメーターに保持
             parameter.PinHashEnc = pinHashEnc;
