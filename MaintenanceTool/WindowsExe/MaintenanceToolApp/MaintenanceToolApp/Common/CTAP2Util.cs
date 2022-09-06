@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using ToolAppCommon;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.Common
 {
@@ -56,7 +57,7 @@ namespace MaintenanceToolApp.Common
         //
         // PinToken生成関連
         // 
-        public bool GenerateSharedSecretKey(CTAP2HealthCheckParameter parameter)
+        public static bool GenerateSharedSecretKey(CTAP2HealthCheckParameter parameter)
         {
             // 公開鍵を抽出
             KeyAgreement agreementKey = parameter.AgreementPublicKey;
@@ -104,7 +105,7 @@ namespace MaintenanceToolApp.Common
             return true;
         }
 
-        public void GeneratePinHashEnc(string curPin, CTAP2HealthCheckParameter parameter)
+        public static void GeneratePinHashEnc(string curPin, CTAP2HealthCheckParameter parameter)
         {
             // curPin のハッシュを生成  SHA-256(curPin)
             byte[] pinbyte = Encoding.ASCII.GetBytes(curPin);
@@ -148,6 +149,38 @@ namespace MaintenanceToolApp.Common
                 pinAuth = digest.ToList().Take(16).ToArray();
             }
             return pinAuth;
+        }
+
+        public static bool CheckStatusByte(byte[] receivedMessage, out string errorMessage)
+        {
+            errorMessage = "";
+            switch (receivedMessage[0]) {
+            case CTAP1_ERR_SUCCESS:
+                return true;
+            case CTAP2_ERR_PIN_INVALID:
+            case CTAP2_ERR_PIN_AUTH_INVALID:
+                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_INVALID;
+                break;
+            case CTAP2_ERR_PIN_BLOCKED:
+                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_BLOCKED;
+                break;
+            case CTAP2_ERR_PIN_AUTH_BLOCKED:
+                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_AUTH_BLOCKED;
+                break;
+            case CTAP2_ERR_PIN_NOT_SET:
+                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_NOT_SET;
+                break;
+            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST: // CTAP2_ERR_VENDOR_FIRST+0x0e
+                errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
+                break;
+            default:
+                errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x2}", receivedMessage[0]);
+                break;
+            }
+
+            // エラーログ出力
+            AppLogUtil.OutputLogError(errorMessage);
+            return false;
         }
 
         //

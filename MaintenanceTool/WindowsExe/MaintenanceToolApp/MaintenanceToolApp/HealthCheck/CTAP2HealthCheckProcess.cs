@@ -169,14 +169,13 @@ namespace MaintenanceToolApp.HealthCheck
             HCheckParameter.CborSubCommand = CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
 
             // 共通鍵を生成
-            CTAP2Util util = new CTAP2Util();
-            if (util.GenerateSharedSecretKey(HCheckParameter) == false) {
+            if (CTAP2Util.GenerateSharedSecretKey(HCheckParameter) == false) {
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_PIN_AUTH_SSKEY_GENERATE, false);
                 return;
             }
 
             // PinHashEncを生成
-            util.GeneratePinHashEnc(Parameter.Pin, HCheckParameter);
+            CTAP2Util.GeneratePinHashEnc(Parameter.Pin, HCheckParameter);
 
             // GetPinTokenコマンドバイトを生成
             CBOREncoder cborEncoder = new CBOREncoder();
@@ -276,7 +275,7 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // ステータスバイトをチェック
             string errorMessage;
-            if (CheckStatusByte(message, out errorMessage) == false) {
+            if (CTAP2Util.CheckStatusByte(message, out errorMessage) == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
                 return;
@@ -292,38 +291,6 @@ namespace MaintenanceToolApp.HealthCheck
             default:
                 break;
             }
-        }
-
-        private bool CheckStatusByte(byte[] receivedMessage, out string errorMessage)
-        {
-            errorMessage = "";
-            switch (receivedMessage[0]) {
-            case CTAP1_ERR_SUCCESS:
-                return true;
-            case CTAP2_ERR_PIN_INVALID:
-            case CTAP2_ERR_PIN_AUTH_INVALID:
-                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_INVALID;
-                break;
-            case CTAP2_ERR_PIN_BLOCKED:
-                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_BLOCKED;
-                break;
-            case CTAP2_ERR_PIN_AUTH_BLOCKED:
-                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_AUTH_BLOCKED;
-                break;
-            case CTAP2_ERR_PIN_NOT_SET:
-                errorMessage = AppCommon.MSG_CTAP2_ERR_PIN_NOT_SET;
-                break;
-            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST: // CTAP2_ERR_VENDOR_FIRST+0x0e
-                errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
-                break;
-            default:
-                errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x2}", receivedMessage[0]) ;
-                break;
-            }
-
-            // エラーログ出力
-            AppLogUtil.OutputLogError(errorMessage);
-            return false;
         }
 
         private void DoResponseCommandClientPin(byte[] message)
