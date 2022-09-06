@@ -209,7 +209,7 @@ namespace MaintenanceToolApp.HealthCheck
             }
 
             // PinTokenを共通鍵で復号化
-            byte[] pinToken = CTAP2Util.AES256CBCDecrypt(pinTokenEnc, HCheckParameter.SharedSecretKey);
+            byte[] pinToken = CTAP2Util.AES256CBCDecrypt(HCheckParameter.SharedSecretKey, pinTokenEnc);
 
             // for debug
             AppLogUtil.OutputLogDebug(string.Format(
