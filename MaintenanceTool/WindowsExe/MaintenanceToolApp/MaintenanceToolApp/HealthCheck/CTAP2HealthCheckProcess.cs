@@ -28,13 +28,18 @@ namespace MaintenanceToolApp.HealthCheck
         public byte[] PinHashEnc { get; set; }
 
         // ヘルスチェック実行用テストデータを保持
-        public CTAP2HealthCheckTestData TestData = null!;
+        public CTAP2HealthCheckTestData TestData { get; set; }
+
+        // MakeCredential／GetAssertionレスポンスデータを保持
+        public MakeOrGetCommandResponse MakeOrGetCommandResponse { get; set; }
 
         public CTAP2HealthCheckParameter()
         {
             AgreementPublicKey = new KeyAgreement();
             SharedSecretKey = new byte[0];
             PinHashEnc = new byte[0];
+            TestData = null!;
+            MakeOrGetCommandResponse = null!;
         }
     }
 
@@ -262,8 +267,16 @@ namespace MaintenanceToolApp.HealthCheck
             }
         }
 
-        private void DoResponseCommandMakeCredential(byte[] cborBytes)
+        private void DoResponseCommandMakeCredential(byte[] message)
         {
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, message.Length);
+
+            // MakeCredentialレスポンスデータを保持
+            //   次のGetAssertionリクエスト送信に必要となる
+            //   Credential IDを抽出して退避
+            HCheckParameter.MakeOrGetCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, true);
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
