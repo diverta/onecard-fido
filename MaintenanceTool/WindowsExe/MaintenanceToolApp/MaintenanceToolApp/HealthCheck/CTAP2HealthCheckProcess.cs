@@ -235,6 +235,12 @@ namespace MaintenanceToolApp.HealthCheck
             // テストデータを生成
             HCheckParameter.TestData = new CTAP2HealthCheckTestData();
 
+            // clientDataHashを生成
+            byte[] clientDataHash = CTAP2Util.ComputeClientDataHash(HCheckParameter.TestData.Challenge);
+
+            // pinAuthを生成
+            byte[] pinAuth = CTAP2Util.GenerateClientPinAuth(pinToken, clientDataHash);
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }

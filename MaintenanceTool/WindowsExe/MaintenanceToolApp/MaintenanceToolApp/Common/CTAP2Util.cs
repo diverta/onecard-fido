@@ -131,6 +131,26 @@ namespace MaintenanceToolApp.Common
         }
 
         //
+        // MakeCredential／GetAssertion関連
+        //
+        public static byte[] ComputeClientDataHash(byte[] challenge)
+        {
+            SHA256 sha = new SHA256CryptoServiceProvider();
+            return sha.ComputeHash(challenge);
+        }
+
+        public static byte[] GenerateClientPinAuth(byte[] pinToken, byte[] clientDataHash)
+        {
+            // LEFT(HMAC-SHA-256(pinToken, clientDataHash), 16)
+            byte[] pinAuth = new byte[0];
+            using (var hmacsha256 = new HMACSHA256(pinToken)) {
+                byte[] digest = hmacsha256.ComputeHash(clientDataHash);
+                pinAuth = digest.ToList().Take(16).ToArray();
+            }
+            return pinAuth;
+        }
+
+        //
         // 共通関数
         //
         public static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
