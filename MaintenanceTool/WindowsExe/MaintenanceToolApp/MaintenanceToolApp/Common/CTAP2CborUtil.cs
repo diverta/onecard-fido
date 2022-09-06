@@ -218,7 +218,7 @@ namespace MaintenanceToolApp.Common
                 MakeOrGetCommandResponse.ExtensionsCBORForCreateSize :
                 MakeOrGetCommandResponse.ExtensionsCBORForGetSize;
             if (data.Length - index < size) {
-                response.HmacSecretRes = null;
+                response.HmacSecretRes = new ExtHmacSecretResponse();
                 return;
             }
 
@@ -232,7 +232,7 @@ namespace MaintenanceToolApp.Common
             // hmac-secret拡張データを初期化
             response.HmacSecretRes = new ExtHmacSecretResponse();
             response.HmacSecretRes.Flag = false;
-            response.HmacSecretRes.Output = null;
+            response.HmacSecretRes.Output = new byte[0];
 
             // hmac-secret拡張データを解析
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
