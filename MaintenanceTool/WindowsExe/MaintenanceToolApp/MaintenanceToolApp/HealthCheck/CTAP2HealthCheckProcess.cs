@@ -1,4 +1,6 @@
 ﻿using MaintenanceToolApp.Common;
+using System;
+using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.FIDODefine;
@@ -25,15 +27,14 @@ namespace MaintenanceToolApp.HealthCheck
         //   AES256-CBC(sharedSecret, IV= 0, LEFT(SHA-256(curPin),16))
         public byte[] PinHashEnc { get; set; }
 
-        // 生成されたPinToken
-        public byte[] PinTokenCbor { get; set; }
+        // ヘルスチェック実行用テストデータを保持
+        public readonly CTAP2HealthCheckTestData TestData = new CTAP2HealthCheckTestData();
 
         public CTAP2HealthCheckParameter()
         {
             AgreementPublicKey = new KeyAgreement();
             SharedSecretKey = new byte[0];
             PinHashEnc = new byte[0];
-            PinTokenCbor = new byte[0];
         }
     }
 
@@ -319,6 +320,29 @@ namespace MaintenanceToolApp.HealthCheck
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
+        }
+    }
+
+    internal class CTAP2HealthCheckTestData
+    {
+        //
+        // ヘルスチェック実行用のテストデータ
+        // 
+        public byte[] Challenge = Encoding.ASCII.GetBytes("This is challenge");
+        public string RpId = "diverta.co.jp";
+        public string RpName = "Diverta inc.";
+        public byte[] UserId = Encoding.ASCII.GetBytes("1234567890123456");
+        public string UserName = "username";
+        public string DisplayName = "User Name";
+
+        // hmac-secret機能で使用するsaltを保持
+        private readonly Random random = new Random();
+        public readonly byte[] Salt = new byte[64];
+
+        public CTAP2HealthCheckTestData()
+        {
+            // hmac-secret機能で使用する64バイト salt（ランダム値）を生成しておく
+            random.NextBytes(Salt);
         }
     }
 }
