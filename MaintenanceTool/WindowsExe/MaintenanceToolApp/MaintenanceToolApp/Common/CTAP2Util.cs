@@ -34,6 +34,49 @@ namespace MaintenanceToolApp.Common
         }
     }
 
+    internal class ExtHmacSecretResponse
+    {
+        public bool Flag { get; set; }
+        public byte[] Output { get; set; }
+        public static int OutputSize = 64;
+
+        public ExtHmacSecretResponse()
+        {
+            Output = new byte[0];
+        }
+    }
+
+    internal class MakeOrGetCommandResponse
+    {
+        // データ項目
+        public byte[] RpIdHash { get; set; }
+        public byte Flags { get; set; }
+        public int SignCount;
+        public byte[] Aaguid { get; set; }
+        public int CredentialIdLength;
+        public byte[] CredentialId { get; set; }
+        public byte[] CredentialPublicKeyByte { get; set; }
+        public ExtHmacSecretResponse HmacSecretRes { get; set; }
+
+        // データ長
+        public static int RpIdHashSize = 32;
+        public static int SignCountSize = 4;
+        public static int AaguidSize = 16;
+        public static int CredentialIdLengthSize = 2;
+        public static int CredentialPublicKeySize = 77;
+        public static int ExtensionsCBORForCreateSize = 14;
+        public static int ExtensionsCBORForGetSize = 79;
+
+        public MakeOrGetCommandResponse()
+        {
+            RpIdHash = new byte[0];
+            Aaguid = new byte[0];
+            CredentialId = new byte[0];
+            CredentialPublicKeyByte = new byte[0];
+            HmacSecretRes = null!;
+        }
+    }
+
     internal class MakeCredentialParameter
     {
         public string RpId { get; set; }
