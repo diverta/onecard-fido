@@ -69,6 +69,10 @@ namespace MaintenanceToolApp
             textBoxMessage.ScrollToEnd();
         }
 
+        private void DoDFU()
+        {
+        }
+
         private void DoHealthCheck()
         {
             // ヘルスチェック実行画面を開き、実行コマンド種別を設定
@@ -113,6 +117,11 @@ namespace MaintenanceToolApp
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow();
+        }
+
+        private void buttonDFU_Click(object sender, RoutedEventArgs e)
+        {
+            DoDFU();
         }
     }
 }
