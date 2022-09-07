@@ -200,6 +200,22 @@ namespace MaintenanceToolApp.Common
             return pinAuth;
         }
 
+        public static byte[] GenerateSaltEnc(byte[] sharedSecret, byte[] salt)
+        {
+            // AES256-CBCで暗号化  
+            //   AES256-CBC(sharedSecret, IV=0, salt)
+            byte[] saltEnc = AES256CBCEncrypt(sharedSecret, salt);
+            return saltEnc;
+        }
+
+        public static byte[] GenerateSaltAuth(byte[] sharedSecret, byte[] saltEnc)
+        {
+            // LEFT(HMAC-SHA-256(sharedSecret, newPinEnc), 16)
+            var hmacsha256 = new HMACSHA256(sharedSecret);
+            byte[] digest = hmacsha256.ComputeHash(saltEnc);
+            return digest.ToList().Take(16).ToArray();
+        }
+
         public static bool CheckStatusByte(byte[] receivedMessage, out string errorMessage)
         {
             errorMessage = "";

@@ -110,6 +110,74 @@ namespace MaintenanceToolApp.Common
             // エンコードされたCBORバイト配列を戻す
             return encoded;
         }
+
+        public static byte[] GenerateGetAssertionCbor(
+            byte cborCommand, string rpid, byte[] clientDataHash, byte[] credentialId, byte[] pinAuth,
+            KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth,
+            bool testUserPresenceNeeded)
+        {
+            // 送信データを生成
+            //   0x01: rpid
+            //   0x02: clientDataHash
+            //   0x03: allowList
+            //   0x04: extensions
+            //   0x05: options
+            //   0x06: pinAuth
+            //   0x07: pinProtocol
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, rpid);
+            cbor.Add(0x02, clientDataHash);
+
+            CBORObject pubKeyCredParams = CBORObject.NewMap();
+            pubKeyCredParams.Add("type", "public-key");
+            pubKeyCredParams.Add("id", credentialId);
+            cbor.Add(0x03, CBORObject.NewArray().Add(pubKeyCredParams));
+
+            CBORObject extensions = CreateExtensionsCBORObject(agreementPublicKey, saltEnc, saltAuth);
+            cbor.Add(0x04, extensions);
+
+            var opt = CBORObject.NewMap();
+            opt.Add("rk", false);
+            opt.Add("uv", false);
+            opt.Add("up", testUserPresenceNeeded);
+            cbor.Add(0x05, opt);
+
+            if (pinAuth != null) {
+                cbor.Add(0x06, pinAuth);
+                cbor.Add(0x07, 1);
+            }
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request(GetAssertion): ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        private static CBORObject CreateExtensionsCBORObject(KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth)
+        {
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, agreementPublicKey.Kty);
+            keyParam.Add(3, agreementPublicKey.Alg);
+            keyParam.Add(-1, agreementPublicKey.Crv);
+            keyParam.Add(-2, agreementPublicKey.X);
+            keyParam.Add(-3, agreementPublicKey.Y);
+
+            CBORObject hmacSecret = CBORObject.NewMap();
+            hmacSecret.Add(0x01, keyParam);
+            hmacSecret.Add(0x02, saltEnc);
+            hmacSecret.Add(0x03, saltAuth);
+
+            CBORObject extensions = CBORObject.NewMap();
+            extensions.Add("hmac-secret", hmacSecret);
+
+            return extensions;
+        }
     }
 
     internal class CBORDecoder
