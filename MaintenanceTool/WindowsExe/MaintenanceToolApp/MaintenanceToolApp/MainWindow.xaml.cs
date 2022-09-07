@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.HealthCheck;
+﻿using MaintenanceToolApp.DFU;
+using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
 using System.Windows;
@@ -71,6 +72,13 @@ namespace MaintenanceToolApp
 
         private void DoDFU()
         {
+            // ファームウェア更新画面を開き、実行を指示
+            DFUParameter param = new DFUParameter();
+            bool b = new DFUWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // DFU機能を実行
+                new DFUProcess(param).DoProcess();
+            }
         }
 
         private void DoHealthCheck()
