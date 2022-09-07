@@ -72,6 +72,11 @@ namespace MaintenanceToolApp
 
         private void DoDFU()
         {
+            // 処理前の確認
+            if (DFUProcess.ConfirmDoProcess(this) == false) {
+                return;
+            }
+
             // ファームウェア更新画面を開き、実行を指示
             DFUParameter param = new DFUParameter();
             bool b = new DFUWindow(param).ShowDialogWithOwner(this);

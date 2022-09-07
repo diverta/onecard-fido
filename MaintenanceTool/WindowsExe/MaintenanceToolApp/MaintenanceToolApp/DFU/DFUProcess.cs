@@ -36,5 +36,19 @@ namespace MaintenanceToolApp.DFU
         public void DoProcess()
         {
         }
+
+        //
+        // 処理開始前の確認
+        //
+        public static bool ConfirmDoProcess(Window currentWindow)
+        {
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+
+            // プロンプトを表示し、Yesの場合だけ処理を続行する
+            return DialogUtil.DisplayPromptPopup(currentWindow, AppCommon.MSG_TOOL_TITLE, message);
+        }
     }
 }
