@@ -382,6 +382,25 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoResponseCommandGetAssertion(byte[] message)
         {
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = AppUtil.ExtractCBORBytesFromResponse(message, message.Length);
+
+            // GetAssertionレスポンスデータを保持
+            //   次のGetAssertionリクエスト送信に必要となる
+            //   Saltをhmac-secret拡張情報から抽出して保持
+            HCheckParameter.MakeOrGetCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, false);
+
+            // GetAssertion実行が２回目かどうか判定
+            bool verifySaltNeeded = (HCheckParameter.GetAssertionCount == 2);
+
+            // Saltの検証
+            byte[] encryptedSalt = HCheckParameter.MakeOrGetCommandResponse.HmacSecretRes.Output;
+            if (VerifyHmacSecretSalt(encryptedSalt, verifySaltNeeded) == false) {
+                // Salt検証失敗時は画面に制御を戻す
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_HMAC_INVALID, false);
+                return;
+            }
+
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
