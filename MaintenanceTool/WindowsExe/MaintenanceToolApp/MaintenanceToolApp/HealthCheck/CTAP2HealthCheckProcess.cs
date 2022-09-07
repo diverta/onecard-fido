@@ -36,6 +36,10 @@ namespace MaintenanceToolApp.HealthCheck
         // GetAssertion実行回数を保持
         public int GetAssertionCount { get; set; }
 
+        // １回目のGetAssertion実行時、
+        // hmac-secret拡張から抽出／復号化されたsaltを保持
+        public byte[] DecryptedSaltOrg { get; set; }
+
         public CTAP2HealthCheckParameter()
         {
             AgreementPublicKey = new KeyAgreement();
@@ -44,6 +48,7 @@ namespace MaintenanceToolApp.HealthCheck
             TestData = null!;
             MakeOrGetCommandResponse = null!;
             GetAssertionCount = 0;
+            DecryptedSaltOrg = new byte[0];
         }
     }
 
@@ -379,6 +384,32 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
+        }
+
+        private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)
+        {
+            // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
+            if (encryptedSalt == null) {
+                return true;
+            }
+
+            if (verifySaltNeeded) {
+                // ２回目のGetAssertionの場合はオリジナルSaltと内容を比較し、
+                // 同じ内容であれば検証成功
+                byte[] decryptedSaltCur = CTAP2Util.AES256CBCDecrypt(HCheckParameter.SharedSecretKey, encryptedSalt);
+                bool success = AppUtil.CompareBytes(decryptedSaltCur, HCheckParameter.DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
+
+                // 検証結果はログファイル出力する
+                AppLogUtil.OutputLogDebug(string.Format(
+                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed")
+                    );
+                return success;
+
+            } else {
+                // １回目のGetAssertionの場合はオリジナルSaltを抽出して終了
+                HCheckParameter.DecryptedSaltOrg = CTAP2Util.AES256CBCDecrypt(HCheckParameter.SharedSecretKey, encryptedSalt);
+                return true;
+            }
         }
 
         //
