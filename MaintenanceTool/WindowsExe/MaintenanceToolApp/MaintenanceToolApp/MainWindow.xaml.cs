@@ -77,6 +77,18 @@ namespace MaintenanceToolApp
                 return;
             }
 
+            // バージョン情報照会から開始
+            DFUVersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+        }
+
+        private void DoDFUResume(bool success, string errorMessage)
+        {
+            // バージョン情報照会失敗時は、以降の処理を実行しない
+            if (success == false) {
+                DialogUtil.ShowWarningMessage(this, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+                return;
+            }
+
             // ファームウェア更新画面を開き、実行を指示
             DFUParameter param = new DFUParameter();
             bool b = new DFUWindow(param).ShowDialogWithOwner(this);
