@@ -350,35 +350,35 @@ namespace MaintenanceToolApp.HealthCheck
             if (BitConverter.IsLittleEndian) {
                 Array.Reverse(statusBytes);
             }
-
             ushort statusWord = BitConverter.ToUInt16(statusBytes, 0);
-            errorMessage = "";
 
-            if (statusWord == 0x6985) {
+            errorMessage = "";
+            switch (statusWord) {
+            case 0x9000:
+                return true;
+            case 0x6985:
                 // キーハンドルチェックの場合は成功とみなす
                 return true;
-            }
-            if (statusWord == 0x6a80) {
+            case 0x6a80:
                 // invalid keyhandleエラーである場合はその旨を通知
                 errorMessage = AppCommon.MSG_OCCUR_KEYHANDLE_ERROR;
-                return false;
-            }
-            if (statusWord == 0x9402) {
+                break;
+            case 0x9402:
                 // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
                 errorMessage = AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR;
-                return false;
-            }
-            if (statusWord == 0x9601) {
+                break;
+            case 0x9601:
                 // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
                 errorMessage = AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR;
-                return false;
+                break;
+            default:
+                errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x4}", statusWord);
+                break;
             }
-            if (statusWord != 0x9000) {
-                // U2Fサービスの戻りコマンドが不正の場合はエラー
-                errorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
-                return false;
-            }
-            return true;
+
+            // エラーログ出力
+            AppLogUtil.OutputLogError(errorMessage);
+            return false;
         }
 
         //

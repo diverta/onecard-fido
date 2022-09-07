@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace ToolAppCommon
@@ -67,6 +68,41 @@ namespace ToolAppCommon
                 cborBytes[i] = message[1 + i];
             }
             return cborBytes;
+        }
+
+        public static bool CompareBytes(byte[] src, byte[] dest, int size)
+        {
+            for (int i = 0; i < size; i++) {
+                if (src[i] != dest[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static int ToInt32(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 4);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt32(sub, 0);
+        }
+
+        public static int ToInt16(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 2);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt16(sub, 0);
+        }
+
+        private static byte[] GetSubArray(byte[] src, int startIndex, int count)
+        {
+            byte[] dst = new byte[count];
+            Array.Copy(src, startIndex, dst, 0, count);
+            return dst;
         }
     }
 }

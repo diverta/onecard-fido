@@ -8,6 +8,7 @@
         public const string MSG_ERROR_DOUBLE_START = "既に起動されています。";
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
+        public const string MSG_NONE = "";
 
         // メッセージリソース
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
@@ -43,6 +44,17 @@
         public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
 
         // ヘルスチェック関連メッセージ
+        public const string MSG_CTAP2_ERR_PIN_AUTH_SSKEY_GENERATE = "PIN認証のための共通鍵生成処理が失敗しました。";
+        public const string MSG_CTAP2_ERR_PIN_AUTH_TOKEN_GET = "PIN認証で発行されたトークンの取得に失敗しました。";
+        public const string MSG_CTAP2_ERR_PIN_INVALID = "入力されたPINコードが違います。正しいPINコードを入力してください。";
+        public const string MSG_CTAP2_ERR_PIN_BLOCKED = "使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。";
+        public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
+        public const string MSG_CTAP2_ERR_PIN_NOT_SET = "PINコードが認証器に設定されていません。PINコードを新規設定してください。";
+        public const string MSG_CTAP2_ERR_HMAC_INVALID = "ログインテスト時の暗号検証に失敗しました。";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_START = "ログインテストを開始します.";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  MAIN SWを１回押してください.";
         public const string MSG_HCHK_U2F_REGISTER_SUCCESS = "U2F Registerが成功しました。";
         public const string MSG_HCHK_U2F_AUTHENTICATE_START = "U2F Authenticateを開始します.";
         public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
@@ -51,7 +63,7 @@
         public const string MSG_HCHK_U2F_AUTHENTICATE_SUCCESS = "U2F Authenticateが成功しました。";
         public const string MSG_OCCUR_KEYHANDLE_ERROR = "キーハンドルが存在しません。再度ユーザー登録を実行してください。";
         public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
-        public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。";
+        public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。ペアリングモードを解除してから、機能を再度実行してください。";
 
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
