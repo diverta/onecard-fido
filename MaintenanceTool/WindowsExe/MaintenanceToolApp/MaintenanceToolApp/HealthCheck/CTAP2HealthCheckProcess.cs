@@ -401,8 +401,15 @@ namespace MaintenanceToolApp.HealthCheck
                 return;
             }
 
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
+            if (verifySaltNeeded) {
+                // ２回目のテストが成功したら画面に制御を戻して終了
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_NONE, true);
+                return;
+            }
+
+            // GetAssertionコマンドを実行する
+            HCheckParameter.GetAssertionCount++;
+            DoPrepareCommandGetAssertion();
         }
 
         private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)

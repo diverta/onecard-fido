@@ -8,6 +8,7 @@
         public const string MSG_ERROR_DOUBLE_START = "既に起動されています。";
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
+        public const string MSG_NONE = "";
 
         // メッセージリソース
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
