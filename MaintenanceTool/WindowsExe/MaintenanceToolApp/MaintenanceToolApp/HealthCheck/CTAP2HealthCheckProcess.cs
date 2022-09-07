@@ -33,6 +33,9 @@ namespace MaintenanceToolApp.HealthCheck
         // MakeCredential／GetAssertionレスポンスデータを保持
         public MakeOrGetCommandResponse MakeOrGetCommandResponse { get; set; }
 
+        // GetAssertion実行回数を保持
+        public int GetAssertionCount { get; set; }
+
         public CTAP2HealthCheckParameter()
         {
             AgreementPublicKey = new KeyAgreement();
@@ -40,6 +43,7 @@ namespace MaintenanceToolApp.HealthCheck
             PinHashEnc = new byte[0];
             TestData = null!;
             MakeOrGetCommandResponse = null!;
+            GetAssertionCount = 0;
         }
     }
 
@@ -115,6 +119,7 @@ namespace MaintenanceToolApp.HealthCheck
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_MAKE_CREDENTIAL:
+            case Command.COMMAND_TEST_GET_ASSERTION:
                 DoRequestCommandGetKeyAgreement();
                 break;
             default:
@@ -160,6 +165,7 @@ namespace MaintenanceToolApp.HealthCheck
 
             switch (Parameter.Command) {
             case Command.COMMAND_TEST_MAKE_CREDENTIAL:
+            case Command.COMMAND_TEST_GET_ASSERTION:
                 // PINトークン取得処理を続行
                 DoRequestCommandGetPinToken();
                 break;
@@ -228,6 +234,10 @@ namespace MaintenanceToolApp.HealthCheck
                 // MakeCredentialコマンドを実行
                 DoRequestCommandMakeCredential(pinToken);
                 break;
+            case Command.COMMAND_TEST_GET_ASSERTION:
+                // GetAssertionコマンドを実行
+                DoRequestCommandGetAssertion(pinToken);
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
@@ -281,6 +291,37 @@ namespace MaintenanceToolApp.HealthCheck
             //   Credential IDを抽出して退避
             HCheckParameter.MakeOrGetCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, true);
 
+            // GetAssertionコマンドを実行する
+            HCheckParameter.GetAssertionCount = 1;
+            DoPrepareCommandGetAssertion();
+        }
+
+        //
+        // GetAssertionコマンド関連
+        //
+        private void DoPrepareCommandGetAssertion()
+        {
+            // 実行するコマンドを設定
+            //   認証器からPINトークンを取得するため、
+            //   ClientPINコマンドを事前実行する必要あり
+            Parameter.Command = Command.COMMAND_TEST_GET_ASSERTION;
+
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                // CTAPHID_INITから実行
+                DoRequestCtapHidInit();
+                break;
+            case Transport.TRANSPORT_BLE:
+                // 再度、GetKeyAgreementコマンドを実行
+                DoRequestCommandGetKeyAgreement();
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void DoRequestCommandGetAssertion(byte[] pinToken)
+        {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
