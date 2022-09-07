@@ -30,8 +30,8 @@ namespace MaintenanceToolApp.HealthCheck
         // ヘルスチェック実行用テストデータを保持
         public CTAP2HealthCheckTestData TestData { get; set; }
 
-        // MakeCredential／GetAssertionレスポンスデータを保持
-        public MakeOrGetCommandResponse MakeOrGetCommandResponse { get; set; }
+        // MakeCredentialレスポンスデータを保持
+        public MakeOrGetCommandResponse MakeCredentialCommandResponse { get; set; }
 
         // GetAssertion実行回数を保持
         public int GetAssertionCount { get; set; }
@@ -46,7 +46,7 @@ namespace MaintenanceToolApp.HealthCheck
             SharedSecretKey = new byte[0];
             PinHashEnc = new byte[0];
             TestData = null!;
-            MakeOrGetCommandResponse = null!;
+            MakeCredentialCommandResponse = null!;
             GetAssertionCount = 0;
             DecryptedSaltOrg = new byte[0];
         }
@@ -294,7 +294,7 @@ namespace MaintenanceToolApp.HealthCheck
             // MakeCredentialレスポンスデータを保持
             //   次のGetAssertionリクエスト送信に必要となる
             //   Credential IDを抽出して退避
-            HCheckParameter.MakeOrGetCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, true);
+            HCheckParameter.MakeCredentialCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, true);
 
             // GetAssertionコマンドを実行する
             HCheckParameter.GetAssertionCount = 1;
@@ -347,12 +347,12 @@ namespace MaintenanceToolApp.HealthCheck
             byte[] saltAuth = CTAP2Util.GenerateSaltAuth(HCheckParameter.SharedSecretKey, saltEnc);
 
             // Credential idを抽出
-            byte[] credentialID = HCheckParameter.MakeOrGetCommandResponse.CredentialId;
+            byte[] credentialID = HCheckParameter.MakeCredentialCommandResponse.CredentialId;
 
             // GetAssertionコマンドバイトを生成
             string rpid = HCheckParameter.TestData.MakeCredentialParameter.RpId;
             byte[] getAssertionCbor = CBOREncoder.GenerateGetAssertionCbor(
-                HCheckParameter.CborCommand, rpid, clientDataHash, credentialID, pinAuth, 
+                HCheckParameter.CborCommand, rpid, clientDataHash, credentialID, pinAuth,
                 HCheckParameter.AgreementPublicKey, saltEnc, saltAuth, testUserPresenceNeeded);
 
             if (testUserPresenceNeeded) {
@@ -388,13 +388,13 @@ namespace MaintenanceToolApp.HealthCheck
             // GetAssertionレスポンスデータを保持
             //   次のGetAssertionリクエスト送信に必要となる
             //   Saltをhmac-secret拡張情報から抽出して保持
-            HCheckParameter.MakeOrGetCommandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, false);
+            MakeOrGetCommandResponse commandResponse = CBORDecoder.ParseMakeOrGetCommandResponse(cborBytes, false);
 
             // GetAssertion実行が２回目かどうか判定
             bool verifySaltNeeded = (HCheckParameter.GetAssertionCount == 2);
 
             // Saltの検証
-            byte[] encryptedSalt = HCheckParameter.MakeOrGetCommandResponse.HmacSecretRes.Output;
+            byte[] encryptedSalt = commandResponse.HmacSecretRes.Output;
             if (VerifyHmacSecretSalt(encryptedSalt, verifySaltNeeded) == false) {
                 // Salt検証失敗時は画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_HMAC_INVALID, false);
