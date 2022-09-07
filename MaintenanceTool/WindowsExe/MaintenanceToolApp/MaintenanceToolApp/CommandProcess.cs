@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using ToolAppCommon;
 
@@ -219,7 +218,7 @@ namespace MaintenanceToolApp
         //
         public static void DoRequestBleCommand(byte CMD, byte[] data)
         {
-            // CTAPHID_INITから応答されたCIDを使用し、HIDコマンド／データを送信
+            // BLEコマンド／データを送信
             BLEProcess.DoRequestCommand(CMD, data);
         }
 

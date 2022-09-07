@@ -29,7 +29,7 @@ namespace MaintenanceToolApp.HealthCheck
         public delegate void HandlerOnNotifyCommandTerminated(string commandTitle, string errorMessage, bool success);
         private event HandlerOnNotifyCommandTerminated NotifyCommandTerminated = null!;
 
-        // HIDインターフェースからデータ受信時のコールバック参照
+        // HID／BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
         public U2FHealthCheckProcess(HealthCheckParameter param)
