@@ -322,6 +322,61 @@ namespace MaintenanceToolApp.HealthCheck
 
         private void DoRequestCommandGetAssertion(byte[] pinToken)
         {
+            // GetAssertion実行が２回目かどうか判定
+            //   ２回目のGetAssertion実行では、MAIN SW押下によるユーザー所在確認が必要
+            bool testUserPresenceNeeded = (HCheckParameter.GetAssertionCount == 2);
+
+            // 実行するコマンドを設定
+            HCheckParameter.CborCommand = CTAP2_CBORCMD_GET_ASSERTION;
+
+            // clientDataHashを生成
+            byte[] clientDataHash = CTAP2Util.ComputeClientDataHash(HCheckParameter.TestData.Challenge);
+
+            // pinAuthを生成
+            byte[] pinAuth = CTAP2Util.GenerateClientPinAuth(pinToken, clientDataHash);
+
+            // saltEncを生成
+            byte[] saltEnc = CTAP2Util.GenerateSaltEnc(HCheckParameter.SharedSecretKey, HCheckParameter.TestData.Salt);
+
+            // saltAuthを生成
+            byte[] saltAuth = CTAP2Util.GenerateSaltAuth(HCheckParameter.SharedSecretKey, saltEnc);
+
+            // Credential idを抽出
+            byte[] credentialID = HCheckParameter.MakeOrGetCommandResponse.CredentialId;
+
+            // GetAssertionコマンドバイトを生成
+            string rpid = HCheckParameter.TestData.MakeCredentialParameter.RpId;
+            byte[] getAssertionCbor = CBOREncoder.GenerateGetAssertionCbor(
+                HCheckParameter.CborCommand, rpid, clientDataHash, credentialID, pinAuth, 
+                HCheckParameter.AgreementPublicKey, saltEnc, saltAuth, testUserPresenceNeeded);
+
+            if (testUserPresenceNeeded) {
+                // リクエスト転送の前に、
+                // FIDO認証器のMAIN SWを押してもらうように促す
+                // メッセージを画面表示
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_START);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2);
+                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3);
+            }
+
+            // GetAssertionコマンドを実行
+            switch (Parameter.Transport) {
+            case Transport.TRANSPORT_HID:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, getAssertionCbor);
+                break;
+            case Transport.TRANSPORT_BLE:
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, getAssertionCbor);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void DoResponseCommandGetAssertion(byte[] message)
+        {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
         }
@@ -345,6 +400,9 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             case CTAP2_CBORCMD_MAKE_CREDENTIAL:
                 DoResponseCommandMakeCredential(message);
+                break;
+            case CTAP2_CBORCMD_GET_ASSERTION:
+                DoResponseCommandGetAssertion(message);
                 break;
             default:
                 break;
