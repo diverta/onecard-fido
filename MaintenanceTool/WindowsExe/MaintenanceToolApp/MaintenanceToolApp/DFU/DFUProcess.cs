@@ -21,6 +21,12 @@ namespace MaintenanceToolApp.DFU
         }
     }
 
+    public class DFUProcessConst
+    {
+        // 更新対象アプリケーション＝version 0.4.0
+        public const int DFU_UPD_TARGET_APP_VERSION = 400;
+    }
+
     public class DFUProcess
     {
         // 処理実行のためのプロパティー
