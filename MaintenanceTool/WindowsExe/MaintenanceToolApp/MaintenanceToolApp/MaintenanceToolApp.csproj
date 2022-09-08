@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs" Link="PeterO\Cbor\Base64.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\CBORCanonical.cs" Link="PeterO\Cbor\CBORCanonical.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\CBORDataUtilities.cs" Link="PeterO\Cbor\CBORDataUtilities.cs" />
@@ -96,6 +102,12 @@
 
   <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
   </ItemGroup>
 
   <ItemGroup>
