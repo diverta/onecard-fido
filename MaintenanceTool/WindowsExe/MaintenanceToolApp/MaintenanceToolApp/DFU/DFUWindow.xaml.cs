@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -22,9 +21,7 @@ namespace MaintenanceToolApp.DFU
         {
             // パラメーターのバージョン情報を画面表示
             labelCurrentVersion.Content = Parameter.CurrentVersionInfo.FWRev;
-
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(string.Format("FW_REV:{0} HW_REV:{1}", Parameter.CurrentVersionInfo.FWRev, Parameter.CurrentVersionInfo.HWRev));
+            labelUpdateVersion.Content = Parameter.UpdateVersion;
 
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;

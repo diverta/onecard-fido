@@ -101,8 +101,17 @@ namespace MaintenanceToolApp
                 return;
             }
 
+            // 更新ファームウェアのバージョンチェック／イメージ情報取得
+            string checkErrorCaption;
+            string checkErrorMessage;
+            DFUImageData imageData;
+            if (DFUImage.CheckAndGetUpdateVersion(versionInfoData, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
+                DialogUtil.ShowWarningMessage(this, checkErrorCaption, checkErrorMessage);
+                return;
+            }
+
             // ファームウェア更新画面を開き、実行を指示
-            DFUParameter param = new DFUParameter(versionInfoData);
+            DFUParameter param = new DFUParameter(versionInfoData, imageData);
             bool b = new DFUWindow(param).ShowDialogWithOwner(this);
             if (b) {
                 // DFU機能を実行

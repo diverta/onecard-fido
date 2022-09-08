@@ -8,10 +8,10 @@ namespace MaintenanceToolApp.DFU
         public VersionInfoData CurrentVersionInfo { get; set; }
         public string UpdateVersion { get; set; }
 
-        public DFUParameter(VersionInfoData versionInfoData)
+        public DFUParameter(VersionInfoData versionInfoData, DFUImageData imageData)
         {
             CurrentVersionInfo = versionInfoData;
-            UpdateVersion = string.Empty;
+            UpdateVersion = imageData.UpdateVersion;
         }
 
         public override string ToString()
