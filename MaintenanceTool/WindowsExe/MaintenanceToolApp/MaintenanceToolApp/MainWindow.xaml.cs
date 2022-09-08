@@ -90,13 +90,13 @@ namespace MaintenanceToolApp
             CommonProcessingWindow.OpenForm(this);
         }
 
-        private void DoDFUResume(bool success, string errorMessage)
+        private void DoDFUResume(bool success, string errorMessage, VersionInfoData versionInfoData)
         {
             // 進捗画面を閉じる
             CommonProcessingWindow.NotifyTerminate();
 
             // バージョン情報照会失敗時は、以降の処理を実行しない
-            if (success == false) {
+            if (success == false || versionInfoData == null) {
                 DialogUtil.ShowWarningMessage(this, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
                 return;
             }
