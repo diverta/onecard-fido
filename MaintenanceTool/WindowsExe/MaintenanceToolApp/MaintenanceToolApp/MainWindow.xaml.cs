@@ -1,7 +1,9 @@
-﻿using MaintenanceToolApp.DFU;
+﻿using MaintenanceToolApp.CommonWindow;
+using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 
@@ -77,12 +79,21 @@ namespace MaintenanceToolApp
                 return;
             }
 
-            // バージョン情報照会から開始
-            DFUVersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+            // コマンドを別スレッドで起動
+            Task task = Task.Run(() => {
+                // バージョン情報照会から開始
+                DFUVersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
         }
 
         private void DoDFUResume(bool success, string errorMessage)
         {
+            // 進捗画面を閉じる
+            CommonProcessingWindow.NotifyTerminate();
+
             // バージョン情報照会失敗時は、以降の処理を実行しない
             if (success == false) {
                 DialogUtil.ShowWarningMessage(this, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
