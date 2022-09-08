@@ -1,13 +1,13 @@
 ﻿using ToolAppCommon;
 
-namespace MaintenanceToolApp.DFU
+namespace MaintenanceToolApp.CommonProcess
 {
-    internal class DFUVersionInfoProcess
+    internal class VersionInfoProcess
     {
         // このクラスのインスタンス
-        private static readonly DFUVersionInfoProcess Instance = new DFUVersionInfoProcess();
+        private static readonly VersionInfoProcess Instance = new VersionInfoProcess();
 
-        private DFUVersionInfoProcess()
+        private VersionInfoProcess()
         {
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);

@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.CommonWindow;
+﻿using MaintenanceToolApp.CommonProcess;
+using MaintenanceToolApp.CommonWindow;
 using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
@@ -82,7 +83,7 @@ namespace MaintenanceToolApp
             // コマンドを別スレッドで起動
             Task task = Task.Run(() => {
                 // バージョン情報照会から開始
-                DFUVersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+                VersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
             });
 
             // 進捗画面を表示
