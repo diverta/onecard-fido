@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace MaintenanceToolApp.Common
+namespace MaintenanceToolApp.CommonWindow
 {
     /// <summary>
     /// CommonProcessingWindow.xaml の相互作用ロジック
