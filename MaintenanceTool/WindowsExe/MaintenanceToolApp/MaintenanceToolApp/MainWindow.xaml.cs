@@ -102,7 +102,7 @@ namespace MaintenanceToolApp
             }
 
             // ファームウェア更新画面を開き、実行を指示
-            DFUParameter param = new DFUParameter();
+            DFUParameter param = new DFUParameter(versionInfoData);
             bool b = new DFUWindow(param).ShowDialogWithOwner(this);
             if (b) {
                 // DFU機能を実行

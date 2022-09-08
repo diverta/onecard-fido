@@ -1,21 +1,23 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp.CommonProcess;
+using System.Windows;
 
 namespace MaintenanceToolApp.DFU
 {
     public class DFUParameter
     {
-        public string CurrentVersion { get; set; }
+        public VersionInfoData CurrentVersionInfo { get; set; }
         public string UpdateVersion { get; set; }
 
-        public DFUParameter()
+        public DFUParameter(VersionInfoData versionInfoData)
         {
-            CurrentVersion = string.Empty;
+            CurrentVersionInfo = versionInfoData;
             UpdateVersion = string.Empty;
         }
 
         public override string ToString()
         {
-            return string.Format("CurrentVersion:{0} UpdateVersion:{1}", CurrentVersion, UpdateVersion);
+            return string.Format("CurrentVersionInfo:FW_REV={0}, HW_REV={1} UpdateVersion:{2}",
+                CurrentVersionInfo.FWRev, CurrentVersionInfo.HWRev, UpdateVersion);
         }
     }
 

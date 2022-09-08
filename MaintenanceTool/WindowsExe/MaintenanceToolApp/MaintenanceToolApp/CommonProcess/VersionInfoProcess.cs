@@ -3,7 +3,7 @@ using ToolAppCommon;
 
 namespace MaintenanceToolApp.CommonProcess
 {
-    internal class VersionInfoData
+    public class VersionInfoData
     {
         public string FWRev { get; set; }
         public string HWRev { get; set; }
