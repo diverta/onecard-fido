@@ -21,6 +21,8 @@ namespace MaintenanceToolApp.DFU
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
             // パラメーターのバージョン情報を画面表示
+            labelCurrentVersion.Content = Parameter.CurrentVersionInfo.FWRev;
+
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(string.Format("FW_REV:{0} HW_REV:{1}", Parameter.CurrentVersionInfo.FWRev, Parameter.CurrentVersionInfo.HWRev));
 
@@ -47,6 +49,11 @@ namespace MaintenanceToolApp.DFU
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
+        }
+
+        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        {
+            TerminateWindow(true);
         }
     }
 }
