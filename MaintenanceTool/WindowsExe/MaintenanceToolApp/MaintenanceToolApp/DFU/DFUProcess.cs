@@ -43,6 +43,12 @@ namespace MaintenanceToolApp.DFU
 
         public void DoProcess()
         {
+            // 処理進捗画面を表示
+            if (DFUProcessingWindow.OpenForm(ParentWindow) == false) {
+                // Cancelボタンクリック時は、メッセージをポップアップ表示したのち、画面に制御を戻す
+                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+                return;
+            }
         }
 
         //
