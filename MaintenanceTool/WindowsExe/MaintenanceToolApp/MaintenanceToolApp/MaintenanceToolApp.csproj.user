@@ -9,6 +9,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="DFU\DFUProcessingWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="DFU\DFUWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -18,6 +21,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="CommonWindow\CommonVersionWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DFU\DFUProcessingWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="DFU\DFUWindow.xaml">
