@@ -6,18 +6,18 @@ namespace MaintenanceToolApp.DFU
     public class DFUParameter
     {
         public VersionInfoData CurrentVersionInfo { get; set; }
-        public string UpdateVersion { get; set; }
+        public DFUImageData UpdateImageData { get; set; }
 
         public DFUParameter(VersionInfoData versionInfoData, DFUImageData imageData)
         {
             CurrentVersionInfo = versionInfoData;
-            UpdateVersion = imageData.UpdateVersion;
+            UpdateImageData = imageData;
         }
 
         public override string ToString()
         {
             return string.Format("CurrentVersionInfo:FW_REV={0}, HW_REV={1} UpdateVersion:{2}",
-                CurrentVersionInfo.FWRev, CurrentVersionInfo.HWRev, UpdateVersion);
+                CurrentVersionInfo.FWRev, CurrentVersionInfo.HWRev, UpdateImageData.UpdateVersion);
         }
     }
 

@@ -21,7 +21,7 @@ namespace MaintenanceToolApp.DFU
         {
             // パラメーターのバージョン情報を画面表示
             labelCurrentVersion.Content = Parameter.CurrentVersionInfo.FWRev;
-            labelUpdateVersion.Content = Parameter.UpdateVersion;
+            labelUpdateVersion.Content = Parameter.UpdateImageData.UpdateVersion;
 
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
