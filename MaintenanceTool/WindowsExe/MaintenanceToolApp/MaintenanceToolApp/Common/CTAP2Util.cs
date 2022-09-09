@@ -156,7 +156,7 @@ namespace MaintenanceToolApp.Common
         {
             // curPin のハッシュを生成  SHA-256(curPin)
             byte[] pinbyte = Encoding.ASCII.GetBytes(curPin);
-            SHA256 sha = new SHA256CryptoServiceProvider();
+            SHA256 sha = SHA256.Create();
             byte[] pinsha = sha.ComputeHash(pinbyte);
 
             // 先頭16バイトを抽出  LEFT(SHA-256(curPin),16)
@@ -185,7 +185,7 @@ namespace MaintenanceToolApp.Common
         //
         public static byte[] ComputeClientDataHash(byte[] challenge)
         {
-            SHA256 sha = new SHA256CryptoServiceProvider();
+            SHA256 sha = SHA256.Create();
             return sha.ComputeHash(challenge);
         }
 
@@ -258,14 +258,13 @@ namespace MaintenanceToolApp.Common
             //   ブロックサイズ: 128（16バイト）
             //   暗号利用モード: CBC
             //   初期化ベクター: 0
-            AesManaged aes = new AesManaged {
-                KeySize = 256,
-                BlockSize = 128,
-                Mode = CipherMode.CBC,
-                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Key = key,
-                Padding = PaddingMode.None
-            };
+            Aes aes = Aes.Create();
+            aes.KeySize = 256;
+            aes.BlockSize = 128;
+            aes.Mode = CipherMode.CBC;
+            aes.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            aes.Key = key;
+            aes.Padding = PaddingMode.None;
             return aes.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
         }
 
@@ -276,14 +275,13 @@ namespace MaintenanceToolApp.Common
             //   ブロックサイズ: 128（16バイト）
             //   暗号利用モード: CBC
             //   初期化ベクター: 0
-            AesManaged aes = new AesManaged {
-                KeySize = 256,
-                BlockSize = 128,
-                Mode = CipherMode.CBC,
-                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Key = key,
-                Padding = PaddingMode.None
-            };
+            Aes aes = Aes.Create();
+            aes.KeySize = 256;
+            aes.BlockSize = 128;
+            aes.Mode = CipherMode.CBC;
+            aes.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            aes.Key = key;
+            aes.Padding = PaddingMode.None;
             return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
         }
     }
