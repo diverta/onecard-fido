@@ -58,6 +58,16 @@ namespace ToolAppCommon
         // 
         // ユーティリティー
         //
+        public static int CalculateDecimalVersion(string versionStr)
+        {
+            // バージョン文字列 "1.2.11" -> "010211" 形式に変換
+            int decimalVersion = 0;
+            foreach (string element in versionStr.Split('.')) {
+                decimalVersion = decimalVersion * 100 + int.Parse(element);
+            }
+            return decimalVersion;
+        }
+
         public static byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
         {
             // レスポンスされたCBORを抽出

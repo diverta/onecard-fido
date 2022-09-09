@@ -1,6 +1,10 @@
-﻿using MaintenanceToolApp.HealthCheck;
+﻿using MaintenanceToolApp.CommonProcess;
+using MaintenanceToolApp.CommonWindow;
+using MaintenanceToolApp.DFU;
+using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 
@@ -69,6 +73,52 @@ namespace MaintenanceToolApp
             textBoxMessage.ScrollToEnd();
         }
 
+        private void DoDFU()
+        {
+            // 処理前の確認
+            if (DFUProcess.ConfirmDoProcess(this) == false) {
+                return;
+            }
+
+            // コマンドを別スレッドで起動
+            Task task = Task.Run(() => {
+                // バージョン情報照会から開始
+                VersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+        }
+
+        private void DoDFUResume(bool success, string errorMessage, VersionInfoData versionInfoData)
+        {
+            // 進捗画面を閉じる
+            CommonProcessingWindow.NotifyTerminate();
+
+            // バージョン情報照会失敗時は、以降の処理を実行しない
+            if (success == false || versionInfoData == null) {
+                DialogUtil.ShowWarningMessage(this, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+                return;
+            }
+
+            // 更新ファームウェアのバージョンチェック／イメージ情報取得
+            string checkErrorCaption;
+            string checkErrorMessage;
+            DFUImageData imageData;
+            if (DFUImage.CheckAndGetUpdateVersion(versionInfoData, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
+                DialogUtil.ShowWarningMessage(this, checkErrorCaption, checkErrorMessage);
+                return;
+            }
+
+            // ファームウェア更新画面を開き、実行を指示
+            DFUParameter param = new DFUParameter(versionInfoData, imageData);
+            bool b = new DFUWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // DFU機能を実行
+                new DFUProcess(param).DoProcess();
+            }
+        }
+
         private void DoHealthCheck()
         {
             // ヘルスチェック実行画面を開き、実行コマンド種別を設定
@@ -113,6 +163,11 @@ namespace MaintenanceToolApp
         private void buttonQuit_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow();
+        }
+
+        private void buttonDFU_Click(object sender, RoutedEventArgs e)
+        {
+            DoDFU();
         }
     }
 }

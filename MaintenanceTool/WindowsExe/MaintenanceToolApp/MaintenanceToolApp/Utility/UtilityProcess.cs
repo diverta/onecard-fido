@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp.CommonWindow;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using ToolAppCommon;
@@ -67,7 +68,7 @@ namespace MaintenanceToolApp.Utility
 
             case Command.COMMAND_VIEW_APP_VERSION:
                 // メイン画面を親ウィンドウとし、バージョン参照画面を開く
-                ToolVersionWindow w = new ToolVersionWindow();
+                CommonVersionWindow w = new CommonVersionWindow();
                 w.ShowDialogWithOwner(ParentWindow);
                 break;
 

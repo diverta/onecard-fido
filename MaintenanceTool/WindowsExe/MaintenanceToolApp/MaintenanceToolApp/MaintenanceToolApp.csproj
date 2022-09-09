@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\Base64.cs" Link="PeterO\Cbor\Base64.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\CBORCanonical.cs" Link="PeterO\Cbor\CBORCanonical.cs" />
     <Compile Include="..\..\CBOR\CBOR\PeterO\Cbor\CBORDataUtilities.cs" Link="PeterO\Cbor\CBORDataUtilities.cs" />
@@ -99,6 +105,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\icon_128.png" />
   </ItemGroup>
 
@@ -117,13 +129,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="CommonWindow\CommonProcessingWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CommonWindow\CommonVersionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="HealthCheck\HealthCheckPinWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="HealthCheck\HealthCheckWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Utility\ToolVersionWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Utility\UtilityWindow.xaml.cs">
@@ -132,15 +147,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="CommonWindow\CommonProcessingWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CommonWindow\CommonVersionWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="HealthCheck\HealthCheckPinWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="HealthCheck\HealthCheckWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Utility\ToolVersionWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -9,6 +9,20 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="DFU\DFUWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="CommonWindow\CommonProcessingWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CommonWindow\CommonVersionWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DFU\DFUWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="HealthCheck\HealthCheckPinWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -16,9 +30,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Utility\ToolVersionWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utility\UtilityWindow.xaml">

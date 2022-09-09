@@ -1,14 +1,14 @@
 ﻿using System.Windows;
 using ToolAppCommon;
 
-namespace MaintenanceToolApp.Utility
+namespace MaintenanceToolApp.CommonWindow
 {
     /// <summary>
     /// ToolVersionWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class ToolVersionWindow : Window
+    public partial class CommonVersionWindow : Window
     {
-        public ToolVersionWindow()
+        public CommonVersionWindow()
         {
             InitializeComponent();
         }
