@@ -56,6 +56,9 @@ namespace MaintenanceToolApp.DFU
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow = App.Current.MainWindow;
 
+        // 処理進捗画面の参照を保持
+        DFUProcessingWindow ProcessingWindow = null!;
+
         public DFUProcess(DFUParameter param)
         {
             // パラメーターの参照を保持
@@ -70,7 +73,8 @@ namespace MaintenanceToolApp.DFU
             });
 
             // 処理進捗画面を表示
-            if (DFUProcessingWindow.NewInstance().OpenForm(ParentWindow) == false) {
+            ProcessingWindow = new DFUProcessingWindow();
+            if (ProcessingWindow.OpenForm(ParentWindow) == false) {
                 // Cancelボタンクリック時は、メッセージをポップアップ表示したのち、画面に制御を戻す
                 DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
                 CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, AppCommon.MSG_NONE, true, ParentWindow);
@@ -81,6 +85,9 @@ namespace MaintenanceToolApp.DFU
             CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_NONE, true, ParentWindow);
         }
 
+        //
+        // DFU主処理
+        //
         private void InvokeDFUProcess()
         {
             // ステータスを更新
@@ -91,18 +98,25 @@ namespace MaintenanceToolApp.DFU
             NotifyDFUProcessStarting(maximum);
 
             // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
-            BLEDFUProcess.PerformDFUProcess();
+            PerformDFUProcess();
+        }
+
+        private void PerformDFUProcess()
+        {
+            // TODO: 仮の実装です。
+            System.Threading.Thread.Sleep(2000);
+            ProcessingWindow.NotifyDFUProcessTerminated(true);
         }
 
         //
         // 画面に対する処理
         //
-        private static void NotifyDFUProcessStarting(int maximum)
+        private void NotifyDFUProcessStarting(int maximum)
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 // 処理進捗画面にDFU処理開始を通知
-                DFUProcessingWindow.GetInstance().NotifyStartDFUProcess(maximum);
-                DFUProcessingWindow.GetInstance().NotifyDFUProcess(AppCommon.MSG_DFU_PRE_PROCESS, 0);
+                ProcessingWindow.NotifyStartDFUProcess(maximum);
+                ProcessingWindow.NotifyDFUProcess(AppCommon.MSG_DFU_PRE_PROCESS, 0);
 
                 // メイン画面に開始メッセージを表示
                 CommandProcess.NotifyCommandStarted(AppCommon.PROCESS_NAME_BLE_DFU);

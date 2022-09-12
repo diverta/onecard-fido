@@ -1,7 +1,6 @@
 ﻿using MaintenanceToolApp.CommonWindow;
 using System;
 using System.Windows;
-using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -10,32 +9,9 @@ namespace MaintenanceToolApp.DFU
     /// </summary>
     public partial class DFUProcessingWindow : Window
     {
-        private static DFUProcessingWindow Instance = null!;
-
-        private DFUProcessingWindow()
+        public DFUProcessingWindow()
         {
             InitializeComponent();
-        }
-
-        BLEDFUProcess.HandlerOnProcessTerminated eventRef = null!;
-
-        //
-        // 公開用メソッド
-        //
-        public static DFUProcessingWindow NewInstance()
-        {
-            // この画面のインスタンスを生成
-            Instance = new DFUProcessingWindow();
-
-            // DFU処理完了時のイベントを登録
-            Instance.eventRef = new BLEDFUProcess.HandlerOnProcessTerminated(Instance.OnTerminateDFUProcess);
-            BLEDFUProcess.RegisterHandlerOnProcessTerminated(Instance.eventRef);
-            return Instance;
-        }
-
-        public static DFUProcessingWindow GetInstance()
-        {
-            return Instance;
         }
 
         public bool OpenForm(Window ownerWindow)
@@ -65,14 +41,11 @@ namespace MaintenanceToolApp.DFU
             levelIndicator.Value = progressValue;
         }
 
-        private void OnTerminateDFUProcess(bool success)
+        public void NotifyDFUProcessTerminated(bool success)
         {
-            // DFU処理完了時のイベントを解除
-            BLEDFUProcess.UnregisterHandlerOnProcessTerminated(Instance.eventRef);
-
             // TODO: 仮の実装です。
             Application.Current.Dispatcher.Invoke(new Action(() => {
-                DialogResult = true;
+                DialogResult = success;
                 Close();
             }));
         }
