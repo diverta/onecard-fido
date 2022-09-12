@@ -17,12 +17,19 @@ namespace MaintenanceToolApp.DFU
             InitializeComponent();
         }
 
+        BLEDFUProcess.HandlerOnProcessTerminated eventRef = null!;
+
         //
         // 公開用メソッド
         //
         public static DFUProcessingWindow NewInstance()
         {
+            // この画面のインスタンスを生成
             Instance = new DFUProcessingWindow();
+
+            // DFU処理完了時のイベントを登録
+            Instance.eventRef = new BLEDFUProcess.HandlerOnProcessTerminated(Instance.OnTerminateDFUProcess);
+            BLEDFUProcess.RegisterHandlerOnProcessTerminated(Instance.eventRef);
             return Instance;
         }
 
@@ -56,6 +63,18 @@ namespace MaintenanceToolApp.DFU
             // 進捗表示を更新
             labelProgress.Content = message;
             levelIndicator.Value = progressValue;
+        }
+
+        private void OnTerminateDFUProcess(bool success)
+        {
+            // DFU処理完了時のイベントを解除
+            BLEDFUProcess.UnregisterHandlerOnProcessTerminated(Instance.eventRef);
+
+            // TODO: 仮の実装です。
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                DialogResult = true;
+                Close();
+            }));
         }
 
         //

@@ -89,6 +89,9 @@ namespace MaintenanceToolApp.DFU
             // DFU処理開始時の画面処理
             int maximum = 100 + DFUProcessConst.DFU_WAITING_SEC_ESTIMATED;
             NotifyDFUProcessStarting(maximum);
+
+            // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
+            BLEDFUProcess.PerformDFUProcess();
         }
 
         //
