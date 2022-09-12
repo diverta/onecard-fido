@@ -41,13 +41,18 @@ namespace MaintenanceToolApp.DFU
             levelIndicator.Value = progressValue;
         }
 
-        public void NotifyDFUProcessTerminated(bool success)
+        public void NotifyCancelDFUProcess()
         {
-            // TODO: 仮の実装です。
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                DialogResult = success;
-                Close();
-            }));
+            // DFU処理がキャンセルされた場合はCancelを戻す
+            DialogResult = false;
+            Close();
+        }
+
+        public void NotifyDFUProcessTerminated()
+        {
+            // 処理結果を戻す
+            DialogResult = true;
+            Close();
         }
 
         //

@@ -23,13 +23,21 @@ namespace MaintenanceToolApp.DFU
         public DFUImageData UpdateImageData { get; set; }
 
         // 処理ステータス
-        public DFUStatus Status;
+        public DFUStatus Status { get; set; }
+
+        // 処理結果
+        public bool Success { get; set; }
+
+        // 処理結果（エラーメッセージ）
+        public string ErrorMessage { get; set; }
 
         public DFUParameter(VersionInfoData versionInfoData, DFUImageData imageData)
         {
             CurrentVersionInfo = versionInfoData;
             UpdateImageData = imageData;
             Status = DFUStatus.None;
+            Success = false;
+            ErrorMessage = AppCommon.MSG_NONE;
         }
 
         public override string ToString()
@@ -84,8 +92,8 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
-            // TODO: 仮の実装です。
-            CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_NONE, true, ParentWindow);
+            // メイン画面に制御を移す
+            CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
         }
 
         //
@@ -109,7 +117,50 @@ namespace MaintenanceToolApp.DFU
         {
             // TODO: 仮の実装です。
             System.Threading.Thread.Sleep(2000);
-            ProcessingWindow.NotifyDFUProcessTerminated(success);
+            OnTerminatedTransferProcess(success);
+        }
+
+        private void OnTerminatedTransferProcess(bool success)
+        {
+            if (Parameter.Status == DFUStatus.Canceled) {
+                // 転送が中止された旨を、処理進捗画面に通知
+                NotifyCancelDFUProcess();
+                return;
+            }
+
+            if (success) {
+                // ステータスを更新（DFU反映待ち）
+                Parameter.Status = DFUStatus.WaitForBoot;
+
+                // DFU反映待ち処理を起動
+                PerformDFUUpdateMonitor();
+
+            } else {
+                // DFU転送失敗時は処理進捗画面に制御を戻す
+                Parameter.Success = false;
+                NotifyDFUProcessTerminated();
+            }
+        }
+
+        // 
+        // DFU反映待ち処理
+        // 
+        private void PerformDFUUpdateMonitor()
+        {
+            // 処理進捗画面に通知
+            NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+
+            // 反映待ち（リセットによるファームウェア再始動完了まで待機）
+            for (int i = 0; i < DFUProcessConst.DFU_WAITING_SEC_ESTIMATED; i++) {
+                // 処理進捗画面に通知
+                NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            // バージョン情報照会処理に遷移
+            // TODO: 仮の実装です。
+            Parameter.Success = true;
+            NotifyDFUProcessTerminated();
         }
 
         //
@@ -124,6 +175,27 @@ namespace MaintenanceToolApp.DFU
 
                 // メイン画面に開始メッセージを表示
                 CommandProcess.NotifyCommandStarted(AppCommon.PROCESS_NAME_BLE_DFU);
+            }));
+        }
+
+        public void NotifyCancelDFUProcess()
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                ProcessingWindow.NotifyCancelDFUProcess();
+            }));
+        }
+
+        private void NotifyDFUProgress(string message, int progressValue)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                ProcessingWindow.NotifyDFUProcess(message, progressValue);
+            }));
+        }
+
+        public void NotifyDFUProcessTerminated()
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                ProcessingWindow.NotifyDFUProcessTerminated();
             }));
         }
 
