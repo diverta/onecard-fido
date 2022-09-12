@@ -5,13 +5,28 @@ namespace MaintenanceToolApp.DFU
 {
     public class DFUParameter
     {
+        public enum DFUStatus
+        {
+            None = 0,
+            GetCurrentVersion,
+            UploadProcess,
+            Canceled,
+            ResetDone,
+            WaitForBoot,
+            CheckUpdateVersion,
+        };
+
         public VersionInfoData CurrentVersionInfo { get; set; }
         public DFUImageData UpdateImageData { get; set; }
+
+        // 処理ステータス
+        public DFUStatus Status;
 
         public DFUParameter(VersionInfoData versionInfoData, DFUImageData imageData)
         {
             CurrentVersionInfo = versionInfoData;
             UpdateImageData = imageData;
+            Status = DFUStatus.None;
         }
 
         public override string ToString()
