@@ -16,7 +16,21 @@ namespace MaintenanceToolApp.DFU
             InitializeComponent();
         }
 
-        private bool OpenFormInner(Window ownerWindow)
+        //
+        // 公開用メソッド
+        //
+        public static DFUProcessingWindow NewInstance()
+        {
+            Instance = new DFUProcessingWindow();
+            return Instance;
+        }
+
+        public static DFUProcessingWindow GetInstance()
+        {
+            return Instance;
+        }
+
+        public bool OpenForm(Window ownerWindow)
         {
             // TODO: 仮の実装です。
             InitFieldValue();
@@ -31,21 +45,15 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
+        //
+        // 内部処理
+        //
         private void InitFieldValue()
         {
             // テキストをブランクに設定
             Title = AppCommon.MSG_DFU_PROCESS_TITLE_GOING;
             labelProgress.Content = "進捗を表示します。";
             levelIndicator.Value = 50;
-        }
-
-        //
-        // 公開用メソッド
-        //
-        public static bool OpenForm(Window owner)
-        {
-            Instance = new DFUProcessingWindow();
-            return Instance.OpenFormInner(owner);
         }
 
         //
