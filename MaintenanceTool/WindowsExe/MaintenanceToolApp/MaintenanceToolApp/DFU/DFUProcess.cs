@@ -57,7 +57,10 @@ namespace MaintenanceToolApp.DFU
         private readonly Window ParentWindow = App.Current.MainWindow;
 
         // 処理進捗画面の参照を保持
-        DFUProcessingWindow ProcessingWindow = null!;
+        private DFUProcessingWindow ProcessingWindow = null!;
+
+        // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
+        private static readonly BLESMPService SMPService = new BLESMPService();
 
         public DFUProcess(DFUParameter param)
         {
@@ -98,14 +101,15 @@ namespace MaintenanceToolApp.DFU
             NotifyDFUProcessStarting(maximum);
 
             // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
-            PerformDFUProcess();
+            // SMPサービスに接続
+            SMPService.ConnectBLESMPService(OnConnectedToSMPService);
         }
 
-        private void PerformDFUProcess()
+        private void OnConnectedToSMPService(bool success)
         {
             // TODO: 仮の実装です。
             System.Threading.Thread.Sleep(2000);
-            ProcessingWindow.NotifyDFUProcessTerminated(true);
+            ProcessingWindow.NotifyDFUProcessTerminated(success);
         }
 
         //
