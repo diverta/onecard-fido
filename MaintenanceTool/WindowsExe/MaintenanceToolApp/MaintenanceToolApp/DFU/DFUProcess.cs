@@ -1,5 +1,8 @@
 ﻿using MaintenanceToolApp.CommonProcess;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
+using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -40,6 +43,9 @@ namespace MaintenanceToolApp.DFU
     {
         // 更新対象アプリケーション＝version 0.4.0
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
+
+        // イメージ反映所要時間（秒）
+        public const int DFU_WAITING_SEC_ESTIMATED = 25;
     }
 
     public class DFUProcess
@@ -58,12 +64,46 @@ namespace MaintenanceToolApp.DFU
 
         public void DoProcess()
         {
+            // DFU主処理を起動
+            Task task = Task.Run(() => {
+                InvokeDFUProcess();
+            });
+
             // 処理進捗画面を表示
             if (DFUProcessingWindow.NewInstance().OpenForm(ParentWindow) == false) {
                 // Cancelボタンクリック時は、メッセージをポップアップ表示したのち、画面に制御を戻す
                 DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, AppCommon.MSG_NONE, true, ParentWindow);
                 return;
             }
+
+            // TODO: 仮の実装です。
+            CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_NONE, true, ParentWindow);
+        }
+
+        private void InvokeDFUProcess()
+        {
+            // ステータスを更新
+            Parameter.Status = DFUStatus.UploadProcess;
+
+            // DFU処理開始時の画面処理
+            int maximum = 100 + DFUProcessConst.DFU_WAITING_SEC_ESTIMATED;
+            NotifyDFUProcessStarting(maximum);
+        }
+
+        //
+        // 画面に対する処理
+        //
+        private static void NotifyDFUProcessStarting(int maximum)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 処理進捗画面にDFU処理開始を通知
+                DFUProcessingWindow.GetInstance().NotifyStartDFUProcess(maximum);
+                DFUProcessingWindow.GetInstance().NotifyDFUProcess(AppCommon.MSG_DFU_PRE_PROCESS, 0);
+
+                // メイン画面に開始メッセージを表示
+                CommandProcess.NotifyCommandStarted(AppCommon.PROCESS_NAME_BLE_DFU);
+            }));
         }
 
         //

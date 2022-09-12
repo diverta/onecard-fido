@@ -1,6 +1,7 @@
 ﻿using MaintenanceToolApp.CommonWindow;
 using System;
 using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -32,9 +33,6 @@ namespace MaintenanceToolApp.DFU
 
         public bool OpenForm(Window ownerWindow)
         {
-            // TODO: 仮の実装です。
-            InitFieldValue();
-
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -45,6 +43,21 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
+        public void NotifyStartDFUProcess(int maximum)
+        {
+            // プログレスバーをリセット
+            InitFieldValue();
+            levelIndicator.Maximum = maximum;
+
+        }
+
+        public void NotifyDFUProcess(string message, int progressValue)
+        {
+            // 進捗表示を更新
+            labelProgress.Content = message;
+            levelIndicator.Value = progressValue;
+        }
+
         //
         // 内部処理
         //
@@ -52,8 +65,8 @@ namespace MaintenanceToolApp.DFU
         {
             // テキストをブランクに設定
             Title = AppCommon.MSG_DFU_PROCESS_TITLE_GOING;
-            labelProgress.Content = "進捗を表示します。";
-            levelIndicator.Value = 50;
+            labelProgress.Content = "";
+            levelIndicator.Value = 0;
         }
 
         //

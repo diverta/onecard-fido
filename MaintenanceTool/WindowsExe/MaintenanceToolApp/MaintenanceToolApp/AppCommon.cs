@@ -39,6 +39,7 @@
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
 
         // BLE DFU関連メッセージ
+        public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
         public const string MSG_DFU_VERSION_INFO_GET_FAILED = "FIDO認証器ファームウェアのバージョンが取得できませんでした。";
         public const string MSG_DFU_IMAGE_NOT_AVAILABLE = "ファームウェア更新機能が利用できません。";
         public const string MSG_DFU_IMAGE_TRANSFER_CANCELED = "更新ファームウェアの転送が中断されました。";
