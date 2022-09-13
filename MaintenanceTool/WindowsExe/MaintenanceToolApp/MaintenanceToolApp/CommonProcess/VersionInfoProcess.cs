@@ -17,18 +17,12 @@ namespace MaintenanceToolApp.CommonProcess
 
     internal class VersionInfoProcess
     {
-        // このクラスのインスタンス
-        private static readonly VersionInfoProcess Instance = new VersionInfoProcess();
-
-        private VersionInfoProcess()
-        {
-            // コールバック参照を初期化
-            OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
-        }
-
         // 上位クラスに対するイベント通知
         public delegate void HandlerOnNotifyCommandTerminated(bool success, string errorMessage, VersionInfoData versionInfoData);
         private event HandlerOnNotifyCommandTerminated NotifyCommandTerminated = null!;
+
+        // 戻り先の関数を保持
+        private HandlerOnNotifyCommandTerminated HandlerRef = null!;
 
         // BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
@@ -36,13 +30,20 @@ namespace MaintenanceToolApp.CommonProcess
         //
         // 外部公開用
         //
-        public static void DoRequestVersionInfo(HandlerOnNotifyCommandTerminated handler)
+        public VersionInfoProcess()
+        {
+            // コールバック参照を初期化
+            OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
+        }
+
+        public void DoRequestVersionInfo(HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
-            Instance.NotifyCommandTerminated = handler;
+            HandlerRef = handler;
+            NotifyCommandTerminated += HandlerRef;
 
             // バージョン照会コマンドを実行
-            Instance.DoRequestBLEGetVersionInfo();
+            DoRequestBLEGetVersionInfo();
         }
 
         //
@@ -62,6 +63,7 @@ namespace MaintenanceToolApp.CommonProcess
             if (CTAP2Util.CheckStatusByte(responseData, out statusMessage) == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
                 NotifyCommandTerminated(false, statusMessage, null!);
+                NotifyCommandTerminated -= HandlerRef;
                 return;
             }
 
@@ -85,6 +87,7 @@ namespace MaintenanceToolApp.CommonProcess
 
             // 上位クラスに制御を戻す
             NotifyCommandTerminated(true, AppCommon.MSG_NONE, new VersionInfoData(strFWRev, strHWRev));
+            NotifyCommandTerminated -= HandlerRef;
         }
 
         //
@@ -98,6 +101,7 @@ namespace MaintenanceToolApp.CommonProcess
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 NotifyCommandTerminated(success, errorMessage, null!);
+                NotifyCommandTerminated -= HandlerRef;
                 return;
             }
 
