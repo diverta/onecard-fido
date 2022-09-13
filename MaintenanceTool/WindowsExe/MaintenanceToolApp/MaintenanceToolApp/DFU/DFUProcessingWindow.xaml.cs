@@ -9,9 +9,19 @@ namespace MaintenanceToolApp.DFU
     /// </summary>
     public partial class DFUProcessingWindow : Window
     {
+        // Cancelボタン押下イベントを定義
+        public delegate void HandlerOnCanceledTransferByUser();
+        private event HandlerOnCanceledTransferByUser OnCanceledTransferByUser = null!;
+
         public DFUProcessingWindow()
         {
             InitializeComponent();
+        }
+
+        public void RegisterHandlerOnCanceledTransferByUser(HandlerOnCanceledTransferByUser handler)
+        {
+            // Cancelボタン押下イベントを登録
+            OnCanceledTransferByUser += handler;
         }
 
         public bool OpenForm(Window ownerWindow)
@@ -41,6 +51,12 @@ namespace MaintenanceToolApp.DFU
             levelIndicator.Value = progressValue;
         }
 
+        public void NotifyCancelable(bool cancelable)
+        {
+            // 転送処理中の場合は、Cancelボタンを押下可能とする
+            buttonCancel.IsEnabled = cancelable;
+        }
+
         public void NotifyCancelDFUProcess()
         {
             // DFU処理がキャンセルされた場合はCancelを戻す
@@ -64,6 +80,9 @@ namespace MaintenanceToolApp.DFU
             Title = AppCommon.MSG_DFU_PROCESS_TITLE_GOING;
             labelProgress.Content = "";
             levelIndicator.Value = 0;
+
+            // Cancelボタンを使用不可とする
+            buttonCancel.IsEnabled = false;
         }
 
         //
@@ -71,9 +90,11 @@ namespace MaintenanceToolApp.DFU
         // 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogResult = false;
-            Close();
+            // Cancelボタンを使用不可とする
+            buttonCancel.IsEnabled = false;
+
+            // Cancelボタンがクリックされた旨をDFU処理クラスに通知
+            OnCanceledTransferByUser();
         }
 
         //

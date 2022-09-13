@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
@@ -85,6 +86,7 @@ namespace MaintenanceToolApp.DFU
 
             // 処理進捗画面を表示
             ProcessingWindow = new DFUProcessingWindow();
+            ProcessingWindow.RegisterHandlerOnCanceledTransferByUser(new DFUProcessingWindow.HandlerOnCanceledTransferByUser(OnCanceledTransferByUser));
             if (ProcessingWindow.OpenForm(ParentWindow) == false) {
                 // Cancelボタンクリック時は、メッセージをポップアップ表示したのち、画面に制御を戻す
                 DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
@@ -115,9 +117,37 @@ namespace MaintenanceToolApp.DFU
 
         private void OnConnectedToSMPService(bool success)
         {
+            // DFU実行開始を通知
+            NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
+
+            //
             // TODO: 仮の実装です。
+            //
             System.Threading.Thread.Sleep(2000);
-            OnTerminatedTransferProcess(success);
+
+            NotifyDFUTransferring(true);
+            for (int percentage = 0; Parameter.Status == DFUStatus.UploadProcess && percentage < 100; percentage++) {
+                string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
+                NotifyDFUProgress(progressMessage, percentage);
+                System.Threading.Thread.Sleep(100);
+            }
+            NotifyDFUTransferring(false);
+
+            if (Parameter.Status == DFUStatus.Canceled) {
+                OnTerminatedTransferProcess(false);
+            } else {
+                OnTerminatedTransferProcess(success);
+            }
+        }
+
+        private void OnCanceledTransferByUser()
+        {
+            // 処理進捗画面のCancelボタンがクリックされた場合
+            // メッセージ文言を画面とログに出力
+            NotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
+
+            // ステータスを更新（処理キャンセル）
+            Parameter.Status = DFUStatus.Canceled;
         }
 
         private void OnTerminatedTransferProcess(bool success)
@@ -175,6 +205,23 @@ namespace MaintenanceToolApp.DFU
 
                 // メイン画面に開始メッセージを表示
                 CommandProcess.NotifyCommandStarted(AppCommon.PROCESS_NAME_BLE_DFU);
+            }));
+        }
+
+        private void NotifyDFUInfoMessage(string message)
+        {
+            // メッセージ文言を画面とログに出力
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                CommandProcess.NotifyMessageToMainUI(message);
+            }));
+            AppLogUtil.OutputLogInfo(message);
+        }
+
+        private void NotifyDFUTransferring(bool transferring)
+        {
+            // 処理進捗画面のCancelボタンを押下可能／不可能とする
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                ProcessingWindow.NotifyCancelable(transferring);
             }));
         }
 
