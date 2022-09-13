@@ -83,7 +83,8 @@ namespace MaintenanceToolApp
             // コマンドを別スレッドで起動
             Task task = Task.Run(() => {
                 // バージョン情報照会から開始
-                VersionInfoProcess.DoRequestVersionInfo(DoDFUResume);
+                VersionInfoProcess process = new VersionInfoProcess();
+                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(DoDFUResume));
             });
 
             // 進捗画面を表示
