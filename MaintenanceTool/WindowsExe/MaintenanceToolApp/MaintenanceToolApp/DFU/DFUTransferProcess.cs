@@ -1,4 +1,7 @@
-﻿using static MaintenanceToolApp.DFU.DFUParameter;
+﻿using MaintenanceToolApp.Common;
+using System;
+using ToolAppCommon;
+using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -6,6 +9,16 @@ namespace MaintenanceToolApp.DFU
     {
         // このクラスのインスタンス
         private static readonly DFUTransferProcess Instance = new DFUTransferProcess();
+
+        // 応答タイムアウト監視用タイマー
+        private CommonTimer responseTimer = null!;
+
+        private DFUTransferProcess()
+        {
+            // 応答タイムアウト発生時のイベントを登録
+            responseTimer = new CommonTimer("DFUTransferProcess", 10000);
+            responseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
+        }
 
         // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
         private static readonly BLESMPService SMPService = new BLESMPService();
@@ -45,6 +58,25 @@ namespace MaintenanceToolApp.DFU
         {
             // 転送処理を開始する
             DoTransferProcess();
+        }
+
+        private void OnTerminatedDFUTransferProcess(bool success, string message)
+        {
+            if (success == false) {
+                // エラーメッセージ文言を画面とログに出力
+                Parameter.ErrorMessage = message;
+                AppLogUtil.OutputLogError(message);
+            }
+            DFUProcess.OnTerminatedTransferProcess(success);
+        }
+
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnTerminatedDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT);
         }
 
         private void DoTransferProcess()
