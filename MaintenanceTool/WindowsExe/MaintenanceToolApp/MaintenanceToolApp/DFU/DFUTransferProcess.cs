@@ -106,8 +106,9 @@ namespace MaintenanceToolApp.DFU
         private void DoResponseGetSlotInfo(byte[] responseData)
         {
             // スロット照会情報を参照し、チェックでNGの場合は以降の処理を行わない
-            if (CheckSlotInfo(responseData) == false) {
-                OnTerminatedDFUTransferProcess(false, AppCommon.MSG_DFU_SLOT_INFO_GET_FAILED);
+            string errorMessage;
+            if (CheckSlotInfo(responseData, out errorMessage) == false) {
+                OnTerminatedDFUTransferProcess(false, errorMessage);
                 return;
             }
 
@@ -118,9 +119,39 @@ namespace MaintenanceToolApp.DFU
             DoTransferProcess();
         }
 
-        private bool CheckSlotInfo(byte[] responseData)
+        private bool CheckSlotInfo(byte[] responseData, out string errorMessage)
         {
-            // TODO: 仮の実装です。
+            // エラーメッセージを初期化
+            errorMessage = AppCommon.MSG_NONE;
+
+            // CBORをデコードしてスロット照会情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeSlotInfo(responseData) == false) {
+                errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
+                return false;
+            }
+
+            // スロット照会情報から、スロット#0のハッシュを抽出
+            byte[] hashSlot = decoder.SlotInfos[0].Hash;
+
+            // SHA-256ハッシュデータをイメージから抽出
+            byte[] hashUpdate = Parameter.UpdateImageData.SHA256Hash;
+
+            // スロット#0と転送対象イメージのハッシュを比較
+            bool hashIsEqual = true;
+            for (int i = 0; i < 32; i++) {
+                if (hashSlot[i] != hashUpdate[i]) {
+                    hashIsEqual = false;
+                    break;
+                }
+            }
+
+            // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
+            bool active = decoder.SlotInfos[0].Active;
+            if (active && hashIsEqual) {
+                errorMessage = AppCommon.MSG_DFU_IMAGE_ALREADY_INSTALLED;
+                return false;
+            }
             return true;
         }
 
