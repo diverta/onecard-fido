@@ -1,0 +1,13 @@
+﻿<Window x:Class="MaintenanceToolApp.DFU.DFUProcessingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="ファームウェアを更新しています" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height" Width="400">
+    <Grid Height="150">
+        <ProgressBar x:Name="levelIndicator" HorizontalAlignment="Center" Height="24" Margin="0,20,0,0" VerticalAlignment="Top" Width="350"/>
+        <Label x:Name="labelProgress" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,55,0,0" Width="350"/>
+        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
+    </Grid>
+</Window>
