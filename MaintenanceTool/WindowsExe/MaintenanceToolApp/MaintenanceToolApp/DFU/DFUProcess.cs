@@ -24,6 +24,19 @@ namespace MaintenanceToolApp.DFU
         public VersionInfoData CurrentVersionInfo { get; set; }
         public DFUImageData UpdateImageData { get; set; }
 
+        // 転送済みバイト数を保持
+        public int ImageBytesSent { get; set; }
+
+        // 処理区分
+        public enum BLEDFUCommand
+        {
+            GetSlotInfo = 0,
+            UploadImage,
+            ChangeImageUpdateMode,
+            ResetApplication,
+        };
+        public BLEDFUCommand Command { get; set; }
+
         // 処理ステータス
         public DFUStatus Status { get; set; }
 
@@ -37,6 +50,7 @@ namespace MaintenanceToolApp.DFU
         {
             CurrentVersionInfo = null!;
             UpdateImageData = null!;
+            ImageBytesSent = 0;
             Status = DFUStatus.None;
             Success = false;
             ErrorMessage = AppCommon.MSG_NONE;
