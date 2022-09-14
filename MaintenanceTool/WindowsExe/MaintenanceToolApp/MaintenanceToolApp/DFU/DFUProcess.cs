@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp.CommonProcess;
+using MaintenanceToolApp.CommonWindow;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -60,10 +61,10 @@ namespace MaintenanceToolApp.DFU
     public class DFUProcess
     {
         // 処理実行のためのプロパティー
-        private readonly DFUParameter Parameter;
+        private DFUParameter Parameter = null!;
 
         // 親ウィンドウの参照を保持
-        private readonly Window ParentWindow = App.Current.MainWindow;
+        private readonly Window ParentWindow;
 
         // 処理進捗画面の参照を保持
         private DFUProcessingWindow ProcessingWindow = null!;
@@ -71,13 +72,13 @@ namespace MaintenanceToolApp.DFU
         // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
         private static readonly BLESMPService SMPService = new BLESMPService();
 
-        public DFUProcess(DFUParameter param)
+        private DFUProcess(Window parentWindowRef)
         {
-            // パラメーターの参照を保持
-            Parameter = param;
+            // 親ウィンドウの参照を保持
+            ParentWindow = parentWindowRef;
         }
 
-        public void DoProcess()
+        private void DoProcess()
         {
             // DFU主処理を起動
             Task task = Task.Run(() => {
@@ -263,23 +264,56 @@ namespace MaintenanceToolApp.DFU
         //
         // 処理開始の指示
         //
-        public static void StartDFUProcess(Window CurrentWindow, VersionInfoData versionInfoData)
+        public static DFUProcess Instance = null!;
+
+        public static void StartDFUProcess(Window ParentWindow)
         {
+            // インスタンスを生成
+            Instance = new DFUProcess(ParentWindow);
+            Instance.StartDFU();
+        }
+
+        private void StartDFU()
+        {
+            // コマンドを別スレッドで起動
+            Task task = Task.Run(() => {
+                // バージョン情報照会から開始
+                VersionInfoProcess process = new VersionInfoProcess();
+                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(DoDFUResume));
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(ParentWindow);
+        }
+
+        private void DoDFUResume(bool success, string errorMessage, VersionInfoData versionInfoData) 
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
+
+            // バージョン情報照会失敗時は、以降の処理を実行しない
+            if (success == false || versionInfoData == null) {
+                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
+                return;
+            }
+
             // 更新ファームウェアのバージョンチェック／イメージ情報取得
             string checkErrorCaption;
             string checkErrorMessage;
             DFUImageData imageData;
             if (DFUImage.CheckAndGetUpdateVersion(versionInfoData, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
-                DialogUtil.ShowWarningMessage(CurrentWindow, checkErrorCaption, checkErrorMessage);
+                DialogUtil.ShowWarningMessage(ParentWindow, checkErrorCaption, checkErrorMessage);
                 return;
             }
 
             // ファームウェア更新画面を開き、実行を指示
-            DFUParameter param = new DFUParameter(versionInfoData, imageData);
-            bool b = new DFUWindow(param).ShowDialogWithOwner(CurrentWindow);
+            Parameter = new DFUParameter(versionInfoData, imageData);
+            bool b = new DFUWindow(Parameter).ShowDialogWithOwner(ParentWindow);
             if (b) {
                 // DFU機能を実行
-                new DFUProcess(param).DoProcess();
+                DoProcess();
             }
         }
     }

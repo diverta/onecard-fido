@@ -1,10 +1,7 @@
-﻿using MaintenanceToolApp.CommonProcess;
-using MaintenanceToolApp.CommonWindow;
-using MaintenanceToolApp.DFU;
+﻿using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 
@@ -76,34 +73,10 @@ namespace MaintenanceToolApp
         private void DoDFU()
         {
             // 処理前の確認
-            if (DFUProcess.ConfirmDoProcess(this) == false) {
-                return;
+            if (DFUProcess.ConfirmDoProcess(this)) {
+                // ファームウェア更新画面を開き、実行を指示
+                DFUProcess.StartDFUProcess(this);
             }
-
-            // コマンドを別スレッドで起動
-            Task task = Task.Run(() => {
-                // バージョン情報照会から開始
-                VersionInfoProcess process = new VersionInfoProcess();
-                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(DoDFUResume));
-            });
-
-            // 進捗画面を表示
-            CommonProcessingWindow.OpenForm(this);
-        }
-
-        private void DoDFUResume(bool success, string errorMessage, VersionInfoData versionInfoData)
-        {
-            // 進捗画面を閉じる
-            CommonProcessingWindow.NotifyTerminate();
-
-            // バージョン情報照会失敗時は、以降の処理を実行しない
-            if (success == false || versionInfoData == null) {
-                DialogUtil.ShowWarningMessage(this, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
-                return;
-            }
-
-            // ファームウェア更新画面を開き、実行を指示
-            DFUProcess.StartDFUProcess(this, versionInfoData);
         }
 
         private void DoHealthCheck()
