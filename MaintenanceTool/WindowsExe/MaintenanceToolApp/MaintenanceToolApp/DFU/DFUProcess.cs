@@ -69,9 +69,6 @@ namespace MaintenanceToolApp.DFU
         // 処理進捗画面の参照を保持
         private DFUProcessingWindow ProcessingWindow = null!;
 
-        // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
-        private static readonly BLESMPService SMPService = new BLESMPService();
-
         private DFUProcess(Window parentWindowRef)
         {
             // 親ウィンドウの参照を保持
@@ -80,9 +77,9 @@ namespace MaintenanceToolApp.DFU
 
         private void DoProcess()
         {
-            // DFU主処理を起動
+            // DFU転送処理を起動
             Task task = Task.Run(() => {
-                InvokeDFUProcess();
+                DFUTransferProcess.InvokeTransferProcess(this, Parameter);
             });
 
             // 処理進捗画面を表示
@@ -100,47 +97,8 @@ namespace MaintenanceToolApp.DFU
         }
 
         //
-        // DFU主処理
+        // DFU転送処理中のコールバック
         //
-        private void InvokeDFUProcess()
-        {
-            // ステータスを更新
-            Parameter.Status = DFUStatus.UploadProcess;
-
-            // DFU処理開始時の画面処理
-            int maximum = 100 + DFUProcessConst.DFU_WAITING_SEC_ESTIMATED;
-            NotifyDFUProcessStarting(maximum);
-
-            // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
-            // SMPサービスに接続
-            SMPService.ConnectBLESMPService(OnConnectedToSMPService);
-        }
-
-        private void OnConnectedToSMPService(bool success)
-        {
-            // DFU実行開始を通知
-            NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
-
-            //
-            // TODO: 仮の実装です。
-            //
-            System.Threading.Thread.Sleep(2000);
-
-            NotifyDFUTransferring(true);
-            for (int percentage = 0; Parameter.Status == DFUStatus.UploadProcess && percentage < 100; percentage++) {
-                string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
-                NotifyDFUProgress(progressMessage, percentage);
-                System.Threading.Thread.Sleep(100);
-            }
-            NotifyDFUTransferring(false);
-
-            if (Parameter.Status == DFUStatus.Canceled) {
-                OnTerminatedTransferProcess(false);
-            } else {
-                OnTerminatedTransferProcess(success);
-            }
-        }
-
         private void OnCanceledTransferByUser()
         {
             // 処理進捗画面のCancelボタンがクリックされた場合
@@ -151,7 +109,7 @@ namespace MaintenanceToolApp.DFU
             Parameter.Status = DFUStatus.Canceled;
         }
 
-        private void OnTerminatedTransferProcess(bool success)
+        public void OnTerminatedTransferProcess(bool success)
         {
             if (Parameter.Status == DFUStatus.Canceled) {
                 // 転送が中止された旨を、処理進捗画面に通知
@@ -236,7 +194,7 @@ namespace MaintenanceToolApp.DFU
         //
         // 画面に対する処理
         //
-        private void NotifyDFUProcessStarting(int maximum)
+        public void NotifyDFUProcessStarting(int maximum)
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 // 処理進捗画面にDFU処理開始を通知
@@ -257,7 +215,7 @@ namespace MaintenanceToolApp.DFU
             AppLogUtil.OutputLogInfo(message);
         }
 
-        private void NotifyDFUTransferring(bool transferring)
+        public void NotifyDFUTransferring(bool transferring)
         {
             // 処理進捗画面のCancelボタンを押下可能／不可能とする
             Application.Current.Dispatcher.Invoke(new Action(() => {
@@ -272,7 +230,7 @@ namespace MaintenanceToolApp.DFU
             }));
         }
 
-        private void NotifyDFUProgress(string message, int progressValue)
+        public void NotifyDFUProgress(string message, int progressValue)
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 ProcessingWindow.NotifyDFUProcess(message, progressValue);
