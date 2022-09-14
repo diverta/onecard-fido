@@ -33,10 +33,10 @@ namespace MaintenanceToolApp.DFU
         // 処理結果（エラーメッセージ）
         public string ErrorMessage { get; set; }
 
-        public DFUParameter(VersionInfoData versionInfoData, DFUImageData imageData)
+        public DFUParameter()
         {
-            CurrentVersionInfo = versionInfoData;
-            UpdateImageData = imageData;
+            CurrentVersionInfo = null!;
+            UpdateImageData = null!;
             Status = DFUStatus.None;
             Success = false;
             ErrorMessage = AppCommon.MSG_NONE;
@@ -61,7 +61,7 @@ namespace MaintenanceToolApp.DFU
     public class DFUProcess
     {
         // 処理実行のためのプロパティー
-        private DFUParameter Parameter = null!;
+        private DFUParameter Parameter = new DFUParameter();
 
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
@@ -275,26 +275,20 @@ namespace MaintenanceToolApp.DFU
 
         private void StartDFU()
         {
-            // コマンドを別スレッドで起動
+            // ステータスを更新
+            Parameter.Status = DFUStatus.GetCurrentVersion;
+
             Task task = Task.Run(() => {
                 // バージョン情報照会から開始
                 VersionInfoProcess process = new VersionInfoProcess();
-                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(DoDFUResume));
+                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
             });
 
             // 進捗画面を表示
             CommonProcessingWindow.OpenForm(ParentWindow);
-        }
-
-        private void DoDFUResume(bool success, string errorMessage, VersionInfoData versionInfoData) 
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // 進捗画面を閉じる
-                CommonProcessingWindow.NotifyTerminate();
-            }));
 
             // バージョン情報照会失敗時は、以降の処理を実行しない
-            if (success == false || versionInfoData == null) {
+            if (Parameter.Status == DFUStatus.None) {
                 DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
                 return;
             }
@@ -303,18 +297,37 @@ namespace MaintenanceToolApp.DFU
             string checkErrorCaption;
             string checkErrorMessage;
             DFUImageData imageData;
-            if (DFUImage.CheckAndGetUpdateVersion(versionInfoData, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
+            if (DFUImage.CheckAndGetUpdateVersion(Parameter.CurrentVersionInfo, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
                 DialogUtil.ShowWarningMessage(ParentWindow, checkErrorCaption, checkErrorMessage);
                 return;
             }
 
+            // イメージ情報をパラメーターに設定
+            Parameter.UpdateImageData = imageData;
+
             // ファームウェア更新画面を開き、実行を指示
-            Parameter = new DFUParameter(versionInfoData, imageData);
             bool b = new DFUWindow(Parameter).ShowDialogWithOwner(ParentWindow);
             if (b) {
                 // DFU機能を実行
                 DoProcess();
             }
+        }
+
+        private void OnReceivedVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData) 
+        {
+            if (success == false || versionInfoData == null) {
+                // バージョン情報照会失敗時はステータスをクリア
+                Parameter.Status = DFUStatus.None;
+
+            } else {
+                // バージョン情報をパラメーターに設定
+                Parameter.CurrentVersionInfo = versionInfoData;
+            }
+
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
     }
 }
