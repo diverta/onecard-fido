@@ -56,6 +56,12 @@ namespace MaintenanceToolApp.DFU
 
         private void OnConnectedToSMPService(bool success)
         {
+            if (success == false) {
+                // 接続失敗時は転送処理を開始しない
+                OnTerminatedDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_CONNECT_FAILED);
+                return;
+            }
+
             // 転送処理を開始する
             DoTransferProcess();
         }
@@ -98,9 +104,9 @@ namespace MaintenanceToolApp.DFU
             DFUProcess.NotifyDFUTransferring(false);
 
             if (Parameter.Status == DFUStatus.Canceled) {
-                DFUProcess.OnTerminatedTransferProcess(false);
+                OnTerminatedDFUTransferProcess(false, AppCommon.MSG_NONE);
             } else {
-                DFUProcess.OnTerminatedTransferProcess(true);
+                OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
             }
         }
     }
