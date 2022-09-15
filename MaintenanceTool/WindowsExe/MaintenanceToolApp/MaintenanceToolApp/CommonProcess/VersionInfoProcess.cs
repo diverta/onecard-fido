@@ -73,8 +73,7 @@ namespace MaintenanceToolApp.CommonProcess
             string statusMessage;
             if (CTAP2Util.CheckStatusByte(responseData, out statusMessage) == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
-                NotifyCommandTerminated(false, statusMessage, null!);
-                NotifyCommandTerminated -= HandlerRef;
+                DoNotifyCommandTerminated(false, statusMessage, null!);
                 return;
             }
 
@@ -97,8 +96,7 @@ namespace MaintenanceToolApp.CommonProcess
             }
 
             // 上位クラスに制御を戻す
-            NotifyCommandTerminated(true, AppCommon.MSG_NONE, new VersionInfoData(strFWRev, strHWRev));
-            NotifyCommandTerminated -= HandlerRef;
+            DoNotifyCommandTerminated(true, AppCommon.MSG_NONE, new VersionInfoData(strFWRev, strHWRev));
         }
 
         //
@@ -114,8 +112,7 @@ namespace MaintenanceToolApp.CommonProcess
 
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
-                NotifyCommandTerminated(success, errorMessage, null!);
-                NotifyCommandTerminated -= HandlerRef;
+                DoNotifyCommandTerminated(success, errorMessage, null!);
                 return;
             }
 
@@ -132,7 +129,18 @@ namespace MaintenanceToolApp.CommonProcess
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
 
             // 応答タイムアウトを通知
-            NotifyCommandTerminated(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT, null!);
+            DoNotifyCommandTerminated(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT, null!);
+        }
+
+        //
+        // コマンド終了時の処理
+        //
+        private void DoNotifyCommandTerminated(bool success, string errorMessage, VersionInfoData versionInfoData)
+        {
+            // バージョン情報、エラーメッセージを戻す
+            NotifyCommandTerminated(success, errorMessage, versionInfoData);
+
+            // 呼出元クラスの関数コールバックを解除
             NotifyCommandTerminated -= HandlerRef;
         }
     }
