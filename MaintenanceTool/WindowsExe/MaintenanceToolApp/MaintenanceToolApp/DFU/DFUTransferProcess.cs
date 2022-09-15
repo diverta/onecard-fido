@@ -185,8 +185,35 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
+            // 転送比率を計算
+            int imageBytesTotal = Parameter.UpdateImageData.NRF53AppBinSize;
+            int percentage = Parameter.ImageBytesSent * 100 / imageBytesTotal;
+
+            // 転送状況を画面表示
+            string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
+            DFUProcess.NotifyDFUProgress(progressMessage, percentage);
+
+            // イメージ全体が転送されたかどうかチェック
+            if (Parameter.ImageBytesSent < imageBytesTotal) {
+                // 転送中であることを通知
+                DFUProcess.NotifyDFUTransferring(true);
+
+                // 転送処理を続行
+                DoRequestUploadImage();
+
+            } else {
+                // 転送が完了したことを通知
+                DFUProcess.NotifyDFUTransferring(false);
+
+                // 反映要求に移行
+                DoRequestChangeImageUpdateMode();
+            }
+        }
+
+        private void DoRequestChangeImageUpdateMode()
+        {
             // TODO: 仮の実装です。
-            DoTransferProcess();
+            OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
         }
 
         private bool CheckUploadResultInfo(byte[] responseData, out string errorMessage)
@@ -333,27 +360,5 @@ namespace MaintenanceToolApp.DFU
         private const int CMD_IMG_MGMT_UPLOAD = 1;
 
         private const int SMP_HEADER_SIZE = 8;
-
-        //
-        // TODO: 仮の実装です。
-        //
-        private void DoTransferProcess()
-        {
-            System.Threading.Thread.Sleep(2000);
-
-            DFUProcess.NotifyDFUTransferring(true);
-            for (int percentage = 0; Parameter.Status == DFUStatus.UploadProcess && percentage < 100; percentage++) {
-                string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
-                DFUProcess.NotifyDFUProgress(progressMessage, percentage);
-                System.Threading.Thread.Sleep(100);
-            }
-            DFUProcess.NotifyDFUTransferring(false);
-
-            if (Parameter.Status == DFUStatus.Canceled) {
-                OnTerminatedDFUTransferProcess(false, AppCommon.MSG_NONE);
-            } else {
-                OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
-            }
-        }
     }
 }
