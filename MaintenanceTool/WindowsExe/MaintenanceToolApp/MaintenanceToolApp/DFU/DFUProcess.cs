@@ -70,6 +70,9 @@ namespace MaintenanceToolApp.DFU
 
         // イメージ反映所要時間（秒）
         public const int DFU_WAITING_SEC_ESTIMATED = 25;
+
+        // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
+        public const bool IMAGE_UPDATE_TEST_MODE = false;
     }
 
     public class DFUProcess
@@ -221,7 +224,7 @@ namespace MaintenanceToolApp.DFU
             }));
         }
 
-        private void NotifyDFUInfoMessage(string message)
+        public void NotifyDFUInfoMessage(string message)
         {
             // メッセージ文言を画面とログに出力
             Application.Current.Dispatcher.Invoke(new Action(() => {

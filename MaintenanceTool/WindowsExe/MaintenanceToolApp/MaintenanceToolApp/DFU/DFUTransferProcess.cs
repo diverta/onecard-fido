@@ -210,12 +210,6 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
-        private void DoRequestChangeImageUpdateMode()
-        {
-            // TODO: 仮の実装です。
-            OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
-        }
-
         private bool CheckUploadResultInfo(byte[] responseData, out string errorMessage)
         {
             // メッセージの初期化
@@ -238,6 +232,79 @@ namespace MaintenanceToolApp.DFU
             // 転送結果情報の off 値を転送済みバイト数に設定
             Parameter.ImageBytesSent = (int)decoder.ResultInfo.Off;
             return true;
+        }
+
+        //
+        // 反映要求
+        //
+        private void DoRequestChangeImageUpdateMode()
+        {
+            // リクエストデータを生成
+            byte[] bodyBytes = DFUCommon.GenerateBodyForRequestChangeImageUpdateMode(Parameter, DFUProcessConst.IMAGE_UPDATE_TEST_MODE);
+            ushort len = (ushort)bodyBytes.Length;
+            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
+
+            // リクエストデータを送信
+            Parameter.Command = BLEDFUCommand.ChangeImageUpdateMode;
+            SendSMPRequestData(bodyBytes, headerBytes);
+        }
+
+        private void DoResponseChangeImageUpdateMode(byte[] responseData)
+        {
+            // スロット照会情報を参照し、チェックでNGの場合は以降の処理を行わない
+            string errorMessage;
+            if (CheckUploadedSlotInfo(responseData, out errorMessage) == false) {
+                OnTerminatedDFUTransferProcess(false, errorMessage);
+                return;
+            }
+
+            // DFU転送成功を通知
+            DFUProcess.NotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
+
+            // リセット要求に移行
+            DoRequestResetApplication();
+        }
+
+        private bool CheckUploadedSlotInfo(byte[] responseData, out string errorMessage)
+        {
+            // メッセージの初期化
+            errorMessage = AppCommon.MSG_NONE;
+
+            // CBORをデコードしてスロット照会情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeSlotInfo(responseData) == false) {
+                errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
+                return false;
+            }
+
+            // スロット情報の代わりに rc が設定されている場合はエラー
+            byte rc = decoder.ResultInfo.Rc;
+            if (rc != 0) {
+                errorMessage = string.Format(AppCommon.MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc);
+                return false;
+            }
+            return true;
+        }
+
+        //
+        // リセット要求
+        //
+        private void DoRequestResetApplication()
+        {
+            // リクエストデータを生成
+            byte[] bodyBytes = new byte[] { 0xbf, 0xff };
+            ushort len = (ushort)bodyBytes.Length;
+            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_OS_MGMT, 0x00, CMD_OS_MGMT_RESET);
+
+            // リクエストデータを送信
+            Parameter.Command = BLEDFUCommand.ResetApplication;
+            SendSMPRequestData(bodyBytes, headerBytes);
+        }
+
+        private void DoResponseResetApplication(byte[] responseData)
+        {
+            // DFU主処理の正常終了を通知
+            OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
         }
 
         //
@@ -307,6 +374,12 @@ namespace MaintenanceToolApp.DFU
                 case BLEDFUCommand.UploadImage:
                     DoResponseUploadImage(ResponseData);
                     break;
+                case BLEDFUCommand.ChangeImageUpdateMode:
+                    DoResponseChangeImageUpdateMode(ResponseData);
+                    break;
+                case BLEDFUCommand.ResetApplication:
+                    DoResponseResetApplication(ResponseData);
+                    break;
                 default:
                     break;
                 }
@@ -331,6 +404,12 @@ namespace MaintenanceToolApp.DFU
                 break;
             case BLEDFUCommand.UploadImage:
                 errorMessage = AppCommon.MSG_DFU_IMAGE_TRANSFER_FAILED;
+                break;
+            case BLEDFUCommand.ChangeImageUpdateMode:
+                errorMessage = AppCommon.MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED;
+                break;
+            case BLEDFUCommand.ResetApplication:
+                errorMessage = AppCommon.MSG_DFU_RESET_APPLICATION_FAILED;
                 break;
             default:
                 break;
@@ -358,6 +437,9 @@ namespace MaintenanceToolApp.DFU
         private const int GRP_IMG_MGMT = 1;
         private const int CMD_IMG_MGMT_STATE = 0;
         private const int CMD_IMG_MGMT_UPLOAD = 1;
+
+        private const int GRP_OS_MGMT = 0;
+        private const int CMD_OS_MGMT_RESET = 5;
 
         private const int SMP_HEADER_SIZE = 8;
     }

@@ -139,5 +139,31 @@ namespace MaintenanceToolApp.DFU
             // 転送イメージを連結して戻す
             return bodyBytes.Concat(sendData).ToArray();
         }
+
+        public static byte[] GenerateBodyForRequestChangeImageUpdateMode(DFUParameter parameter, bool imageUpdateTestMode)
+        {
+            // リクエストデータ
+            byte[] body = {
+                0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x00,
+                0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20
+            };
+
+            // イメージ反映モードを設定（confirm=false/true）
+            if (imageUpdateTestMode) {
+                body[9] = 0xf4;
+            } else {
+                body[9] = 0xf5;
+            }
+
+            // SHA-256ハッシュデータをイメージから抽出
+            byte[] hashUpdate = parameter.UpdateImageData.SHA256Hash;
+
+            // 本体にSHA-256ハッシュを連結
+            body = body.Concat(hashUpdate).ToArray();
+
+            // 終端文字を設定して戻す
+            byte[] terminator = { 0xff };
+            return body.Concat(terminator).ToArray();
+        }
     }
 }
