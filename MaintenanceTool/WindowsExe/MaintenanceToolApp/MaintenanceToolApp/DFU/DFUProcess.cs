@@ -198,7 +198,8 @@ namespace MaintenanceToolApp.DFU
 
             } else {
                 // バージョンが同じでなければ異常終了
-                AppLogUtil.OutputLogError(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion));
+                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion);
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
             }
 
             // 比較結果を戻す
