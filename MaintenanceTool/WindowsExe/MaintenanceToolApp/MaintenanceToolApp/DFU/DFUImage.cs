@@ -12,7 +12,7 @@ namespace MaintenanceToolApp.DFU
         // nRF5340アプリケーションファームウェアのバイナリーイメージを保持。
         // .bin=512Kバイトと見積っています。
         //
-        public byte[] NRF53AppBin = new byte[524288];
+        public byte[] NRF53AppBin = new byte[0];
         public int NRF53AppBinSize { get; set; }
 
         // 更新イメージファイルのハッシュ値
@@ -165,10 +165,18 @@ namespace MaintenanceToolApp.DFU
 
             try {
                 // リソースファイルを配列に読込
+                ImageDataRef.NRF53AppBin = new byte[stream.Length];
                 ImageDataRef.NRF53AppBinSize = stream.Read(ImageDataRef.NRF53AppBin, 0, (int)stream.Length);
 
                 // リソースファイルを閉じる
                 stream.Close();
+
+                // 読込長とバッファ長が異なる場合
+                if (ImageDataRef.NRF53AppBinSize != ImageDataRef.NRF53AppBin.Length) {
+                    AppLogUtil.OutputLogError(string.Format("ToolBLEDFUImage.ReadDFUImage: Read size {0} bytes, but image buffer size {1} bytes",
+                        ImageDataRef.NRF53AppBinSize, ImageDataRef.NRF53AppBin.Length));
+                    return false;
+                }
                 return true;
 
             } catch (Exception e) {
