@@ -172,8 +172,45 @@ namespace MaintenanceToolApp.DFU
 
         private void DoResponseUploadImage(byte[] responseData)
         {
+            // 処理進捗画面でCancelボタンが押下された時は、転送処理を終了し、BLE接続を切断
+            if (Parameter.Status == DFUStatus.Canceled) {
+                OnTerminatedDFUTransferProcess(false, AppCommon.MSG_NONE);
+                return;
+            }
+
+            // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
+            string errorMessage;
+            if (CheckUploadResultInfo(responseData, out errorMessage) == false) {
+                OnTerminatedDFUTransferProcess(false, errorMessage);
+                return;
+            }
+
             // TODO: 仮の実装です。
             DoTransferProcess();
+        }
+
+        private bool CheckUploadResultInfo(byte[] responseData, out string errorMessage)
+        {
+            // メッセージの初期化
+            errorMessage = AppCommon.MSG_NONE;
+
+            // CBORをデコードして転送結果情報を抽出
+            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            if (decoder.DecodeUploadResultInfo(responseData) == false) {
+                errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
+                return false;
+            }
+
+            // 転送結果情報の rc が設定されている場合はエラー
+            byte rc = decoder.ResultInfo.Rc;
+            if (rc != 0) {
+                errorMessage = string.Format(AppCommon.MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc);
+                return false;
+            }
+
+            // 転送結果情報の off 値を転送済みバイト数に設定
+            Parameter.ImageBytesSent = (int)decoder.ResultInfo.Off;
+            return true;
         }
 
         //
