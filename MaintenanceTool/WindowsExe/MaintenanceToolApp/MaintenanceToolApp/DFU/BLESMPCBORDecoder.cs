@@ -120,7 +120,7 @@ namespace MaintenanceToolApp.DFU
 
                 // 抽出する値を格納
                 byte slotNo = 0;
-                byte[] hash = null;
+                byte[] hash = new byte[0];
                 bool active = false;
 
                 // Map内を探索
