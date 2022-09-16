@@ -95,7 +95,7 @@ namespace ToolAppCommon
             }
 
             if (BleService.IsConnected() == false) {
-                AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
                 OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                 return;
             }
