@@ -126,6 +126,8 @@
         public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLEサービスからデータを受信できません。";
         public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
+        public const string MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION = "リクエスト送信が失敗しました：{0}";
+        public const string MSG_REQUEST_SEND_TIMED_OUT = "リクエスト送信がタイムアウトしました。";
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
         public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";

@@ -179,6 +179,8 @@ namespace MaintenanceToolApp.DFU
             if (success == false || versionInfoData == null) {
                 // バージョン情報照会失敗時は終了
                 Parameter.ErrorMessage = errorMessage;
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
+
                 Parameter.Success = false;
                 NotifyDFUProcessTerminated();
                 return;

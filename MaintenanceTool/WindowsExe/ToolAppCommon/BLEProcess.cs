@@ -273,10 +273,10 @@ namespace ToolAppCommon
             }
         }
 
-        private void OnTransactionFailed()
+        private void OnTransactionFailed(string errorMessage)
         {
             // 送信失敗時
-            OnReceivedResponse(CMDToSend, new byte[0], false, AppCommon.MSG_REQUEST_SEND_FAILED);
+            OnReceivedResponse(CMDToSend, new byte[0], false, errorMessage);
         }
 
         private void DisconnectBLE()

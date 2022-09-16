@@ -1,5 +1,4 @@
 ﻿using MaintenanceToolApp.Common;
-using System;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp.CommonProcess
@@ -28,9 +27,6 @@ namespace MaintenanceToolApp.CommonProcess
         // BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
-        // 応答タイムアウト監視用タイマー
-        private CommonTimer responseTimer = null!;
-
         //
         // 外部公開用
         //
@@ -38,10 +34,6 @@ namespace MaintenanceToolApp.CommonProcess
         {
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
-
-            // 応答タイムアウト発生時のイベントを登録
-            responseTimer = new CommonTimer("VersionInfoProcess", 10000);
-            responseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
         }
 
         public void DoRequestVersionInfo(HandlerOnNotifyCommandTerminated handler)
@@ -62,9 +54,6 @@ namespace MaintenanceToolApp.CommonProcess
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
             CommandProcess.DoRequestBleCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[1]);
-
-            // 応答タイムアウト監視開始
-            responseTimer.Start();
         }
 
         private void DoResponseBLEGetVersionInfo(byte[] responseData)
@@ -107,9 +96,6 @@ namespace MaintenanceToolApp.CommonProcess
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
 
-            // 応答タイムアウト監視終了
-            responseTimer.Stop();
-
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 DoNotifyCommandTerminated(success, errorMessage, null!);
@@ -118,18 +104,6 @@ namespace MaintenanceToolApp.CommonProcess
 
             // バージョン情報照会結果
             DoResponseBLEGetVersionInfo(responseData);
-        }
-
-        //
-        // 応答タイムアウト時の処理
-        //
-        private void OnResponseTimerElapsed(object sender, EventArgs e)
-        {
-            // イベントを解除
-            CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
-
-            // 応答タイムアウトを通知
-            DoNotifyCommandTerminated(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT, null!);
         }
 
         //
