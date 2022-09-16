@@ -44,7 +44,6 @@ namespace MaintenanceToolApp.Common
             try {
                 // イベントを送出
                 CommandTimeoutEvent(sender, e);
-                AppLogUtil.OutputLogError(string.Format("CommonTimer({0}) timed out", TimerName));
 
             } catch (Exception ex) {
                 AppLogUtil.OutputLogError(string.Format("CommonTimer({0}): {1}", TimerName, ex.Message));
