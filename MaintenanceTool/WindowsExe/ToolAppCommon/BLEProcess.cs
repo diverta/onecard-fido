@@ -90,13 +90,15 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 for (int i = 0; i < 2; i++) {
+                    if (i > 0) {
+                        AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i));
+                        await Task.Run(() => System.Threading.Thread.Sleep(250));
+                    }
                     // 未接続の場合はFIDO認証器とのBLE通信を開始
                     if (await BleService.StartCommunicate()) {
                         AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
                         break;
                     }
-                    AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i + 1));
-                    await Task.Run(() => System.Threading.Thread.Sleep(250));
                 }
             }
 
