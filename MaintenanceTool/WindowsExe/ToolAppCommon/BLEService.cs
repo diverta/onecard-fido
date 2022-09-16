@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,8 +18,15 @@ namespace ToolAppCommon
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
         private Guid U2F_STATUS_CHAR_UUID = new Guid("F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB");
 
+        // 応答タイムアウト監視用タイマー
+        private CommonTimer ResponseTimer = null!;
+
         public BLEService()
         {
+            // 応答タイムアウト発生時のイベントを登録
+            ResponseTimer = new CommonTimer("BLEService", 10000);
+            ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
+
             watcher = new BluetoothLEAdvertisementWatcher();
             watcher.Received += OnAdvertisementReceived;
             FreeResources();
@@ -190,7 +198,7 @@ namespace ToolAppCommon
         public delegate void HandlerOnDataReceived(byte[] receivedData);
         public event HandlerOnDataReceived OnDataReceived = null!;
 
-        public delegate void HandlerOnTransactionFailed();
+        public delegate void HandlerOnTransactionFailed(string errorMessage);
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
         public async Task<bool> StartCommunicate()
@@ -280,6 +288,9 @@ namespace ToolAppCommon
 
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
+            // 応答タイムアウト監視終了
+            ResponseTimer.Stop();
+
             try {
                 // レスポンスを受領（U2F Statusを読込）
                 uint len = eventArgs.CharacteristicValue.Length;
@@ -290,8 +301,7 @@ namespace ToolAppCommon
                 OnDataReceived(responseBytes);
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
         }
 
@@ -299,7 +309,7 @@ namespace ToolAppCommon
         {
             if (BLEservice == null) {
                 AppLogUtil.OutputLogError(string.Format("BLEService.Send: service is null"));
-                OnTransactionFailed();
+                OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
             }
 
             try {
@@ -313,18 +323,30 @@ namespace ToolAppCommon
                 if (U2FControlPointChar != null) {
                     GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
                     if (result != GattCommunicationStatus.Success) {
-                        AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                        OnTransactionFailed();
+                        OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
+
+                    } else {
+                        // 応答タイムアウト監視開始
+                        ResponseTimer.Start();
                     }
+
                 } else {
                     AppLogUtil.OutputLogError(string.Format("BLEService.Send: U2F control point characteristic is null"));
-                    OnTransactionFailed();
+                    OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.Send: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
+        }
+
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
 
         public void Disconnect()

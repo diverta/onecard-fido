@@ -114,5 +114,21 @@ namespace ToolAppCommon
             Array.Copy(src, startIndex, dst, 0, count);
             return dst;
         }
+
+        public static void ConvertUint32ToBEBytes(UInt32 ui, byte[] b, int offset)
+        {
+            byte[] s = BitConverter.GetBytes(ui);
+            for (int i = 0; i < s.Length; i++) {
+                b[i + offset] = s[s.Length - 1 - i];
+            }
+        }
+
+        public static void ConvertUint16ToBEBytes(UInt16 ui, byte[] b, int offset)
+        {
+            byte[] s = BitConverter.GetBytes(ui);
+            for (int i = 0; i < s.Length; i++) {
+                b[i + offset] = s[s.Length - 1 - i];
+            }
+        }
     }
 }

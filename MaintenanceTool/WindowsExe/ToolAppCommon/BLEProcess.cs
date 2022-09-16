@@ -34,6 +34,12 @@ namespace ToolAppCommon
             Instance.SendBLEMessage(CMD, data);
         }
 
+        public static void DisconnctBLE()
+        {
+            // 接続破棄
+            Instance.DisconnectBLE();
+        }
+
         //
         // 内部処理
         //
@@ -84,18 +90,20 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 for (int i = 0; i < 2; i++) {
+                    if (i > 0) {
+                        AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i));
+                        await Task.Run(() => System.Threading.Thread.Sleep(250));
+                    }
                     // 未接続の場合はFIDO認証器とのBLE通信を開始
                     if (await BleService.StartCommunicate()) {
                         AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
                         break;
                     }
-                    AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i + 1));
-                    await Task.Run(() => System.Threading.Thread.Sleep(250));
                 }
             }
 
             if (BleService.IsConnected() == false) {
-                AppLogUtil.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
                 OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                 return;
             }
@@ -273,10 +281,10 @@ namespace ToolAppCommon
             }
         }
 
-        private void OnTransactionFailed()
+        private void OnTransactionFailed(string errorMessage)
         {
             // 送信失敗時
-            OnReceivedResponse(CMDToSend, new byte[0], false, AppCommon.MSG_REQUEST_SEND_FAILED);
+            OnReceivedResponse(CMDToSend, new byte[0], false, errorMessage);
         }
 
         private void DisconnectBLE()
