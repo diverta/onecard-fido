@@ -34,6 +34,12 @@ namespace ToolAppCommon
             Instance.SendBLEMessage(CMD, data);
         }
 
+        public static void DisconnctBLE()
+        {
+            // 接続破棄
+            Instance.DisconnectBLE();
+        }
+
         //
         // 内部処理
         //
