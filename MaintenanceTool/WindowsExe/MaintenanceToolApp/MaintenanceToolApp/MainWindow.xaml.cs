@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.DFU;
+﻿using MaintenanceToolApp.BLESettings;
+using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
@@ -72,6 +73,8 @@ namespace MaintenanceToolApp
 
         private void DoBLESettings()
         {
+            // TODO: 仮の実装です。
+            new BLESettingsWindow().ShowDialogWithOwner(this);
         }
 
         private void DoDFU()
