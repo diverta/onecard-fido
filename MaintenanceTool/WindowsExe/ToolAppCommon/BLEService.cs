@@ -46,7 +46,7 @@ namespace ToolAppCommon
         private ulong BluetoothAddress;
 
         // ペアリングに使用するパスキー（PIN）を保持
-        private string? Passkey = null;
+        private string Passkey = null!;
 
         //
         // BLEペアリング関連イベント
@@ -195,9 +195,9 @@ namespace ToolAppCommon
         //
         // サービスをディスカバーできたデバイスを保持
         private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
-        private GattDeviceService? BLEservice;
-        private GattCharacteristic? U2FControlPointChar;
-        private GattCharacteristic? U2FStatusChar;
+        private GattDeviceService BLEservice = null!;
+        private GattCharacteristic U2FControlPointChar = null!;
+        private GattCharacteristic U2FStatusChar = null!;
 
         //
         // BLE送受信関連イベント
@@ -275,7 +275,7 @@ namespace ToolAppCommon
                 GattCommunicationStatus result = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (result != GattCommunicationStatus.Success) {
-                    BLEservice = null;
+                    FreeResources();
                     return false;
                 }
 
@@ -400,8 +400,9 @@ namespace ToolAppCommon
         private void FreeResources()
         {
             // オブジェクトへの参照を解除
-            BLEservice = null;
-            U2FStatusChar = null;
+            BLEservice = null!;
+            U2FControlPointChar = null!;
+            U2FStatusChar = null!;
         }
     }
 }
