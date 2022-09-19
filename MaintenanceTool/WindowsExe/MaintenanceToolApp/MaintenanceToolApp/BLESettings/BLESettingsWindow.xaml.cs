@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -29,6 +30,19 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
+        private void DoPairing()
+        {
+            // パスコード入力画面を表示
+            PairingStartWindow w = new PairingStartWindow(Parameter);
+            if (w.ShowDialogWithOwner(this) == false) {
+                return;
+            }
+
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_PAIRING;
+            TerminateWindow(true);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -46,8 +60,7 @@ namespace MaintenanceToolApp.BLESettings
 
         private void buttonPairing_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            new PairingStartWindow(Parameter).ShowDialogWithOwner(this);
+            DoPairing();
         }
     }
 }

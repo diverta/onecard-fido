@@ -38,6 +38,10 @@
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
 
+        // BLE設定機能
+        public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE = "パスコードを６桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE_NUM = "パスコードを数字で入力してください";
+
         // BLE DFU関連メッセージ
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
         public const string MSG_DFU_SUB_PROCESS_FAILED = "ファームウェア更新機能の内部処理が失敗しました。";

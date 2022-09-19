@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -10,6 +11,10 @@ namespace MaintenanceToolApp.BLESettings
         // 処理実行のためのプロパティー
         private readonly BLESettingsParameter Parameter;
 
+        // パスコードの最小／最大桁数
+        private const int PASS_CODE_SIZE_MIN = 6;
+        private const int PASS_CODE_SIZE_MAX = 6;
+
         public PairingStartWindow(BLESettingsParameter param)
         {
             // パラメーターの参照を保持
@@ -19,6 +24,10 @@ namespace MaintenanceToolApp.BLESettings
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
+            // パスコード入力欄をブランクにし、フォーカスを移動
+            passwordBoxPasscode.Clear();
+            passwordBoxPasscode.Focus();
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -29,6 +38,18 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
+        private void DoOK()
+        {
+            // 入力チェックがNGの場合は中止
+            if (CheckEntries() == false) {
+                return;
+            }
+
+            // 入力されたパスコードを設定し、画面を閉じる
+            Parameter.Passcode = passwordBoxPasscode.Password;
+            TerminateWindow(true);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -36,9 +57,29 @@ namespace MaintenanceToolApp.BLESettings
             Close();
         }
 
+        private bool CheckEntries()
+        {
+            // 長さチェック
+            if (PasswordBoxUtil.CheckEntrySize(passwordBoxPasscode, PASS_CODE_SIZE_MIN, PASS_CODE_SIZE_MAX, Title, AppCommon.MSG_PROMPT_INPUT_PAIRING_PASSCODE, this) == false) {
+                return false;
+            }
+
+            // 数字入力チェック
+            if (PasswordBoxUtil.CheckIsNumeric(passwordBoxPasscode, Title, AppCommon.MSG_PROMPT_INPUT_PAIRING_PASSCODE_NUM, this) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
         //
         // イベント処理部
         // 
+        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        {
+            DoOK();
+        }
+
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);

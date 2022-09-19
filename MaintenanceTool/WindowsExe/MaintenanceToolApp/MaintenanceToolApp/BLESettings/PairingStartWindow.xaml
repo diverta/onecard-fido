@@ -10,7 +10,7 @@
         <GroupBox x:Name="groupBox1" Header="ペアリング実行" Margin="25,85,25,76"/>
         <Label x:Name="labelToolName2" Content="パスコード（半角数字6桁）" HorizontalAlignment="Left" Margin="35,117,0,0" VerticalAlignment="Top" Width="140"/>
         <PasswordBox x:Name="passwordBoxPasscode" HorizontalAlignment="Left" Margin="185,121,0,0" VerticalAlignment="Top" Width="130"/>
-        <Button x:Name="buttonOK" Content="ペアリングを実行する" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="150" Margin="0,164,0,0"/>
+        <Button x:Name="buttonOK" Content="ペアリングを実行する" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="150" Margin="0,164,0,0" Click="buttonOK_Click"/>
         <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,240,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
     </Grid>
 </Window>
