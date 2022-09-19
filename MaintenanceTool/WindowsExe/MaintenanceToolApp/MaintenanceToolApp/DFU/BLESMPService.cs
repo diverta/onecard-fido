@@ -35,7 +35,7 @@ namespace MaintenanceToolApp.DFU
         public delegate void HandlerOnDataReceived(byte[] receivedData);
         public event HandlerOnDataReceived OnDataReceived = null!;
 
-        public delegate void HandlerOnTransactionFailed();
+        public delegate void HandlerOnTransactionFailed(string errorMessage);
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
         // 応答タイムアウト監視用タイマー
@@ -167,7 +167,7 @@ namespace MaintenanceToolApp.DFU
         {
             if (SMPService == null) {
                 AppLogUtil.OutputLogError(string.Format("BLESMPService.Send: service is null"));
-                OnTransactionFailed();
+                OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
             }
 
             try {
@@ -186,8 +186,7 @@ namespace MaintenanceToolApp.DFU
                 // リクエストを実行（SMPキャラクタリスティックに書込）
                 GattCommunicationStatus result = await SMPCharacteristic.WriteValueAsync(writer.DetachBuffer(), writeOption);
                 if (result != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                    OnTransactionFailed();
+                    OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
 
                 } else {
                     // 応答タイムアウト監視開始
@@ -195,8 +194,7 @@ namespace MaintenanceToolApp.DFU
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
         }
 
@@ -206,7 +204,7 @@ namespace MaintenanceToolApp.DFU
         private void OnResponseTimerElapsed(object sender, EventArgs e)
         {
             // 応答タイムアウトを通知
-            OnTransactionFailed();
+            OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
 
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
@@ -224,9 +222,7 @@ namespace MaintenanceToolApp.DFU
                 OnDataReceived(responseBytes);
 
             } catch (Exception e) {
-                // エラー通知
-                AppLogUtil.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
         }
 

@@ -378,8 +378,11 @@ namespace MaintenanceToolApp.DFU
         //
         // 応答失敗時の処理
         //
-        private void OnTransactionFailed()
+        private void OnTransactionFailed(string errorBLEMessage)
         {
+            // トランスポートのエラーメッセージをログ出力
+            AppLogUtil.OutputLogError(errorBLEMessage);
+
             // 処理区分に応じて分岐
             string errorMessage = AppCommon.MSG_NONE;
             switch (Parameter.Command) {
