@@ -7,8 +7,8 @@
         Title="BLE設定" Width="360" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
     <Grid Height="230">
         <GroupBox x:Name="groupBox1" Header="BLEペアリング" Margin="25,15,25,75"/>
-        <Button x:Name="buttonBLECtap2HealthCheck" Content="ペアリング実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,45,0,0"/>
-        <Button x:Name="buttonBLEU2FHealthCheck" Content="ペアリング解除" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,100,0,0"/>
+        <Button x:Name="buttonPairing" Content="ペアリング実行" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,45,0,0" Click="buttonPairing_Click"/>
+        <Button x:Name="buttonUnpairing" Content="ペアリング解除" HorizontalAlignment="Center" VerticalAlignment="Top" Height="25" Width="250" Margin="0,100,0,0"/>
         <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,180,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
     </Grid>
 </Window>

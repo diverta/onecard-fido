@@ -3,11 +3,11 @@
 namespace MaintenanceToolApp.BLESettings
 {
     /// <summary>
-    /// BLESettingsWindow.xaml の相互作用ロジック
+    /// PairingStartWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class BLESettingsWindow : Window
+    public partial class PairingStartWindow : Window
     {
-        public BLESettingsWindow()
+        public PairingStartWindow()
         {
             InitializeComponent();
         }
@@ -37,12 +37,6 @@ namespace MaintenanceToolApp.BLESettings
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
-        }
-
-        private void buttonPairing_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: 仮の実装です。
-            new PairingStartWindow().ShowDialogWithOwner(this);
         }
     }
 }
