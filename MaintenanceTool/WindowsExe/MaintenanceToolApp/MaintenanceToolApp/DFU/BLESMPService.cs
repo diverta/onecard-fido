@@ -82,39 +82,33 @@ namespace MaintenanceToolApp.DFU
         // 
         public async Task<bool> StartCommunicate()
         {
-            try {
-                // サービスをディスカバー
-                if (await DiscoverBLEService() == false) {
-                    return false;
-                }
-
-                // データ受信監視を開始
-                foreach (GattDeviceService service in BLEServices) {
-                    if (await StartBLENotification(service)) {
-                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
-                        break;
-                    }
-                    AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
-                }
-
-                // 接続された場合は true
-                return IsConnected();
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("StartCommunicate: {0}", e.Message));
-                FreeResources();
+            // サービスをディスカバー
+            BLEServices.Clear();
+            if (await DiscoverBLEService() == false) {
                 return false;
             }
+
+            // データ受信監視を開始
+            for (int i = 0; i < BLEServices.Count; i++) {
+                GattDeviceService service = BLEServices[i];
+                if (await StartBLENotification(service)) {
+                    AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                    break;
+                }
+                AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+            }
+
+            // 接続された場合は true
+            return IsConnected();
         }
 
-        public async Task<bool> DiscoverBLEService()
+        private async Task<bool> DiscoverBLEService()
         {
             try {
-                AppLogUtil.OutputLogInfo(string.Format("BLE SMPサービス({0})を検索します。", BLE_SMP_SERVICE_UUID));
+                AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_SMP_SERVICE_FINDING, BLE_SMP_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(BLE_SMP_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
-                BLEServices.Clear();
                 foreach (DeviceInformation info in collection) {
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
                     if (service != null) {
@@ -124,11 +118,11 @@ namespace MaintenanceToolApp.DFU
                 }
 
                 if (BLEServices.Count == 0) {
-                    AppLogUtil.OutputLogError("BLE SMPサービスが見つかりません。");
+                    AppLogUtil.OutputLogError(AppCommon.MSG_BLE_SMP_SERVICE_NOT_FOUND);
                     return false;
                 }
 
-                AppLogUtil.OutputLogInfo("BLE SMPサービスが見つかりました。");
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_FOUND);
                 return true;
 
             } catch (Exception e) {

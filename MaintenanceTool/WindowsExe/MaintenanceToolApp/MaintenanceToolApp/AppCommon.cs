@@ -117,6 +117,7 @@
 
         // Windows版固有のメッセージ文言
         // BLE関連のメッセージ文言
+        public const string MSG_BLE_U2F_SERVICE_FINDING = "FIDO BLEサービス({0})を検索します。";
         public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
         public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";
         public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO認証器の接続に失敗しました。";
@@ -131,6 +132,9 @@
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
         public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
+        public const string MSG_BLE_SMP_SERVICE_FINDING = "BLE SMPサービス({0})を検索します。";
+        public const string MSG_BLE_SMP_SERVICE_NOT_FOUND = "BLE SMPサービスが見つかりません。";
+        public const string MSG_BLE_SMP_SERVICE_FOUND = "BLE SMPサービスが見つかりました。";
 
         // BLEペアリング関連のメッセージ文言
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
