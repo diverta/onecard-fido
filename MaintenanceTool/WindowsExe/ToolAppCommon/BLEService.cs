@@ -12,11 +12,18 @@ using Windows.Storage.Streams;
 
 namespace ToolAppCommon
 {
+    public class BLEServiceConst
+    {
+        public const string U2F_BLE_SERVICE_UUID_STR = "0000FFFD-0000-1000-8000-00805f9b34fb";
+        public const string U2F_CONTROL_POINT_CHAR_UUID_STR = "F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB";
+        public const string U2F_STATUS_CHAR_UUID_STR = "F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB";
+    }
+
     public class BLEService
     {
-        private Guid U2F_BLE_SERVICE_UUID = new Guid("0000FFFD-0000-1000-8000-00805f9b34fb");
-        private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
-        private Guid U2F_STATUS_CHAR_UUID = new Guid("F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB");
+        private readonly Guid U2F_BLE_SERVICE_UUID = new Guid(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+        private readonly Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid(BLEServiceConst.U2F_CONTROL_POINT_CHAR_UUID_STR);
+        private readonly Guid U2F_STATUS_CHAR_UUID = new Guid(BLEServiceConst.U2F_STATUS_CHAR_UUID_STR);
 
         // 応答タイムアウト監視用タイマー
         private CommonTimer ResponseTimer = null!;
@@ -39,7 +46,7 @@ namespace ToolAppCommon
         private ulong BluetoothAddress;
 
         // ペアリングに使用するパスキー（PIN）を保持
-        private string? Passkey = null;
+        private string Passkey = null!;
 
         //
         // BLEペアリング関連イベント
@@ -188,9 +195,9 @@ namespace ToolAppCommon
         //
         // サービスをディスカバーできたデバイスを保持
         private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
-        private GattDeviceService? BLEservice;
-        private GattCharacteristic? U2FControlPointChar;
-        private GattCharacteristic? U2FStatusChar;
+        private GattDeviceService BLEservice = null!;
+        private GattCharacteristic U2FControlPointChar = null!;
+        private GattCharacteristic U2FStatusChar = null!;
 
         //
         // BLE送受信関連イベント
@@ -203,37 +210,39 @@ namespace ToolAppCommon
 
         public async Task<bool> StartCommunicate()
         {
-            try {
-                if (BLEServices.Count == 0) {
-                    // サービスをディスカバー
-                    if (await DiscoverBLEService() == false) {
-                        return false;
-                    }
-                }
-
-                // データ受信監視を開始
-                foreach (GattDeviceService service in BLEServices) {
-                    if (await StartBLENotification(service)) {
-                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
-                        break;
-                    }
-                    AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
-                }
-
-                // 接続された場合は true
-                return IsConnected();
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.StartCommunicate: {0}", e.Message));
-                FreeResources();
+            // サービスをディスカバー
+            BLEServices.Clear();
+            if (await DiscoverBLEService() == false) {
                 return false;
             }
+
+            // データ受信監視を開始
+            for (int i = 0; i < BLEServices.Count; i++) {
+                GattDeviceService service = BLEServices[i];
+
+                for (int k = 0; k < 2; k++) {
+                    if (k > 0) {
+                        AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
+                        await Task.Run(() => System.Threading.Thread.Sleep(100));
+                    }
+
+                    if (await StartBLENotification(service)) {
+                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        return true;
+                    }
+                }
+
+                AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+            }
+
+            // 接続されなかった場合は false
+            return false;
         }
 
         private async Task<bool> DiscoverBLEService()
         {
             try {
-                AppLogUtil.OutputLogInfo(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
+                AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_U2F_SERVICE_FINDING, U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
@@ -268,7 +277,7 @@ namespace ToolAppCommon
                 GattCommunicationStatus result = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (result != GattCommunicationStatus.Success) {
-                    BLEservice = null;
+                    FreeResources();
                     return false;
                 }
 
@@ -393,8 +402,9 @@ namespace ToolAppCommon
         private void FreeResources()
         {
             // オブジェクトへの参照を解除
-            BLEservice = null;
-            U2FStatusChar = null;
+            BLEservice = null!;
+            U2FControlPointChar = null!;
+            U2FStatusChar = null!;
         }
     }
 }

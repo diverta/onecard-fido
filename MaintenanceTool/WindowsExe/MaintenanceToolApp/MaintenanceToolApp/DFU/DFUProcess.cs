@@ -188,19 +188,19 @@ namespace MaintenanceToolApp.DFU
 
             // バージョン情報を比較して終了判定
             // --> 判定結果をメイン画面に戻す
-            Parameter.Success = CompareUpdateVersion();
+            Parameter.Success = CompareUpdateVersion(versionInfoData);
             NotifyDFUProcessTerminated();
         }
 
-        private bool CompareUpdateVersion()
+        private bool CompareUpdateVersion(VersionInfoData versionInfoData)
         {
             // バージョン情報を比較
-            string CurrentVersion = Parameter.CurrentVersionInfo.FWRev;
+            string CurrentVersion = versionInfoData.FWRev;
             string UpdateVersion = Parameter.UpdateImageData.UpdateVersion;
             bool versionEqual = (CurrentVersion == UpdateVersion);
             if (versionEqual) {
                 // バージョンが同じであればDFU処理は正常終了
-                AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+                NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
 
             } else {
                 // バージョンが同じでなければ異常終了

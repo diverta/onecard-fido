@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToolAppCommon;
@@ -8,11 +9,17 @@ using Windows.Storage.Streams;
 
 namespace MaintenanceToolApp.DFU
 {
+    public class BLESMPServiceConst
+    {
+        public const string BLE_SMP_SERVICE_UUID_STR = "8D53DC1D-1DB7-4CD3-868B-8A527460AA84";
+        public const string BLE_SMP_CHARACT_UUID_STR = "DA2E7828-FBCE-4E01-AE9E-261174997C48";
+    }
+
     internal class BLESMPService
     {
         // UUID
-        private Guid BLE_SMP_SERVICE_UUID = new Guid("8D53DC1D-1DB7-4CD3-868B-8A527460AA84");
-        private Guid BLE_SMP_CHARACT_UUID = new Guid("DA2E7828-FBCE-4E01-AE9E-261174997C48");
+        private readonly Guid BLE_SMP_SERVICE_UUID = new Guid(BLESMPServiceConst.BLE_SMP_SERVICE_UUID_STR);
+        private readonly Guid BLE_SMP_CHARACT_UUID = new Guid(BLESMPServiceConst.BLE_SMP_CHARACT_UUID_STR);
 
         // BLE SMPサービス／キャラクタリスティック
         private GattDeviceService SMPService = null!;
@@ -28,11 +35,18 @@ namespace MaintenanceToolApp.DFU
         public delegate void HandlerOnDataReceived(byte[] receivedData);
         public event HandlerOnDataReceived OnDataReceived = null!;
 
-        public delegate void HandlerOnTransactionFailed();
+        public delegate void HandlerOnTransactionFailed(string errorMessage);
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
+
+        // 応答タイムアウト監視用タイマー
+        private CommonTimer ResponseTimer = null!;
 
         public BLESMPService()
         {
+            // 応答タイムアウト発生時のイベントを登録
+            ResponseTimer = new CommonTimer("BLESMPService", 10000);
+            ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
+
             FreeResources();
         }
 
@@ -48,7 +62,7 @@ namespace MaintenanceToolApp.DFU
                     OnConnectedToSMPService -= handler;
                     return;
                 }
-                AppLogUtil.OutputLogInfo("BLE SMPサービスに接続されました。");
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_CONNECTED);
             }
 
             // FIDO認証器に接続完了
@@ -60,7 +74,7 @@ namespace MaintenanceToolApp.DFU
         {
             // 切断
             StopCommunicate();
-            AppLogUtil.OutputLogInfo("BLE SMPサービスから切断されました。");
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_DISCONNECTED);
         }
 
         //
@@ -68,39 +82,42 @@ namespace MaintenanceToolApp.DFU
         // 
         public async Task<bool> StartCommunicate()
         {
-            try {
-                // サービスをディスカバー
-                if (await DiscoverBLEService() == false) {
-                    return false;
-                }
-
-                // データ受信監視を開始
-                foreach (GattDeviceService service in BLEServices) {
-                    if (await StartBLENotification(service)) {
-                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
-                        break;
-                    }
-                    AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
-                }
-
-                // 接続された場合は true
-                return IsConnected();
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("StartCommunicate: {0}", e.Message));
-                FreeResources();
+            // サービスをディスカバー
+            BLEServices.Clear();
+            if (await DiscoverBLEService() == false) {
                 return false;
             }
+
+            // データ受信監視を開始
+            for (int i = 0; i < BLEServices.Count; i++) {
+                GattDeviceService service = BLEServices[i];
+
+                for (int k = 0; k < 2; k++) {
+                    if (k > 0) {
+                        AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
+                        await Task.Run(() => System.Threading.Thread.Sleep(100));
+                    }
+
+                    if (await StartBLENotification(service)) {
+                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        return true;
+                    }
+                }
+
+                AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+            }
+
+            // 接続されなかった場合は false
+            return false;
         }
 
-        public async Task<bool> DiscoverBLEService()
+        private async Task<bool> DiscoverBLEService()
         {
             try {
-                AppLogUtil.OutputLogInfo(string.Format("BLE SMPサービス({0})を検索します。", BLE_SMP_SERVICE_UUID));
+                AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_SMP_SERVICE_FINDING, BLE_SMP_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(BLE_SMP_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
-                BLEServices.Clear();
                 foreach (DeviceInformation info in collection) {
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
                     if (service != null) {
@@ -110,11 +127,11 @@ namespace MaintenanceToolApp.DFU
                 }
 
                 if (BLEServices.Count == 0) {
-                    AppLogUtil.OutputLogError("BLE SMPサービスが見つかりません。");
+                    AppLogUtil.OutputLogError(AppCommon.MSG_BLE_SMP_SERVICE_NOT_FOUND);
                     return false;
                 }
 
-                AppLogUtil.OutputLogInfo("BLE SMPサービスが見つかりました。");
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_FOUND);
                 return true;
 
             } catch (Exception e) {
@@ -153,7 +170,7 @@ namespace MaintenanceToolApp.DFU
         {
             if (SMPService == null) {
                 AppLogUtil.OutputLogError(string.Format("BLESMPService.Send: service is null"));
-                OnTransactionFailed();
+                OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
             }
 
             try {
@@ -172,18 +189,32 @@ namespace MaintenanceToolApp.DFU
                 // リクエストを実行（SMPキャラクタリスティックに書込）
                 GattCommunicationStatus result = await SMPCharacteristic.WriteValueAsync(writer.DetachBuffer(), writeOption);
                 if (result != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
-                    OnTransactionFailed();
+                    OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
+
+                } else {
+                    // 応答タイムアウト監視開始
+                    ResponseTimer.Start();
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLESMPService.Send: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
+        }
+
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
 
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
+            // 応答タイムアウト監視終了
+            ResponseTimer.Stop();
+
             try {
                 // レスポンスを受領（SMPキャラクタリスティックから読込）
                 uint len = eventArgs.CharacteristicValue.Length;
@@ -194,9 +225,7 @@ namespace MaintenanceToolApp.DFU
                 OnDataReceived(responseBytes);
 
             } catch (Exception e) {
-                // エラー通知
-                AppLogUtil.OutputLogError(string.Format("OnCharacteristicValueChanged: {0}", e.Message));
-                OnTransactionFailed();
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
             }
         }
 

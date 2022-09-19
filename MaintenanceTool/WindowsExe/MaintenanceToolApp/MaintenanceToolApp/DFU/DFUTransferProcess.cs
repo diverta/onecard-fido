@@ -1,5 +1,4 @@
-﻿using MaintenanceToolApp.Common;
-using System;
+﻿using System;
 using System.Linq;
 using ToolAppCommon;
 using static MaintenanceToolApp.DFU.DFUParameter;
@@ -11,14 +10,8 @@ namespace MaintenanceToolApp.DFU
         // このクラスのインスタンス
         private static readonly DFUTransferProcess Instance = new DFUTransferProcess();
 
-        // 応答タイムアウト監視用タイマー
-        private CommonTimer responseTimer = null!;
-
         private DFUTransferProcess()
         {
-            // 応答タイムアウト発生時のイベントを登録
-            responseTimer = new CommonTimer("DFUTransferProcess", 10000);
-            responseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
         }
 
         // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
@@ -259,7 +252,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // DFU転送成功を通知
-            DFUProcess.NotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
 
             // リセット要求に移行
             DoRequestResetApplication();
@@ -303,6 +296,9 @@ namespace MaintenanceToolApp.DFU
 
         private void DoResponseResetApplication(byte[] responseData)
         {
+            // BLE接続を破棄
+            BLEProcess.DisconnctBLE();
+
             // DFU主処理の正常終了を通知
             OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
         }
@@ -325,9 +321,6 @@ namespace MaintenanceToolApp.DFU
                     "Transmit SMP request ({0} bytes)\r\n{1}",
                     requestData.Length, dump));
             }
-
-            // 応答タイムアウト監視開始
-            responseTimer.Start();
         }
 
         // 受信済みデータ／バイト数を保持
@@ -337,9 +330,6 @@ namespace MaintenanceToolApp.DFU
 
         private void OnDataReceived(byte[] receivedData)
         {
-            // 応答タイムアウト監視終了
-            responseTimer.Stop();
-
             // ログ出力
             if (Parameter.Command != BLEDFUCommand.UploadImage) {
                 string dump = AppLogUtil.DumpMessage(receivedData, receivedData.Length);
@@ -391,10 +381,10 @@ namespace MaintenanceToolApp.DFU
         //
         // 応答失敗時の処理
         //
-        private void OnTransactionFailed()
+        private void OnTransactionFailed(string errorBLEMessage)
         {
-            // 応答タイムアウト監視終了
-            responseTimer.Stop();
+            // トランスポートのエラーメッセージをログ出力
+            AppLogUtil.OutputLogError(errorBLEMessage);
 
             // 処理区分に応じて分岐
             string errorMessage = AppCommon.MSG_NONE;
@@ -417,15 +407,6 @@ namespace MaintenanceToolApp.DFU
 
             // 画面に異常終了を通知
             OnTerminatedDFUTransferProcess(false, errorMessage);
-        }
-
-        //
-        // 応答タイムアウト時の処理
-        //
-        private void OnResponseTimerElapsed(object sender, EventArgs e)
-        {
-            // 応答タイムアウトを通知
-            OnTerminatedDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT);
         }
 
         //
