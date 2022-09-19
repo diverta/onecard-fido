@@ -91,15 +91,24 @@ namespace MaintenanceToolApp.DFU
             // データ受信監視を開始
             for (int i = 0; i < BLEServices.Count; i++) {
                 GattDeviceService service = BLEServices[i];
-                if (await StartBLENotification(service)) {
-                    AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
-                    break;
+
+                for (int k = 0; k < 2; k++) {
+                    if (k > 0) {
+                        AppLogUtil.OutputLogWarn(string.Format("監視開始を再試行しています（{0}回目）", k));
+                        await Task.Run(() => System.Threading.Thread.Sleep(100));
+                    }
+
+                    if (await StartBLENotification(service)) {
+                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        return true;
+                    }
                 }
+
                 AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
             }
 
-            // 接続された場合は true
-            return IsConnected();
+            // 接続されなかった場合は false
+            return false;
         }
 
         private async Task<bool> DiscoverBLEService()
