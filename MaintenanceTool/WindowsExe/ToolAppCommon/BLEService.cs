@@ -222,7 +222,7 @@ namespace ToolAppCommon
 
                 for (int k = 0; k < 2; k++) {
                     if (k > 0) {
-                        AppLogUtil.OutputLogWarn(string.Format("監視開始を再試行しています（{0}回目）", k));
+                        AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
                         await Task.Run(() => System.Threading.Thread.Sleep(100));
                     }
 

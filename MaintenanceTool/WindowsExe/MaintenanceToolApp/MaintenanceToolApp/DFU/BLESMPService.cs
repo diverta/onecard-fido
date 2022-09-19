@@ -62,7 +62,7 @@ namespace MaintenanceToolApp.DFU
                     OnConnectedToSMPService -= handler;
                     return;
                 }
-                AppLogUtil.OutputLogInfo("BLE SMPサービスに接続されました。");
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_CONNECTED);
             }
 
             // FIDO認証器に接続完了
@@ -74,7 +74,7 @@ namespace MaintenanceToolApp.DFU
         {
             // 切断
             StopCommunicate();
-            AppLogUtil.OutputLogInfo("BLE SMPサービスから切断されました。");
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_DISCONNECTED);
         }
 
         //
@@ -94,7 +94,7 @@ namespace MaintenanceToolApp.DFU
 
                 for (int k = 0; k < 2; k++) {
                     if (k > 0) {
-                        AppLogUtil.OutputLogWarn(string.Format("監視開始を再試行しています（{0}回目）", k));
+                        AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
                         await Task.Run(() => System.Threading.Thread.Sleep(100));
                     }
 

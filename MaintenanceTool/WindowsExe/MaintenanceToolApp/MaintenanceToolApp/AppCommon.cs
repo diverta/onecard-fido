@@ -126,6 +126,7 @@
         public const string MSG_BLE_CHARACT_NOT_DISCOVERED = "FIDO BLEサービスと通信できません。";
         public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLEサービスからデータを受信できません。";
         public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
+        public const string MSG_BLE_NOTIFICATION_RETRY = "受信データ監視開始を再試行しています（{0}回目）";
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
         public const string MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION = "リクエスト送信が失敗しました：{0}";
         public const string MSG_REQUEST_SEND_TIMED_OUT = "リクエスト送信がタイムアウトしました。";
@@ -135,6 +136,8 @@
         public const string MSG_BLE_SMP_SERVICE_FINDING = "BLE SMPサービス({0})を検索します。";
         public const string MSG_BLE_SMP_SERVICE_NOT_FOUND = "BLE SMPサービスが見つかりません。";
         public const string MSG_BLE_SMP_SERVICE_FOUND = "BLE SMPサービスが見つかりました。";
+        public const string MSG_BLE_SMP_SERVICE_CONNECTED = "BLE SMPサービスに接続されました。";
+        public const string MSG_BLE_SMP_SERVICE_DISCONNECTED = "BLE SMPサービスから切断されました。";
 
         // BLEペアリング関連のメッセージ文言
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
