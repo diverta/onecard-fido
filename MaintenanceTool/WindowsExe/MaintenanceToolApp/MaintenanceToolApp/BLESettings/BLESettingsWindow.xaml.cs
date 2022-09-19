@@ -7,8 +7,13 @@ namespace MaintenanceToolApp.BLESettings
     /// </summary>
     public partial class BLESettingsWindow : Window
     {
-        public BLESettingsWindow()
+        // 処理実行のためのプロパティー
+        private readonly BLESettingsParameter Parameter;
+
+        public BLESettingsWindow(BLESettingsParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 
@@ -42,7 +47,7 @@ namespace MaintenanceToolApp.BLESettings
         private void buttonPairing_Click(object sender, RoutedEventArgs e)
         {
             // TODO: 仮の実装です。
-            new PairingStartWindow().ShowDialogWithOwner(this);
+            new PairingStartWindow(Parameter).ShowDialogWithOwner(this);
         }
     }
 }

@@ -7,8 +7,13 @@ namespace MaintenanceToolApp.BLESettings
     /// </summary>
     public partial class PairingStartWindow : Window
     {
-        public PairingStartWindow()
+        // 処理実行のためのプロパティー
+        private readonly BLESettingsParameter Parameter;
+
+        public PairingStartWindow(BLESettingsParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 

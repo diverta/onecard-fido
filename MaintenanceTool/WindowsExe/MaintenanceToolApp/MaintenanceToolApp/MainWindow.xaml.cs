@@ -73,8 +73,13 @@ namespace MaintenanceToolApp
 
         private void DoBLESettings()
         {
-            // TODO: 仮の実装です。
-            new BLESettingsWindow().ShowDialogWithOwner(this);
+            // BLE設定画面を開き、実行コマンド種別を設定
+            BLESettingsParameter param = new BLESettingsParameter();
+            bool b = new BLESettingsWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // BLE設定機能を実行
+                new BLESettingsProcess(param).DoProcess();
+            }
         }
 
         private void DoDFU()
