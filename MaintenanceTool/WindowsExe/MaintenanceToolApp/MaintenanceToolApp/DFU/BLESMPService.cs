@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToolAppCommon;
@@ -37,8 +38,15 @@ namespace MaintenanceToolApp.DFU
         public delegate void HandlerOnTransactionFailed();
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
+        // 応答タイムアウト監視用タイマー
+        private CommonTimer ResponseTimer = null!;
+
         public BLESMPService()
         {
+            // 応答タイムアウト発生時のイベントを登録
+            ResponseTimer = new CommonTimer("BLESMPService", 10000);
+            ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
+
             FreeResources();
         }
 
@@ -180,6 +188,10 @@ namespace MaintenanceToolApp.DFU
                 if (result != GattCommunicationStatus.Success) {
                     AppLogUtil.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
                     OnTransactionFailed();
+
+                } else {
+                    // 応答タイムアウト監視開始
+                    ResponseTimer.Start();
                 }
 
             } catch (Exception e) {
@@ -188,8 +200,20 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnTransactionFailed();
+        }
+
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
+            // 応答タイムアウト監視終了
+            ResponseTimer.Stop();
+
             try {
                 // レスポンスを受領（SMPキャラクタリスティックから読込）
                 uint len = eventArgs.CharacteristicValue.Length;

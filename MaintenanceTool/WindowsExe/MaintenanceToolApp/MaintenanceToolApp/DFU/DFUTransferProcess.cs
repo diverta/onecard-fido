@@ -1,5 +1,4 @@
-﻿using MaintenanceToolApp.Common;
-using System;
+﻿using System;
 using System.Linq;
 using ToolAppCommon;
 using static MaintenanceToolApp.DFU.DFUParameter;
@@ -11,14 +10,8 @@ namespace MaintenanceToolApp.DFU
         // このクラスのインスタンス
         private static readonly DFUTransferProcess Instance = new DFUTransferProcess();
 
-        // 応答タイムアウト監視用タイマー
-        private CommonTimer responseTimer = null!;
-
         private DFUTransferProcess()
         {
-            // 応答タイムアウト発生時のイベントを登録
-            responseTimer = new CommonTimer("DFUTransferProcess", 10000);
-            responseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
         }
 
         // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
@@ -325,9 +318,6 @@ namespace MaintenanceToolApp.DFU
                     "Transmit SMP request ({0} bytes)\r\n{1}",
                     requestData.Length, dump));
             }
-
-            // 応答タイムアウト監視開始
-            responseTimer.Start();
         }
 
         // 受信済みデータ／バイト数を保持
@@ -337,9 +327,6 @@ namespace MaintenanceToolApp.DFU
 
         private void OnDataReceived(byte[] receivedData)
         {
-            // 応答タイムアウト監視終了
-            responseTimer.Stop();
-
             // ログ出力
             if (Parameter.Command != BLEDFUCommand.UploadImage) {
                 string dump = AppLogUtil.DumpMessage(receivedData, receivedData.Length);
@@ -393,9 +380,6 @@ namespace MaintenanceToolApp.DFU
         //
         private void OnTransactionFailed()
         {
-            // 応答タイムアウト監視終了
-            responseTimer.Stop();
-
             // 処理区分に応じて分岐
             string errorMessage = AppCommon.MSG_NONE;
             switch (Parameter.Command) {
@@ -417,15 +401,6 @@ namespace MaintenanceToolApp.DFU
 
             // 画面に異常終了を通知
             OnTerminatedDFUTransferProcess(false, errorMessage);
-        }
-
-        //
-        // 応答タイムアウト時の処理
-        //
-        private void OnResponseTimerElapsed(object sender, EventArgs e)
-        {
-            // 応答タイムアウトを通知
-            OnTerminatedDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_TIMEOUT);
         }
 
         //
