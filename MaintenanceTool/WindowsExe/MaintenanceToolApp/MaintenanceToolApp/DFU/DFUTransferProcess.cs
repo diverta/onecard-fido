@@ -252,7 +252,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // DFU転送成功を通知
-            DFUProcess.NotifyDFUInfoMessage(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_DFU_IMAGE_TRANSFER_SUCCESS);
 
             // リセット要求に移行
             DoRequestResetApplication();
