@@ -70,6 +70,10 @@ namespace MaintenanceToolApp
             textBoxMessage.ScrollToEnd();
         }
 
+        private void DoBLESettings()
+        {
+        }
+
         private void DoDFU()
         {
             // 処理前の確認
@@ -128,6 +132,11 @@ namespace MaintenanceToolApp
         private void buttonDFU_Click(object sender, RoutedEventArgs e)
         {
             DoDFU();
+        }
+
+        private void buttonBLE_Click(object sender, RoutedEventArgs e)
+        {
+            DoBLESettings();
         }
     }
 }
