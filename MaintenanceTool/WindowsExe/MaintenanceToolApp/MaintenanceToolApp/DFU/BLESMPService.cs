@@ -8,11 +8,17 @@ using Windows.Storage.Streams;
 
 namespace MaintenanceToolApp.DFU
 {
+    public class BLESMPServiceConst
+    {
+        public const string BLE_SMP_SERVICE_UUID_STR = "8D53DC1D-1DB7-4CD3-868B-8A527460AA84";
+        public const string BLE_SMP_CHARACT_UUID_STR = "DA2E7828-FBCE-4E01-AE9E-261174997C48";
+    }
+
     internal class BLESMPService
     {
         // UUID
-        private Guid BLE_SMP_SERVICE_UUID = new Guid("8D53DC1D-1DB7-4CD3-868B-8A527460AA84");
-        private Guid BLE_SMP_CHARACT_UUID = new Guid("DA2E7828-FBCE-4E01-AE9E-261174997C48");
+        private readonly Guid BLE_SMP_SERVICE_UUID = new Guid(BLESMPServiceConst.BLE_SMP_SERVICE_UUID_STR);
+        private readonly Guid BLE_SMP_CHARACT_UUID = new Guid(BLESMPServiceConst.BLE_SMP_CHARACT_UUID_STR);
 
         // BLE SMPサービス／キャラクタリスティック
         private GattDeviceService SMPService = null!;
