@@ -8,13 +8,17 @@ namespace MaintenanceToolApp.BLESettings
     {
         public string CommandTitle { get; set; }
         public Command Command { get; set; }
+        public ulong BluetoothAddress { get; set; }
         public string Passcode { get; set; }
+        public string ErrorMessage { get; set; }
 
         public BLESettingsParameter()
         {
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
+            BluetoothAddress = 0;
             Passcode = string.Empty;
+            ErrorMessage = string.Empty;
         }
 
         public override string ToString()
