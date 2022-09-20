@@ -40,6 +40,12 @@ namespace MaintenanceToolApp.BLESettings
         {
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_PAIRING:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_PAIRING;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestPairing();
+                break;
+
             case Command.COMMAND_ERASE_BONDS:
                 Parameter.CommandTitle = AppCommon.PROCESS_NAME_ERASE_BONDS;
                 CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
@@ -51,6 +57,11 @@ namespace MaintenanceToolApp.BLESettings
                 DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
                 break;
             }
+        }
+
+        private void DoRequestPairing()
+        {
+            new PairingProcess(Parameter).DoRequestPairing(DoResponseFromSubProcess);
         }
 
         private void DoRequestEraseBonds()
