@@ -27,22 +27,16 @@
         //
         // 外部公開用
         //
+        public static void DoFindFIDOPeripheral(BLEPairingService.HandlerOnFIDOPeripheralFound handler)
+        {
+            // ペアリング対象のFIDO認証器を検索
+            PairingService.FindFIDOPeripheral(handler);
+        }
+
         public void DoRequestPairing(HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
-
-            // ペアリング対象のFIDO認証器を検索
-            PairingService.FindFIDOPeripheral(OnNotifyCommandTerminated);
-        }
-
-        private void OnNotifyCommandTerminated(bool found, string errorMessage)
-        {
-            if (found == false) {
-                // 接続失敗時はペアリング処理を開始しない
-                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
-                return;
-            }
 
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);

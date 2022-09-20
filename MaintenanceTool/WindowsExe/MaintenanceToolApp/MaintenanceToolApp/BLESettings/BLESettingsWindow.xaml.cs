@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp.CommonWindow;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -33,6 +36,20 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoPairing()
         {
+            Task task = Task.Run(() => {
+                // ペアリング対象のFIDO認証器を検索
+                BLEPairingProcess.DoFindFIDOPeripheral(OnFIDOPeripheralFound);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            // FIDO認証器が見つからなかった場合は終了
+            if (Parameter.BluetoothAddress == 0) {
+                DialogUtil.ShowWarningMessage(this, AppCommon.PROCESS_NAME_PAIRING, Parameter.ErrorMessage);
+                return;
+            }
+
             // パスコード入力画面を表示
             PairingStartWindow w = new PairingStartWindow(Parameter);
             if (w.ShowDialogWithOwner(this) == false) {
@@ -42,6 +59,23 @@ namespace MaintenanceToolApp.BLESettings
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = Command.COMMAND_PAIRING;
             TerminateWindow(true);
+        }
+
+        private void OnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage)
+        {
+            // Bluetoothアドレス、エラーメッセージを設定
+            Parameter.BluetoothAddress = bluetoothAddress;
+            Parameter.ErrorMessage = errorMessage;
+
+            if (found == false) {
+                // 失敗時はログ出力
+                AppLogUtil.OutputLogError(errorMessage);
+            }
+
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         private void DoUnpairing()
