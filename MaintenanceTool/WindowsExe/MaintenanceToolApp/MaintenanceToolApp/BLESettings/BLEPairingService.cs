@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ToolAppCommon;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
 
 namespace MaintenanceToolApp.BLESettings
@@ -14,11 +16,15 @@ namespace MaintenanceToolApp.BLESettings
         public delegate void HandlerOnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage);
         private event HandlerOnFIDOPeripheralFound OnFIDOPeripheralFound = null!;
 
+        public delegate void HandlerOnFIDOPeripheralPaired(bool success, string errorMessage);
+        private event HandlerOnFIDOPeripheralPaired OnFIDOPeripheralPaired = null!;
+
         // 監視対象UUID
         private readonly Guid U2F_BLE_SERVICE_UUID = new Guid(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
 
         private BluetoothLEAdvertisementWatcher watcher = null!;
         private ulong BluetoothAddress = 0;
+        private string Passkey = string.Empty;
 
         public BLEPairingService()
         {
@@ -106,6 +112,79 @@ namespace MaintenanceToolApp.BLESettings
         {
             OnFIDOPeripheralFound(found, bluetoothAddress, errorMessage);
             OnFIDOPeripheralFound -= handler;
+        }
+
+        //
+        // ペアリング実行
+        //
+        public async void PairWithFIDOPeripheral(ulong bluetoothAddress, string passcode, HandlerOnFIDOPeripheralPaired handler)
+        {
+            // イベントを登録
+            OnFIDOPeripheralPaired += handler;
+
+            // 変数を初期化
+            bool success = false;
+            string errorMessage = "";
+
+            // パスコードを設定
+            Passkey = passcode;
+
+            try {
+                // デバイス情報を取得
+                BluetoothLEDevice? device = await BluetoothLEDevice.FromBluetoothAddressAsync(bluetoothAddress);
+                DeviceInformation deviceInfoForPair = device.DeviceInformation;
+
+                // ペアリング実行
+                deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
+                DevicePairingResult result;
+                if (Passkey == null || Passkey.Length == 0) {
+                    // パスキーが指定されていない場合
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ConfirmOnly, DevicePairingProtectionLevel.Encryption);
+
+                } else {
+                    // パスキーが指定されている場合は、パスキーを使用
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ProvidePin, DevicePairingProtectionLevel.EncryptionAndAuthentication);
+                }
+                deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
+
+                // ペアリングが正常終了したら処理完了
+                if (result.Status == DevicePairingResultStatus.Paired ||
+                    result.Status == DevicePairingResultStatus.AlreadyPaired) {
+                    success = true;
+                    AppLogUtil.OutputLogDebug("Pairing with FIDO device success");
+
+                } else if (result.Status == DevicePairingResultStatus.Failed) {
+                    errorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
+                    AppLogUtil.OutputLogError("Pairing with FIDO device fail");
+
+                } else {
+                    errorMessage = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
+                    AppLogUtil.OutputLogError(string.Format("Pairing with FIDO device fail: reason={0}", result.Status));
+                }
+
+                // BLEデバイスを解放
+                device.Dispose();
+                device = null;
+
+            } catch (Exception e) {
+                errorMessage = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
+                AppLogUtil.OutputLogError(string.Format("Pairing with FIDO device fail: {0}", e.Message));
+            }
+
+            // 上位クラスに成否を通知
+            OnFIDOPeripheralPaired(success, errorMessage);
+            OnFIDOPeripheralPaired -= handler;
+        }
+
+        private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
+        {
+            if (args.PairingKind == DevicePairingKinds.ProvidePin && Passkey != null) {
+                args.Accept(Passkey);
+            } else {
+                args.Accept();
+            }
         }
     }
 }
