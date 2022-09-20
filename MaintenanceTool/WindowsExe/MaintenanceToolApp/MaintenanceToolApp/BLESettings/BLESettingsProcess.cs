@@ -40,6 +40,12 @@ namespace MaintenanceToolApp.BLESettings
         {
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_ERASE_BONDS:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_ERASE_BONDS;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestEraseBonds();
+                break;
+
             default:
                 // エラーメッセージをポップアップ表示
                 DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
@@ -47,5 +53,18 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
+        private void DoRequestEraseBonds()
+        {
+            new UnpairingProcess(Parameter).DoRequestEraseBonds(DoResponseFromSubProcess);
+        }
+
+        //
+        // 下位クラスからのコールバック
+        //
+        private void DoResponseFromSubProcess(string commandTitle, string errorMessage, bool success)
+        {
+            // メイン画面に制御を戻す
+            CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
+        }
     }
 }
