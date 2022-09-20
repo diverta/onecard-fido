@@ -51,7 +51,7 @@ namespace MaintenanceToolApp.BLESettings
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
             case Command.COMMAND_ERASE_BONDS:
-                DoRequestCommandRegister();
+                DoRequestCommandEraseBonds();
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -63,10 +63,24 @@ namespace MaintenanceToolApp.BLESettings
         //
         // ペアリング情報削除
         //
-        private void DoRequestCommandRegister()
+        private void DoRequestCommandEraseBonds()
         {
-            // TODO: 仮の実装です。
-            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);
+            // コマンドバイトだけを送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_ERASE_BONDS, new byte[0]);
+        }
+
+        public void DoResponseCommandEraseBonds(byte[] responseData)
+        {
+            // ステータスバイトをチェック
+            string errorMessage = AppCommon.MSG_NONE;
+            bool success = (responseData[0] == 0x00);
+            if (success == false) {
+                errorMessage = AppCommon.MSG_ERASE_BONDS_COMMAND_ERROR;
+            }
+
+            // 上位クラスに制御を戻す
+            NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
         }
 
         //
@@ -91,6 +105,9 @@ namespace MaintenanceToolApp.BLESettings
 
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_ERASE_BONDS:
+                DoResponseCommandEraseBonds(responseData);
+                break;
             default:
                 // メイン画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);

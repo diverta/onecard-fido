@@ -44,6 +44,7 @@
         public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE_NUM = "パスコードを数字で入力してください";
         public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
 
         // BLE DFU関連メッセージ
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
