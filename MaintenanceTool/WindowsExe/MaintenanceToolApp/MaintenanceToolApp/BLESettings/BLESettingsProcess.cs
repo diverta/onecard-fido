@@ -61,7 +61,7 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoRequestPairing()
         {
-            new PairingProcess(Parameter).DoRequestPairing(DoResponseFromSubProcess);
+            new BLEPairingProcess(Parameter).DoRequestPairing(DoResponseFromSubProcess);
         }
 
         private void DoRequestEraseBonds()
