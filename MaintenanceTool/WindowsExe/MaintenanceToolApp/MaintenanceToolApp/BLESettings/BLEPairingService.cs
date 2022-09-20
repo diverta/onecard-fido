@@ -11,7 +11,7 @@ namespace MaintenanceToolApp.BLESettings
         //
         // BLEペアリング関連イベント
         //
-        public delegate void HandlerOnFIDOPeripheralFound(bool found, string errorMessage);
+        public delegate void HandlerOnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage);
         private event HandlerOnFIDOPeripheralFound OnFIDOPeripheralFound = null!;
 
         // 監視対象UUID
@@ -48,13 +48,13 @@ namespace MaintenanceToolApp.BLESettings
                 }
             } catch {
                 // Bluetoothオン状態が確認できない場合は失敗を通知
-                FuncOnFIDOPeripheralFound(false, AppCommon.MSG_BLE_PARING_ERR_BT_STATUS_CANNOT_GET, handler);
+                FuncOnFIDOPeripheralFound(false, 0, AppCommon.MSG_BLE_PARING_ERR_BT_STATUS_CANNOT_GET, handler);
                 return;
             }
 
             if (bton == false) {
                 // Bluetoothがオンになっていない場合は失敗を通知
-                FuncOnFIDOPeripheralFound(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF, handler);
+                FuncOnFIDOPeripheralFound(false, 0, AppCommon.MSG_BLE_PARING_ERR_BT_OFF, handler);
                 return;
             }
 
@@ -80,12 +80,12 @@ namespace MaintenanceToolApp.BLESettings
 
             if (BluetoothAddress == 0) {
                 // FIDO認証器が見つからなかった場合は失敗を通知
-                FuncOnFIDOPeripheralFound(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT, handler);
+                FuncOnFIDOPeripheralFound(false, 0, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT, handler);
                 return;
             }
 
             // FIDO認証器が見つかった場合は成功を通知
-            FuncOnFIDOPeripheralFound(true, AppCommon.MSG_NONE, handler);
+            FuncOnFIDOPeripheralFound(true, BluetoothAddress, AppCommon.MSG_NONE, handler);
         }
 
         private void OnAdvertisementReceived(BluetoothLEAdvertisementWatcher watcher, BluetoothLEAdvertisementReceivedEventArgs eventArgs)
@@ -93,12 +93,7 @@ namespace MaintenanceToolApp.BLESettings
             // FIDO認証器が見つかったら、
             // アドレス情報を保持し、画面スレッドに通知
             string name = eventArgs.Advertisement.LocalName;
-            AppLogUtil.OutputLogDebug(string.Format("BLE device found [{0}]: BluetoothAddress={1}, {2} services",
-                name, eventArgs.BluetoothAddress, eventArgs.Advertisement.ServiceUuids.Count));
-
             foreach (Guid g in eventArgs.Advertisement.ServiceUuids) {
-                AppLogUtil.OutputLogDebug(string.Format("  service={0}", g.ToString()));
-
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
                     AppLogUtil.OutputLogDebug("FIDO BLE device found.");
@@ -107,9 +102,9 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
-        private void FuncOnFIDOPeripheralFound(bool found, string errorMessage, HandlerOnFIDOPeripheralFound handler)
+        private void FuncOnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage, HandlerOnFIDOPeripheralFound handler)
         {
-            OnFIDOPeripheralFound(found, errorMessage);
+            OnFIDOPeripheralFound(found, bluetoothAddress, errorMessage);
             OnFIDOPeripheralFound -= handler;
         }
     }
