@@ -1,7 +1,10 @@
 ﻿namespace MaintenanceToolApp.BLESettings
 {
-    internal class PairingProcess
+    internal class BLEPairingProcess
     {
+        // BLEペアリングサービスの参照を保持（インスタンス生成は１度だけ行われる）
+        private static readonly BLEPairingService PairingService = new BLEPairingService();
+
         // 処理実行のためのプロパティー
         private readonly BLESettingsParameter Parameter;
 
@@ -12,7 +15,7 @@
         // HID／BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
-        public PairingProcess(BLESettingsParameter param)
+        public BLEPairingProcess(BLESettingsParameter param)
         {
             // パラメーターの参照を保持
             Parameter = param;
@@ -28,6 +31,18 @@
         {
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
+
+            // ペアリング対象のFIDO認証器を検索
+            PairingService.FindFIDOPeripheral(OnNotifyCommandTerminated);
+        }
+
+        private void OnNotifyCommandTerminated(bool found, string errorMessage)
+        {
+            if (found == false) {
+                // 接続失敗時はペアリング処理を開始しない
+                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, false);
+                return;
+            }
 
             // TODO: 仮の実装です。
             NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, false);

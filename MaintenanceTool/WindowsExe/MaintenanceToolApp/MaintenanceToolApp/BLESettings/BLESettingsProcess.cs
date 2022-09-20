@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.BLESettings
@@ -74,6 +75,11 @@ namespace MaintenanceToolApp.BLESettings
         //
         private void DoResponseFromSubProcess(string commandTitle, string errorMessage, bool success)
         {
+            // 失敗時はログ出力
+            if (success == false && errorMessage.Length > 0) {
+                AppLogUtil.OutputLogError(errorMessage);
+            }
+
             // メイン画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
