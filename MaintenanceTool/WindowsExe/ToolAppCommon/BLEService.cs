@@ -88,6 +88,7 @@ namespace ToolAppCommon
                 AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_U2F_SERVICE_FINDING, U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
+                AppLogUtil.OutputLogDebug(String.Format("DeviceInformation collection count={0}", collection.Count));
 
                 foreach (DeviceInformation info in collection) {
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
@@ -230,11 +231,13 @@ namespace ToolAppCommon
         {
             if (BLEServices.Count == 0) {
                 // 接続されていない場合は false
+                AppLogUtil.OutputLogDebug("IsConnected: BLEServices.Count == 0");
                 return false;
             }
 
             if (BLEservice == null) {
                 // データ受信ができない場合は false
+                AppLogUtil.OutputLogDebug("IsConnected: BLEservice == null");
                 return false;
             }
 
@@ -248,6 +251,7 @@ namespace ToolAppCommon
             BLEservice = null!;
             U2FControlPointChar = null!;
             U2FStatusChar = null!;
+            AppLogUtil.OutputLogDebug("FreeResources done.");
         }
     }
 }
