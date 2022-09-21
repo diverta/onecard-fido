@@ -46,32 +46,11 @@ namespace ToolAppCommon
         // BLEデバイス
         private BLEService BleService = new BLEService();
 
-        // ペアリング完了時のイベント
-        public delegate void HandlerOnPairingCompleted(bool success, string messageOnFail);
-        public event HandlerOnPairingCompleted OnPairingCompleted = null!;
-
         private BLEProcess()
         {
             // BLEデバイスのイベントを登録
             BleService.OnDataReceived += new BLEService.HandlerOnDataReceived(OnDataReceived);
             BleService.OnTransactionFailed += new BLEService.HandlerOnTransactionFailed(OnTransactionFailed);
-            BleService.OnFIDOPeripheralFound += new BLEService.HandlerOnFIDOPeripheralFound(OnFIDOPeripheralFound);
-            BleService.OnFIDOPeripheralPaired += new BLEService.HandlerOnFIDOPeripheralPaired(OnFIDOPeripheralPaired);
-        }
-
-        private void PairWithFIDOPeripheral(string passkey)
-        {
-            BleService.Pair(passkey);
-        }
-
-        private void OnFIDOPeripheralFound()
-        {
-            BleService.PairWithFIDOPeripheral();
-        }
-
-        private void OnFIDOPeripheralPaired(bool success, string messageOnFail)
-        {
-            OnPairingCompleted(success, messageOnFail);
         }
 
         // 当初送信コマンドを保持

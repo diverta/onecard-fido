@@ -9,6 +9,12 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="BLESettings\BLESettingsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="BLESettings\PairingStartWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="DFU\DFUProcessingWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -17,6 +23,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="BLESettings\BLESettingsWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="BLESettings\PairingStartWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="CommonWindow\CommonProcessingWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

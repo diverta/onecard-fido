@@ -18,6 +18,8 @@
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
 
         // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_PAIRING = "ペアリング";
+        public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -37,6 +39,13 @@
         public const string MSG_SUCCESS = "成功";
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+
+        // BLE設定機能
+        public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE = "パスコードを６桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE_NUM = "パスコードを数字で入力してください";
+        public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
+        public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
 
         // BLE DFU関連メッセージ
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
@@ -140,6 +149,7 @@
         public const string MSG_BLE_SMP_SERVICE_DISCONNECTED = "BLE SMPサービスから切断されました。";
 
         // BLEペアリング関連のメッセージ文言
+        public const string MSG_BLE_PARING_ERR_BT_STATUS_CANNOT_GET = "Bluetooth状態を確認できません。";
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
         public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
         public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";

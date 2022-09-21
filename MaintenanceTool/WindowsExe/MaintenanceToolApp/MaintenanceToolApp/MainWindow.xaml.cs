@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.DFU;
+﻿using MaintenanceToolApp.BLESettings;
+using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
@@ -70,6 +71,17 @@ namespace MaintenanceToolApp
             textBoxMessage.ScrollToEnd();
         }
 
+        private void DoBLESettings()
+        {
+            // BLE設定画面を開き、実行コマンド種別を設定
+            BLESettingsParameter param = new BLESettingsParameter();
+            bool b = new BLESettingsWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // BLE設定機能を実行
+                new BLESettingsProcess(param).DoProcess();
+            }
+        }
+
         private void DoDFU()
         {
             // 処理前の確認
@@ -128,6 +140,11 @@ namespace MaintenanceToolApp
         private void buttonDFU_Click(object sender, RoutedEventArgs e)
         {
             DoDFU();
+        }
+
+        private void buttonBLE_Click(object sender, RoutedEventArgs e)
+        {
+            DoBLESettings();
         }
     }
 }
