@@ -88,7 +88,6 @@ namespace ToolAppCommon
                 AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_U2F_SERVICE_FINDING, U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
-                AppLogUtil.OutputLogDebug(String.Format("DeviceInformation collection count={0}", collection.Count));
 
                 foreach (DeviceInformation info in collection) {
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);

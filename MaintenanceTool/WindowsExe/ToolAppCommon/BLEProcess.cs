@@ -56,6 +56,9 @@ namespace ToolAppCommon
         // 当初送信コマンドを保持
         private byte CMDToSend { get; set; }
 
+        // エラー発生有無を保持
+        private bool errored = false;
+
         private async void SendBLEMessage(byte CMD, byte[] message)
         {
             // 送信コマンドを保持
@@ -67,11 +70,18 @@ namespace ToolAppCommon
                 return;
             }
 
+            //
+            // 直近にエラー発生時は、リトライ回数を100に変更
+            //
+            int retry = 2;
+            if (errored) {
+                retry = 100;
+            }
             if (BleService.IsConnected() == false) {
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < retry; i++) {
                     if (i > 0) {
                         AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i));
-                        await Task.Run(() => System.Threading.Thread.Sleep(250));
+                        await Task.Run(() => System.Threading.Thread.Sleep(1000));
                     }
                     // 未接続の場合はFIDO認証器とのBLE通信を開始
                     if (await BleService.StartCommunicate()) {
@@ -84,8 +94,12 @@ namespace ToolAppCommon
             if (BleService.IsConnected() == false) {
                 // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
                 OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                errored = true;
                 return;
             }
+
+            // 接続されたときは、リトライ回数をもとに戻す
+            errored = false;
 
             // BLEデバイスにメッセージをフレーム分割して送信
             SendBLEMessageFrames(CMD, message);
