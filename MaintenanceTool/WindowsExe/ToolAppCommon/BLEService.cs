@@ -1,7 +1,6 @@
 ﻿using MaintenanceToolApp;
 using MaintenanceToolApp.Common;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
@@ -134,7 +133,7 @@ namespace ToolAppCommon
                 CommunicationStatus = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (CommunicationStatus != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogError(string.Format("BLEService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
+                    AppLogUtil.OutputLogDebug(string.Format("BLEService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
                     return false;
                 }
 
@@ -173,7 +172,7 @@ namespace ToolAppCommon
         public async void Send(byte[] requestData)
         {
             if (BLEservice == null) {
-                AppLogUtil.OutputLogError(string.Format("BLEService.Send: service is null"));
+                AppLogUtil.OutputLogDebug(string.Format("BLEService.Send: service is null"));
                 OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
             }
 
@@ -196,7 +195,7 @@ namespace ToolAppCommon
                     }
 
                 } else {
-                    AppLogUtil.OutputLogError(string.Format("BLEService.Send: U2F control point characteristic is null"));
+                    AppLogUtil.OutputLogDebug(string.Format("BLEService.Send: U2F control point characteristic is null"));
                     OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
                 }
 
@@ -249,13 +248,11 @@ namespace ToolAppCommon
         {
             if (BluetoothLEDevice == null) {
                 // 接続されていない場合は false
-                AppLogUtil.OutputLogDebug("IsConnected: BluetoothLEDevice == null");
                 return false;
             }
 
             if (BLEservice == null) {
                 // データ受信ができない場合は false
-                AppLogUtil.OutputLogDebug("IsConnected: BLEservice == null");
                 return false;
             }
 
@@ -270,7 +267,6 @@ namespace ToolAppCommon
             BLEservice = null!;
             U2FControlPointChar = null!;
             U2FStatusChar = null!;
-            AppLogUtil.OutputLogDebug("FreeResources done.");
         }
     }
 }
