@@ -3,6 +3,7 @@ using MaintenanceToolApp.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
@@ -98,10 +99,13 @@ namespace ToolAppCommon
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
                 foreach (DeviceInformation info in collection) {
-                    GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
-                    if (service != null) {
-                        BLEServices.Add(service);
-                        AppLogUtil.OutputLogDebug(string.Format("  FIDO BLE service found [{0}]", info.Name));
+                    BluetoothLEDevice device = await BluetoothLEDevice.FromIdAsync(info.Id);
+                    var gattServices = await device.GetGattServicesAsync();
+                    foreach (var gattService in gattServices.Services) {
+                        if (gattService.Uuid.Equals(U2F_BLE_SERVICE_UUID)) {
+                            BLEServices.Add(gattService);
+                            AppLogUtil.OutputLogDebug(string.Format("  FIDO BLE service found [{0}]", info.Name));
+                        }
                     }
                 }
 
@@ -213,6 +217,9 @@ namespace ToolAppCommon
             OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
 
+        //
+        // 切断処理
+        //
         public void Disconnect()
         {
             // 切断
