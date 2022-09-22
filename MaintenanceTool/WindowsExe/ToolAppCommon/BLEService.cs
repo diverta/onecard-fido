@@ -122,6 +122,9 @@ namespace ToolAppCommon
 
         private async Task<bool> StartBLENotification(GattDeviceService service)
         {
+            // ステータスを初期化（戻りの有無を上位関数で判別できるようにするため）
+            CommunicationStatus = GattCommunicationStatus.Success;
+
             try {
                 U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
 
