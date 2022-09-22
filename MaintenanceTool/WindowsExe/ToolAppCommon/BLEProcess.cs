@@ -71,14 +71,14 @@ namespace ToolAppCommon
             }
 
             //
-            // 直近にエラー発生時は、リトライ回数を100に変更
+            // 初回接続時にエラーが発生した場合、リトライ回数を100に設定
             //
-            int retry = 2;
+            int retry = 1;
             if (errored) {
                 retry = 100;
             }
             if (BleService.IsConnected() == false) {
-                for (int i = 0; i < retry; i++) {
+                for (int i = 0; i < retry + 1; i++) {
                     if (i > 0) {
                         AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i));
                         await Task.Run(() => System.Threading.Thread.Sleep(1000));
