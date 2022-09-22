@@ -75,8 +75,9 @@ namespace ToolAppCommon
                     return true;
                 }
 
-                // 物理接続がない場合は再試行しない
+                // 物理接続がない場合は再試行せず、明示的に接続オブジェクトを破棄
                 if (CommunicationStatus == GattCommunicationStatus.Unreachable) {
+                    StopCommunicate();
                     return false;
                 }
             }
