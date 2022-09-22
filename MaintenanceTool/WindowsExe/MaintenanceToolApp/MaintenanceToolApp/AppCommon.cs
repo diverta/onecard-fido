@@ -147,6 +147,7 @@
         public const string MSG_BLE_SMP_SERVICE_FOUND = "BLE SMPサービスが見つかりました。";
         public const string MSG_BLE_SMP_SERVICE_CONNECTED = "BLE SMPサービスに接続されました。";
         public const string MSG_BLE_SMP_SERVICE_DISCONNECTED = "BLE SMPサービスから切断されました。";
+        public const string MSG_BLE_SMP_NOTIFICATION_FAILED = "BLE SMPサービスからデータを受信できません。";
 
         // BLEペアリング関連のメッセージ文言
         public const string MSG_BLE_PARING_ERR_BT_STATUS_CANNOT_GET = "Bluetooth状態を確認できません。";

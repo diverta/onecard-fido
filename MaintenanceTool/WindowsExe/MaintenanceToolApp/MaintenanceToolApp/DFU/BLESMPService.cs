@@ -1,8 +1,8 @@
 ﻿using MaintenanceToolApp.Common;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ToolAppCommon;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
@@ -36,9 +36,12 @@ namespace MaintenanceToolApp.DFU
         // BLE接続／送受信関連
         //
         // サービスをディスカバーできたデバイスを保持
-        private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
+        private BluetoothLEDevice BluetoothLEDevice = null!;
         private GattDeviceService SMPService = null!;
         private GattCharacteristic SMPCharacteristic = null!;
+
+        // ステータスを保持
+        private GattCommunicationStatus CommunicationStatus;
 
         //
         // BLE送受信関連イベント
@@ -78,31 +81,36 @@ namespace MaintenanceToolApp.DFU
         public async Task<bool> StartCommunicate()
         {
             // サービスをディスカバー
-            BLEServices.Clear();
             if (await DiscoverBLEService() == false) {
+                FreeResources();
                 return false;
             }
 
+            //
             // データ受信監視を開始
-            for (int i = 0; i < BLEServices.Count; i++) {
-                GattDeviceService service = BLEServices[i];
-
-                for (int k = 0; k < 2; k++) {
-                    if (k > 0) {
-                        AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
-                        await Task.Run(() => System.Threading.Thread.Sleep(100));
-                    }
-
-                    if (await StartBLENotification(service)) {
-                        AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
-                        return true;
-                    }
+            // リトライ上限は３回とする
+            //
+            int retry = 3;
+            for (int k = 0; k < retry + 1; k++) {
+                if (k > 0) {
+                    AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
+                    await Task.Run(() => System.Threading.Thread.Sleep(100));
                 }
 
-                AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+                if (await StartBLENotification(SMPService)) {
+                    AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, SMPService.Device.Name));
+                    return true;
+                }
+
+                // 物理接続がない場合は再試行せず、明示的に接続オブジェクトを破棄
+                if (CommunicationStatus == GattCommunicationStatus.Unreachable) {
+                    StopCommunicate();
+                    return false;
+                }
             }
 
             // 接続されなかった場合は false
+            AppLogUtil.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_SMP_NOTIFICATION_FAILED, SMPService.Device.Name));
             return false;
         }
 
@@ -114,14 +122,17 @@ namespace MaintenanceToolApp.DFU
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
                 foreach (DeviceInformation info in collection) {
-                    GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
-                    if (service != null) {
-                        BLEServices.Add(service);
-                        AppLogUtil.OutputLogDebug(string.Format("  BLE SMP service found [{0}]", info.Name));
+                    BluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(info.Id);
+                    var gattServices = await BluetoothLEDevice.GetGattServicesAsync();
+                    foreach (var gattService in gattServices.Services) {
+                        if (gattService.Uuid.Equals(BLE_SMP_SERVICE_UUID)) {
+                            SMPService = gattService;
+                            AppLogUtil.OutputLogDebug(string.Format("  BLE SMP service found [{0}]", info.Name));
+                        }
                     }
                 }
 
-                if (BLEServices.Count == 0) {
+                if (BluetoothLEDevice == null || SMPService == null) {
                     AppLogUtil.OutputLogError(AppCommon.MSG_BLE_SMP_SERVICE_NOT_FOUND);
                     return false;
                 }
@@ -130,21 +141,23 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("DiscoverBLEService: {0}", e.Message));
-                FreeResources();
+                AppLogUtil.OutputLogError(string.Format("BLESMPService.DiscoverBLEService: {0}", e.Message));
                 return false;
             }
         }
 
-        public async Task<bool> StartBLENotification(GattDeviceService service)
+        private async Task<bool> StartBLENotification(GattDeviceService service)
         {
+            // ステータスを初期化（戻りの有無を上位関数で判別できるようにするため）
+            CommunicationStatus = GattCommunicationStatus.Success;
+
             try {
                 SMPCharacteristic = service.GetCharacteristics(BLE_SMP_CHARACT_UUID)[0];
 
                 GattCommunicationStatus result = await SMPCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                if (result != GattCommunicationStatus.Success) {
-                    SMPService = null!;
+                if (CommunicationStatus != GattCommunicationStatus.Success) {
+                    AppLogUtil.OutputLogDebug(string.Format("BLESMPService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
                     return false;
                 }
 
@@ -155,8 +168,7 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("StartBLENotification: {0}", e.Message));
-                FreeResources();
+                AppLogUtil.OutputLogError(string.Format("BLESMPService.StartBLENotification: {0}", e.Message));
                 return false;
             }
         }
@@ -243,6 +255,9 @@ namespace MaintenanceToolApp.DFU
                 if (SMPService != null) {
                     SMPService.Dispose();
                 }
+                if (BluetoothLEDevice != null) {
+                    BluetoothLEDevice.Dispose();
+                }
 
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("StopCommunicate: {0}", e.Message));
@@ -254,13 +269,13 @@ namespace MaintenanceToolApp.DFU
 
         public bool IsConnected()
         {
-            // 接続されていない場合は false
-            if (BLEServices.Count == 0) {
+            if (BluetoothLEDevice == null) {
+                // 接続されていない場合は false
                 return false;
             }
 
-            // データ受信ができない場合は false
             if (SMPService == null) {
+                // データ受信ができない場合は false
                 return false;
             }
 
@@ -271,6 +286,7 @@ namespace MaintenanceToolApp.DFU
         private void FreeResources()
         {
             // オブジェクトへの参照を解除
+            BluetoothLEDevice = null!;
             SMPService = null!;
             SMPCharacteristic = null!;
         }
