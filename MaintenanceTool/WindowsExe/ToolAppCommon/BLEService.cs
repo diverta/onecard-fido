@@ -42,6 +42,9 @@ namespace ToolAppCommon
         private GattCharacteristic U2FControlPointChar = null!;
         private GattCharacteristic U2FStatusChar = null!;
 
+        // ステータスを保持
+        private GattCommunicationStatus CommunicationStatus;
+
         //
         // BLE送受信関連イベント
         //
@@ -72,6 +75,11 @@ namespace ToolAppCommon
                     if (await StartBLENotification(service)) {
                         AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
                         return true;
+                    }
+
+                    // 物理接続がない場合は再試行しない
+                    if (CommunicationStatus == GattCommunicationStatus.Unreachable) {
+                        return false;
                     }
                 }
 
@@ -117,10 +125,10 @@ namespace ToolAppCommon
             try {
                 U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
 
-                GattCommunicationStatus result = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
+                CommunicationStatus = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                if (result != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogError(string.Format("BLEService.StartBLENotification: GattCommunicationStatus={0}", result));
+                if (CommunicationStatus != GattCommunicationStatus.Success) {
+                    AppLogUtil.OutputLogError(string.Format("BLEService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
                     FreeResources();
                     return false;
                 }
