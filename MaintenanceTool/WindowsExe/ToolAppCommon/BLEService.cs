@@ -120,6 +120,7 @@ namespace ToolAppCommon
                 GattCommunicationStatus result = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (result != GattCommunicationStatus.Success) {
+                    AppLogUtil.OutputLogError(string.Format("BLEService.StartBLENotification: GattCommunicationStatus={0}", result));
                     FreeResources();
                     return false;
                 }
