@@ -21,23 +21,6 @@ namespace MaintenanceToolApp.DFU
         private readonly Guid BLE_SMP_SERVICE_UUID = new Guid(BLESMPServiceConst.BLE_SMP_SERVICE_UUID_STR);
         private readonly Guid BLE_SMP_CHARACT_UUID = new Guid(BLESMPServiceConst.BLE_SMP_CHARACT_UUID_STR);
 
-        // BLE SMPサービス／キャラクタリスティック
-        private GattDeviceService SMPService = null!;
-        private GattCharacteristic SMPCharacteristic = null!;
-
-        // サービスをディスカバーできたデバイスを保持
-        private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
-
-        // BLE SMPサービスのイベントを定義
-        public delegate void HandlerOnConnectedToSMPService(bool success);
-        public event HandlerOnConnectedToSMPService OnConnectedToSMPService = null!;
-
-        public delegate void HandlerOnDataReceived(byte[] receivedData);
-        public event HandlerOnDataReceived OnDataReceived = null!;
-
-        public delegate void HandlerOnTransactionFailed(string errorMessage);
-        public event HandlerOnTransactionFailed OnTransactionFailed = null!;
-
         // 応答タイムアウト監視用タイマー
         private CommonTimer ResponseTimer = null!;
 
@@ -46,9 +29,28 @@ namespace MaintenanceToolApp.DFU
             // 応答タイムアウト発生時のイベントを登録
             ResponseTimer = new CommonTimer("BLESMPService", 10000);
             ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
-
             FreeResources();
         }
+
+        //
+        // BLE接続／送受信関連
+        //
+        // サービスをディスカバーできたデバイスを保持
+        private readonly List<GattDeviceService> BLEServices = new List<GattDeviceService>();
+        private GattDeviceService SMPService = null!;
+        private GattCharacteristic SMPCharacteristic = null!;
+
+        //
+        // BLE送受信関連イベント
+        //
+        public delegate void HandlerOnConnectedToSMPService(bool success);
+        public event HandlerOnConnectedToSMPService OnConnectedToSMPService = null!;
+
+        public delegate void HandlerOnDataReceived(byte[] receivedData);
+        public event HandlerOnDataReceived OnDataReceived = null!;
+
+        public delegate void HandlerOnTransactionFailed(string errorMessage);
+        public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
         public async void ConnectBLESMPService(HandlerOnConnectedToSMPService handler)
         {
@@ -68,13 +70,6 @@ namespace MaintenanceToolApp.DFU
             // FIDO認証器に接続完了
             OnConnectedToSMPService(true);
             OnConnectedToSMPService -= handler;
-        }
-
-        public void DisconnectBLESMPService()
-        {
-            // 切断
-            StopCommunicate();
-            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_DISCONNECTED);
         }
 
         //
@@ -166,6 +161,25 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
+        private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        {
+            // 応答タイムアウト監視終了
+            ResponseTimer.Stop();
+
+            try {
+                // レスポンスを受領（SMPキャラクタリスティックから読込）
+                uint len = eventArgs.CharacteristicValue.Length;
+                byte[] responseBytes = new byte[len];
+                DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
+
+                // レスポンスを転送
+                OnDataReceived(responseBytes);
+
+            } catch (Exception e) {
+                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
+            }
+        }
+
         public async void Send(byte[] requestData)
         {
             if (SMPService == null) {
@@ -210,39 +224,14 @@ namespace MaintenanceToolApp.DFU
             OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
 
-        private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        //
+        // 切断処理
+        //
+        public void DisconnectBLESMPService()
         {
-            // 応答タイムアウト監視終了
-            ResponseTimer.Stop();
-
-            try {
-                // レスポンスを受領（SMPキャラクタリスティックから読込）
-                uint len = eventArgs.CharacteristicValue.Length;
-                byte[] responseBytes = new byte[len];
-                DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
-
-                // レスポンスを転送
-                OnDataReceived(responseBytes);
-
-            } catch (Exception e) {
-                OnTransactionFailed(string.Format(AppCommon.MSG_REQUEST_SEND_FAILED_WITH_EXCEPTION, e.Message));
-            }
-        }
-
-        public bool IsConnected()
-        {
-            // 接続されていない場合は false
-            if (BLEServices.Count == 0) {
-                return false;
-            }
-
-            // データ受信ができない場合は false
-            if (SMPService == null) {
-                return false;
-            }
-
-            // BLE接続されている場合は true
-            return true;
+            // 切断
+            StopCommunicate();
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_SMP_SERVICE_DISCONNECTED);
         }
 
         private void StopCommunicate()
@@ -261,6 +250,22 @@ namespace MaintenanceToolApp.DFU
             } finally {
                 FreeResources();
             }
+        }
+
+        public bool IsConnected()
+        {
+            // 接続されていない場合は false
+            if (BLEServices.Count == 0) {
+                return false;
+            }
+
+            // データ受信ができない場合は false
+            if (SMPService == null) {
+                return false;
+            }
+
+            // BLE接続されている場合は true
+            return true;
         }
 
         private void FreeResources()
