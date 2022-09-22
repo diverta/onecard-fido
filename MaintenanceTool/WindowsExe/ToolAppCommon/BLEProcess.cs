@@ -56,9 +56,6 @@ namespace ToolAppCommon
         // 当初送信コマンドを保持
         private byte CMDToSend { get; set; }
 
-        // エラー発生有無を保持
-        private bool errored = false;
-
         private async void SendBLEMessage(byte CMD, byte[] message)
         {
             // 送信コマンドを保持
@@ -73,10 +70,7 @@ namespace ToolAppCommon
             //
             // 初回接続時にエラーが発生した場合、リトライ回数を100に設定
             //
-            int retry = 1;
-            if (errored) {
-                retry = 100;
-            }
+            int retry = 0;
             if (BleService.IsConnected() == false) {
                 for (int i = 0; i < retry + 1; i++) {
                     if (i > 0) {
@@ -94,12 +88,12 @@ namespace ToolAppCommon
             if (BleService.IsConnected() == false) {
                 // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
                 OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                errored = true;
+                retry = 100;
                 return;
             }
 
             // 接続されたときは、リトライ回数をもとに戻す
-            errored = false;
+            retry = 0;
 
             // BLEデバイスにメッセージをフレーム分割して送信
             SendBLEMessageFrames(CMD, message);

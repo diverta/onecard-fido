@@ -63,8 +63,12 @@ namespace ToolAppCommon
                 return false;
             }
 
+            //
             // データ受信監視を開始
-            for (int k = 0; k < 2; k++) {
+            // リトライ上限は３回とする
+            //
+            int retry = 3;
+            for (int k = 0; k < retry + 1; k++) {
                 if (k > 0) {
                     AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_BLE_NOTIFICATION_RETRY, k));
                     await Task.Run(() => System.Threading.Thread.Sleep(100));
