@@ -67,11 +67,15 @@ namespace ToolAppCommon
                 return;
             }
 
+            //
+            // 初回接続時にエラーが発生した場合、リトライ回数を100に設定
+            //
+            int retry = 0;
             if (BleService.IsConnected() == false) {
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < retry + 1; i++) {
                     if (i > 0) {
                         AppLogUtil.OutputLogWarn(string.Format("接続を再試行しています（{0}回目）", i));
-                        await Task.Run(() => System.Threading.Thread.Sleep(250));
+                        await Task.Run(() => System.Threading.Thread.Sleep(1000));
                     }
                     // 未接続の場合はFIDO認証器とのBLE通信を開始
                     if (await BleService.StartCommunicate()) {
@@ -84,8 +88,12 @@ namespace ToolAppCommon
             if (BleService.IsConnected() == false) {
                 // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
                 OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                retry = 100;
                 return;
             }
+
+            // 接続されたときは、リトライ回数をもとに戻す
+            retry = 0;
 
             // BLEデバイスにメッセージをフレーム分割して送信
             SendBLEMessageFrames(CMD, message);
