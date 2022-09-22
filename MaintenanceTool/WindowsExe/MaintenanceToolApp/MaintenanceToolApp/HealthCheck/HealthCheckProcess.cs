@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.HealthCheck
@@ -134,6 +135,11 @@ namespace MaintenanceToolApp.HealthCheck
         //
         private void DoResponseU2fHealthCheck(string commandTitle, string errorMessage, bool success)
         {
+            // BLE接続を破棄
+            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                BLEProcess.DisconnctBLE();
+            }
+
             // メイン画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
