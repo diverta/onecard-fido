@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.FIDOSettings
 {
@@ -33,6 +34,17 @@ namespace MaintenanceToolApp.FIDOSettings
 
         private void DoSetPinCode()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // PINコード設定画面を表示
+            SetPinCodeWindow w = new SetPinCodeWindow();
+            if (w.ShowDialogWithOwner(this) == false) {
+                return;
+            }
+
             TerminateWindow(true);
         }
 
