@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp.BLESettings;
 using MaintenanceToolApp.DFU;
+using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
@@ -84,6 +85,8 @@ namespace MaintenanceToolApp
 
         private void DoFIDOSettings()
         {
+            // FIDO設定画面を開き、実行コマンド種別を設定
+            new FIDOSettingsWindow().ShowDialogWithOwner(this);
         }
 
         private void DoDFU()
