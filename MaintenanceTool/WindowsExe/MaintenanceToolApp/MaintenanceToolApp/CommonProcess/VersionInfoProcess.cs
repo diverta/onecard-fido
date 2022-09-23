@@ -58,6 +58,9 @@ namespace MaintenanceToolApp.CommonProcess
 
         private void DoResponseBLEGetVersionInfo(byte[] responseData)
         {
+            // BLE接続を破棄
+            BLEProcess.DisconnctBLE();
+            
             // ステータスバイトをチェック
             string statusMessage;
             if (CTAP2Util.CheckStatusByte(responseData, out statusMessage) == false) {

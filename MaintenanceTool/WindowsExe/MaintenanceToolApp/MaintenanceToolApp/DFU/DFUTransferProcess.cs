@@ -66,6 +66,9 @@ namespace MaintenanceToolApp.DFU
 
         private void OnTerminatedDFUTransferProcess(bool success, string message)
         {
+            // BLE接続を破棄
+            SMPService.DisconnectBLESMPService();
+
             if (success == false) {
                 // エラーメッセージ文言を画面とログに出力
                 Parameter.ErrorMessage = message;
@@ -296,9 +299,6 @@ namespace MaintenanceToolApp.DFU
 
         private void DoResponseResetApplication(byte[] responseData)
         {
-            // BLE接続を破棄
-            BLEProcess.DisconnctBLE();
-
             // DFU主処理の正常終了を通知
             OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
         }
