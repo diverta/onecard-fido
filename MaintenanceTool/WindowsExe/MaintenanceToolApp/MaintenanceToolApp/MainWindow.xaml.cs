@@ -82,6 +82,10 @@ namespace MaintenanceToolApp
             }
         }
 
+        private void DoFIDOSettings()
+        {
+        }
+
         private void DoDFU()
         {
             // 処理前の確認
@@ -145,6 +149,11 @@ namespace MaintenanceToolApp
         private void buttonBLE_Click(object sender, RoutedEventArgs e)
         {
             DoBLESettings();
+        }
+
+        private void buttonFIDO_Click(object sender, RoutedEventArgs e)
+        {
+            DoFIDOSettings();
         }
     }
 }
