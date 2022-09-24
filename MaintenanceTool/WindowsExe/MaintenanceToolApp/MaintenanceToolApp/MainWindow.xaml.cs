@@ -86,7 +86,11 @@ namespace MaintenanceToolApp
         private void DoFIDOSettings()
         {
             // FIDO設定画面を開き、実行コマンド種別を設定
-            new FIDOSettingsWindow().ShowDialogWithOwner(this);
+            FIDOSettingsParameter param = new FIDOSettingsParameter();
+            new FIDOSettingsWindow(param).ShowDialogWithOwner(this);
+
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(param.ToString());
         }
 
         private void DoDFU()

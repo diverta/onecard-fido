@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.FIDOSettings
 {
@@ -8,12 +9,17 @@ namespace MaintenanceToolApp.FIDOSettings
     /// </summary>
     public partial class SetPinCodeWindow : Window
     {
+        // 処理実行のためのプロパティー
+        private readonly FIDOSettingsParameter Parameter;
+
         // PINコードの最小／最大桁数
         private const int PIN_CODE_SIZE_MIN = 4;
         private const int PIN_CODE_SIZE_MAX = 16;
 
-        public SetPinCodeWindow()
+        public SetPinCodeWindow(FIDOSettingsParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 
@@ -39,6 +45,10 @@ namespace MaintenanceToolApp.FIDOSettings
                 return;
             }
 
+            // 入力されたPINを設定し、画面を閉じる
+            Parameter.PinNew = passwordBoxPin.Password;
+            Parameter.PinOld = string.Empty;
+            Parameter.Command = Command.COMMAND_CLIENT_PIN_SET;
             TerminateWindow(true);
         }
 
@@ -52,6 +62,10 @@ namespace MaintenanceToolApp.FIDOSettings
                 return;
             }
 
+            // 入力されたPINを設定し、画面を閉じる
+            Parameter.PinNew = passwordBoxPin.Password;
+            Parameter.PinOld = passwordBoxPinOld.Password;
+            Parameter.Command = Command.COMMAND_CLIENT_PIN_CHANGE;
             TerminateWindow(true);
         }
 

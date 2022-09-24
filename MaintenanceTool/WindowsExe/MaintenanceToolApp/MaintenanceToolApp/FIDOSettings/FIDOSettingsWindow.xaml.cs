@@ -8,8 +8,13 @@ namespace MaintenanceToolApp.FIDOSettings
     /// </summary>
     public partial class FIDOSettingsWindow : Window
     {
-        public FIDOSettingsWindow()
+        // 処理実行のためのプロパティー
+        private readonly FIDOSettingsParameter Parameter;
+
+        public FIDOSettingsWindow(FIDOSettingsParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 
@@ -40,7 +45,7 @@ namespace MaintenanceToolApp.FIDOSettings
             }
 
             // PINコード設定画面を表示
-            SetPinCodeWindow w = new SetPinCodeWindow();
+            SetPinCodeWindow w = new SetPinCodeWindow(Parameter);
             if (w.ShowDialogWithOwner(this) == false) {
                 return;
             }
