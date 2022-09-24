@@ -48,6 +48,9 @@ namespace MaintenanceToolApp.FIDOSettings
             if (CheckEntries() == false) {
                 return;
             }
+            if (CheckEntriesForChange() == false) {
+                return;
+            }
 
             TerminateWindow(true);
         }
@@ -91,6 +94,21 @@ namespace MaintenanceToolApp.FIDOSettings
 
             // 確認用PINコードのチェック
             if (PasswordBoxUtil.CompareEntry(passwordBoxPinConfirm, passwordBoxPin, Title, AppCommon.MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT, this) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckEntriesForChange()
+        {
+            // 長さチェック
+            if (PasswordBoxUtil.CheckEntrySize(passwordBoxPinOld, PIN_CODE_SIZE_MIN, PIN_CODE_SIZE_MAX, Title, AppCommon.MSG_PROMPT_INPUT_OLD_PIN, this) == false) {
+                return false;
+            }
+
+            // 数字入力チェック
+            if (PasswordBoxUtil.CheckIsNumeric(passwordBoxPinOld, Title, AppCommon.MSG_PROMPT_INPUT_OLD_PIN_NUM, this) == false) {
                 return false;
             }
 
