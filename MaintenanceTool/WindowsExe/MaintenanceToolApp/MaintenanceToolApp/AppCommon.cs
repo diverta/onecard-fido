@@ -20,6 +20,7 @@
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
+        public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -57,6 +58,10 @@
         public const string MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT = "確認用のPINコードを正しく入力してください";
         public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定された認証情報を消去します。";
         public const string MSG_PROMPT_CLEAR_PIN_CODE = "消去後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nFIDO認証情報の消去処理を実行しますか？";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT1 = "  ユーザー確認が必要となりますので、";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上のユーザー確認LEDが高速点滅したら、";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  ボタンを１回押してください.";
+        public const string MSG_AUTH_RESET_COMMAND_ERROR = "FIDO認証情報消去コマンドの実行に失敗しました。";
 
         // BLE DFU関連メッセージ
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";

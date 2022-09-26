@@ -41,16 +41,33 @@ namespace MaintenanceToolApp.FIDOSettings
 
         public void DoProcess()
         {
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(Parameter.ToString());
-
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_AUTH_RESET:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_AUTH_RESET;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                new AuthResetProcess(Parameter).DoRequestAuthReset(DoResponseFromSubProcess);
+                break;
+
             default:
                 // エラーメッセージをポップアップ表示
                 DialogUtil.ShowErrorMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
                 break;
             }
+        }
+
+        //
+        // 下位クラスからのコールバック
+        //
+        private void DoResponseFromSubProcess(string commandTitle, string errorMessage, bool success)
+        {
+            // 失敗時はログ出力
+            if (success == false && errorMessage.Length > 0) {
+                AppLogUtil.OutputLogError(errorMessage);
+            }
+
+            // メイン画面に制御を戻す
+            CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
     }
 }
