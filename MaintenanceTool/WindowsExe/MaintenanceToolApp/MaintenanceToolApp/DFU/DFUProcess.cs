@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
@@ -23,6 +24,9 @@ namespace MaintenanceToolApp.DFU
 
         public VersionInfoData CurrentVersionInfo { get; set; }
         public DFUImageData UpdateImageData { get; set; }
+
+        // 転送区分を保持
+        public Transport Transport { get; set; }
 
         // 転送済みバイト数を保持
         public int ImageBytesSent { get; set; }
@@ -293,6 +297,15 @@ namespace MaintenanceToolApp.DFU
 
         private void StartDFU()
         {
+            //
+            // TODO: 経過措置
+            //
+            // USB DFU処理は後日実装
+            if (Parameter.Transport != Transport.TRANSPORT_BLE) {
+                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, "現在、BLE経由のファームウェア更新のみサポートしています。");
+                return;
+            }
+
             // ステータスを更新
             Parameter.Status = DFUStatus.GetCurrentVersion;
 
