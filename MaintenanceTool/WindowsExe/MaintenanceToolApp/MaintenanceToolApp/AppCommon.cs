@@ -20,6 +20,8 @@
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
+        public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
+        public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";

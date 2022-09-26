@@ -43,6 +43,18 @@ namespace MaintenanceToolApp.FIDOSettings
         {
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_CLIENT_PIN_SET:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_CLIENT_PIN_SET;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                new SetPinCodeProcess(Parameter).DoRequestSetPinCode(DoResponseFromSubProcess);
+                break;
+
+            case Command.COMMAND_CLIENT_PIN_CHANGE:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_CLIENT_PIN_CHANGE;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                new SetPinCodeProcess(Parameter).DoRequestSetPinCode(DoResponseFromSubProcess);
+                break;
+
             case Command.COMMAND_AUTH_RESET:
                 Parameter.CommandTitle = AppCommon.PROCESS_NAME_AUTH_RESET;
                 CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
