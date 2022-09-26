@@ -21,6 +21,9 @@
     <Compile Update="DFU\DFUWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DFU\DFUStartWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="FIDOSettings\FIDOSettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -45,6 +48,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="DFU\DFUWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DFU\DFUStartWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="FIDOSettings\FIDOSettingsWindow.xaml">

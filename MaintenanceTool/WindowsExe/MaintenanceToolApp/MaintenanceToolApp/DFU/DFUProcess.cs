@@ -82,7 +82,7 @@ namespace MaintenanceToolApp.DFU
     public class DFUProcess
     {
         // 処理実行のためのプロパティー
-        private DFUParameter Parameter = new DFUParameter();
+        private DFUParameter Parameter = null!;
 
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
@@ -90,10 +90,13 @@ namespace MaintenanceToolApp.DFU
         // 処理進捗画面の参照を保持
         private DFUProcessingWindow ProcessingWindow = null!;
 
-        private DFUProcess(Window parentWindowRef)
+        private DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
         {
             // 親ウィンドウの参照を保持
             ParentWindow = parentWindowRef;
+
+            // パラメーターの参照を保持
+            Parameter = parameterRef;
         }
 
         private void DoProcess()
@@ -288,10 +291,10 @@ namespace MaintenanceToolApp.DFU
         //
         public static DFUProcess Instance = null!;
 
-        public static void StartDFUProcess(Window ParentWindow)
+        public static void StartDFUProcess(Window ParentWindow, DFUParameter param)
         {
             // インスタンスを生成
-            Instance = new DFUProcess(ParentWindow);
+            Instance = new DFUProcess(ParentWindow, param);
             Instance.StartDFU();
         }
 
