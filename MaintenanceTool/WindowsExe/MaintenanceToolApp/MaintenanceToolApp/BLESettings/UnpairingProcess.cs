@@ -67,7 +67,7 @@ namespace MaintenanceToolApp.BLESettings
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_ERASE_BONDS, new byte[0]);
+            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_ERASE_BONDS, new byte[0]);
         }
 
         public void DoResponseCommandEraseBonds(byte[] responseData)
