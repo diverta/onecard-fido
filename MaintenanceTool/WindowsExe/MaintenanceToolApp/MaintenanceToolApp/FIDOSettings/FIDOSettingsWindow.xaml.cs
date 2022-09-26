@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.FIDOSettings
 {
@@ -53,9 +54,24 @@ namespace MaintenanceToolApp.FIDOSettings
             TerminateWindow(true);
         }
 
-
         private void DoReset()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}", AppCommon.MSG_CLEAR_PIN_CODE, AppCommon.MSG_PROMPT_CLEAR_PIN_CODE);
+
+            // FIDO認証情報の消去（認証器のリセット）
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (DialogUtil.DisplayPromptPopup(this, Title, message) == false) {
+                return;
+            }
+
+            // 実行コマンドをパラメーターに保持
+            Parameter.Command = Command.COMMAND_AUTH_RESET;
             TerminateWindow(true);
         }
 
