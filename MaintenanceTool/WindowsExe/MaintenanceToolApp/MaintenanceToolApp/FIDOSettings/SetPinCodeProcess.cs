@@ -98,16 +98,15 @@ namespace MaintenanceToolApp.FIDOSettings
                 return;
             }
 
-            // PINコードからNewPinEnc、PinAuthを生成
+            // PINコード、共通鍵からNewPinEncを生成
             byte[] newPinEnc = CTAP2Util.CreateNewPinEnc(Parameter.PinNew, CTAP2Parameter.SharedSecretKey);
-            byte[] pinAuth = CTAP2Util.CreatePinAuth(newPinEnc, CTAP2Parameter.PinHashEnc, CTAP2Parameter.SharedSecretKey);
 
             switch (Parameter.Command) {
             case Command.COMMAND_CLIENT_PIN_SET:
-                DoRequestCommandClientPinSet(newPinEnc, pinAuth);
+                DoRequestCommandClientPinSet(newPinEnc);
                 break;
             case Command.COMMAND_CLIENT_PIN_CHANGE:
-                DoRequestCommandClientPinChange(newPinEnc, pinAuth);
+                DoRequestCommandClientPinChange(newPinEnc);
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -119,11 +118,14 @@ namespace MaintenanceToolApp.FIDOSettings
         //
         // PINコードの設定
         //
-        private void DoRequestCommandClientPinSet(byte[] newPinEnc, byte[] pinAuth)
+        private void DoRequestCommandClientPinSet(byte[] newPinEnc)
         {
             // 実行するコマンドを保持
             CTAP2Parameter.CborCommand = FIDODefine.CTAP2_CBORCMD_CLIENT_PIN;
             CTAP2Parameter.CborSubCommand = FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_SET;
+
+            // NewPinEncと共通鍵から、PinAuthを生成
+            byte[] pinAuth = CTAP2Util.CreatePinAuth(newPinEnc, Array.Empty<byte>(), CTAP2Parameter.SharedSecretKey);
 
             // setPinコマンドバイトを生成
             byte[] setPinCbor = CBOREncoder.GenerateSetPinCbor(
@@ -135,7 +137,7 @@ namespace MaintenanceToolApp.FIDOSettings
             CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, setPinCbor);
         }
 
-        private void DoRequestCommandClientPinChange(byte[] newPinEnc, byte[] pinAuth)
+        private void DoRequestCommandClientPinChange(byte[] newPinEnc)
         {
             // 実行するコマンドを保持
             CTAP2Parameter.CborCommand = FIDODefine.CTAP2_CBORCMD_CLIENT_PIN;
@@ -143,6 +145,9 @@ namespace MaintenanceToolApp.FIDOSettings
 
             // PINコード変更の場合は、pinHashEncを生成
             CTAP2Util.GeneratePinHashEnc(Parameter.PinOld, CTAP2Parameter);
+
+            // NewPinEnc、PinHashEncと共通鍵から、PinAuthを生成
+            byte[] pinAuth = CTAP2Util.CreatePinAuth(newPinEnc, CTAP2Parameter.PinHashEnc, CTAP2Parameter.SharedSecretKey);
 
             // setPinコマンドバイトを生成
             byte[] setPinCbor = CBOREncoder.GenerateSetPinCbor(
