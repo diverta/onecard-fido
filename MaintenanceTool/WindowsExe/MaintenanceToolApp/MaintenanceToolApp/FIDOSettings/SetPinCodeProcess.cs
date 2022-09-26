@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp.Common;
 using MaintenanceToolApp.HealthCheck;
+using System;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -87,12 +88,54 @@ namespace MaintenanceToolApp.FIDOSettings
 
         private void DoResponseCommandGetKeyAgreement(byte[] cborBytes)
         {
+            // CBORをデコードして公開鍵を抽出
+            CBORDecoder cborDecoder = new CBORDecoder();
+            CTAP2Parameter.AgreementPublicKey = CBORDecoder.GetKeyAgreement(cborBytes);
+
+            // 共通鍵を生成
+            if (CTAP2Util.GenerateSharedSecretKey(CTAP2Parameter) == false) {
+                NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_CTAP2_ERR_SSKEY_GENERATE_FOR_SET_PIN_CODE, false);
+                return;
+            }
+
+            // PINコードからNewPinEnc、PinAuthを生成
+            byte[] newPinEnc = CTAP2Util.CreateNewPinEnc(Parameter.PinNew, CTAP2Parameter.SharedSecretKey);
+            byte[] pinAuth = CTAP2Util.CreatePinAuth(newPinEnc, CTAP2Parameter.PinHashEnc, CTAP2Parameter.SharedSecretKey);
+
             switch (Parameter.Command) {
+            case Command.COMMAND_CLIENT_PIN_SET:
+                DoRequestCommandClientPinSet(newPinEnc, pinAuth);
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
                 break;
             }
+        }
+
+        //
+        // PINコードの設定
+        //
+        private void DoRequestCommandClientPinSet(byte[] newPinEnc, byte[] pinAuth)
+        {
+            // 実行するコマンドを保持
+            CTAP2Parameter.CborCommand = FIDODefine.CTAP2_CBORCMD_CLIENT_PIN;
+            CTAP2Parameter.CborSubCommand = FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_SET;
+
+            // setPinコマンドバイトを生成
+            byte[] setPinCbor = CBOREncoder.GenerateSetPinCbor(
+                CTAP2Parameter.CborCommand, CTAP2Parameter.CborSubCommand,
+                CTAP2Parameter.AgreementPublicKey, pinAuth, newPinEnc, Array.Empty<byte>());
+
+            // コマンドを実行する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, setPinCbor);
+        }
+
+        private void DoResponseCommandClientPinSet(byte[] responseData)
+        {
+            // 上位クラスに制御を戻す
+            NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_NONE, true);
         }
 
         //
@@ -125,6 +168,9 @@ namespace MaintenanceToolApp.FIDOSettings
             switch (CTAP2Parameter.CborSubCommand) {
             case FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 DoResponseCommandGetKeyAgreement(cborBytes);
+                break;
+            case FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_SET:
+                DoResponseCommandClientPinSet(cborBytes);
                 break;
             default:
                 break;
