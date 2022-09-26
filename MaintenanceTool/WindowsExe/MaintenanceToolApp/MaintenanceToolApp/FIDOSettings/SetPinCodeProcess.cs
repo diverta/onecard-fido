@@ -106,6 +106,9 @@ namespace MaintenanceToolApp.FIDOSettings
             case Command.COMMAND_CLIENT_PIN_SET:
                 DoRequestCommandClientPinSet(newPinEnc, pinAuth);
                 break;
+            case Command.COMMAND_CLIENT_PIN_CHANGE:
+                DoRequestCommandClientPinChange(newPinEnc, pinAuth);
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 NotifyCommandTerminated(Parameter.CommandTitle, AppCommon.MSG_OCCUR_UNKNOWN_ERROR, false);
@@ -126,6 +129,25 @@ namespace MaintenanceToolApp.FIDOSettings
             byte[] setPinCbor = CBOREncoder.GenerateSetPinCbor(
                 CTAP2Parameter.CborCommand, CTAP2Parameter.CborSubCommand,
                 CTAP2Parameter.AgreementPublicKey, pinAuth, newPinEnc, Array.Empty<byte>());
+
+            // コマンドを実行する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, setPinCbor);
+        }
+
+        private void DoRequestCommandClientPinChange(byte[] newPinEnc, byte[] pinAuth)
+        {
+            // 実行するコマンドを保持
+            CTAP2Parameter.CborCommand = FIDODefine.CTAP2_CBORCMD_CLIENT_PIN;
+            CTAP2Parameter.CborSubCommand = FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_CHANGE;
+
+            // PINコード変更の場合は、pinHashEncを生成
+            CTAP2Util.GeneratePinHashEnc(Parameter.PinOld, CTAP2Parameter);
+
+            // setPinコマンドバイトを生成
+            byte[] setPinCbor = CBOREncoder.GenerateSetPinCbor(
+                CTAP2Parameter.CborCommand, CTAP2Parameter.CborSubCommand,
+                CTAP2Parameter.AgreementPublicKey, pinAuth, newPinEnc, CTAP2Parameter.PinHashEnc);
 
             // コマンドを実行する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
@@ -170,6 +192,7 @@ namespace MaintenanceToolApp.FIDOSettings
                 DoResponseCommandGetKeyAgreement(cborBytes);
                 break;
             case FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_SET:
+            case FIDODefine.CTAP2_SUBCMD_CLIENT_PIN_CHANGE:
                 DoResponseCommandClientPinSet(cborBytes);
                 break;
             default:
