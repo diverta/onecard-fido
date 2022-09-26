@@ -178,7 +178,7 @@ namespace MaintenanceToolApp.DFU
 
             // バージョン情報照会処理に遷移
             VersionInfoProcess process = new VersionInfoProcess();
-            process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
+            process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
         }
 
         private void OnReceivedUpdateVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData)
@@ -315,7 +315,7 @@ namespace MaintenanceToolApp.DFU
             Task task = Task.Run(() => {
                 // バージョン情報照会から開始
                 VersionInfoProcess process = new VersionInfoProcess();
-                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
+                process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
             });
 
             // 進捗画面を表示
