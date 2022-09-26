@@ -39,5 +39,15 @@ namespace ToolAppCommon
             }
             return true;
         }
+
+        public static bool CompareEntry(PasswordBox passwordBoxDest, PasswordBox passwordBoxSrc, string title, string informativeText, Window parentWindow)
+        {
+            if (passwordBoxDest.Password.Equals(passwordBoxSrc.Password)) {
+                return true;
+            }
+            DialogUtil.ShowWarningMessage(parentWindow, title, informativeText);
+            passwordBoxDest.Focus();
+            return false;
+        }
     }
 }

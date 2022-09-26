@@ -178,6 +178,46 @@ namespace MaintenanceToolApp.Common
 
             return extensions;
         }
+
+        public static byte[] GenerateSetPinCbor(byte cborCommand, byte subCommand, KeyAgreement agreementPublicKey, byte[] pinAuth, byte[] newPinEnc, byte[] pinHashEnc)
+        {
+            // 送信データを生成
+            //   0x01: pinProtocol
+            //   0x02: subCommand
+            //   0x03: keyAgreement
+            //   0x04: pinAuth
+            //   0x05: newPinEnc
+            //   0x06: pinHashEnc
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, 1);
+            cbor.Add(0x02, subCommand);
+
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, agreementPublicKey.Kty);
+            keyParam.Add(3, agreementPublicKey.Alg);
+            keyParam.Add(-1, agreementPublicKey.Crv);
+            keyParam.Add(-2, agreementPublicKey.X);
+            keyParam.Add(-3, agreementPublicKey.Y);
+            cbor.Add(0x03, keyParam);
+
+            cbor.Add(0x04, pinAuth);
+            cbor.Add(0x05, newPinEnc);
+
+            if (pinHashEnc.Length > 0) {
+                cbor.Add(0x06, pinHashEnc);
+            }
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
     }
 
     internal class CBORDecoder

@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp.BLESettings;
 using MaintenanceToolApp.DFU;
+using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.Utility;
 using System;
@@ -82,6 +83,17 @@ namespace MaintenanceToolApp
             }
         }
 
+        private void DoFIDOSettings()
+        {
+            // FIDO設定画面を開き、実行コマンド種別を設定
+            FIDOSettingsParameter param = new FIDOSettingsParameter();
+            bool b = new FIDOSettingsWindow(param).ShowDialogWithOwner(this);
+            if (b) {
+                // FIDO設定機能を実行
+                new FIDOSettingsProcess(param).DoProcess();
+            }
+        }
+
         private void DoDFU()
         {
             // 処理前の確認
@@ -145,6 +157,11 @@ namespace MaintenanceToolApp
         private void buttonBLE_Click(object sender, RoutedEventArgs e)
         {
             DoBLESettings();
+        }
+
+        private void buttonFIDO_Click(object sender, RoutedEventArgs e)
+        {
+            DoFIDOSettings();
         }
     }
 }

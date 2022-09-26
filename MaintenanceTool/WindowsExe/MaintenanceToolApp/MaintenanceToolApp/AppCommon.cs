@@ -20,6 +20,9 @@
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
+        public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
+        public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
+        public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -46,6 +49,22 @@
         public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
+
+        // FIDO設定機能
+        public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";
+        public const string MSG_PROMPT_INPUT_NEW_PIN_CONFIRM = "新しいPINコード（確認用）を４〜16桁で入力してください";
+        public const string MSG_PROMPT_INPUT_OLD_PIN = "変更前のPINコードを４〜16桁で入力してください";
+        public const string MSG_PROMPT_INPUT_NEW_PIN_NUM = "新しいPINコードを数字で入力してください";
+        public const string MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM = "新しいPINコード（確認用）を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_OLD_PIN_NUM = "変更前のPINコードを数字で入力してください";
+        public const string MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT = "確認用のPINコードを正しく入力してください";
+        public const string MSG_CTAP2_ERR_SSKEY_GENERATE_FOR_SET_PIN_CODE = "PINコード設定のための共通鍵生成処理が失敗しました。";
+        public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定された認証情報を消去します。";
+        public const string MSG_PROMPT_CLEAR_PIN_CODE = "消去後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nFIDO認証情報の消去処理を実行しますか？";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT1 = "  ユーザー確認が必要となりますので、";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上のユーザー確認LEDが高速点滅したら、";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  ボタンを１回押してください.";
+        public const string MSG_AUTH_RESET_COMMAND_ERROR = "FIDO認証情報消去コマンドの実行に失敗しました。";
 
         // BLE DFU関連メッセージ
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";

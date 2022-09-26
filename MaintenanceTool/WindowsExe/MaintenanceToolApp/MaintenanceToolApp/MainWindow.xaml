@@ -8,7 +8,7 @@
         Height="500" Width="700" ResizeMode="CanMinimize">
     <Grid>
         <Button x:Name="buttonBLE"  Content="BLE設定" HorizontalAlignment="Left" Margin="25,20,0,0" VerticalAlignment="Top" Height="25" Width="200" Click="buttonBLE_Click"/>
-        <Button x:Name="buttonFIDO" Content="FIDO設定" HorizontalAlignment="Left" Margin="25,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+        <Button x:Name="buttonFIDO" Content="FIDO設定" HorizontalAlignment="Left" Margin="25,60,0,0" VerticalAlignment="Top" Height="25" Width="200" Click="buttonFIDO_Click"/>
         <Button x:Name="buttonDFU"  Content="ファームウェア更新" HorizontalAlignment="Left" Margin="25,100,0,0" VerticalAlignment="Top" Height="25" Width="200" Click="buttonDFU_Click"/>
         <Button x:Name="buttonSetPivParam"  Content="PIV設定" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
         <Button x:Name="buttonSetPgpParam"  Content="OpenPGP設定" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" Height="25" Width="200"/>

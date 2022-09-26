@@ -1,12 +1,12 @@
 ﻿using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp.BLESettings
+namespace MaintenanceToolApp.FIDOSettings
 {
-    internal class UnpairingProcess
+    internal class AuthResetProcess
     {
         // 処理実行のためのプロパティー
-        private readonly BLESettingsParameter Parameter;
+        private readonly FIDOSettingsParameter Parameter;
 
         // 上位クラスに対するイベント通知
         public delegate void HandlerOnNotifyCommandTerminated(string commandTitle, string errorMessage, bool success);
@@ -15,7 +15,7 @@ namespace MaintenanceToolApp.BLESettings
         // HID／BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
-        public UnpairingProcess(BLESettingsParameter param)
+        public AuthResetProcess(FIDOSettingsParameter param)
         {
             // パラメーターの参照を保持
             Parameter = param;
@@ -27,7 +27,7 @@ namespace MaintenanceToolApp.BLESettings
         //
         // 外部公開用
         //
-        public void DoRequestEraseBonds(HandlerOnNotifyCommandTerminated handler)
+        public void DoRequestAuthReset(HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
             NotifyCommandTerminated = handler;
@@ -50,8 +50,8 @@ namespace MaintenanceToolApp.BLESettings
         {
             // CTAPHID_INIT応答後の処理を実行
             switch (Parameter.Command) {
-            case Command.COMMAND_ERASE_BONDS:
-                DoRequestCommandEraseBonds();
+            case Command.COMMAND_AUTH_RESET:
+                DoRequestCommandAuthReset();
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -61,22 +61,32 @@ namespace MaintenanceToolApp.BLESettings
         }
 
         //
-        // ペアリング情報削除
+        // FIDO認証情報の消去
         //
-        private void DoRequestCommandEraseBonds()
+        private void DoRequestCommandAuthReset()
         {
-            // コマンドバイトだけを送信する
+            // リクエスト転送の前に、
+            // 基板上のボタンを押してもらうように促す
+            // メッセージを画面表示
+            CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT1);
+            CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT2);
+            CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_CLEAR_PIN_CODE_COMMENT3);
+
+            // authenticatorResetコマンドバイトを生成
+            byte[] commandByte = { FIDODefine.CTAP2_CBORCMD_AUTH_RESET };
+
+            // authenticatorResetコマンドを実行する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_ERASE_BONDS, new byte[0]);
+            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_CTAPHID_CBOR, commandByte);
         }
 
-        public void DoResponseCommandEraseBonds(byte[] responseData)
+        private void DoResponseCommandAuthReset(byte[] responseData)
         {
             // ステータスバイトをチェック
             string errorMessage = AppCommon.MSG_NONE;
             bool success = (responseData[0] == 0x00);
             if (success == false) {
-                errorMessage = AppCommon.MSG_ERASE_BONDS_COMMAND_ERROR;
+                errorMessage = AppCommon.MSG_AUTH_RESET_COMMAND_ERROR;
             }
 
             // 上位クラスに制御を戻す
@@ -105,8 +115,8 @@ namespace MaintenanceToolApp.BLESettings
 
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
-            case Command.COMMAND_ERASE_BONDS:
-                DoResponseCommandEraseBonds(responseData);
+            case Command.COMMAND_AUTH_RESET:
+                DoResponseCommandAuthReset(responseData);
                 break;
             default:
                 // メイン画面に制御を戻す

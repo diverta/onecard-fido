@@ -242,10 +242,51 @@ namespace MaintenanceToolApp.Common
                 errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x2}", receivedMessage[0]);
                 break;
             }
-
-            // エラーログ出力
-            AppLogUtil.OutputLogError(errorMessage);
             return false;
+        }
+
+        //
+        // ClientPin関連
+        //
+        public static byte[] CreateNewPinEnc(string pinNew, byte[] sharedSecretKey)
+        {
+            byte[] newPinBytes = PaddingPin64(pinNew);
+            return AES256CBCEncrypt(sharedSecretKey, newPinBytes);
+        }
+
+        private static byte[] PaddingPin64(string pin)
+        {
+            // PINを64バイトの配列に転化する。
+            // （64バイトに満たない部分は０埋め）
+            byte[] pinBytes = new byte[64];
+            byte[] pintmp = Encoding.ASCII.GetBytes(pin);
+            for (int i = 0; i < pinBytes.Length; i++) {
+                if (i < pintmp.Length) {
+                    pinBytes[i] = pintmp[i];
+                } else {
+                    pinBytes[i] = 0;
+                }
+            }
+            return pinBytes;
+        }
+
+        public static byte[] CreatePinAuth(byte[] newPinEnc, byte[] pinHashEnc, byte[] sharedSecretKey)
+        {
+            // ハッシュ化対象データを生成
+            List<byte> dataForHash = new List<byte>();
+            dataForHash.AddRange(newPinEnc.ToArray());
+            if (pinHashEnc != null) {
+                dataForHash.AddRange(pinHashEnc.ToArray());
+            }
+
+            // LEFT(HMAC-SHA-256(sharedSecret, newPinEnc), 16)
+            byte[] pinAuth = new byte[0];
+            using (var hmacsha256 = new HMACSHA256(sharedSecretKey)) {
+                byte[] digest = hmacsha256.ComputeHash(dataForHash.ToArray());
+                pinAuth = digest.ToList().Take(16).ToArray();
+            }
+
+            return pinAuth;
         }
 
         //
