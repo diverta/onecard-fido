@@ -140,6 +140,11 @@ namespace MaintenanceToolApp.HealthCheck
                 BLEProcess.DisconnctBLE();
             }
 
+            // 失敗時はログ出力
+            if (success == false && errorMessage.Length > 0) {
+                AppLogUtil.OutputLogError(errorMessage);
+            }
+
             // メイン画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }

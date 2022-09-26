@@ -242,9 +242,6 @@ namespace MaintenanceToolApp.Common
                 errorMessage = string.Format("不明なステータスにより処理が失敗しました: 0x{0:x2}", receivedMessage[0]);
                 break;
             }
-
-            // エラーログ出力
-            AppLogUtil.OutputLogError(errorMessage);
             return false;
         }
 
