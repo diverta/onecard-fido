@@ -1,7 +1,9 @@
 ﻿using MaintenanceToolApp.CommonProcess;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
@@ -17,6 +19,15 @@ namespace MaintenanceToolApp.DFU
 
         // 更新イメージファイルのハッシュ値
         public byte[] SHA256Hash = new byte[32];
+
+        //
+        // nRF52840アプリケーションファームウェアのバイナリーイメージを保持。
+        // .dat=256バイト、.bin=512Kバイトと見積っています。
+        //
+        public byte[] NRF52AppDat = Array.Empty<byte>();
+        public byte[] NRF52AppBin = Array.Empty<byte>();
+        public int NRF52AppDatSize { get; set; }
+        public int NRF52AppBinSize { get; set; }
 
         // 更新イメージファイルのリソース名称
         public string DFUImageResourceName;
@@ -116,6 +127,12 @@ namespace MaintenanceToolApp.DFU
             // ファームウェア更新イメージ(.bin)を配列に読込
             if (ReadDFUImage() == false) {
                 return false;
+            }
+
+            // nRF52固有対応
+            // 書庫を解析し、内包されているイメージを抽出
+            if (BoardIsNRF52(boardname)) {
+                return ExtractDFUImage();
             }
 
             // イメージからSHA-256ハッシュを抽出
@@ -274,6 +291,10 @@ namespace MaintenanceToolApp.DFU
         //
         // nRF52固有対応
         //
+        // DFU対象ファイル名
+        private const string NRF52_APP_DAT_FILE_NAME = "nrf52840_xxaa.dat";
+        private const string NRF52_APP_BIN_FILE_NAME = "nrf52840_xxaa.bin";
+
         private static bool StartsWithResourceNameForNRF52(string boardname, string resName)
         {
             // リソース名が
@@ -282,6 +303,72 @@ namespace MaintenanceToolApp.DFU
             // ファームウェア更新イメージファイルと判定
             string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefixFor52, boardname);
             return resName.StartsWith(prefix);
+        }
+
+        private static bool BoardIsNRF52(string boardname)
+        {
+            return boardname.StartsWith("PCA10059");
+        }
+
+        private bool ExtractDFUImage()
+        {
+            // 例外抑止
+            if (ImageDataRef.NRF53AppBinSize == 0) {
+                return false;
+            }
+
+            // .zip書庫ファイルを解析し、内包されている.bin/.datイメージを抽出
+            int i = 0;
+            while (i < ImageDataRef.NRF53AppBinSize) {
+                if (ImageDataRef.NRF53AppBin[i + 0] == 0x50 && ImageDataRef.NRF53AppBin[i + 1] == 0x4B &&
+                    ImageDataRef.NRF53AppBin[i + 2] == 0x03 && ImageDataRef.NRF53AppBin[i + 3] == 0x04) {
+                    // 書庫エントリーのヘッダー（50 4B 03 04）が見つかった場合
+                    i += ParseImage(ImageDataRef.NRF53AppBin, i);
+                } else {
+                    i++;
+                }
+            }
+            return true;
+        }
+
+        private int ParseImage(byte[] data, int index)
+        {
+            // ファイルのサイズ
+            int offset = 18;
+            int compressedSize = AppUtil.ToInt32(data, index + offset, false);
+            offset += 8;
+
+            // ファイル名のサイズ
+            int filenameSize = AppUtil.ToInt16(data, index + offset, false);
+            offset += 2;
+
+            // コメントのサイズ
+            int commentSize = AppUtil.ToInt16(data, index + offset, false);
+            offset += 2;
+
+            // ファイル名
+            byte[] file_name = data.Skip(index + offset).Take(filenameSize).ToArray();
+            string fileNameStr = Encoding.UTF8.GetString(file_name);
+            offset += filenameSize;
+
+            // コメント
+            offset += commentSize;
+
+            // ファイルの内容
+            if (fileNameStr.Equals(NRF52_APP_DAT_FILE_NAME)) {
+                // .datファイルのバイナリーイメージを配列に格納
+                ImageDataRef.NRF52AppDat = data.Skip(index + offset).Take(compressedSize).ToArray();
+                ImageDataRef.NRF52AppDatSize = compressedSize;
+
+            } else if (fileNameStr.Equals(NRF52_APP_BIN_FILE_NAME)) {
+                // .binファイルのバイナリーイメージを配列に格納
+                ImageDataRef.NRF52AppBin = data.Skip(index + offset).Take(compressedSize).ToArray();
+                ImageDataRef.NRF52AppBinSize = compressedSize;
+            }
+
+            // 書庫エントリーのサイズを戻す
+            offset += compressedSize;
+            return offset;
         }
     }
 }
