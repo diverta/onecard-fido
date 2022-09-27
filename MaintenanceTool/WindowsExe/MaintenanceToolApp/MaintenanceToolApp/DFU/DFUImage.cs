@@ -28,6 +28,7 @@ namespace MaintenanceToolApp.DFU
         public const string ResourceName = "MaintenanceToolApp.Resources.";
         public const string ResourceNamePrefix = "app_update.";
         public const string ResourceNameSuffix = ".bin";
+        public const string ResourceNamePrefixFor52 = "appkg.";
 
         public DFUImageData()
         {
@@ -137,18 +138,30 @@ namespace MaintenanceToolApp.DFU
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             string[] resnames = myAssembly.GetManifestResourceNames();
             foreach (string resName in resnames) {
-                // リソース名が
-                // "MaintenanceToolApp.Resources.app_update.<boardname>."
-                // という名称で始まっている場合は、
-                // ファームウェア更新イメージファイルと判定
-                string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefix, boardname);
-                if (resName.StartsWith(prefix)) {
+                // nRF53用のイメージかどうか判定
+                if (StartsWithResourceNameForNRF53(boardname, resName)) {
+                    ImageDataRef.DFUImageResourceName = resName;
+                    return true;
+                }
+
+                // nRF52用のイメージかどうか判定
+                if (StartsWithResourceNameForNRF52(boardname, resName)) {
                     ImageDataRef.DFUImageResourceName = resName;
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static bool StartsWithResourceNameForNRF53(string boardname, string resName)
+        {
+            // リソース名が
+            // "MaintenanceToolApp.Resources.app_update.<boardname>."
+            // という名称で始まっている場合は、
+            // ファームウェア更新イメージファイルと判定
+            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefix, boardname);
+            return resName.StartsWith(prefix);
         }
 
         private bool ReadDFUImage()
@@ -256,6 +269,19 @@ namespace MaintenanceToolApp.DFU
                 ));
 
             return UpdateVersion;
+        }
+
+        //
+        // nRF52固有対応
+        //
+        private static bool StartsWithResourceNameForNRF52(string boardname, string resName)
+        {
+            // リソース名が
+            // "MaintenanceToolApp.Resources.appkg.<boardname>."
+            // という名称で始まっている場合は、
+            // ファームウェア更新イメージファイルと判定
+            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefixFor52, boardname);
+            return resName.StartsWith(prefix);
         }
     }
 }
