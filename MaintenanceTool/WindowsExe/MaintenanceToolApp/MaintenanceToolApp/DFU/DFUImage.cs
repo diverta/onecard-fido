@@ -103,8 +103,9 @@ namespace MaintenanceToolApp.DFU
 
             // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可
             // （ブートローダーのバージョンが異なるため）
-            if (currentVersionDec < DFUProcessConst.DFU_UPD_TARGET_APP_VERSION) {
-                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, UpdateVersion);
+            string minVersionForDFU;
+            if (CurrentVersionIsUnavailableForDFU(versionInfoData.HWRev, currentVersionDec, out minVersionForDFU)) {
+                string informative = string.Format(AppCommon.MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE, UpdateVersion, minVersionForDFU);
                 checkErrorCaption = AppCommon.MSG_DFU_IMAGE_NOT_AVAILABLE;
                 checkErrorMessage = informative;
                 return false;
@@ -125,7 +126,7 @@ namespace MaintenanceToolApp.DFU
                 return false;
             }
 
-            // ファームウェア更新イメージ(.bin)を配列に読込
+            // ファームウェア更新イメージ(.bin or .zip)を配列に読込
             if (ReadDFUImage() == false) {
                 return false;
             }
@@ -285,13 +286,24 @@ namespace MaintenanceToolApp.DFU
 
             // ログ出力
             string fname = resName.Replace(DFUImageData.ResourceName, "");
-            AppLogUtil.OutputLogDebug(string.Format("ToolBLEDFUImage: Firmware version {0}, board name {1}",
+            AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF53: Firmware version {0}, board name {1}",
                 UpdateVersion, boardname));
-            AppLogUtil.OutputLogDebug(string.Format("ToolBLEDFUImage: {0}({1} bytes)",
+            AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF53: {0}({1} bytes)",
                 fname, ImageDataRef.NRF53AppBinSize
                 ));
 
             return UpdateVersion;
+        }
+
+        private static bool CurrentVersionIsUnavailableForDFU(string boardname, int currentVersionDec, out string minVersionForDFU)
+        {
+            if (BoardIsNRF52(boardname)) {
+                minVersionForDFU = "0.3.0";
+                return (currentVersionDec < DFUProcessConst.DFU_UPD_TARGET_APP_VERSION_FOR_52);
+            } else {
+                minVersionForDFU = "0.4.0";
+                return (currentVersionDec < DFUProcessConst.DFU_UPD_TARGET_APP_VERSION);
+            }
         }
 
         //

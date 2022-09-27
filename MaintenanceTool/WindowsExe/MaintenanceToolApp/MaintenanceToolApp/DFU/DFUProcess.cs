@@ -77,6 +77,12 @@ namespace MaintenanceToolApp.DFU
 
         // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
         public const bool IMAGE_UPDATE_TEST_MODE = false;
+
+        //
+        // nRF52固有対応
+        //
+        // 更新対象アプリケーション＝version 0.3.0
+        public const int DFU_UPD_TARGET_APP_VERSION_FOR_52 = 300;
     }
 
     public class DFUProcess
