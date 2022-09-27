@@ -1,10 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
     internal class USBDFUProcess
     {
+        // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
+        private static readonly USBDFUService DFUService = new USBDFUService();
+
         // 処理実行のためのプロパティー
         private DFUParameter Parameter = null!;
 
@@ -121,7 +125,22 @@ namespace MaintenanceToolApp.DFU
             // ブートローダーモード遷移完了
             AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_BOOTLOADER_MODE);
 
-            //
+            // DFU対象デバイスへの接続処理を実行
+            EstablishDFUConnection();
+        }
+
+        //
+        // 認証器へのCDC ACM接続処理
+        //
+        public void EstablishDFUConnection()
+        {
+            // DFU対象デバイスに接続（USB CDC ACM接続）
+            USBDFUService.HandlerOnConnectedToDFUService handler = new USBDFUService.HandlerOnConnectedToDFUService(OnConnectedToDFUService);
+            DFUService.ConnectUSBDFUService(handler);
+        }
+
+        private void OnConnectedToDFUService(bool success)
+        {
             // TODO: 仮の実装です。
             NotifyCommandTerminated(AppCommon.MSG_NONE, true);
         }
@@ -134,7 +153,9 @@ namespace MaintenanceToolApp.DFU
             // メイン画面に制御を戻す
             Parameter.ErrorMessage = errorMessage;
             Parameter.Success = success;
-            CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
+            }));
         }
     }
 }
