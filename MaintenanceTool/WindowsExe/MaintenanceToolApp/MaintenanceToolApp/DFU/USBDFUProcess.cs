@@ -11,8 +11,11 @@ namespace MaintenanceToolApp.DFU
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
 
-        // HID／BLEからデータ受信時のコールバック参照
+        // HIDからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
+
+        // USB接続／切断時のコールバック参照
+        private readonly HIDProcess.HandlerOnConnectHIDDevice OnConnectHIDDeviceRef;
 
         public USBDFUProcess(Window parentWindowRef, DFUParameter parameterRef)
         {
@@ -24,6 +27,7 @@ namespace MaintenanceToolApp.DFU
 
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
+            OnConnectHIDDeviceRef = new HIDProcess.HandlerOnConnectHIDDevice(OnConnectHIDDevice);
         }
 
         public void StartUSBDFU()
@@ -33,7 +37,7 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
-            // ブートローダー遷移コマンドを実行
+            // ブートローダーモード遷移コマンドを実行
             DoRequestCtapHidInit();
         }
 
@@ -67,9 +71,7 @@ namespace MaintenanceToolApp.DFU
         {
             if (CMD == HIDProcessConst.HID_CMD_BOOTLOADER_MODE) {
                 // ブートローダーモード遷移コマンド成功時
-                //
-                // TODO: 仮の実装です。
-                NotifyCommandTerminated(AppCommon.MSG_NONE, true);
+                HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
 
             } else {
                 // ブートローダーモード遷移コマンド失敗時は、
@@ -98,8 +100,30 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
-            // ブートローダー遷移コマンド実行後の処理
+            // ブートローダーモード遷移コマンド実行後の処理
             DoResponseCommandBootloaderMode(CMD, responseData);
+        }
+
+        //
+        // USB接続／切断時の処理
+        //
+        private void OnConnectHIDDevice(bool connected)
+        {
+            // イベントを解除
+            HIDProcess.UnregisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+
+            if (connected) {
+                // 画面に制御を戻す
+                NotifyCommandTerminated(AppCommon.MSG_DFU_TARGET_NOT_BOOTLOADER_MODE, false);
+                return;
+            }
+
+            // ブートローダーモード遷移完了
+            AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_BOOTLOADER_MODE);
+
+            //
+            // TODO: 仮の実装です。
+            NotifyCommandTerminated(AppCommon.MSG_NONE, true);
         }
 
         //

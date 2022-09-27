@@ -46,6 +46,11 @@ namespace ToolAppCommon
             Instance.OnConnectHIDDevice += handler;
         }
 
+        public static void UnregisterHandlerOnConnectHIDDevice(HandlerOnConnectHIDDevice handler)
+        {
+            Instance.OnConnectHIDDevice -= handler;
+        }
+
         public static void ConnectHIDDevice()
         {
             //
