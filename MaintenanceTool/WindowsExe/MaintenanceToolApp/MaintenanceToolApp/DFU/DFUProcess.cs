@@ -107,9 +107,9 @@ namespace MaintenanceToolApp.DFU
 
         private void DoProcess()
         {
-            // USB DFUの場合は、認証器をブートローダーモードに遷移させる
+            // USB DFUの場合
             if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
-                DoProcessUSBDFU();
+                new USBDFUProcess(ParentWindow, Parameter).StartUSBDFU();
                 return;
             }
 
@@ -130,14 +130,6 @@ namespace MaintenanceToolApp.DFU
 
             // メイン画面に制御を移す
             CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
-        }
-
-        private void DoProcessUSBDFU()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (WindowUtil.CheckUSBDeviceDisconnected(ParentWindow)) {
-                return;
-            }
         }
 
         //
