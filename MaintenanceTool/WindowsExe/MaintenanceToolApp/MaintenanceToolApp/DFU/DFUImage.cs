@@ -40,6 +40,7 @@ namespace MaintenanceToolApp.DFU
         public const string ResourceNamePrefix = "app_update.";
         public const string ResourceNameSuffix = ".bin";
         public const string ResourceNamePrefixFor52 = "appkg.";
+        public const string ResourceNameSuffixFor52 = ".zip";
 
         public DFUImageData()
         {
@@ -73,7 +74,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // ファームウェア更新イメージファイルから、更新バージョンを取得
-            string UpdateVersion = Instance.GetUpdateVersionFromDFUImage();
+            string UpdateVersion = Instance.GetUpdateVersionFromDFUImage(versionInfoData.HWRev);
 
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
@@ -139,11 +140,16 @@ namespace MaintenanceToolApp.DFU
             return ExtractImageHashSha256();
         }
 
-        public string GetUpdateVersionFromDFUImage()
+        public string GetUpdateVersionFromDFUImage(string boardname)
         {
             // ファームウェア更新イメージ名称から、更新バージョンを取得
-            string UpdateVersion = ExtractUpdateVersion(ImageDataRef.DFUImageResourceName);
-            return UpdateVersion;
+            if (BoardIsNRF52(boardname)) {
+                // nRF52固有対応
+                return ExtractUpdateVersionFor52(ImageDataRef.DFUImageResourceName);
+
+            } else {
+                return ExtractUpdateVersion(ImageDataRef.DFUImageResourceName);
+            }
         }
 
         private bool GetDFUImageFileResourceName(string boardname)
@@ -369,6 +375,40 @@ namespace MaintenanceToolApp.DFU
             // 書庫エントリーのサイズを戻す
             offset += compressedSize;
             return offset;
+        }
+
+        public string ExtractUpdateVersionFor52(string resName)
+        {
+            // バージョン文字列を初期化
+            string UpdateVersion = "";
+            if (resName.Equals("")) {
+                return UpdateVersion;
+            }
+            if (resName.EndsWith(DFUImageData.ResourceNameSuffixFor52) == false) {
+                return UpdateVersion;
+            }
+
+            // リソース名称文字列から、バージョン文字列だけを抽出
+            string replaced = resName.Replace(DFUImageData.ResourceName, "").Replace(DFUImageData.ResourceNamePrefixFor52, "").Replace(DFUImageData.ResourceNameSuffixFor52, "");
+            string[] elem = replaced.Split('.');
+            if (elem.Length != 4) {
+                return UpdateVersion;
+            }
+
+            // 抽出後の文字列を、基板名とバージョン文字列に分ける
+            // 例：PCA10059_02.0.2.11 --> PCA10059_02, 0.2.11
+            string boardname = elem[0];
+            UpdateVersion = string.Format("{0}.{1}.{2}", elem[1], elem[2], elem[3]);
+
+            // ログ出力
+            AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF52: Firmware version {0}, board name {1}",
+                UpdateVersion, boardname));
+            AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF52: {0}({1} bytes), {2}({3} bytes)",
+                NRF52_APP_DAT_FILE_NAME, ImageDataRef.NRF52AppDatSize,
+                NRF52_APP_BIN_FILE_NAME, ImageDataRef.NRF52AppBinSize
+                ));
+
+            return UpdateVersion;
         }
     }
 }
