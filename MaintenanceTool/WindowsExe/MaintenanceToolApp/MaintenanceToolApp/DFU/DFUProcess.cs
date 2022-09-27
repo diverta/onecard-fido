@@ -107,6 +107,12 @@ namespace MaintenanceToolApp.DFU
 
         private void DoProcess()
         {
+            // USB DFUの場合は、認証器をブートローダーモードに遷移させる
+            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
+                DoProcessUSBDFU();
+                return;
+            }
+
             // DFU転送処理を起動
             Task task = Task.Run(() => {
                 DFUTransferProcess.InvokeTransferProcess(this, Parameter);
@@ -124,6 +130,14 @@ namespace MaintenanceToolApp.DFU
 
             // メイン画面に制御を移す
             CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
+        }
+
+        private void DoProcessUSBDFU()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(ParentWindow)) {
+                return;
+            }
         }
 
         //
@@ -306,15 +320,6 @@ namespace MaintenanceToolApp.DFU
 
         private void StartDFU()
         {
-            //
-            // TODO: 経過措置
-            //
-            // USB DFU処理は後日実装
-            if (Parameter.Transport != Transport.TRANSPORT_BLE) {
-                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, "現在、BLE経由のファームウェア更新のみサポートしています。");
-                return;
-            }
-
             // ステータスを更新
             Parameter.Status = DFUStatus.GetCurrentVersion;
 
