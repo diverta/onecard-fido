@@ -11,7 +11,7 @@
         <Label x:Name="labelCaption2" Content="更新するバージョン" HorizontalAlignment="Left" Margin="45,70,0,0" VerticalAlignment="Top" Width="153"/>
         <Label x:Name="labelCurrentVersion" Content="00.00.00" HorizontalAlignment="Left" Margin="210,40,0,0" VerticalAlignment="Top" Width="85" HorizontalContentAlignment="Center"/>
         <Label x:Name="labelUpdateVersion" Content="00.00.00" HorizontalAlignment="Left" Margin="210,70,0,0" VerticalAlignment="Top" Width="85" HorizontalContentAlignment="Center"/>
-        <Label x:Name="labelCaption3" Content="OKボタンをクリックすると、&#xD;&#xA;ファームウェア更新処理が開始されます。&#xD;&#xA;&#xD;&#xA;処理が完了するまでは、FIDO認証器の&#xD;&#xA;電源をOnにしたままにして下さい。" HorizontalAlignment="Left" Margin="45,140,0,0" VerticalAlignment="Top" Width="265" Height="95"/>
+        <Label x:Name="labelCaption3" Content="" HorizontalAlignment="Left" Margin="45,140,0,0" VerticalAlignment="Top" Width="265" Height="95"/>
         <Button x:Name="buttonOK"  Content="OK" HorizontalAlignment="Center" Margin="0,260,100,0" VerticalAlignment="Top" Height="25" Width="80" RenderTransformOrigin="-0.307,0.398" Click="buttonOK_Click"/>
         <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="100,260,0,0" VerticalAlignment="Top" Height="25" Width="80" Click="buttonCancel_Click"/>
     </Grid>

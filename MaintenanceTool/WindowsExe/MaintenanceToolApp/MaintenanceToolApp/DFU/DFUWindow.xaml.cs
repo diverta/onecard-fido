@@ -23,6 +23,15 @@ namespace MaintenanceToolApp.DFU
             labelCurrentVersion.Content = Parameter.CurrentVersionInfo.FWRev;
             labelUpdateVersion.Content = Parameter.UpdateImageData.UpdateVersion;
 
+            // トランスポート種別に応じ、ラベル文言を変える
+            if (Parameter.Transport == AppDefine.Transport.TRANSPORT_CDC_ACM) {
+                labelCaption3.Content = AppCommon.MSG_DFU_PROMPT_START_USB_DFU;
+            } else if (Parameter.Transport == AppDefine.Transport.TRANSPORT_BLE) {
+                labelCaption3.Content = AppCommon.MSG_DFU_PROMPT_START_BLE_DFU;
+            } else {
+                labelCaption3.Content = string.Empty;
+            }
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();

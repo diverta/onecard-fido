@@ -66,7 +66,9 @@
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  ボタンを１回押してください.";
         public const string MSG_AUTH_RESET_COMMAND_ERROR = "FIDO認証情報消去コマンドの実行に失敗しました。";
 
-        // BLE DFU関連メッセージ
+        // DFU関連メッセージ
+        public const string MSG_DFU_PROMPT_START_USB_DFU = "OKボタンをクリックすると、\nファームウェア更新処理が開始されます。\n\n処理が完了するまでは、FIDO認証器を\nUSBポートから外さないでください。";
+        public const string MSG_DFU_PROMPT_START_BLE_DFU = "OKボタンをクリックすると、\nファームウェア更新処理が開始されます。\n\n処理が完了するまでは、FIDO認証器の\n電源をOnにしたままにして下さい。";
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
         public const string MSG_DFU_SUB_PROCESS_FAILED = "ファームウェア更新機能の内部処理が失敗しました。";
         public const string MSG_DFU_VERSION_INFO_GET_FAILED = "FIDO認証器ファームウェアのバージョンが取得できませんでした。";
