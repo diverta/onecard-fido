@@ -36,8 +36,8 @@ namespace MaintenanceToolApp.DFU
         public delegate void HandlerOnConnectedToDFUService(bool success);
         private event HandlerOnConnectedToDFUService OnConnectedToDFUService = null!;
 
-        public delegate void HandlerOnReceivedResponse(bool success, byte[] responseData);
-        private event HandlerOnReceivedResponse OnReceivedResponse = null!;
+        public delegate void HandlerOnReceivedDFUResponse(bool success, byte[] responseData);
+        private event HandlerOnReceivedDFUResponse OnReceivedResponse = null!;
 
         //
         // 接続処理
@@ -217,6 +217,16 @@ namespace MaintenanceToolApp.DFU
         //
         // DFUリクエスト／レスポンス処理
         //
+        public void RegisterHandlerOnReceivedResponse(HandlerOnReceivedDFUResponse handler)
+        {
+            OnReceivedResponse += handler;
+        }
+
+        public void UnregisterHandlerOnReceivedResponse(HandlerOnReceivedDFUResponse handler)
+        {
+            OnReceivedResponse -= handler;
+        }
+
         public bool SendDFURequest(byte[] b)
         {
             try {

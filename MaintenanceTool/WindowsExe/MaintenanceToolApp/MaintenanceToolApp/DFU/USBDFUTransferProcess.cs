@@ -3,6 +3,11 @@ using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
 {
+    internal class USBDFUTransferParameter
+    {
+        public int MTU;
+    }
+
     internal class USBDFUTransferProcess
     {
         // このクラスのインスタンス
@@ -14,11 +19,18 @@ namespace MaintenanceToolApp.DFU
         // USB接続／切断時のコールバック参照
         private readonly HIDProcess.HandlerOnConnectHIDDevice OnConnectHIDDeviceRef;
 
+        // CDC ACMからデータ受信時のコールバック参照
+        private readonly USBDFUService.HandlerOnReceivedDFUResponse OnReceivedDFUResponseRef;
+
+        // 処理パラメーターを保持
+        private readonly USBDFUTransferParameter TransferParameter = new USBDFUTransferParameter();
+
         private USBDFUTransferProcess()
         {
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
             OnConnectHIDDeviceRef = new HIDProcess.HandlerOnConnectHIDDevice(OnConnectHIDDevice);
+            OnReceivedDFUResponseRef = new USBDFUService.HandlerOnReceivedDFUResponse(OnReceivedDFUResponse);
         }
 
         // USB DFUサービスの参照を保持（インスタンス生成は１度だけ行われる）
@@ -57,6 +69,9 @@ namespace MaintenanceToolApp.DFU
 
         private void TerminateDFUTransferProcess(bool success, string message)
         {
+            // イベントを解除
+            DFUService.UnregisterHandlerOnReceivedResponse(OnReceivedDFUResponseRef);
+
             // CDC ACM接続を破棄
             DFUService.CloseDFUDevice();
 
@@ -175,8 +190,96 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
+            // イベントを登録
+            DFUService.RegisterHandlerOnReceivedResponse(OnReceivedDFUResponseRef);
+
+            // DFU対象デバイスの通知設定
+            DoRequestSetReceipt();
+        }
+
+        //
+        // 転送準備処理
+        //
+        private void DoRequestSetReceipt()
+        {
+            // SET RECEIPTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, USBDFUConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void DoResponseSetReceipt(byte[] response)
+        {
+            // DFU対象デバイスからMTUを取得
+            DoRequestGetMtu();
+        }
+
+        private void DoRequestGetMtu()
+        {
+            // GET MTUコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_MTU_GET, USBDFUConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void DoResponseGetMtu(byte[] response)
+        {
+            // レスポンスからMTUを取得（4〜5バイト目、リトルエンディアン）
+            TransferParameter.MTU = AppUtil.ToInt16(response, 3, false);
+
             // TODO: 仮の実装です。
             TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
+        }
+
+        //
+        // DFUレスポンス受信時の処理
+        //
+        public void OnReceivedDFUResponse(bool success, byte[] response)
+        {
+            // コマンドバイト（レスポンスの２バイト目）を取得
+            byte cmd = response[1];
+
+            // 失敗時はメイン画面に制御を戻す
+            if (success == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                return;
+            }
+
+            // レスポンスがNGの場合は処理終了
+            if (AssertDFUResponseSuccess(response) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_RESPONSE_FAILED);
+            }
+
+            // コマンドバイトで処理分岐
+            switch (cmd) {
+            case USBDFUConst.NRF_DFU_OP_RECEIPT_NOTIF_SET:
+                DoResponseSetReceipt(response);
+                break;
+            case USBDFUConst.NRF_DFU_OP_MTU_GET:
+                DoResponseGetMtu(response);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private bool AssertDFUResponseSuccess(byte[] response)
+        {
+            // レスポンスを検証
+            if (response == null || response.Length == 0) {
+                return false;
+            }
+
+            // ステータスコードを参照し、処理が成功したかどうかを判定
+            return (response[2] == USBDFUConst.NRF_DFU_BYTE_RESP_SUCCESS);
         }
     }
 }

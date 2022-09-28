@@ -89,6 +89,8 @@
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED = "FIDO認証器ファームウェアのバージョンが{0}に更新されました。";
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED = "FIDO認証器ファームウェアのバージョンを{0}に更新できませんでした。";
         public const string MSG_DFU_PROCESS_CONNECT_FAILED = "更新ファームウェア転送サービスの接続に失敗しました。";
+        public const string MSG_DFU_PROCESS_REQUEST_FAILED = "更新ファームウェア転送サービスへのデータ送信に失敗しました。";
+        public const string MSG_DFU_PROCESS_RESPONSE_FAILED = "更新ファームウェア転送サービスからのデータ受信に失敗しました。";
         public const string MSG_DFU_PROCESS_TIMEOUT = "FIDO認証器ファームウェアの更新処理がタイムアウトしました。";
         public const string MSG_DFU_PROCESS_TITLE_GOING = "ファームウェアを更新しています";
         public const string MSG_DFU_PROCESS_TRANSFER_IMAGE = "更新ファームウェアを転送中です。";
