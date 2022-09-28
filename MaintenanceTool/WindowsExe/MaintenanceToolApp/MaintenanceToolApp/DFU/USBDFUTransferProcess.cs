@@ -5,6 +5,10 @@ namespace MaintenanceToolApp.DFU
 {
     internal class USBDFUTransferParameter
     {
+        public byte ObjectType;
+        public int MaxCreateSize;
+        public int AlreadySent;
+        public int RemainingToSend;
     }
 
     internal class USBDFUTransferProcess
@@ -237,9 +241,51 @@ namespace MaintenanceToolApp.DFU
             // パラメーターのインスタンスを生成
             TransferUtil = new USBDFUTransferUtil();
 
-            // レスポンスからMTUを取得（４〜５バイト目、リトルエンディアン）]
+            // レスポンスからMTUを取得（４〜５バイト目、リトルエンディアン）
             int mtu = AppUtil.ToInt16(response, 3, false);
             TransferUtil.SetMTU(mtu);
+
+            // DATイメージ転送処理の開始
+            // １回あたりの送信データ最大長を取得
+            DoRequestSelectObject(USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD);
+        }
+
+        //
+        // イメージ転送処理（DAT／BIN）
+        //
+        private void DoRequestSelectObject(byte type)
+        {
+            // パラメーターのインスタンスを生成
+            TransferParameter = new USBDFUTransferParameter();
+
+            // 転送対象オブジェクトの区分（DAT／BIN）を保持
+            TransferParameter.ObjectType = type;
+
+            // SELECT OBJECTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_OBJECT_SELECT, TransferParameter.ObjectType, USBDFUConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void DoResponseSelectObject(byte[] response)
+        {
+            // レスポンスからMaxCreateSizeを取得（4〜7バイト目、リトルエンディアン）
+            TransferParameter.MaxCreateSize = AppUtil.ToInt32(response, 3, false);
+
+            // データサイズを設定
+            TransferParameter.AlreadySent = 0;
+            if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
+                TransferParameter.RemainingToSend = Parameter.UpdateImageData.NRF52AppDatSize;
+            } else {
+                TransferParameter.RemainingToSend = Parameter.UpdateImageData.NRF52AppBinSize;
+            }
+
+            // チェックサムを初期化
+            TransferUtil.DFUObjectChecksumReset();
 
             // TODO: 仮の実装です。
             TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
@@ -271,6 +317,9 @@ namespace MaintenanceToolApp.DFU
                 break;
             case USBDFUConst.NRF_DFU_OP_MTU_GET:
                 DoResponseGetMtu(response);
+                break;
+            case USBDFUConst.NRF_DFU_OP_OBJECT_SELECT:
+                DoResponseSelectObject(response);
                 break;
             default:
                 break;
