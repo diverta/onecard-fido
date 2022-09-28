@@ -6,9 +6,13 @@ namespace MaintenanceToolApp.DFU
     internal class USBDFUTransferUtil
     {
         // DFUで使用するパラメーター
-        private readonly int MTU;
+        private int MTU;
 
-        public USBDFUTransferUtil(int size)
+        public USBDFUTransferUtil()
+        {
+        }
+
+        public void SetMTU(int size)
         {
             // MTUは４の倍数とする
             MTU = (size / 4) * 4;
