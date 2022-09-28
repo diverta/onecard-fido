@@ -142,6 +142,7 @@ namespace MaintenanceToolApp.DFU
         private void OnConnectedToDFUService(bool success)
         {
             // TODO: 仮の実装です。
+            DFUService.CloseDFUDevice();
             NotifyCommandTerminated(AppCommon.MSG_NONE, true);
         }
 
