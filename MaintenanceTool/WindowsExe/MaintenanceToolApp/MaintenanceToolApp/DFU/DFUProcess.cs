@@ -15,6 +15,7 @@ namespace MaintenanceToolApp.DFU
         {
             None = 0,
             GetCurrentVersion,
+            ToBootloaderMode,
             UploadProcess,
             Canceled,
             ResetDone,
