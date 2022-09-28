@@ -5,7 +5,6 @@ namespace MaintenanceToolApp.DFU
 {
     internal class USBDFUTransferParameter
     {
-        public int MTU;
     }
 
     internal class USBDFUTransferProcess
@@ -23,7 +22,10 @@ namespace MaintenanceToolApp.DFU
         private readonly USBDFUService.HandlerOnReceivedDFUResponse OnReceivedDFUResponseRef;
 
         // 処理パラメーターを保持
-        private readonly USBDFUTransferParameter TransferParameter = new USBDFUTransferParameter();
+        private USBDFUTransferParameter TransferParameter = null!;
+
+        // 転送用ユーティリティーの参照を保持
+        private USBDFUTransferUtil TransferUtil = null!;
 
         private USBDFUTransferProcess()
         {
@@ -232,8 +234,12 @@ namespace MaintenanceToolApp.DFU
 
         private void DoResponseGetMtu(byte[] response)
         {
-            // レスポンスからMTUを取得（4〜5バイト目、リトルエンディアン）
-            TransferParameter.MTU = AppUtil.ToInt16(response, 3, false);
+            // パラメーターのインスタンスを生成
+            TransferUtil = new USBDFUTransferUtil();
+
+            // レスポンスからMTUを取得（４〜５バイト目、リトルエンディアン）]
+            int mtu = AppUtil.ToInt16(response, 3, false);
+            TransferUtil.SetMTU(mtu);
 
             // TODO: 仮の実装です。
             TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
