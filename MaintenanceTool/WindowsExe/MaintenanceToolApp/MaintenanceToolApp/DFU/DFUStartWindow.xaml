@@ -9,7 +9,7 @@
         <GroupBox x:Name="groupBoxUSB" Header="MDBT50Q用" VerticalAlignment="Top" Margin="25,15,25,0" Height="140"/>
         <Button x:Name="buttonUSBDFU" Content="ファームウェアを更新（USB）" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Height="25" Width="274" RenderTransformOrigin="-0.307,0.398" Click="buttonUSBDFU_Click"/>
         <Label x:Name="labelCaptionUSB" Content="USB経由でファームウェアを更新します。&#xD;&#xA;FIDO認証器は、バージョン0.3.0以降のファームウェアが&#xD;&#xA;導入済みのものをご利用ください。" HorizontalAlignment="Left" Margin="39,74,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="278" Height="70"/>
-        <GroupBox x:Name="groupBoxBLE" Header="MDBT53V用" VerticalAlignment="Top" Margin="25,170,25,0" Height="140"/>
+        <GroupBox x:Name="groupBoxBLE" Header="MDBT53用" VerticalAlignment="Top" Margin="25,170,25,0" Height="140"/>
         <Button x:Name="buttonBLEDFU" Content="ファームウェアを更新（BLE）" HorizontalAlignment="Center" Margin="0,200,0,0" VerticalAlignment="Top" Height="25" Width="274" RenderTransformOrigin="-0.307,0.398" Click="buttonBLEDFU_Click"/>
         <Label x:Name="labelCaptionBLE" Content="BLE経由でファームウェアを更新します。&#xD;&#xA;FIDO認証器は、バージョン0.4.0以降のファームウェアが&#xD;&#xA;導入済みのものをご利用ください。" HorizontalAlignment="Left" Margin="39,230,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="278" Height="70"/>
         <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Left" Margin="138,325,0,0" VerticalAlignment="Top" Height="25" Width="80" Click="buttonCancel_Click"/>
