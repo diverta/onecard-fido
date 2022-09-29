@@ -96,11 +96,14 @@ namespace MaintenanceToolApp
 
         private void DoDFU()
         {
-            // 処理前の確認
-            if (DFUProcess.ConfirmDoProcess(this)) {
-                // ファームウェア更新画面を開き、実行を指示
-                DFUProcess.StartDFUProcess(this);
+            // DFU開始画面を表示
+            DFUParameter param = new DFUParameter();
+            if (new DFUStartWindow(param).ShowDialogWithOwner(this) == false) {
+                return;
             }
+
+            // ファームウェア更新画面を開き、実行を指示
+            DFUProcess.StartDFUProcess(this, param);
         }
 
         private void DoHealthCheck()

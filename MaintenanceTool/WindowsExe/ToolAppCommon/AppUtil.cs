@@ -115,6 +115,22 @@ namespace ToolAppCommon
             return dst;
         }
 
+        public static void ConvertUint32ToLEBytes(UInt32 ui, byte[] b, int offset)
+        {
+            byte[] s = BitConverter.GetBytes(ui);
+            for (int i = 0; i < s.Length; i++) {
+                b[i + offset] = s[i];
+            }
+        }
+
+        public static void ConvertUint16ToLEBytes(UInt16 ui, byte[] b, int offset)
+        {
+            byte[] s = BitConverter.GetBytes(ui);
+            for (int i = 0; i < s.Length; i++) {
+                b[i + offset] = s[i];
+            }
+        }
+
         public static void ConvertUint32ToBEBytes(UInt32 ui, byte[] b, int offset)
         {
             byte[] s = BitConverter.GetBytes(ui);

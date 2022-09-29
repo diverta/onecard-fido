@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp.Common;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
@@ -36,14 +37,19 @@ namespace MaintenanceToolApp.CommonProcess
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
         }
 
-        public void DoRequestVersionInfo(HandlerOnNotifyCommandTerminated handler)
+        public void DoRequestVersionInfo(Transport transport, HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
             HandlerRef = handler;
             NotifyCommandTerminated += HandlerRef;
 
             // バージョン照会コマンドを実行
-            DoRequestBLEGetVersionInfo();
+            if (transport == Transport.TRANSPORT_BLE) {
+                DoRequestBLEGetVersionInfo();
+
+            } else {
+                DoRequestHIDGetVersionInfo();
+            }
         }
 
         //
@@ -56,7 +62,14 @@ namespace MaintenanceToolApp.CommonProcess
             CommandProcess.DoRequestBleCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[1]);
         }
 
-        private void DoResponseBLEGetVersionInfo(byte[] responseData)
+        private void DoRequestHIDGetVersionInfo()
+        {
+            // コマンドバイトだけを送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[0]);
+        }
+
+        private void DoResponseGetVersionInfo(byte[] responseData)
         {
             // BLE接続を破棄
             BLEProcess.DisconnctBLE();
@@ -92,7 +105,7 @@ namespace MaintenanceToolApp.CommonProcess
         }
 
         //
-        // BLEからのレスポンス振分け処理
+        // トランスポートからのレスポンス振分け処理
         //
         private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
@@ -106,7 +119,7 @@ namespace MaintenanceToolApp.CommonProcess
             }
 
             // バージョン情報照会結果
-            DoResponseBLEGetVersionInfo(responseData);
+            DoResponseGetVersionInfo(responseData);
         }
 
         //

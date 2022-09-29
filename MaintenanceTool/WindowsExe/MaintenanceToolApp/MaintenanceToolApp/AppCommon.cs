@@ -66,7 +66,9 @@
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  ボタンを１回押してください.";
         public const string MSG_AUTH_RESET_COMMAND_ERROR = "FIDO認証情報消去コマンドの実行に失敗しました。";
 
-        // BLE DFU関連メッセージ
+        // DFU関連メッセージ
+        public const string MSG_DFU_PROMPT_START_USB_DFU = "OKボタンをクリックすると、\nファームウェア更新処理が開始されます。\n\n処理が完了するまでは、FIDO認証器を\nUSBポートから外さないでください。";
+        public const string MSG_DFU_PROMPT_START_BLE_DFU = "OKボタンをクリックすると、\nファームウェア更新処理が開始されます。\n\n処理が完了するまでは、FIDO認証器の\n電源をOnにしたままにして下さい。";
         public const string MSG_DFU_PRE_PROCESS = "ファームウェア更新機能の内部処理中です";
         public const string MSG_DFU_SUB_PROCESS_FAILED = "ファームウェア更新機能の内部処理が失敗しました。";
         public const string MSG_DFU_VERSION_INFO_GET_FAILED = "FIDO認証器ファームウェアのバージョンが取得できませんでした。";
@@ -77,14 +79,22 @@
         public const string MSG_DFU_IMAGE_TRANSFER_SUCCESS = "更新ファームウェアの転送が完了しました。";
         public const string MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC = "更新ファームウェアの転送後に不明なエラー（rc={0}）が発生しました。";
         public const string MSG_DFU_IMAGE_ALREADY_INSTALLED = "更新ファームウェアが既に導入済みなので、ファームウェア更新処理を続行できません。";
+        public const string MSG_DFU_TARGET_NOT_BOOTLOADER_MODE = "FIDO認証器をブートローダーモードに遷移させることができません。";
+        public const string MSG_DFU_TARGET_BOOTLOADER_MODE = "FIDO認証器がブートローダーモードに遷移しました。";
+        public const string MSG_DFU_TARGET_NOT_NORMAL_MODE = "FIDO認証器のファームウェア再始動に失敗しました。";
+        public const string MSG_DFU_TARGET_NORMAL_MODE = "FIDO認証器のファームウェアが再始動しました。";
         public const string MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST = "ファームウェア更新イメージファイルが存在しません。";
         public const string MSG_DFU_UPDATE_VERSION_UNKNOWN = "FIDO認証器ファームウェアの更新バージョンが不明です。";
         public const string MSG_DFU_CURRENT_VERSION_UNKNOWN = "FIDO認証器ファームウェアの現在バージョンが不明です。";
         public const string MSG_DFU_CURRENT_VERSION_ALREADY_NEW = "FIDO認証器のファームウェア (現在のバージョン: {0}) を、バージョン{1}に更新することはできません。";
-        public const string MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE = "FIDO認証器ファームウェアをバージョン{0}に更新するためには、ファームウェアをバージョン0.4.0以降に更新してください。";
+        public const string MSG_DFU_CURRENT_VERSION_OLD_FIRMWARE = "FIDO認証器ファームウェアをバージョン{0}に更新するためには、ファームウェアをバージョン{1}以降に更新してください。";
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED = "FIDO認証器ファームウェアのバージョンが{0}に更新されました。";
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED = "FIDO認証器ファームウェアのバージョンを{0}に更新できませんでした。";
         public const string MSG_DFU_PROCESS_CONNECT_FAILED = "更新ファームウェア転送サービスの接続に失敗しました。";
+        public const string MSG_DFU_PROCESS_REQUEST_FAILED = "更新ファームウェア転送サービスへのデータ送信に失敗しました。";
+        public const string MSG_DFU_PROCESS_RESPONSE_FAILED = "更新ファームウェア転送サービスからのデータ受信に失敗しました。";
+        public const string MSG_DFU_PROCESS_VERIFY_CHECKSUM_FAILED = "更新ファームウェア転送時、送信データのチェックサム検証に失敗しました。";
+        public const string MSG_DFU_PROCESS_VERIFY_SENDSIZE_FAILED = "更新ファームウェア転送時、送信データ長の検証に失敗しました。";
         public const string MSG_DFU_PROCESS_TIMEOUT = "FIDO認証器ファームウェアの更新処理がタイムアウトしました。";
         public const string MSG_DFU_PROCESS_TITLE_GOING = "ファームウェアを更新しています";
         public const string MSG_DFU_PROCESS_TRANSFER_IMAGE = "更新ファームウェアを転送中です。";
@@ -102,6 +112,7 @@
         public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
         public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
         public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_CTAPHID_CMD = "CTAPHIDコマンドのレスポンスが不正です。";
 
         // ヘルスチェック関連メッセージ
         public const string MSG_CTAP2_ERR_PIN_AUTH_SSKEY_GENERATE = "PIN認証のための共通鍵生成処理が失敗しました。";

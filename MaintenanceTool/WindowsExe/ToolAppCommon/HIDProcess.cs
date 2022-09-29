@@ -46,6 +46,11 @@ namespace ToolAppCommon
             Instance.OnConnectHIDDevice += handler;
         }
 
+        public static void UnregisterHandlerOnConnectHIDDevice(HandlerOnConnectHIDDevice handler)
+        {
+            Instance.OnConnectHIDDevice -= handler;
+        }
+
         public static void ConnectHIDDevice()
         {
             //
@@ -342,6 +347,15 @@ namespace ToolAppCommon
             } else {
                 // CONTフレームであると判断
                 int seq = frameData[4];
+
+                // INITフレームを未受信時はエラー
+                if (Received == 0) {
+                    string temp = AppLogUtil.DumpMessage(frameData, frameData.Length);
+                    AppLogUtil.OutputLogDebug(string.Format(
+                        "HID Recv irreagal frame: CMD=0x{0:x2} length={1}\r\n{2}", seq, frameData.Length, temp));
+                    OnReceivedResponse(receivedCID, (byte)seq, ReceivedMessage);
+                    return;
+                }
 
                 // データをコピー
                 int remaining = ReceivedMessageLen - Received;

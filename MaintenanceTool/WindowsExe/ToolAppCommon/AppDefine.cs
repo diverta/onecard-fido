@@ -70,6 +70,7 @@
             TRANSPORT_NONE = 0,
             TRANSPORT_BLE,
             TRANSPORT_HID,
+            TRANSPORT_CDC_ACM,
         }
     }
 }

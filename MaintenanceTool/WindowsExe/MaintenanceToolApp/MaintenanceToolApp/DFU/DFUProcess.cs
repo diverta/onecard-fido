@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
@@ -14,6 +15,7 @@ namespace MaintenanceToolApp.DFU
         {
             None = 0,
             GetCurrentVersion,
+            ToBootloaderMode,
             UploadProcess,
             Canceled,
             ResetDone,
@@ -23,6 +25,9 @@ namespace MaintenanceToolApp.DFU
 
         public VersionInfoData CurrentVersionInfo { get; set; }
         public DFUImageData UpdateImageData { get; set; }
+
+        // 転送区分を保持
+        public Transport Transport { get; set; }
 
         // 転送済みバイト数を保持
         public int ImageBytesSent { get; set; }
@@ -73,12 +78,18 @@ namespace MaintenanceToolApp.DFU
 
         // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
         public const bool IMAGE_UPDATE_TEST_MODE = false;
+
+        //
+        // nRF52固有対応
+        //
+        // 更新対象アプリケーション＝version 0.3.0
+        public const int DFU_UPD_TARGET_APP_VERSION_FOR_52 = 300;
     }
 
     public class DFUProcess
     {
         // 処理実行のためのプロパティー
-        private DFUParameter Parameter = new DFUParameter();
+        private DFUParameter Parameter = null!;
 
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
@@ -86,14 +97,23 @@ namespace MaintenanceToolApp.DFU
         // 処理進捗画面の参照を保持
         private DFUProcessingWindow ProcessingWindow = null!;
 
-        private DFUProcess(Window parentWindowRef)
+        private DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
         {
             // 親ウィンドウの参照を保持
             ParentWindow = parentWindowRef;
+
+            // パラメーターの参照を保持
+            Parameter = parameterRef;
         }
 
         private void DoProcess()
         {
+            // USB DFUの場合
+            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
+                new USBDFUProcess(ParentWindow, Parameter).StartUSBDFU();
+                return;
+            }
+
             // DFU転送処理を起動
             Task task = Task.Run(() => {
                 DFUTransferProcess.InvokeTransferProcess(this, Parameter);
@@ -171,7 +191,7 @@ namespace MaintenanceToolApp.DFU
 
             // バージョン情報照会処理に遷移
             VersionInfoProcess process = new VersionInfoProcess();
-            process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
+            process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
         }
 
         private void OnReceivedUpdateVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData)
@@ -284,10 +304,10 @@ namespace MaintenanceToolApp.DFU
         //
         public static DFUProcess Instance = null!;
 
-        public static void StartDFUProcess(Window ParentWindow)
+        public static void StartDFUProcess(Window ParentWindow, DFUParameter param)
         {
             // インスタンスを生成
-            Instance = new DFUProcess(ParentWindow);
+            Instance = new DFUProcess(ParentWindow, param);
             Instance.StartDFU();
         }
 
@@ -299,7 +319,7 @@ namespace MaintenanceToolApp.DFU
             Task task = Task.Run(() => {
                 // バージョン情報照会から開始
                 VersionInfoProcess process = new VersionInfoProcess();
-                process.DoRequestVersionInfo(new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
+                process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
             });
 
             // 進捗画面を表示

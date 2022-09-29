@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\appkg.PCA10059_01.0.3.5.zip" />
+    <None Remove="Resources\appkg.PCA10059_02.0.3.5.zip" />
     <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
@@ -46,6 +48,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.5.zip" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.5.zip" />
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
@@ -64,6 +68,7 @@
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.6.0.20220608" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.6.0.20220608" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
