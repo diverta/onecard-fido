@@ -76,7 +76,7 @@ namespace MaintenanceToolApp.DFU
         {
             if (ResumeRemaining == 0) {
                 // 最大繰り返し回数に達した場合は終了
-                AppLogUtil.OutputLogError("DFUDevice.SearchACMDevicePath: DFU target device not found");
+                AppLogUtil.OutputLogError("USBDFUService.ConnectUSBDFUService: DFU target device not found");
                 FuncOnConnectedToDFUService(false);
                 return;
             }
@@ -88,7 +88,7 @@ namespace MaintenanceToolApp.DFU
             if (GetCOMPortNameList() == false) {
                 // COMポートリストが空の場合はリトライ
                 ResumeRemaining--;
-                AppLogUtil.OutputLogDebug(string.Format("DFUDevice.SearchACMDevicePath retry: remaining {0} times", ResumeRemaining));
+                AppLogUtil.OutputLogDebug(string.Format("USBDFUService.ConnectUSBDFUService retry: remaining {0} times", ResumeRemaining));
                 ResumeConnectUSBDFUService();
                 return;
             }
@@ -164,7 +164,7 @@ namespace MaintenanceToolApp.DFU
                 // ポート初期化
                 SerialPortRef = new SerialPort(port);
                 if (SerialPortRef == null) {
-                    AppLogUtil.OutputLogError(string.Format("DFUDevice.OpenDFUDevice({0}): SerialPortRef is null", port));
+                    AppLogUtil.OutputLogError(string.Format("USBDFUService.OpenDFUDevice({0}): SerialPortRef is null", port));
                     return false;
                 }
                 SerialPortRef.WriteTimeout = 1000;
@@ -179,12 +179,12 @@ namespace MaintenanceToolApp.DFU
                     SerialPortRef.DataReceived += SerialDataReceivedEventHandlerRef;
 
                     // ポートオープン完了
-                    AppLogUtil.OutputLogDebug(string.Format("DFUDevice.OpenDFUDevice({0}): SerialPort is opened", port));
+                    AppLogUtil.OutputLogDebug(string.Format("USBDFUService.OpenDFUDevice({0}): SerialPort is opened", port));
                     return true;
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("DFUDevice.OpenDFUDevice({0}): {1}", port, e.Message));
+                AppLogUtil.OutputLogError(string.Format("USBDFUService.OpenDFUDevice({0}): {1}", port, e.Message));
             }
             return false;
         }
@@ -192,7 +192,7 @@ namespace MaintenanceToolApp.DFU
         public void CloseDFUDevice()
         {
             if (SerialPortRef == null) {
-                AppLogUtil.OutputLogDebug("DFUDevice.CloseDFUDevice: SerialPortRef is null");
+                AppLogUtil.OutputLogDebug("USBDFUService.CloseDFUDevice: SerialPortRef is null");
                 return;
             }
 
@@ -203,11 +203,11 @@ namespace MaintenanceToolApp.DFU
 
                     // ポートを閉じる
                     SerialPortRef.Close();
-                    AppLogUtil.OutputLogDebug("DFUDevice.CloseDFUDevice: SerialPort is closed");
+                    AppLogUtil.OutputLogDebug("USBDFUService.CloseDFUDevice: SerialPort is closed");
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogDebug(string.Format("DFUDevice.CloseDFUDevice: {0}", e.Message));
+                AppLogUtil.OutputLogDebug(string.Format("USBDFUService.CloseDFUDevice: {0}", e.Message));
 
             } finally {
                 SerialPortRef = null!;
@@ -235,7 +235,7 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("DFUDevice.SendDFURequest: {0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("USBDFUService.SendDFURequest: {0}", e.Message));
                 return false;
             }
         }
@@ -248,7 +248,7 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("DFUDevice.DTROperation: {0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("USBDFUService.DTROperation: {0}", e.Message));
                 return false;
             }
         }
@@ -257,17 +257,17 @@ namespace MaintenanceToolApp.DFU
         {
             // EOF受信時は何もしない
             if (a.EventType.Equals(SerialData.Eof)) {
-                AppLogUtil.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialData is EOF");
+                AppLogUtil.OutputLogDebug("USBDFUService.SerialPortDataReceived: SerialData is EOF");
                 return;
             }
 
             // シリアルポートをオープンしていない場合は何もしない
             if (SerialPortRef == null) {
-                AppLogUtil.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialPortRef is null");
+                AppLogUtil.OutputLogDebug("USBDFUService.SerialPortDataReceived: SerialPortRef is null");
                 return;
             }
             if (SerialPortRef.IsOpen == false) {
-                AppLogUtil.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialPortRef is not opened");
+                AppLogUtil.OutputLogDebug("USBDFUService.SerialPortDataReceived: SerialPortRef is not opened");
                 return;
             }
 
@@ -277,7 +277,7 @@ namespace MaintenanceToolApp.DFU
             try {
                 int bytesToRead = SerialPortRef.BytesToRead;
                 if (bytesToRead == 0) {
-                    AppLogUtil.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialPortRef.BytesToRead is zero");
+                    AppLogUtil.OutputLogDebug("USBDFUService.SerialPortDataReceived: SerialPortRef.BytesToRead is zero");
                     success = false;
 
                 } else {
@@ -287,7 +287,7 @@ namespace MaintenanceToolApp.DFU
                 }
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("DFUDevice.serialPortDataReceived: {0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("USBDFUService.serialPortDataReceived: {0}", e.Message));
                 success = false;
             }
 
@@ -339,7 +339,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // PING成功の場合は検索処理を終了
-            AppLogUtil.OutputLogDebug(string.Format("DFUDevice: DFU target device found on {0}", SerialPortName));
+            AppLogUtil.OutputLogDebug(string.Format("USBDFUService: DFU target device found on {0}", SerialPortName));
             FuncOnConnectedToDFUService(true);
         }
     }

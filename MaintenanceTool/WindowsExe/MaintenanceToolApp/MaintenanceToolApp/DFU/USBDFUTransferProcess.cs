@@ -363,19 +363,19 @@ namespace MaintenanceToolApp.DFU
             TransferUtil.DFUObjectChecksumReset();
 
             // データ分割送信開始
-            SendCreateObjectRequest();
+            DoRequestCreateObject();
         }
 
         //
         // データ分割送信処理
         //
-        private void SendCreateObjectRequest()
+        private void DoRequestCreateObject()
         {
             // 送信すべきデータがない場合は終了
             if (TransferParameter.RemainingToSend < 1) {
                 if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
                     // DATイメージ転送完了
-                    AppLogUtil.OutputLogDebug("ToolDFU: update init command object done");
+                    AppLogUtil.OutputLogDebug("USB DFU: update init command object done");
 
                     // BINイメージ転送処理の開始
                     // １回あたりの送信データ最大長を取得
@@ -383,7 +383,7 @@ namespace MaintenanceToolApp.DFU
 
                 } else if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_DATA) {
                     // BINイメージ転送完了
-                    AppLogUtil.OutputLogDebug("ToolDFU: update data object done");
+                    AppLogUtil.OutputLogDebug("USB DFU: update data object done");
                     TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
                 }
                 return;
@@ -405,7 +405,7 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
-        private void ReceiveCreateObjectResponse(byte[] response)
+        private void DoResponseCreateObject(byte[] response)
         {
             // オブジェクト種別に対応するデータ／サイズを設定
             if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
@@ -415,10 +415,10 @@ namespace MaintenanceToolApp.DFU
             }
 
             // データを送信
-            SendWriteCommandObjectRequest();
+            DoRequestWriteCommandObject();
         }
 
-        private void SendWriteCommandObjectRequest()
+        private void DoRequestWriteCommandObject()
         {
             // 送信フレームを生成
             while (TransferUtil.DFUObjectFramePrepare(TransferParameter.ObjectType)) {
@@ -433,10 +433,10 @@ namespace MaintenanceToolApp.DFU
             TransferParameter.AlreadySent += TransferParameter.SizeToSend;
 
             // 送信データのチェックサム検証に移る
-            SendGetCrcRequest();
+            DoRequestGetCrc();
         }
 
-        private void SendGetCrcRequest()
+        private void DoRequestGetCrc()
         {
             // CRC GETコマンドを生成（DFUリクエスト）
             byte[] b = new byte[] {
@@ -448,7 +448,7 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
-        private void ReceiveGetCrcResponse(byte[] response)
+        private void DoResponseGetCrc(byte[] response)
         {
             // レスポンスデータから、エスケープシーケンスを取り除く
             byte[] respUnesc = USBDFUTransferUtil.UnescapeResponseData(response);
@@ -458,7 +458,7 @@ namespace MaintenanceToolApp.DFU
 
             // 送信データ長を検証
             if (recvSize != TransferParameter.AlreadySent) {
-                AppLogUtil.OutputLogError(string.Format("ToolDFUCommand: send object {0} failed (expected {1} bytes, recv {2} bytes)",
+                AppLogUtil.OutputLogError(string.Format("USB DFU: send object {0} failed (expected {1} bytes, recv {2} bytes)",
                     TransferParameter.ObjectType, TransferParameter.AlreadySent, recvSize));
                 TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_VERIFY_SENDSIZE_FAILED);
                 return;
@@ -469,17 +469,17 @@ namespace MaintenanceToolApp.DFU
 
             // チェックサムを検証
             if (checksum != TransferUtil.DFUObjectChecksumGet()) {
-                AppLogUtil.OutputLogError(string.Format("ToolDFUCommand: send object {0} failed (checksum error)",
+                AppLogUtil.OutputLogError(string.Format("USB DFU: send object {0} failed (checksum error)",
                     TransferParameter.ObjectType));
                 TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_VERIFY_CHECKSUM_FAILED);
                 return;
             }
 
             // 送信データのチェックサム検証に移る
-            SendExecuteObjectRequest();
+            DoRequestExecuteObject();
         }
 
-        private void SendExecuteObjectRequest()
+        private void DoRequestExecuteObject()
         {
             // EXECUTE OBJECTコマンドを生成（DFUリクエスト）
             byte[] b = new byte[] {
@@ -491,7 +491,7 @@ namespace MaintenanceToolApp.DFU
             }
         }
 
-        private void ReceiveExecuteObjectResponse(byte[] response)
+        private void DoResponseExecuteObject(byte[] response)
         {
             // 未送信サイズを更新
             TransferParameter.RemainingToSend -= TransferParameter.SizeToSend;
@@ -508,7 +508,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // 次ブロックの送信処理に移る
-            SendCreateObjectRequest();
+            DoRequestCreateObject();
         }
 
         //
@@ -542,13 +542,13 @@ namespace MaintenanceToolApp.DFU
                 DoResponseSelectObject(response);
                 break;
             case USBDFUConst.NRF_DFU_OP_OBJECT_CREATE:
-                ReceiveCreateObjectResponse(response);
+                DoResponseCreateObject(response);
                 break;
             case USBDFUConst.NRF_DFU_OP_CRC_GET:
-                ReceiveGetCrcResponse(response);
+                DoResponseGetCrc(response);
                 break;
             case USBDFUConst.NRF_DFU_OP_OBJECT_EXECUTE:
-                ReceiveExecuteObjectResponse(response);
+                DoResponseExecuteObject(response);
                 break;
             default:
                 break;
