@@ -254,7 +254,8 @@ namespace ToolAppCommon
 
         private void OnTransactionFailed(string errorMessage)
         {
-            // 送信失敗時
+            // 送信失敗時はBLEデバイスを切断
+            DisconnectBLE();
             OnReceivedResponse(CMDToSend, new byte[0], false, errorMessage);
         }
 
