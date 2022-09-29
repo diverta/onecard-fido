@@ -1,4 +1,6 @@
-﻿using ToolAppCommon;
+﻿using MaintenanceToolApp.CommonProcess;
+using System;
+using ToolAppCommon;
 using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
@@ -9,6 +11,7 @@ namespace MaintenanceToolApp.DFU
         public int MaxCreateSize;
         public int AlreadySent;
         public int RemainingToSend;
+        public int SizeToSend;
     }
 
     internal class USBDFUTransferProcess
@@ -85,8 +88,16 @@ namespace MaintenanceToolApp.DFU
                 // エラーメッセージ文言を画面とログに出力
                 Parameter.ErrorMessage = message;
                 AppLogUtil.OutputLogError(message);
+                DFUProcess.OnTerminatedTransferProcess(success);
+                return;
             }
-            DFUProcess.OnTerminatedTransferProcess(success);
+
+            // DFU転送成功時は、処理進捗画面に通知
+            DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
+
+            // 再接続まで待機
+            Parameter.Status = DFUStatus.CheckUpdateVersion;
+            HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
         }
 
         //
@@ -172,10 +183,71 @@ namespace MaintenanceToolApp.DFU
                     EstablishDFUConnection();
                 }
 
+            } else if (Parameter.Status == DFUStatus.CheckUpdateVersion) {
+                if (connected == false) {
+                    // 画面に制御を戻す
+                    TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_TARGET_NOT_NORMAL_MODE);
+
+                } else {
+                    // ファームウェア再始動完了
+                    AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_NORMAL_MODE);
+
+                    // 処理進捗画面に通知
+                    DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_CONFIRM_VERSION, 100);
+
+                    // バージョン情報照会処理に遷移
+                    VersionInfoProcess process = new VersionInfoProcess();
+                    process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
+                }
+
             } else {
                 // 画面に制御を戻す
                 TerminateDFUTransferProcess(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
             }
+        }
+
+        // 
+        // バージョン情報照会
+        // 
+        private void OnReceivedUpdateVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData)
+        {
+            if (success == false || versionInfoData == null) {
+                // バージョン情報照会失敗時は終了
+                Parameter.ErrorMessage = errorMessage;
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
+
+                Parameter.Success = false;
+                DFUProcess.NotifyDFUProcessTerminated();
+                return;
+            }
+
+            // バージョン情報を比較して終了判定
+            // --> 判定結果をメイン画面に戻す
+            if (CompareUpdateVersion(versionInfoData) == false) {
+                // バージョンが同じでなければ異常終了
+                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, Parameter.UpdateImageData.UpdateVersion);
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
+
+                Parameter.Success = false;
+                DFUProcess.NotifyDFUProcessTerminated();
+                return;
+            }
+
+            // バージョンが同じであればDFU処理は正常終了
+            DFUProcess.NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, Parameter.UpdateImageData.UpdateVersion));
+            Parameter.Success = true;
+            DFUProcess.NotifyDFUProcessTerminated();
+        }
+
+        private bool CompareUpdateVersion(VersionInfoData versionInfoData)
+        {
+            // バージョン情報を比較
+            string CurrentVersion = versionInfoData.FWRev;
+            string UpdateVersion = Parameter.UpdateImageData.UpdateVersion;
+            bool versionEqual = (CurrentVersion == UpdateVersion);
+
+            // 比較結果を戻す
+            return versionEqual;
         }
 
         //
@@ -198,6 +270,9 @@ namespace MaintenanceToolApp.DFU
 
             // イベントを登録
             DFUService.RegisterHandlerOnReceivedResponse(OnReceivedDFUResponseRef);
+
+            // 処理進捗画面に通知
+            DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE, 0);
 
             // DFU対象デバイスの通知設定
             DoRequestSetReceipt();
@@ -287,8 +362,153 @@ namespace MaintenanceToolApp.DFU
             // チェックサムを初期化
             TransferUtil.DFUObjectChecksumReset();
 
-            // TODO: 仮の実装です。
-            TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
+            // データ分割送信開始
+            SendCreateObjectRequest();
+        }
+
+        //
+        // データ分割送信処理
+        //
+        private void SendCreateObjectRequest()
+        {
+            // 送信すべきデータがない場合は終了
+            if (TransferParameter.RemainingToSend < 1) {
+                if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
+                    // DATイメージ転送完了
+                    AppLogUtil.OutputLogDebug("ToolDFU: update init command object done");
+
+                    // BINイメージ転送処理の開始
+                    // １回あたりの送信データ最大長を取得
+                    DoRequestSelectObject(USBDFUConst.NRF_DFU_BYTE_OBJ_DATA);
+
+                } else if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_DATA) {
+                    // BINイメージ転送完了
+                    AppLogUtil.OutputLogDebug("ToolDFU: update data object done");
+                    TerminateDFUTransferProcess(true, AppCommon.MSG_NONE);
+                }
+                return;
+            }
+
+            // 送信サイズを通知
+            TransferParameter.SizeToSend = (TransferParameter.MaxCreateSize < TransferParameter.RemainingToSend) ? TransferParameter.MaxCreateSize : TransferParameter.RemainingToSend;
+
+            // CREATE OBJECTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_OBJECT_CREATE, TransferParameter.ObjectType, 0x00, 0x00, 0x00, 0x00,
+                USBDFUConst.NRF_DFU_BYTE_EOM};
+            int offset = 2;
+            AppUtil.ConvertUint32ToLEBytes((UInt32)TransferParameter.SizeToSend, b, offset);
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void ReceiveCreateObjectResponse(byte[] response)
+        {
+            // オブジェクト種別に対応するデータ／サイズを設定
+            if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
+                TransferUtil.DFUObjectFrameInit(Parameter.UpdateImageData.NRF52AppDat, TransferParameter.SizeToSend, TransferParameter.AlreadySent);
+            } else {
+                TransferUtil.DFUObjectFrameInit(Parameter.UpdateImageData.NRF52AppBin, TransferParameter.SizeToSend, TransferParameter.AlreadySent);
+            }
+
+            // データを送信
+            SendWriteCommandObjectRequest();
+        }
+
+        private void SendWriteCommandObjectRequest()
+        {
+            // 送信フレームを生成
+            while (TransferUtil.DFUObjectFramePrepare(TransferParameter.ObjectType)) {
+                // DFUリクエスト（生成したフレーム）を送信
+                if (DFUService.SendDFURequest(TransferUtil.GetPreparedFrame()) == false) {
+                    TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+                    return;
+                }
+            }
+
+            // 送信済みサイズを更新
+            TransferParameter.AlreadySent += TransferParameter.SizeToSend;
+
+            // 送信データのチェックサム検証に移る
+            SendGetCrcRequest();
+        }
+
+        private void SendGetCrcRequest()
+        {
+            // CRC GETコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_CRC_GET, USBDFUConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void ReceiveGetCrcResponse(byte[] response)
+        {
+            // レスポンスデータから、エスケープシーケンスを取り除く
+            byte[] respUnesc = USBDFUTransferUtil.UnescapeResponseData(response);
+
+            // レスポンスからデータ長を取得（4〜7バイト目、リトルエンディアン）
+            int recvSize = AppUtil.ToInt32(respUnesc, 3, false);
+
+            // 送信データ長を検証
+            if (recvSize != TransferParameter.AlreadySent) {
+                AppLogUtil.OutputLogError(string.Format("ToolDFUCommand: send object {0} failed (expected {1} bytes, recv {2} bytes)",
+                    TransferParameter.ObjectType, TransferParameter.AlreadySent, recvSize));
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_VERIFY_SENDSIZE_FAILED);
+                return;
+            }
+
+            // レスポンスからチェックサムを取得（8〜11バイト目、リトルエンディアン）
+            UInt32 checksum = (UInt32)AppUtil.ToInt32(respUnesc, 7, false);
+
+            // チェックサムを検証
+            if (checksum != TransferUtil.DFUObjectChecksumGet()) {
+                AppLogUtil.OutputLogError(string.Format("ToolDFUCommand: send object {0} failed (checksum error)",
+                    TransferParameter.ObjectType));
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_VERIFY_CHECKSUM_FAILED);
+                return;
+            }
+
+            // 送信データのチェックサム検証に移る
+            SendExecuteObjectRequest();
+        }
+
+        private void SendExecuteObjectRequest()
+        {
+            // EXECUTE OBJECTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                USBDFUConst.NRF_DFU_OP_OBJECT_EXECUTE, USBDFUConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUService.SendDFURequest(b) == false) {
+                TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_PROCESS_REQUEST_FAILED);
+            }
+        }
+
+        private void ReceiveExecuteObjectResponse(byte[] response)
+        {
+            // 未送信サイズを更新
+            TransferParameter.RemainingToSend -= TransferParameter.SizeToSend;
+
+            // 処理進捗画面に通知
+            if (TransferParameter.ObjectType == USBDFUConst.NRF_DFU_BYTE_OBJ_DATA) {
+                // 転送比率を計算
+                int imageBytesTotal = Parameter.UpdateImageData.NRF52AppBinSize;
+                int percentage = TransferParameter.AlreadySent * 100 / imageBytesTotal;
+
+                // 転送状況を画面表示
+                string progressMessage = string.Format(AppCommon.MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage);
+                DFUProcess.NotifyDFUProgress(progressMessage, percentage);
+            }
+
+            // 次ブロックの送信処理に移る
+            SendCreateObjectRequest();
         }
 
         //
@@ -320,6 +540,15 @@ namespace MaintenanceToolApp.DFU
                 break;
             case USBDFUConst.NRF_DFU_OP_OBJECT_SELECT:
                 DoResponseSelectObject(response);
+                break;
+            case USBDFUConst.NRF_DFU_OP_OBJECT_CREATE:
+                ReceiveCreateObjectResponse(response);
+                break;
+            case USBDFUConst.NRF_DFU_OP_CRC_GET:
+                ReceiveGetCrcResponse(response);
+                break;
+            case USBDFUConst.NRF_DFU_OP_OBJECT_EXECUTE:
+                ReceiveExecuteObjectResponse(response);
                 break;
             default:
                 break;

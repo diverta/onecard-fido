@@ -81,6 +81,8 @@
         public const string MSG_DFU_IMAGE_ALREADY_INSTALLED = "更新ファームウェアが既に導入済みなので、ファームウェア更新処理を続行できません。";
         public const string MSG_DFU_TARGET_NOT_BOOTLOADER_MODE = "FIDO認証器をブートローダーモードに遷移させることができません。";
         public const string MSG_DFU_TARGET_BOOTLOADER_MODE = "FIDO認証器がブートローダーモードに遷移しました。";
+        public const string MSG_DFU_TARGET_NOT_NORMAL_MODE = "FIDO認証器のファームウェア再始動に失敗しました。";
+        public const string MSG_DFU_TARGET_NORMAL_MODE = "FIDO認証器のファームウェアが再始動しました。";
         public const string MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST = "ファームウェア更新イメージファイルが存在しません。";
         public const string MSG_DFU_UPDATE_VERSION_UNKNOWN = "FIDO認証器ファームウェアの更新バージョンが不明です。";
         public const string MSG_DFU_CURRENT_VERSION_UNKNOWN = "FIDO認証器ファームウェアの現在バージョンが不明です。";
@@ -91,6 +93,8 @@
         public const string MSG_DFU_PROCESS_CONNECT_FAILED = "更新ファームウェア転送サービスの接続に失敗しました。";
         public const string MSG_DFU_PROCESS_REQUEST_FAILED = "更新ファームウェア転送サービスへのデータ送信に失敗しました。";
         public const string MSG_DFU_PROCESS_RESPONSE_FAILED = "更新ファームウェア転送サービスからのデータ受信に失敗しました。";
+        public const string MSG_DFU_PROCESS_VERIFY_CHECKSUM_FAILED = "更新ファームウェア転送時、送信データのチェックサム検証に失敗しました。";
+        public const string MSG_DFU_PROCESS_VERIFY_SENDSIZE_FAILED = "更新ファームウェア転送時、送信データ長の検証に失敗しました。";
         public const string MSG_DFU_PROCESS_TIMEOUT = "FIDO認証器ファームウェアの更新処理がタイムアウトしました。";
         public const string MSG_DFU_PROCESS_TITLE_GOING = "ファームウェアを更新しています";
         public const string MSG_DFU_PROCESS_TRANSFER_IMAGE = "更新ファームウェアを転送中です。";
