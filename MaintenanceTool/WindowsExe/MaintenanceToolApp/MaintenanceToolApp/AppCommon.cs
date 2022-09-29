@@ -112,6 +112,7 @@
         public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
         public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
         public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_CTAPHID_CMD = "CTAPHIDコマンドのレスポンスが不正です。";
 
         // ヘルスチェック関連メッセージ
         public const string MSG_CTAP2_ERR_PIN_AUTH_SSKEY_GENERATE = "PIN認証のための共通鍵生成処理が失敗しました。";

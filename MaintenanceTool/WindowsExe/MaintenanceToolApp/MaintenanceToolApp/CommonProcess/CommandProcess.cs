@@ -136,6 +136,12 @@ namespace MaintenanceToolApp
 
         private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
         {
+            // CMDが0の場合はエラー扱い
+            if (CMD == 0) {
+                OnCommandResponseToMainThread(CMD, data, false, AppCommon.MSG_CMDTST_INVALID_CTAPHID_CMD);
+                return;
+            }
+
             // HIDデバイスからメッセージ受信時の処理を行う
             if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
                 DoResponseCtapHidInit(CMD, data);
