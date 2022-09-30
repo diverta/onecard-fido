@@ -23,12 +23,12 @@ namespace MaintenanceToolApp.DFU
         }
     }
 
-    internal class BLESMPCBORDecoder
+    internal class BLEDFUCBORDecoder
     {
         public BLESMPResultInfo ResultInfo { get; set; }
         public BLESMPSlotInfo[] SlotInfos { get; set; }
 
-        public BLESMPCBORDecoder()
+        public BLEDFUCBORDecoder()
         {
             // スロット照会情報を初期化
             SlotInfos = new BLESMPSlotInfo[2];

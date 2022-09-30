@@ -16,7 +16,7 @@ namespace MaintenanceToolApp.DFU
         }
 
         // BLE SMPサービスの参照を保持（インスタンス生成は１度だけ行われる）
-        private static readonly BLESMPService SMPService = new BLESMPService();
+        private static readonly BLEDFUService DFUService = new BLEDFUService();
 
         // 上位クラス／パラメーターの参照を保持
         private DFUProcess DFUProcess = null!;
@@ -46,10 +46,10 @@ namespace MaintenanceToolApp.DFU
 
             // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
             // SMPサービスに接続
-            SMPService.ConnectBLESMPService(OnConnectedToSMPService);
+            DFUService.ConnectBLEDFUService(OnConnectedToDFUService);
         }
 
-        private void OnConnectedToSMPService(bool success)
+        private void OnConnectedToDFUService(bool success)
         {
             if (success == false) {
                 // 接続失敗時は転送処理を開始しない
@@ -58,8 +58,8 @@ namespace MaintenanceToolApp.DFU
             }
 
             // イベントを登録
-            SMPService.OnDataReceived += OnDataReceived;
-            SMPService.OnTransactionFailed += OnTransactionFailed;
+            DFUService.OnDataReceived += OnDataReceived;
+            DFUService.OnTransactionFailed += OnTransactionFailed;
 
             // 転送処理を開始する
             DoRequestGetSlotInfo();
@@ -68,7 +68,7 @@ namespace MaintenanceToolApp.DFU
         private void OnTerminatedDFUTransferProcess(bool success, string message)
         {
             // BLE接続を破棄
-            SMPService.DisconnectBLESMPService();
+            DFUService.DisconnectBLEDFUService();
 
             if (success == false) {
                 // エラーメッセージ文言を画面とログに出力
@@ -78,8 +78,8 @@ namespace MaintenanceToolApp.DFU
             DFUProcess.OnTerminatedTransferProcess(success);
 
             // イベントを解除
-            SMPService.OnDataReceived -= OnDataReceived;
-            SMPService.OnTransactionFailed -= OnTransactionFailed;
+            DFUService.OnDataReceived -= OnDataReceived;
+            DFUService.OnTransactionFailed -= OnTransactionFailed;
         }
 
         //
@@ -122,7 +122,7 @@ namespace MaintenanceToolApp.DFU
             errorMessage = AppCommon.MSG_NONE;
 
             // CBORをデコードしてスロット照会情報を抽出
-            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            BLEDFUCBORDecoder decoder = new BLEDFUCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
                 errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
                 return false;
@@ -213,7 +213,7 @@ namespace MaintenanceToolApp.DFU
             errorMessage = AppCommon.MSG_NONE;
 
             // CBORをデコードして転送結果情報を抽出
-            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            BLEDFUCBORDecoder decoder = new BLEDFUCBORDecoder();
             if (decoder.DecodeUploadResultInfo(responseData) == false) {
                 errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
                 return false;
@@ -268,7 +268,7 @@ namespace MaintenanceToolApp.DFU
             errorMessage = AppCommon.MSG_NONE;
 
             // CBORをデコードしてスロット照会情報を抽出
-            BLESMPCBORDecoder decoder = new BLESMPCBORDecoder();
+            BLEDFUCBORDecoder decoder = new BLEDFUCBORDecoder();
             if (decoder.DecodeSlotInfo(responseData) == false) {
                 errorMessage = AppCommon.MSG_DFU_SUB_PROCESS_FAILED;
                 return false;
@@ -386,7 +386,7 @@ namespace MaintenanceToolApp.DFU
             byte[] requestData = Enumerable.Concat(requestHeader, requestBody).ToArray();
 
             // リクエストデータを送信
-            SMPService.Send(requestData);
+            DFUService.Send(requestData);
 
             // ログ出力
             if (Parameter.Command != BLEDFUCommand.UploadImage) {
