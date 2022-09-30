@@ -28,11 +28,6 @@ namespace MaintenanceToolApp.DFU
 
         public void StartUSBDFU()
         {
-            // USB接続がない場合はエラーメッセージを表示
-            if (WindowUtil.CheckUSBDeviceDisconnected(ParentWindow)) {
-                return;
-            }
-
             // USB DFU処理を起動
             Task task = Task.Run(() => {
                 USBDFUTransferProcess.InvokeTransferProcess(this, Parameter);

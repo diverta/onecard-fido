@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -59,6 +60,11 @@ namespace MaintenanceToolApp.DFU
 
         private void buttonOK_Click(object sender, RoutedEventArgs e)
         {
+            // USB接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
             TerminateWindow(true);
         }
     }
