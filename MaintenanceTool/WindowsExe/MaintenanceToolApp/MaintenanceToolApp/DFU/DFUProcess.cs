@@ -116,7 +116,7 @@ namespace MaintenanceToolApp.DFU
 
             // DFU転送処理を起動
             Task task = Task.Run(() => {
-                DFUTransferProcess.InvokeTransferProcess(this, Parameter);
+                BLEDFUTransferProcess.InvokeTransferProcess(this, Parameter);
             });
 
             // 処理進捗画面を表示

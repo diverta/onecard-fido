@@ -5,12 +5,12 @@ using static MaintenanceToolApp.DFU.DFUParameter;
 
 namespace MaintenanceToolApp.DFU
 {
-    internal class DFUTransferProcess
+    internal class BLEDFUTransferProcess
     {
         // このクラスのインスタンス
-        private static readonly DFUTransferProcess Instance = new DFUTransferProcess();
+        private static readonly BLEDFUTransferProcess Instance = new BLEDFUTransferProcess();
 
-        private DFUTransferProcess()
+        private BLEDFUTransferProcess()
         {
         }
 
