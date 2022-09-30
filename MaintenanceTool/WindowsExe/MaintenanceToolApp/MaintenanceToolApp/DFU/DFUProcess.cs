@@ -93,28 +93,13 @@ namespace MaintenanceToolApp.DFU
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
 
-        private DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
+        public DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
         {
             // 親ウィンドウの参照を保持
             ParentWindow = parentWindowRef;
 
             // パラメーターの参照を保持
             Parameter = parameterRef;
-        }
-
-        private void DoProcess()
-        {
-            // USB DFUの場合
-            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
-                new USBDFUProcess(ParentWindow, Parameter).StartUSBDFU();
-                return;
-            }
-
-            // BLE DFUの場合
-            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
-                new BLEDFUProcess(ParentWindow, Parameter).StartUSBDFU();
-                return;
-            }
         }
 
         //
@@ -134,16 +119,7 @@ namespace MaintenanceToolApp.DFU
         //
         // 処理開始の指示
         //
-        public static DFUProcess Instance = null!;
-
-        public static void StartDFUProcess(Window ParentWindow, DFUParameter param)
-        {
-            // インスタンスを生成
-            Instance = new DFUProcess(ParentWindow, param);
-            Instance.StartDFU();
-        }
-
-        private void StartDFU()
+        public void StartDFUProcess()
         {
             // ステータスを更新
             Parameter.Status = DFUStatus.GetCurrentVersion;
@@ -178,8 +154,17 @@ namespace MaintenanceToolApp.DFU
             // ファームウェア更新画面を開き、実行を指示
             bool b = new DFUWindow(Parameter).ShowDialogWithOwner(ParentWindow);
             if (b) {
-                // DFU機能を実行
-                DoProcess();
+                // USB DFUの場合
+                if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
+                    new USBDFUProcess(ParentWindow, Parameter).StartUSBDFU();
+                    return;
+                }
+
+                // BLE DFUの場合
+                if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                    new BLEDFUProcess(ParentWindow, Parameter).StartUSBDFU();
+                    return;
+                }
             }
         }
 
