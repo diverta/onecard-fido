@@ -92,7 +92,7 @@ namespace MaintenanceToolApp.DFU
             // リクエストデータを生成
             byte[] bodyBytes = new byte[] { 0xbf, 0xff };
             ushort len = (ushort)bodyBytes.Length;
-            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_READ_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
+            byte[] headerBytes = BLEDFUTransferUtil.BuildSMPHeader(OP_READ_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
 
             // リクエストデータを送信
             Parameter.Command = BLEDFUCommand.GetSlotInfo;
@@ -157,9 +157,9 @@ namespace MaintenanceToolApp.DFU
         private void DoRequestUploadImage()
         {
             // リクエストデータを生成
-            byte[] bodyBytes = DFUCommon.GenerateBodyForRequestUploadImage(Parameter);
+            byte[] bodyBytes = BLEDFUTransferUtil.GenerateBodyForRequestUploadImage(Parameter);
             ushort len = (ushort)bodyBytes.Length;
-            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_UPLOAD);
+            byte[] headerBytes = BLEDFUTransferUtil.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_UPLOAD);
 
             // リクエストデータを送信
             Parameter.Command = BLEDFUCommand.UploadImage;
@@ -236,9 +236,9 @@ namespace MaintenanceToolApp.DFU
         private void DoRequestChangeImageUpdateMode()
         {
             // リクエストデータを生成
-            byte[] bodyBytes = DFUCommon.GenerateBodyForRequestChangeImageUpdateMode(Parameter, DFUProcessConst.IMAGE_UPDATE_TEST_MODE);
+            byte[] bodyBytes = BLEDFUTransferUtil.GenerateBodyForRequestChangeImageUpdateMode(Parameter, DFUProcessConst.IMAGE_UPDATE_TEST_MODE);
             ushort len = (ushort)bodyBytes.Length;
-            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
+            byte[] headerBytes = BLEDFUTransferUtil.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_IMG_MGMT, 0x00, CMD_IMG_MGMT_STATE);
 
             // リクエストデータを送信
             Parameter.Command = BLEDFUCommand.ChangeImageUpdateMode;
@@ -290,7 +290,7 @@ namespace MaintenanceToolApp.DFU
             // リクエストデータを生成
             byte[] bodyBytes = new byte[] { 0xbf, 0xff };
             ushort len = (ushort)bodyBytes.Length;
-            byte[] headerBytes = DFUCommon.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_OS_MGMT, 0x00, CMD_OS_MGMT_RESET);
+            byte[] headerBytes = BLEDFUTransferUtil.BuildSMPHeader(OP_WRITE_REQ, 0x00, len, GRP_OS_MGMT, 0x00, CMD_OS_MGMT_RESET);
 
             // リクエストデータを送信
             Parameter.Command = BLEDFUCommand.ResetApplication;
@@ -342,7 +342,7 @@ namespace MaintenanceToolApp.DFU
             int responseSize = receivedData.Length;
             if (received == 0) {
                 // レスポンスヘッダーからデータ長を抽出
-                totalSize = DFUCommon.GetSMPResponseBodySize(receivedData);
+                totalSize = BLEDFUTransferUtil.GetSMPResponseBodySize(receivedData);
                 // 受信済みデータを保持
                 received = responseSize - SMP_HEADER_SIZE;
                 ResponseData = new byte[received];

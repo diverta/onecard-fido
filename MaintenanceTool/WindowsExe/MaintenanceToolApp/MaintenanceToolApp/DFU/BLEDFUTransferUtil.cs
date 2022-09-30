@@ -5,7 +5,7 @@ using ToolAppCommon;
 
 namespace MaintenanceToolApp.DFU
 {
-    internal class DFUCommon
+    internal class BLEDFUTransferUtil
     {
         //
         // BLE SMPサービス関連
@@ -43,18 +43,18 @@ namespace MaintenanceToolApp.DFU
 
             if (Parameter.ImageBytesSent == 0) {
                 // 初回呼び出しの場合、イメージ長を設定
-                body = body.Concat(DFUCommon.GenerateLenBytes(bytesTotal)).ToArray();
+                body = body.Concat(BLEDFUTransferUtil.GenerateLenBytes(bytesTotal)).ToArray();
 
                 // イメージのハッシュ値を設定
-                body = body.Concat(DFUCommon.GenerateSHA256HashData(Parameter.UpdateImageData.NRF53AppBin)).ToArray();
+                body = body.Concat(BLEDFUTransferUtil.GenerateSHA256HashData(Parameter.UpdateImageData.NRF53AppBin)).ToArray();
             }
 
             // 転送済みバイト数を設定
-            body = body.Concat(DFUCommon.GenerateOffBytes(Parameter.ImageBytesSent)).ToArray();
+            body = body.Concat(BLEDFUTransferUtil.GenerateOffBytes(Parameter.ImageBytesSent)).ToArray();
 
             // 転送イメージを連結（データ本体が240バイトに収まるよう、上限サイズを事前計算）
             int remainingSize = 240 - body.Length - 1;
-            body = body.Concat(DFUCommon.GenerateDataBytes(Parameter.UpdateImageData.NRF53AppBin, Parameter.ImageBytesSent, remainingSize)).ToArray();
+            body = body.Concat(BLEDFUTransferUtil.GenerateDataBytes(Parameter.UpdateImageData.NRF53AppBin, Parameter.ImageBytesSent, remainingSize)).ToArray();
 
             // 終端文字を設定して戻す
             byte[] terminator = { 0xff };
@@ -140,6 +140,9 @@ namespace MaintenanceToolApp.DFU
             return bodyBytes.Concat(sendData).ToArray();
         }
 
+        //
+        // 反映要求関連
+        //
         public static byte[] GenerateBodyForRequestChangeImageUpdateMode(DFUParameter parameter, bool imageUpdateTestMode)
         {
             // リクエストデータ
