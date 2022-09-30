@@ -19,10 +19,10 @@ namespace MaintenanceToolApp.DFU
         private static readonly BLESMPService SMPService = new BLESMPService();
 
         // 上位クラス／パラメーターの参照を保持
-        private BLEDFUProcess DFUProcess = null!;
+        private DFUProcess DFUProcess = null!;
         private DFUParameter Parameter = null!;
 
-        public static void InvokeTransferProcess(BLEDFUProcess process, DFUParameter parameter)
+        public static void InvokeTransferProcess(DFUProcess process, DFUParameter parameter)
         {
             // 上位クラス／パラメーターの参照を保持
             Instance.DFUProcess = process;

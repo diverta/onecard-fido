@@ -46,10 +46,10 @@ namespace MaintenanceToolApp.DFU
         private static readonly USBDFUService DFUService = new USBDFUService();
 
         // 上位クラス／パラメーターの参照を保持
-        private USBDFUProcess DFUProcess = null!;
+        private DFUProcess DFUProcess = null!;
         private DFUParameter Parameter = null!;
 
-        public static void InvokeTransferProcess(USBDFUProcess process, DFUParameter parameter)
+        public static void InvokeTransferProcess(DFUProcess process, DFUParameter parameter)
         {
             // 上位クラス／パラメーターの参照を保持
             Instance.DFUProcess = process;
