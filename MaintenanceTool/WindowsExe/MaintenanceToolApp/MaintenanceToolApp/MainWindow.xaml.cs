@@ -2,6 +2,7 @@
 using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
+using MaintenanceToolApp.OpenPGP;
 using MaintenanceToolApp.Utility;
 using System;
 using System.Windows;
@@ -106,6 +107,8 @@ namespace MaintenanceToolApp
 
         private void DoOpenPGP()
         {
+            // OpenPGP設定画面を開く
+            new OpenPGPWindow().ShowDialogWithOwner(this);
         }
 
         private void DoHealthCheck()
