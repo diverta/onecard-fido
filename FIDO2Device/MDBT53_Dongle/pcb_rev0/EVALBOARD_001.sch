@@ -1033,6 +1033,38 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-1.143" y1="0.635" x2="-0.6858" y2="1.3208" layer="51"/>
 <rectangle x1="-1.1938" y1="-1.3208" x2="-0.3048" y2="-0.635" layer="51"/>
 </package>
+<package name="SOT23">
+<description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
+<smd name="3" x="0" y="1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="2" x="0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="1" x="-0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<text x="-1.42875" y="2.2225" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.508125" y="-3.4925" size="0.7112" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
+<rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
+<rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
+<wire x1="-1.4" y1="0.65" x2="-1.4" y2="-0.65" width="0.127" layer="51"/>
+<wire x1="-1.4" y1="-0.65" x2="1.4" y2="-0.65" width="0.127" layer="51"/>
+<wire x1="1.4" y1="-0.65" x2="1.4" y2="0.65" width="0.127" layer="51"/>
+<wire x1="1.4" y1="0.65" x2="-1.4" y2="0.65" width="0.127" layer="51"/>
+</package>
+<package name="SOD323-W">
+<description>&lt;b&gt;SOD323 &lt;/b&gt; &lt;p&gt;
+Wave soldering</description>
+<wire x1="-1" y1="0.7" x2="1" y2="0.7" width="0.1524" layer="51"/>
+<wire x1="1" y1="0.7" x2="1" y2="-0.7" width="0.1524" layer="51"/>
+<wire x1="1" y1="-0.7" x2="-1" y2="-0.7" width="0.1524" layer="51"/>
+<wire x1="-1" y1="-0.7" x2="-1" y2="0.7" width="0.1524" layer="51"/>
+<wire x1="-0.5" y1="0" x2="0.1" y2="0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="0.4" x2="0.1" y2="-0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="-0.4" x2="-0.5" y2="0" width="0.1524" layer="51"/>
+<smd name="C" x="-1.2" y="0" dx="1" dy="1.2" layer="1"/>
+<smd name="A" x="1.2" y="0" dx="1" dy="1.2" layer="1"/>
+<rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
+<text x="-1.16125" y="1.0875" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
+<rectangle x1="-1.5" y1="-1.4" x2="-1.1" y2="-1" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="XTAL">
@@ -1147,6 +1179,33 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <pin name="GND" x="0" y="0" length="short" direction="pas"/>
 <pin name="I/O_2" x="22.86" y="-5.08" length="short" rot="R180"/>
 <pin name="VCC" x="22.86" y="0" length="short" direction="pas" rot="R180"/>
+</symbol>
+<symbol name="XC6206">
+<description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="2.54" y1="2.54" x2="20.32" y2="2.54" width="0.254" layer="94"/>
+<wire x1="20.32" y1="2.54" x2="20.32" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="20.32" y1="-7.62" x2="2.54" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-7.62" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="VSS" x="22.86" y="-5.08" length="short" direction="pas" rot="R180"/>
+<pin name="VOUT" x="22.86" y="0" length="short" direction="pas" rot="R180"/>
+<pin name="VIN" x="0" y="-2.54" length="short" direction="pas"/>
+</symbol>
+<symbol name="SBD">
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="1.27" x2="1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="1.27" x2="1.905" y2="1.016" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="0.635" y1="-1.016" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
+<text x="-2.286" y="1.905" size="1.778" layer="95">&gt;NAME</text>
+<text x="-2.286" y="-3.429" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="A" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
+<pin name="C" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -1580,6 +1639,54 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 </device>
 </devices>
 </deviceset>
+<deviceset name="XC6206" prefix="U">
+<description>&lt;b&gt;電圧レギュレータ&lt;/b&gt;&lt;p&gt;
+出力電圧: 3.3 V &lt;br&gt;
+出力電流: 200 mA&lt;br&gt;
+入力電圧最大値: 6 V &lt;br&gt;
+最小入力電圧: 1.8 V&lt;br&gt;
+動作供給電流: 1 uA&lt;br&gt;
+最低動作温度: - 40 C &lt;br&gt;
+最高動作温度: + 85 C</description>
+<gates>
+<gate name="G$1" symbol="XC6206" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="P332MR-G" package="SOT23">
+<connects>
+<connect gate="G$1" pin="VIN" pad="3"/>
+<connect gate="G$1" pin="VOUT" pad="2"/>
+<connect gate="G$1" pin="VSS" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PMEG2005" prefix="D">
+<description>&lt;b&gt;ショットキーダイオード&lt;/b&gt;&lt;p&gt;
+If - 順電流: 500 mA &lt;br&gt;
+Vrrm - 繰返し逆電圧: 20 V  &lt;br&gt;
+Vf - 順電圧: 0.39 V  &lt;br&gt;
+Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
+最低動作温度: - 65 C  &lt;br&gt;
+最高動作温度: + 150 C &lt;br&gt;</description>
+<gates>
+<gate name="G$1" symbol="SBD" x="2.54" y="0"/>
+</gates>
+<devices>
+<device name="AEA,115" package="SOD323-W">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="Connectors">
@@ -1662,6 +1769,74 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <text x="-7.62" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
 <pad name="6" x="6.35" y="0" drill="0.889" diameter="1.651" rot="R90"/>
 </package>
+<package name="BAT-HLD-012-SMT">
+<description>&lt;b&gt;Battery Holders&lt;/B&gt; &lt;p&gt;
+CR1216/1225&lt;br&gt;
+9.5 mm x 15.3 mm x 3.6 mm</description>
+<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100" cream="no"/>
+<smd name="+@1" x="-7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
+<smd name="+@2" x="7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
+<wire x1="6.35" y1="3.048" x2="4.826" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-6.35" y1="3.048" x2="-4.826" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="4.572" x2="-3.048" y2="4.572" width="0.127" layer="21"/>
+<wire x1="4.826" y1="4.572" x2="3.048" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-6.35" y1="-3.048" x2="-2.54" y2="-4.826" width="0.127" layer="21" curve="61.172159"/>
+<wire x1="6.35" y1="-3.048" x2="2.54" y2="-4.826" width="0.127" layer="21" curve="-61.172159"/>
+<text x="9.58" y="3.79" size="0.7" layer="25">&gt;NAME</text>
+<text x="9.83" y="0.79" size="0.7" layer="27">&gt;VALUE</text>
+</package>
+<package name="1072TR">
+<description>&lt;b&gt;Battery Holder&lt;/B&gt; &lt;p&gt;
+Keystone Electronics 1072TR&lt;br&gt;
+suitable for CR1225</description>
+<smd name="+" x="-7.4" y="0" dx="2" dy="1.5" layer="1"/>
+<smd name="-" x="7.4" y="0" dx="2" dy="1.5" layer="1"/>
+<hole x="0" y="4" drill="1.1"/>
+<hole x="0" y="-4" drill="0.7"/>
+<circle x="0" y="0" radius="6.6" width="0.127" layer="101"/>
+<wire x1="-4.5" y1="2.2" x2="-6.1" y2="2.6" width="0.127" layer="21"/>
+<wire x1="-6.1" y1="-2.6" x2="-4.5" y2="-2.2" width="0.127" layer="21"/>
+<wire x1="4.5" y1="-2.2" x2="6.1" y2="-2.6" width="0.127" layer="21"/>
+<wire x1="4.5" y1="2.2" x2="6.1" y2="2.6" width="0.127" layer="21"/>
+<wire x1="-4.5" y1="2.2" x2="4.5" y2="2.2" width="0.127" layer="21" curve="-127.893009"/>
+<wire x1="4.5" y1="-2.2" x2="-4.5" y2="-2.2" width="0.127" layer="21" curve="-127.893009"/>
+<circle x="0" y="0" radius="5.7" width="0.127" layer="101"/>
+<wire x1="-0.5" y1="0" x2="-5.9" y2="4.7" width="0.127" layer="101"/>
+<wire x1="-0.5" y1="0" x2="-4.6" y2="5.9" width="0.127" layer="101"/>
+<circle x="-0.5" y="0" radius="7.2" width="0.127" layer="101"/>
+<wire x1="-8.4" y1="1.8" x2="-7.5" y2="1.8" width="0.127" layer="21"/>
+<wire x1="-7.5" y1="1.8" x2="-4.6" y2="5.9" width="0.127" layer="21" curve="-40.783201"/>
+<wire x1="-4.6" y1="5.9" x2="-3.6" y2="4.4" width="0.127" layer="21"/>
+<wire x1="-4.5" y1="3.5" x2="-5.2" y2="4.1" width="0.127" layer="21"/>
+<wire x1="-6.1" y1="2.6" x2="-5.2" y2="4.1" width="0.127" layer="21" curve="-15.696035"/>
+<wire x1="-4.5" y1="3.5" x2="-3.6" y2="4.4" width="0.127" layer="21" curve="-11.786576"/>
+<wire x1="-0.5" y1="0" x2="-5.9" y2="-4.7" width="0.127" layer="101"/>
+<wire x1="-0.5" y1="0" x2="-4.6" y2="-5.9" width="0.127" layer="101"/>
+<wire x1="-8.4" y1="-1.8" x2="-8.4" y2="1.8" width="0.127" layer="21"/>
+<wire x1="-8.4" y1="-1.8" x2="-7.5" y2="-1.8" width="0.127" layer="21"/>
+<wire x1="-5.2" y1="-4.1" x2="-6.1" y2="-2.6" width="0.127" layer="21" curve="-15.169287"/>
+<wire x1="-3.6" y1="-4.4" x2="-4.5" y2="-3.5" width="0.127" layer="21" curve="-12.835609"/>
+<wire x1="-4.6" y1="-5.9" x2="-7.5" y2="-1.8" width="0.127" layer="21" curve="-40.783201"/>
+<wire x1="-3.6" y1="-4.4" x2="-4.6" y2="-5.9" width="0.127" layer="21"/>
+<wire x1="-5.2" y1="-4.1" x2="-4.5" y2="-3.5" width="0.127" layer="21"/>
+<wire x1="0.5" y1="0" x2="5.9" y2="4.7" width="0.127" layer="101"/>
+<wire x1="0.5" y1="0" x2="4.6" y2="5.9" width="0.127" layer="101"/>
+<wire x1="4.5" y1="3.5" x2="5.2" y2="4.1" width="0.127" layer="21"/>
+<wire x1="5.2" y1="4.1" x2="6.1" y2="2.6" width="0.127" layer="21" curve="-15.169287"/>
+<wire x1="3.6" y1="4.4" x2="4.5" y2="3.5" width="0.127" layer="21" curve="-12.835609"/>
+<wire x1="4.6" y1="-5.9" x2="0.5" y2="0" width="0.127" layer="101"/>
+<wire x1="5.9" y1="-4.7" x2="0.5" y2="0" width="0.127" layer="101"/>
+<wire x1="4.5" y1="-3.5" x2="3.6" y2="-4.4" width="0.127" layer="21" curve="-12.835609"/>
+<wire x1="6.1" y1="-2.6" x2="5.2" y2="-4.1" width="0.127" layer="21" curve="-15.169287"/>
+<wire x1="5.2" y1="-4.1" x2="4.5" y2="-3.5" width="0.127" layer="21"/>
+<wire x1="8.2" y1="1.4" x2="8.2" y2="-1.4" width="0.127" layer="101"/>
+<wire x1="8.2" y1="-1.4" x2="4.6" y2="-5.9" width="0.127" layer="21" curve="-76.865978"/>
+<wire x1="8.2" y1="1.4" x2="4.6" y2="5.9" width="0.127" layer="21" curve="76.865978"/>
+<wire x1="3.6" y1="4.4" x2="4.6" y2="5.9" width="0.127" layer="21"/>
+<wire x1="3.6" y1="-4.4" x2="4.6" y2="-5.9" width="0.127" layer="21"/>
+<wire x1="8.2" y1="-1.4" x2="8.2" y2="-1.2" width="0.127" layer="21"/>
+<wire x1="8.2" y1="1.4" x2="8.2" y2="1.2" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="USB4105-GF-A">
@@ -1730,6 +1905,19 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
 <pin name="6" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
 </symbol>
+<symbol name="3V">
+<description>&lt;b&gt;ボタン電池&lt;/b&gt;</description>
+<wire x1="-0.635" y1="0.635" x2="-0.635" y2="0" width="0.4064" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-0.635" y2="0" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="0" x2="-0.635" y2="-0.635" width="0.4064" layer="94"/>
+<wire x1="0.635" y1="2.54" x2="0.635" y2="0" width="0.4064" layer="94"/>
+<wire x1="0.635" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="0.635" y1="0" x2="0.635" y2="-2.54" width="0.4064" layer="94"/>
+<text x="-1.27" y="3.175" size="1.778" layer="95">&gt;NAME</text>
+<text x="-1.27" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="+" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+<pin name="-" x="-5.08" y="0" visible="pad" length="short" direction="pas"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="USB4105-GF-A" prefix="CN">
@@ -1777,6 +1965,42 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <connect gate="G$1" pin="4" pad="4"/>
 <connect gate="G$1" pin="5" pad="5"/>
 <connect gate="G$1" pin="6" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BAT-HLD-012-SMT" prefix="BAT">
+<description>&lt;b&gt;ボタン電池ホルダー(CR1216/1225) &lt;/B&gt;&lt;p&gt;</description>
+<gates>
+<gate name="G$1" symbol="3V" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BAT-HLD-012-SMT">
+<connects>
+<connect gate="G$1" pin="+" pad="+@2"/>
+<connect gate="G$1" pin="-" pad="-"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="1072" prefix="BAT">
+<description>&lt;b&gt;Coin Cell Battery Holder&lt;/b&gt;&lt;p&gt;
+Keystone Electronics&lt;br&gt;
+suitable for CR1225</description>
+<gates>
+<gate name="G$1" symbol="3V" x="5.08" y="0"/>
+</gates>
+<devices>
+<device name="TR" package="1072TR">
+<connects>
+<connect gate="G$1" pin="+" pad="+"/>
+<connect gate="G$1" pin="-" pad="-"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -1938,6 +2162,20 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="5.1k"/>
 <part name="GND15" library="Supply" deviceset="0V" device=""/>
 <part name="CN1" library="Connectors" deviceset="IF_6PIN" device=""/>
+<part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
+<part name="C8" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
+<part name="C9" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
+<part name="GND16" library="Supply" deviceset="0V" device=""/>
+<part name="GND17" library="Supply" deviceset="0V" device=""/>
+<part name="GND18" library="Supply" deviceset="0V" device=""/>
+<part name="BAT1" library="Connectors" deviceset="BAT-HLD-012-SMT" device=""/>
+<part name="GND19" library="Supply" deviceset="0V" device=""/>
+<part name="U2" library="Parts" deviceset="XC6206" device="P332MR-G"/>
+<part name="GND6" library="Supply" deviceset="0V" device=""/>
+<part name="D2" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="D4" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="BAT2" library="Connectors" deviceset="1072" device="TR"/>
 </parts>
 <sheets>
 <sheet>
@@ -2721,6 +2959,135 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <wire x1="134.62" y1="58.42" x2="124.46" y2="58.42" width="0.1524" layer="91"/>
 <label x="124.46" y="58.42" size="1.778" layer="95" rot="R180" xref="yes"/>
 <junction x="134.62" y="48.26"/>
+</segment>
+</net>
+</nets>
+</sheet>
+<sheet>
+<plain>
+<text x="217.424" y="20.32" size="1.778" layer="91">Eval board for MDBT53 Dongle</text>
+<text x="168.91" y="8.89" size="3.81" layer="91">MDBT53 Dongle
+    （rev0）</text>
+<text x="48.26" y="144.78" size="3.81" layer="91">電源供給部</text>
+<text x="48.26" y="139.7" size="2.54" layer="91" align="top-left">USBポートに装着時は、VBUSの5.0V--&gt;3.3Vに降圧して供給します。
+乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
+<text x="48.26" y="88.9" size="2.54" layer="91" align="top-left">ボタン乾電池ケース（1225）</text>
+<text x="170.18" y="109.22" size="2.54" layer="91" align="top-left">逆流回避用</text>
+<text x="48.26" y="55.88" size="2.54" layer="91" align="top-left">ボタン乾電池ケース（2032）</text>
+</plain>
+<instances>
+<instance part="FRAME4" gate="G$1" x="0" y="0"/>
+<instance part="C8" gate="G$1" x="76.2" y="114.3"/>
+<instance part="C9" gate="G$1" x="119.38" y="114.3"/>
+<instance part="GND16" gate="1" x="76.2" y="99.06"/>
+<instance part="GND17" gate="1" x="111.76" y="99.06"/>
+<instance part="GND18" gate="1" x="119.38" y="99.06"/>
+<instance part="BAT1" gate="G$1" x="76.2" y="78.74"/>
+<instance part="GND19" gate="1" x="50.8" y="68.58"/>
+<instance part="U2" gate="G$1" x="83.82" y="121.92"/>
+<instance part="GND6" gate="1" x="50.8" y="35.56"/>
+<instance part="D2" gate="G$1" x="177.8" y="91.44"/>
+<instance part="D3" gate="G$1" x="177.8" y="81.28"/>
+<instance part="D4" gate="G$1" x="177.8" y="71.12"/>
+<instance part="BAT2" gate="G$1" x="76.2" y="45.72"/>
+</instances>
+<busses>
+</busses>
+<nets>
+<net name="0V" class="0">
+<segment>
+<pinref part="BAT1" gate="G$1" pin="-"/>
+<pinref part="GND19" gate="1" pin="0V"/>
+<wire x1="71.12" y1="78.74" x2="50.8" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="78.74" x2="50.8" y2="71.12" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U2" gate="G$1" pin="VSS"/>
+<pinref part="GND17" gate="1" pin="0V"/>
+<wire x1="106.68" y1="116.84" x2="111.76" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="116.84" x2="111.76" y2="101.6" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C8" gate="G$1" pin="2"/>
+<pinref part="GND16" gate="1" pin="0V"/>
+<wire x1="76.2" y1="106.68" x2="76.2" y2="101.6" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C9" gate="G$1" pin="2"/>
+<pinref part="GND18" gate="1" pin="0V"/>
+<wire x1="119.38" y1="106.68" x2="119.38" y2="101.6" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND6" gate="1" pin="0V"/>
+<wire x1="50.8" y1="38.1" x2="50.8" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="45.72" x2="71.12" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="BAT2" gate="G$1" pin="-"/>
+</segment>
+</net>
+<net name="VDD_3V3" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="VOUT"/>
+<pinref part="C9" gate="G$1" pin="1"/>
+<wire x1="106.68" y1="121.92" x2="119.38" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="121.92" x2="119.38" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="121.92" x2="129.54" y2="121.92" width="0.1524" layer="91"/>
+<junction x="119.38" y="121.92"/>
+<label x="129.54" y="121.92" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<wire x1="167.64" y1="91.44" x2="175.26" y2="91.44" width="0.1524" layer="91"/>
+<pinref part="D2" gate="G$1" pin="A"/>
+<label x="167.64" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="VBUS_LDO" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="VIN"/>
+<wire x1="83.82" y1="119.38" x2="76.2" y2="119.38" width="0.1524" layer="91"/>
+<pinref part="C8" gate="G$1" pin="1"/>
+<wire x1="76.2" y1="119.38" x2="68.58" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="114.3" x2="76.2" y2="119.38" width="0.1524" layer="91"/>
+<junction x="76.2" y="119.38"/>
+<label x="68.58" y="119.38" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="VBAT_1225" class="0">
+<segment>
+<pinref part="BAT1" gate="G$1" pin="+"/>
+<wire x1="81.28" y1="78.74" x2="101.6" y2="78.74" width="0.1524" layer="91"/>
+<label x="101.6" y="78.74" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="D3" gate="G$1" pin="A"/>
+<wire x1="175.26" y1="81.28" x2="167.64" y2="81.28" width="0.1524" layer="91"/>
+<label x="167.64" y="81.28" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="VBAT_2032" class="0">
+<segment>
+<wire x1="81.28" y1="45.72" x2="101.6" y2="45.72" width="0.1524" layer="91"/>
+<label x="101.6" y="45.72" size="1.778" layer="95" xref="yes"/>
+<pinref part="BAT2" gate="G$1" pin="+"/>
+</segment>
+<segment>
+<pinref part="D4" gate="G$1" pin="A"/>
+<wire x1="175.26" y1="71.12" x2="167.64" y2="71.12" width="0.1524" layer="91"/>
+<label x="167.64" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="VDD_NRF" class="0">
+<segment>
+<pinref part="D3" gate="G$1" pin="C"/>
+<wire x1="180.34" y1="81.28" x2="205.74" y2="81.28" width="0.1524" layer="91"/>
+<label x="213.36" y="81.28" size="1.778" layer="95" xref="yes"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+<wire x1="205.74" y1="81.28" x2="213.36" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="91.44" x2="205.74" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="91.44" x2="205.74" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="D4" gate="G$1" pin="C"/>
+<wire x1="205.74" y1="81.28" x2="205.74" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="71.12" x2="180.34" y2="71.12" width="0.1524" layer="91"/>
+<junction x="205.74" y="81.28"/>
 </segment>
 </net>
 </nets>
