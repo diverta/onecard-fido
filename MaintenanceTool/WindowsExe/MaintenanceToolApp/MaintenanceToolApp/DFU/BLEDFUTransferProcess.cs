@@ -336,52 +336,7 @@ namespace MaintenanceToolApp.DFU
             Parameter.Status = DFUStatus.CheckUpdateVersion;
 
             // バージョン情報照会処理に遷移
-            VersionInfoProcess process = new VersionInfoProcess();
-            process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
-        }
-
-        // 
-        // バージョン情報照会
-        // 
-        private void OnReceivedUpdateVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData)
-        {
-            if (success == false || versionInfoData == null) {
-                // バージョン情報照会失敗時は終了
-                Parameter.ErrorMessage = errorMessage;
-                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
-
-                Parameter.Success = false;
-                DFUProcess.NotifyDFUProcessTerminated();
-                return;
-            }
-
-            // バージョン情報を比較して終了判定
-            // --> 判定結果をメイン画面に戻す
-            if (CompareUpdateVersion(versionInfoData) == false) {
-                // バージョンが同じでなければ異常終了
-                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, Parameter.UpdateImageData.UpdateVersion);
-                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
-
-                Parameter.Success = false;
-                DFUProcess.NotifyDFUProcessTerminated();
-                return;
-            }
-
-            // バージョンが同じであればDFU処理は正常終了
-            DFUProcess.NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, Parameter.UpdateImageData.UpdateVersion));
-            Parameter.Success = true;
-            DFUProcess.NotifyDFUProcessTerminated();
-        }
-
-        private bool CompareUpdateVersion(VersionInfoData versionInfoData)
-        {
-            // バージョン情報を比較
-            string CurrentVersion = versionInfoData.FWRev;
-            string UpdateVersion = Parameter.UpdateImageData.UpdateVersion;
-            bool versionEqual = (CurrentVersion == UpdateVersion);
-
-            // 比較結果を戻す
-            return versionEqual;
+            DFUProcess.CheckUpdateVersionInfo();
         }
 
         //
