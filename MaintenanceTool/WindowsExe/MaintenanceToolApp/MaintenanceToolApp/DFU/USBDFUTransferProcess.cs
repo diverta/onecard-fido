@@ -46,10 +46,10 @@ namespace MaintenanceToolApp.DFU
         private static readonly USBDFUService DFUService = new USBDFUService();
 
         // 上位クラス／パラメーターの参照を保持
-        private USBDFUProcess DFUProcess = null!;
+        private DFUProcess DFUProcess = null!;
         private DFUParameter Parameter = null!;
 
-        public static void InvokeTransferProcess(USBDFUProcess process, DFUParameter parameter)
+        public static void InvokeTransferProcess(DFUProcess process, DFUParameter parameter)
         {
             // 上位クラス／パラメーターの参照を保持
             Instance.DFUProcess = process;
@@ -196,58 +196,13 @@ namespace MaintenanceToolApp.DFU
                     DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_CONFIRM_VERSION, 100);
 
                     // バージョン情報照会処理に遷移
-                    VersionInfoProcess process = new VersionInfoProcess();
-                    process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
+                    DFUProcess.CheckUpdateVersionInfo();
                 }
 
             } else {
                 // 画面に制御を戻す
                 TerminateDFUTransferProcess(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
             }
-        }
-
-        // 
-        // バージョン情報照会
-        // 
-        private void OnReceivedUpdateVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData)
-        {
-            if (success == false || versionInfoData == null) {
-                // バージョン情報照会失敗時は終了
-                Parameter.ErrorMessage = errorMessage;
-                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
-
-                Parameter.Success = false;
-                DFUProcess.NotifyDFUProcessTerminated();
-                return;
-            }
-
-            // バージョン情報を比較して終了判定
-            // --> 判定結果をメイン画面に戻す
-            if (CompareUpdateVersion(versionInfoData) == false) {
-                // バージョンが同じでなければ異常終了
-                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, Parameter.UpdateImageData.UpdateVersion);
-                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
-
-                Parameter.Success = false;
-                DFUProcess.NotifyDFUProcessTerminated();
-                return;
-            }
-
-            // バージョンが同じであればDFU処理は正常終了
-            DFUProcess.NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, Parameter.UpdateImageData.UpdateVersion));
-            Parameter.Success = true;
-            DFUProcess.NotifyDFUProcessTerminated();
-        }
-
-        private bool CompareUpdateVersion(VersionInfoData versionInfoData)
-        {
-            // バージョン情報を比較
-            string CurrentVersion = versionInfoData.FWRev;
-            string UpdateVersion = Parameter.UpdateImageData.UpdateVersion;
-            bool versionEqual = (CurrentVersion == UpdateVersion);
-
-            // 比較結果を戻す
-            return versionEqual;
         }
 
         //

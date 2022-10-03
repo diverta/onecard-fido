@@ -9,25 +9,25 @@ using Windows.Storage.Streams;
 
 namespace MaintenanceToolApp.DFU
 {
-    public class BLESMPServiceConst
+    public class BLEDFUServiceConst
     {
         public const string BLE_SMP_SERVICE_UUID_STR = "8D53DC1D-1DB7-4CD3-868B-8A527460AA84";
         public const string BLE_SMP_CHARACT_UUID_STR = "DA2E7828-FBCE-4E01-AE9E-261174997C48";
     }
 
-    internal class BLESMPService
+    internal class BLEDFUService
     {
         // UUID
-        private readonly Guid BLE_SMP_SERVICE_UUID = new Guid(BLESMPServiceConst.BLE_SMP_SERVICE_UUID_STR);
-        private readonly Guid BLE_SMP_CHARACT_UUID = new Guid(BLESMPServiceConst.BLE_SMP_CHARACT_UUID_STR);
+        private readonly Guid BLE_SMP_SERVICE_UUID = new Guid(BLEDFUServiceConst.BLE_SMP_SERVICE_UUID_STR);
+        private readonly Guid BLE_SMP_CHARACT_UUID = new Guid(BLEDFUServiceConst.BLE_SMP_CHARACT_UUID_STR);
 
         // 応答タイムアウト監視用タイマー
         private CommonTimer ResponseTimer = null!;
 
-        public BLESMPService()
+        public BLEDFUService()
         {
             // 応答タイムアウト発生時のイベントを登録
-            ResponseTimer = new CommonTimer("BLESMPService", 10000);
+            ResponseTimer = new CommonTimer("BLEDFUService", 10000);
             ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
             FreeResources();
         }
@@ -55,7 +55,7 @@ namespace MaintenanceToolApp.DFU
         public delegate void HandlerOnTransactionFailed(string errorMessage);
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
-        public async void ConnectBLESMPService(HandlerOnConnectedToSMPService handler)
+        public async void ConnectBLEDFUService(HandlerOnConnectedToSMPService handler)
         {
             // イベントを登録
             OnConnectedToSMPService += handler;
@@ -141,7 +141,7 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLESMPService.DiscoverBLEService: {0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("BLEDFUService.DiscoverBLEService: {0}", e.Message));
                 return false;
             }
         }
@@ -157,7 +157,7 @@ namespace MaintenanceToolApp.DFU
                 GattCommunicationStatus result = await SMPCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (CommunicationStatus != GattCommunicationStatus.Success) {
-                    AppLogUtil.OutputLogDebug(string.Format("BLESMPService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
+                    AppLogUtil.OutputLogDebug(string.Format("BLEDFUService.StartBLENotification: GattCommunicationStatus={0}", CommunicationStatus));
                     return false;
                 }
 
@@ -168,7 +168,7 @@ namespace MaintenanceToolApp.DFU
                 return true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("BLESMPService.StartBLENotification: {0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("BLEDFUService.StartBLENotification: {0}", e.Message));
                 return false;
             }
         }
@@ -195,7 +195,7 @@ namespace MaintenanceToolApp.DFU
         public async void Send(byte[] requestData)
         {
             if (SMPService == null) {
-                AppLogUtil.OutputLogError(string.Format("BLESMPService.Send: service is null"));
+                AppLogUtil.OutputLogError(string.Format("BLEDFUService.Send: service is null"));
                 OnTransactionFailed(AppCommon.MSG_REQUEST_SEND_FAILED);
             }
 
@@ -239,7 +239,7 @@ namespace MaintenanceToolApp.DFU
         //
         // 切断処理
         //
-        public void DisconnectBLESMPService()
+        public void DisconnectBLEDFUService()
         {
             // 切断
             StopCommunicate();

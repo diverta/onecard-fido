@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -59,6 +61,13 @@ namespace MaintenanceToolApp.DFU
 
         private void buttonOK_Click(object sender, RoutedEventArgs e)
         {
+            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
+                // USB接続がない場合はエラーメッセージを表示
+                if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                    return;
+                }
+            }
+
             TerminateWindow(true);
         }
     }

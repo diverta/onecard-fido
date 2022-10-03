@@ -94,10 +94,7 @@ namespace MaintenanceToolApp.DFU
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow;
 
-        // 処理進捗画面の参照を保持
-        private DFUProcessingWindow ProcessingWindow = null!;
-
-        private DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
+        public DFUProcess(Window parentWindowRef, DFUParameter parameterRef)
         {
             // 親ウィンドウの参照を保持
             ParentWindow = parentWindowRef;
@@ -106,18 +103,102 @@ namespace MaintenanceToolApp.DFU
             Parameter = parameterRef;
         }
 
-        private void DoProcess()
+        //
+        // 処理開始前の確認
+        //
+        public static bool ConfirmDoProcess(Window currentWindow)
         {
-            // USB DFUの場合
-            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
-                new USBDFUProcess(ParentWindow, Parameter).StartUSBDFU();
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
+                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
+
+            // プロンプトを表示し、Yesの場合だけ処理を続行する
+            return DialogUtil.DisplayPromptPopup(currentWindow, AppCommon.MSG_TOOL_TITLE, message);
+        }
+
+        //
+        // 処理開始の指示
+        //
+        public void StartDFUProcess()
+        {
+            // ステータスを更新
+            Parameter.Status = DFUStatus.GetCurrentVersion;
+
+            Task task = Task.Run(() => {
+                // バージョン情報照会から開始
+                VersionInfoProcess process = new VersionInfoProcess();
+                process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(ParentWindow);
+
+            // バージョン情報照会失敗時は、以降の処理を実行しない
+            if (Parameter.Status == DFUStatus.None) {
+                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
                 return;
             }
 
-            // DFU転送処理を起動
-            Task task = Task.Run(() => {
-                DFUTransferProcess.InvokeTransferProcess(this, Parameter);
-            });
+            // 更新ファームウェアのバージョンチェック／イメージ情報取得
+            string checkErrorCaption;
+            string checkErrorMessage;
+            DFUImageData imageData;
+            if (DFUImage.CheckAndGetUpdateVersion(Parameter.CurrentVersionInfo, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
+                DialogUtil.ShowWarningMessage(ParentWindow, checkErrorCaption, checkErrorMessage);
+                return;
+            }
+
+            // イメージ情報をパラメーターに設定
+            Parameter.UpdateImageData = imageData;
+
+            // ファームウェア更新画面を開き、実行を指示
+            if (new DFUWindow(Parameter).ShowDialogWithOwner(ParentWindow)) {
+                InvokeDFUTransferProcess();
+            }
+        }
+
+        private void OnReceivedVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData) 
+        {
+            if (success == false || versionInfoData == null) {
+                // バージョン情報照会失敗時はステータスをクリア
+                Parameter.Status = DFUStatus.None;
+
+            } else {
+                // バージョン情報をパラメーターに設定
+                Parameter.CurrentVersionInfo = versionInfoData;
+            }
+
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
+        }
+
+        //
+        // DFU処理開始-->処理進捗画面表示
+        //
+        // 処理進捗画面の参照を保持
+        private DFUProcessingWindow ProcessingWindow = null!;
+
+        public void InvokeDFUTransferProcess()
+        {
+            if (Parameter.Transport == Transport.TRANSPORT_CDC_ACM) {
+                // USB DFU処理を起動
+                Task task = Task.Run(() => {
+                    USBDFUTransferProcess.InvokeTransferProcess(this, Parameter);
+                });
+
+            } else if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                // BLE DFU処理を起動
+                Task task = Task.Run(() => {
+                    BLEDFUTransferProcess.InvokeTransferProcess(this, Parameter);
+                });
+
+            } else {
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, AppCommon.MSG_NONE, true, ParentWindow);
+                return;
+            }
 
             // 処理進捗画面を表示
             ProcessingWindow = new DFUProcessingWindow();
@@ -126,11 +207,14 @@ namespace MaintenanceToolApp.DFU
                 // Cancelボタンクリック時は、メッセージをポップアップ表示したのち、画面に制御を戻す
                 DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.PROCESS_NAME_BLE_DFU, AppCommon.MSG_DFU_IMAGE_TRANSFER_CANCELED);
                 CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, AppCommon.MSG_NONE, true, ParentWindow);
-                return;
+
+            } else {
+                // メイン画面に制御を移す
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
             }
 
-            // メイン画面に制御を移す
-            CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_BLE_DFU, Parameter.ErrorMessage, Parameter.Success, ParentWindow);
+            // ステータスを更新
+            Parameter.Status = DFUStatus.None;
         }
 
         //
@@ -154,41 +238,16 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
-            if (success) {
-                // ステータスを更新（DFU反映待ち）
-                Parameter.Status = DFUStatus.WaitForBoot;
-
-                // DFU反映待ち処理を起動
-                PerformDFUUpdateMonitor();
-
-            } else {
-                // DFU転送失敗時は処理進捗画面に制御を戻す
-                Parameter.Success = false;
-                NotifyDFUProcessTerminated();
-            }
+            // 処理進捗画面に制御を戻す
+            Parameter.Success = success;
+            NotifyDFUProcessTerminated();
         }
 
-        // 
-        // DFU反映待ち処理
-        // 
-        private void PerformDFUUpdateMonitor()
+        //
+        // DFU完了後のバージョン情報照会
+        //
+        public void CheckUpdateVersionInfo()
         {
-            // 処理進捗画面に通知
-            NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
-
-            // 反映待ち（リセットによるファームウェア再始動完了まで待機）
-            for (int i = 0; i < DFUProcessConst.DFU_WAITING_SEC_ESTIMATED; i++) {
-                // 処理進捗画面に通知
-                NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
-                System.Threading.Thread.Sleep(1000);
-            }
-
-            // 処理進捗画面に通知
-            NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_CONFIRM_VERSION, 100 + DFUProcessConst.DFU_WAITING_SEC_ESTIMATED);
-
-            // ステータスを更新（バージョン更新判定）
-            Parameter.Status = DFUStatus.CheckUpdateVersion;
-
             // バージョン情報照会処理に遷移
             VersionInfoProcess process = new VersionInfoProcess();
             process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedUpdateVersionInfo));
@@ -208,7 +267,19 @@ namespace MaintenanceToolApp.DFU
 
             // バージョン情報を比較して終了判定
             // --> 判定結果をメイン画面に戻す
-            Parameter.Success = CompareUpdateVersion(versionInfoData);
+            if (CompareUpdateVersion(versionInfoData) == false) {
+                // バージョンが同じでなければ異常終了
+                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, Parameter.UpdateImageData.UpdateVersion);
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
+
+                Parameter.Success = false;
+                NotifyDFUProcessTerminated();
+                return;
+            }
+
+            // バージョンが同じであればDFU処理は正常終了
+            NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, Parameter.UpdateImageData.UpdateVersion));
+            Parameter.Success = true;
             NotifyDFUProcessTerminated();
         }
 
@@ -218,15 +289,6 @@ namespace MaintenanceToolApp.DFU
             string CurrentVersion = versionInfoData.FWRev;
             string UpdateVersion = Parameter.UpdateImageData.UpdateVersion;
             bool versionEqual = (CurrentVersion == UpdateVersion);
-            if (versionEqual) {
-                // バージョンが同じであればDFU処理は正常終了
-                NotifyDFUInfoMessage(string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
-
-            } else {
-                // バージョンが同じでなければ異常終了
-                Parameter.ErrorMessage = string.Format(AppCommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, UpdateVersion);
-                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
-            }
 
             // 比較結果を戻す
             return versionEqual;
@@ -282,89 +344,6 @@ namespace MaintenanceToolApp.DFU
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 ProcessingWindow.NotifyDFUProcessTerminated();
-            }));
-        }
-
-        //
-        // 処理開始前の確認
-        //
-        public static bool ConfirmDoProcess(Window currentWindow)
-        {
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_PROMPT_START_BLE_DFU_PROCESS,
-                AppCommon.MSG_COMMENT_START_BLE_DFU_PROCESS);
-
-            // プロンプトを表示し、Yesの場合だけ処理を続行する
-            return DialogUtil.DisplayPromptPopup(currentWindow, AppCommon.MSG_TOOL_TITLE, message);
-        }
-
-        //
-        // 処理開始の指示
-        //
-        public static DFUProcess Instance = null!;
-
-        public static void StartDFUProcess(Window ParentWindow, DFUParameter param)
-        {
-            // インスタンスを生成
-            Instance = new DFUProcess(ParentWindow, param);
-            Instance.StartDFU();
-        }
-
-        private void StartDFU()
-        {
-            // ステータスを更新
-            Parameter.Status = DFUStatus.GetCurrentVersion;
-
-            Task task = Task.Run(() => {
-                // バージョン情報照会から開始
-                VersionInfoProcess process = new VersionInfoProcess();
-                process.DoRequestVersionInfo(Parameter.Transport, new VersionInfoProcess.HandlerOnNotifyCommandTerminated(OnReceivedVersionInfo));
-            });
-
-            // 進捗画面を表示
-            CommonProcessingWindow.OpenForm(ParentWindow);
-
-            // バージョン情報照会失敗時は、以降の処理を実行しない
-            if (Parameter.Status == DFUStatus.None) {
-                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_DFU_VERSION_INFO_GET_FAILED);
-                return;
-            }
-
-            // 更新ファームウェアのバージョンチェック／イメージ情報取得
-            string checkErrorCaption;
-            string checkErrorMessage;
-            DFUImageData imageData;
-            if (DFUImage.CheckAndGetUpdateVersion(Parameter.CurrentVersionInfo, out checkErrorCaption, out checkErrorMessage, out imageData) == false) {
-                DialogUtil.ShowWarningMessage(ParentWindow, checkErrorCaption, checkErrorMessage);
-                return;
-            }
-
-            // イメージ情報をパラメーターに設定
-            Parameter.UpdateImageData = imageData;
-
-            // ファームウェア更新画面を開き、実行を指示
-            bool b = new DFUWindow(Parameter).ShowDialogWithOwner(ParentWindow);
-            if (b) {
-                // DFU機能を実行
-                DoProcess();
-            }
-        }
-
-        private void OnReceivedVersionInfo(bool success, string errorMessage, VersionInfoData versionInfoData) 
-        {
-            if (success == false || versionInfoData == null) {
-                // バージョン情報照会失敗時はステータスをクリア
-                Parameter.Status = DFUStatus.None;
-
-            } else {
-                // バージョン情報をパラメーターに設定
-                Parameter.CurrentVersionInfo = versionInfoData;
-            }
-
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // 進捗画面を閉じる
-                CommonProcessingWindow.NotifyTerminate();
             }));
         }
     }
