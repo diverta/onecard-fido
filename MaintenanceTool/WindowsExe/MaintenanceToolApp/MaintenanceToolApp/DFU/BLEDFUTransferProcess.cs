@@ -70,16 +70,26 @@ namespace MaintenanceToolApp.DFU
             // BLE接続を破棄
             DFUService.DisconnectBLEDFUService();
 
+            // イベントを解除
+            DFUService.OnDataReceived -= OnDataReceived;
+            DFUService.OnTransactionFailed -= OnTransactionFailed;
+
             if (success == false) {
                 // エラーメッセージ文言を画面とログに出力
                 Parameter.ErrorMessage = message;
                 AppLogUtil.OutputLogError(message);
-            }
-            DFUProcess.OnTerminatedTransferProcess(success);
 
-            // イベントを解除
-            DFUService.OnDataReceived -= OnDataReceived;
-            DFUService.OnTransactionFailed -= OnTransactionFailed;
+                // 上位クラスに制御を戻す
+                DFUProcess.OnTerminatedTransferProcess(false);
+                return;
+            }
+
+            // 正常時は以降の処理を続行
+            // ステータスを更新（DFU反映待ち）
+            Parameter.Status = DFUStatus.WaitForBoot;
+
+            // DFU反映待ち処理を起動
+            PerformDFUUpdateMonitor();
         }
 
         //
@@ -300,11 +310,8 @@ namespace MaintenanceToolApp.DFU
 
         private void DoResponseResetApplication(byte[] responseData)
         {
-            // ステータスを更新（DFU反映待ち）
-            Parameter.Status = DFUStatus.WaitForBoot;
-
-            // DFU反映待ち処理を起動
-            PerformDFUUpdateMonitor();
+            // BLE接続を破棄／イベントを解除してから、DFU反映待ち処理に遷移
+            OnTerminatedDFUTransferProcess(true, AppCommon.MSG_NONE);
         }
 
         // 
