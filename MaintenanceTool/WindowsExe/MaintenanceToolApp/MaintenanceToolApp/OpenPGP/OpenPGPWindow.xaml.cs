@@ -34,7 +34,7 @@ namespace MaintenanceToolApp.OpenPGP
         //
         // イベント処理部
         // 
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        private void buttonClose_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
         }
