@@ -1807,57 +1807,27 @@ CR1216/1225&lt;br&gt;
 <text x="9.58" y="3.79" size="0.7" layer="25">&gt;NAME</text>
 <text x="9.83" y="0.79" size="0.7" layer="27">&gt;VALUE</text>
 </package>
-<package name="1072TR">
-<description>&lt;b&gt;Battery Holder&lt;/B&gt; &lt;p&gt;
-Keystone Electronics 1072TR&lt;br&gt;
-suitable for CR1225</description>
-<smd name="+" x="-7.4" y="0" dx="2" dy="1.5" layer="1"/>
-<smd name="-" x="7.4" y="0" dx="2" dy="1.5" layer="1"/>
-<hole x="0" y="4" drill="1.1"/>
-<hole x="0" y="-4" drill="0.7"/>
-<circle x="0" y="0" radius="6.6" width="0.127" layer="101"/>
-<wire x1="-4.5" y1="2.2" x2="-6.1" y2="2.6" width="0.127" layer="21"/>
-<wire x1="-6.1" y1="-2.6" x2="-4.5" y2="-2.2" width="0.127" layer="21"/>
-<wire x1="4.5" y1="-2.2" x2="6.1" y2="-2.6" width="0.127" layer="21"/>
-<wire x1="4.5" y1="2.2" x2="6.1" y2="2.6" width="0.127" layer="21"/>
-<wire x1="-4.5" y1="2.2" x2="4.5" y2="2.2" width="0.127" layer="21" curve="-127.893009"/>
-<wire x1="4.5" y1="-2.2" x2="-4.5" y2="-2.2" width="0.127" layer="21" curve="-127.893009"/>
-<circle x="0" y="0" radius="5.7" width="0.127" layer="101"/>
-<wire x1="-0.5" y1="0" x2="-5.9" y2="4.7" width="0.127" layer="101"/>
-<wire x1="-0.5" y1="0" x2="-4.6" y2="5.9" width="0.127" layer="101"/>
-<circle x="-0.5" y="0" radius="7.2" width="0.127" layer="101"/>
-<wire x1="-8.4" y1="1.8" x2="-7.5" y2="1.8" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="1.8" x2="-4.6" y2="5.9" width="0.127" layer="21" curve="-40.783201"/>
-<wire x1="-4.6" y1="5.9" x2="-3.6" y2="4.4" width="0.127" layer="21"/>
-<wire x1="-4.5" y1="3.5" x2="-5.2" y2="4.1" width="0.127" layer="21"/>
-<wire x1="-6.1" y1="2.6" x2="-5.2" y2="4.1" width="0.127" layer="21" curve="-15.696035"/>
-<wire x1="-4.5" y1="3.5" x2="-3.6" y2="4.4" width="0.127" layer="21" curve="-11.786576"/>
-<wire x1="-0.5" y1="0" x2="-5.9" y2="-4.7" width="0.127" layer="101"/>
-<wire x1="-0.5" y1="0" x2="-4.6" y2="-5.9" width="0.127" layer="101"/>
-<wire x1="-8.4" y1="-1.8" x2="-8.4" y2="1.8" width="0.127" layer="21"/>
-<wire x1="-8.4" y1="-1.8" x2="-7.5" y2="-1.8" width="0.127" layer="21"/>
-<wire x1="-5.2" y1="-4.1" x2="-6.1" y2="-2.6" width="0.127" layer="21" curve="-15.169287"/>
-<wire x1="-3.6" y1="-4.4" x2="-4.5" y2="-3.5" width="0.127" layer="21" curve="-12.835609"/>
-<wire x1="-4.6" y1="-5.9" x2="-7.5" y2="-1.8" width="0.127" layer="21" curve="-40.783201"/>
-<wire x1="-3.6" y1="-4.4" x2="-4.6" y2="-5.9" width="0.127" layer="21"/>
-<wire x1="-5.2" y1="-4.1" x2="-4.5" y2="-3.5" width="0.127" layer="21"/>
-<wire x1="0.5" y1="0" x2="5.9" y2="4.7" width="0.127" layer="101"/>
-<wire x1="0.5" y1="0" x2="4.6" y2="5.9" width="0.127" layer="101"/>
-<wire x1="4.5" y1="3.5" x2="5.2" y2="4.1" width="0.127" layer="21"/>
-<wire x1="5.2" y1="4.1" x2="6.1" y2="2.6" width="0.127" layer="21" curve="-15.169287"/>
-<wire x1="3.6" y1="4.4" x2="4.5" y2="3.5" width="0.127" layer="21" curve="-12.835609"/>
-<wire x1="4.6" y1="-5.9" x2="0.5" y2="0" width="0.127" layer="101"/>
-<wire x1="5.9" y1="-4.7" x2="0.5" y2="0" width="0.127" layer="101"/>
-<wire x1="4.5" y1="-3.5" x2="3.6" y2="-4.4" width="0.127" layer="21" curve="-12.835609"/>
-<wire x1="6.1" y1="-2.6" x2="5.2" y2="-4.1" width="0.127" layer="21" curve="-15.169287"/>
-<wire x1="5.2" y1="-4.1" x2="4.5" y2="-3.5" width="0.127" layer="21"/>
-<wire x1="8.2" y1="1.4" x2="8.2" y2="-1.4" width="0.127" layer="101"/>
-<wire x1="8.2" y1="-1.4" x2="4.6" y2="-5.9" width="0.127" layer="21" curve="-76.865978"/>
-<wire x1="8.2" y1="1.4" x2="4.6" y2="5.9" width="0.127" layer="21" curve="76.865978"/>
-<wire x1="3.6" y1="4.4" x2="4.6" y2="5.9" width="0.127" layer="21"/>
-<wire x1="3.6" y1="-4.4" x2="4.6" y2="-5.9" width="0.127" layer="21"/>
-<wire x1="8.2" y1="-1.4" x2="8.2" y2="-1.2" width="0.127" layer="21"/>
-<wire x1="8.2" y1="1.4" x2="8.2" y2="1.2" width="0.127" layer="21"/>
+<package name="BAT-HLD-003-SMT">
+<description>&lt;b&gt;Battery Holders&lt;/B&gt; &lt;p&gt;
+CR2025/2032</description>
+<smd name="-" x="0" y="0" dx="17.9" dy="17.9" layer="1" roundness="100" cream="no"/>
+<smd name="+@1" x="-12.9" y="0" dx="5.7" dy="6.1" layer="1"/>
+<smd name="+@2" x="12.9" y="0" dx="5.7" dy="6.1" layer="1"/>
+<text x="12" y="5" size="0.7" layer="25">&gt;NAME</text>
+<text x="12" y="4" size="0.7" layer="27">&gt;VALUE</text>
+<rectangle x1="-15.2" y1="-2.55" x2="-10.8" y2="2.55" layer="51"/>
+<rectangle x1="10.8" y1="-2.55" x2="15.2" y2="2.55" layer="51"/>
+<rectangle x1="-10.55" y1="-4.7" x2="-10" y2="4.7" layer="51"/>
+<rectangle x1="10" y1="-4.7" x2="10.55" y2="4.7" layer="51"/>
+<rectangle x1="-3.75" y1="9.95" x2="3.75" y2="10.45" layer="21"/>
+<wire x1="-10.45" y1="4.7" x2="-3.75" y2="10.35" width="0.2" layer="21"/>
+<wire x1="10.45" y1="4.7" x2="3.75" y2="10.35" width="0.2" layer="21"/>
+<wire x1="-5" y1="-8.5" x2="-10.45" y2="-6.5" width="0.2" layer="21" curve="-141.340192"/>
+<wire x1="-10.45" y1="-6.5" x2="-10.45" y2="-4" width="0.2" layer="21"/>
+<wire x1="10.45" y1="-6.5" x2="10.45" y2="-4" width="0.2" layer="21"/>
+<wire x1="10.45" y1="-6.5" x2="5" y2="-8.5" width="0.2" layer="21" curve="-141.340192"/>
+<wire x1="-10.45" y1="3.8" x2="-10.45" y2="4.7" width="0.2" layer="21"/>
+<wire x1="10.45" y1="3.8" x2="10.45" y2="4.7" width="0.2" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -2011,17 +1981,15 @@ suitable for CR1225</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="1072" prefix="BAT">
-<description>&lt;b&gt;Coin Cell Battery Holder&lt;/b&gt;&lt;p&gt;
-Keystone Electronics&lt;br&gt;
-suitable for CR1225</description>
+<deviceset name="BAT-HLD-003-SMT" prefix="BAT">
+<description>&lt;b&gt;ボタン電池ホルダー(CR2025/2032) &lt;/B&gt;&lt;p&gt;</description>
 <gates>
-<gate name="G$1" symbol="3V" x="5.08" y="0"/>
+<gate name="G$1" symbol="3V" x="0" y="0"/>
 </gates>
 <devices>
-<device name="TR" package="1072TR">
+<device name="" package="BAT-HLD-003-SMT">
 <connects>
-<connect gate="G$1" pin="+" pad="+"/>
+<connect gate="G$1" pin="+" pad="+@1"/>
 <connect gate="G$1" pin="-" pad="-"/>
 </connects>
 <technologies>
@@ -2197,7 +2165,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="D2" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
 <part name="D3" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
 <part name="D4" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
-<part name="BAT2" library="Connectors" deviceset="1072" device="TR"/>
+<part name="BAT2" library="Connectors" deviceset="BAT-HLD-003-SMT" device=""/>
 </parts>
 <sheets>
 <sheet>
