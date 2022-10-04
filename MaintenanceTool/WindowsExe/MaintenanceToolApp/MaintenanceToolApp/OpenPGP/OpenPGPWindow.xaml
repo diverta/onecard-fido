@@ -5,28 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="OpenPGP設定" Width="480" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
-    <Grid Height="400">
-        <Button x:Name="buttonPGPStatus" Content="設定情報を参照" HorizontalAlignment="Center" Margin="0,360,330,0" VerticalAlignment="Top" Height="25" Width="100"/>
-        <Button x:Name="buttonPGPReset" Content="設定情報を消去" HorizontalAlignment="Center" Margin="0,360,110,0" VerticalAlignment="Top" Height="25" Width="100"/>
-        <Button x:Name="buttonFirmwareReset" Content="認証器のリセット" HorizontalAlignment="Center" Margin="110,360,0,0" VerticalAlignment="Top" Height="25" Width="100"/>
-        <Button x:Name="buttonClose" Content="閉じる" HorizontalAlignment="Center" Margin="330,360,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonClose_Click"/>
-        <TabControl x:Name="tabControl" Height="310" Width="430" VerticalAlignment="Top" Margin="0,20,0,0">
-            <TabItem Header="PGP鍵管理">
-                <Grid Background="#FFFAFAFA" Height="304">
-                    <GroupBox x:Name="groupBox1" Header="インストールするPGP鍵" VerticalAlignment="Top" Margin="15,15,15,0" Height="55"/>
-                    <CheckBox x:Name="checkBox1" Content="電子署名用" HorizontalAlignment="Left" Margin=" 35,20,0,224" VerticalContentAlignment="Top" Height="18" Width="90" IsChecked="True" IsEnabled="False"/>
-                    <CheckBox x:Name="checkBox2" Content="暗号化用" HorizontalAlignment="Left" Margin="135,20,0,223" VerticalContentAlignment="Top" Height="18" Width="75" IsChecked="True" IsEnabled="False"/>
-                    <CheckBox x:Name="checkBox3" Content="認証用" HorizontalAlignment="Left" Margin="220,20,0,223" VerticalContentAlignment="Top" Height="18" Width="60" IsChecked="True" IsEnabled="False"/>
-                    <GroupBox x:Name="groupBox2" Header="PGP鍵の情報" VerticalAlignment="Top" Margin="15,80,15,0" Height="110"/>
-                    <Label x:Name="labelToolName1" Content="名前" HorizontalAlignment="Left" Margin="30,100,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textBoxRealName" HorizontalAlignment="Left" Margin="130,103,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="260" Height="21"/>
-                    <Label x:Name="labelToolName2" Content="メールアドレス" HorizontalAlignment="Left" Margin="30,125,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textMailAddress" HorizontalAlignment="Left" Margin="130,128,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="260" Height="21"/>
-                    <Label x:Name="labelToolName3" Content="コメント" HorizontalAlignment="Left" Margin="30,150,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textComment" HorizontalAlignment="Left" Margin="130,153,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="260" Height="21"/>
+    <Grid Height="535">
+        <Button x:Name="buttonPGPStatus" Content="設定情報を参照" HorizontalAlignment="Center" Margin="0,490,340,0" VerticalAlignment="Top" Height="25" Width="100"/>
+        <Button x:Name="buttonPGPReset" Content="設定情報を消去" HorizontalAlignment="Center" Margin="0,490,115,0" VerticalAlignment="Top" Height="25" Width="100"/>
+        <Button x:Name="buttonFirmwareReset" Content="認証器のリセット" HorizontalAlignment="Center" Margin="110,490,0,0" VerticalAlignment="Top" Height="25" Width="100"/>
+        <Button x:Name="buttonClose" Content="閉じる" HorizontalAlignment="Center" Margin="340,490,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonClose_Click"/>
+        <TabControl x:Name="tabControl" Height="455" Width="440" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0">
+            <TabItem Header="PGP鍵管理" Name="tabPagePGPKeyManagement">
+                <Grid Background="#FFFAFAFA">
+                    <GroupBox x:Name="groupBox1" Header="インストールするPGP鍵" VerticalAlignment="Top" Margin="10,15,10,0" Height="55"/>
+                    <CheckBox x:Name="checkBox1" Content="電子署名用" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Top" Height="18" Width="90" IsChecked="True" IsEnabled="False"/>
+                    <CheckBox x:Name="checkBox2" Content="暗号化用" HorizontalAlignment="Left" Margin="130,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Top" Height="18" Width="75" IsChecked="True" IsEnabled="False"/>
+                    <CheckBox x:Name="checkBox3" Content="認証用" HorizontalAlignment="Left" Margin="215,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Top" Height="18" Width="60" IsChecked="True" IsEnabled="False"/>
+                    <GroupBox x:Name="groupBox2" Header="PGP鍵の情報" VerticalAlignment="Top" Margin="10,80,10,0" Height="110"/>
+                    <Label x:Name="labelRealName" Content="名前" HorizontalAlignment="Left" Margin="25,100,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textRealName" HorizontalAlignment="Left" Margin="125,103,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <Label x:Name="labelMailAddress" Content="メールアドレス" HorizontalAlignment="Left" Margin="25,125,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textMailAddress" HorizontalAlignment="Left" Margin="125,128,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <Label x:Name="labelComment" Content="コメント" HorizontalAlignment="Left" Margin="25,150,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textComment" HorizontalAlignment="Left" Margin="125,153,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <GroupBox x:Name="groupBox3" Header="各種ファイルの出力先フォルダー" VerticalAlignment="Top" Margin="10,200,10,0" Height="85"/>
+                    <Label x:Name="labelPubkeyFolderPath" Content="PGP公開鍵" HorizontalAlignment="Left" Margin="25,220,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPubkeyFolderPath" HorizontalAlignment="Left" Margin="125,223,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <Button x:Name="buttonPubkeyFolderPath" Content="参照" HorizontalAlignment="Left" Margin="365,223,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelBackupFolderPath" Content="バックアップ" HorizontalAlignment="Left" Margin="25,245,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textBackupFolderPath" HorizontalAlignment="Left" Margin="125,248,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <Button x:Name="buttonBackupFolderPath" Content="参照" HorizontalAlignment="Left" Margin="365,248,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <GroupBox x:Name="groupBox4" Header="認証情報" VerticalAlignment="Top" Margin="10,295,10,0" Height="85"/>
+                    <Label x:Name="labelPin" Content="管理用PIN番号" HorizontalAlignment="Left" Margin="25,315,0,0" VerticalAlignment="Top" Width="125" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="160,318,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelPinConfirm" Content="管理用PIN番号(確認)" HorizontalAlignment="Left" Margin="25,340,0,0" VerticalAlignment="Top" Width="125" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPinConfirm" HorizontalAlignment="Left" Margin="160,343,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Button x:Name="buttonInstallPGPKey"  Content="PGP秘密鍵のインストール" HorizontalAlignment="Center" Margin="0,390,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="PIN番号管理">
+            <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
                 <Grid Background="#FFFAFAFA"/>
             </TabItem>
         </TabControl>
