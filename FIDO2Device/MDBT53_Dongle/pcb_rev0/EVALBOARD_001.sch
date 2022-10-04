@@ -1061,9 +1061,22 @@ Wave soldering</description>
 <smd name="C" x="-1.2" y="0" dx="1" dy="1.2" layer="1"/>
 <smd name="A" x="1.2" y="0" dx="1" dy="1.2" layer="1"/>
 <rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
-<text x="-1.16125" y="1.0875" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
-<rectangle x1="-1.5" y1="-1.4" x2="-1.1" y2="-1" layer="21"/>
+<text x="-2.41125" y="1.1875" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-2.56125" y="-1.54625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
+<rectangle x1="-2.65" y1="-1.25" x2="-2.25" y2="-0.85" layer="21"/>
+</package>
+<package name="DFN1006D-2">
+<description>&lt;b&gt; Leadless ultra small plastic package&lt;/b&gt;&lt;p&gt;
+SOD882D&lt;br&gt;
+2 terminals</description>
+<smd name="2" x="0.4" y="0" dx="0.5" dy="0.7" layer="1" stop="no" cream="no"/>
+<smd name="1" x="-0.4" y="0" dx="0.5" dy="0.7" layer="1" stop="no" cream="no"/>
+<rectangle x1="0.1" y1="-0.4" x2="0.7" y2="0.4" layer="29"/>
+<rectangle x1="-0.7" y1="-0.4" x2="-0.1" y2="0.4" layer="29"/>
+<rectangle x1="0.2" y1="-0.3" x2="0.5" y2="0.3" layer="31"/>
+<rectangle x1="-0.5" y1="-0.3" x2="-0.2" y2="0.3" layer="31"/>
+<text x="-0.7" y="0.7" size="0.6" layer="25">&gt;NAME</text>
+<text x="-0.7" y="-0.7" size="0.6" layer="27" align="top-left">&gt;VALUE</text>
 </package>
 </packages>
 <symbols>
@@ -1685,6 +1698,15 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 <technology name=""/>
 </technologies>
 </device>
+<device name="BELD,315" package="DFN1006D-2">
+<connects>
+<connect gate="G$1" pin="A" pad="2"/>
+<connect gate="G$1" pin="C" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
 </devices>
 </deviceset>
 </devicesets>
@@ -2172,9 +2194,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
 <part name="U2" library="Parts" deviceset="XC6206" device="P332MR-G"/>
 <part name="GND6" library="Supply" deviceset="0V" device=""/>
-<part name="D2" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
-<part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
-<part name="D4" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="D2" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
+<part name="D3" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
+<part name="D4" library="Parts" deviceset="PMEG2005" device="BELD,315" value="PMEG2005BELD,315"/>
 <part name="BAT2" library="Connectors" deviceset="1072" device="TR"/>
 </parts>
 <sheets>
