@@ -26,10 +26,10 @@
                     <TextBox x:Name="textComment" HorizontalAlignment="Left" Margin="125,153,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
                     <GroupBox x:Name="groupBox3" Header="各種ファイルの出力先フォルダー" VerticalAlignment="Top" Margin="10,200,10,0" Height="85"/>
                     <Label x:Name="labelPubkeyFolderPath" Content="PGP公開鍵" HorizontalAlignment="Left" Margin="25,220,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textPubkeyFolderPath" HorizontalAlignment="Left" Margin="125,223,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <TextBox x:Name="textPubkeyFolderPath" HorizontalAlignment="Left" Margin="125,223,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21"/>
                     <Button x:Name="buttonPubkeyFolderPath" Content="参照" HorizontalAlignment="Left" Margin="365,223,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonPubkeyFolderPath_Click"/>
                     <Label x:Name="labelBackupFolderPath" Content="バックアップ" HorizontalAlignment="Left" Margin="25,245,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textBackupFolderPath" HorizontalAlignment="Left" Margin="125,248,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="Wrap" Width="230" Height="21"/>
+                    <TextBox x:Name="textBackupFolderPath" HorizontalAlignment="Left" Margin="125,248,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21"/>
                     <Button x:Name="buttonBackupFolderPath" Content="参照" HorizontalAlignment="Left" Margin="365,248,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonBackupFolderPath_Click"/>
                     <GroupBox x:Name="groupBox4" Header="認証情報" VerticalAlignment="Top" Margin="10,295,10,0" Height="85"/>
                     <Label x:Name="labelPin" Content="管理用PIN番号" HorizontalAlignment="Left" Margin="25,315,0,0" VerticalAlignment="Top" Width="125" Height="25"/>
