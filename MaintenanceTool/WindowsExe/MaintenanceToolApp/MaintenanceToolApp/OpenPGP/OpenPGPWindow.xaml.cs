@@ -38,5 +38,15 @@ namespace MaintenanceToolApp.OpenPGP
         {
             TerminateWindow(false);
         }
+
+        private void buttonPubkeyFolderPath_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFolderPath(this, AppCommon.MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER, textPubkeyFolderPath);
+        }
+
+        private void buttonBackupFolderPath_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFolderPath(this, AppCommon.MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER, textBackupFolderPath);
+        }
     }
 }
