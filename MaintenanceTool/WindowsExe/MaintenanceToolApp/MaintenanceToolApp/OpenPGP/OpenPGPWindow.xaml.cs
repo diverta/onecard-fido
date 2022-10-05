@@ -25,8 +25,13 @@ namespace MaintenanceToolApp.OpenPGP
         // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
         private const string OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
-        public OpenPGPWindow()
+        // 処理実行のためのプロパティー
+        private readonly OpenPGPParameter Parameter;
+
+        public OpenPGPWindow(OpenPGPParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 
@@ -53,6 +58,17 @@ namespace MaintenanceToolApp.OpenPGP
             if (CheckForInstallPGPKey() == false) {
                 return;
             }
+
+            // 画面入力内容をパラメーターに設定
+            Parameter.RealName = textRealName.Text;
+            Parameter.MailAddress = textMailAddress.Text;
+            Parameter.Comment = textComment.Text;
+            Parameter.Passphrase = passwordBoxPinConfirm.Password;
+            Parameter.PubkeyFolderPath = textPubkeyFolderPath.Text;
+            Parameter.BackupFolderPath = textBackupFolderPath.Text;
+
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(Parameter.ToString());
         }
 
         private void TerminateWindow(bool dialogResult)
