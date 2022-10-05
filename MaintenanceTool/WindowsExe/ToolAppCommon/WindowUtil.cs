@@ -17,6 +17,30 @@ namespace ToolAppCommon
         }
     }
 
+    public class TextBoxUtil
+    {
+        public static bool CheckEntrySize(TextBox textBox, int minSize, int maxSize, string title, string informativeText, Window parentWindow)
+        {
+            int size = textBox.Text.Length;
+            if (size < minSize || size > maxSize) {
+                DialogUtil.ShowWarningMessage(parentWindow, title, informativeText);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        public static bool CheckValueWithPattern(TextBox textBox, string pattern, string title, string informativeText, Window parentWindow)
+        {
+            if (Regex.IsMatch(textBox.Text, pattern) == false) {
+                DialogUtil.ShowWarningMessage(parentWindow, title, informativeText);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
+    }
+
     public class PasswordBoxUtil
     {
         public static bool CheckEntrySize(PasswordBox passwordBox, int minSize, int maxSize, string title, string informativeText, Window parentWindow)
