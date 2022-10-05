@@ -36,7 +36,7 @@
                     <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="160,318,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
                     <Label x:Name="labelPinConfirm" Content="管理用PIN番号(確認)" HorizontalAlignment="Left" Margin="25,340,0,0" VerticalAlignment="Top" Width="125" Height="25"/>
                     <PasswordBox x:Name="passwordBoxPinConfirm" HorizontalAlignment="Left" Margin="160,343,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
-                    <Button x:Name="buttonInstallPGPKey"  Content="PGP秘密鍵のインストール" HorizontalAlignment="Center" Margin="0,390,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
+                    <Button x:Name="buttonInstallPGPKey"  Content="PGP秘密鍵のインストール" HorizontalAlignment="Center" Margin="0,390,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonInstallPGPKey_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
