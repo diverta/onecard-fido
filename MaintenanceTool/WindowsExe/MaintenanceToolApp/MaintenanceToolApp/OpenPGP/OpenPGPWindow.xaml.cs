@@ -37,6 +37,9 @@ namespace MaintenanceToolApp.OpenPGP
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
+            // TODO: 仮の実装です。
+            InitTabPinManagement();
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -81,6 +84,19 @@ namespace MaintenanceToolApp.OpenPGP
         //
         // PIN番号管理タブ関連の処理
         //
+        private void InitTabPinManagement()
+        {
+            // ラジオボタンの初期化
+            InitButtonPinCommandsWithDefault(radioButton1);
+        }
+
+        private void InitButtonPinCommandsWithDefault(RadioButton radioButton)
+        {
+            // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+            radioButton1.IsChecked = true;
+            GetSelectedPinCommandValue(radioButton);
+        }
+
         private void InitTabPinManagementPinFields()
         {
             // PIN番号のテキストボックスを初期化
