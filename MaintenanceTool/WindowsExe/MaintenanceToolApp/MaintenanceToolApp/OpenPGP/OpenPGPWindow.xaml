@@ -42,18 +42,18 @@
             <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
                 <Grid Background="#FFFAFAFA">
                     <GroupBox x:Name="groupBox5" Header="実行する機能" VerticalAlignment="Top" Margin="10,15,10,0" Height="85"/>
-                    <RadioButton x:Name="radioButton1" Content="PIN番号を変更" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" IsChecked="True"/>
-                    <RadioButton x:Name="radioButton2" Content="管理用PIN番号を変更" HorizontalAlignment="Left" Margin="140,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
-                    <RadioButton x:Name="radioButton3" Content="PIN番号をリセット" HorizontalAlignment="Left" Margin="285,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
-                    <RadioButton x:Name="radioButton4" Content="リセットコードを変更" HorizontalAlignment="Left" Margin="30,65,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
-                    <RadioButton x:Name="radioButton5" Content="リセットコードでPIN番号をリセット" HorizontalAlignment="Left" Margin="160,65,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+                    <RadioButton x:Name="radioButton1" Content="PIN番号を変更" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton1_Checked" IsChecked="True"/>
+                    <RadioButton x:Name="radioButton2" Content="管理用PIN番号を変更" HorizontalAlignment="Left" Margin="140,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton2_Checked"/>
+                    <RadioButton x:Name="radioButton3" Content="PIN番号をリセット" HorizontalAlignment="Left" Margin="285,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton3_Checked"/>
+                    <RadioButton x:Name="radioButton4" Content="リセットコードを変更" HorizontalAlignment="Left" Margin="30,65,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton4_Checked"/>
+                    <RadioButton x:Name="radioButton5" Content="リセットコードでPIN番号をリセット" HorizontalAlignment="Left" Margin="160,65,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton5_Checked"/>
                     <GroupBox x:Name="groupBox6" Header="認証情報" VerticalAlignment="Top" Margin="10,110,10,0" Height="110"/>
-                    <Label x:Name="labelCurPin" Content="現在の管理用PIN番号" HorizontalAlignment="Left" Margin="25,130,0,0" VerticalAlignment="Top" Width="155" Height="25"/>
-                    <PasswordBox x:Name="passwordBoxCurPin" HorizontalAlignment="Left" Margin="190,133,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
-                    <Label x:Name="labelNewPin" Content="新しい管理用PIN番号" HorizontalAlignment="Left" Margin="25,155,0,0" VerticalAlignment="Top" Width="155" Height="25"/>
-                    <PasswordBox x:Name="passwordBoxNewPin" HorizontalAlignment="Left" Margin="190,158,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
-                    <Label x:Name="labelNewPinConfirm" Content="新しい管理用PIN番号(確認)" HorizontalAlignment="Left" Margin="25,180,0,0" VerticalAlignment="Top" Width="155" Height="25"/>
-                    <PasswordBox x:Name="passwordBoxNewPinConfirm" HorizontalAlignment="Left" Margin="190,183,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelCurPin" Content="現在の管理用PIN番号" HorizontalAlignment="Left" Margin="25,130,0,0" VerticalAlignment="Top" Width="170" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxCurPin" HorizontalAlignment="Left" Margin="205,133,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPin" Content="新しい管理用PIN番号" HorizontalAlignment="Left" Margin="25,155,0,0" VerticalAlignment="Top" Width="170" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPin" HorizontalAlignment="Left" Margin="205,158,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPinConfirm" Content="新しい管理用PIN番号(確認)" HorizontalAlignment="Left" Margin="25,180,0,0" VerticalAlignment="Top" Width="170" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPinConfirm" HorizontalAlignment="Left" Margin="205,183,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
                     <Button x:Name="buttonPerformPinCommand"  Content="実行" HorizontalAlignment="Center" Margin="0,235,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
                 </Grid>
             </TabItem>

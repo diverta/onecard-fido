@@ -79,6 +79,56 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         //
+        // PIN番号管理タブ関連の処理
+        //
+        private void InitTabPinManagementPinFields()
+        {
+            // PIN番号のテキストボックスを初期化
+            passwordBoxCurPin.Password = string.Empty;
+            passwordBoxNewPin.Password = string.Empty;
+            passwordBoxNewPinConfirm.Password = string.Empty;
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            passwordBoxCurPin.Focus();
+        }
+
+        private void GetSelectedPinCommandValue(object sender)
+        {
+            // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+            if (sender.Equals(radioButton1)) {
+                // PIN番号を変更
+                labelCurPin.Content = AppCommon.MSG_LABEL_ITEM_CUR_PIN;
+                labelNewPin.Content = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+            if (sender.Equals(radioButton2)) {
+                // 管理用PIN番号を変更
+                labelCurPin.Content = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Content = AppCommon.MSG_LABEL_ITEM_NEW_ADMPIN;
+            }
+            if (sender.Equals(radioButton3)) {
+                // PIN番号をリセット
+                labelCurPin.Content = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Content = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+            if (sender.Equals(radioButton4)) {
+                // リセットコードを変更
+                labelCurPin.Content = AppCommon.MSG_LABEL_ITEM_CUR_ADMPIN;
+                labelNewPin.Content = AppCommon.MSG_LABEL_ITEM_NEW_RESET_CODE;
+            }
+            if (sender.Equals(radioButton5)) {
+                // リセットコードでPIN番号をリセット
+                labelCurPin.Content = AppCommon.MSG_LABEL_ITEM_CUR_RESET_CODE;
+                labelNewPin.Content = AppCommon.MSG_LABEL_ITEM_NEW_PIN;
+            }
+
+            // 確認欄のキャプションを設定
+            labelNewPinConfirm.Content = string.Format(AppCommon.MSG_FORMAT_OPENPGP_ITEM_FOR_CONF, labelNewPin.Content);
+
+            // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+            InitTabPinManagementPinFields();
+        }
+
+        //
         // PGP秘密鍵インストール時の入力チェック
         //
         private bool CheckForInstallPGPKey()
@@ -242,6 +292,31 @@ namespace MaintenanceToolApp.OpenPGP
         private void buttonInstallPGPKey_Click(object sender, RoutedEventArgs e)
         {
             DoInstallPGPKey();
+        }
+
+        private void radioButton1_Checked(object sender, RoutedEventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton2_Checked(object sender, RoutedEventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton3_Checked(object sender, RoutedEventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton4_Checked(object sender, RoutedEventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
+        }
+
+        private void radioButton5_Checked(object sender, RoutedEventArgs e)
+        {
+            GetSelectedPinCommandValue(sender);
         }
     }
 }
