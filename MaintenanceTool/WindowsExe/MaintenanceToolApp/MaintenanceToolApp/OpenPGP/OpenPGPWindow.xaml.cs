@@ -74,6 +74,17 @@ namespace MaintenanceToolApp.OpenPGP
             AppLogUtil.OutputLogDebug(Parameter.ToString());
         }
 
+        private void DoPerformPinCommand()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(Parameter.ToString());
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -136,7 +147,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
             radioButton1.IsChecked = true;
-            GetSelectedPinCommandValue(radioButton);
+            ChangeLabelCaptionOfPinText(radioButton);
         }
 
         private void InitTabPinManagementPinFields()
@@ -150,7 +161,7 @@ namespace MaintenanceToolApp.OpenPGP
             passwordBoxCurPin.Focus();
         }
 
-        private void GetSelectedPinCommandValue(object sender)
+        private void ChangeLabelCaptionOfPinText(object sender)
         {
             // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
             if (sender.Equals(radioButton1)) {
@@ -354,27 +365,32 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void radioButton1_Checked(object sender, RoutedEventArgs e)
         {
-            GetSelectedPinCommandValue(sender);
+            ChangeLabelCaptionOfPinText(sender);
         }
 
         private void radioButton2_Checked(object sender, RoutedEventArgs e)
         {
-            GetSelectedPinCommandValue(sender);
+            ChangeLabelCaptionOfPinText(sender);
         }
 
         private void radioButton3_Checked(object sender, RoutedEventArgs e)
         {
-            GetSelectedPinCommandValue(sender);
+            ChangeLabelCaptionOfPinText(sender);
         }
 
         private void radioButton4_Checked(object sender, RoutedEventArgs e)
         {
-            GetSelectedPinCommandValue(sender);
+            ChangeLabelCaptionOfPinText(sender);
         }
 
         private void radioButton5_Checked(object sender, RoutedEventArgs e)
         {
-            GetSelectedPinCommandValue(sender);
+            ChangeLabelCaptionOfPinText(sender);
+        }
+
+        private void buttonPerformPinCommand_Click(object sender, RoutedEventArgs e)
+        {
+            DoPerformPinCommand();
         }
     }
 }
