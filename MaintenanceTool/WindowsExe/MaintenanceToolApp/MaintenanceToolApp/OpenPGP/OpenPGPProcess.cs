@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.OpenPGP
 {
@@ -10,6 +11,10 @@ namespace MaintenanceToolApp.OpenPGP
         public string Passphrase { get; set; }
         public string PubkeyFolderPath { get; set; }
         public string BackupFolderPath { get; set; }
+        public Command SelectedPinCommand { get; set; }
+        public string SelectedPinCommandName { get; set; }
+        public string CurrentPin { get; set; }
+        public string NewPin { get; set; }
 
         public OpenPGPParameter()
         {
@@ -19,12 +24,18 @@ namespace MaintenanceToolApp.OpenPGP
             Passphrase = string.Empty;
             PubkeyFolderPath = string.Empty;
             BackupFolderPath = string.Empty;
+            SelectedPinCommandName = string.Empty;
+            CurrentPin = string.Empty;
+            NewPin = string.Empty;
         }
 
         public override string ToString()
         {
-            return string.Format("RealName:{0} MailAddress:{1} Comment:{2} Passphrase:{3} PubkeyFolderPath:{4} BackupFolderPath:{5}", 
+            string PGPKeyParam = string.Format("RealName:{0} MailAddress:{1} Comment:{2} Passphrase:{3} PubkeyFolderPath:{4} BackupFolderPath:{5}",
                 RealName, MailAddress, Comment, Passphrase, PubkeyFolderPath, BackupFolderPath);
+            string PinCommandParam = string.Format("SelectedPinCommand:{0} SelectedPinCommandName:{1} CurrentPin:{2} NewPin:{3}",
+                SelectedPinCommand, SelectedPinCommandName, CurrentPin, NewPin);
+            return string.Format("{0}\n{1}", PGPKeyParam, PinCommandParam);
         }
     }
 
