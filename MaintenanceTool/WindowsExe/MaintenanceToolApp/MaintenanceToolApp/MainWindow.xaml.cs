@@ -108,8 +108,7 @@ namespace MaintenanceToolApp
         private void DoOpenPGP()
         {
             // OpenPGP設定画面を開く
-            OpenPGPParameter param = new OpenPGPParameter();
-            new OpenPGPProcess(param).DoProcess();
+            new OpenPGPWindow().ShowDialogWithOwner(this);
         }
 
         private void DoHealthCheck()

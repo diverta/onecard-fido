@@ -11,6 +11,9 @@ namespace MaintenanceToolApp.OpenPGP
     /// </summary>
     public partial class OpenPGPWindow : Window
     {
+        // OpenPGP処理の参照を保持
+        private readonly OpenPGPProcess Process = null!;
+
         // 入力可能文字数
         private const int OPENPGP_NAME_SIZE_MIN = 5;
         private const int OPENPGP_ENTRY_SIZE_MAX = 32;
@@ -26,16 +29,13 @@ namespace MaintenanceToolApp.OpenPGP
         // メールアドレス入力パターン \w は [a-zA-Z_0-9] と等価
         private const string OPENPGP_ENTRY_PATTERN_MAIL_ADDRESS = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
-        // 処理実行のためのプロパティー
-        private readonly OpenPGPParameter Parameter;
-
-        public OpenPGPWindow(OpenPGPParameter param)
+        public OpenPGPWindow()
         {
-            // パラメーターの参照を保持
-            Parameter = param;
-            InitializeComponent();
+            // OpenPGP処理クラスの参照を保持
+            Process = new OpenPGPProcess();
 
             // 画面項目の初期化
+            InitializeComponent();
             InitFieldValue();
         }
 
@@ -64,15 +64,16 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // 画面入力内容をパラメーターに設定
-            Parameter.RealName = textRealName.Text;
-            Parameter.MailAddress = textMailAddress.Text;
-            Parameter.Comment = textComment.Text;
-            Parameter.Passphrase = passwordBoxPinConfirm.Password;
-            Parameter.PubkeyFolderPath = textPubkeyFolderPath.Text;
-            Parameter.BackupFolderPath = textBackupFolderPath.Text;
+            OpenPGPParameter param = new OpenPGPParameter();
+            param.RealName = textRealName.Text;
+            param.MailAddress = textMailAddress.Text;
+            param.Comment = textComment.Text;
+            param.Passphrase = passwordBoxPinConfirm.Password;
+            param.PubkeyFolderPath = textPubkeyFolderPath.Text;
+            param.BackupFolderPath = textBackupFolderPath.Text;
 
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(Parameter.ToString());
+            // コマンドを実行
+            Process.DoOpenPGPCommand(param);
         }
 
         private void DoPerformPinCommand()
@@ -88,12 +89,13 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // 画面入力内容をパラメーターに設定
-            GetSelectedPinCommandValue(Parameter);
-            Parameter.CurrentPin = passwordBoxCurPin .Password;
-            Parameter.NewPin = passwordBoxNewPinConfirm.Password;
+            OpenPGPParameter param = new OpenPGPParameter();
+            GetSelectedPinCommandValue(param);
+            param.CurrentPin = passwordBoxCurPin .Password;
+            param.NewPin = passwordBoxNewPinConfirm.Password;
 
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(Parameter.ToString());
+            // コマンドを実行
+            Process.DoOpenPGPCommand(param);
         }
 
         private void TerminateWindow(bool dialogResult)

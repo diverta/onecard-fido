@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.OpenPGP
@@ -42,21 +43,21 @@ namespace MaintenanceToolApp.OpenPGP
     public class OpenPGPProcess
     {
         // 処理実行のためのプロパティー
-        private readonly OpenPGPParameter Parameter;
+        private OpenPGPParameter Parameter = null!;
 
         // 親ウィンドウの参照を保持
         private readonly Window ParentWindow = App.Current.MainWindow;
 
-        public OpenPGPProcess(OpenPGPParameter param)
+        //
+        // OpenPGP機能設定用関数
+        // 
+        public void DoOpenPGPCommand(OpenPGPParameter parameter)
         {
-            // パラメーターの参照を保持
-            Parameter = param;
-        }
+            // 画面から引き渡されたパラメーターを退避
+            Parameter = parameter;
 
-        public void DoProcess()
-        {
-            // OpenPGP設定画面を開く
-            new OpenPGPWindow(Parameter).ShowDialogWithOwner(ParentWindow);
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(Parameter.ToString());
         }
     }
 }
