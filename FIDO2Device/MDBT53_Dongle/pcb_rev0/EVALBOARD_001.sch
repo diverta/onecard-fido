@@ -1078,6 +1078,17 @@ SOD882D&lt;br&gt;
 <text x="-0.7" y="0.7" size="0.6" layer="25">&gt;NAME</text>
 <text x="-0.7" y="-0.7" size="0.6" layer="27" align="top-left">&gt;VALUE</text>
 </package>
+<package name="R0402N">
+<description>&lt;b&gt;RESISTOR&lt;/b&gt;</description>
+<wire x1="-0.245" y1="0.224" x2="0.245" y2="0.224" width="0.1524" layer="51"/>
+<wire x1="0.245" y1="-0.224" x2="-0.245" y2="-0.224" width="0.1524" layer="51"/>
+<smd name="1" x="-0.7" y="0" dx="0.8" dy="0.7" layer="1"/>
+<smd name="2" x="0.7" y="0" dx="0.8" dy="0.7" layer="1"/>
+<text x="-0.5" y="0.7" size="0.6" layer="25">&gt;NAME</text>
+<text x="-0.5" y="-1.3" size="0.6" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.554" y1="-0.3048" x2="-0.254" y2="0.2951" layer="51"/>
+<rectangle x1="0.2588" y1="-0.3048" x2="0.5588" y2="0.2951" layer="51"/>
+</package>
 </packages>
 <symbols>
 <symbol name="XTAL">
@@ -1491,6 +1502,15 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 </technologies>
 </device>
 <device name="_0402" package="R0402">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_0402N" package="R0402N">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -2175,21 +2195,21 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="SW2" library="Parts" deviceset="SKTADAE010" device=""/>
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
-<part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
-<part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.8k"/>
-<part name="R7" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
+<part name="R5" library="Parts" deviceset="RESISTOR" device="_0402N" value="1.2k"/>
+<part name="R6" library="Parts" deviceset="RESISTOR" device="_0402N" value="1.8k"/>
+<part name="R7" library="Parts" deviceset="RESISTOR" device="_0402N" value="390"/>
 <part name="LED1" library="Parts" deviceset="APTD1608" device="LSECK/J4-PF" value="APTD1608LSECK/J4-PF"/>
-<part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
+<part name="R4" library="Parts" deviceset="RESISTOR" device="_0402N" value="1.2k"/>
 <part name="LED3" library="Parts" deviceset="APTD1608" device="LZGCK" value="APTD1608LZGCK"/>
 <part name="LED2" library="Parts" deviceset="APHD1608" device="LSURCK"/>
 <part name="LED4" library="Parts" deviceset="APTD1608" device="LVBC/D"/>
 <part name="U3" library="ICs" deviceset="RV-3028-C7" device=""/>
 <part name="GND20" library="Supply" deviceset="0V" device=""/>
-<part name="R8" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
-<part name="R9" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
-<part name="R10" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
+<part name="R8" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
+<part name="R9" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
+<part name="R10" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="C8" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
-<part name="R11" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
+<part name="R11" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="L1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="L2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
@@ -2202,9 +2222,9 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
 <part name="L3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
-<part name="R1" library="Parts" deviceset="RESISTOR" device="_0402" value="5.1k"/>
+<part name="R1" library="Parts" deviceset="RESISTOR" device="_0402N" value="5.1k"/>
 <part name="CN1" library="Connectors" deviceset="USB4105-GF-A" device=""/>
-<part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="5.1k"/>
+<part name="R2" library="Parts" deviceset="RESISTOR" device="_0402N" value="5.1k"/>
 <part name="GND15" library="Supply" deviceset="0V" device=""/>
 <part name="CN2" library="Connectors" deviceset="IF_6PIN" device=""/>
 <part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
