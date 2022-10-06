@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.OpenPGP
 {
@@ -80,6 +81,14 @@ namespace MaintenanceToolApp.OpenPGP
             if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                 return;
             }
+
+            // 画面入力内容をパラメーターに設定
+            Parameter.CurrentPin = passwordBoxCurPin .Password;
+            Parameter.NewPin = passwordBoxNewPinConfirm.Password;
+
+            // PIN番号管理タブのラジオボタン選択状態に
+            // 応じたコマンド／機能名称をパラメーターに設定
+            GetSelectedPinCommandValue();
 
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(Parameter.ToString());
@@ -338,6 +347,48 @@ namespace MaintenanceToolApp.OpenPGP
             // PIN番号の確認入力内容をチェック
             string informativeText = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM, fieldName);
             return PasswordBoxUtil.CompareEntry(passwordBoxPinConfirm, passwordBoxPin, Title, informativeText, this);
+        }
+
+        //
+        // PIN番号管理タブのラジオボタン選択状態に
+        // 応じたコマンド／機能名称を設定
+        //
+        private void GetSelectedPinCommandValue()
+        {
+            if (RadioButtonIsChecked(radioButton1)) {
+                // PIN番号を変更
+                Parameter.SelectedPinCommand = Command.COMMAND_OPENPGP_CHANGE_PIN;
+                Parameter.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
+            }
+            if (RadioButtonIsChecked(radioButton2)) {
+                // 管理用PIN番号を変更
+                Parameter.SelectedPinCommand = Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+                Parameter.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+            }
+            if (RadioButtonIsChecked(radioButton3)) {
+                // PIN番号をリセット
+                Parameter.SelectedPinCommand = Command.COMMAND_OPENPGP_UNBLOCK_PIN;
+                Parameter.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
+            }
+            if (RadioButtonIsChecked(radioButton4)) {
+                // リセットコードを変更
+                Parameter.SelectedPinCommand = Command.COMMAND_OPENPGP_SET_RESET_CODE;
+                Parameter.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
+            }
+            if (RadioButtonIsChecked(radioButton5)) {
+                // リセットコードでPIN番号をリセット
+                Parameter.SelectedPinCommand = Command.COMMAND_OPENPGP_UNBLOCK;
+                Parameter.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
+            }
+        }
+
+        private static bool RadioButtonIsChecked(RadioButton radioButton)
+        { 
+            if (radioButton.IsChecked == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         //
