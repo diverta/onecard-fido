@@ -33,13 +33,13 @@ namespace MaintenanceToolApp.OpenPGP
             // パラメーターの参照を保持
             Parameter = param;
             InitializeComponent();
+
+            // 画面項目の初期化
+            InitFieldValue();
         }
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
-            // TODO: 仮の実装です。
-            InitTabPinManagement();
-
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -79,6 +79,48 @@ namespace MaintenanceToolApp.OpenPGP
             // この画面を閉じる
             DialogResult = dialogResult;
             Close();
+        }
+
+        //
+        // 画面初期化処理
+        //
+        private void InitFieldValue()
+        {
+            // PGP鍵管理タブ内の入力項目を初期化
+            InitTabPGPKeyManagement();
+
+            // PIN番号管理タブ内の入力項目を初期化
+            InitTabPinManagement();
+        }
+
+        //
+        // PGP鍵管理タブ関連の処理
+        //
+        private void InitTabPGPKeyManagement()
+        {
+            // テキストボックスの初期化
+            InitTabPGPKeyPathFields();
+            InitTabPGPKeyEntryFields();
+        }
+
+        private void InitTabPGPKeyPathFields()
+        {
+            // ファイルパスのテキストボックスを初期化
+            textPubkeyFolderPath.Text = string.Empty;
+            textBackupFolderPath.Text = string.Empty;
+        }
+
+        private void InitTabPGPKeyEntryFields()
+        {
+            // テキストボックスを初期化
+            textRealName.Text = string.Empty;
+            textMailAddress.Text = string.Empty;
+            textComment.Text = string.Empty;
+            passwordBoxPin.Password = string.Empty;
+            passwordBoxPinConfirm.Password = string.Empty;
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            textRealName.Focus();
         }
 
         //
