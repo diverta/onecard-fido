@@ -988,7 +988,16 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <gate name="G$1" symbol="FERRITE_BEAD" x="0" y="0"/>
 </gates>
 <devices>
-<device name="121SN1D" package="C0402K">
+<device name="121SN1D_" package="C0402K">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="121SN1D" package="C0402N">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
