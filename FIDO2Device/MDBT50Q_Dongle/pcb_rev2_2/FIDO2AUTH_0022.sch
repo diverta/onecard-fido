@@ -667,6 +667,30 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.554" y1="-0.3048" x2="-0.254" y2="0.2951" layer="51"/>
 <rectangle x1="0.2588" y1="-0.3048" x2="0.5588" y2="0.2951" layer="51"/>
 </package>
+<package name="C0603N">
+<description>&lt;b&gt;Ceramic Chip Capacitor KEMET 0603 reflow solder&lt;/b&gt;&lt;p&gt;
+Metric Code Size 1608</description>
+<wire x1="-0.725" y1="0.35" x2="0.725" y2="0.35" width="0.1016" layer="51"/>
+<wire x1="0.725" y1="-0.35" x2="-0.725" y2="-0.35" width="0.1016" layer="51"/>
+<smd name="1" x="-0.925" y="0" dx="1.15" dy="0.9" layer="1"/>
+<smd name="2" x="0.925" y="0" dx="1.15" dy="0.9" layer="1"/>
+<text x="-0.8001" y="0.879475" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-0.8" y="-1.49125" size="0.7112" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.8" y1="-0.4" x2="-0.45" y2="0.4" layer="51"/>
+<rectangle x1="0.45" y1="-0.4" x2="0.8" y2="0.4" layer="51"/>
+</package>
+<package name="C0402N">
+<description>&lt;b&gt;Ceramic Chip Capacitor KEMET 0204 Reflow solder&lt;/b&gt;&lt;p&gt;
+Metric Code Size 1005</description>
+<wire x1="-0.425" y1="0.2" x2="0.425" y2="0.2" width="0.1016" layer="51"/>
+<wire x1="0.425" y1="-0.2" x2="-0.425" y2="-0.2" width="0.1016" layer="51"/>
+<smd name="1" x="-0.65" y="0" dx="0.925" dy="0.7" layer="1"/>
+<smd name="2" x="0.65" y="0" dx="0.925" dy="0.7" layer="1"/>
+<text x="-1.1" y="0.7" size="0.6" layer="25">&gt;NAME</text>
+<text x="-1.1" y="-1.3" size="0.6" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.5" y1="-0.25" x2="-0.225" y2="0.25" layer="51"/>
+<rectangle x1="0.225" y1="-0.25" x2="0.5" y2="0.25" layer="51"/>
+</package>
 </packages>
 <symbols>
 <symbol name="XTAL">
@@ -930,6 +954,24 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 </technologies>
 </device>
 <device name="_1608" package="CHIP_1608">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_0603N" package="C0603N">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_0402N" package="C0402N">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -1984,11 +2026,11 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="U1" library="Modules" deviceset="MDBT50Q-P1M" device=""/>
 <part name="FRAME1" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="X1" library="Parts" deviceset="NX3215SA" device="-32.768K"/>
-<part name="C1" library="Parts" deviceset="CAP" device="_0603" value="12pF"/>
-<part name="C2" library="Parts" deviceset="CAP" device="_0603" value="12pF"/>
+<part name="C1" library="Parts" deviceset="CAP" device="_0603N" value="12pF"/>
+<part name="C2" library="Parts" deviceset="CAP" device="_0603N" value="12pF"/>
 <part name="GND1" library="Supply" deviceset="0V" device=""/>
-<part name="C3" library="Parts" deviceset="CAP" device="_0603" value="4.7uF"/>
-<part name="C4" library="Parts" deviceset="CAP" device="_0603" value="4.7uF"/>
+<part name="C3" library="Parts" deviceset="CAP" device="_0603N" value="4.7uF"/>
+<part name="C4" library="Parts" deviceset="CAP" device="_0603N" value="4.7uF"/>
 <part name="GND2" library="Supply" deviceset="0V" device=""/>
 <part name="GND3" library="Supply" deviceset="0V" device=""/>
 <part name="GND4" library="Supply" deviceset="0V" device=""/>
@@ -1998,10 +2040,10 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="C5" library="Parts" deviceset="CAP" device="_0402K" value="0.01uF"/>
-<part name="C6" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
-<part name="C7" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
-<part name="C8" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
+<part name="C5" library="Parts" deviceset="CAP" device="_0402N" value="0.01uF"/>
+<part name="C6" library="Parts" deviceset="CAP" device="_0603N" value="10uF"/>
+<part name="C7" library="Parts" deviceset="CAP" device="_0402N" value="0.1uF"/>
+<part name="C8" library="Parts" deviceset="CAP" device="_0402N" value="0.1uF"/>
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
@@ -2009,7 +2051,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="CN1" library="Connectors" deviceset="TE-1734028" device=""/>
 <part name="R1" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
-<part name="C9" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
+<part name="C9" library="Parts" deviceset="CAP" device="_0402N" value="0.1uF"/>
 <part name="GND11" library="Supply" deviceset="0V" device=""/>
 <part name="SW1" library="Parts" deviceset="SKRPACE010" device=""/>
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
@@ -2021,8 +2063,8 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="U2" library="Parts" deviceset="XC6206" device="P302MR-G" value="XC6206P302MR-G"/>
-<part name="C10" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
-<part name="C11" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
+<part name="C10" library="Parts" deviceset="CAP" device="_0603N" value="1uF"/>
+<part name="C11" library="Parts" deviceset="CAP" device="_0603N" value="1uF"/>
 <part name="GND15" library="Supply" deviceset="0V" device=""/>
 <part name="GND16" library="Supply" deviceset="0V" device=""/>
 <part name="GND17" library="Supply" deviceset="0V" device=""/>
@@ -2040,7 +2082,7 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="R2" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="R9" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="R10" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
-<part name="C13" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
+<part name="C13" library="Parts" deviceset="CAP" device="_0402N" value="0.1uF"/>
 <part name="R11" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 </parts>
