@@ -1483,7 +1483,7 @@ DIN A4, landscape with location and doc. field</description>
 <description>&lt;b&gt;Battery Holders&lt;/B&gt; &lt;p&gt;
 CR1216/1225&lt;br&gt;
 9.5 mm x 15.3 mm x 3.6 mm</description>
-<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100"/>
+<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100" cream="no"/>
 <smd name="+@1" x="-7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
 <smd name="+@2" x="7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
 <wire x1="6.35" y1="3.048" x2="4.826" y2="4.572" width="0.127" layer="21"/>
@@ -1492,6 +1492,8 @@ CR1216/1225&lt;br&gt;
 <wire x1="4.826" y1="4.572" x2="3.048" y2="4.572" width="0.127" layer="21"/>
 <wire x1="-6.35" y1="-3.048" x2="-2.54" y2="-4.826" width="0.127" layer="21" curve="61.172159"/>
 <wire x1="6.35" y1="-3.048" x2="2.54" y2="-4.826" width="0.127" layer="21" curve="-61.172159"/>
+<text x="9.58" y="3.79" size="0.7" layer="25">&gt;NAME</text>
+<text x="9.83" y="0.79" size="0.7" layer="27">&gt;VALUE</text>
 </package>
 <package name="DF65-5P-1.7V_DEV">
 <description>&lt;b&gt;DF65 Series&lt;/b&gt;&lt;p&gt;
@@ -1645,7 +1647,7 @@ TE Connectivity</description>
 <devices>
 <device name="" package="BAT-HLD-012-SMT">
 <connects>
-<connect gate="G$1" pin="+" pad="+@1"/>
+<connect gate="G$1" pin="+" pad="+@2"/>
 <connect gate="G$1" pin="-" pad="-"/>
 </connects>
 <technologies>
