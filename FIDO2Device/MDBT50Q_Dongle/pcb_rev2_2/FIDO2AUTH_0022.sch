@@ -2343,22 +2343,6 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <label x="170.18" y="83.82" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="LED2" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P0.08"/>
-<wire x1="73.66" y1="45.72" x2="73.66" y2="12.7" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="12.7" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
-<label x="104.14" y="12.7" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="LED3" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P1.09"/>
-<wire x1="78.74" y1="45.72" x2="78.74" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="17.78" x2="104.14" y2="17.78" width="0.1524" layer="91"/>
-<label x="104.14" y="17.78" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="LED4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.12"/>
@@ -2412,6 +2396,22 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <pinref part="U1" gate="G$1" pin="P0.25"/>
 <wire x1="104.14" y1="106.68" x2="114.3" y2="106.68" width="0.1524" layer="91"/>
 <label x="114.3" y="106.68" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="LED3" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P0.27"/>
+<wire x1="53.34" y1="45.72" x2="53.34" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="38.1" x2="40.64" y2="38.1" width="0.1524" layer="91"/>
+<label x="40.64" y="38.1" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="LED2" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P0.07"/>
+<wire x1="71.12" y1="45.72" x2="71.12" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="17.78" x2="104.14" y2="17.78" width="0.1524" layer="91"/>
+<label x="104.14" y="17.78" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
