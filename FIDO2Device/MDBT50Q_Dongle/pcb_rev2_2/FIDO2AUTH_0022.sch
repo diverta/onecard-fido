@@ -1354,6 +1354,10 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 </library>
 <library name="Generic">
 <packages>
+<package name="ROUND-MARK-1.0">
+<circle x="0" y="0" radius="1" width="0" layer="29"/>
+<smd name="P$1" x="0" y="0" dx="1" dy="1" layer="1" roundness="100" stop="no" cream="no"/>
+</package>
 </packages>
 <symbols>
 <symbol name="A4L-LOC">
@@ -1379,6 +1383,10 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 <text x="216.916" y="4.953" size="2.54" layer="94" font="fixed">Sheet:</text>
 <frame x1="0" y1="0" x2="260.35" y2="179.07" columns="6" rows="4" layer="94"/>
 </symbol>
+<symbol name="MARK">
+<circle x="0" y="0" radius="0.635" width="0.1524" layer="94"/>
+<text x="-1.27" y="1.27" size="0.8128" layer="95" ratio="10">&gt;name</text>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="A4L-LOC" prefix="FRAME">
@@ -1391,6 +1399,20 @@ DIN A4, landscape with location and doc. field</description>
 <device name="">
 <technologies>
 <technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PAD-MARK" prefix="P" uservalue="yes">
+<gates>
+<gate name="G$1" symbol="MARK" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ROUND-MARK-1.0">
+<technologies>
+<technology name="">
+<attribute name="PARTNO" value="DNP"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -2096,6 +2118,10 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="C12" library="Parts" deviceset="CAP" device="_0402N" value="0.1uF"/>
 <part name="R9" library="Parts" deviceset="RESISTOR" device="_0402N" value="10k"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
+<part name="P1" library="Generic" deviceset="PAD-MARK" device="" value="0"/>
+<part name="P2" library="Generic" deviceset="PAD-MARK" device="" value="0"/>
+<part name="P3" library="Generic" deviceset="PAD-MARK" device="" value="0"/>
+<part name="P4" library="Generic" deviceset="PAD-MARK" device="" value="0"/>
 </parts>
 <sheets>
 <sheet>
@@ -2137,6 +2163,10 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <attribute name="VALUE" x="212.09" y="71.755" size="1.778" layer="96"/>
 </instance>
 <instance part="GND12" gate="1" x="210.82" y="63.5"/>
+<instance part="P1" gate="G$1" x="149.86" y="7.62"/>
+<instance part="P2" gate="G$1" x="152.4" y="7.62"/>
+<instance part="P3" gate="G$1" x="154.94" y="7.62"/>
+<instance part="P4" gate="G$1" x="157.48" y="7.62"/>
 </instances>
 <busses>
 </busses>
