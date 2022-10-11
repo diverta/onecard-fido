@@ -89,6 +89,8 @@
   #include "pca10059_01.h"
 #elif defined(BOARD_PCA10059_02)
   #include "pca10059_02.h"
+#elif defined(BOARD_PCA10059_03)
+  #include "pca10059_03.h"
 #else
 #error "Board is not defined"
 
