@@ -6,6 +6,8 @@ namespace MaintenanceToolApp.OpenPGP
 {
     public class OpenPGPParameter
     {
+        public string CommandTitle { get; set; }
+        public Command Command { get; set; }
         public string RealName { get; set; }
         public string MailAddress { get; set; }
         public string Comment { get; set; }
@@ -19,6 +21,8 @@ namespace MaintenanceToolApp.OpenPGP
 
         public OpenPGPParameter()
         {
+            CommandTitle = string.Empty;
+            Command = Command.COMMAND_NONE;
             RealName = string.Empty;
             MailAddress = string.Empty;
             Comment = string.Empty;
@@ -32,11 +36,12 @@ namespace MaintenanceToolApp.OpenPGP
 
         public override string ToString()
         {
+            string command = string.Format("Command:{0} CommandTitle:{1}", Command, CommandTitle);
             string PGPKeyParam = string.Format("RealName:{0} MailAddress:{1} Comment:{2} Passphrase:{3} PubkeyFolderPath:{4} BackupFolderPath:{5}",
                 RealName, MailAddress, Comment, Passphrase, PubkeyFolderPath, BackupFolderPath);
             string PinCommandParam = string.Format("SelectedPinCommand:{0} SelectedPinCommandName:{1} CurrentPin:{2} NewPin:{3}",
                 SelectedPinCommand, SelectedPinCommandName, CurrentPin, NewPin);
-            return string.Format("{0}\n{1}", PGPKeyParam, PinCommandParam);
+            return string.Format("{0}\n{1}\n{2}", command, PGPKeyParam, PinCommandParam);
         }
     }
 

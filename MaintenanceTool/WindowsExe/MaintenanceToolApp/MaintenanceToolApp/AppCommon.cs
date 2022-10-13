@@ -24,6 +24,7 @@
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
+        public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_BLE_PING = "BLE PINGテスト";
@@ -139,6 +140,7 @@
         public const string MSG_LABEL_ITEM_CUR_RESET_CODE = "現在のリセットコード";
         public const string MSG_LABEL_ITEM_NEW_RESET_CODE = "新しいリセットコード";
         public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
+        public const string MSG_LABEL_COMMAND_OPENPGP_STATUS = "設定情報の参照";
         public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
         public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN = "PIN番号変更";
         public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN = "管理用PIN番号変更";

@@ -107,6 +107,8 @@ namespace MaintenanceToolApp.OpenPGP
 
             // コマンドを実行
             OpenPGPParameter param = new OpenPGPParameter();
+            param.Command = Command.COMMAND_OPENPGP_STATUS;
+            param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
             Process.DoOpenPGPCommand(param);
         }
 
@@ -129,6 +131,8 @@ namespace MaintenanceToolApp.OpenPGP
 
             // コマンドを実行
             OpenPGPParameter param = new OpenPGPParameter();
+            param.Command = Command.COMMAND_OPENPGP_RESET;
+            param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
             Process.DoOpenPGPCommand(param);
         }
 
@@ -141,6 +145,8 @@ namespace MaintenanceToolApp.OpenPGP
 
             // コマンドを実行
             OpenPGPParameter param = new OpenPGPParameter();
+            param.Command = Command.COMMAND_HID_FIRMWARE_RESET;
+            param.CommandTitle = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
             Process.DoOpenPGPCommand(param);
         }
 
