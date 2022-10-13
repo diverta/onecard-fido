@@ -73,6 +73,8 @@ namespace MaintenanceToolApp.OpenPGP
             param.BackupFolderPath = textBackupFolderPath.Text;
 
             // コマンドを実行
+            param.Command = Command.COMMAND_OPENPGP_INSTALL_KEYS;
+            param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
             Process.DoOpenPGPCommand(param);
         }
 
@@ -420,7 +422,7 @@ namespace MaintenanceToolApp.OpenPGP
             string msgNewPin = "";
             int minSizeCurPin = 0;
             int minSizeNewPin = 0;
-            switch (param.SelectedPinCommand) {
+            switch (param.Command) {
             case Command.COMMAND_OPENPGP_CHANGE_PIN:
                 msgCurPin = AppCommon.MSG_LABEL_ITEM_CUR_PIN;
                 minSizeCurPin = 6;
@@ -475,7 +477,7 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            string caption = string.Format(AppCommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, param.SelectedPinCommandName);
+            string caption = string.Format(AppCommon.MSG_FORMAT_OPENPGP_WILL_PROCESS, param.CommandTitle);
             return DialogUtil.DisplayPromptPopup(this, caption, AppCommon.MSG_PROMPT_OPENPGP_PIN_COMMAND);
         }
 
@@ -504,28 +506,28 @@ namespace MaintenanceToolApp.OpenPGP
         {
             if (RadioButtonIsChecked(radioButton1)) {
                 // PIN番号を変更
-                param.SelectedPinCommand = Command.COMMAND_OPENPGP_CHANGE_PIN;
-                param.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
+                param.Command = Command.COMMAND_OPENPGP_CHANGE_PIN;
+                param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN;
             }
             if (RadioButtonIsChecked(radioButton2)) {
                 // 管理用PIN番号を変更
-                param.SelectedPinCommand = Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
-                param.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+                param.Command = Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
+                param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN;
             }
             if (RadioButtonIsChecked(radioButton3)) {
                 // PIN番号をリセット
-                param.SelectedPinCommand = Command.COMMAND_OPENPGP_UNBLOCK_PIN;
-                param.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
+                param.Command = Command.COMMAND_OPENPGP_UNBLOCK_PIN;
+                param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN;
             }
             if (RadioButtonIsChecked(radioButton4)) {
                 // リセットコードを変更
-                param.SelectedPinCommand = Command.COMMAND_OPENPGP_SET_RESET_CODE;
-                param.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
+                param.Command = Command.COMMAND_OPENPGP_SET_RESET_CODE;
+                param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE;
             }
             if (RadioButtonIsChecked(radioButton5)) {
                 // リセットコードでPIN番号をリセット
-                param.SelectedPinCommand = Command.COMMAND_OPENPGP_UNBLOCK;
-                param.SelectedPinCommandName = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
+                param.Command = Command.COMMAND_OPENPGP_UNBLOCK;
+                param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_UNBLOCK;
             }
         }
 
