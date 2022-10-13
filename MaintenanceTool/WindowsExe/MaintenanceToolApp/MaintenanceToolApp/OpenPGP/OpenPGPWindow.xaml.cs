@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using MaintenanceToolApp.CommonWindow;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ToolAppCommon;
@@ -75,7 +78,7 @@ namespace MaintenanceToolApp.OpenPGP
             // コマンドを実行
             param.Command = Command.COMMAND_OPENPGP_INSTALL_KEYS;
             param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS;
-            Process.DoOpenPGPCommand(param);
+            DoOpenPGPProcess(param);
         }
 
         private void DoPerformPinCommand()
@@ -97,7 +100,7 @@ namespace MaintenanceToolApp.OpenPGP
             param.NewPin = passwordBoxNewPinConfirm.Password;
 
             // コマンドを実行
-            Process.DoOpenPGPCommand(param);
+            DoOpenPGPProcess(param);
         }
 
         private void DoPGPStatus()
@@ -111,7 +114,7 @@ namespace MaintenanceToolApp.OpenPGP
             OpenPGPParameter param = new OpenPGPParameter();
             param.Command = Command.COMMAND_OPENPGP_STATUS;
             param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_STATUS;
-            Process.DoOpenPGPCommand(param);
+            DoOpenPGPProcess(param);
         }
 
         private void DoPGPReset()
@@ -135,7 +138,7 @@ namespace MaintenanceToolApp.OpenPGP
             OpenPGPParameter param = new OpenPGPParameter();
             param.Command = Command.COMMAND_OPENPGP_RESET;
             param.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET;
-            Process.DoOpenPGPCommand(param);
+            DoOpenPGPProcess(param);
         }
 
         private void DoFirmwareReset()
@@ -149,7 +152,7 @@ namespace MaintenanceToolApp.OpenPGP
             OpenPGPParameter param = new OpenPGPParameter();
             param.Command = Command.COMMAND_HID_FIRMWARE_RESET;
             param.CommandTitle = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
-            Process.DoOpenPGPCommand(param);
+            DoOpenPGPProcess(param);
         }
 
         private void TerminateWindow(bool dialogResult)
@@ -157,6 +160,28 @@ namespace MaintenanceToolApp.OpenPGP
             // この画面を閉じる
             DialogResult = dialogResult;
             Close();
+        }
+
+        //
+        // コマンド実行指示
+        //
+        private void DoOpenPGPProcess(OpenPGPParameter param)
+        {
+            Task task = Task.Run(() => {
+                // コマンドを実行
+                Process.DoOpenPGPProcess(param, new OpenPGPProcess.HandlerOnNotifyProcessTerminated(OnOpenPGPProcessTerminated));
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+        }
+
+        private void OnOpenPGPProcessTerminated(OpenPGPParameter param)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //
