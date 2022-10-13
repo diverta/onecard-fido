@@ -174,6 +174,13 @@ namespace MaintenanceToolApp.OpenPGP
 
             // 進捗画面を表示
             CommonProcessingWindow.OpenForm(this);
+
+            // メッセージをポップアップ表示
+            if (param.CommandSuccess) {
+                DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
+            } else {
+                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+            }
         }
 
         private void OnOpenPGPProcessTerminated(OpenPGPParameter param)
