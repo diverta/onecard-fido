@@ -98,6 +98,52 @@ namespace MaintenanceToolApp.OpenPGP
             Process.DoOpenPGPCommand(param);
         }
 
+        private void DoPGPStatus()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // コマンドを実行
+            OpenPGPParameter param = new OpenPGPParameter();
+            Process.DoOpenPGPCommand(param);
+        }
+
+        private void DoPGPReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // プロンプトで表示されるタイトル
+            string title = string.Format(
+                AppCommon.MSG_FORMAT_OPENPGP_WILL_PROCESS,
+                AppCommon.MSG_LABEL_COMMAND_OPENPGP_RESET);
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (DialogUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_OPENPGP_RESET) == false) {
+                return;
+            }
+
+            // コマンドを実行
+            OpenPGPParameter param = new OpenPGPParameter();
+            Process.DoOpenPGPCommand(param);
+        }
+
+        private void DoFirmwareReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // コマンドを実行
+            OpenPGPParameter param = new OpenPGPParameter();
+            Process.DoOpenPGPCommand(param);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -537,6 +583,21 @@ namespace MaintenanceToolApp.OpenPGP
         private void buttonPerformPinCommand_Click(object sender, RoutedEventArgs e)
         {
             DoPerformPinCommand();
+        }
+
+        private void buttonPGPStatus_Click(object sender, RoutedEventArgs e)
+        {
+            DoPGPStatus();
+        }
+
+        private void buttonPGPReset_Click(object sender, RoutedEventArgs e)
+        {
+            DoPGPReset();
+        }
+
+        private void buttonFirmwareReset_Click(object sender, RoutedEventArgs e)
+        {
+            DoFirmwareReset();
         }
     }
 }

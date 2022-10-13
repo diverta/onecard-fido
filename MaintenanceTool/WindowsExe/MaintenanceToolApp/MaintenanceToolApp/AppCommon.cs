@@ -124,6 +124,7 @@
         public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM = "{0}を正しく入力してください";
         public const string MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS = "{0}の先頭または末尾の半角スペースを除去してください";
         public const string MSG_PROMPT_INSTALL_PGP_KEY = "インストールを実行しますか？";
+        public const string MSG_PROMPT_OPENPGP_RESET = "OpenPGP機能の設定（鍵・PIN番号等）が全て削除され、OpenPGP機能が使用できなくなります。\n\n処理を開始しますか？";
         public const string MSG_PROMPT_OPENPGP_PIN_COMMAND = "処理を実行しますか？";
         public const string MSG_LABEL_PGP_REAL_NAME = "名前";
         public const string MSG_LABEL_PGP_MAIL_ADDRESS = "メールアドレス";
@@ -138,6 +139,7 @@
         public const string MSG_LABEL_ITEM_CUR_RESET_CODE = "現在のリセットコード";
         public const string MSG_LABEL_ITEM_NEW_RESET_CODE = "新しいリセットコード";
         public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
+        public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
         public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN = "PIN番号変更";
         public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN = "管理用PIN番号変更";
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN = "PIN番号リセット";
