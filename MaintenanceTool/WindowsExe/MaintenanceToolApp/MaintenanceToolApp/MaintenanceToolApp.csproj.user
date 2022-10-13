@@ -30,6 +30,9 @@
     <Compile Update="FIDOSettings\SetPinCodeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="OpenPGP\OpenPGPWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="BLESettings\BLESettingsWindow.xaml">
@@ -66,6 +69,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OpenPGP\OpenPGPWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utility\UtilityWindow.xaml">

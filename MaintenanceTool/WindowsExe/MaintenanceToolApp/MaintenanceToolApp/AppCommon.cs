@@ -24,6 +24,7 @@
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
+        public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_BLE_PING = "BLE PINGテスト";
@@ -106,6 +107,46 @@
         public const string MSG_DFU_RESET_APPLICATION_FAILED = "FIDO認証器ファームウェアの再始動要求に失敗しました。";
         public const string MSG_PROMPT_START_BLE_DFU_PROCESS = "ファームウェア更新処理を開始しますか？";
         public const string MSG_COMMENT_START_BLE_DFU_PROCESS = "BLEペアリングの済んだFIDO認証器が\nBLEペリフェラルモードになっているのを\n確認した後、Yesボタンをクリックすると、\nBLE経由でファームウェア更新処理が\n開始されます。\n\nFIDO認証器は、バージョン0.4.0以降の\nファームウェアが導入済みのものをご利用\nください。";
+
+        // OpenPGP機能設定関連
+        public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
+        public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
+        public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
+        public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
+        public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";
+        public const string MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER = "バックアップファイルの出力先フォルダーを選択してください";
+        public const string MSG_PROMPT_INPUT_PGP_MUST_ENTRY = "{0}は必ず入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ENTRY_DIGIT = "{0}は{1}～{2}文字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ASCII_ENTRY = "{0}は半角文字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADDRESS_ENTRY = "{0}を正しく入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_PIN_DIGIT = "{0}は{1}桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_DIGIT = "{0}を8桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_NUM = "{0}を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ADMIN_PIN_CONFIRM = "{0}を正しく入力してください";
+        public const string MSG_PROMPT_INPUT_PGP_ENTRY_NOSP_BOTH_ENDS = "{0}の先頭または末尾の半角スペースを除去してください";
+        public const string MSG_PROMPT_INSTALL_PGP_KEY = "インストールを実行しますか？";
+        public const string MSG_PROMPT_OPENPGP_RESET = "OpenPGP機能の設定（鍵・PIN番号等）が全て削除され、OpenPGP機能が使用できなくなります。\n\n処理を開始しますか？";
+        public const string MSG_PROMPT_OPENPGP_PIN_COMMAND = "処理を実行しますか？";
+        public const string MSG_LABEL_PGP_REAL_NAME = "名前";
+        public const string MSG_LABEL_PGP_MAIL_ADDRESS = "メールアドレス";
+        public const string MSG_LABEL_PGP_COMMENT = "コメント";
+        public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
+        public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_ITEM_PGP_RESET_CODE = "リセットコード";
+        public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";
+        public const string MSG_LABEL_ITEM_NEW_PIN = "新しいPIN番号";
+        public const string MSG_LABEL_ITEM_CUR_ADMPIN = "現在の管理用PIN番号";
+        public const string MSG_LABEL_ITEM_NEW_ADMPIN = "新しい管理用PIN番号";
+        public const string MSG_LABEL_ITEM_CUR_RESET_CODE = "現在のリセットコード";
+        public const string MSG_LABEL_ITEM_NEW_RESET_CODE = "新しいリセットコード";
+        public const string MSG_LABEL_COMMAND_OPENPGP_INSTALL_KEYS = "PGP秘密鍵のインストール";
+        public const string MSG_LABEL_COMMAND_OPENPGP_STATUS = "設定情報の参照";
+        public const string MSG_LABEL_COMMAND_OPENPGP_RESET = "設定情報の消去";
+        public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_PIN = "PIN番号変更";
+        public const string MSG_LABEL_COMMAND_OPENPGP_CHANGE_ADMIN_PIN = "管理用PIN番号変更";
+        public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN = "PIN番号リセット";
+        public const string MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE = "リセットコード変更";
+        public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
