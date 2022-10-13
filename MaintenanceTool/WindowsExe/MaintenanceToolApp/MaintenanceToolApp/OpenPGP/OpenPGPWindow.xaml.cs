@@ -163,7 +163,7 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         //
-        // コマンド実行指示
+        // コマンド実行指示～完了後の処理
         //
         private void DoOpenPGPProcess(OpenPGPParameter param)
         {
@@ -180,6 +180,32 @@ namespace MaintenanceToolApp.OpenPGP
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
                 DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+            }
+
+            // 全ての入力欄をクリア
+            ClearEntry(param.Command, param.CommandSuccess);
+        }
+
+        private void ClearEntry(Command command, bool commandSuccess)
+        {
+            switch (command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
+                if (commandSuccess) {
+                    InitTabPGPKeyPathFields();
+                    InitTabPGPKeyEntryFields();
+                }
+                break;
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                if (commandSuccess) {
+                    InitTabPinManagementPinFields();
+                }
+                break;
+            default:
+                break;
             }
         }
 
