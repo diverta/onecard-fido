@@ -13,6 +13,22 @@
         <TabControl x:Name="tabControl" Height="455" Width="440" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0">
             <TabItem Header="鍵・証明書管理" Name="tabPagePkeyCertManagement">
                 <Grid Background="#FFFAFAFA">
+                    <GroupBox x:Name="groupBox1" Header="インストールする鍵・証明書ファイル" VerticalAlignment="Top" Margin="10,15,10,0" Height="280"/>
+                    <GroupBox x:Name="groupBoxChild1" Header="PIV認証用" VerticalAlignment="Top" Margin="20,35,20,0" Height="80"/>
+                    <Label x:Name="labelPubkeyFolderPath" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,55,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPubkeyFolderPath" HorizontalAlignment="Left" Margin="120,58,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPubkeyFolderPath" Content="参照" HorizontalAlignment="Left" Margin="357,58,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelBackupFolderPath" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,80,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textBackupFolderPath" HorizontalAlignment="Left" Margin="120,83,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonBackupFolderPath" Content="参照" HorizontalAlignment="Left" Margin="357,83,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <GroupBox x:Name="groupBoxChild2" Header="電子署名用" VerticalAlignment="Top" Margin="20,120,20,0" Height="80"/>
+                    <GroupBox x:Name="groupBoxChild3" Header="管理機能用" VerticalAlignment="Top" Margin="20,205,20,0" Height="80"/>
+                    <GroupBox x:Name="groupBox4" Header="認証情報" VerticalAlignment="Top" Margin="10,300,10,0" Height="80"/>
+                    <Label x:Name="labelPin" Content="PIN番号" HorizontalAlignment="Left" Margin="25,317,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="135,320,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelPinConfirm" Content="PIN番号(確認)" HorizontalAlignment="Left" Margin="25,342,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPinConfirm" HorizontalAlignment="Left" Margin="135,345,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Button x:Name="buttonInstallPGPKey"  Content="鍵・証明書ファイルのインストール" HorizontalAlignment="Center" Margin="0,390,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
                 </Grid>
             </TabItem>
             <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
