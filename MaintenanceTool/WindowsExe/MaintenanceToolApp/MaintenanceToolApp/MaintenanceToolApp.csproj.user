@@ -33,6 +33,9 @@
     <Compile Update="OpenPGP\OpenPGPWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="PIV\PIVWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="BLESettings\BLESettingsWindow.xaml">
@@ -72,6 +75,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OpenPGP\OpenPGPWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="PIV\PIVWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utility\UtilityWindow.xaml">
