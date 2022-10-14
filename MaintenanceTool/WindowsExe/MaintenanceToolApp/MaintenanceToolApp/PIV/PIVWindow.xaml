@@ -45,6 +45,18 @@
             </TabItem>
             <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
                 <Grid Background="#FFFAFAFA">
+                    <GroupBox x:Name="groupBox3" Header="実行する機能" VerticalAlignment="Top" Margin="10,15,10,0" Height="60"/>
+                    <RadioButton x:Name="radioButton1" Content="PIN番号を変更" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+                    <RadioButton x:Name="radioButton2" Content="PUK番号を変更" HorizontalAlignment="Left" Margin="140,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+                    <RadioButton x:Name="radioButton3" Content="PIN番号をリセット" HorizontalAlignment="Left" Margin="255,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+                    <GroupBox x:Name="groupBox4" Header="認証情報" VerticalAlignment="Top" Margin="10,85,10,0" Height="110"/>
+                    <Label x:Name="labelCurPin" Content="現在のPUK番号" HorizontalAlignment="Left" Margin="25,105,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxCurPin" HorizontalAlignment="Left" Margin="175,108,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPin" Content="新しいPUK番号" HorizontalAlignment="Left" Margin="25,130,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPin" HorizontalAlignment="Left" Margin="175,133,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPinConfirm" Content="新しいPUK番号(確認)" HorizontalAlignment="Left" Margin="25,155,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPinConfirm" HorizontalAlignment="Left" Margin="175,158,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Button x:Name="buttonPerformPinCommand"  Content="実行" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
                 </Grid>
             </TabItem>
         </TabControl>
