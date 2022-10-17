@@ -45,6 +45,16 @@ namespace MaintenanceToolApp.PIV
             if (CheckForInstallPkeyCert() == false) {
                 return;
             }
+
+            // 画面入力内容をパラメーターに設定
+            PIVParameter param = new PIVParameter();
+            param.PkeyFilePath1 = textPkeyFilePath1.Text;
+            param.CertFilePath1 = textCertFilePath1.Text;
+            param.PkeyFilePath2 = textPkeyFilePath2.Text;
+            param.CertFilePath2 = textCertFilePath2.Text;
+            param.PkeyFilePath3 = textPkeyFilePath3.Text;
+            param.CertFilePath3 = textCertFilePath3.Text;
+            param.AuthPin = passwordBoxPinConfirm.Password;
         }
 
         private void DoPerformPinCommand()
@@ -58,6 +68,12 @@ namespace MaintenanceToolApp.PIV
             if (CheckForPerformPinCommand() == false) {
                 return;
             }
+
+            // 画面入力内容をパラメーターに設定
+            PIVParameter param = new PIVParameter();
+            GetSelectedPinCommandValue(param);
+            param.CurrentPin = passwordBoxCurPin.Password;
+            param.NewPin = passwordBoxNewPinConfirm.Password;
         }
 
         private void TerminateWindow(bool dialogResult)
