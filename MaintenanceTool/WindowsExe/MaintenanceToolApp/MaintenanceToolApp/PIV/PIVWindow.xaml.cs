@@ -38,5 +38,35 @@ namespace MaintenanceToolApp.PIV
         {
             TerminateWindow(false);
         }
+
+        private void buttonPkeyFilePath1_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH, textPkeyFilePath1, AppCommon.MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH);
+        }
+
+        private void buttonCertFilePath1_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH, textCertFilePath1, AppCommon.MSG_FILTER_SELECT_PIV_CERT_PEM_PATH);
+        }
+
+        private void buttonPkeyFilePath2_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH, textPkeyFilePath2, AppCommon.MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH);
+        }
+
+        private void buttonCertFilePath2_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH, textCertFilePath2, AppCommon.MSG_FILTER_SELECT_PIV_CERT_PEM_PATH);
+        }
+
+        private void buttonPkeyFilePath3_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH, textPkeyFilePath3, AppCommon.MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH);
+        }
+
+        private void buttonCertFilePath3_Click(object sender, RoutedEventArgs e)
+        {
+            FileDialogUtil.SelectFilePath(this, AppCommon.MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH, textCertFilePath3, AppCommon.MSG_FILTER_SELECT_PIV_CERT_PEM_PATH);
+        }
     }
 }

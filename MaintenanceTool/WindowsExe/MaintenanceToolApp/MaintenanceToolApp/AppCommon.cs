@@ -108,6 +108,12 @@
         public const string MSG_PROMPT_START_BLE_DFU_PROCESS = "ファームウェア更新処理を開始しますか？";
         public const string MSG_COMMENT_START_BLE_DFU_PROCESS = "BLEペアリングの済んだFIDO認証器が\nBLEペリフェラルモードになっているのを\n確認した後、Yesボタンをクリックすると、\nBLE経由でファームウェア更新処理が\n開始されます。\n\nFIDO認証器は、バージョン0.4.0以降の\nファームウェアが導入済みのものをご利用\nください。";
 
+        // PIV機能設定関連
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
+        public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
+        public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
+
         // OpenPGP機能設定関連
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
