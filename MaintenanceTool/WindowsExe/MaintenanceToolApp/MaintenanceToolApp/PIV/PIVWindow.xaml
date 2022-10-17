@@ -56,7 +56,7 @@
                     <PasswordBox x:Name="passwordBoxNewPin" HorizontalAlignment="Left" Margin="175,133,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
                     <Label x:Name="labelNewPinConfirm" Content="新しいPUK番号(確認)" HorizontalAlignment="Left" Margin="25,155,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
                     <PasswordBox x:Name="passwordBoxNewPinConfirm" HorizontalAlignment="Left" Margin="175,158,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
-                    <Button x:Name="buttonPerformPinCommand"  Content="実行" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Height="25" Width="150"/>
+                    <Button x:Name="buttonPerformPinCommand"  Content="実行" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonPerformPinCommand_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

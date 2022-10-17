@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -40,6 +41,19 @@ namespace MaintenanceToolApp.PIV
 
             // 入力欄の内容をチェック
             if (CheckForInstallPkeyCert() == false) {
+                return;
+            }
+        }
+
+        private void DoPerformPinCommand()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 入力欄の内容をチェック
+            if (CheckForPerformPinCommand() == false) {
                 return;
             }
         }
@@ -174,6 +188,57 @@ namespace MaintenanceToolApp.PIV
         }
 
         //
+        // PIN番号変更時の入力チェック
+        //
+        private bool CheckForPerformPinCommand()
+        {
+            // PIN番号管理タブのラジオボタン選択状態に
+            // 応じたコマンド／機能名称を取得
+            PIVParameter param = new PIVParameter();
+            GetSelectedPinCommandValue(param);
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string caption = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, param.CommandTitle);
+            string message = string.Format(AppCommon.MSG_FORMAT_PROCESS_INFORMATIVE, param.CommandDesc);
+            return DialogUtil.DisplayPromptPopup(this, caption, message);
+        }
+
+        //
+        // PIN番号管理タブのラジオボタン選択状態に
+        // 応じたコマンド／機能名称を設定
+        //
+        private void GetSelectedPinCommandValue(PIVParameter param)
+        {
+            if (RadioButtonIsChecked(radioButton1)) {
+                // PIN番号を変更
+                param.Command = Command.COMMAND_CCID_PIV_CHANGE_PIN;
+                param.CommandTitle = AppCommon.MSG_PIV_CHANGE_PIN_NUMBER;
+                param.CommandDesc = AppCommon.MSG_DESC_PIV_CHANGE_PIN_NUMBER;
+            }
+            if (RadioButtonIsChecked(radioButton2)) {
+                // PUK番号を変更
+                param.Command = Command.COMMAND_CCID_PIV_CHANGE_PUK;
+                param.CommandTitle = AppCommon.MSG_PIV_CHANGE_PUK_NUMBER;
+                param.CommandDesc = AppCommon.MSG_DESC_PIV_CHANGE_PUK_NUMBER;
+            }
+            if (RadioButtonIsChecked(radioButton3)) {
+                // PIN番号をリセット
+                param.Command = Command.COMMAND_CCID_PIV_UNBLOCK_PIN;
+                param.CommandTitle = AppCommon.MSG_PIV_RESET_PIN_NUMBER;
+                param.CommandDesc = AppCommon.MSG_DESC_PIV_RESET_PIN_NUMBER;
+            }
+        }
+
+        private static bool RadioButtonIsChecked(RadioButton radioButton)
+        {
+            if (radioButton.IsChecked == true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //
         // イベント処理部
         // 
         private void buttonClose_Click(object sender, RoutedEventArgs e)
@@ -229,6 +294,11 @@ namespace MaintenanceToolApp.PIV
         private void radioButton3_Checked(object sender, RoutedEventArgs e)
         {
             ChangeLabelCaptionOfPinText(sender);
+        }
+
+        private void buttonPerformPinCommand_Click(object sender, RoutedEventArgs e)
+        {
+            DoPerformPinCommand();
         }
     }
 }
