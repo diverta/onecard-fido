@@ -15,26 +15,26 @@
                 <Grid Background="#FFFAFAFA">
                     <GroupBox x:Name="groupBox1" Header="インストールする鍵・証明書ファイル" VerticalAlignment="Top" Margin="10,15,10,0" Height="300"/>
                     <GroupBox x:Name="groupBoxPkeySlotId1" Header="PIV認証用" VerticalAlignment="Top" Margin="20,35,20,0" Height="85"/>
-                    <Label x:Name="labelPkeyFolderPath1" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,55,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textPkeyFolderPath1" HorizontalAlignment="Left" Margin="120,58,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonPkeyFolderPath1" Content="参照" HorizontalAlignment="Left" Margin="357,58,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
-                    <Label x:Name="labelCertFolderPath1" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,80,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textCertFolderPath1" HorizontalAlignment="Left" Margin="120,83,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonCertFolderPath1" Content="参照" HorizontalAlignment="Left" Margin="357,83,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelPkeyFilePath1" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,55,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath1" HorizontalAlignment="Left" Margin="120,58,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath1" Content="参照" HorizontalAlignment="Left" Margin="357,58,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelCertFilePath1" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,80,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath1" HorizontalAlignment="Left" Margin="120,83,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath1" Content="参照" HorizontalAlignment="Left" Margin="357,83,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
                     <GroupBox x:Name="groupBoxPkeySlotId2" Header="電子署名用" VerticalAlignment="Top" Margin="20,125,20,0" Height="85"/>
-                    <Label x:Name="labelPkeyFolderPath2" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,145,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textPkeyFolderPath2" HorizontalAlignment="Left" Margin="120,148,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonPkeyFolderPath2" Content="参照" HorizontalAlignment="Left" Margin="357,148,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
-                    <Label x:Name="labelCertFolderPath2" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,170,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textCertFolderPath2" HorizontalAlignment="Left" Margin="120,173,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonCertFolderPath2" Content="参照" HorizontalAlignment="Left" Margin="357,173,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelPkeyFilePath2" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,145,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath2" HorizontalAlignment="Left" Margin="120,148,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath2" Content="参照" HorizontalAlignment="Left" Margin="357,148,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelCertFilePath2" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,170,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath2" HorizontalAlignment="Left" Margin="120,173,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath2" Content="参照" HorizontalAlignment="Left" Margin="357,173,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
                     <GroupBox x:Name="groupBoxPkeySlotId3" Header="管理機能用" VerticalAlignment="Top" Margin="20,215,20,0" Height="85"/>
-                    <Label x:Name="labelPkeyFolderPath3" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,235,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textPkeyFolderPath3" HorizontalAlignment="Left" Margin="120,238,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonPkeyFolderPath3" Content="参照" HorizontalAlignment="Left" Margin="357,238,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
-                    <Label x:Name="labelCertFolderPath3" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
-                    <TextBox x:Name="textCertFolderPath3" HorizontalAlignment="Left" Margin="120,263,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
-                    <Button x:Name="buttonCertFolderPath3" Content="参照" HorizontalAlignment="Left" Margin="357,263,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelPkeyFilePath3" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,235,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath3" HorizontalAlignment="Left" Margin="120,238,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath3" Content="参照" HorizontalAlignment="Left" Margin="357,238,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
+                    <Label x:Name="labelCertFilePath3" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath3" HorizontalAlignment="Left" Margin="120,263,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath3" Content="参照" HorizontalAlignment="Left" Margin="357,263,0,0" VerticalAlignment="Top" Height="21" Width="45"/>
                     <GroupBox x:Name="groupBox2" Header="認証情報" VerticalAlignment="Top" Margin="10,325,10,0" Height="85"/>
                     <Label x:Name="labelPin" Content="PIN番号" HorizontalAlignment="Left" Margin="25,345,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
                     <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="135,348,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
