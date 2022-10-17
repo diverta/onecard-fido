@@ -7,6 +7,8 @@ namespace MaintenanceToolApp.PIV
         public Command Command { get; set; }
         public string CommandTitle { get; set; }
         public string CommandDesc { get; set; }
+        public bool CommandSuccess { get; set; }
+        public string ResultMessage { get; set; }
         public string PkeyFilePath1 { get; set; }
         public string CertFilePath1 { get; set; }
         public string PkeyFilePath2 { get; set; }
@@ -22,6 +24,7 @@ namespace MaintenanceToolApp.PIV
             Command = Command.COMMAND_NONE;
             CommandTitle = string.Empty;
             CommandDesc = string.Empty;
+            ResultMessage = string.Empty;
             PkeyFilePath1 = string.Empty;
             CertFilePath1 = string.Empty;
             PkeyFilePath2 = string.Empty;

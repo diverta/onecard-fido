@@ -150,6 +150,39 @@ namespace MaintenanceToolApp.PIV
         {
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(param.ToString());
+            param.CommandSuccess = true;
+            param.ResultMessage = AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED;
+
+            // メッセージをポップアップ表示
+            if (param.CommandSuccess) {
+                DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
+            } else {
+                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+            }
+
+            // 全ての入力欄をクリア
+            ClearEntry(param.Command, param.CommandSuccess);
+        }
+
+        private void ClearEntry(Command command, bool commandSuccess)
+        {
+            switch (command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                if (commandSuccess) {
+                    InitTabPkeyCertPathFields();
+                    InitTabPkeyCertEntryFields();
+                }
+                break;
+            case Command.COMMAND_CCID_PIV_CHANGE_PIN:
+            case Command.COMMAND_CCID_PIV_CHANGE_PUK:
+            case Command.COMMAND_CCID_PIV_UNBLOCK_PIN:
+                if (commandSuccess) {
+                    InitTabPinManagementPinFields();
+                }
+                break;
+            default:
+                break;
+            }
         }
 
         //
