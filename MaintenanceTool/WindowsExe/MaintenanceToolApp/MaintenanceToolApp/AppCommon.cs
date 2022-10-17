@@ -125,6 +125,11 @@
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";
         public const string MSG_LABEL_CURRENT_PIN = "現在のPIN番号";
         public const string MSG_LABEL_CURRENT_PIN_FOR_CONFIRM = "現在のPIN番号（確認用）";
+        public const string MSG_LABEL_NEW_PIN = "新しいPIN番号";
+        public const string MSG_LABEL_NEW_PIN_FOR_CONFIRM = "新しいPIN番号（確認用）";
+        public const string MSG_LABEL_CURRENT_PUK = "現在のPUK番号";
+        public const string MSG_LABEL_NEW_PUK = "新しいPUK番号";
+        public const string MSG_LABEL_NEW_PUK_FOR_CONFIRM = "新しいPUK番号（確認用）";
 
         // OpenPGP機能設定関連
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";

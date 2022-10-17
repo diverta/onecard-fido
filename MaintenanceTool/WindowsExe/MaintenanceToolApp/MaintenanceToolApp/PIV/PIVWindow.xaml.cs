@@ -52,6 +52,46 @@ namespace MaintenanceToolApp.PIV
         }
 
         //
+        // PIN番号管理タブ関連の処理
+        //
+        private void InitTabPinManagementPinFields()
+        {
+            // PIN番号のテキストボックスを初期化
+            passwordBoxCurPin.Password = string.Empty;
+            passwordBoxNewPin.Password = string.Empty;
+            passwordBoxNewPinConfirm.Password = string.Empty;
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            passwordBoxCurPin.Focus();
+        }
+
+        private void ChangeLabelCaptionOfPinText(object sender)
+        {
+            // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+            if (sender.Equals(radioButton1)) {
+                // PIN番号を変更
+                labelCurPin.Content = AppCommon.MSG_LABEL_CURRENT_PIN;
+                labelNewPin.Content = AppCommon.MSG_LABEL_NEW_PIN;
+                labelNewPinConfirm.Content = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+            }
+            if (sender.Equals(radioButton2)) {
+                // PUK番号を変更
+                labelCurPin.Content = AppCommon.MSG_LABEL_CURRENT_PUK;
+                labelNewPin.Content = AppCommon.MSG_LABEL_NEW_PUK;
+                labelNewPinConfirm.Content = AppCommon.MSG_LABEL_NEW_PUK_FOR_CONFIRM;
+            }
+            if (sender.Equals(radioButton3)) {
+                // PIN番号をリセット
+                labelCurPin.Content = AppCommon.MSG_LABEL_CURRENT_PUK;
+                labelNewPin.Content = AppCommon.MSG_LABEL_NEW_PIN;
+                labelNewPinConfirm.Content = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+            }
+
+            // PIN入力欄をクリアし、新しいPIN欄にフォーカスを移す
+            InitTabPinManagementPinFields();
+        }
+
+        //
         // 鍵・証明書インストール時の入力チェック
         //
         private bool CheckForInstallPkeyCert()
@@ -174,6 +214,21 @@ namespace MaintenanceToolApp.PIV
         private void buttonInstallPkeyCert_Click(object sender, RoutedEventArgs e)
         {
             DoInstallPkeyCert();
+        }
+
+        private void radioButton1_Checked(object sender, RoutedEventArgs e)
+        {
+            ChangeLabelCaptionOfPinText(sender);
+        }
+
+        private void radioButton2_Checked(object sender, RoutedEventArgs e)
+        {
+            ChangeLabelCaptionOfPinText(sender);
+        }
+
+        private void radioButton3_Checked(object sender, RoutedEventArgs e)
+        {
+            ChangeLabelCaptionOfPinText(sender);
         }
     }
 }
