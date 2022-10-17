@@ -17,7 +17,9 @@ namespace MaintenanceToolApp.PIV
 
         public PIVWindow()
         {
+            // 画面項目の初期化
             InitializeComponent();
+            InitFieldValue();
         }
 
         public bool ShowDialogWithOwner(Window ownerWindow)
@@ -66,8 +68,64 @@ namespace MaintenanceToolApp.PIV
         }
 
         //
+        // 画面初期化処理
+        //
+        private void InitFieldValue()
+        {
+            // 鍵・証明書管理タブ内の入力項目を初期化
+            InitTabPkeyCertManagement();
+
+            // PIN番号管理タブ内の入力項目を初期化
+            InitTabPinManagement();
+        }
+
+        //
+        // 鍵・証明書管理タブ関連の処理
+        //
+        private void InitTabPkeyCertManagement()
+        {
+            // テキストボックスの初期化
+            InitTabPkeyCertPathFields();
+            InitTabPkeyCertEntryFields();
+        }
+
+        private void InitTabPkeyCertPathFields()
+        {
+            // ファイルパスのテキストボックスを初期化
+            textPkeyFilePath1.Text = string.Empty;
+            textCertFilePath1.Text = string.Empty;
+            textPkeyFilePath2.Text = string.Empty;
+            textCertFilePath2.Text = string.Empty;
+            textPkeyFilePath3.Text = string.Empty;
+            textCertFilePath3.Text = string.Empty;
+        }
+
+        private void InitTabPkeyCertEntryFields()
+        {
+            // テキストボックスを初期化
+            passwordBoxPin.Password = string.Empty;
+            passwordBoxPinConfirm.Password = string.Empty;
+
+            // テキストボックスのカーソルを先頭の項目に配置
+            passwordBoxPin.Focus();
+        }
+
+        //
         // PIN番号管理タブ関連の処理
         //
+        private void InitTabPinManagement()
+        {
+            // ラジオボタンの初期化
+            InitButtonPinCommandsWithDefault(radioButton1);
+        }
+
+        private void InitButtonPinCommandsWithDefault(RadioButton radioButton)
+        {
+            // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+            radioButton1.IsChecked = true;
+            ChangeLabelCaptionOfPinText(radioButton);
+        }
+
         private void InitTabPinManagementPinFields()
         {
             // PIN番号のテキストボックスを初期化
@@ -196,6 +254,48 @@ namespace MaintenanceToolApp.PIV
             // 応じたコマンド／機能名称を取得
             PIVParameter param = new PIVParameter();
             GetSelectedPinCommandValue(param);
+
+            // チェック用パラメーターの設定
+            string msgCurPin = "";
+            string msgNewPin = "";
+            string msgNewPinConf = "";
+            switch (param.Command) {
+            case Command.COMMAND_CCID_PIV_CHANGE_PIN:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PIN;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PIN;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            case Command.COMMAND_CCID_PIV_CHANGE_PUK:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PUK;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PUK;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PUK_FOR_CONFIRM;
+                break;
+            case Command.COMMAND_CCID_PIV_UNBLOCK_PIN:
+                msgCurPin = AppCommon.MSG_LABEL_CURRENT_PUK;
+                msgNewPin = AppCommon.MSG_LABEL_NEW_PIN;
+                msgNewPinConf = AppCommon.MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            default:
+                break;
+            }
+
+            // 現在のPINをチェック
+            if (CheckPinNumber(passwordBoxCurPin, msgCurPin) == false) {
+                return false;
+            }
+
+            // 新しいPINをチェック
+            if (CheckPinNumber(passwordBoxNewPin, msgNewPin) == false) {
+                return false;
+            }
+
+            // 確認用PINをチェック
+            if (CheckPinNumber(passwordBoxNewPinConfirm, msgNewPinConf) == false) {
+                return false;
+            }
+            if (CheckPinConfirm(passwordBoxNewPinConfirm, passwordBoxNewPin, msgNewPinConf) == false) {
+                return false;
+            }
 
             // プロンプトを表示し、Yesの場合だけ処理を行う
             string caption = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, param.CommandTitle);
