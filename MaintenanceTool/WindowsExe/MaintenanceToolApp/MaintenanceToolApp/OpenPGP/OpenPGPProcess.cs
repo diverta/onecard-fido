@@ -52,7 +52,7 @@ namespace MaintenanceToolApp.OpenPGP
         public delegate void HandlerOnNotifyProcessTerminated(OpenPGPParameter parameter);
         private event HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
 
-        // HID／BLEからデータ受信時のコールバック参照
+        // イベントのコールバック参照
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
 
         //
