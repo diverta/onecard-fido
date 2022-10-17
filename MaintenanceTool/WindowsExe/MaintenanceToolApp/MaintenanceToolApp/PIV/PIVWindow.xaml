@@ -40,7 +40,7 @@
                     <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="135,348,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
                     <Label x:Name="labelPinConfirm" Content="PIN番号(確認)" HorizontalAlignment="Left" Margin="25,370,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
                     <PasswordBox x:Name="passwordBoxPinConfirm" HorizontalAlignment="Left" Margin="135,373,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
-                    <Button x:Name="buttonInstallPkeyCert"  Content="鍵・証明書ファイルのインストール" HorizontalAlignment="Center" Margin="0,420,0,0" VerticalAlignment="Top" Height="25" Width="200"/>
+                    <Button x:Name="buttonInstallPkeyCert"  Content="鍵・証明書ファイルのインストール" HorizontalAlignment="Center" Margin="0,420,0,0" VerticalAlignment="Top" Height="25" Width="200" Click="buttonInstallPkeyCert_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="PIN番号管理" Name="tabPagePinManagement">

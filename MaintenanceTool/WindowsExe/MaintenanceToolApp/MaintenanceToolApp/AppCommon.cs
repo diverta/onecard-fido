@@ -113,6 +113,18 @@
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
         public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
         public const string MSG_FILTER_SELECT_PIV_CERT_PEM_PATH = "証明書ファイル (*.pem)|*.pem";
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH1 = "PIV認証用の鍵ファイルパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH1 = "PIV認証用の証明書ファイルパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH2 = "電子署名用の鍵ファイルパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH2 = "電子署名用の証明書ファイルパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH3 = "管理機能用の鍵ファイルパスを選択してください";
+        public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH3 = "管理機能用の証明書ファイルパスを選択してください";
+        public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";
+        public const string MSG_LABEL_CURRENT_PIN = "現在のPIN番号";
+        public const string MSG_LABEL_CURRENT_PIN_FOR_CONFIRM = "現在のPIN番号（確認用）";
 
         // OpenPGP機能設定関連
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
