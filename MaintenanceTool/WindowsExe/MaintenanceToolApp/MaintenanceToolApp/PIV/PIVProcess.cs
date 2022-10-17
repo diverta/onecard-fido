@@ -1,4 +1,5 @@
-﻿using static MaintenanceToolApp.AppDefine;
+﻿using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -48,5 +49,68 @@ namespace MaintenanceToolApp.PIV
 
     public class PIVProcess
     {
+        // 処理実行のためのプロパティー
+        private PIVParameter Parameter = null!;
+
+        // 上位クラスに対するイベント通知
+        public delegate void HandlerOnNotifyProcessTerminated(PIVParameter parameter);
+        private event HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
+
+        // イベントのコールバック参照
+        private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
+
+        //
+        // PIV機能設定用関数
+        // 
+        public void DoPIVProcess(PIVParameter parameter, HandlerOnNotifyProcessTerminated handlerRef)
+        {
+            // 画面から引き渡されたパラメーターを退避
+            Parameter = parameter;
+
+            // コールバックを登録
+            OnNotifyProcessTerminatedRef = handlerRef;
+            OnNotifyProcessTerminated += OnNotifyProcessTerminatedRef;
+
+            // 処理開始を通知
+            NotifyProcessStarted();
+
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(Parameter.ToString());
+            System.Threading.Thread.Sleep(1000);
+            NotifyProcessTerminated(true);
+        }
+
+        // 
+        // 共通処理
+        //
+        private void NotifyProcessStarted()
+        {
+            // コマンド開始メッセージをログファイルに出力
+            string startMsg = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, Parameter.CommandTitle);
+            AppLogUtil.OutputLogInfo(startMsg);
+        }
+
+        private void NotifyProcessTerminated(bool success)
+        {
+            // コマンドの実行結果をログ出力
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
+                Parameter.CommandTitle,
+                success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
+            if (success) {
+                AppLogUtil.OutputLogInfo(formatted);
+            } else {
+                AppLogUtil.OutputLogError(formatted);
+            }
+
+            // パラメーターにコマンド成否を設定
+            Parameter.CommandSuccess = success;
+            Parameter.ResultMessage = formatted;
+
+            // 画面に制御を戻す            
+            OnNotifyProcessTerminated(Parameter);
+
+            // コールバックを解除
+            OnNotifyProcessTerminated -= OnNotifyProcessTerminatedRef;
+        }
     }
 }

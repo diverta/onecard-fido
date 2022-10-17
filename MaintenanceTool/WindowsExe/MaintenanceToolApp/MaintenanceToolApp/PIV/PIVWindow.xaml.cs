@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using MaintenanceToolApp.CommonWindow;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ToolAppCommon;
@@ -11,12 +14,18 @@ namespace MaintenanceToolApp.PIV
     /// </summary>
     public partial class PIVWindow : Window
     {
+        // PIV処理の参照を保持
+        private readonly PIVProcess Process = null!;
+
         // 入力可能文字数
         private const int PIV_PIN_CODE_SIZE_MIN = 6;
         private const int PIV_PIN_CODE_SIZE_MAX = 8;
 
         public PIVWindow()
         {
+            // PIV処理クラスの参照を保持
+            Process = new PIVProcess();
+
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();
@@ -148,10 +157,13 @@ namespace MaintenanceToolApp.PIV
         //
         private void DoPIVProcess(PIVParameter param)
         {
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(param.ToString());
-            param.CommandSuccess = true;
-            param.ResultMessage = AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED;
+            Task task = Task.Run(() => {
+                // コマンドを実行
+                Process.DoPIVProcess(param, new PIVProcess.HandlerOnNotifyProcessTerminated(OnPIVProcessTerminated));
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
 
             // メッセージをポップアップ表示
             if (param.CommandSuccess) {
@@ -183,6 +195,14 @@ namespace MaintenanceToolApp.PIV
             default:
                 break;
             }
+        }
+
+        private void OnPIVProcessTerminated(PIVParameter param)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //
