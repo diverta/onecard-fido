@@ -3,6 +3,7 @@ using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
 using MaintenanceToolApp.OpenPGP;
+using MaintenanceToolApp.PIV;
 using MaintenanceToolApp.Utility;
 using System;
 using System.Windows;
@@ -105,6 +106,12 @@ namespace MaintenanceToolApp
             }
         }
 
+        private void DoPIV()
+        {
+            // PIV設定画面を開く
+            new PIVWindow().ShowDialogWithOwner(this);
+        }
+
         private void DoOpenPGP()
         {
             // OpenPGP設定画面を開く
@@ -175,6 +182,11 @@ namespace MaintenanceToolApp
         private void buttonOpenPGP_Click(object sender, RoutedEventArgs e)
         {
             DoOpenPGP();
+        }
+
+        private void buttonPIV_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIV();
         }
     }
 }

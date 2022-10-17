@@ -1,34 +1,38 @@
 ﻿using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
-namespace MaintenanceToolApp.OpenPGP
+namespace MaintenanceToolApp.PIV
 {
-    public class OpenPGPParameter
+    public class PIVParameter
     {
-        public string CommandTitle { get; set; }
         public Command Command { get; set; }
+        public string CommandTitle { get; set; }
+        public string CommandDesc { get; set; }
         public bool CommandSuccess { get; set; }
         public string ResultMessage { get; set; }
-        public string RealName { get; set; }
-        public string MailAddress { get; set; }
-        public string Comment { get; set; }
-        public string Passphrase { get; set; }
-        public string PubkeyFolderPath { get; set; }
-        public string BackupFolderPath { get; set; }
+        public string PkeyFilePath1 { get; set; }
+        public string CertFilePath1 { get; set; }
+        public string PkeyFilePath2 { get; set; }
+        public string CertFilePath2 { get; set; }
+        public string PkeyFilePath3 { get; set; }
+        public string CertFilePath3 { get; set; }
+        public string AuthPin { get; set; }
         public string CurrentPin { get; set; }
         public string NewPin { get; set; }
 
-        public OpenPGPParameter()
+        public PIVParameter()
         {
-            CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
+            CommandTitle = string.Empty;
+            CommandDesc = string.Empty;
             ResultMessage = string.Empty;
-            RealName = string.Empty;
-            MailAddress = string.Empty;
-            Comment = string.Empty;
-            Passphrase = string.Empty;
-            PubkeyFolderPath = string.Empty;
-            BackupFolderPath = string.Empty;
+            PkeyFilePath1 = string.Empty;
+            CertFilePath1 = string.Empty;
+            PkeyFilePath2 = string.Empty;
+            CertFilePath2 = string.Empty;
+            PkeyFilePath3 = string.Empty;
+            CertFilePath3 = string.Empty;
+            AuthPin = string.Empty;
             CurrentPin = string.Empty;
             NewPin = string.Empty;
         }
@@ -36,29 +40,29 @@ namespace MaintenanceToolApp.OpenPGP
         public override string ToString()
         {
             string command = string.Format("Command:{0} CommandTitle:{1}", Command, CommandTitle);
-            string PGPKeyParam = string.Format("RealName:{0} MailAddress:{1} Comment:{2} Passphrase:{3} PubkeyFolderPath:{4} BackupFolderPath:{5}",
-                RealName, MailAddress, Comment, Passphrase, PubkeyFolderPath, BackupFolderPath);
-            string PinCommandParam = string.Format("CurrentPin:{0} NewPin:{1}", CurrentPin, NewPin);
-            return string.Format("{0}\n{1}\n{2}", command, PGPKeyParam, PinCommandParam);
+            string pkeyCertParam = string.Format("PkeyFilePath1:{0} CertFilePath1:{1} PkeyFilePath2:{2} CertFilePath2:{3} PkeyFilePath3:{4} CertFilePath3:{5} AuthPin:{6}",
+                PkeyFilePath1, CertFilePath1, PkeyFilePath2, CertFilePath2, PkeyFilePath3, CertFilePath3, AuthPin);
+            string pinCommandParam = string.Format("CurrentPin:{0} NewPin:{1}", CurrentPin, NewPin);
+            return string.Format("{0}\n{1}\n{2}", command, pkeyCertParam, pinCommandParam);
         }
     }
 
-    public class OpenPGPProcess
+    public class PIVProcess
     {
         // 処理実行のためのプロパティー
-        private OpenPGPParameter Parameter = null!;
+        private PIVParameter Parameter = null!;
 
         // 上位クラスに対するイベント通知
-        public delegate void HandlerOnNotifyProcessTerminated(OpenPGPParameter parameter);
+        public delegate void HandlerOnNotifyProcessTerminated(PIVParameter parameter);
         private event HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
 
         // イベントのコールバック参照
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
 
         //
-        // OpenPGP機能設定用関数
+        // PIV機能設定用関数
         // 
-        public void DoOpenPGPProcess(OpenPGPParameter parameter, HandlerOnNotifyProcessTerminated handlerRef)
+        public void DoPIVProcess(PIVParameter parameter, HandlerOnNotifyProcessTerminated handlerRef)
         {
             // 画面から引き渡されたパラメーターを退避
             Parameter = parameter;

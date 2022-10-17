@@ -1,0 +1,64 @@
+﻿<Window x:Class="MaintenanceToolApp.PIV.PIVWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="PIV設定" Width="480" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
+    <Grid Height="560">
+        <Button x:Name="buttonPIVStatus" Content="設定情報を参照" HorizontalAlignment="Center" Margin="0,515,340,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonPIVStatus_Click"/>
+        <Button x:Name="buttonPIVReset" Content="設定情報を消去" HorizontalAlignment="Center" Margin="0,515,115,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonPIVReset_Click"/>
+        <Button x:Name="buttonFirmwareReset" Content="認証器のリセット" HorizontalAlignment="Center" Margin="110,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonFirmwareReset_Click"/>
+        <Button x:Name="buttonClose" Content="閉じる" HorizontalAlignment="Center" Margin="340,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonClose_Click"/>
+        <TabControl x:Name="tabControl" Height="485" Width="440" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0">
+            <TabItem Header="鍵・証明書管理" Name="tabPagePkeyCertManagement">
+                <Grid Background="#FFFAFAFA">
+                    <GroupBox x:Name="groupBox1" Header="インストールする鍵・証明書ファイル" VerticalAlignment="Top" Margin="10,15,10,0" Height="300"/>
+                    <GroupBox x:Name="groupBoxPkeySlotId1" Header="PIV認証用" VerticalAlignment="Top" Margin="20,35,20,0" Height="85"/>
+                    <Label x:Name="labelPkeyFilePath1" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,55,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath1" HorizontalAlignment="Left" Margin="120,58,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath1" Content="参照" HorizontalAlignment="Left" Margin="357,58,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonPkeyFilePath1_Click"/>
+                    <Label x:Name="labelCertFilePath1" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,80,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath1" HorizontalAlignment="Left" Margin="120,83,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath1" Content="参照" HorizontalAlignment="Left" Margin="357,83,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonCertFilePath1_Click"/>
+                    <GroupBox x:Name="groupBoxPkeySlotId2" Header="電子署名用" VerticalAlignment="Top" Margin="20,125,20,0" Height="85"/>
+                    <Label x:Name="labelPkeyFilePath2" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,145,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath2" HorizontalAlignment="Left" Margin="120,148,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath2" Content="参照" HorizontalAlignment="Left" Margin="357,148,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonPkeyFilePath2_Click"/>
+                    <Label x:Name="labelCertFilePath2" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,170,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath2" HorizontalAlignment="Left" Margin="120,173,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath2" Content="参照" HorizontalAlignment="Left" Margin="357,173,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonCertFilePath2_Click"/>
+                    <GroupBox x:Name="groupBoxPkeySlotId3" Header="管理機能用" VerticalAlignment="Top" Margin="20,215,20,0" Height="85"/>
+                    <Label x:Name="labelPkeyFilePath3" Content="鍵ファイル" HorizontalAlignment="Left" Margin="30,235,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textPkeyFilePath3" HorizontalAlignment="Left" Margin="120,238,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonPkeyFilePath3" Content="参照" HorizontalAlignment="Left" Margin="357,238,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonPkeyFilePath3_Click"/>
+                    <Label x:Name="labelCertFilePath3" Content="証明書ファイル" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top" Width="80" Height="25"/>
+                    <TextBox x:Name="textCertFilePath3" HorizontalAlignment="Left" Margin="120,263,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="230" Height="21" IsReadOnly="True"/>
+                    <Button x:Name="buttonCertFilePath3" Content="参照" HorizontalAlignment="Left" Margin="357,263,0,0" VerticalAlignment="Top" Height="21" Width="45" Click="buttonCertFilePath3_Click"/>
+                    <GroupBox x:Name="groupBox2" Header="認証情報" VerticalAlignment="Top" Margin="10,325,10,0" Height="85"/>
+                    <Label x:Name="labelPin" Content="PIN番号" HorizontalAlignment="Left" Margin="25,345,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPin" HorizontalAlignment="Left" Margin="135,348,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelPinConfirm" Content="PIN番号(確認)" HorizontalAlignment="Left" Margin="25,370,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxPinConfirm" HorizontalAlignment="Left" Margin="135,373,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Button x:Name="buttonInstallPkeyCert"  Content="鍵・証明書ファイルのインストール" HorizontalAlignment="Center" Margin="0,420,0,0" VerticalAlignment="Top" Height="25" Width="200" Click="buttonInstallPkeyCert_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="PIN番号管理" Name="tabPagePinManagement">
+                <Grid Background="#FFFAFAFA">
+                    <GroupBox x:Name="groupBox3" Header="実行する機能" VerticalAlignment="Top" Margin="10,15,10,0" Height="60"/>
+                    <RadioButton x:Name="radioButton1" Content="PIN番号を変更" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton1_Checked"/>
+                    <RadioButton x:Name="radioButton2" Content="PUK番号を変更" HorizontalAlignment="Left" Margin="140,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton2_Checked"/>
+                    <RadioButton x:Name="radioButton3" Content="PIN番号をリセット" HorizontalAlignment="Left" Margin="255,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="radioButton3_Checked"/>
+                    <GroupBox x:Name="groupBox4" Header="認証情報" VerticalAlignment="Top" Margin="10,85,10,0" Height="110"/>
+                    <Label x:Name="labelCurPin" Content="現在のPUK番号" HorizontalAlignment="Left" Margin="25,105,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxCurPin" HorizontalAlignment="Left" Margin="175,108,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPin" Content="新しいPUK番号" HorizontalAlignment="Left" Margin="25,130,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPin" HorizontalAlignment="Left" Margin="175,133,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Label x:Name="labelNewPinConfirm" Content="新しいPUK番号(確認)" HorizontalAlignment="Left" Margin="25,155,0,0" VerticalAlignment="Top" Width="140" Height="25"/>
+                    <PasswordBox x:Name="passwordBoxNewPinConfirm" HorizontalAlignment="Left" Margin="175,158,0,0" VerticalAlignment="Top" Width="150" Height="21"/>
+                    <Button x:Name="buttonPerformPinCommand"  Content="実行" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonPerformPinCommand_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
