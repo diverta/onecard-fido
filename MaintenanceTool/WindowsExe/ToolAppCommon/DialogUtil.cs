@@ -173,6 +173,9 @@ namespace MaintenanceToolApp
             if (dialog.ShowDialog(owner) == CommonFileDialogResult.Ok) {
                 if (dialog.FileName.Length > 0) {
                     textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
                 }
             }
         }
@@ -193,6 +196,9 @@ namespace MaintenanceToolApp
             if (dialog.ShowDialog(owner) == true) {
                 if (dialog.FileName.Length > 0) {
                     textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
                 }
             }
         }
