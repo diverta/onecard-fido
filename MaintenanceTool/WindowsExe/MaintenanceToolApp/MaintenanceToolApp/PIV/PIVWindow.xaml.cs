@@ -55,6 +55,11 @@ namespace MaintenanceToolApp.PIV
             param.PkeyFilePath3 = textPkeyFilePath3.Text;
             param.CertFilePath3 = textCertFilePath3.Text;
             param.AuthPin = passwordBoxPinConfirm.Password;
+
+            // コマンドを実行
+            param.Command = Command.COMMAND_CCID_PIV_IMPORT_KEY;
+            param.CommandTitle = AppCommon.MSG_PIV_INSTALL_PKEY_CERT;
+            DoPIVProcess(param);
         }
 
         private void DoPerformPinCommand()
@@ -74,6 +79,61 @@ namespace MaintenanceToolApp.PIV
             GetSelectedPinCommandValue(param);
             param.CurrentPin = passwordBoxCurPin.Password;
             param.NewPin = passwordBoxNewPinConfirm.Password;
+
+            // コマンドを実行
+            DoPIVProcess(param);
+        }
+
+        private void DoPIVStatus()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // コマンドを実行
+            PIVParameter param = new PIVParameter();
+            param.Command = Command.COMMAND_CCID_PIV_STATUS;
+            param.CommandTitle = AppCommon.MSG_PIV_STATUS;
+            DoPIVProcess(param);
+        }
+
+        private void DoPIVReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // プロンプトで表示されるタイトル
+            string title = string.Format(
+                AppCommon.MSG_FORMAT_WILL_PROCESS,
+                AppCommon.MSG_PIV_CLEAR_SETTING);
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (DialogUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_PIV_CLEAR_SETTING) == false) {
+                return;
+            }
+
+            // コマンドを実行
+            PIVParameter param = new PIVParameter();
+            param.Command = Command.COMMAND_CCID_PIV_RESET;
+            param.CommandTitle = AppCommon.MSG_PIV_CLEAR_SETTING;
+            DoPIVProcess(param);
+        }
+
+        private void DoFirmwareReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // コマンドを実行
+            PIVParameter param = new PIVParameter();
+            param.Command = Command.COMMAND_HID_FIRMWARE_RESET;
+            param.CommandTitle = AppCommon.PROCESS_NAME_FIRMWARE_RESET;
+            DoPIVProcess(param);
         }
 
         private void TerminateWindow(bool dialogResult)
@@ -81,6 +141,15 @@ namespace MaintenanceToolApp.PIV
             // この画面を閉じる
             DialogResult = dialogResult;
             Close();
+        }
+
+        //
+        // コマンド実行指示～完了後の処理
+        //
+        private void DoPIVProcess(PIVParameter param)
+        {
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(param.ToString());
         }
 
         //
@@ -415,6 +484,21 @@ namespace MaintenanceToolApp.PIV
         private void buttonPerformPinCommand_Click(object sender, RoutedEventArgs e)
         {
             DoPerformPinCommand();
+        }
+
+        private void buttonPIVStatus_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIVStatus();
+        }
+
+        private void buttonPIVReset_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIVReset();
+        }
+
+        private void buttonFirmwareReset_Click(object sender, RoutedEventArgs e)
+        {
+            DoFirmwareReset();
         }
     }
 }
