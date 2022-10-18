@@ -9,18 +9,20 @@
 #import "DFUWindow.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolPopupWindow.h"
+#import "USBDFUCommand.h"
 
 @implementation DFUCommandParameter
 
 @end
 
-@interface DFUCommand () <ToolBLEDFUCommandDelegate>
+@interface DFUCommand () <USBDFUCommandDelegate, ToolBLEDFUCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) DFUWindow                    *dfuWindow;
     // 下位クラスの参照を保持
+    @property (nonatomic) USBDFUCommand                *usbDFUCommand;
     @property (nonatomic) ToolBLEDFUCommand            *toolBLEDFUCommand;
     // DFU処理のパラメーターを保持
     @property (nonatomic) DFUCommandParameter          *commandParameter;
@@ -36,6 +38,7 @@
             [self setDfuWindow:[[DFUWindow alloc] initWithWindowNibName:@"DFUWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[DFUCommandParameter alloc] init]];
+            [self setUsbDFUCommand:[[USBDFUCommand alloc] initWithDelegate:self]];
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -57,8 +60,7 @@
 
     - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        // TODO: 仮の実装です。
-        return true;
+        return [[self usbDFUCommand] isUSBHIDConnected];
     }
 
 #pragma mark - Perform functions
@@ -70,9 +72,7 @@
         switch ([[self commandParameter] transportType]) {
             case TRANSPORT_HID:
                 // ファームウェア更新処理（USB）を実行
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] informational:@"not supported" informativeText:nil withObject:nil forSelector:nil
-                                                  parentWindow:[self parentWindow]];
+                [[self usbDFUCommand] usbDfuProcessWillStart:self parentWindow:[self parentWindow]];
                 break;
             case TRANSPORT_BLE:
                 // ファームウェア更新処理（BLE）を実行
