@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "DFUCommand.h"
 #import "DFUWindow.h"
+#import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
 
 @interface DFUWindow ()
@@ -39,12 +40,17 @@
 
     - (IBAction)buttonUSBDFUDidPress:(id)sender {
         // USB接続チェック
-        if ([[self dfuCommandRef] isUSBHIDConnected]) {
+        if ([self checkUSBHIDConnection]) {
             // パラメーターを設定
             [[self commandParameterRef] setTransportType:TRANSPORT_HID];
             // このウィンドウを終了
             [self terminateWindow:NSModalResponseOK];
         }
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合は処理中止
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[self dfuCommandRef] isUSBHIDConnected]];
     }
 
     - (IBAction)buttonBLEDFUDidPress:(id)sender {
