@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "DFUCommand.h"
+#import "DFUWindow.h"
 #import "ToolBLEDFUCommand.h"
 #import "ToolPopupWindow.h"
 
@@ -17,6 +18,8 @@
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
+    // 画面の参照を保持
+    @property (nonatomic) DFUWindow                    *dfuWindow;
     // 下位クラスの参照を保持
     @property (nonatomic) ToolBLEDFUCommand            *toolBLEDFUCommand;
     // DFU処理のパラメーターを保持
@@ -29,6 +32,8 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super initWithDelegate:delegate];
         if (self) {
+            // 画面のインスタンスを生成
+            [self setDfuWindow:[[DFUWindow alloc] initWithWindowNibName:@"DFUWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[DFUCommandParameter alloc] init]];
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
@@ -36,21 +41,47 @@
         return self;
     }
 
-    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+    - (void)DFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
-        // DFU処理を開始するかどうかのプロンプトを表示
-        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_START_BLE_DFU_PROCESS informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS
-                                                  withObject:self forSelector:@selector(bleDfuCommandPromptDone) parentWindow:[self parentWindow]];
+        // 画面に親画面参照をセット
+        [[self dfuWindow] setParentWindowRef:parentWindow withCommandRef:self withParameterRef:[self commandParameter]];
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [[self dfuWindow] window];
+        DFUCommand * __weak weakSelf = self;
+        [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuWindowDidClose:self modalResponse:response];
+        }];
     }
 
-    - (void)bleDfuCommandPromptDone {
-        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
-        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
-            return;
+    - (bool)isUSBHIDConnected {
+        // USBポートに接続されていない場合はfalse
+        // TODO: 仮の実装です。
+        return true;
+    }
+
+#pragma mark - Perform functions
+
+    - (void)dfuWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self dfuWindow] close];
+        // 実行コマンドにより処理分岐
+        switch ([[self commandParameter] transportType]) {
+            case TRANSPORT_HID:
+                // ファームウェア更新処理（USB）を実行
+                // TODO: 仮の実装です。
+                [[ToolPopupWindow defaultWindow] informational:@"not supported" informativeText:nil withObject:nil forSelector:nil
+                                                  parentWindow:[self parentWindow]];
+                break;
+            case TRANSPORT_BLE:
+                // ファームウェア更新処理（BLE）を実行
+                [[self toolBLEDFUCommand] bleDfuProcessWillStart:self parentWindow:[self parentWindow]];
+                break;
+            default:
+                // メイン画面に制御を戻す
+                break;
         }
-        // ファームウェア更新処理を実行
-        [[self toolBLEDFUCommand] bleDfuProcessWillStart:self parentWindow:[self parentWindow]];
     }
 
 #pragma mark - Perform functions

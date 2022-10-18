@@ -17,7 +17,8 @@
 
 @interface DFUCommand : AppCommand
 
-    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)DFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (bool)isUSBHIDConnected;
 
 @end
 
