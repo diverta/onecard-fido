@@ -12,15 +12,32 @@
 
 @interface USBDFUImage ()
 
+    // 上位クラスの参照を保持
+    @property (nonatomic, weak) id                      delegate;
+
 @end
 
 @implementation USBDFUImage
+
+    - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id)delegate {
+        self = [super init];
+        if (self) {
+            // 上位クラスの参照を保持
+            [self setDelegate:delegate];
+        }
+        return self;
+    }
 
     - (bool)readDFUImageFile:(DFUCommandParameter *)commandParameter {
         // 更新イメージファイル（例：appkg.PCA10059_02.0.2.11.zip）の検索用文字列を生成
         NSString *zipFileNamePrefix = [NSString stringWithFormat:@"appkg.%@.", [commandParameter currentBoardname]];
         // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImages:zipFileNamePrefix] == false) {
+            [[self delegate] notifyCriticalErrorMessage:MSG_DFU_IMAGE_NOT_AVAILABLE informative:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST];
             return false;
         }
         return true;
@@ -31,7 +48,7 @@
         NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
         // .zipファイル名を取得
         if (nrf52_app_image_zip_filename_get([resourcePath UTF8String], [zipFileNamePrefix UTF8String]) == false) {
-            [self setErrorMessage:MSG_DFU_IMAGE_FILENAME_CANNOT_GET];
+            [[self delegate] notifyErrorMessage:MSG_DFU_IMAGE_FILENAME_CANNOT_GET];
             return false;
         }
         // ログ出力
@@ -41,7 +58,7 @@
         // .zipファイルからイメージを読込
         const char *zip_path = nrf52_app_image_zip_filename();
         if (nrf52_app_image_zip_read(zip_path) == false) {
-            [self setErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
+            [[self delegate] notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
             return false;
         }
         // ログ出力

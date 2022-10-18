@@ -14,7 +14,7 @@
 #import "USBDFUCommand.h"
 #import "USBDFUImage.h"
 
-@interface USBDFUCommand () <AppHIDCommandDelegate>
+@interface USBDFUCommand () <AppHIDCommandDelegate, USBDFUImageDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                      delegate;
@@ -44,7 +44,7 @@
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
-            [self setUsbDfuImage:[[USBDFUImage alloc] init]];
+            [self setUsbDfuImage:[[USBDFUImage alloc] initWithDelegate:self]];
             // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
             [self setMainQueue:dispatch_get_main_queue()];
             [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
@@ -117,9 +117,6 @@
     - (void)resumeDfuProcessStart {
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([[self usbDfuImage] readDFUImageFile:[self commandParameter]] == false) {
-            [self notifyErrorMessage:[[self usbDfuImage] errorMessage]];
-            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST
-                                           withObject:nil forSelector:nil parentWindow:[self parentWindow]];
             [self notifyProcessCanceled];
             return;
         }
@@ -152,6 +149,13 @@
                 [self usbDfuProcessDidCompleted:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
+    }
+
+#pragma mark - Call back from USBDFUImage
+
+    - (void)notifyCriticalErrorMessage:(NSString *)errorMessage informative:(NSString *)informativeMessage {
+        [[ToolPopupWindow defaultWindow] critical:errorMessage informativeText:informativeMessage
+                                       withObject:nil forSelector:nil parentWindow:[self parentWindow]];
     }
 
 #pragma mark - Private common methods

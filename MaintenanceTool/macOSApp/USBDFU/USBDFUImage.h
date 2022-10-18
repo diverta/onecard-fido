@@ -7,13 +7,19 @@
 #ifndef USBDFUImage_h
 #define USBDFUImage_h
 
+@protocol USBDFUImageDelegate;
+
 @interface USBDFUImage : NSObject
 
-    // 処理失敗時のエラーメッセージを保持
-    @property (nonatomic) NSString                 *errorMessage;
-
-    // 関数群
+    - (id)initWithDelegate:(id)delegate;
     - (bool)readDFUImageFile:(DFUCommandParameter *)commandParameter;
+
+@end
+
+@protocol USBDFUImageDelegate <NSObject>
+
+    - (void)notifyCriticalErrorMessage:(NSString *)errorMessage informative:(NSString *)informativeMessage;
+    - (void)notifyErrorMessage:(NSString *)errorMessage;
 
 @end
 
