@@ -12,6 +12,7 @@
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 #import "USBDFUCommand.h"
+#import "USBDFUImage.h"
 
 @interface USBDFUCommand () <AppHIDCommandDelegate>
 
@@ -19,6 +20,7 @@
     @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    @property (nonatomic) USBDFUImage                  *usbDfuImage;
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // DFU処理のパラメーターを保持
@@ -42,6 +44,7 @@
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            [self setUsbDfuImage:[[USBDFUImage alloc] init]];
             // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
             [self setMainQueue:dispatch_get_main_queue()];
             [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
@@ -112,6 +115,14 @@
     }
 
     - (void)resumeDfuProcessStart {
+        // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+        if ([[self usbDfuImage] readDFUImageFile:[self commandParameter]] == false) {
+            [self notifyErrorMessage:[[self usbDfuImage] errorMessage]];
+            [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST
+                                           withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+            [self notifyProcessCanceled];
+            return;
+        }
         // TODO: 仮の実装です。
         [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
         [self usbDfuProcessDidCompleted:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];
@@ -144,6 +155,18 @@
     }
 
 #pragma mark - Private common methods
+
+    - (void)notifyErrorMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] error:message];
+        [self notifyToolCommandMessage:message];
+    }
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        // メイン画面にメッセージ文字列を表示する
+        dispatch_async([self mainQueue], ^{
+            [[self delegate] notifyMessage:message];
+        });
+    }
 
     - (void)notifyProcessCanceled {
         dispatch_async([self mainQueue], ^{
