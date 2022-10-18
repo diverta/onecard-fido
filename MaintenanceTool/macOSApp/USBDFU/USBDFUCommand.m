@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
+#import "DFUCommand.h"
 #import "USBDFUCommand.h"
 
 @interface USBDFUCommand () <AppHIDCommandDelegate>
@@ -14,6 +15,8 @@
     @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    // DFU処理のパラメーターを保持
+    @property (nonatomic) DFUCommandParameter          *commandParameter;
 
 @end
 
@@ -30,6 +33,9 @@
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            // パラメーターを初期化
+            [self setCommandParameter:[[DFUCommandParameter alloc] init]];
+            [[self commandParameter] setDfuStatus:DFU_ST_NONE];
         }
         return self;
     }
