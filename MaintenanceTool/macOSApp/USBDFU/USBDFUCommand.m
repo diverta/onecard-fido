@@ -14,6 +14,9 @@
 #import "USBDFUCommand.h"
 #import "USBDFUImage.h"
 
+// 以下は、BLE DFU機能と共通利用
+#import "BLEDFUStartWindow.h"
+
 @interface USBDFUCommand () <AppHIDCommandDelegate, USBDFUImageDelegate>
 
     // 上位クラスの参照を保持
@@ -28,6 +31,8 @@
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t              mainQueue;
     @property (nonatomic) dispatch_queue_t              subQueue;
+    // 画面の参照を保持
+    @property (nonatomic) BLEDFUStartWindow            *dfuStartWindow;
 
 @end
 
@@ -45,6 +50,8 @@
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setUsbDfuImage:[[USBDFUImage alloc] initWithDelegate:self]];
+            // 画面のインスタンスを生成
+            [self setDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
             // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
             [self setMainQueue:dispatch_get_main_queue()];
             [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
@@ -65,6 +72,8 @@
     - (void)usbDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
+        // 処理開始画面に親画面参照をセット
+        [[self dfuStartWindow] setParentWindow:parentWindow];
         // 事前にHID経由でバージョン情報を取得
         [self doRequestHIDGetVersionInfo];
     }
@@ -125,6 +134,37 @@
             [self notifyProcessCanceled];
             return;
         }
+        // 処理開始画面を表示
+        [self dfuStartWindowWillOpen];
+    }
+
+#pragma mark - Interface for DFUStartWindow
+
+    - (void)dfuStartWindowWillOpen {
+        NSWindow *dialog = [[self dfuStartWindow] window];
+        USBDFUCommand * __weak weakSelf = self;
+        [[[self dfuStartWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuStartWindowDidClose:self modalResponse:response];
+        }];
+        // バージョン情報を、ダイアログの該当欄に設定
+        [[self dfuStartWindow] setWindowParameter:self
+            currentVersion:[[self commandParameter] currentVersion] updateVersion:[[self commandParameter] updateVersionFromImage]];
+    }
+
+    - (void)dfuStartWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self dfuStartWindow] close];
+        if (modalResponse == NSModalResponseCancel) {
+            // キャンセルボタンがクリックされた場合は、ポップアップ画面を出さずに終了
+            [self notifyProcessCanceled];
+            return;
+        }
+        // DFU処理開始
+        [self invokeDFUProcess];
+    }
+
+    - (void)invokeDFUProcess {
         // TODO: 仮の実装です。
         [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
         [self usbDfuProcessDidCompleted:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];
