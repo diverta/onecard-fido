@@ -21,7 +21,7 @@
 
 @protocol USBDFUCommandDelegate <NSObject>
 
-    - (void)notifyCommandStarted:(Command)command;
+    - (void)notifyCommandStartedWithCommand:(Command)command;
     - (void)notifyMessage:(NSString *)message;
     - (void)notifyCommandTerminated:(Command)command success:(bool)success message:(NSString *)message;
 

@@ -108,4 +108,10 @@
         [[self delegate] notifyMessageToMainUI:message];
     }
 
+#pragma mark - Call back from USBDFUCommand
+
+    - (void)notifyCommandStartedWithCommand:(Command)command {
+        [self notifyCommandStartedWithCommandName:PROCESS_NAME_USB_DFU];
+    }
+
 @end

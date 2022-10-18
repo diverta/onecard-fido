@@ -49,7 +49,7 @@
 
     - (void)usbDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
         // TODO: 仮の実装です。
-        [[self delegate] notifyCommandStarted:COMMAND_USB_DFU];
+        [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
         [self usbDfuProcessDidCompleted:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];
     }
 
