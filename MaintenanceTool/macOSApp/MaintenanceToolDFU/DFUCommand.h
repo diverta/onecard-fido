@@ -27,6 +27,8 @@ typedef enum : NSInteger {
     // 認証器からHID経由で取得したバージョン、基板名
     @property (nonatomic) NSString         *currentVersion;
     @property (nonatomic) NSString         *currentBoardname;
+    // 更新イメージファイル名から取得したバージョン
+    @property (nonatomic) NSString         *updateVersionFromImage;
     // 処理ステータス
     @property (nonatomic) NSInteger         dfuStatus;
 

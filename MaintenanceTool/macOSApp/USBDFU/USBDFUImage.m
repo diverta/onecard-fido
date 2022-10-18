@@ -7,8 +7,12 @@
 #import "AppCommonMessage.h"
 #import "DFUCommand.h"
 #import "nrf52_app_image.h"
+#import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "USBDFUImage.h"
+
+// 更新対象アプリケーション＝version 0.3.0
+#define DFU_UPD_TARGET_APP_VERSION      300
 
 @interface USBDFUImage ()
 
@@ -66,6 +70,34 @@
          debugWithFormat:@"ToolDFUCommand: %@(%d bytes), %@(%d bytes)",
          @NRF52_APP_DAT_FILE_NAME, nrf52_app_image_dat_size(),
          @NRF52_APP_BIN_FILE_NAME, nrf52_app_image_bin_size()];
+        return true;
+    }
+
+    - (bool)dfuImageIsAvailable:(DFUCommandParameter *)commandParameter {
+        // パッケージに同梱されている更新イメージファイル名からバージョンを取得
+        NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
+        // バージョンが取得できなかった場合は利用不可
+        if ([update length] == 0) {
+            [[self delegate] notifyCriticalErrorMessage:MSG_DFU_IMAGE_NOT_AVAILABLE informative:MSG_DFU_UPDATE_VERSION_UNKNOWN];
+            return false;
+        }
+        // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
+        int currentVersionDec = [ToolCommon calculateDecimalVersion:[commandParameter currentVersion]];
+        int updateVersionDec = [ToolCommon calculateDecimalVersion:update];
+        if (currentVersionDec > updateVersionDec) {
+            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
+                                     [commandParameter currentVersion], update];
+            [[self delegate] notifyCriticalErrorMessage:MSG_DFU_IMAGE_NOT_AVAILABLE informative:informative];
+            return false;
+        }
+        // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
+        if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
+            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
+            [[self delegate] notifyCriticalErrorMessage:MSG_DFU_IMAGE_NOT_AVAILABLE informative:informative];
+            return false;
+        }
+        // 更新バージョンを保持
+        [commandParameter setUpdateVersionFromImage:update];
         return true;
     }
 

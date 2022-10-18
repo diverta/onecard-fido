@@ -120,6 +120,11 @@
             [self notifyProcessCanceled];
             return;
         }
+        // ツール同梱のイメージファイルのバージョンが、稼働中のファームウェアのバージョンより古い場合は処理を中止
+        if ([[self usbDfuImage] dfuImageIsAvailable:[self commandParameter]] == false) {
+            [self notifyProcessCanceled];
+            return;
+        }
         // TODO: 仮の実装です。
         [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
         [self usbDfuProcessDidCompleted:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];

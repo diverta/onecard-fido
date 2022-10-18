@@ -13,6 +13,7 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (bool)readDFUImageFile:(DFUCommandParameter *)commandParameter;
+    - (bool)dfuImageIsAvailable:(DFUCommandParameter *)commandParameter;
 
 @end
 
