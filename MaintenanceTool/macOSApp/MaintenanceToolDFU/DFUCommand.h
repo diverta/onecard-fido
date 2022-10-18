@@ -24,6 +24,9 @@ typedef enum : NSInteger {
 @interface DFUCommandParameter : NSObject
 
     @property (nonatomic) TransportType     transportType;
+    // 認証器からHID経由で取得したバージョン、基板名
+    @property (nonatomic) NSString         *currentVersion;
+    @property (nonatomic) NSString         *currentBoardname;
     // 処理ステータス
     @property (nonatomic) NSInteger         dfuStatus;
 
