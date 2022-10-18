@@ -236,6 +236,7 @@
 #define MSG_DFU_PROCESS_CONFIRM_VERSION         @"転送された更新ファームウェアのバージョンを確認中です。"
 #define MSG_PROMPT_START_DFU_PROCESS            @"ファームウェア新規導入処理を開始しますか？"
 #define MSG_COMMENT_START_DFU_PROCESS           @"署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち、Yesボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。"
+#define MSG_DESCRIPTION_START_DFU_PROCESS       @"OKボタンをクリックすると、\nファームウェア更新処理が開始されます。\n\n処理が完了するまでは、FIDO認証器を\nUSBポートから外さないでください。"
 
 #pragma mark - USB CCID関連
 #define MSG_CCID_SESSION_ALREADY_EXIST          @"CCIDインターフェースで別のセッションが存在します。"
