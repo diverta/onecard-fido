@@ -9,6 +9,12 @@
 
 #import "AppCommand.h"
 
+@interface DFUCommandParameter : NSObject
+
+    @property (nonatomic) TransportType     transportType;
+
+@end
+
 @interface DFUCommand : AppCommand
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;

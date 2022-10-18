@@ -9,12 +9,18 @@
 #import "ToolBLEDFUCommand.h"
 #import "ToolPopupWindow.h"
 
+@implementation DFUCommandParameter
+
+@end
+
 @interface DFUCommand () <ToolBLEDFUCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 下位クラスの参照を保持
     @property (nonatomic) ToolBLEDFUCommand            *toolBLEDFUCommand;
+    // DFU処理のパラメーターを保持
+    @property (nonatomic) DFUCommandParameter          *commandParameter;
 
 @end
 
@@ -24,6 +30,7 @@
         self = [super initWithDelegate:delegate];
         if (self) {
             // ヘルパークラスのインスタンスを生成
+            [self setCommandParameter:[[DFUCommandParameter alloc] init]];
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
         }
         return self;
