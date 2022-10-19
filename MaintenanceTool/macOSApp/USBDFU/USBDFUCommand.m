@@ -14,18 +14,20 @@
 #import "USBDFUCommand.h"
 #import "USBDFUDefine.h"
 #import "USBDFUImage.h"
+#import "USBDFUTransferCommand.h"
 
 // 以下は、BLE DFU機能と共通利用
 #import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
 
-@interface USBDFUCommand () <AppHIDCommandDelegate, USBDFUImageDelegate>
+@interface USBDFUCommand () <AppHIDCommandDelegate, USBDFUImageDelegate, USBDFUTransferCommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
     @property (nonatomic) USBDFUImage                  *usbDfuImage;
+    @property (nonatomic) USBDFUTransferCommand        *transferCommand;
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // DFU処理のパラメーターを保持
@@ -53,6 +55,7 @@
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setUsbDfuImage:[[USBDFUImage alloc] initWithDelegate:self]];
+            [self setTransferCommand:[[USBDFUTransferCommand alloc] initWithDelegate:self]];
             // 画面のインスタンスを生成
             [self setDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
             [self setDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
@@ -217,12 +220,9 @@
         [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
-        // TODO: 仮の実装です。
         dispatch_async([self subQueue], ^{
-            [NSThread sleepForTimeInterval:2.0];
-            dispatch_async([self mainQueue], ^{
-                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:true];
-            });
+            // 転送処理を開始
+            [[self transferCommand] invokeTransferWithParamRef:[self commandParameter]];
         });
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
@@ -291,6 +291,17 @@
     - (void)notifyCriticalErrorMessage:(NSString *)errorMessage informative:(NSString *)informativeMessage {
         [[ToolPopupWindow defaultWindow] critical:errorMessage informativeText:informativeMessage
                                        withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+    }
+
+#pragma mark - Call back from USBDFUTransferCommand
+
+    - (void)transferCommandDidTerminate:(bool)success {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に対し、処理成功／失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:success];
+        });
     }
 
 #pragma mark - Private common methods

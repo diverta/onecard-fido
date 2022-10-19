@@ -68,6 +68,7 @@
 		7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680628FE80B10096A848 /* nrf52_app_image.c */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
+		7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
@@ -220,6 +221,9 @@
 		7A92D0E328754DD00094D2DB /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommonFunc.m; sourceTree = "<group>"; };
 		7A92D0E528754F3C0094D2DB /* ToolCommonFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonFunc.h; sourceTree = "<group>"; };
+		7A95408D28FFCBE7006D5C33 /* USBDFUDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USBDFUDefine.h; sourceTree = "<group>"; };
+		7A95408E28FFCFD4006D5C33 /* USBDFUTransferCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USBDFUTransferCommand.h; sourceTree = "<group>"; };
+		7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USBDFUTransferCommand.m; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
@@ -567,6 +571,9 @@
 				7A91680128FE497E0096A848 /* USBDFUCommand.m */,
 				7A91680328FE7A820096A848 /* USBDFUImage.h */,
 				7A91680428FE7A990096A848 /* USBDFUImage.m */,
+				7A95408D28FFCBE7006D5C33 /* USBDFUDefine.h */,
+				7A95408E28FFCFD4006D5C33 /* USBDFUTransferCommand.h */,
+				7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */,
 			);
 			path = USBDFU;
 			sourceTree = "<group>";
@@ -828,6 +835,7 @@
 				7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */,
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
+				7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
