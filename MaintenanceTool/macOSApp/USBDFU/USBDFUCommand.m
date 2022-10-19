@@ -15,6 +15,7 @@
 #import "USBDFUImage.h"
 
 // 以下は、BLE DFU機能と共通利用
+#import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
 
 @interface USBDFUCommand () <AppHIDCommandDelegate, USBDFUImageDelegate>
@@ -32,6 +33,7 @@
     @property (nonatomic) dispatch_queue_t              mainQueue;
     @property (nonatomic) dispatch_queue_t              subQueue;
     // 画面の参照を保持
+    @property (nonatomic) BLEDFUProcessingWindow       *dfuProcessingWindow;
     @property (nonatomic) BLEDFUStartWindow            *dfuStartWindow;
 
 @end
@@ -52,6 +54,7 @@
             [self setUsbDfuImage:[[USBDFUImage alloc] initWithDelegate:self]];
             // 画面のインスタンスを生成
             [self setDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
+            [self setDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
             // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
             [self setMainQueue:dispatch_get_main_queue()];
             [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
@@ -74,6 +77,7 @@
         [self setParentWindow:parentWindow];
         // 処理開始画面に親画面参照をセット
         [[self dfuStartWindow] setParentWindow:parentWindow];
+        [[self dfuProcessingWindow] setParentWindow:parentWindow];
         // 事前にHID経由でバージョン情報を取得
         [self doRequestHIDGetVersionInfo];
     }
@@ -165,9 +169,50 @@
     }
 
     - (void)invokeDFUProcess {
+        // 処理進捗画面（ダイアログ）をモーダルで表示
+        [self dfuProcessingWindowWillOpen];
+        // 処理進捗画面にDFU処理開始を通知
+        [[self dfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:100];
         // TODO: 仮の実装です。
         [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
-        [self usbDfuProcessDidCompleted:false message:MSG_CMDTST_MENU_NOT_SUPPORTED];
+        dispatch_async([self subQueue], ^{
+            [NSThread sleepForTimeInterval:2.0];
+            dispatch_async([self mainQueue], ^{
+                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:true];
+            });
+        });
+    }
+
+#pragma mark - Interface for DFUProcessingWindow
+
+    - (void)dfuProcessingWindowWillOpen {
+        NSWindow *dialog = [[self dfuProcessingWindow] window];
+        USBDFUCommand * __weak weakSelf = self;
+        [[[self dfuProcessingWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuProcessingWindowDidClose:self modalResponse:response];
+        }];
+    }
+
+    - (void)dfuProcessingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // ステータスを初期化
+        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
+        // 処理進捗画面を閉じる
+        [[self dfuProcessingWindow] close];
+        switch (modalResponse) {
+            case NSModalResponseOK:
+                [self notifyProcessTerminated:true];
+                break;
+            case NSModalResponseAbort:
+                [self notifyProcessTerminated:false];
+                break;
+            case NSModalResponseCancel:
+                // メッセージをポップアップ表示したのち、画面に制御を戻す
+                [[ToolPopupWindow defaultWindow] critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil withObject:self forSelector:@selector(notifyProcessCanceled) parentWindow:[self parentWindow]];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -214,6 +259,13 @@
         // メイン画面にメッセージ文字列を表示する
         dispatch_async([self mainQueue], ^{
             [[self delegate] notifyMessage:message];
+        });
+    }
+
+    - (void)notifyProcessTerminated:(bool)success {
+        dispatch_async([self mainQueue], ^{
+            // メイン画面に制御を戻す
+            [[self delegate] notifyCommandTerminated:COMMAND_USB_DFU success:success message:nil];
         });
     }
 
