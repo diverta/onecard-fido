@@ -12,6 +12,7 @@
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 #import "USBDFUCommand.h"
+#import "USBDFUDefine.h"
 #import "USBDFUImage.h"
 
 // 以下は、BLE DFU機能と共通利用
@@ -173,14 +174,8 @@
         [self dfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
         [[self dfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:100];
-        // TODO: 仮の実装です。
-        [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
-        dispatch_async([self subQueue], ^{
-            [NSThread sleepForTimeInterval:2.0];
-            dispatch_async([self mainQueue], ^{
-                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:true];
-            });
-        });
+        // DFU処理を開始
+        [self startDFUProcess];
     }
 
 #pragma mark - Interface for DFUProcessingWindow
@@ -213,6 +208,56 @@
             default:
                 break;
         }
+    }
+
+#pragma mark - Main process
+
+    - (void)startDFUProcess {
+        // 処理ステータスを更新
+        [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
+        // 処理タイムアウト監視を開始
+        [self startDFUTimeoutMonitor];
+        // TODO: 仮の実装です。
+        dispatch_async([self subQueue], ^{
+            [NSThread sleepForTimeInterval:2.0];
+            dispatch_async([self mainQueue], ^{
+                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:true];
+            });
+        });
+        // メイン画面に開始メッセージを出力
+        dispatch_async([self mainQueue], ^{
+            [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
+        });
+    }
+
+    - (void)notifyErrorToProcessingWindow {
+        // 処理タイムアウト監視を停止
+        [self stopDFUTimeoutMonitor];
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        });
+    }
+
+#pragma mark - Process timeout monitor
+
+    - (void)stopDFUTimeoutMonitor {
+        // 処理タイムアウト監視を停止
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+    }
+
+    - (void)startDFUTimeoutMonitor {
+        // 処理タイムアウト監視を事前停止
+        [self stopDFUTimeoutMonitor];
+        // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
+        [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+    }
+
+    - (void)DFUProcessDidTimeout {
+        // 処理タイムアウトを検知したので、異常終了と判断
+        [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
+        // 処理進捗画面に対し、処理失敗の旨を通知する
+        [self notifyErrorToProcessingWindow];
     }
 
 #pragma mark - Call back from AppHIDCommand
