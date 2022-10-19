@@ -19,6 +19,7 @@
 @protocol USBDFUTransferCommandDelegate <NSObject>
 
     - (void)transferCommandDidTerminate:(bool)success;
+    - (void)notifyErrorMessage:(NSString *)message;
 
 @end
 

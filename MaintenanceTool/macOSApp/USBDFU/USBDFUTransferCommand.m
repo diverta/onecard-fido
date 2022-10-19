@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/10/19.
 //
+#import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "DFUCommand.h"
 #import "FIDODefines.h"
@@ -61,9 +62,17 @@
         [[self appHIDCommand] doRequestCtap2Command:COMMAND_HID_BOOTLOADER_MODE withCMD:HID_CMD_BOOTLOADER_MODE withData:commandData];
     }
 
-    - (void)doResponseHidBootloaderMode:(NSData *)response {
-        // 処理ステータスを設定 --> USB切断検知により処理続行
-        [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
+    - (void)doResponseHidBootloaderMode:(uint8_t)cmd response:(NSData *)response {
+        // ブートローダーモード遷移コマンド成功時
+        if (cmd == HID_CMD_BOOTLOADER_MODE) {
+            // 処理ステータスを設定 --> USB切断検知により処理続行
+            [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
+
+        } else {
+            // ブートローダーモード遷移コマンド失敗時は、即時で制御を戻す
+            [[self delegate] notifyErrorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
+            [self terminateTransferCommand:false];
+        }
     }
 
  #pragma mark - Call back from AppHIDCommand
@@ -95,7 +104,7 @@
                  [self doResponseHIDCtap2Init];
                  break;
              case COMMAND_HID_BOOTLOADER_MODE:
-                 [self doResponseHidBootloaderMode:response];
+                 [self doResponseHidBootloaderMode:cmd response:response];
                  break;
              default:
                  // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
