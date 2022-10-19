@@ -216,8 +216,8 @@
 #pragma mark - Main process
 
     - (void)startDFUProcess {
-        // 処理ステータスを更新
-        [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
+        // 処理ステータスをクリア
+        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
         dispatch_async([self subQueue], ^{
