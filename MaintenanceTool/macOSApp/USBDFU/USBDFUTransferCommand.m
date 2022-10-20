@@ -75,42 +75,42 @@
         }
     }
 
- #pragma mark - Call back from AppHIDCommand
+#pragma mark - Call back from AppHIDCommand
 
-     - (void)didDetectConnect {
-     }
+    - (void)didDetectConnect {
+    }
 
-     - (void)didDetectRemoval {
-         if ([[self commandParameter] dfuStatus] != DFU_ST_TO_BOOTLOADER_MODE) {
-             return;
-         }
-         // ステータスをクリア
-         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
-         // TODO: 仮の実装です。
-         [NSThread sleepForTimeInterval:2.0];
-         [self terminateTransferCommand:true];
-     }
+    - (void)didDetectRemoval {
+        if ([[self commandParameter] dfuStatus] != DFU_ST_TO_BOOTLOADER_MODE) {
+            return;
+        }
+        // ステータスをクリア
+        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
+        // TODO: 仮の実装です。
+        [NSThread sleepForTimeInterval:2.0];
+        [self terminateTransferCommand:true];
+    }
 
-     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-         // 即時で上位クラスに制御を戻す
-         if (success == false) {
-             [[ToolLogFile defaultLogger] error:errorMessage];
-             [self terminateTransferCommand:false];
-             return;
-         }
-         // 実行コマンドにより処理分岐
-         switch (command) {
-             case COMMAND_HID_CTAP2_INIT:
-                 [self doResponseHIDCtap2Init];
-                 break;
-             case COMMAND_HID_BOOTLOADER_MODE:
-                 [self doResponseHidBootloaderMode:cmd response:response];
-                 break;
-             default:
-                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                 [self terminateTransferCommand:false];
-                 break;
-         }
-     }
+    - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 即時で上位クラスに制御を戻す
+        if (success == false) {
+            [[ToolLogFile defaultLogger] error:errorMessage];
+            [self terminateTransferCommand:false];
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch (command) {
+            case COMMAND_HID_CTAP2_INIT:
+                [self doResponseHIDCtap2Init];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self doResponseHidBootloaderMode:cmd response:response];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
+                [self terminateTransferCommand:false];
+                break;
+        }
+    }
 
 @end
