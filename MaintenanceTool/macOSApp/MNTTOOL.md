@@ -49,8 +49,8 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[ファームウェア更新手順（BLE）](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b><br>
-管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。
+- <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b><br>
+管理ツールから、MDBT50Q Dongleのファームウェアを更新する手順を掲載しています。
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。
