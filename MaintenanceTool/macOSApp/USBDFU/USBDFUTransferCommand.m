@@ -129,8 +129,13 @@
             return false;
         }
         [[ToolLogFile defaultLogger] debug:@"USBDFUTransferCommand: update init command object done"];
-        // TODO: 仮の実装です。
-        [NSThread sleepForTimeInterval:3.0];
+        // binイメージを転送
+        if ([self transferDFUImage:NRF_DFU_BYTE_OBJ_DATA
+                         imageData:nrf52_app_image_bin()
+                         imageSize:nrf52_app_image_bin_size()] == false) {
+            return false;
+        }
+        [[ToolLogFile defaultLogger] debug:@"USBDFUTransferCommand: update data object done"];
         return true;
     }
 
@@ -193,6 +198,14 @@
             // 送信データをコミット
             if ([self sendExecuteObjectRequest] == false) {
                 return false;
+            }
+            // 進捗画面に通知
+            if (objectType == NRF_DFU_BYTE_OBJ_DATA) {
+                // 転送比率を計算
+                int percentage = (int)(alreadySent * 100 / size);
+                // 転送状況を画面表示
+                NSString *progress = [[NSString alloc] initWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
+                [[self delegate] notifyProgress:progress progressValue:percentage];
             }
             // 未送信サイズを更新
             remaining -= sendSize;
