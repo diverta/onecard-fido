@@ -47,6 +47,8 @@
     }
 
     - (void)terminateTransferCommand:(bool)success {
+        // ステータスをクリア
+        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
         // 上位クラスに制御を戻す
         [[self delegate] transferCommandDidTerminate:success];
     }
@@ -90,11 +92,27 @@
         // DFU実行開始を通知
         [[self delegate] notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE progressValue:0];
         dispatch_async([self subQueue], ^{
-            // TODO: 仮の実装です。
-            [NSThread sleepForTimeInterval:3.0];
+            // DFUを実行
+            bool ret = [self performTransferProcessSync];
+            // DFU対象デバイスから切断
             [[self acmCommand] closeACMConnection];
-            [self terminateTransferCommand:true];
+            if (ret == false) {
+                // 処理失敗時は、処理進捗画面に対し通知
+                [[self delegate] notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
+                [self terminateTransferCommand:false];
+            } else {
+                // 処理成功時は、再接続まで待機 --> HID接続検知により、バージョン更新判定に遷移
+                [[self delegate] notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:100];
+                [[ToolLogFile defaultLogger] info:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+                [[self commandParameter] setDfuStatus:DFU_ST_WAIT_FOR_BOOT];
+            }
         });
+    }
+
+    - (bool)performTransferProcessSync {
+        // TODO: 仮の実装です。
+        [NSThread sleepForTimeInterval:3.0];
+        return true;
     }
 
 #pragma mark - Call back from AppHIDCommand
