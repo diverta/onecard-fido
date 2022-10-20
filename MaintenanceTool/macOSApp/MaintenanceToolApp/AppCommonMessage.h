@@ -230,6 +230,7 @@
 #define MSG_DFU_PROCESS_TIMEOUT                 @"FIDO認証器ファームウェアの更新処理がタイムアウトしました。"
 #define MSG_DFU_PROCESS_TITLE_GOING             @"ファームウェアを更新しています"
 #define MSG_DFU_PROCESS_TITLE_END               @"ファームウェアの更新が完了しました"
+#define MSG_DFU_PROCESS_TRANSFER_PREPARE        @"更新ファームウェア転送の準備中です。"
 #define MSG_DFU_PROCESS_TRANSFER_IMAGE          @"更新ファームウェアを転送中です。"
 #define MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT   @"更新ファームウェアを転送中（%d％）"
 #define MSG_DFU_PROCESS_WAITING_UPDATE          @"転送された更新ファームウェアの反映を待機中です。"
