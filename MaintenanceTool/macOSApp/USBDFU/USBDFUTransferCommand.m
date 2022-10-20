@@ -21,6 +21,8 @@
     @property (nonatomic) USBDFUACMCommand             *acmCommand;
     // DFU処理のパラメーターを保持
     @property (nonatomic) DFUCommandParameter          *commandParameter;
+    // 非同期処理用のキュー（転送処理用）
+    @property (nonatomic) dispatch_queue_t              subQueue;
 
 @end
 
@@ -38,6 +40,8 @@
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setAcmCommand:[[USBDFUACMCommand alloc] initWithDelegate:self]];
+            // サブスレッドにバインドされるキューを取得
+            [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
         }
         return self;
     }
@@ -85,10 +89,12 @@
     - (void)performTransferProcess {
         // DFU実行開始を通知
         [[self delegate] notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE progressValue:0];
-        // TODO: 仮の実装です。
-        [NSThread sleepForTimeInterval:2.0];
-        [[self acmCommand] closeACMConnection];
-        [self terminateTransferCommand:true];
+        dispatch_async([self subQueue], ^{
+            // TODO: 仮の実装です。
+            [NSThread sleepForTimeInterval:3.0];
+            [[self acmCommand] closeACMConnection];
+            [self terminateTransferCommand:true];
+        });
     }
 
 #pragma mark - Call back from AppHIDCommand
@@ -102,8 +108,10 @@
         }
         // ステータスをクリア
         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
-        // USB DFUに必要なACM接続を確立
-        [[self acmCommand] establishACMConnection];
+        dispatch_async([self subQueue], ^{
+            // USB DFUに必要なACM接続を確立
+            [[self acmCommand] establishACMConnection];
+        });
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {

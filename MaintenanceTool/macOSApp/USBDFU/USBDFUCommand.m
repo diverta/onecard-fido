@@ -32,9 +32,8 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // DFU処理のパラメーターを保持
     @property (nonatomic) DFUCommandParameter          *commandParameter;
-    // 非同期処理用のキュー（画面用／DFU処理用）
+    // 非同期処理用のキュー（画面用）
     @property (nonatomic) dispatch_queue_t              mainQueue;
-    @property (nonatomic) dispatch_queue_t              subQueue;
     // 画面の参照を保持
     @property (nonatomic) BLEDFUProcessingWindow       *dfuProcessingWindow;
     @property (nonatomic) BLEDFUStartWindow            *dfuStartWindow;
@@ -59,9 +58,8 @@
             // 画面のインスタンスを生成
             [self setDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
             [self setDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
-            // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
+            // メインスレッドにバインドされるデフォルトキューを取得
             [self setMainQueue:dispatch_get_main_queue()];
-            [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.usbdfu", DISPATCH_QUEUE_SERIAL)];
             // パラメーターを初期化
             [self setCommandParameter:[[DFUCommandParameter alloc] init]];
             [[self commandParameter] setDfuStatus:DFU_ST_NONE];
@@ -228,10 +226,8 @@
         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
-        dispatch_async([self subQueue], ^{
-            // 転送処理を開始
-            [[self transferCommand] invokeTransferWithParamRef:[self commandParameter]];
-        });
+        // 転送処理を開始
+        [[self transferCommand] invokeTransferWithParamRef:[self commandParameter]];
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
             [[self delegate] notifyCommandStartedWithCommand:COMMAND_USB_DFU];
