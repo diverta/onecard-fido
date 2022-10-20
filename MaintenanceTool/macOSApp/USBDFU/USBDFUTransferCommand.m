@@ -11,10 +11,11 @@
 #import "AppHIDCommand.h"
 #import "DFUCommand.h"
 #import "FIDODefines.h"
+#import "ToolCommon.h"
+#import "ToolLogFile.h"
 #import "USBDFUACMCommand.h"
 #import "USBDFUDefine.h"
 #import "USBDFUTransferCommand.h"
-#import "ToolLogFile.h"
 
 @interface USBDFUTransferCommand () <AppHIDCommandDelegate, USBDFUACMCommandDelegate>
 
@@ -139,7 +140,7 @@
         return true;
     }
 
-#pragma mark - Sub process
+#pragma mark - DFU transfer sub process
 
     - (bool)sendSetReceiptRequest {
         // SET RECEIPT 02 00 00 C0 -> 60 02 01 C0
@@ -352,9 +353,77 @@
         return unescaped;
     }
 
+#pragma mark - Version checking process
+
+    - (void)doRequestHIDGetVersionInfo {
+        // ステータスを更新（更新後バージョン照会）
+        [[self commandParameter] setDfuStatus:DFU_ST_CHECK_UPDATE_VERSION];
+        // HID経由でFlash ROM情報を取得（コマンド 0xC3 を実行、メッセージ無し）
+        [[self appHIDCommand] doRequestCommand:COMMAND_HID_GET_VERSION_INFO withCMD:HID_CMD_GET_VERSION_INFO withData:nil];
+    }
+
+    - (void)doResponseHIDGetVersionInfo:(NSData *)versionInfoResponse {
+        // 更新後バージョン照会の場合（ファームウェア反映待ち完了時）
+        if ([[self commandParameter] dfuStatus] == DFU_ST_CHECK_UPDATE_VERSION) {
+            [self notifyFirmwareVersionForComplete:versionInfoResponse];
+        }
+    }
+
+    - (void)notifyFirmwareVersionForComplete:(NSData *)response {
+        if (response == nil || [response length] < 2) {
+            // 処理失敗時は、処理進捗画面に対し通知
+            [[self delegate] notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [self terminateTransferCommand:false];
+            return;
+        }
+        // 戻りメッセージからバージョン情報を抽出
+        [self extractVersionAndBoardnameFrom:response];
+        // バージョン情報を比較して終了判定
+        bool result = [self compareUpdateVersion:[[self commandParameter] currentVersion]];
+        // 処理進捗画面に対し、処理結果を通知する
+        [self terminateTransferCommand:result];
+    }
+
+    - (void)extractVersionAndBoardnameFrom:(NSData *)response {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:response];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        // 情報取得CSVからバージョン情報を抽出
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
+        // 取得したバージョン情報を内部保持
+        [[self commandParameter] setCurrentVersion:array[1]];
+        [[self commandParameter] setCurrentBoardname:array[2]];
+    }
+
+    - (bool)compareUpdateVersion:(NSString *)update {
+        // バージョン情報を比較
+        char *fw_version = nrf52_app_image_zip_version();
+        NSString *expected = [[NSString alloc] initWithUTF8String:fw_version];
+        if (strcmp([update UTF8String], fw_version) == 0) {
+            // バージョンが同じであればDFU処理は正常終了とする
+            NSString *infoMessage = [[NSString alloc] initWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected];
+            [[self delegate] notifyInfoMessage:infoMessage];
+            return true;
+        } else {
+            // バージョンが同じでなければ異常終了とする
+            NSString *errorMessage = [[NSString alloc] initWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED, expected];
+            [[self delegate] notifyErrorMessage:errorMessage];
+            return false;
+        }
+    }
+
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
+        if ([[self commandParameter] dfuStatus] != DFU_ST_WAIT_FOR_BOOT) {
+            return;
+        }
+        // ステータスをクリア
+        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
+        dispatch_async([self subQueue], ^{
+            // HID経由で更新後のバージョン情報を取得
+            [self doRequestHIDGetVersionInfo];
+        });
     }
 
     - (void)didDetectRemoval {
@@ -383,6 +452,9 @@
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self doResponseHidBootloaderMode:cmd response:response];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self doResponseHIDGetVersionInfo:response];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
