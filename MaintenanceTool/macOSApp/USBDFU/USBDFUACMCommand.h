@@ -14,6 +14,8 @@
     - (id)initWithDelegate:(id)delegate;
     - (void)establishACMConnection;
     - (void)closeACMConnection;
+    - (NSData *)sendRequest:(NSData *)data timeoutSec:(double)timeout;
+    - (bool)assertDFUResponseSuccess:(NSData *)response;
 
 @end
 

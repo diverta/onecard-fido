@@ -4,11 +4,14 @@
 //
 //  Created by Makoto Morita on 2022/10/19.
 //
+#import "usb_dfu_util.h"
+
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "DFUCommand.h"
 #import "FIDODefines.h"
 #import "USBDFUACMCommand.h"
+#import "USBDFUDefine.h"
 #import "USBDFUTransferCommand.h"
 #import "ToolLogFile.h"
 
@@ -110,9 +113,52 @@
     }
 
     - (bool)performTransferProcessSync {
+        // DFU対象デバイスの通知設定
+        if ([self sendSetReceiptRequest] == false) {
+            return false;
+        }
+        // DFU対象デバイスからMTUを取得
+        if ([self sendGetMtuRequest] == false) {
+            return false;
+        }
         // TODO: 仮の実装です。
         [NSThread sleepForTimeInterval:3.0];
         return true;
+    }
+
+#pragma mark - Sub process
+
+    - (bool)sendSetReceiptRequest {
+        // SET RECEIPT 02 00 00 C0 -> 60 02 01 C0
+        static uint8_t request[] = {
+            NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        return [[self acmCommand] assertDFUResponseSuccess:response];
+    }
+
+    - (bool)sendGetMtuRequest {
+        // Get the preferred MTU size on the request.
+        // GET MTU 07 C0 -> 60 07 01 83 00 C0
+        static uint8_t mtuRequest[] = {NRF_DFU_OP_MTU_GET, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:mtuRequest length:sizeof(mtuRequest)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        if ([[self acmCommand] assertDFUResponseSuccess:response] == false) {
+            return false;
+        }
+        // レスポンスからMTUを取得（4〜5バイト目）
+        uint16_t mtu = [self convertLEBytesToUint16:[response bytes] offset:3];
+        size_t mtu_size = usb_dfu_object_set_mtu(mtu);
+        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolDFUCommand: MTU=%d", mtu_size];
+        return true;
+    }
+
+    - (uint16_t)convertLEBytesToUint16:(const void *)data offset:(uint16_t)offset {
+        uint8_t *bytes = (uint8_t *)data;
+        uint16_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8);
+        return uint;
     }
 
 #pragma mark - Call back from AppHIDCommand
