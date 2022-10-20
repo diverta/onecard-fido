@@ -214,6 +214,13 @@
         }
     }
 
+    - (void)notifyProgress:(NSString *)message progressValue:(int)progressValue {
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に進捗を通知
+            [[self dfuProcessingWindow] commandDidNotifyDFUProcess:message progressValue:progressValue];
+        });
+    }
+
 #pragma mark - Main process
 
     - (void)startDFUProcess {

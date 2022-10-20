@@ -83,6 +83,8 @@
 #pragma mark - DFU transfer main process
 
     - (void)performTransferProcess {
+        // DFU実行開始を通知
+        [[self delegate] notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE progressValue:0];
         // TODO: 仮の実装です。
         [NSThread sleepForTimeInterval:2.0];
         [[self acmCommand] closeACMConnection];

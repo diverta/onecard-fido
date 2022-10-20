@@ -20,6 +20,7 @@
 
     - (void)transferCommandDidTerminate:(bool)success;
     - (void)notifyErrorMessage:(NSString *)message;
+    - (void)notifyProgress:(NSString *)message progressValue:(int)progressValue;
 
 @end
 
