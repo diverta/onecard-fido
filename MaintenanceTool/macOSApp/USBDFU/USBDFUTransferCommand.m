@@ -8,15 +8,17 @@
 #import "AppHIDCommand.h"
 #import "DFUCommand.h"
 #import "FIDODefines.h"
+#import "USBDFUACMCommand.h"
 #import "USBDFUTransferCommand.h"
 #import "ToolLogFile.h"
 
-@interface USBDFUTransferCommand () <AppHIDCommandDelegate>
+@interface USBDFUTransferCommand () <AppHIDCommandDelegate, USBDFUACMCommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
+    @property (nonatomic) USBDFUACMCommand             *acmCommand;
     // DFU処理のパラメーターを保持
     @property (nonatomic) DFUCommandParameter          *commandParameter;
 
@@ -35,6 +37,7 @@
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
+            [self setAcmCommand:[[USBDFUACMCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -43,6 +46,8 @@
         // 上位クラスに制御を戻す
         [[self delegate] transferCommandDidTerminate:success];
     }
+
+#pragma mark - Change to bootloader mode
 
     - (void)invokeTransferWithParamRef:(id)ref {
         // DFU処理のパラメーターを保持
@@ -75,6 +80,14 @@
         }
     }
 
+#pragma mark - DFU transfer main process
+
+    - (void)performTransferProcess {
+        // TODO: 仮の実装です。
+        [NSThread sleepForTimeInterval:2.0];
+        [self terminateTransferCommand:true];
+    }
+
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
@@ -86,9 +99,8 @@
         }
         // ステータスをクリア
         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
-        // TODO: 仮の実装です。
-        [NSThread sleepForTimeInterval:2.0];
-        [self terminateTransferCommand:true];
+        // USB DFUに必要なACM接続を確立
+        [[self acmCommand] establishACMConnection];
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
@@ -111,6 +123,12 @@
                 [self terminateTransferCommand:false];
                 break;
         }
+    }
+
+#pragma mark - Call back from USBDFUACMCommand
+
+    - (void)didEstablishACMConnection:(bool)success {
+        [self performTransferProcess];
     }
 
 @end
