@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/10/19.
 //
+#import "nrf52_app_image.h"
 #import "usb_dfu_util.h"
 
 #import "AppCommonMessage.h"
@@ -121,6 +122,13 @@
         if ([self sendGetMtuRequest] == false) {
             return false;
         }
+        // datイメージを転送
+        if ([self transferDFUImage:NRF_DFU_BYTE_OBJ_INIT_CMD
+                         imageData:nrf52_app_image_dat()
+                         imageSize:nrf52_app_image_dat_size()] == false) {
+            return false;
+        }
+        [[ToolLogFile defaultLogger] debug:@"USBDFUTransferCommand: update init command object done"];
         // TODO: 仮の実装です。
         [NSThread sleepForTimeInterval:3.0];
         return true;
@@ -151,14 +159,184 @@
         // レスポンスからMTUを取得（4〜5バイト目）
         uint16_t mtu = [self convertLEBytesToUint16:[response bytes] offset:3];
         size_t mtu_size = usb_dfu_object_set_mtu(mtu);
-        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolDFUCommand: MTU=%d", mtu_size];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"USBDFUTransferCommand: MTU=%d", mtu_size];
         return true;
+    }
+
+    - (bool)transferDFUImage:(uint8_t)objectType imageData:(uint8_t *)data imageSize:(size_t)size {
+        // １回あたりの送信データ最大長を取得
+        size_t maxCreateSize;
+        if ([self sendSelectObjectRequest:objectType pMaxCreateSize:&maxCreateSize] == false) {
+            return false;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"USBDFUTransferCommand: object select size=%d, create size max=%d", size, maxCreateSize];
+        // データを分割送信
+        size_t remaining = size;
+        size_t alreadySent = 0;
+        while (remaining > 0) {
+            // 送信サイズを通知
+            size_t sendSize = (maxCreateSize < remaining) ? maxCreateSize : remaining;
+            if ([self sendCreateObjectRequest:objectType imageSize:sendSize] == false) {
+                return false;
+            }
+            // データを送信
+            uint8_t *sendData = data + alreadySent;
+            if ([self sendWriteCommandObjectRequest:objectType
+                                          imageData:sendData imageSize:sendSize] == false) {
+                return false;
+            }
+            // 送信データのチェックサムを検証
+            alreadySent += sendSize;
+            if ([self sendGetCrcRequest:objectType imageSize:alreadySent] == false) {
+                return false;
+            }
+            // 送信データをコミット
+            if ([self sendExecuteObjectRequest] == false) {
+                return false;
+            }
+            // 未送信サイズを更新
+            remaining -= sendSize;
+        }
+        return true;
+    }
+
+    - (bool)sendSelectObjectRequest:(uint8_t)objectType pMaxCreateSize:(size_t *)pMaxCreateSize {
+        // SELECT OBJECT 06 xx C0 -> 60 06 xx 00 01 00 00 00 00 00 00 00 00 00 00 C0
+        uint8_t request[] = {
+            NRF_DFU_OP_OBJECT_SELECT, objectType,
+            NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        if ([[self acmCommand] assertDFUResponseSuccess:response] == false) {
+            return false;
+        }
+        // レスポンスから、イメージの最大送信可能サイズを取得（4〜7バイト目）
+        *pMaxCreateSize = (size_t)[self convertLEBytesToUint32:[response bytes] offset:3];
+        // チェックサムを初期化
+        usb_dfu_object_checksum_reset();
+        return true;
+    }
+
+    - (bool)sendCreateObjectRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
+        // CREATE OBJECT 01 xx 87 00 00 00 C0 -> 60 01 01 C0
+        uint8_t createObjectRequest[] = {
+            NRF_DFU_OP_OBJECT_CREATE, objectType, 0x00, 0x00, 0x00, 0x00,
+            NRF_DFU_BYTE_EOM};
+        uint32_t commandObjectLen = (uint32_t)imageSize;
+        [self convertUint32ToLEBytes:commandObjectLen data:createObjectRequest offset:2];
+        
+        NSData *data = [NSData dataWithBytes:createObjectRequest length:sizeof(createObjectRequest)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        return [[self acmCommand] assertDFUResponseSuccess:response];
+    }
+
+    - (bool)sendWriteCommandObjectRequest:(uint8_t)objectType
+                                imageData:(uint8_t *)data imageSize:(size_t)size {
+        // オブジェクト種別に対応するデータ／サイズを設定
+        usb_dfu_object_frame_init(data, size);
+        // 送信フレームを生成
+        while (usb_dfu_object_frame_prepare()) {
+            // フレームを送信
+            NSData *frame = [NSData dataWithBytes:usb_dfu_object_frame_data()
+                                          length:usb_dfu_object_frame_size()];
+            if ([[self acmCommand] sendRequestData:frame] == false) {
+                return false;
+            }
+#if CDC_ACM_LOG_DEBUG
+            [[ToolLogFile defaultLogger] debugWithFormat:@"CDC ACM Send (%d bytes)", [frame length]];
+#endif
+        }
+        return true;
+    }
+
+    - (bool)sendGetCrcRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
+        // CRC GET 03 C0 -> 60 03 01 87 00 00 00 38 f4 97 72 C0
+        uint8_t request[] = {NRF_DFU_OP_CRC_GET, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        if ([[self acmCommand] assertDFUResponseSuccess:response] == false) {
+            return false;
+        }
+        // レスポンスデータから、エスケープシーケンスを取り除く
+        NSData *respUnesc = [self unescapeResponseData:response];
+
+        // 送信データ長を検証
+        size_t recvSize = (size_t)[self convertLEBytesToUint32:[respUnesc bytes] offset:3];
+        if (recvSize != imageSize) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"USBDFUTransferCommand: send object %d failed (expected %d bytes, recv %d bytes)",
+             objectType, imageSize, recvSize];
+            return false;
+        }
+        // チェックサムを検証
+        uint32_t checksum = [self convertLEBytesToUint32:[respUnesc bytes] offset:7];
+        if (checksum != usb_dfu_object_checksum_get()) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"USBDFUTransferCommand: send object %d failed (checksum error)",
+             objectType];
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)sendExecuteObjectRequest {
+        // EXECUTE OBJECT 04 C0 -> 60 04 01 C0
+        static uint8_t request[] = {NRF_DFU_OP_OBJECT_EXECUTE, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [[self acmCommand] sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスを検証
+        return [[self acmCommand] assertDFUResponseSuccess:response];
+    }
+
+    - (void)convertUint32ToLEBytes:(uint32_t)uint data:(uint8_t *)data offset:(uint16_t)offset {
+        uint8_t *bytes = data + offset;
+        for (uint8_t i = 0; i < 4; i++) {
+            *bytes++ = uint & 0xff;
+            uint = uint >> 8;
+        }
+    }
+
+    - (uint32_t)convertLEBytesToUint32:(const void *)data offset:(uint16_t)offset {
+        uint8_t *bytes = (uint8_t *)data;
+        uint32_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8)
+            | ((uint32_t)bytes[offset + 2] << 16) | ((uint32_t)bytes[offset + 3] << 24);
+        return uint;
     }
 
     - (uint16_t)convertLEBytesToUint16:(const void *)data offset:(uint16_t)offset {
         uint8_t *bytes = (uint8_t *)data;
         uint16_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8);
         return uint;
+    }
+
+    - (NSData *)unescapeResponseData:(NSData *)response {
+        uint8_t c;
+        NSMutableData *unescaped = [[NSMutableData alloc] init];
+        
+        uint8_t *data = (uint8_t *)[response bytes];
+        size_t   size = [response length];
+        
+        bool escapeChar = false;
+        for (size_t i = 0; i < size; i++) {
+            c = data[i];
+            if (c == 0xdb) {
+                escapeChar = true;
+            } else {
+                if (escapeChar) {
+                    escapeChar = false;
+                    if (c == 0xdc) {
+                        c = 0xc0;
+                    } else if (c == 0xdd) {
+                        c = 0xdb;
+                    }
+                }
+                [unescaped appendBytes:&c length:sizeof(c)];
+            }
+        }
+        return unescaped;
     }
 
 #pragma mark - Call back from AppHIDCommand
