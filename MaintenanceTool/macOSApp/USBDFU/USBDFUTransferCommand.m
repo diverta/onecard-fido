@@ -420,6 +420,7 @@
         }
         // ステータスをクリア
         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
+        [[self delegate] notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:100];
         dispatch_async([self subQueue], ^{
             // HID経由で更新後のバージョン情報を取得
             [self doRequestHIDGetVersionInfo];
