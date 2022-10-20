@@ -310,6 +310,11 @@
 
 #pragma mark - Private common methods
 
+    - (void)notifyInfoMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] info:message];
+        [self notifyToolCommandMessage:message];
+    }
+
     - (void)notifyErrorMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] error:message];
         [self notifyToolCommandMessage:message];
