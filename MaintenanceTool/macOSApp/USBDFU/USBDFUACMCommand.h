@@ -13,6 +13,7 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (void)establishACMConnection;
+    - (void)closeACMConnection;
 
 @end
 

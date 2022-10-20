@@ -85,6 +85,7 @@
     - (void)performTransferProcess {
         // TODO: 仮の実装です。
         [NSThread sleepForTimeInterval:2.0];
+        [[self acmCommand] closeACMConnection];
         [self terminateTransferCommand:true];
     }
 
