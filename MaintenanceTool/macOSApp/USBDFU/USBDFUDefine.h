@@ -7,6 +7,9 @@
 #ifndef USBDFUDefine_h
 #define USBDFUDefine_h
 
+// 更新対象アプリケーション＝version 0.3.0
+#define DFU_UPD_TARGET_APP_VERSION      300
+
 // 処理タイムアウト（転送／反映チェック処理）
 #define TIMEOUT_SEC_DFU_PROCESS         30.0
 

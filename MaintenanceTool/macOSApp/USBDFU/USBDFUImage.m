@@ -9,10 +9,8 @@
 #import "nrf52_app_image.h"
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
+#import "USBDFUDefine.h"
 #import "USBDFUImage.h"
-
-// 更新対象アプリケーション＝version 0.3.0
-#define DFU_UPD_TARGET_APP_VERSION      300
 
 @interface USBDFUImage ()
 
