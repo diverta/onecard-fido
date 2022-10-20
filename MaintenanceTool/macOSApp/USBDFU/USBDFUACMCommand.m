@@ -97,7 +97,7 @@
         // シリアルデバイスのインスタンスを走査
         CFMutableDictionaryRef classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
         if (classesToMatch == NULL) {
-            [[ToolLogFile defaultLogger] error:@"ToolCDCHelper: IOServiceMatching returned NULL"];
+            [[ToolLogFile defaultLogger] error:@"USBDFUACMCommand: IOServiceMatching returned NULL"];
             return nil;
         }
         
@@ -108,11 +108,11 @@
         IOServiceGetMatchingServices(kIOMasterPortDefault, classesToMatch, &serviceIterator);
         if (kernResult != KERN_SUCCESS) {
             [[ToolLogFile defaultLogger] errorWithFormat:
-             @"ToolCDCHelper: IOServiceGetMatchingServices returned %d", kernResult];
+             @"USBDFUACMCommand: IOServiceGetMatchingServices returned %d", kernResult];
             return nil;
         }
         if (serviceIterator == 0) {
-            [[ToolLogFile defaultLogger] error:@"ToolCDCHelper: serviceIterator not exist"];
+            [[ToolLogFile defaultLogger] error:@"USBDFUACMCommand: serviceIterator not exist"];
             return nil;
         }
         
@@ -175,25 +175,25 @@
         
         // デバイスがビジー状態でないかどうか検査
         if (usb_cdc_acm_device_is_not_busy(path) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"USBDFUACMCommand: %s", log_debug_message()];
             return false;
         }
 
         // デバイス接続を実行
         if (usb_cdc_acm_device_open(path) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"USBDFUACMCommand: %s", log_debug_message()];
             return false;
         }
 
         // 現在オープンされているデバイスのパスを保持
         [self setOpeningDevicePath:ACMDevicePath];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ opened", [self openingDevicePath]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"USBDFUACMCommand: %@ opened", [self openingDevicePath]];
         return true;
     }
 
     - (void)disconnectDevice {
         if ([self openingDevicePath]) {
-            [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
+            [[ToolLogFile defaultLogger] debugWithFormat:@"USBDFUACMCommand: %@ closed", [self openingDevicePath]];
         }
         // デバイスから切断
         usb_cdc_acm_device_close();
@@ -206,7 +206,7 @@
         const char *dataBytes = (const char *)[data bytes];
         NSUInteger dataLength = [data length];
         if (usb_cdc_acm_device_write(dataBytes, dataLength) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"USBDFUACMCommand: %s", log_debug_message()];
             return false;
         }
         return true;
@@ -215,7 +215,7 @@
     - (NSData *)readFromDevice:(double)timeout_sec {
         // 現在オープンされているデバイスから、内部バッファにバイト配列を読込
         if (usb_cdc_acm_device_read(timeout_sec) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"USBDFUACMCommand: %s", log_debug_message()];
             return nil;
         }
         // 読込データをNSDataオブジェクトに変換

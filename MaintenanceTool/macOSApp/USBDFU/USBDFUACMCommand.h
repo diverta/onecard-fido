@@ -15,6 +15,7 @@
     - (void)establishACMConnection;
     - (void)closeACMConnection;
     - (NSData *)sendRequest:(NSData *)data timeoutSec:(double)timeout;
+    - (bool)sendRequestData:(NSData *)data;
     - (bool)assertDFUResponseSuccess:(NSData *)response;
 
 @end
