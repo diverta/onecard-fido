@@ -37,6 +37,7 @@
         self = [super init];
         if (self) {
             [self setDelegate:delegate];
+            NSLog(@"%@", delegate);
             [self initializeHIDManager];
         }
         return self;
