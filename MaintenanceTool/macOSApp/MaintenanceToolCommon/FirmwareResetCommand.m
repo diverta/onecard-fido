@@ -106,7 +106,7 @@
     - (void)didDetectRemoval {
     }
 
-    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+    - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
         // 即時で上位クラスに制御を戻す
         if (success == false) {
             [self commandDidProcess:false message:errorMessage];

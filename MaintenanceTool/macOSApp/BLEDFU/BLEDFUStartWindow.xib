@@ -12,6 +12,7 @@
                 <outlet property="buttonOK" destination="y4V-cK-FxX" id="cHH-8J-6VL"/>
                 <outlet property="labelCurrentVersion" destination="IzL-CG-LOW" id="FnX-gv-ksM"/>
                 <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
+                <outlet property="labelDescription" destination="S5S-JP-fCE" id="w0g-99-QrA"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>

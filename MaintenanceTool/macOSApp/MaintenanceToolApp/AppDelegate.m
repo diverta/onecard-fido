@@ -109,7 +109,7 @@
 
     - (IBAction)buttonDFUDidPress:(id)sender {
         // ファームウェア更新画面を表示
-        [[self dfuCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
+        [[self dfuCommand] DFUWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPgpParamDidPress:(id)sender {
