@@ -106,10 +106,10 @@
                 [[self delegate] notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
                 [self terminateTransferCommand:false];
             } else {
-                // 処理成功時は、再接続まで待機 --> HID接続検知により、バージョン更新判定に遷移
+                // 処理成功時は、再接続まで待機
                 [[self delegate] notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:100];
                 [[ToolLogFile defaultLogger] info:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
-                [[self commandParameter] setDfuStatus:DFU_ST_WAIT_FOR_BOOT];
+                [self performDFUUpdateMonitor];
             }
         });
     }
@@ -138,6 +138,19 @@
         }
         [[ToolLogFile defaultLogger] debug:@"USBDFUTransferCommand: update data object done"];
         return true;
+    }
+
+    - (void) performDFUUpdateMonitor {
+        // ステータスを更新（更新イメージ反映待ち）
+        [[self commandParameter] setDfuStatus:DFU_ST_WAIT_FOR_BOOT];
+        // 反映待ち（リセットによるファームウェア再始動完了まで待機）
+        for (int i = 0; i < USBDFU_WAITING_SEC_ESTIMATED; i++) {
+            // 処理進捗画面に通知
+            [[self delegate] notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:(100 + i)];
+            [NSThread sleepForTimeInterval:1.0];
+        }
+        // 処理進捗画面に通知
+        [[self delegate] notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:(100 + USBDFU_WAITING_SEC_ESTIMATED)];
     }
 
 #pragma mark - DFU transfer sub process
@@ -420,7 +433,6 @@
         }
         // ステータスをクリア
         [[self commandParameter] setDfuStatus:DFU_ST_NONE];
-        [[self delegate] notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:100];
         dispatch_async([self subQueue], ^{
             // HID経由で更新後のバージョン情報を取得
             [self doRequestHIDGetVersionInfo];

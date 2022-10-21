@@ -174,7 +174,7 @@
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self dfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
-        [[self dfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:100];
+        [[self dfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:(100 + USBDFU_WAITING_SEC_ESTIMATED)];
         [[self dfuProcessingWindow] commandDidNotifyDFUProcess:MSG_DFU_PROCESS_TRANSFER_PREPARE progressValue:0];
         // DFU処理を開始
         [self startDFUProcess];

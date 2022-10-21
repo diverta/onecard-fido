@@ -11,7 +11,10 @@
 #define DFU_UPD_TARGET_APP_VERSION      300
 
 // 処理タイムアウト（転送／反映チェック処理）
-#define TIMEOUT_SEC_DFU_PROCESS         30.0
+#define TIMEOUT_SEC_DFU_PROCESS         35.0
+
+// イメージ反映所要時間（秒）
+#define USBDFU_WAITING_SEC_ESTIMATED    15
 
 // CDC ACM接続処理用の試行回数・インターバル
 #define MAX_CNT_FOR_ACM_CONNECT         5
