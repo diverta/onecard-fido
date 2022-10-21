@@ -228,6 +228,7 @@
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED        @"FIDO認証器ファームウェアのバージョンが%@に更新されました。"
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED @"FIDO認証器ファームウェアのバージョンを%@に更新できませんでした。"
 #define MSG_DFU_PROCESS_TIMEOUT                 @"FIDO認証器ファームウェアの更新処理がタイムアウトしました。"
+#define MSG_DFU_PROCESS_REBOOT_TIMEOUT          @"ファームウェア更新イメージの反映処理がタイムアウトしました。"
 #define MSG_DFU_PROCESS_TITLE_GOING             @"ファームウェアを更新しています"
 #define MSG_DFU_PROCESS_TITLE_END               @"ファームウェアの更新が完了しました"
 #define MSG_DFU_PROCESS_TRANSFER_PREPARE        @"更新ファームウェア転送の準備中です。"

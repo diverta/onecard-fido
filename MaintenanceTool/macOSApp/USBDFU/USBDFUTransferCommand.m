@@ -149,8 +149,16 @@
             [[self delegate] notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:(100 + i)];
             [NSThread sleepForTimeInterval:1.0];
         }
+        // ステータスが更新されていない場合は、タイムアウトとして判定
+        if ([[self commandParameter] dfuStatus] == DFU_ST_WAIT_FOR_BOOT) {
+            [[self delegate] notifyErrorMessage:MSG_DFU_PROCESS_REBOOT_TIMEOUT];
+            [self terminateTransferCommand:false];
+            return;
+        }
         // 処理進捗画面に通知
         [[self delegate] notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:(100 + USBDFU_WAITING_SEC_ESTIMATED)];
+        // HID経由で更新後のバージョン情報を取得
+        [self doRequestHIDGetVersionInfo];
     }
 
 #pragma mark - DFU transfer sub process
@@ -428,15 +436,10 @@
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
-        if ([[self commandParameter] dfuStatus] != DFU_ST_WAIT_FOR_BOOT) {
-            return;
-        }
         // ステータスをクリア
-        [[self commandParameter] setDfuStatus:DFU_ST_NONE];
-        dispatch_async([self subQueue], ^{
-            // HID経由で更新後のバージョン情報を取得
-            [self doRequestHIDGetVersionInfo];
-        });
+        if ([[self commandParameter] dfuStatus] == DFU_ST_WAIT_FOR_BOOT) {
+            [[self commandParameter] setDfuStatus:DFU_ST_NONE];
+        }
     }
 
     - (void)didDetectRemoval {
