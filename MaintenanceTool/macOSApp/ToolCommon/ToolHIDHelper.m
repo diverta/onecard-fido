@@ -37,7 +37,6 @@
         self = [super init];
         if (self) {
             [self setDelegate:delegate];
-            NSLog(@"%@", delegate);
             [self initializeHIDManager];
         }
         return self;
@@ -70,7 +69,6 @@
             [self toolHIDManager], &handleDeviceRemoval, (__bridge void *)self);
         IOHIDManagerRegisterInputReportCallback(
             [self toolHIDManager], &handleInputReport, (__bridge void *)self);
-        [[ToolLogFile defaultLogger] debug:MSG_USB_DETECT_STARTED];
     }
 
     - (bool)isDeviceConnected {
