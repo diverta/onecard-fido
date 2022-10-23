@@ -24,5 +24,5 @@ No,部品分類,部品種類,メーカー名,メーカー型番,リファレン�
 19,SMD,タクトスイッチ,ALPS,SKTADAE010,SW2,1,実装,2,,テープ,4pos,
 20,SMD,BLEモジュール,Raytac Corporation,MDBT50Q-P1MV2,U1,1,実装,2,,テープ,LGA,
 21,SMD,LDO,Torex Semiconductor,XC6206P302MR-G,U2,1,実装,2,,テープ,SOT23,
-22,SMD,RTCC,Micro Crystal AG,RV-3028-C7 32.768kHz 1ppm TA QA,U3,1,実装,2,,テープ,SON-8,
+22,SMD,RTCC,Micro Crystal AG,RV-3028-C7 32.768KHZ 1PPM-TA-QC,U3,1,実装,2,,テープ,SON-8,
 23,SMD,クリスタル,NDK,NX3215SA-32.768K-STD-MUA-9,X1,1,実装,2,,テープ,3215,
