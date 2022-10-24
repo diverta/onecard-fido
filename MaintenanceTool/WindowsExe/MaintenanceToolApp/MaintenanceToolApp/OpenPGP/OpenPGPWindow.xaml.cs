@@ -35,7 +35,7 @@ namespace MaintenanceToolApp.OpenPGP
         public OpenPGPWindow()
         {
             // OpenPGP処理クラスの参照を保持
-            Process = new OpenPGPProcess();
+            Process = new OpenPGPProcess(this);
 
             // 画面項目の初期化
             InitializeComponent();
