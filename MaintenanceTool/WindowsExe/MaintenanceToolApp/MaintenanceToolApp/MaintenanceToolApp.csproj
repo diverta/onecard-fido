@@ -35,6 +35,7 @@
     <Compile Include="..\..\ToolAppCommon\AppUtil.cs" Link="ToolAppCommon\AppUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\BLEProcess.cs" Link="ToolAppCommon\BLEProcess.cs" />
     <Compile Include="..\..\ToolAppCommon\BLEService.cs" Link="ToolAppCommon\BLEService.cs" />
+    <Compile Include="..\..\ToolAppCommon\CCIDDevice.cs" Link="ToolAppCommon\CCIDDevice.cs" />
     <Compile Include="..\..\ToolAppCommon\DialogUtil.cs" Link="ToolAppCommon\DialogUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\FIDODefine.cs" Link="ToolAppCommon\FIDODefine.cs" />
     <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
