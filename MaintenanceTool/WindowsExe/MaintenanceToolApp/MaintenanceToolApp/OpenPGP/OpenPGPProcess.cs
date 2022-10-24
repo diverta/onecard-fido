@@ -138,7 +138,8 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // エラーメッセージを画面＆ログ出力
             if (success == false && errorMessage.Length > 0) {
-                AppLogUtil.OutputLogError(errorMessage);
+                // ログ出力する文言からは、改行文字を除去
+                AppLogUtil.OutputLogError(AppUtil.ReplaceCRLF(errorMessage));
                 Parameter.ResultInformativeMessage = errorMessage;
             }
 

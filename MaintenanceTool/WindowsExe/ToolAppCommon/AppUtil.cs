@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ToolAppCommon
 {
@@ -154,6 +155,11 @@ namespace ToolAppCommon
             for (int i = 0; i < s.Length; i++) {
                 b[i + offset] = s[s.Length - 1 - i];
             }
+        }
+
+        public static string ReplaceCRLF(string src)
+        {
+            return new Regex("\r\n|\n").Replace(src, "");
         }
     }
 }
