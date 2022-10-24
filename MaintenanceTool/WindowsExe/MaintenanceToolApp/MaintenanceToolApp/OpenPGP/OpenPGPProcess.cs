@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using ToolAppCommon;
+﻿using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.OpenPGP
@@ -55,15 +54,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         // イベントのコールバック参照
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
-
-        // 親ウィンドウの参照を保持
-        private readonly Window ParentWindow;
-
-        public OpenPGPProcess(Window parentWindowRef)
-        {
-            // 親ウィンドウの参照を保持
-            ParentWindow = parentWindowRef;
-        }
 
         //
         // OpenPGP機能設定用関数
