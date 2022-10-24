@@ -20,6 +20,15 @@ namespace ToolAppCommon
         public byte P2 { get; set; }
         public byte[] Data { get; set; } = Array.Empty<byte>();
         public byte Le { get; set; }
+
+        public CCIDParameter(byte iNS, byte p1, byte p2, byte[] data, byte le)
+        {
+            INS = iNS;
+            P1 = p1;
+            P2 = p2;
+            Data = data;
+            Le = le;
+        }
     }
 
     public class CCIDProcess
