@@ -39,6 +39,7 @@ namespace ToolAppCommon
         // CCIDメッセージ受信時のイベント
         public delegate void HandlerOnReceivedResponse(bool success, byte[] responseData, UInt16 responseSW);
         private event HandlerOnReceivedResponse OnReceivedResponse = null!;
+        private HandlerOnReceivedResponse OnReceivedResponseRef = null!;
 
         //
         // 外部公開用
@@ -50,9 +51,14 @@ namespace ToolAppCommon
 
         public static void DoRequestCommand(CCIDParameter parameter, HandlerOnReceivedResponse handler)
         {
-            Instance.OnReceivedResponse += handler;
+            Instance.OnReceivedResponseRef = new HandlerOnReceivedResponse(handler);
+            Instance.OnReceivedResponse += Instance.OnReceivedResponseRef;
             Instance.SendIns(parameter.INS, parameter.P1, parameter.P2, parameter.Data, parameter.Le);
-            Instance.OnReceivedResponse -= handler;
+        }
+
+        public static void UnregisterHandlerOnReceivedResponse()
+        {
+            Instance.OnReceivedResponse -= Instance.OnReceivedResponseRef;
         }
 
         public static void DisconnectCCID()
@@ -100,7 +106,7 @@ namespace ToolAppCommon
             int sizeToSend = sendData.Length;
             byte sendCla;
             byte[] responseData = Array.Empty<byte>();
-            UInt16 responseSW = 0;
+            UInt16 responseSW;
             IEnumerable<byte> responseBytes;
 
             // 例外回避
