@@ -149,7 +149,10 @@
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
+        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
+        public const string MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR = "入力した{0}が間違っています。\n（あと{1}回リトライ可能です）";
         public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
+        public const string MSG_OPENPGP_ADMIN_PIN_VERIFIED = "管理用PIN番号を検証しました。";
         public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER = "バックアップファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_INPUT_PGP_MUST_ENTRY = "{0}は必ず入力してください";
@@ -169,6 +172,7 @@
         public const string MSG_LABEL_PGP_COMMENT = "コメント";
         public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
         public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_ITEM_PGP_ADMIN_PIN = "管理用PIN番号";
         public const string MSG_LABEL_ITEM_PGP_RESET_CODE = "リセットコード";
         public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";
         public const string MSG_LABEL_ITEM_NEW_PIN = "新しいPIN番号";
@@ -184,6 +188,7 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN = "PIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE = "リセットコード変更";
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
+        public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";

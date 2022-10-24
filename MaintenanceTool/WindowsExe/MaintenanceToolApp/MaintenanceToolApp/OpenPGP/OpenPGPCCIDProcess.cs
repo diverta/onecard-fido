@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -77,13 +78,49 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseOpenPGPInsSelectApplication(bool success, byte[] responseData, UInt16 responseSW)
         {
+            // イベントを解除
+            CCIDProcess.UnregisterHandlerOnReceivedResponse();
+
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
                 DoCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
                 return;
             }
 
-            // TODO: 仮の実装です。
+            // 次の処理に移行
+            DoRequestOpenPGPInsVerify();
+        }
+
+        private void DoRequestOpenPGPInsVerify()
+        {
+            // パラメーターの管理用PIN番号を使用し、PIN認証を実行
+            string pin = Parameter.Passphrase;
+            byte[] pinBytes = Encoding.ASCII.GetBytes(pin);
+            CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_VERIFY, 0x00, 0x83, pinBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseOpenPGPInsVerify);
+        }
+
+        private void DoResponseOpenPGPInsVerify(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // イベントを解除
+            CCIDProcess.UnregisterHandlerOnReceivedResponse();
+
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                string errMsg;
+                if ((responseSW & 0xfff0) == 0x63c0) {
+                    // 入力PINが不正の場合はその旨のメッセージを出力
+                    int retries = responseSW & 0x000f;
+                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries);
+
+                } else {
+                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
+                }
+                DoCommandResponse(false, errMsg);
+                return;
+            }
+
+            // 上位クラスに制御を戻す
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }

@@ -70,9 +70,49 @@ namespace MaintenanceToolApp.OpenPGP
             // 処理開始を通知
             NotifyProcessStarted();
 
+            if (Parameter.Command == Command.COMMAND_OPENPGP_INSTALL_KEYS) {
+                // 管理用PIN番号検証から開始
+                DoRequestAdminPinVerify();
+
+            } else {
+                // バージョン照会から開始
+                DoRequestGPGVersion();
+            }
+
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(Parameter.ToString());
             System.Threading.Thread.Sleep(1000);
+            NotifyProcessTerminated(true);
+        }
+
+        //
+        // CCID I/Fコマンド実行関数
+        //
+        private void DoRequestAdminPinVerify()
+        {
+            // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
+            new OpenPGPCCIDProcess().DoOpenPGPCcidCommand(Parameter, new OpenPGPCCIDProcess.HandlerOnCommandResponse(DoResponseAdminPinVerify));
+        }
+
+        private void DoResponseAdminPinVerify(bool success, string errorMessage)
+        {
+            if (success) {
+                // バージョン照会から開始
+                AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
+                DoRequestGPGVersion();
+
+            } else {
+                // 画面に制御を戻す
+                NotifyProcessTerminated(false);
+            }
+        }
+
+        //
+        // GPGコマンド実行関数
+        // 
+        private void DoRequestGPGVersion()
+        {
+            // TODO: 仮の実装です。
             NotifyProcessTerminated(true);
         }
 
