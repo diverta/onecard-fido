@@ -9,6 +9,7 @@ namespace MaintenanceToolApp.OpenPGP
         public Command Command { get; set; }
         public bool CommandSuccess { get; set; }
         public string ResultMessage { get; set; }
+        public string ResultInformativeMessage { get; set; }
         public string RealName { get; set; }
         public string MailAddress { get; set; }
         public string Comment { get; set; }
@@ -23,6 +24,7 @@ namespace MaintenanceToolApp.OpenPGP
             CommandTitle = string.Empty;
             Command = Command.COMMAND_NONE;
             ResultMessage = string.Empty;
+            ResultInformativeMessage = string.Empty;
             RealName = string.Empty;
             MailAddress = string.Empty;
             Comment = string.Empty;
@@ -82,7 +84,7 @@ namespace MaintenanceToolApp.OpenPGP
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(Parameter.ToString());
             System.Threading.Thread.Sleep(1000);
-            NotifyProcessTerminated(true);
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
         //
@@ -103,7 +105,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             } else {
                 // 画面に制御を戻す
-                NotifyProcessTerminated(false);
+                NotifyProcessTerminated(false, errorMessage);
             }
         }
 
@@ -113,7 +115,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestGPGVersion()
         {
             // TODO: 仮の実装です。
-            NotifyProcessTerminated(true);
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
         // 
@@ -126,8 +128,14 @@ namespace MaintenanceToolApp.OpenPGP
             AppLogUtil.OutputLogInfo(startMsg);
         }
 
-        private void NotifyProcessTerminated(bool success)
+        private void NotifyProcessTerminated(bool success, string errorMessage)
         {
+            // エラーメッセージを画面＆ログ出力
+            if (success == false && errorMessage.Length > 0) {
+                AppLogUtil.OutputLogError(errorMessage);
+                Parameter.ResultInformativeMessage = errorMessage;
+            }
+
             // コマンドの実行結果をログ出力
             string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 Parameter.CommandTitle,
