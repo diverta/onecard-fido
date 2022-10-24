@@ -57,6 +57,9 @@ namespace MaintenanceToolApp.OpenPGP
         // イベントのコールバック参照
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
 
+        // CCIDコマンド処理クラスのインスタンスを保持
+        private readonly OpenPGPCCIDProcess CCIDProcess = new OpenPGPCCIDProcess();
+
         //
         // OpenPGP機能設定用関数
         // 
@@ -93,11 +96,14 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestAdminPinVerify()
         {
             // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
-            new OpenPGPCCIDProcess().DoOpenPGPCcidCommand(Parameter, new OpenPGPCCIDProcess.HandlerOnCommandResponse(DoResponseAdminPinVerify));
+            CCIDProcess.DoOpenPGPCcidCommand(Parameter, DoResponseAdminPinVerify);
         }
 
         private void DoResponseAdminPinVerify(bool success, string errorMessage)
         {
+            // イベントを解除
+            CCIDProcess.UnregisterHandlerOnCommandResponse();
+
             if (success) {
                 // バージョン照会から開始
                 AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);

@@ -30,7 +30,7 @@ namespace MaintenanceToolApp.OpenPGP
             Parameter = parameter;
 
             // イベントを登録
-            OnCommandResponseRef = handlerRef;
+            OnCommandResponseRef = new HandlerOnCommandResponse(handlerRef);
             OnCommandResponse += OnCommandResponseRef;
 
             // CCIDインタフェース経由で認証器に接続
@@ -55,14 +55,17 @@ namespace MaintenanceToolApp.OpenPGP
             }
         }
 
+        public void UnregisterHandlerOnCommandResponse()
+        {
+            // イベントを解除
+            OnCommandResponse -= OnCommandResponseRef;
+        }
+
         private void DoCommandResponse(bool success, string errorMessage)
         {
             // CCIDデバイスから切断し、上位クラスに制御を戻す
             CCIDProcess.DisconnectCCID();
             OnCommandResponse(success, errorMessage);
-
-            // イベントを解除
-            OnCommandResponse -= OnCommandResponseRef;
         }
 
         //
