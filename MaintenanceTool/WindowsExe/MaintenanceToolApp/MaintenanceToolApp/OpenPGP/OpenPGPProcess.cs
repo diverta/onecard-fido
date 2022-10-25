@@ -19,6 +19,9 @@ namespace MaintenanceToolApp.OpenPGP
         public string BackupFolderPath { get; set; }
         public string CurrentPin { get; set; }
         public string NewPin { get; set; }
+        //
+        // 以下は処理生成中に設定
+        //
         public string TempFolderPath { get; set; }
 
         public OpenPGPParameter()
@@ -201,7 +204,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             // 処理完了を通知
             AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_REMOVED_TEMPDIR);
-            NotifyProcessTerminated(Parameter.CommandSuccess, AppCommon.MSG_NONE);
+            NotifyProcessTerminated(Parameter.CommandSuccess, Parameter.ResultInformativeMessage);
         }
         
         //
@@ -212,19 +215,31 @@ namespace MaintenanceToolApp.OpenPGP
             // スクリプトを作業用フォルダーに生成
             string scriptName = "generate_main_key.bat";
             if (GpgProcess.WriteScriptToTempFolder(scriptName) == false) {
-                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATED_MAIN_KEY);
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_UNKNOWN);
                 return;
             }
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "generate_main_key.param";
             if (GpgProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
-                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATED_MAIN_KEY);
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_UNKNOWN);
                 return;
             }
 
+            // スクリプトを実行し、主鍵を生成
+            string exe = string.Format("{0}\\{1}", Parameter.TempFolderPath, scriptName);
+            string args = string.Format("{0} {1} --no-tty", Parameter.TempFolderPath, Parameter.Passphrase);
+            Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_VERSION, exe, args, null!);
+            GpgProcess.DoRequestCommandLine(parameter, DoResponseGenerateMainKey);
+        }
+
+        private void DoResponseGenerateMainKey(bool success, string response, string error)
+        {
+            // イベントを解除
+            GpgProcess.UnregisterHandlerOnCommandResponse();
+
             // TODO: 仮の実装です。
-            Parameter.CommandSuccess = true;
+            Parameter.CommandSuccess = success;
             DoRequestRemoveTempFolder();
         }
 
