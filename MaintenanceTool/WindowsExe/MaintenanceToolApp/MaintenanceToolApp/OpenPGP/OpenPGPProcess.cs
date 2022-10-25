@@ -209,6 +209,20 @@ namespace MaintenanceToolApp.OpenPGP
         //
         private void DoRequestGenerateMainKey()
         {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "generate_main_key.bat";
+            if (GpgProcess.WriteScriptToTempFolder(scriptName) == false) {
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATED_MAIN_KEY);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "generate_main_key.param";
+            if (GpgProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATED_MAIN_KEY);
+                return;
+            }
+
             // TODO: 仮の実装です。
             Parameter.CommandSuccess = true;
             DoRequestRemoveTempFolder();

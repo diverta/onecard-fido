@@ -27,6 +27,8 @@
     <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <None Remove="Resources\generate_main_key.bat" />
+    <None Remove="Resources\generate_main_key.param" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +57,8 @@
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\generate_main_key.bat" />
+    <EmbeddedResource Include="Resources\generate_main_key.param" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToolAppCommon;
@@ -144,7 +146,7 @@ namespace MaintenanceToolApp.OpenPGP
                 success = true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("OpenPGPUtil.MakeTempFolder exception:\n{0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("Gpg4winProcess.MakeTempFolder exception:\n{0}", e.Message));
             }
 
             // 生成された作業用フォルダーを戻す
@@ -165,7 +167,7 @@ namespace MaintenanceToolApp.OpenPGP
                 success = true;
 
             } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("OpenPGPUtil.RemoveTempFolder exception:\n{0}", e.Message));
+                AppLogUtil.OutputLogError(string.Format("Gpg4winProcess.RemoveTempFolder exception:\n{0}", e.Message));
             }
 
             // 作業用フォルダー削除の成否を戻す
@@ -177,6 +179,112 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // イベントを解除
             OnTempFolderCommandResponse -= OnTempFolderCommandResponseRef;
+        }
+
+        //
+        // スクリプト／パラメーターファイル関連
+        //
+        public bool WriteScriptToTempFolder(string scriptName)
+        {
+            // スクリプトをリソースから読込み
+            string scriptContent = GetScriptResourceContentString(scriptName);
+            if (scriptContent == null) {
+                return false;
+            }
+
+            // スクリプトファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(scriptContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool WriteParamForGenerateMainKeyToTempFolder(string scriptName, OpenPGPParameter parameter)
+        {
+            // パラメーターをリソースから読込み
+            string scriptContent = GetScriptResourceContentString(scriptName);
+            if (scriptContent == string.Empty) {
+                return false;
+            }
+
+            // パラメーターを置き換え
+            string parameterContent = string.Format(scriptContent, parameter.RealName, parameter.MailAddress, parameter.Comment);
+
+            // パラメーターファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            if (WriteStringToFile(parameterContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GetScriptResourceContentString(string scriptName)
+        {
+            // スクリプトをリソースから読込み
+            string scriptResourceName = GetScriptResourceName(scriptName);
+            if (scriptResourceName == string.Empty) {
+                AppLogUtil.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
+                return string.Empty;
+            }
+            string scriptContent = GetScriptResourceContent(scriptResourceName);
+            if (scriptContent == null) {
+                AppLogUtil.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
+                return string.Empty;
+            }
+            return scriptContent;
+        }
+
+        private static string GetScriptResourceName(string scriptName)
+        {
+            // 検索対象のリソース名
+            string resourceName = string.Format("MaintenanceToolApp.Resources.{0}", scriptName);
+
+            // このアプリケーションに同梱されているリソース名を取得
+            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            string[] resnames = myAssembly.GetManifestResourceNames();
+            foreach (string resName in resnames) {
+                // リソース名が
+                // "MaintenanceToolApp.Resources.<scriptName>"
+                // という名称の場合
+                if (resName.Equals(resourceName)) {
+                    return resourceName;
+                }
+            }
+            return string.Empty;
+        }
+
+        // スクリプト内容を読込むための領域
+        private byte[] ScriptContentBytes = new byte[5120];
+        private int ScriptContentSize { get; set; }
+
+        private string GetScriptResourceContent(string resourceName)
+        {
+            // リソースファイルを開く
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Stream? stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) {
+                return string.Empty;
+            }
+
+            try {
+                // リソースファイルを配列に読込
+                ScriptContentSize = stream.Read(ScriptContentBytes, 0, (int)stream.Length);
+
+                // リソースファイルを閉じる
+                stream.Close();
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("Gpg4winProcess.GetScriptResourceContent exception:\n{0}", e.Message));
+                return string.Empty;
+            }
+
+            // 読込んだスクリプト内容を戻す
+            byte[] b = ScriptContentBytes.Take(ScriptContentSize).ToArray();
+            string text = Encoding.UTF8.GetString(b);
+            return text;
         }
 
         //
@@ -206,6 +314,18 @@ namespace MaintenanceToolApp.OpenPGP
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");
+        }
+
+        private static bool WriteStringToFile(string contents, string filePath)
+        {
+            try {
+                File.WriteAllText(filePath, contents);
+                return true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("Gpg4winProcess.WriteStringToFile exception:\n{0}", e.Message));
+                return false;
+            }
         }
     }
 }
