@@ -23,6 +23,7 @@ namespace MaintenanceToolApp.OpenPGP
         // 以下は処理生成中に設定
         //
         public string TempFolderPath { get; set; }
+        public string GeneratedMainKeyId { get; set; }
 
         public OpenPGPParameter()
         {
@@ -39,6 +40,7 @@ namespace MaintenanceToolApp.OpenPGP
             CurrentPin = string.Empty;
             NewPin = string.Empty;
             TempFolderPath = string.Empty;
+            GeneratedMainKeyId = string.Empty;
         }
 
         public override string ToString()
@@ -240,15 +242,27 @@ namespace MaintenanceToolApp.OpenPGP
 
             // レスポンス内容をチェック
             if (Gpg4winProcess.CheckResponseOfScript(response)) {
-                // TODO: 仮の実装です。
-                Parameter.CommandSuccess = success;
-                DoRequestRemoveTempFolder();
-                return;
+                // 生成鍵がCertify機能を有しているかチェック
+                string keyid = Gpg4winProcess.ExtractMainKeyIdFromResponse(response);
+                if (keyid != string.Empty) {
+                    // チェックOKの場合は鍵IDを保持し、次の処理に移行
+                    Parameter.GeneratedMainKeyId = keyid;
+                    AppLogUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY, Parameter.GeneratedMainKeyId));
+                    DoRequestAddSubKey();
+                    return;
+                }
             }
 
             // エラーメッセージを設定し、後処理に移行
             Parameter.ResultInformativeMessage = AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL;
             Parameter.CommandSuccess = false;
+            DoRequestRemoveTempFolder();
+        }
+
+        private void DoRequestAddSubKey()
+        {
+            // TODO: 仮の実装です。
+            Parameter.CommandSuccess = true;
             DoRequestRemoveTempFolder();
         }
 

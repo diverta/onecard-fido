@@ -326,6 +326,30 @@ namespace MaintenanceToolApp.OpenPGP
             return false;
         }
 
+        public static string ExtractMainKeyIdFromResponse(string response)
+        {
+            // メッセージ文字列から鍵IDを抽出
+            string keyid = string.Empty;
+
+            // メッセージ検索用文字列
+            string keyword = "pub   rsa2048";
+
+            // 改行文字で区切られた文字列を分割
+            string[] textArray = TextArrayOfResponse(response);
+
+            // 分割されたメッセージの１件目について、鍵の機能を解析
+            if (textArray[0].StartsWith(keyword)) {
+                if (textArray[0].Contains("[C]")) {
+                    // 分割されたメッセージの２件目、後ろから16バイトの文字列を、鍵IDとして抽出
+                    int startIndex = textArray[1].Length - 16;
+                    keyid = textArray[1].Substring(startIndex);
+                }
+            }
+
+            // 抽出された鍵IDを戻す
+            return keyid;
+        }
+
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");
