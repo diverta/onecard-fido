@@ -141,7 +141,7 @@ namespace MaintenanceToolApp.OpenPGP
             GpgProcess.UnregisterHandlerOnCommandResponse();
 
             // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
-            if (success == false || Gpg4winProcess.CheckIfGPGVersionAvailable(response) == false) {
+            if (success == false || Gpg4winUtility.CheckIfGPGVersionAvailable(response) == false) {
                 // 画面に制御を戻す
                 NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL);
                 return;
