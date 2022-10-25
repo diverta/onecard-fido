@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToolAppCommon;
@@ -50,14 +51,13 @@ namespace MaintenanceToolApp.OpenPGP
         // 処理実行のためのプロパティー
         private Gpg4winParameter Parameter = null!;
 
-        // CCID I/Fからデータ受信時のイベント
+        //
+        // GPGコマンドラインプロセッサー
+        //
         public delegate void HandlerOnCommandResponse(bool success, string standardOutput, string standardError);
         private event HandlerOnCommandResponse OnCommandResponse = null!;
         private HandlerOnCommandResponse OnCommandResponseRef = null!;
 
-        //
-        // GPGコマンドラインプロセッサー
-        //
         public void DoRequestCommandLine(Gpg4winParameter parameter, HandlerOnCommandResponse handlerRef)
         {
             // 引き渡されたパラメーターを退避
@@ -116,6 +116,67 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // イベントを解除
             OnCommandResponse -= OnCommandResponseRef;
+        }
+
+        //
+        // Gpg4winコマンド実行時に使用する
+        // 作業用フォルダーの生成／消去処理
+        //
+        public delegate void HandlerOnTempFolderCommandResponse(bool success, string tempFolderPath);
+        private event HandlerOnTempFolderCommandResponse OnTempFolderCommandResponse = null!;
+        private HandlerOnTempFolderCommandResponse OnTempFolderCommandResponseRef = null!;
+
+        private string TempFolderPath = string.Empty;
+
+        public void MakeTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
+        {
+            // イベントを登録
+            OnTempFolderCommandResponseRef = new HandlerOnTempFolderCommandResponse(handlerRef);
+            OnTempFolderCommandResponse += OnTempFolderCommandResponseRef;
+
+            bool success = false;
+
+            try {
+                // 作業用フォルダーを生成
+                TempFolderPath = Path.GetTempFileName();
+                File.Delete(TempFolderPath);
+                Directory.CreateDirectory(TempFolderPath);
+                success = true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("OpenPGPUtil.MakeTempFolder exception:\n{0}", e.Message));
+            }
+
+            // 生成された作業用フォルダーを戻す
+            OnTempFolderCommandResponse(success, TempFolderPath);
+        }
+
+        public void RemoveTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
+        {
+            // イベントを登録
+            OnTempFolderCommandResponseRef = new HandlerOnTempFolderCommandResponse(handlerRef);
+            OnTempFolderCommandResponse += OnTempFolderCommandResponseRef;
+
+            bool success = false;
+
+            try {
+                // 作業用フォルダーを、内包しているファイルごと削除
+                Directory.Delete(TempFolderPath, true);
+                success = true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("OpenPGPUtil.RemoveTempFolder exception:\n{0}", e.Message));
+            }
+
+            // 作業用フォルダー削除の成否を戻す
+            OnTempFolderCommandResponse(success, TempFolderPath);
+            TempFolderPath = string.Empty;
+        }
+
+        public void UnregisterHandlerOnTempFolderCommandResponse()
+        {
+            // イベントを解除
+            OnTempFolderCommandResponse -= OnTempFolderCommandResponseRef;
         }
 
         //

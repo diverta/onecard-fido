@@ -146,12 +146,16 @@
         // OpenPGP機能設定関連
         public const string MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED = "OpenPGP機能を使用することができません。";
         public const string MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL = "バージョン「4.0.0」以降のGpg4winをインストールしてから実行してください。";
+        public const string MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL = "作業用フォルダーを生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL = "作業用フォルダーが消去出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL = "OpenPGP機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
+        public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
         public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
         public const string MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR = "入力した{0}が間違っています。\n（あと{1}回リトライ可能です）";
+        public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
         public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
         public const string MSG_OPENPGP_ADMIN_PIN_VERIFIED = "管理用PIN番号を検証しました。";
         public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";

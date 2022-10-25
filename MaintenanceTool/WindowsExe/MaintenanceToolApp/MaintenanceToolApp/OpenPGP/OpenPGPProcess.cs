@@ -19,6 +19,7 @@ namespace MaintenanceToolApp.OpenPGP
         public string BackupFolderPath { get; set; }
         public string CurrentPin { get; set; }
         public string NewPin { get; set; }
+        public string TempFolderPath { get; set; }
 
         public OpenPGPParameter()
         {
@@ -34,6 +35,7 @@ namespace MaintenanceToolApp.OpenPGP
             BackupFolderPath = string.Empty;
             CurrentPin = string.Empty;
             NewPin = string.Empty;
+            TempFolderPath = string.Empty;
         }
 
         public override string ToString()
@@ -141,10 +143,75 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // 次の処理に移行
-            // DoRequestMakeTempFolder();
+            DoRequestCreateTempFolder();
+        }
 
+        //
+        // 作業フォルダー生成／消去
+        //
+        private void DoRequestCreateTempFolder()
+        {
+            // 作業用フォルダーをPC上に生成
+            GpgProcess.MakeTempFolder(DoResponseCreateTempFolder);
+        }
+
+        private void DoResponseCreateTempFolder(bool success, string createdTempFolderPath)
+        {
+            // イベントを解除
+            GpgProcess.UnregisterHandlerOnTempFolderCommandResponse();
+
+            // レスポンスをチェック
+            if (success == false) {
+                // 画面に制御を戻す
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL);
+                return;
+            }
+
+            // 生成された作業用フォルダー名称を保持
+            Parameter.TempFolderPath = createdTempFolderPath;
+            AppLogUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_CREATED_TEMPDIR, Parameter.TempFolderPath));
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
+                DoRequestGenerateMainKey();
+                break;
+            default:
+                NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        private void DoRequestRemoveTempFolder()
+        {
+            // 作業用フォルダーをPC上から削除
+            GpgProcess.RemoveTempFolder(DoResponseRemoveTempFolder);
+        }
+
+        private void DoResponseRemoveTempFolder(bool success, string removedTempFolderPath)
+        {
+            // イベントを解除
+            GpgProcess.UnregisterHandlerOnTempFolderCommandResponse();
+
+            // レスポンスをチェック
+            if (success == false) {
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL);
+                return;
+            }
+
+            // 処理完了を通知
+            AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_REMOVED_TEMPDIR);
+            NotifyProcessTerminated(Parameter.CommandSuccess, AppCommon.MSG_NONE);
+        }
+        
+        //
+        // PGP秘密鍵インストール関連
+        //
+        private void DoRequestGenerateMainKey()
+        {
             // TODO: 仮の実装です。
-            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+            Parameter.CommandSuccess = true;
+            DoRequestRemoveTempFolder();
         }
 
         // 
