@@ -241,9 +241,9 @@ namespace MaintenanceToolApp.OpenPGP
             GpgProcess.UnregisterHandlerOnCommandResponse();
 
             // レスポンス内容をチェック
-            if (Gpg4winProcess.CheckResponseOfScript(response)) {
+            if (Gpg4winUtility.CheckResponseOfScript(response)) {
                 // 生成鍵がCertify機能を有しているかチェック
-                string keyid = Gpg4winProcess.ExtractMainKeyIdFromResponse(response);
+                string keyid = Gpg4winUtility.ExtractMainKeyIdFromResponse(response);
                 if (keyid != string.Empty) {
                     // チェックOKの場合は鍵IDを保持し、次の処理に移行
                     Parameter.GeneratedMainKeyId = keyid;
