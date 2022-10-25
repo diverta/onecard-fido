@@ -290,6 +290,21 @@ namespace MaintenanceToolApp.OpenPGP
         //
         // ユーティリティー
         //
+        public static bool CheckResponseOfScript(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "Execute script for gnupg success";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keyword)) {
+                    // シェルスクリプトから成功メッセージが出力された場合、trueを戻す
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool CheckIfGPGVersionAvailable(string response)
         {
             // メッセージ検索用文字列

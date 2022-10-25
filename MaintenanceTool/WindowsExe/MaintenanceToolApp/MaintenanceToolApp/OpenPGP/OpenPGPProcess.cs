@@ -238,8 +238,17 @@ namespace MaintenanceToolApp.OpenPGP
             // イベントを解除
             GpgProcess.UnregisterHandlerOnCommandResponse();
 
-            // TODO: 仮の実装です。
-            Parameter.CommandSuccess = success;
+            // レスポンス内容をチェック
+            if (Gpg4winProcess.CheckResponseOfScript(response)) {
+                // TODO: 仮の実装です。
+                Parameter.CommandSuccess = success;
+                DoRequestRemoveTempFolder();
+                return;
+            }
+
+            // エラーメッセージを設定し、後処理に移行
+            Parameter.ResultInformativeMessage = AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL;
+            Parameter.CommandSuccess = false;
             DoRequestRemoveTempFolder();
         }
 

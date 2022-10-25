@@ -150,6 +150,7 @@
         public const string MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL = "作業用フォルダーが消去出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL = "OpenPGP機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
         public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_UNKNOWN = "PGP秘密鍵（主鍵）を生成時、不明なエラーが発生しました。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL = "PGP秘密鍵（主鍵）を生成出来ませんでした。";
         public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
