@@ -1,5 +1,6 @@
 ﻿using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
 namespace MaintenanceToolApp.OpenPGP
 {
@@ -59,6 +60,9 @@ namespace MaintenanceToolApp.OpenPGP
 
         // CCIDコマンド処理クラスのインスタンスを保持
         private readonly OpenPGPCCIDProcess CCIDProcess = new OpenPGPCCIDProcess();
+
+        // Gpg4winコマンド処理クラスのインスタンスを保持
+        private readonly Gpg4winProcess GpgProcess = new Gpg4winProcess();
 
         //
         // OpenPGP機能設定用関数
@@ -120,6 +124,25 @@ namespace MaintenanceToolApp.OpenPGP
         // 
         private void DoRequestGPGVersion()
         {
+            Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_VERSION, "gpg", "--version", null!);
+            GpgProcess.DoRequestCommandLine(parameter, DoResponseGPGVersion);
+        }
+
+        private void DoResponseGPGVersion(bool success, string response, string error)
+        {
+            // イベントを解除
+            GpgProcess.UnregisterHandlerOnCommandResponse();
+
+            // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
+            if (success == false || Gpg4winProcess.CheckIfGPGVersionAvailable(response) == false) {
+                // 画面に制御を戻す
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL);
+                return;
+            }
+
+            // 次の処理に移行
+            // DoRequestMakeTempFolder();
+
             // TODO: 仮の実装です。
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }

@@ -145,6 +145,7 @@
 
         // OpenPGP機能設定関連
         public const string MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED = "OpenPGP機能を使用することができません。";
+        public const string MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL = "バージョン「4.0.0」以降のGpg4winをインストールしてから実行してください。";
         public const string MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL = "OpenPGP機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
