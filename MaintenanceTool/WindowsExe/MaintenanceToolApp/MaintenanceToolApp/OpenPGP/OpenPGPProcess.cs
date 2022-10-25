@@ -193,6 +193,14 @@ namespace MaintenanceToolApp.OpenPGP
             GpgProcess.RemoveTempFolder(DoResponseRemoveTempFolder);
         }
 
+        private void DoRequestRemoveTempFolderWithInformative(bool commandSuccess, string resultInformativeMessage)
+        {
+            // エラーメッセージを設定し、作業用フォルダー消去処理に移行
+            Parameter.ResultInformativeMessage = resultInformativeMessage;
+            Parameter.CommandSuccess = commandSuccess;
+            DoRequestRemoveTempFolder();
+        }
+
         private void DoResponseRemoveTempFolder(bool success, string removedTempFolderPath)
         {
             // イベントを解除
@@ -217,14 +225,16 @@ namespace MaintenanceToolApp.OpenPGP
             // スクリプトを作業用フォルダーに生成
             string scriptName = "generate_main_key.bat";
             if (GpgProcess.WriteScriptToTempFolder(scriptName) == false) {
-                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_UNKNOWN);
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                DoRequestRemoveTempFolderWithInformative(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_BAT);
                 return;
             }
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "generate_main_key.param";
             if (GpgProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
-                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_UNKNOWN);
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                DoRequestRemoveTempFolderWithInformative(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_PAR);
                 return;
             }
 
@@ -253,10 +263,8 @@ namespace MaintenanceToolApp.OpenPGP
                 }
             }
 
-            // エラーメッセージを設定し、後処理に移行
-            Parameter.ResultInformativeMessage = AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL;
-            Parameter.CommandSuccess = false;
-            DoRequestRemoveTempFolder();
+            // エラーメッセージを設定し、作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL);
         }
 
         private void DoRequestAddSubKey()
