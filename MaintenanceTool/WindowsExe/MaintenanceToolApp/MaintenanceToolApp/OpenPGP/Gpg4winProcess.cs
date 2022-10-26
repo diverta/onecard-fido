@@ -167,8 +167,8 @@ namespace MaintenanceToolApp.OpenPGP
         public static bool WriteScriptToTempFolder(string scriptName, OpenPGPParameter parameter)
         {
             // スクリプトをリソースから読込み
-            string scriptContent = GetScriptResourceContentString(scriptName);
-            if (scriptContent == null) {
+            string scriptContent;
+            if (GetScriptResourceContentString(scriptName, out scriptContent) == false) {
                 return false;
             }
 
@@ -184,8 +184,8 @@ namespace MaintenanceToolApp.OpenPGP
         public static bool WriteParamForGenerateMainKeyToTempFolder(string scriptName, OpenPGPParameter parameter)
         {
             // パラメーターをリソースから読込み
-            string scriptContent = GetScriptResourceContentString(scriptName);
-            if (scriptContent == string.Empty) {
+            string scriptContent;
+            if (GetScriptResourceContentString(scriptName, out scriptContent) == false) {
                 return false;
             }
 
@@ -201,24 +201,31 @@ namespace MaintenanceToolApp.OpenPGP
             return true;
         }
 
-        private static string GetScriptResourceContentString(string scriptName)
+        private static bool GetScriptResourceContentString(string scriptName, out string scriptResourceContentString)
         {
+            // 戻り値を初期化
+            scriptResourceContentString = string.Empty;
+
             // スクリプトをリソースから読込み
-            string scriptResourceName = GetScriptResourceName(scriptName);
-            if (scriptResourceName == string.Empty) {
+            string scriptResourceName;
+            if (GetScriptResourceName(scriptName, out scriptResourceName) == false) {
                 AppLogUtil.OutputLogError(string.Format("Script resource name is null: {0}", scriptName));
-                return string.Empty;
+                return false;
             }
-            string scriptContent = GetScriptResourceContent(scriptResourceName);
-            if (scriptContent == null) {
+            string scriptContent;
+            if (GetScriptResourceContent(scriptResourceName, out scriptContent) == false) {
                 AppLogUtil.OutputLogError(string.Format("Script content is null: {0}", scriptResourceName));
-                return string.Empty;
+                return false;
             }
-            return scriptContent;
+            scriptResourceContentString = scriptContent;
+            return true;
         }
 
-        private static string GetScriptResourceName(string scriptName)
+        private static bool GetScriptResourceName(string scriptName, out string scriptResourceName)
         {
+            // 戻り値を初期化
+            scriptResourceName = string.Empty;
+
             // 検索対象のリソース名
             string resourceName = string.Format("MaintenanceToolApp.Resources.{0}", scriptName);
 
@@ -230,19 +237,24 @@ namespace MaintenanceToolApp.OpenPGP
                 // "MaintenanceToolApp.Resources.<scriptName>"
                 // という名称の場合
                 if (resName.Equals(resourceName)) {
-                    return resourceName;
+                    scriptResourceName = resourceName;
+                    return true;
                 }
             }
-            return string.Empty;
+            return false;
         }
 
-        private static string GetScriptResourceContent(string resourceName)
+        private static bool GetScriptResourceContent(string resourceName, out string scriptResourceContent)
         {
+            // 戻り値を初期化
+            scriptResourceContent = string.Empty;
+            bool ret = false;
+
             // リソースファイルを開く
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream? stream = assembly.GetManifestResourceStream(resourceName);
             if (stream == null) {
-                return string.Empty;
+                return false;
             }
 
             byte[] ScriptContentBytes;
@@ -258,15 +270,16 @@ namespace MaintenanceToolApp.OpenPGP
                 // リソースファイルを閉じる
                 stream.Close();
 
+                // 読込んだスクリプト内容を戻す
+                byte[] b = ScriptContentBytes.Take(ScriptContentSize).ToArray();
+                scriptResourceContent = Encoding.UTF8.GetString(b);
+                ret = true;
+
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("Gpg4winProcess.GetScriptResourceContent exception:\n{0}", e.Message));
-                return string.Empty;
             }
 
-            // 読込んだスクリプト内容を戻す
-            byte[] b = ScriptContentBytes.Take(ScriptContentSize).ToArray();
-            string text = Encoding.UTF8.GetString(b);
-            return text;
+            return ret;
         }
     }
 }
