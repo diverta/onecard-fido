@@ -131,13 +131,23 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // レスポンス内容をチェック
             if (Gpg4winUtility.CheckResponseOfScript(response)) {
-                // TODO: 仮の実装です。
-                OnCommandResponse(true, AppCommon.MSG_NONE);
-                return;
+                if (Gpg4winUtility.CheckIfPubkeyAndBackupExist(Parameter.PubkeyFolderPath, Parameter.BackupFolderPath)) {
+                    // 公開鍵ファイル、バックアップファイルが生成された場合は、次の処理に移行
+                    AppLogUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE, Parameter.PubkeyFolderPath));
+                    AppLogUtil.OutputLogDebug(string.Format(AppCommon.MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE, Parameter.BackupFolderPath));
+                    DoRequestTransferSubkeyToCard();
+                    return;
+                }
             }
 
             // エラーメッセージを設定し、作業用フォルダー消去処理に移行
             OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL);
+        }
+
+        private void DoRequestTransferSubkeyToCard()
+        {
+            // TODO: 仮の実装です。
+            OnCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
 }

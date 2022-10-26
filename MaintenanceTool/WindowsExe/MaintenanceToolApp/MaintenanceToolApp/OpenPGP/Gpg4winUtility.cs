@@ -126,6 +126,30 @@ namespace MaintenanceToolApp.OpenPGP
             return false;
         }
 
+        public static bool CheckIfPubkeyAndBackupExist(string pubkeyFolderPath, string backupFolderPath)
+        {
+            // 公開鍵ファイルがエクスポート先に存在するかチェック
+            if (CheckIfFileExist("public_key.pgp", pubkeyFolderPath) == false) {
+                AppLogUtil.OutputLogError(AppCommon.MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL);
+                return false;
+            }
+
+            // バックアップファイルがエクスポート先に存在するかチェック
+            if (CheckIfFileExist("GNUPGHOME.tgz", backupFolderPath) == false) {
+                AppLogUtil.OutputLogError(AppCommon.MSG_ERROR_OPENPGP_BACKUP_FAIL);
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckIfFileExist(string filename, string inFolderPath)
+        {
+            // 指定のフォルダー配下にファイルが存在している場合は true
+            string filePath = string.Format("{0}\\{1}", inFolderPath, filename);
+            return File.Exists(filePath);
+        }
+
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");
