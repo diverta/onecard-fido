@@ -111,8 +111,33 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoRequestExportPubkeyAndBackup()
         {
-            // TODO: 仮の実装です。
-            OnCommandResponse(true, AppCommon.MSG_NONE);
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "export_pubkey_and_backup.bat";
+            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_GEN_BAT);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", Parameter.TempFolderPath, scriptName);
+            string args = string.Format("{0} {1} {2} {3} {4}", Parameter.TempFolderPath, Parameter.Passphrase, Parameter.GeneratedMainKeyId,
+                Parameter.PubkeyFolderPath, Parameter.BackupFolderPath);
+            Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_EXPORT_PUBKEY_AND_BACKUP, exe, args, Parameter.TempFolderPath);
+            new Gpg4winProcess().DoRequestCommandLine(parameter, DoResponseExportPubkeyAndBackup);
+        }
+
+        private void DoResponseExportPubkeyAndBackup(bool success, string response, string error)
+        {
+            // レスポンス内容をチェック
+            if (Gpg4winUtility.CheckResponseOfScript(response)) {
+                // TODO: 仮の実装です。
+                OnCommandResponse(true, AppCommon.MSG_NONE);
+                return;
+            }
+
+            // エラーメッセージを設定し、作業用フォルダー消去処理に移行
+            OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL);
         }
     }
 }
