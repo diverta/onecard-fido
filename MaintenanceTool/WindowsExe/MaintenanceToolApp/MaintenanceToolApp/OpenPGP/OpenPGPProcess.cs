@@ -94,11 +94,6 @@ namespace MaintenanceToolApp.OpenPGP
                 // バージョン照会から開始
                 DoRequestGPGVersion();
             }
-
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(Parameter.ToString());
-            System.Threading.Thread.Sleep(1000);
-            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
         //
