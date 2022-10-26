@@ -152,6 +152,9 @@
         public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_BAT = "PGP秘密鍵（主鍵）を生成時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
         public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_PAR = "PGP秘密鍵（主鍵）を生成時にエラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
         public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL = "PGP秘密鍵（主鍵）を生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_BAT = "PGP秘密鍵（副鍵）を生成時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_PAR = "PGP秘密鍵（副鍵）を生成時にエラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL = "PGP秘密鍵（副鍵）を生成出来ませんでした。";
         public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
         public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
