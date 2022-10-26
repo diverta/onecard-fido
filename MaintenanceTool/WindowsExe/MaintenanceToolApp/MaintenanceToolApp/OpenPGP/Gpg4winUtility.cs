@@ -150,6 +150,34 @@ namespace MaintenanceToolApp.OpenPGP
             return File.Exists(filePath);
         }
 
+        public static bool CheckIfSubKeyAlreadyStoredFromResponse(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "such a key has already been stored on the card!";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keyword)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool CheckIfCardErrorFromResponse(string response)
+        {
+            // メッセージ検索用文字列
+            string keyword = "selecting card failed";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keyword)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");

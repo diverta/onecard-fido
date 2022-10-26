@@ -177,12 +177,28 @@ namespace MaintenanceToolApp.OpenPGP
 
             // レスポンス内容をチェック
             if (Gpg4winUtility.CheckResponseOfScript(response)) {
-                // TODO: 仮の実装です。
-                commandSuccess = true;
+                if (Gpg4winUtility.CheckIfSubKeysExistFromResponse(response, true, Parameter.TempFolderPath)) {
+                    // 副鍵が認証器に移動された場合は、処理成功を通知
+                    AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE);
+                    commandSuccess = true;
+
+                } else {
+                    // 副鍵が移動されなかった場合、副鍵が認証器に既に保管されていたかどうかチェック
+                    // （標準エラーに出力されるメッセージをチェック）
+                    if (Gpg4winUtility.CheckIfSubKeyAlreadyStoredFromResponse(error)) {
+                        errorMessage = AppCommon.MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED;
+                    } else {
+                        errorMessage = AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL;
+                    }
+                }
 
             } else {
-                // TODO: 仮の実装です。
-                errorMessage = AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL;
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (Gpg4winUtility.CheckIfCardErrorFromResponse(error)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL;
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL;
+                }
             }
 
             // 作業用フォルダー消去処理に移行

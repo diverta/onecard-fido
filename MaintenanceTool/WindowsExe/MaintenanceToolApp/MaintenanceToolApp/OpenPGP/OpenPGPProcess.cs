@@ -200,15 +200,8 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseInstallKeys(bool success, string errorMessage)
         {
-            if (success == false) {
-                // エラー発生時は、作業用フォルダー消去処理に移行
-                DoRequestRemoveTempFolderWithInformative(false, errorMessage);
-                return;
-            }
-
-            // TODO: 仮の実装です。
-            Parameter.CommandSuccess = true;
-            DoRequestRemoveTempFolder();
+            // 作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(success, errorMessage);
         }
 
         // 
