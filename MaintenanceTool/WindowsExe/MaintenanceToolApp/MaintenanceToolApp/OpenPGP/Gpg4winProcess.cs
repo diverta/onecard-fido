@@ -56,17 +56,15 @@ namespace MaintenanceToolApp.OpenPGP
         // GPGコマンドラインプロセッサー
         //
         public delegate void HandlerOnCommandResponse(bool success, string standardOutput, string standardError);
-        private event HandlerOnCommandResponse OnCommandResponse = null!;
-        private HandlerOnCommandResponse OnCommandResponseRef = null!;
+        private HandlerOnCommandResponse OnCommandResponse = null!;
 
         public void DoRequestCommandLine(Gpg4winParameter parameter, HandlerOnCommandResponse handlerRef)
         {
             // 引き渡されたパラメーターを退避
             Parameter = parameter;
 
-            // イベントを登録
-            OnCommandResponseRef = new HandlerOnCommandResponse(handlerRef);
-            OnCommandResponse += OnCommandResponseRef;
+            // コールバックを保持
+            OnCommandResponse = handlerRef;
 
             // 実行コマンドに関する諸設定
             ProcessStartInfo psi = new ProcessStartInfo();
@@ -113,27 +111,19 @@ namespace MaintenanceToolApp.OpenPGP
             OnCommandResponse(success, stdOutputString, stdErrorString);
         }
 
-        public void UnregisterHandlerOnCommandResponse()
-        {
-            // イベントを解除
-            OnCommandResponse -= OnCommandResponseRef;
-        }
-
         //
         // Gpg4winコマンド実行時に使用する
         // 作業用フォルダーの生成／消去処理
         //
         public delegate void HandlerOnTempFolderCommandResponse(bool success, string tempFolderPath);
-        private event HandlerOnTempFolderCommandResponse OnTempFolderCommandResponse = null!;
-        private HandlerOnTempFolderCommandResponse OnTempFolderCommandResponseRef = null!;
+        private HandlerOnTempFolderCommandResponse OnTempFolderCommandResponse = null!;
 
         private string TempFolderPath = string.Empty;
 
         public void MakeTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
         {
-            // イベントを登録
-            OnTempFolderCommandResponseRef = new HandlerOnTempFolderCommandResponse(handlerRef);
-            OnTempFolderCommandResponse += OnTempFolderCommandResponseRef;
+            // コールバックを保持
+            OnTempFolderCommandResponse = handlerRef;
 
             bool success = false;
 
@@ -154,9 +144,8 @@ namespace MaintenanceToolApp.OpenPGP
 
         public void RemoveTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
         {
-            // イベントを登録
-            OnTempFolderCommandResponseRef = new HandlerOnTempFolderCommandResponse(handlerRef);
-            OnTempFolderCommandResponse += OnTempFolderCommandResponseRef;
+            // コールバックを保持
+            OnTempFolderCommandResponse = handlerRef;
 
             bool success = false;
 
@@ -172,12 +161,6 @@ namespace MaintenanceToolApp.OpenPGP
             // 作業用フォルダー削除の成否を戻す
             OnTempFolderCommandResponse(success, TempFolderPath);
             TempFolderPath = string.Empty;
-        }
-
-        public void UnregisterHandlerOnTempFolderCommandResponse()
-        {
-            // イベントを解除
-            OnTempFolderCommandResponse -= OnTempFolderCommandResponseRef;
         }
 
         //

@@ -16,10 +16,9 @@ namespace MaintenanceToolApp.OpenPGP
         // 処理実行のためのプロパティー
         private OpenPGPParameter Parameter = null!;
 
-        // CCID I/Fからデータ受信時のイベント
+        // CCID I/Fからデータ受信時のコールバックを保持
         public delegate void HandlerOnCommandResponse(bool success, string errorMessage);
-        private event HandlerOnCommandResponse OnCommandResponse = null!;
-        private HandlerOnCommandResponse OnCommandResponseRef = null!;
+        private HandlerOnCommandResponse OnCommandResponse = null!;
 
         //
         // OpenPGP機能設定用関数
@@ -29,9 +28,8 @@ namespace MaintenanceToolApp.OpenPGP
             // 引き渡されたパラメーターを退避
             Parameter = parameter;
 
-            // イベントを登録
-            OnCommandResponseRef = new HandlerOnCommandResponse(handlerRef);
-            OnCommandResponse += OnCommandResponseRef;
+            // コールバックを保持
+            OnCommandResponse = handlerRef;
 
             // CCIDインタフェース経由で認証器に接続
             if (CCIDProcess.ConnectCCID() == false) {
@@ -55,12 +53,6 @@ namespace MaintenanceToolApp.OpenPGP
             }
         }
 
-        public void UnregisterHandlerOnCommandResponse()
-        {
-            // イベントを解除
-            OnCommandResponse -= OnCommandResponseRef;
-        }
-
         private void DoCommandResponse(bool success, string errorMessage)
         {
             // CCIDデバイスから切断し、上位クラスに制御を戻す
@@ -81,9 +73,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseOpenPGPInsSelectApplication(bool success, byte[] responseData, UInt16 responseSW)
         {
-            // イベントを解除
-            CCIDProcess.UnregisterHandlerOnReceivedResponse();
-
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
                 DoCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED);
@@ -105,9 +94,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseOpenPGPInsVerify(bool success, byte[] responseData, UInt16 responseSW)
         {
-            // イベントを解除
-            CCIDProcess.UnregisterHandlerOnReceivedResponse();
-
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
                 string errMsg;

@@ -107,9 +107,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseAdminPinVerify(bool success, string errorMessage)
         {
-            // イベントを解除
-            CCIDProcess.UnregisterHandlerOnCommandResponse();
-
             if (success) {
                 // バージョン照会から開始
                 AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADMIN_PIN_VERIFIED);
@@ -132,9 +129,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseGPGVersion(bool success, string response, string error)
         {
-            // イベントを解除
-            GpgProcess.UnregisterHandlerOnCommandResponse();
-
             // PCに導入されているGPGが、所定のバージョン以上でない場合は終了
             if (success == false || Gpg4winUtility.CheckIfGPGVersionAvailable(response) == false) {
                 // 画面に制御を戻す
@@ -157,9 +151,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseCreateTempFolder(bool success, string createdTempFolderPath)
         {
-            // イベントを解除
-            GpgProcess.UnregisterHandlerOnTempFolderCommandResponse();
-
             // レスポンスをチェック
             if (success == false) {
                 // 画面に制御を戻す
@@ -198,9 +189,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseRemoveTempFolder(bool success, string removedTempFolderPath)
         {
-            // イベントを解除
-            GpgProcess.UnregisterHandlerOnTempFolderCommandResponse();
-
             // レスポンスをチェック
             if (success == false) {
                 NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL);
@@ -242,9 +230,6 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseGenerateMainKey(bool success, string response, string error)
         {
-            // イベントを解除
-            GpgProcess.UnregisterHandlerOnCommandResponse();
-
             // レスポンス内容をチェック
             if (Gpg4winUtility.CheckResponseOfScript(response)) {
                 // 生成鍵がCertify機能を有しているかチェック

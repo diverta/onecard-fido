@@ -36,10 +36,9 @@ namespace ToolAppCommon
         // このクラスのインスタンス
         private static readonly CCIDProcess Instance = new CCIDProcess();
 
-        // CCIDメッセージ受信時のイベント
+        // CCIDメッセージ受信時のコールバックを保持
         public delegate void HandlerOnReceivedResponse(bool success, byte[] responseData, UInt16 responseSW);
-        private event HandlerOnReceivedResponse OnReceivedResponse = null!;
-        private HandlerOnReceivedResponse OnReceivedResponseRef = null!;
+        private HandlerOnReceivedResponse OnReceivedResponse = null!;
 
         //
         // 外部公開用
@@ -51,14 +50,8 @@ namespace ToolAppCommon
 
         public static void DoRequestCommand(CCIDParameter parameter, HandlerOnReceivedResponse handler)
         {
-            Instance.OnReceivedResponseRef = new HandlerOnReceivedResponse(handler);
-            Instance.OnReceivedResponse += Instance.OnReceivedResponseRef;
+            Instance.OnReceivedResponse = handler;
             Instance.SendIns(parameter.INS, parameter.P1, parameter.P2, parameter.Data, parameter.Le);
-        }
-
-        public static void UnregisterHandlerOnReceivedResponse()
-        {
-            Instance.OnReceivedResponse -= Instance.OnReceivedResponseRef;
         }
 
         public static void DisconnectCCID()
