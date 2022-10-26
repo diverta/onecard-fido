@@ -65,12 +65,6 @@ namespace MaintenanceToolApp.OpenPGP
         // イベントのコールバック参照
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
 
-        // CCIDコマンド処理クラスのインスタンスを保持
-        private readonly OpenPGPCCIDProcess CCIDProcess = new OpenPGPCCIDProcess();
-
-        // Gpg4winコマンド処理クラスのインスタンスを保持
-        private readonly Gpg4winProcess GpgProcess = new Gpg4winProcess();
-
         //
         // OpenPGP機能設定用関数
         // 
@@ -102,7 +96,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestAdminPinVerify()
         {
             // 事前にCCID I/F経由で、管理用PIN番号の検証を試行
-            CCIDProcess.DoOpenPGPCcidCommand(Parameter, DoResponseAdminPinVerify);
+            new OpenPGPCCIDProcess().DoOpenPGPCcidCommand(Parameter, DoResponseAdminPinVerify);
         }
 
         private void DoResponseAdminPinVerify(bool success, string errorMessage)
@@ -124,7 +118,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestGPGVersion()
         {
             Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_VERSION, "gpg", "--version", null!);
-            GpgProcess.DoRequestCommandLine(parameter, DoResponseGPGVersion);
+            new Gpg4winProcess().DoRequestCommandLine(parameter, DoResponseGPGVersion);
         }
 
         private void DoResponseGPGVersion(bool success, string response, string error)
@@ -146,7 +140,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestCreateTempFolder()
         {
             // 作業用フォルダーをPC上に生成
-            GpgProcess.MakeTempFolder(DoResponseCreateTempFolder);
+            new Gpg4winProcess().MakeTempFolder(DoResponseCreateTempFolder);
         }
 
         private void DoResponseCreateTempFolder(bool success, string createdTempFolderPath)
@@ -176,7 +170,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestRemoveTempFolder()
         {
             // 作業用フォルダーをPC上から削除
-            GpgProcess.RemoveTempFolder(Parameter.TempFolderPath, DoResponseRemoveTempFolder);
+            new Gpg4winProcess().RemoveTempFolder(Parameter.TempFolderPath, DoResponseRemoveTempFolder);
         }
 
         private void DoRequestRemoveTempFolderWithInformative(bool commandSuccess, string resultInformativeMessage)
@@ -225,7 +219,7 @@ namespace MaintenanceToolApp.OpenPGP
             string exe = string.Format("{0}\\{1}", Parameter.TempFolderPath, scriptName);
             string args = string.Format("{0} {1} --no-tty", Parameter.TempFolderPath, Parameter.Passphrase);
             Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_VERSION, exe, args, null!);
-            GpgProcess.DoRequestCommandLine(parameter, DoResponseGenerateMainKey);
+            new Gpg4winProcess().DoRequestCommandLine(parameter, DoResponseGenerateMainKey);
         }
 
         private void DoResponseGenerateMainKey(bool success, string response, string error)
