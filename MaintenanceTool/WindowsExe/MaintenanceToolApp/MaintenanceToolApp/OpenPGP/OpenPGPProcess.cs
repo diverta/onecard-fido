@@ -58,12 +58,9 @@ namespace MaintenanceToolApp.OpenPGP
         // 処理実行のためのプロパティー
         private OpenPGPParameter Parameter = null!;
 
-        // 上位クラスに対するイベント通知
+        // 上位クラスに対するコールバックを保持
         public delegate void HandlerOnNotifyProcessTerminated(OpenPGPParameter parameter);
-        private event HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
-
-        // イベントのコールバック参照
-        private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminatedRef = null!;
+        private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
 
         //
         // OpenPGP機能設定用関数
@@ -73,9 +70,8 @@ namespace MaintenanceToolApp.OpenPGP
             // 画面から引き渡されたパラメーターを退避
             Parameter = parameter;
 
-            // コールバックを登録
-            OnNotifyProcessTerminatedRef = handlerRef;
-            OnNotifyProcessTerminated += OnNotifyProcessTerminatedRef;
+            // コールバックを保持
+            OnNotifyProcessTerminated = handlerRef;
 
             // 処理開始を通知
             NotifyProcessStarted();
@@ -193,7 +189,7 @@ namespace MaintenanceToolApp.OpenPGP
             AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_REMOVED_TEMPDIR);
             NotifyProcessTerminated(Parameter.CommandSuccess, Parameter.ResultInformativeMessage);
         }
-        
+
         //
         // PGP秘密鍵インストール関連
         //
@@ -283,9 +279,6 @@ namespace MaintenanceToolApp.OpenPGP
 
             // 画面に制御を戻す            
             OnNotifyProcessTerminated(Parameter);
-
-            // コールバックを解除
-            OnNotifyProcessTerminated -= OnNotifyProcessTerminatedRef;
         }
     }
 }

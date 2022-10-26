@@ -169,7 +169,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             Task task = Task.Run(() => {
                 // コマンドを実行
-                Process.DoOpenPGPProcess(param, new OpenPGPProcess.HandlerOnNotifyProcessTerminated(OnOpenPGPProcessTerminated));
+                Process.DoOpenPGPProcess(param, OnOpenPGPProcessTerminated);
             });
 
             // 進捗画面を表示
