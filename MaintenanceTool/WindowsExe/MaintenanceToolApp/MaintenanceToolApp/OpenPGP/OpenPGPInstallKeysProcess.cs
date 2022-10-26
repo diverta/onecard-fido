@@ -146,8 +146,47 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoRequestTransferSubkeyToCard()
         {
-            // TODO: 仮の実装です。
-            OnCommandResponse(true, AppCommon.MSG_NONE);
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "transfer_subkey_to_card.bat";
+            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_BAT);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "transfer_subkey_to_card.param";
+            if (Gpg4winProcess.WriteScriptToTempFolder(paramName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_PAR);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", Parameter.TempFolderPath, scriptName);
+            string args = string.Format("{0} {1} {2} --no-tty", Parameter.TempFolderPath, Parameter.Passphrase, Parameter.GeneratedMainKeyId);
+            Gpg4winParameter parameter = new Gpg4winParameter(GPGCommand.COMMAND_GPG_TRANSFER_SUBKEY_TO_CARD, exe, args, Parameter.TempFolderPath);
+            new Gpg4winProcess().DoRequestCommandLine(parameter, DoResponseTransferSubkeyToCard);
+        }
+
+        private void DoResponseTransferSubkeyToCard(bool success, string response, string error)
+        {
+            // 変数を初期化
+            bool commandSuccess = false;
+            string errorMessage = AppCommon.MSG_NONE;
+
+            // レスポンス内容をチェック
+            if (Gpg4winUtility.CheckResponseOfScript(response)) {
+                // TODO: 仮の実装です。
+                commandSuccess = true;
+
+            } else {
+                // TODO: 仮の実装です。
+                errorMessage = AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL;
+            }
+
+            // 作業用フォルダー消去処理に移行
+            OnCommandResponse(commandSuccess, errorMessage);
         }
     }
 }

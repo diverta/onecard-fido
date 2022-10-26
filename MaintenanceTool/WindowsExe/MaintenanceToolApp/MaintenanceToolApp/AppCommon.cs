@@ -159,6 +159,9 @@
         public const string MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL = "PGP公開鍵を指定フォルダーに生成出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_BACKUP_FAIL = "バックアップファイルを指定フォルダーに生成出来ませんでした。";
         public const string MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL = "PGP公開鍵／バックアップファイルの生成が失敗しました。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_BAT = "PGP秘密鍵（副鍵）を認証器に移動時、エラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_PAR = "PGP秘密鍵（副鍵）を認証器に移動時、エラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL = "生成したPGP秘密鍵（副鍵）を認証器に移動出来ませんでした。";
         public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
         public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE = "PGP公開鍵ファイルを、指定フォルダー（{0}）に生成しました。";

@@ -32,6 +32,8 @@
     <None Remove="Resources\export_pubkey_and_backup.bat" />
     <None Remove="Resources\generate_main_key.bat" />
     <None Remove="Resources\generate_main_key.param" />
+    <None Remove="Resources\transfer_subkey_to_card.bat" />
+    <None Remove="Resources\transfer_subkey_to_card.param" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +67,8 @@
     <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
     <EmbeddedResource Include="Resources\generate_main_key.bat" />
     <EmbeddedResource Include="Resources\generate_main_key.param" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
   </ItemGroup>
 
   <ItemGroup>
