@@ -97,13 +97,22 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // レスポンス内容をチェック
             if (Gpg4winUtility.CheckResponseOfScript(response)) {
-                // TODO: 仮の実装です。
-                OnCommandResponse(true, AppCommon.MSG_NONE);
-                return;
+                if (Gpg4winUtility.CheckIfSubKeysExistFromResponse(response, false, Parameter.TempFolderPath)) {
+                    // 副鍵が３点生成された場合は、次の処理に移行
+                    AppLogUtil.OutputLogDebug(AppCommon.MSG_OPENPGP_ADDED_SUB_KEYS);
+                    DoRequestExportPubkeyAndBackup();
+                    return;
+                }
             }
 
             // エラーメッセージを設定し、作業用フォルダー消去処理に移行
             OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL);
+        }
+
+        private void DoRequestExportPubkeyAndBackup()
+        {
+            // TODO: 仮の実装です。
+            OnCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
 }

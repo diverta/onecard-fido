@@ -162,6 +162,7 @@
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
         public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
         public const string MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR = "入力した{0}が間違っています。\n（あと{1}回リトライ可能です）";
+        public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
         public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
         public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
         public const string MSG_OPENPGP_ADMIN_PIN_VERIFIED = "管理用PIN番号を検証しました。";

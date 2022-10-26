@@ -70,6 +70,62 @@ namespace MaintenanceToolApp.OpenPGP
             return keyid;
         }
 
+        public static bool CheckIfSubKeysExistFromResponse(string response, bool transferred, string tempFolderPath)
+        {
+            // メッセージ検索用文字列
+            string keyword1 = string.Format("{0}\\pubring.kbx", tempFolderPath);
+            string keyword2 = transferred ? "ssb>  rsa2048" : "ssb   rsa2048";
+
+            // 副鍵生成の有無を保持
+            bool subKeyS = false;
+            bool subKeyE = false;
+            bool subKeyA = false;
+
+            // メッセージ文字列から鍵一覧メッセージ（'gpg -K'実行結果）を抽出
+            bool gpgKisAvailable = false;
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.StartsWith(keyword1)) {
+                    // 'gpg -K'の実行結果が、メッセージ文字列中に存在すると判断
+                    gpgKisAvailable = true;
+                    continue;
+                }
+                // 'gpg -K'の実行結果を解析
+                if (gpgKisAvailable) {
+                    // 副鍵に関するメッセージを解析
+                    if (text.StartsWith(keyword2)) {
+                        // 副鍵の機能を解析
+                        if (text.Contains("[S]")) {
+                            subKeyS = true;
+                        } else if (text.Contains("[E]")) {
+                            subKeyE = true;
+                        } else if (text.Contains("[A]")) {
+                            subKeyA = true;
+                        }
+                    }
+                }
+            }
+
+            // ３点の副鍵が揃っていれば true を戻す
+            if (subKeyS && subKeyE && subKeyA) {
+                return true;
+            }
+
+            // 揃っていない副鍵についてログを出力
+            string str = transferred ? "transferred" : "added";
+            if (subKeyS == false) {
+                AppLogUtil.OutputLogDebug(string.Format("Sub key (for sign) not {0}", str));
+            }
+            if (subKeyE == false) {
+                AppLogUtil.OutputLogDebug(string.Format("Sub key (for encrypt) not {0}", str));
+            }
+            if (subKeyA == false) {
+                AppLogUtil.OutputLogDebug(string.Format("Sub key (for authenticate) not {0}", str));
+            }
+
+            // false を戻す
+            return false;
+        }
+
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");
