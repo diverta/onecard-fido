@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 using ToolAppCommon;
 
@@ -181,18 +180,6 @@ namespace MaintenanceToolApp.OpenPGP
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");
-        }
-
-        public static bool WriteStringToFile(string contents, string filePath)
-        {
-            try {
-                File.WriteAllText(filePath, contents);
-                return true;
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("Gpg4winUtility.WriteStringToFile exception:\n{0}", e.Message));
-                return false;
-            }
         }
     }
 }

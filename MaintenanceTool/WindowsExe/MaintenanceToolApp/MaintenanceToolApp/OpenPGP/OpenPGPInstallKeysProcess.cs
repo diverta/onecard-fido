@@ -28,7 +28,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // スクリプトを作業用フォルダーに生成
             string scriptName = "generate_main_key.bat";
-            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_BAT);
                 return;
@@ -36,7 +36,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "generate_main_key.param";
-            if (Gpg4winProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_PAR);
                 return;
@@ -72,7 +72,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // スクリプトを作業用フォルダーに生成
             string scriptName = "add_sub_key.bat";
-            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_BAT);
                 return;
@@ -80,7 +80,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "add_sub_key.param";
-            if (Gpg4winProcess.WriteScriptToTempFolder(paramName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(paramName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_PAR);
                 return;
@@ -113,7 +113,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // スクリプトを作業用フォルダーに生成
             string scriptName = "export_pubkey_and_backup.bat";
-            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_EXPORT_BACKUP_GEN_BAT);
                 return;
@@ -148,7 +148,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // スクリプトを作業用フォルダーに生成
             string scriptName = "transfer_subkey_to_card.bat";
-            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_BAT);
                 return;
@@ -156,7 +156,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "transfer_subkey_to_card.param";
-            if (Gpg4winProcess.WriteScriptToTempFolder(paramName, Parameter) == false) {
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(paramName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_PAR);
                 return;
