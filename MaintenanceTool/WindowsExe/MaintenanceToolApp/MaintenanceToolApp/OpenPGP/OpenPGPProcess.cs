@@ -176,7 +176,7 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoRequestRemoveTempFolder()
         {
             // 作業用フォルダーをPC上から削除
-            GpgProcess.RemoveTempFolder(DoResponseRemoveTempFolder);
+            GpgProcess.RemoveTempFolder(Parameter.TempFolderPath, DoResponseRemoveTempFolder);
         }
 
         private void DoRequestRemoveTempFolderWithInformative(bool commandSuccess, string resultInformativeMessage)
@@ -207,7 +207,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // スクリプトを作業用フォルダーに生成
             string scriptName = "generate_main_key.bat";
-            if (GpgProcess.WriteScriptToTempFolder(scriptName) == false) {
+            if (Gpg4winProcess.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 DoRequestRemoveTempFolderWithInformative(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_BAT);
                 return;
@@ -215,7 +215,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             // パラメーターファイルを作業用フォルダーに生成
             string paramName = "generate_main_key.param";
-            if (GpgProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
+            if (Gpg4winProcess.WriteParamForGenerateMainKeyToTempFolder(paramName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 DoRequestRemoveTempFolderWithInformative(false, AppCommon.MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_PAR);
                 return;

@@ -118,13 +118,12 @@ namespace MaintenanceToolApp.OpenPGP
         public delegate void HandlerOnTempFolderCommandResponse(bool success, string tempFolderPath);
         private HandlerOnTempFolderCommandResponse OnTempFolderCommandResponse = null!;
 
-        private string TempFolderPath = string.Empty;
-
         public void MakeTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
         {
             // コールバックを保持
             OnTempFolderCommandResponse = handlerRef;
 
+            string TempFolderPath = string.Empty;
             bool success = false;
 
             try {
@@ -142,7 +141,7 @@ namespace MaintenanceToolApp.OpenPGP
             OnTempFolderCommandResponse(success, TempFolderPath);
         }
 
-        public void RemoveTempFolder(HandlerOnTempFolderCommandResponse handlerRef)
+        public void RemoveTempFolder(string tempFolderPath, HandlerOnTempFolderCommandResponse handlerRef)
         {
             // コールバックを保持
             OnTempFolderCommandResponse = handlerRef;
@@ -151,7 +150,7 @@ namespace MaintenanceToolApp.OpenPGP
 
             try {
                 // 作業用フォルダーを、内包しているファイルごと削除
-                Directory.Delete(TempFolderPath, true);
+                Directory.Delete(tempFolderPath, true);
                 success = true;
 
             } catch (Exception e) {
@@ -159,14 +158,13 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // 作業用フォルダー削除の成否を戻す
-            OnTempFolderCommandResponse(success, TempFolderPath);
-            TempFolderPath = string.Empty;
+            OnTempFolderCommandResponse(success, tempFolderPath);
         }
 
         //
         // スクリプト／パラメーターファイル関連
         //
-        public bool WriteScriptToTempFolder(string scriptName)
+        public static bool WriteScriptToTempFolder(string scriptName, OpenPGPParameter parameter)
         {
             // スクリプトをリソースから読込み
             string scriptContent = GetScriptResourceContentString(scriptName);
@@ -175,7 +173,7 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // スクリプトファイルを作業用フォルダーに書き出し
-            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string scriptFilePath = string.Format("{0}\\{1}", parameter.TempFolderPath, scriptName);
             if (Gpg4winUtility.WriteStringToFile(scriptContent, scriptFilePath) == false) {
                 return false;
             }
@@ -183,7 +181,7 @@ namespace MaintenanceToolApp.OpenPGP
             return true;
         }
 
-        public bool WriteParamForGenerateMainKeyToTempFolder(string scriptName, OpenPGPParameter parameter)
+        public static bool WriteParamForGenerateMainKeyToTempFolder(string scriptName, OpenPGPParameter parameter)
         {
             // パラメーターをリソースから読込み
             string scriptContent = GetScriptResourceContentString(scriptName);
@@ -195,7 +193,7 @@ namespace MaintenanceToolApp.OpenPGP
             string parameterContent = string.Format(scriptContent, parameter.RealName, parameter.MailAddress, parameter.Comment);
 
             // パラメーターファイルを作業用フォルダーに書き出し
-            string scriptFilePath = string.Format("{0}\\{1}", TempFolderPath, scriptName);
+            string scriptFilePath = string.Format("{0}\\{1}", parameter.TempFolderPath, scriptName);
             if (Gpg4winUtility.WriteStringToFile(parameterContent, scriptFilePath) == false) {
                 return false;
             }
@@ -203,7 +201,7 @@ namespace MaintenanceToolApp.OpenPGP
             return true;
         }
 
-        private string GetScriptResourceContentString(string scriptName)
+        private static string GetScriptResourceContentString(string scriptName)
         {
             // スクリプトをリソースから読込み
             string scriptResourceName = GetScriptResourceName(scriptName);
@@ -238,11 +236,7 @@ namespace MaintenanceToolApp.OpenPGP
             return string.Empty;
         }
 
-        // スクリプト内容を読込むための領域
-        private byte[] ScriptContentBytes = new byte[5120];
-        private int ScriptContentSize { get; set; }
-
-        private string GetScriptResourceContent(string resourceName)
+        private static string GetScriptResourceContent(string resourceName)
         {
             // リソースファイルを開く
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -251,9 +245,15 @@ namespace MaintenanceToolApp.OpenPGP
                 return string.Empty;
             }
 
+            byte[] ScriptContentBytes;
+            int ScriptContentSize;
             try {
+                // 配列領域を確保
+                int streamLength = (int)stream.Length;
+                ScriptContentBytes = new byte[streamLength];
+
                 // リソースファイルを配列に読込
-                ScriptContentSize = stream.Read(ScriptContentBytes, 0, (int)stream.Length);
+                ScriptContentSize = stream.Read(ScriptContentBytes, 0, streamLength);
 
                 // リソースファイルを閉じる
                 stream.Close();
