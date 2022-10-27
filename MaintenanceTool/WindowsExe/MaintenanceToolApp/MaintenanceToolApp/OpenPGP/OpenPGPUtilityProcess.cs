@@ -57,8 +57,30 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseCardReset(bool success, string response, string error)
         {
-            // TODO: 仮の実装です。
-            OnCommandResponse(success, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+            // 変数を初期化
+            bool commandSuccess = false;
+            string errorMessage = AppCommon.MSG_NONE;
+
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (Gpg4winUtility.CheckIfCardErrorFromResponse(error)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL;
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL;
+                }
+
+            } else {
+                // スクリプト正常終了の場合は副鍵３点が存在しない事をチェック
+                if (Gpg4winUtility.CheckIfNoSubKeyExistFromResponse(response)) {
+                    commandSuccess = true;
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED;
+                }
+            }
+
+            // 作業用フォルダー消去処理に移行
+            OnCommandResponse(commandSuccess, errorMessage);
         }
 
         private void DoRequestCardStatus()

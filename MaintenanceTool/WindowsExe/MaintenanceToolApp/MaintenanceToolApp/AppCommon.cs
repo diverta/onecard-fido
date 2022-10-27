@@ -170,6 +170,8 @@
         public const string MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL = "OpenPGPステータス照会コマンドの実行に失敗しました。";
         public const string MSG_ERROR_OPENPGP_SUBKEY_REMOVE_GEN_BAT = "PGP秘密鍵（副鍵）を認証器から削除時、エラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
         public const string MSG_ERROR_OPENPGP_SUBKEY_REMOVE_GEN_PAR = "PGP秘密鍵（副鍵）を認証器から削除時、エラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_SUBKEY_REMOVE_FAIL = "PGP秘密鍵（副鍵）を認証器から削除時、不明なエラーが発生しました。";
+        public const string MSG_ERROR_OPENPGP_SUBKEY_NOT_REMOVED = "PGP秘密鍵（副鍵）を認証器から正しく削除できませんでした。";
         public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE = "PGP公開鍵ファイルを、指定フォルダー（{0}）に生成しました。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE = "PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（{0}）に生成しました。";
