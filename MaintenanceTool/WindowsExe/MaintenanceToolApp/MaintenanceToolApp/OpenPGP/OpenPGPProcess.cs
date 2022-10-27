@@ -173,6 +173,13 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_RESET:
                 DoRequestCardReset();
                 break;
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                DoRequestPinManagement();
+                break;
             default:
                 NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 break;
@@ -215,6 +222,20 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         private void DoResponseInstallKeys(bool success, string errorMessage)
+        {
+            // 作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            new OpenPGPPinManagementProcess().DoProcess(Parameter, DoResponsePinManagement);
+        }
+
+        private void DoResponsePinManagement(bool success, string errorMessage)
         {
             // 作業用フォルダー消去処理に移行
             DoRequestRemoveTempFolderWithInformative(success, errorMessage);
