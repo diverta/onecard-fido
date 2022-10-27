@@ -1,4 +1,5 @@
-﻿using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
+﻿using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
 namespace MaintenanceToolApp.OpenPGP
 {
@@ -11,7 +12,7 @@ namespace MaintenanceToolApp.OpenPGP
         public delegate void HandlerOnCommandResponse(bool success, string errorMessage);
         private HandlerOnCommandResponse OnCommandResponse = null!;
 
-        public void DoCardStatusCommand(OpenPGPParameter parameterRef, HandlerOnCommandResponse handlerRef)
+        public void DoProcess(OpenPGPParameter parameterRef, HandlerOnCommandResponse handlerRef)
         {
             // パラメーターを保持
             Parameter = parameterRef;
@@ -19,8 +20,45 @@ namespace MaintenanceToolApp.OpenPGP
             // コールバックを保持
             OnCommandResponse = handlerRef;
 
-            // 設定情報照会を実行
-            DoRequestCardStatus();
+            if (Parameter.Command == Command.COMMAND_OPENPGP_RESET) {
+                // 設定情報消去を実行
+                DoRequestCardReset();
+
+            } else {
+                // 設定情報照会を実行
+                DoRequestCardStatus();
+            }
+        }
+
+        private void DoRequestCardReset()
+        {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_reset.bat";
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_GEN_BAT);
+                return;
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            string paramName = "card_reset.param";
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(paramName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, AppCommon.MSG_ERROR_OPENPGP_SUBKEY_REMOVE_GEN_PAR);
+                return;
+            }
+
+            // スクリプトを実行
+            string exe = string.Format("{0}\\{1}", Parameter.TempFolderPath, scriptName);
+            string args = string.Format("{0} --no-tty", Parameter.TempFolderPath);
+            Gpg4winParameter param = new Gpg4winParameter(GPGCommand.COMMAND_GPG_CARD_RESET, exe, args, Parameter.TempFolderPath);
+            new Gpg4winProcess().DoRequestCommandLine(param, DoResponseCardReset);
+        }
+
+        private void DoResponseCardReset(bool success, string response, string error)
+        {
+            // TODO: 仮の実装です。
+            OnCommandResponse(success, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
         }
 
         private void DoRequestCardStatus()
