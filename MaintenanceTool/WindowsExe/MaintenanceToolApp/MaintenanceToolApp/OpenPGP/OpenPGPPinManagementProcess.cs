@@ -17,6 +17,20 @@
             // コールバックを保持
             OnCommandResponse = handlerRef;
 
+            // Gpg4winの`card edit passwd/unblock`コマンドを実行
+            DoRequestCardEditPasswdCommand();
+        }
+
+        private void DoRequestCardEditPasswdCommand()
+        {
+            // スクリプトを作業用フォルダーに生成
+            string scriptName = "card_edit_passwd.bat";
+            if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_GEN_BAT_ERR, Parameter.CommandTitle));
+                return;
+            }
+
             // TODO: 仮の実装です。
             OnCommandResponse(true, AppCommon.MSG_NONE);
         }
