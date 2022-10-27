@@ -29,6 +29,7 @@
     <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <None Remove="Resources\card_status.bat" />
     <None Remove="Resources\export_pubkey_and_backup.bat" />
     <None Remove="Resources\generate_main_key.bat" />
     <None Remove="Resources\generate_main_key.param" />
@@ -64,6 +65,7 @@
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\card_status.bat" />
     <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
     <EmbeddedResource Include="Resources\generate_main_key.bat" />
     <EmbeddedResource Include="Resources\generate_main_key.param" />

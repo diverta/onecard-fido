@@ -225,8 +225,8 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseCardStatus(bool success, string errorMessage)
         {
-            // 画面に制御を戻す
-            NotifyProcessTerminated(success, errorMessage);
+            // 作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(success, errorMessage);
         }
 
         //

@@ -165,6 +165,8 @@
         public const string MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL = "生成したPGP秘密鍵（副鍵）を認証器に移動するための内部処理が失敗しました。";
         public const string MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED = "PGP秘密鍵（副鍵）が既に認証器に格納されているため、生成したPGP秘密鍵（副鍵）を移動出来ませんでした。";
         public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
+        public const string MSG_ERROR_OPENPGP_STATUS_COMMAND_GEN_BAT = "OpenPGPステータス照会コマンド実行時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL = "OpenPGPステータス照会コマンドの実行に失敗しました。";
         public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE = "PGP公開鍵ファイルを、指定フォルダー（{0}）に生成しました。";
         public const string MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE = "PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（{0}）に生成しました。";
