@@ -144,10 +144,40 @@
         public const string MSG_PIV_STATUS = "設定情報の取得";
 
         // OpenPGP機能設定関連
+        public const string MSG_ERROR_OPENPGP_APPLET_SELECT_FAILED = "OpenPGP機能を使用することができません。";
+        public const string MSG_ERROR_OPENPGP_GPG_VERSION_UNAVAIL = "バージョン「4.0.0」以降のGpg4winをインストールしてから実行してください。";
+        public const string MSG_ERROR_OPENPGP_CREATE_TEMPDIR_FAIL = "作業用フォルダーを生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_REMOVE_TEMPDIR_FAIL = "作業用フォルダーが消去出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL = "OpenPGP機能を認識出来ませんでした。\n認証器を一旦USBから取り外し、再度PCに装着した後、処理を再試行してください。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_BAT = "PGP秘密鍵（主鍵）を生成時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_GEN_PAR = "PGP秘密鍵（主鍵）を生成時にエラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_MAINKEY_FAIL = "PGP秘密鍵（主鍵）を生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_BAT = "PGP秘密鍵（副鍵）を生成時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_GEN_PAR = "PGP秘密鍵（副鍵）を生成時にエラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_GENERATE_SUB_KEY_FAIL = "PGP秘密鍵（副鍵）を生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_EXPORT_BACKUP_GEN_BAT = "PGP公開鍵／バックアップファイルを生成時にエラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_EXPORT_PUBKEY_FAIL = "PGP公開鍵を指定フォルダーに生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_BACKUP_FAIL = "バックアップファイルを指定フォルダーに生成出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_EXPORT_BACKUP_FAIL = "PGP公開鍵／バックアップファイルの生成が失敗しました。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_BAT = "PGP秘密鍵（副鍵）を認証器に移動時、エラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_GEN_PAR = "PGP秘密鍵（副鍵）を認証器に移動時、エラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_KEYS_FAIL = "生成したPGP秘密鍵（副鍵）を認証器に移動出来ませんでした。";
+        public const string MSG_ERROR_OPENPGP_TRANSFER_SCRIPT_FAIL = "生成したPGP秘密鍵（副鍵）を認証器に移動するための内部処理が失敗しました。";
+        public const string MSG_ERROR_OPENPGP_KEYS_ALREADY_STORED = "PGP秘密鍵（副鍵）が既に認証器に格納されているため、生成したPGP秘密鍵（副鍵）を移動出来ませんでした。";
+        public const string MSG_FORMAT_OPENPGP_CREATED_TEMPDIR = "作業用フォルダーを新規に生成しました（{0}）。";
+        public const string MSG_FORMAT_OPENPGP_GENERATED_MAIN_KEY = "PGP秘密鍵（主鍵）を新規に生成しました（鍵ID: {0}）。";
+        public const string MSG_FORMAT_OPENPGP_EXPORT_PUBKEY_DONE = "PGP公開鍵ファイルを、指定フォルダー（{0}）に生成しました。";
+        public const string MSG_FORMAT_OPENPGP_EXPORT_BACKUP_DONE = "PGP秘密鍵（主鍵）バックアップファイルを、指定フォルダー（{0}）に生成しました。";
         public const string MSG_FORMAT_OPENPGP_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONF = "{0}（確認）";
         public const string MSG_FORMAT_OPENPGP_ITEM_FOR_CONFIRM = "{0}（確認用）";
+        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
+        public const string MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR = "入力した{0}が間違っています。\n（あと{1}回リトライ可能です）";
+        public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
+        public const string MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE = "生成したPGP秘密鍵（副鍵）を認証器に移動しました。";
+        public const string MSG_OPENPGP_REMOVED_TEMPDIR = "作業用フォルダーを消去しました。";
         public const string MSG_OPENPGP_INSTALL_PGP_KEY = "PGP秘密鍵を認証器にインストールします。";
+        public const string MSG_OPENPGP_ADMIN_PIN_VERIFIED = "管理用PIN番号を検証しました。";
         public const string MSG_PROMPT_SELECT_PGP_PUBKEY_FOLDER = "PGP公開鍵ファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_SELECT_PGP_BACKUP_FOLDER = "バックアップファイルの出力先フォルダーを選択してください";
         public const string MSG_PROMPT_INPUT_PGP_MUST_ENTRY = "{0}は必ず入力してください";
@@ -167,6 +197,7 @@
         public const string MSG_LABEL_PGP_COMMENT = "コメント";
         public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
         public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_ITEM_PGP_ADMIN_PIN = "管理用PIN番号";
         public const string MSG_LABEL_ITEM_PGP_RESET_CODE = "リセットコード";
         public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";
         public const string MSG_LABEL_ITEM_NEW_PIN = "新しいPIN番号";
@@ -182,6 +213,7 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK_PIN = "PIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_SET_RESET_CODE = "リセットコード変更";
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
+        public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";

@@ -169,7 +169,7 @@ namespace MaintenanceToolApp.OpenPGP
         {
             Task task = Task.Run(() => {
                 // コマンドを実行
-                Process.DoOpenPGPProcess(param, new OpenPGPProcess.HandlerOnNotifyProcessTerminated(OnOpenPGPProcessTerminated));
+                Process.DoOpenPGPProcess(param, OnOpenPGPProcessTerminated);
             });
 
             // 進捗画面を表示
@@ -179,7 +179,7 @@ namespace MaintenanceToolApp.OpenPGP
             if (param.CommandSuccess) {
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
-                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+                DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
             }
 
             // 全ての入力欄をクリア
