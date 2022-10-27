@@ -12,6 +12,12 @@ namespace MaintenanceToolApp.CommonProcess
         // HIDからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
+        // USB接続／切断時のコールバック参照
+        private readonly HIDProcess.HandlerOnConnectHIDDevice OnConnectHIDDeviceRef;
+
+        // 待機フラグ
+        private bool WaitingToBoot = false;
+
         //
         // 外部公開用
         //
@@ -19,12 +25,16 @@ namespace MaintenanceToolApp.CommonProcess
         {
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
+            OnConnectHIDDeviceRef = new HIDProcess.HandlerOnConnectHIDDevice(OnConnectHIDDevice);
         }
 
         public void DoProcess(HandlerOnNotifyCommandTerminated handlerRef)
         {
             // コールバックを保持
             OnNotifyCommandTerminated = handlerRef;
+
+            // 待機フラグをリセット
+            WaitingToBoot = false;
 
             // CTAPHID_INITから実行
             DoRequestCtapHidInit();
@@ -61,8 +71,9 @@ namespace MaintenanceToolApp.CommonProcess
                 OnNotifyCommandTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
 
             } else {
-                // TODO: 仮の実装です。
-                OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
+                // 再接続まで待機
+                WaitingToBoot = true;
+                HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
             }
         }
 
@@ -88,6 +99,33 @@ namespace MaintenanceToolApp.CommonProcess
 
             // 実行コマンドからの戻り
             DoResponseFirmwareResetCommand(responseData);
+        }
+
+        //
+        // USB接続／切断時の処理
+        //
+        private void OnConnectHIDDevice(bool connected)
+        {
+            // イベントを解除
+            HIDProcess.UnregisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+
+            // 待機フラグ設定中でない場合は無視
+            if (WaitingToBoot == false) {
+                return;
+            }
+
+            if (connected == false) {
+                // 切断時は、再び接続まで待機
+                HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+
+            } else { 
+                // 再接続時は、待機フラグをリセット
+                WaitingToBoot = false;
+
+                // ファームウェア再始動完了
+                AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_NORMAL_MODE);
+                OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
+            }
         }
     }
 }
