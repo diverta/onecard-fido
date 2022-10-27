@@ -76,13 +76,16 @@ namespace MaintenanceToolApp.OpenPGP
             // 処理開始を通知
             NotifyProcessStarted();
 
-            if (Parameter.Command == Command.COMMAND_OPENPGP_INSTALL_KEYS) {
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
                 // 管理用PIN番号検証から開始
                 DoRequestAdminPinVerify();
-
-            } else {
+                break;
+            default:
                 // バージョン照会から開始
                 DoRequestGPGVersion();
+                break;
             }
         }
 
