@@ -1,4 +1,5 @@
-﻿using ToolAppCommon;
+﻿using MaintenanceToolApp.CommonProcess;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
@@ -81,6 +82,10 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_INSTALL_KEYS:
                 // 管理用PIN番号検証から開始
                 DoRequestAdminPinVerify();
+                break;
+            case Command.COMMAND_HID_FIRMWARE_RESET:
+                // 認証器のリセット処理を実行
+                DoRequestFirmwareReset();
                 break;
             default:
                 // バージョン照会から開始
@@ -205,6 +210,20 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // 作業用フォルダー消去処理に移行
             DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // 認証器のリセット
+        //
+        private void DoRequestFirmwareReset()
+        {
+            new FirmwareResetProcess().DoProcess(DoResponseFirmwareReset);
+        }
+
+        private void DoResponseFirmwareReset(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         // 
