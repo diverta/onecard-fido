@@ -41,8 +41,27 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseCardStatus(bool success, string response, string error)
         {
-            // TODO: 仮の実装です。
-            OnCommandResponse(true, AppCommon.MSG_NONE);
+            // 変数を初期化
+            bool commandSuccess = false;
+            string errorMessage = AppCommon.MSG_NONE;
+
+            // レスポンスをチェック
+            if (success) {
+                // レスポンスを保持
+                Parameter.StatusInfoString = response;
+                commandSuccess = true;
+
+            } else {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (Gpg4winUtility.CheckIfCardErrorFromResponse(error)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL;
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_STATUS_COMMAND_FAIL;
+                }
+            }
+
+            // 作業用フォルダー消去処理に移行
+            OnCommandResponse(commandSuccess, errorMessage);
         }
     }
 }

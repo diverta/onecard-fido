@@ -25,6 +25,7 @@ namespace MaintenanceToolApp.OpenPGP
         //
         public string TempFolderPath { get; set; }
         public string GeneratedMainKeyId { get; set; }
+        public string StatusInfoString { get; set; }
 
         public OpenPGPParameter()
         {
@@ -42,6 +43,7 @@ namespace MaintenanceToolApp.OpenPGP
             NewPin = string.Empty;
             TempFolderPath = string.Empty;
             GeneratedMainKeyId = string.Empty;
+            StatusInfoString = string.Empty;
         }
 
         public override string ToString()
