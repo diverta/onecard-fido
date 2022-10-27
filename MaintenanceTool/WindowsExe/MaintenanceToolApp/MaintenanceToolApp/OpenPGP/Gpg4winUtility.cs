@@ -163,6 +163,33 @@ namespace MaintenanceToolApp.OpenPGP
             return false;
         }
 
+        public static bool CheckIfNoSubKeyExistFromResponse(string response)
+        {
+            // ステータス開始行の有無を保持
+            bool header = false;
+
+            // 副鍵の有無を保持
+            bool subKeyS = false;
+            bool subKeyE = false;
+            bool subKeyA = false;
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains("Reader ...........:")) {
+                    header = true;
+                } else if (text.Contains("Signature key")) {
+                    subKeyS = text.Contains("[none]");
+                } else if (text.Contains("Encryption key")) {
+                    subKeyE = text.Contains("[none]");
+                } else if (text.Contains("Authentication key")) {
+                    subKeyA = text.Contains("[none]");
+                }
+            }
+
+            // ３点の副鍵が削除されていれば true を戻す
+            return (header && subKeyS && subKeyE && subKeyA);
+        }
+
         public static bool CheckIfCardErrorFromResponse(string response)
         {
             // メッセージ検索用文字列

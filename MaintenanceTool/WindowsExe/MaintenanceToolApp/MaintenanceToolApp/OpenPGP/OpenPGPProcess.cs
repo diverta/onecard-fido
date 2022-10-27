@@ -1,4 +1,5 @@
-﻿using ToolAppCommon;
+﻿using MaintenanceToolApp.CommonProcess;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
@@ -24,6 +25,7 @@ namespace MaintenanceToolApp.OpenPGP
         //
         public string TempFolderPath { get; set; }
         public string GeneratedMainKeyId { get; set; }
+        public string StatusInfoString { get; set; }
 
         public OpenPGPParameter()
         {
@@ -41,6 +43,7 @@ namespace MaintenanceToolApp.OpenPGP
             NewPin = string.Empty;
             TempFolderPath = string.Empty;
             GeneratedMainKeyId = string.Empty;
+            StatusInfoString = string.Empty;
         }
 
         public override string ToString()
@@ -76,13 +79,20 @@ namespace MaintenanceToolApp.OpenPGP
             // 処理開始を通知
             NotifyProcessStarted();
 
-            if (Parameter.Command == Command.COMMAND_OPENPGP_INSTALL_KEYS) {
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
                 // 管理用PIN番号検証から開始
                 DoRequestAdminPinVerify();
-
-            } else {
+                break;
+            case Command.COMMAND_HID_FIRMWARE_RESET:
+                // 認証器のリセット処理を実行
+                DoRequestFirmwareReset();
+                break;
+            default:
                 // バージョン照会から開始
                 DoRequestGPGVersion();
+                break;
             }
         }
 
@@ -157,6 +167,12 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_INSTALL_KEYS:
                 DoRequestInstallKeys();
                 break;
+            case Command.COMMAND_OPENPGP_STATUS:
+                DoRequestCardStatus();
+                break;
+            case Command.COMMAND_OPENPGP_RESET:
+                DoRequestCardReset();
+                break;
             default:
                 NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 break;
@@ -202,6 +218,48 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // 作業用フォルダー消去処理に移行
             DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // 設定情報照会
+        //
+        private void DoRequestCardStatus()
+        {
+            new OpenPGPUtilityProcess().DoProcess(Parameter, DoResponseCardStatus);
+        }
+
+        private void DoResponseCardStatus(bool success, string errorMessage)
+        {
+            // 作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // 設定情報消去
+        //
+        private void DoRequestCardReset()
+        {
+            new OpenPGPUtilityProcess().DoProcess(Parameter, DoResponseCardReset);
+        }
+
+        private void DoResponseCardReset(bool success, string errorMessage)
+        {
+            // 作業用フォルダー消去処理に移行
+            DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // 認証器のリセット
+        //
+        private void DoRequestFirmwareReset()
+        {
+            new FirmwareResetProcess().DoProcess(DoResponseFirmwareReset);
+        }
+
+        private void DoResponseFirmwareReset(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         // 

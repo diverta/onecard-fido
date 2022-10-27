@@ -177,6 +177,11 @@ namespace MaintenanceToolApp.OpenPGP
 
             // メッセージをポップアップ表示
             if (param.CommandSuccess) {
+                if (param.Command == Command.COMMAND_OPENPGP_STATUS) {
+                    // メッセージの代わりに、OpenPGP設定情報を、情報表示画面に表示
+                    new OpenPGPStatusWindow().ShowDialogWithOwner(this, AppCommon.PROCESS_NAME_OPENPGP_STATUS, param.StatusInfoString);
+                    return;
+                }
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
                 DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
