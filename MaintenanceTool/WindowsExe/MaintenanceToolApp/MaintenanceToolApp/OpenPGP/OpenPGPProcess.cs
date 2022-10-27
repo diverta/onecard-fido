@@ -165,6 +165,9 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_INSTALL_KEYS:
                 DoRequestInstallKeys();
                 break;
+            case Command.COMMAND_OPENPGP_STATUS:
+                DoRequestCardStatus();
+                break;
             default:
                 NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 break;
@@ -210,6 +213,20 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // 作業用フォルダー消去処理に移行
             DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // 設定情報照会
+        //
+        private void DoRequestCardStatus()
+        {
+            new OpenPGPUtilityProcess().DoCardStatusCommand(Parameter, DoResponseCardStatus);
+        }
+
+        private void DoResponseCardStatus(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         //
