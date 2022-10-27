@@ -1,4 +1,6 @@
-﻿namespace MaintenanceToolApp.OpenPGP
+﻿using static MaintenanceToolApp.AppDefine;
+
+namespace MaintenanceToolApp.OpenPGP
 {
     internal class OpenPGPPinManagementProcess
     {
@@ -28,6 +30,21 @@
             if (Gpg4winScriptUtil.WriteScriptToTempFolder(scriptName, Parameter) == false) {
                 // エラー発生時は、作業用フォルダー消去処理に移行
                 OnCommandResponse(false, string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_GEN_BAT_ERR, Parameter.CommandTitle));
+                return;
+            }
+
+            // パラメーターファイル名を設定
+            string paramName;
+            if (Parameter.Command == Command.COMMAND_OPENPGP_UNBLOCK) {
+                paramName = "card_edit_unblock.param";
+            } else {
+                paramName = "card_edit_passwd.param";
+            }
+
+            // パラメーターファイルを作業用フォルダーに生成
+            if (Gpg4winScriptUtil.WriteParamForCardEditUnblockToTempFolder(paramName, Parameter) == false) {
+                // エラー発生時は、作業用フォルダー消去処理に移行
+                OnCommandResponse(false, string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_GEN_PAR_ERR, Parameter.CommandTitle));
                 return;
             }
 

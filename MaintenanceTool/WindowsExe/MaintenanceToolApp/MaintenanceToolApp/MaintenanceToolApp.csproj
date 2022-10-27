@@ -29,6 +29,9 @@
     <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <None Remove="Resources\card_edit_passwd.bat" />
+    <None Remove="Resources\card_edit_passwd.param" />
+    <None Remove="Resources\card_edit_unblock.param" />
     <None Remove="Resources\card_reset.bat" />
     <None Remove="Resources\card_reset.param" />
     <None Remove="Resources\card_status.bat" />
@@ -67,6 +70,9 @@
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\card_edit_passwd.bat" />
+    <EmbeddedResource Include="Resources\card_edit_passwd.param" />
+    <EmbeddedResource Include="Resources\card_edit_unblock.param" />
     <EmbeddedResource Include="Resources\card_reset.bat" />
     <EmbeddedResource Include="Resources\card_reset.param" />
     <EmbeddedResource Include="Resources\card_status.bat" />

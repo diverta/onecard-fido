@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
 namespace MaintenanceToolApp.OpenPGP
 {
@@ -47,6 +49,51 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             return true;
+        }
+
+
+        public static bool WriteParamForCardEditUnblockToTempFolder(string scriptName, OpenPGPParameter parameter)
+        {
+            // パラメーターをリソースから読込み
+            string scriptContent;
+            if (GetScriptResourceContentString(scriptName, out scriptContent) == false) {
+                return false;
+            }
+
+            // パラメーターを置き換え
+            string parameterContent;
+            switch (parameter.Command) {
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                parameterContent = string.Format(scriptContent, parameter.CurrentPin, parameter.NewPin, parameter.NewPin);
+                break;
+            default:
+                parameterContent = string.Format(scriptContent, MenuNoForCardEditPasswdCommand(parameter.Command), parameter.CurrentPin, parameter.NewPin, parameter.NewPin);
+                break;
+            }
+
+            // パラメーターファイルを作業用フォルダーに書き出し
+            string scriptFilePath = string.Format("{0}\\{1}", parameter.TempFolderPath, scriptName);
+            if (WriteStringToFile(parameterContent, scriptFilePath) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static string MenuNoForCardEditPasswdCommand(Command command)
+        {
+            switch (command) {
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+                return "1";
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+                return "2";
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                return "3";
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                return "4";
+            default:
+                return "Q";
+            }
         }
 
         private static bool GetScriptResourceContentString(string scriptName, out string scriptResourceContentString)
