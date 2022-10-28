@@ -181,6 +181,7 @@
         public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_GEN_BAT_ERR = "{0}時、エラーが発生しました（スクリプトを作業用フォルダーに生成失敗）。";
         public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_GEN_PAR_ERR = "{0}時、エラーが発生しました（パラメーターファイルを作業用フォルダーに生成失敗）。";
         public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR = "{0}時、不明なエラーが発生しました。";
+        public const string MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG = "入力した{0}が間違っている可能性があります。";
         public const string MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR = "入力した{0}が間違っています。\n（あと{1}回リトライ可能です）";
         public const string MSG_OPENPGP_ADDED_SUB_KEYS = "PGP秘密鍵（副鍵）を新規に生成しました。";
         public const string MSG_OPENPGP_TRANSFERRED_KEYS_TO_DEVICE = "生成したPGP秘密鍵（副鍵）を認証器に移動しました。";
@@ -206,6 +207,7 @@
         public const string MSG_LABEL_PGP_COMMENT = "コメント";
         public const string MSG_LABEL_PGP_ADMIN_PIN = "OpenPGP機能の管理用PIN";
         public const string MSG_LABEL_PGP_ADMIN_PIN_CONFIRM = "OpenPGP機能の管理用PIN（確認）";
+        public const string MSG_LABEL_ITEM_PGP_PIN = "PIN番号";
         public const string MSG_LABEL_ITEM_PGP_ADMIN_PIN = "管理用PIN番号";
         public const string MSG_LABEL_ITEM_PGP_RESET_CODE = "リセットコード";
         public const string MSG_LABEL_ITEM_CUR_PIN = "現在のPIN番号";

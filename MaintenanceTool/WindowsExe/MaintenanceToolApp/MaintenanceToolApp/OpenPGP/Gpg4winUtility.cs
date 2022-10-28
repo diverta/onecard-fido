@@ -204,6 +204,29 @@ namespace MaintenanceToolApp.OpenPGP
             return false;
         }
 
+        public static bool CheckIfOperationSuccess(string response)
+        {
+            // メッセージ検索用文字列
+            string keywordNG = "SC_OP_FAILURE";
+            string keywordOK = "SC_OP_SUCCESS";
+
+            // 改行文字で区切られた文字列を分割
+            foreach (string text in TextArrayOfResponse(response)) {
+                if (text.Contains(keywordNG)) {
+                    // 失敗メッセージが出力されている場合は false
+                    AppLogUtil.OutputLogError(string.Format("GnuPG operation failed: {0}", text));
+                    return false;
+
+                } else if (text.Contains(keywordOK)) {
+                    // 成功メッセージが出力されている場合は true
+                    return true;
+                }
+            }
+
+            // 所定のメッセージが出力されていない場合は false
+            return false;
+        }
+
         private static string[] TextArrayOfResponse(string response)
         {
             return Regex.Split(response, "\r\n|\n");

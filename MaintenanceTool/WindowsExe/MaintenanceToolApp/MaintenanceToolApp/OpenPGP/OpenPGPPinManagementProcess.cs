@@ -1,4 +1,5 @@
-﻿using static MaintenanceToolApp.AppDefine;
+﻿using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
 namespace MaintenanceToolApp.OpenPGP
@@ -61,8 +62,45 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseCardEditPasswdCommand(bool success, string response, string error)
         {
-            // TODO: 仮の実装です。
-            OnCommandResponse(true, AppCommon.MSG_NONE);
+            // 変数を初期化
+            bool commandSuccess = false;
+            string errorMessage = AppCommon.MSG_NONE;
+
+            // レスポンスをチェック
+            if (success == false) {
+                // スクリプトエラーの場合はOpenPGP cardエラーをチェック
+                if (Gpg4winUtility.CheckIfCardErrorFromResponse(error)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_SELECTING_CARD_FAIL;
+                } else {
+                    errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, Parameter.CommandTitle);
+                }
+
+            } else {
+                // 成功 or 失敗メッセージが出力されているかどうかチェック
+                if (Gpg4winUtility.CheckIfOperationSuccess(response)) {
+                    commandSuccess = true;
+                } else {
+                    string itemName = ItemNameForCardEditPasswdCommand();
+                    errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_NG, itemName);
+                }
+            }
+
+            // 作業用フォルダー消去処理に移行
+            OnCommandResponse(commandSuccess, errorMessage);
+        }
+
+        private string ItemNameForCardEditPasswdCommand()
+        {
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                return AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                return AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+            default:
+                return AppCommon.MSG_LABEL_ITEM_PGP_PIN;
+            }
         }
     }
 }
