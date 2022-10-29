@@ -11,6 +11,11 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../secure_device_app</sourceRootElem>
+                <sourceRootElem>../ble_lib</sourceRootElem>
+                <sourceRootElem>../plat_lib</sourceRootElem>
+                <sourceRootElem>../../../../CCID/ccid_lib</sourceRootElem>
+                <sourceRootElem>../../../../CCID/openpgp_lib</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/fido2_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
