@@ -169,7 +169,7 @@ namespace MaintenanceToolApp.PIV
             if (param.CommandSuccess) {
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
-                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+                DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
             }
 
             // 全ての入力欄をクリア

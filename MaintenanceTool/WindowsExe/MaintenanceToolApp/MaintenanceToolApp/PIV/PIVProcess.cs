@@ -10,6 +10,7 @@ namespace MaintenanceToolApp.PIV
         public string CommandDesc { get; set; }
         public bool CommandSuccess { get; set; }
         public string ResultMessage { get; set; }
+        public string ResultInformativeMessage { get; set; }
         public string PkeyFilePath1 { get; set; }
         public string CertFilePath1 { get; set; }
         public string PkeyFilePath2 { get; set; }
@@ -26,6 +27,7 @@ namespace MaintenanceToolApp.PIV
             CommandTitle = string.Empty;
             CommandDesc = string.Empty;
             ResultMessage = string.Empty;
+            ResultInformativeMessage = string.Empty;
             PkeyFilePath1 = string.Empty;
             CertFilePath1 = string.Empty;
             PkeyFilePath2 = string.Empty;
@@ -73,7 +75,7 @@ namespace MaintenanceToolApp.PIV
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(Parameter.ToString());
             System.Threading.Thread.Sleep(1000);
-            NotifyProcessTerminated(true);
+            NotifyProcessTerminated(false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         // 
@@ -86,8 +88,15 @@ namespace MaintenanceToolApp.PIV
             AppLogUtil.OutputLogInfo(startMsg);
         }
 
-        private void NotifyProcessTerminated(bool success)
+        private void NotifyProcessTerminated(bool success, string errorMessage)
         {
+            // エラーメッセージを画面＆ログ出力
+            if (success == false && errorMessage.Length > 0) {
+                // ログ出力する文言からは、改行文字を除去
+                AppLogUtil.OutputLogError(AppUtil.ReplaceCRLF(errorMessage));
+                Parameter.ResultInformativeMessage = errorMessage;
+            }
+
             // コマンドの実行結果をログ出力
             string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 Parameter.CommandTitle,
