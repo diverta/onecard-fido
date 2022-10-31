@@ -111,6 +111,10 @@
 
         // PIV機能設定関連
         public const string MSG_ERROR_PIV_APPLET_SELECT_FAILED = "PIV機能を使用することができません。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED = "PIV管理機能認証（往路）が失敗しました。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED = "PIV管理機能認証（復路）が失敗しました。";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED = "PIV管理機能認証の内部処理が失敗しました（{0}）";
+        public const string MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF = "PIV管理機能認証が失敗しました（チャレンジが一致しません）。";
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
         public const string MSG_FILTER_SELECT_PIV_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
@@ -124,6 +128,7 @@
         public const string MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED = "PIV秘密鍵ファイル読込処理が失敗しました（{0}）";
         public const string MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED = "PIV証明書ファイル読込処理が失敗しました（{0}）";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
+        public const string MSG_ERROR_PIV_CERT_INFO_GET_FAILED = "PIV証明書からの属性取得処理が失敗しました（{0}）";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM = "{0}を正しく入力してください";

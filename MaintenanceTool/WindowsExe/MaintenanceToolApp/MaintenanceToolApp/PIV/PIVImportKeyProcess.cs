@@ -74,6 +74,7 @@ namespace MaintenanceToolApp.PIV
             // 上位クラスに制御を戻す
             OnCommandResponse(success, errorMessage);
         }
+
         //
         // リクエストデータ生成処理
         //

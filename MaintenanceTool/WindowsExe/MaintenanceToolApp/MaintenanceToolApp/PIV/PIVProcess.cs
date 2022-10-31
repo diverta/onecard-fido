@@ -15,6 +15,9 @@ namespace MaintenanceToolApp.PIV
         public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
         public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
 
+        public const byte TAG_DYNAMIC_AUTH_TEMPLATE = 0x7c;
+        public const byte TAG_AUTH_WITNESS = 0x80;
+        public const byte TAG_AUTH_CHALLENGE = 0x81;
         public const byte TAG_DATA_OBJECT = 0x5c;
         public const byte TAG_DATA_OBJECT_VALUE = 0x53;
         public const byte TAG_CERT = 0x70;
@@ -45,6 +48,7 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter1 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
+        public byte[] PivAuthChallenge = Array.Empty<byte>();
 
         public PIVParameter()
         {

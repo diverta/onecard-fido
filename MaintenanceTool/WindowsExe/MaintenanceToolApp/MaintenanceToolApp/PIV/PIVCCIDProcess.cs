@@ -7,6 +7,7 @@ namespace MaintenanceToolApp.PIV
     internal class PIVCCIDConst
     {
         public const byte PIV_INS_SELECT = 0xA4;
+        public const byte PIV_INS_AUTHENTICATE = 0x87;
     }
 
     internal class PIVCCIDProcess
@@ -76,8 +77,29 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DoCommandResponse(true, AppCommon.MSG_NONE);
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                // PIV管理機能認証を実行
+                DoRequestPivAdminAuth();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        private void DoRequestPivAdminAuth()
+        {
+            // PIV管理機能認証を実行
+            new PIVCCIDAdminAuthProcess().DoPIVCcidCommand(Parameter, DoResponsePIVAdminAuth);
+        }
+
+        private void DoResponsePIVAdminAuth(bool success, string errorMessage)
+        {
+            // 上位クラスに制御を戻す
+            DoCommandResponse(success, errorMessage);
         }
     }
 }
