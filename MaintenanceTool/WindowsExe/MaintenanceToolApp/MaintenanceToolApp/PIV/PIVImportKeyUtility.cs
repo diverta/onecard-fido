@@ -228,8 +228,8 @@ namespace MaintenanceToolApp.PIV
 
             // 証明書のバイナリーイメージを抽出
             parameter.CertBytes = x509.GetRawCertData();
-            parameter.PkeyAlgName = CertAlgName;
-            parameter.PkeyAlgorithm = CertAlgorithm;
+            parameter.CertAlgName = CertAlgName;
+            parameter.CertAlgorithm = CertAlgorithm;
             return true;
         }
     }
