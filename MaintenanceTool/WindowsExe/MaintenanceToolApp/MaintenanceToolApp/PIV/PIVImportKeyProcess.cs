@@ -1,5 +1,4 @@
 ﻿using System;
-using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -100,7 +99,7 @@ namespace MaintenanceToolApp.PIV
             // エラーメッセージを初期化
             errorMessage = AppCommon.MSG_NONE;
 
-            if (PIVImportKeyUtility.LoadPrivateKey(pkeyPemPath, parameter) == false) {
+            if (PIVImportKeyLoader.LoadPrivateKey(pkeyPemPath, parameter) == false) {
                 errorMessage = AppCommon.MSG_PIV_LOAD_PKEY_FAILED;
                 return false;
             }
@@ -113,7 +112,7 @@ namespace MaintenanceToolApp.PIV
             // エラーメッセージを初期化
             errorMessage = AppCommon.MSG_NONE;
 
-            if (PIVImportKeyUtility.LoadCertificate(certPemPath, parameter) == false) {
+            if (PIVImportKeyLoader.LoadCertificate(certPemPath, parameter) == false) {
                 errorMessage = AppCommon.MSG_PIV_LOAD_CERT_FAILED;
                 return false;
             }

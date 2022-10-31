@@ -13,7 +13,7 @@ namespace MaintenanceToolApp.PIV
         public const byte CRYPTO_ALG_RSA2048 = 0x07;
         public const byte CRYPTO_ALG_ECCP256 = 0x11;
     }
-    internal class PIVImportKeyUtility
+    internal class PIVImportKeyLoader
     {
         public static bool LoadPrivateKey(string pkeyPath, PIVImportKeyParameter parameter)
         {
