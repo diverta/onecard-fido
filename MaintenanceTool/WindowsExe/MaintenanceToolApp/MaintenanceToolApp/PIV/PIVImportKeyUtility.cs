@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
@@ -193,6 +194,43 @@ namespace MaintenanceToolApp.PIV
                 AppLogUtil.OutputLogError(string.Format(AppCommon.MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED, e.Message));
                 return false;
             }
+        }
+
+        public static bool LoadCertificate(string certPath, PIVImportKeyParameter parameter)
+        {
+            // 変数初期化
+            byte CertAlgorithm;
+            string CertAlgName;
+
+            // PEMファイルから証明書を読込
+            X509Certificate2 x509 = new X509Certificate2(certPath);
+
+            // 証明書アルゴリズム名を取得
+            string? friendlyName = x509.PublicKey.Oid.FriendlyName;
+            if (friendlyName == null) {
+                return false;
+            } else if (friendlyName.Equals("RSA")) {
+                CertAlgName = PIVImportKeyConst.ALG_NAME_RSA2048;
+            } else if (friendlyName.Equals("ECC")) {
+                CertAlgName = PIVImportKeyConst.ALG_NAME_ECCP256;
+            } else {
+                return false;
+            }
+
+            // 証明書アルゴリズムを、コマンドパラメーターに設定
+            if (CertAlgName.Equals(PIVImportKeyConst.ALG_NAME_RSA2048)) {
+                CertAlgorithm = PIVImportKeyConst.CRYPTO_ALG_RSA2048;
+            } else if (CertAlgName.Equals(PIVImportKeyConst.ALG_NAME_ECCP256)) {
+                CertAlgorithm = PIVImportKeyConst.CRYPTO_ALG_ECCP256;
+            } else {
+                return false;
+            }
+
+            // 証明書のバイナリーイメージを抽出
+            parameter.CertBytes = x509.GetRawCertData();
+            parameter.PkeyAlgName = CertAlgName;
+            parameter.PkeyAlgorithm = CertAlgorithm;
+            return true;
         }
     }
 }

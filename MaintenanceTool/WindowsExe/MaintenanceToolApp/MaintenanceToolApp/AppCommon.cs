@@ -121,6 +121,7 @@
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH3 = "管理機能用の鍵ファイルパスを選択してください";
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH3 = "管理機能用の証明書ファイルパスを選択してください";
         public const string MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED = "PIV秘密鍵ファイル読込処理が失敗しました（{0}）";
+        public const string MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED = "PIV証明書ファイル読込処理が失敗しました（{0}）";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
@@ -138,6 +139,7 @@
         public const string MSG_PROMPT_PIV_CLEAR_SETTING = "PIV機能の設定（鍵・証明書・PIN番号等）が全て削除され、PIV機能が使用できなくなります。\n\n処理を開始しますか？";
         public const string MSG_PIV_INSTALL_PKEY_CERT = "鍵・証明書ファイルのインストール";
         public const string MSG_PIV_LOAD_PKEY_FAILED = "鍵ファイルの読込が失敗しました。";
+        public const string MSG_PIV_LOAD_CERT_FAILED = "証明書ファイルの読込が失敗しました。";
         public const string MSG_PIV_CHANGE_PIN_NUMBER = "PIN番号の変更";
         public const string MSG_PIV_CHANGE_PUK_NUMBER = "PUK番号の変更";
         public const string MSG_PIV_RESET_PIN_NUMBER = "PIN番号のリセット";
