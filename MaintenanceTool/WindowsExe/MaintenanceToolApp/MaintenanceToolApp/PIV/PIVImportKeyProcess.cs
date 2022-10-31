@@ -38,5 +38,10 @@ namespace MaintenanceToolApp.PIV
 
     internal class PIVImportKeyProcess
     {
+        public static bool PrepareRequestDataForImport(PIVParameter parameter, out string errorMessage) 
+        {
+            errorMessage = AppCommon.MSG_OCCUR_UNKNOWN_ERROR;
+            return false;
+        }
     }
 }

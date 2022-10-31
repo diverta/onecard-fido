@@ -20,6 +20,10 @@ namespace MaintenanceToolApp.PIV
         public string AuthPin { get; set; }
         public string CurrentPin { get; set; }
         public string NewPin { get; set; }
+        //
+        // 以下は処理生成中に設定
+        //
+        public PIVImportKeyParameter ImportKeyParameter { get; set; }
 
         public PIVParameter()
         {
@@ -37,6 +41,7 @@ namespace MaintenanceToolApp.PIV
             AuthPin = string.Empty;
             CurrentPin = string.Empty;
             NewPin = string.Empty;
+            ImportKeyParameter = null!;
         }
 
         public override string ToString()
@@ -72,10 +77,30 @@ namespace MaintenanceToolApp.PIV
             // 処理開始を通知
             NotifyProcessStarted();
 
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                DoPIVImportKey();
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void DoPIVImportKey()
+        {
+            // 鍵・証明書ファイルを読込み、インポート処理用のリクエストデータを生成
+            Parameter.ImportKeyParameter = new PIVImportKeyParameter();
+            string errorMessage = string.Empty;
+            if (PIVImportKeyProcess.PrepareRequestDataForImport(Parameter, out errorMessage) == false) {
+                NotifyProcessTerminated(false, errorMessage);
+                return;
+            }
+
             // TODO: 仮の実装です。
             AppLogUtil.OutputLogDebug(Parameter.ToString());
             System.Threading.Thread.Sleep(1000);
-            NotifyProcessTerminated(false, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
         // 
