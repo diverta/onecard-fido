@@ -1,0 +1,83 @@
+﻿using System;
+using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
+
+namespace MaintenanceToolApp.PIV
+{
+    internal class PIVCCIDConst
+    {
+        public const byte PIV_INS_SELECT = 0xA4;
+    }
+
+    internal class PIVCCIDProcess
+    {
+        // 処理実行のためのプロパティー
+        private PIVParameter Parameter = null!;
+
+        // CCID I/Fからデータ受信時のコールバックを保持
+        public delegate void HandlerOnCommandResponse(bool success, string errorMessage);
+        private HandlerOnCommandResponse OnCommandResponse = null!;
+
+        //
+        // PIV機能設定用関数
+        // 
+        public void DoPIVCcidCommand(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
+        {
+            // 引き渡されたパラメーターを退避
+            Parameter = parameter;
+
+            // コールバックを保持
+            OnCommandResponse = handlerRef;
+
+            // CCIDインタフェース経由で認証器に接続
+            if (CCIDProcess.ConnectCCID() == false) {
+                // PIV機能を認識できなかった旨のエラーメッセージを設定し
+                // 上位クラスに制御を戻す
+                OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_APPLET_SELECT_FAILED);
+                return;
+            }
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                // 機能実行に先立ち、PIVアプレットをSELECT
+                DoRequestPIVInsSelectApplication();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        private void DoCommandResponse(bool success, string errorMessage)
+        {
+            // CCIDデバイスから切断し、上位クラスに制御を戻す
+            CCIDProcess.DisconnectCCID();
+            OnCommandResponse(success, errorMessage);
+        }
+
+        //
+        // CCID I/Fコマンド実行関数
+        //
+        private void DoRequestPIVInsSelectApplication()
+        {
+            // PIV appletを選択
+            byte[] aidBytes = new byte[] { 0xa0, 0x00, 0x00, 0x03, 0x08 };
+            CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_SELECT, 0x04, 0x00, aidBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponsePIVInsSelectApplication);
+        }
+
+        private void DoResponsePIVInsSelectApplication(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                DoCommandResponse(false, AppCommon.MSG_ERROR_PIV_APPLET_SELECT_FAILED);
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            DoCommandResponse(true, AppCommon.MSG_NONE);
+        }
+    }
+}

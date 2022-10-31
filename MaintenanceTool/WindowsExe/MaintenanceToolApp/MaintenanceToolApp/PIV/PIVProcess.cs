@@ -103,26 +103,25 @@ namespace MaintenanceToolApp.PIV
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
-                DoPIVImportKey();
+                DoRequestPIVImportKey();
                 break;
             default:
                 break;
             }
         }
 
-        private void DoPIVImportKey()
+        //
+        // 鍵・証明書インポート処理
+        //
+        private void DoRequestPIVImportKey()
         {
-            // 鍵・証明書ファイルを読込み、インポート処理用のリクエストデータを生成
-            string errorMessage;
-            if (PIVImportKeyProcess.PrepareRequestDataForImport(Parameter, out errorMessage) == false) {
-                NotifyProcessTerminated(false, errorMessage);
-                return;
-            }
+            new PIVImportKeyProcess().DoProcess(Parameter, DoResponsePIVImportKey);
+        }
 
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(Parameter.ToString());
-            System.Threading.Thread.Sleep(1000);
-            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         // 

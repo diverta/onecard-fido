@@ -43,7 +43,41 @@ namespace MaintenanceToolApp.PIV
 
     internal class PIVImportKeyProcess
     {
-        public static bool PrepareRequestDataForImport(PIVParameter parameter, out string errorMessage) 
+        // 処理実行のためのプロパティー
+        private PIVParameter Parameter = null!;
+
+        // 上位クラスに対するコールバックを保持
+        public delegate void HandlerOnCommandResponse(bool success, string errorMessage);
+        private HandlerOnCommandResponse OnCommandResponse = null!;
+
+        public void DoProcess(PIVParameter parameterRef, HandlerOnCommandResponse handlerRef)
+        {
+            // パラメーターを保持
+            Parameter = parameterRef;
+
+            // コールバックを保持
+            OnCommandResponse = handlerRef;
+
+            // 鍵・証明書ファイルを読込み、インポート処理用のリクエストデータを生成
+            string errorMessage;
+            if (PrepareRequestDataForImport(Parameter, out errorMessage) == false) {
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // CCID I/F経由で、鍵・証明書インポート処理を実行
+            new PIVCCIDProcess().DoPIVCcidCommand(Parameter, DoResponsePIVImportKey);
+        }
+
+        private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 上位クラスに制御を戻す
+            OnCommandResponse(success, errorMessage);
+        }
+        //
+        // リクエストデータ生成処理
+        //
+        private static bool PrepareRequestDataForImport(PIVParameter parameter, out string errorMessage) 
         {
             // スロット１の処理
             parameter.ImportKeyParameter1 = new PIVImportKeyParameter(PIVConst.PIV_KEY_AUTHENTICATION);
