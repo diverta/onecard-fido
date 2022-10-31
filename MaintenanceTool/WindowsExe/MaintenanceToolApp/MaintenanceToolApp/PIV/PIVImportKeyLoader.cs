@@ -6,13 +6,6 @@ using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
 {
-    internal class PIVImportKeyConst
-    {
-        public const string ALG_NAME_RSA2048 = "RSA2048";
-        public const string ALG_NAME_ECCP256 = "ECCP256";
-        public const byte CRYPTO_ALG_RSA2048 = 0x07;
-        public const byte CRYPTO_ALG_ECCP256 = 0x11;
-    }
     internal class PIVImportKeyLoader
     {
         public static bool LoadPrivateKey(string pkeyPath, PIVImportKeyParameter parameter)

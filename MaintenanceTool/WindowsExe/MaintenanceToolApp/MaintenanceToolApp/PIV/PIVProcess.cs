@@ -1,8 +1,27 @@
-﻿using ToolAppCommon;
+﻿using System;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.PIV
 {
+    internal class PIVConst
+    {
+        public const byte PIV_KEY_AUTHENTICATION = 0x9a;
+        public const byte PIV_KEY_CARDMGM = 0x9b;
+        public const byte PIV_KEY_SIGNATURE = 0x9c;
+        public const byte PIV_KEY_KEYMGM = 0x9d;
+
+        public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
+        public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
+        public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
+
+        public const byte TAG_DATA_OBJECT = 0x5c;
+        public const byte TAG_DATA_OBJECT_VALUE = 0x53;
+        public const byte TAG_CERT = 0x70;
+        public const byte TAG_CERT_COMPRESS = 0x71;
+        public const byte TAG_CERT_LRC = 0xfe;
+    }
+
     public class PIVParameter
     {
         public Command Command { get; set; }
