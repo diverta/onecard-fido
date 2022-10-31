@@ -23,7 +23,9 @@ namespace MaintenanceToolApp.PIV
         //
         // 以下は処理生成中に設定
         //
-        public PIVImportKeyParameter ImportKeyParameter { get; set; }
+        public PIVImportKeyParameter ImportKeyParameter1 { get; set; }
+        public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
+        public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
 
         public PIVParameter()
         {
@@ -41,7 +43,9 @@ namespace MaintenanceToolApp.PIV
             AuthPin = string.Empty;
             CurrentPin = string.Empty;
             NewPin = string.Empty;
-            ImportKeyParameter = null!;
+            ImportKeyParameter1 = null!;
+            ImportKeyParameter2 = null!;
+            ImportKeyParameter3 = null!;
         }
 
         public override string ToString()
