@@ -94,8 +94,7 @@ namespace MaintenanceToolApp.PIV
         private void DoPIVImportKey()
         {
             // 鍵・証明書ファイルを読込み、インポート処理用のリクエストデータを生成
-            Parameter.ImportKeyParameter = new PIVImportKeyParameter();
-            string errorMessage = string.Empty;
+            string errorMessage;
             if (PIVImportKeyProcess.PrepareRequestDataForImport(Parameter, out errorMessage) == false) {
                 NotifyProcessTerminated(false, errorMessage);
                 return;
