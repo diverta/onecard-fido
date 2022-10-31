@@ -159,7 +159,7 @@ namespace MaintenanceToolApp.PIV
         {
             Task task = Task.Run(() => {
                 // コマンドを実行
-                Process.DoPIVProcess(param, new PIVProcess.HandlerOnNotifyProcessTerminated(OnPIVProcessTerminated));
+                Process.DoPIVProcess(param, OnPIVProcessTerminated);
             });
 
             // 進捗画面を表示
