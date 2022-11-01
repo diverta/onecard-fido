@@ -133,7 +133,9 @@
         public const string MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED = "PIV証明書ファイル読込処理が失敗しました（{0}）";
         public const string MSG_INSTALL_PIV_PKEY_CERT = "PIV秘密鍵・証明書をインストールします。";
         public const string MSG_ERROR_PIV_IMPORT_PKEY_FAILED = "PIV秘密鍵インポート処理が失敗しました（slot=0x{0:x2}, alg=0x{1:x2}）。";
+        public const string MSG_ERROR_PIV_IMPORT_CERT_FAILED = "PIV証明書インポート処理が失敗しました（slot=0x{0:x2}, alg=0x{1:x2}）。";
         public const string MSG_PIV_PKEY_PEM_IMPORTED = "PIV秘密鍵を正常にインポートしました（slot=0x{0:x2}, alg=0x{1:x2}）。";
+        public const string MSG_PIV_CERT_PEM_IMPORTED = "PIV証明書を正常にインポートしました（slot=0x{0:x2}, alg=0x{1:x2}）。";
         public const string MSG_ERROR_PIV_CERT_INFO_GET_FAILED = "PIV証明書からの属性取得処理が失敗しました（{0}）";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";

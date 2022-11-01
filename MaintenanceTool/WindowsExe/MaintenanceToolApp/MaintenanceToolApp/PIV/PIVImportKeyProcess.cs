@@ -120,6 +120,18 @@ namespace MaintenanceToolApp.PIV
 
         private void DoRequestPivImportCertSlot1()
         {
+            // スロット１の証明書をインポート
+            DoRequestPivImportCert(Parameter.ImportKeyParameter1, DoResponsePivImportCertSlot1);
+        }
+
+        private void DoResponsePivImportCertSlot1(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // レスポンスをチェック後、次スロットのインポート処理に移行
+            DoResponsePivImportCert(Parameter.ImportKeyParameter1, success, responseSW, DoRequestPivImportKeySlot2);
+        }
+
+        private void DoRequestPivImportKeySlot2()
+        {
             // TODO: 仮の実装です。
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
@@ -162,5 +174,44 @@ namespace MaintenanceToolApp.PIV
             }
         }
 
+        //
+        // 証明書インポート共通処理
+        //
+        private void DoRequestPivImportCert(PIVImportKeyParameter parameter, CCIDProcess.HandlerOnReceivedResponse handler)
+        {
+            // パラメーターを取得
+            byte slotId = parameter.PkeySlotId;
+            byte[] certApdu = parameter.CertAPDUBytes;
+
+            // スロットIDからオブジェクトIDを取得
+            UInt32 objectId = PIVImportKeyUtility.GetObjectIdFromSlotId(slotId);
+
+            // コマンドを実行
+            CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_PUT_DATA, 0x3f, 0xff, certApdu, 0xff);
+            CCIDProcess.DoRequestCommand(param, handler);
+        }
+
+        private void DoResponsePivImportCert(PIVImportKeyParameter parameter, bool success, UInt16 responseSW, HandlerPivImportKey? handlerPivImportKey)
+        {
+            // パラメーターを取得
+            byte alg = parameter.PkeyAlgorithm;
+            byte slotId = parameter.PkeySlotId;
+
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                string errorMessage = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_CERT_FAILED, slotId, alg);
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // 処理成功のログを出力
+            string msgSuccess = string.Format(AppCommon.MSG_PIV_CERT_PEM_IMPORTED, slotId, alg);
+            AppLogUtil.OutputLogInfo(msgSuccess);
+
+            // 次スロットの秘密鍵インポート処理が指定されている場合は実行
+            if (handlerPivImportKey != null) {
+                handlerPivImportKey();
+            }
+        }
     }
 }
