@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -7,7 +8,10 @@ namespace MaintenanceToolApp.PIV
     internal class PIVCCIDConst
     {
         public const byte PIV_INS_SELECT = 0xA4;
+        public const byte PIV_INS_VERIFY = 0x20;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
+
+        public const byte PIV_KEY_PIN = 0x80;
     }
 
     internal class PIVCCIDProcess
@@ -98,8 +102,58 @@ namespace MaintenanceToolApp.PIV
 
         private void DoResponsePIVAdminAuth(bool success, string errorMessage)
         {
-            // 上位クラスに制御を戻す
-            DoCommandResponse(success, errorMessage);
+            // エラーが発生時は以降の処理を行わない
+            if (success == false) {
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                // PIN番号認証を実行
+                DoRequestPivPinVerify();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        private void DoRequestPivPinVerify()
+        {
+            // PIN番号による認証を実行
+            new PIVCCIDPinAuthProcess().DoPIVCcidCommand(Parameter, DoResponsePIVPinVerify);
+        }
+
+        private void DoResponsePIVPinVerify(bool success, string errorMessage)
+        {
+            // エラーが発生時は以降の処理を行わない
+            if (success == false) {
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+                DoRequestPivImportKey();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        //
+        // 鍵・証明書インポート
+        //
+        private void DoRequestPivImportKey()
+        {
+            // TODO: 仮の実装です。
+            DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
 }
