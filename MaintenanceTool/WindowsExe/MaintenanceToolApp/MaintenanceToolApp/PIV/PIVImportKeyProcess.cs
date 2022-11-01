@@ -109,18 +109,13 @@ namespace MaintenanceToolApp.PIV
         private void DoRequestPivImportKeySlot1()
         {
             // スロット１の秘密鍵をインポート
-            byte alg = Parameter.ImportKeyParameter1.PkeyAlgorithm;
-            byte slotId = Parameter.ImportKeyParameter1.PkeySlotId;
-            byte[] apdu = Parameter.ImportKeyParameter1.PkeyAPDUBytes;
-            DoRequestPivImportKey(alg, slotId, apdu, DoResponsePivImportKeySlot1);
+            DoRequestPivImportKey(Parameter.ImportKeyParameter1, DoResponsePivImportKeySlot1);
         }
 
         private void DoResponsePivImportKeySlot1(bool success, byte[] responseData, UInt16 responseSW)
         {
             // レスポンスをチェック後、証明書インポート処理に移行
-            byte alg = Parameter.ImportKeyParameter1.PkeyAlgorithm;
-            byte slotId = Parameter.ImportKeyParameter1.PkeySlotId;
-            DoResponsePivImportKey(success, alg, slotId, responseSW, DoRequestPivImportCertSlot1);
+            DoResponsePivImportKey(Parameter.ImportKeyParameter1, success, responseSW, DoRequestPivImportCertSlot1);
         }
 
         private void DoRequestPivImportCertSlot1()
@@ -132,15 +127,24 @@ namespace MaintenanceToolApp.PIV
         //
         // 秘密鍵インポート共通処理
         //
-        private static void DoRequestPivImportKey(byte alg, byte slotId, byte[] apdu, CCIDProcess.HandlerOnReceivedResponse handler)
+        private static void DoRequestPivImportKey(PIVImportKeyParameter parameter, CCIDProcess.HandlerOnReceivedResponse handler)
         {
+            // パラメーターを取得
+            byte alg = parameter.PkeyAlgorithm;
+            byte slotId = parameter.PkeySlotId;
+            byte[] apdu = parameter.PkeyAPDUBytes;
+
             // コマンドを実行
             CCIDParameter param = new CCIDParameter(PIVCCIDConst.YKPIV_INS_IMPORT_ASYMM_KEY, alg, slotId, apdu, 0xff);
             CCIDProcess.DoRequestCommand(param, handler);
         }
 
-        private void DoResponsePivImportKey(bool success, byte alg, byte slotId, UInt16 responseSW, HandlerPivImportCert? handlerPivImportCert)
+        private void DoResponsePivImportKey(PIVImportKeyParameter parameter, bool success, UInt16 responseSW, HandlerPivImportCert? handlerPivImportCert)
         {
+            // パラメーターを取得
+            byte alg = parameter.PkeyAlgorithm;
+            byte slotId = parameter.PkeySlotId;
+
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
                 string errorMessage = string.Format(AppCommon.MSG_ERROR_PIV_IMPORT_PKEY_FAILED, slotId, alg);
