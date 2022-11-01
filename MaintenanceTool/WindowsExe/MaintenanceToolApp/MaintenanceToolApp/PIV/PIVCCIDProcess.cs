@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
