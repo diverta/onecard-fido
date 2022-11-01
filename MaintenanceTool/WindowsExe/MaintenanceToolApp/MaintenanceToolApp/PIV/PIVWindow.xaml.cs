@@ -159,7 +159,7 @@ namespace MaintenanceToolApp.PIV
         {
             Task task = Task.Run(() => {
                 // コマンドを実行
-                Process.DoPIVProcess(param, new PIVProcess.HandlerOnNotifyProcessTerminated(OnPIVProcessTerminated));
+                Process.DoPIVProcess(param, OnPIVProcessTerminated);
             });
 
             // 進捗画面を表示
@@ -169,7 +169,7 @@ namespace MaintenanceToolApp.PIV
             if (param.CommandSuccess) {
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
-                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+                DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
             }
 
             // 全ての入力欄をクリア
