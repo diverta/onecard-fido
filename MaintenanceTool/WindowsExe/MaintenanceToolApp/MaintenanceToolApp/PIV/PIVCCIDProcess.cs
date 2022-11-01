@@ -26,7 +26,7 @@ namespace MaintenanceToolApp.PIV
         //
         // PIV機能設定用関数
         // 
-        public void DoPIVCcidCommand(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
+        public void DoRequestPinAuth(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
         {
             // 引き渡されたパラメーターを退避
             Parameter = parameter;
@@ -34,31 +34,13 @@ namespace MaintenanceToolApp.PIV
             // コールバックを保持
             OnCommandResponse = handlerRef;
 
-            // CCIDインタフェース経由で認証器に接続
-            if (CCIDProcess.ConnectCCID() == false) {
-                // PIV機能を認識できなかった旨のエラーメッセージを設定し
-                // 上位クラスに制御を戻す
-                OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_APPLET_SELECT_FAILED);
-                return;
-            }
-
-            // コマンドに応じ、以下の処理に分岐
-            switch (Parameter.Command) {
-            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
-                // 機能実行に先立ち、PIVアプレットをSELECT
-                DoRequestPIVInsSelectApplication();
-                break;
-            default:
-                // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                break;
-            }
+            // 機能実行に先立ち、PIVアプレットをSELECT
+            DoRequestPIVInsSelectApplication();
         }
 
         private void DoCommandResponse(bool success, string errorMessage)
         {
-            // CCIDデバイスから切断し、上位クラスに制御を戻す
-            CCIDProcess.DisconnectCCID();
+            // 上位クラスに制御を戻す
             OnCommandResponse(success, errorMessage);
         }
 
@@ -94,6 +76,9 @@ namespace MaintenanceToolApp.PIV
             }
         }
 
+        //
+        // PIV管理機能認証
+        //
         private void DoRequestPivAdminAuth()
         {
             // PIV管理機能認証を実行
@@ -121,6 +106,9 @@ namespace MaintenanceToolApp.PIV
             }
         }
 
+        //
+        // PIN番号による認証
+        //
         private void DoRequestPivPinVerify()
         {
             // PIN番号による認証を実行
@@ -129,22 +117,8 @@ namespace MaintenanceToolApp.PIV
 
         private void DoResponsePIVPinVerify(bool success, string errorMessage)
         {
-            // エラーが発生時は以降の処理を行わない
-            if (success == false) {
-                DoCommandResponse(false, errorMessage);
-                return;
-            }
-
-            // コマンドに応じ、以下の処理に分岐
-            switch (Parameter.Command) {
-            case Command.COMMAND_CCID_PIV_IMPORT_KEY:
-                DoRequestPivImportKey();
-                break;
-            default:
-                // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                break;
-            }
+            // 上位クラスに制御を戻す
+            DoCommandResponse(success, errorMessage);
         }
 
         //

@@ -1,4 +1,5 @@
 ﻿using System;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -65,13 +66,32 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
-            // CCID I/F経由で、鍵・証明書インポート処理を実行
-            new PIVCCIDProcess().DoPIVCcidCommand(Parameter, DoResponsePIVImportKey);
+            // CCIDインタフェース経由で認証器に接続
+            if (CCIDProcess.ConnectCCID() == false) {
+                // PIV機能を認識できなかった旨のエラーメッセージを設定し
+                // 上位クラスに制御を戻す
+                OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_APPLET_SELECT_FAILED);
+                return;
+            }
+
+            // CCID I/F経由で、PIN番号による認証を実行
+            new PIVCCIDProcess().DoRequestPinAuth(Parameter, DoResponsePinAuth);
         }
 
-        private void DoResponsePIVImportKey(bool success, string errorMessage)
+        private void DoResponsePinAuth(bool success, string errorMessage)
         {
-            // 上位クラスに制御を戻す
+            if (success == false) {
+                DoCommandResponse(false, errorMessage);
+            }
+
+            // TODO: 仮の実装です。
+            DoCommandResponse(true, AppCommon.MSG_NONE);
+        }
+
+        private void DoCommandResponse(bool success, string errorMessage)
+        {
+            // CCIDデバイスから切断し、上位クラスに制御を戻す
+            CCIDProcess.DisconnectCCID();
             OnCommandResponse(success, errorMessage);
         }
 
