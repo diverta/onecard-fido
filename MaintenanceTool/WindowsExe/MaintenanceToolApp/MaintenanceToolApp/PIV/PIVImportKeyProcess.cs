@@ -132,6 +132,30 @@ namespace MaintenanceToolApp.PIV
 
         private void DoRequestPivImportKeySlot2()
         {
+            // スロット２の秘密鍵をインポート
+            DoRequestPivImportKey(Parameter.ImportKeyParameter2, DoResponsePivImportKeySlot2);
+        }
+
+        private void DoResponsePivImportKeySlot2(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // レスポンスをチェック後、証明書インポート処理に移行
+            DoResponsePivImportKey(Parameter.ImportKeyParameter2, success, responseSW, DoRequestPivImportCertSlot2);
+        }
+
+        private void DoRequestPivImportCertSlot2()
+        {
+            // スロット２の証明書をインポート
+            DoRequestPivImportCert(Parameter.ImportKeyParameter2, DoResponsePivImportCertSlot2);
+        }
+
+        private void DoResponsePivImportCertSlot2(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // レスポンスをチェック後、次スロットのインポート処理に移行
+            DoResponsePivImportCert(Parameter.ImportKeyParameter2, success, responseSW, DoRequestPivImportKeySlot3);
+        }
+
+        private void DoRequestPivImportKeySlot3()
+        {
             // TODO: 仮の実装です。
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
