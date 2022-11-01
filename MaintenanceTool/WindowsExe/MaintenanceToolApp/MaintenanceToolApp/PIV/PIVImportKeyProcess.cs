@@ -85,6 +85,7 @@ namespace MaintenanceToolApp.PIV
             }
 
             // TODO: 仮の実装です。
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_PIV_PIN_AUTH_SUCCESS);
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
 
