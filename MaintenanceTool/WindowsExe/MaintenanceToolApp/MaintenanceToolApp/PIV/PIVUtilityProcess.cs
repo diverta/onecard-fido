@@ -118,7 +118,19 @@ namespace MaintenanceToolApp.PIV
 
         private void DoRequestRetrieveCCC()
         {
-            // TODO: 仮の実装です。
+            // PIVオブジェクト（CCC）を取得
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CAPABILITY, DoResponseRetrieveCCC);
+        }
+
+        private void DoResponseRetrieveCCC(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // レスポンスをチェックし、取得データを`PIVSettings`に格納後、次処理に移行
+            PIVSettingDataProcess.DoResponsePIVGetDataObject(Parameter.PIVSettings, success, responseData, responseSW, DoRequestRetrieveDataTerminate);
+        }
+
+        private void DoRequestRetrieveDataTerminate()
+        {
+            // 上位クラスに制御を戻す
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
