@@ -110,6 +110,9 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_CCID_PIV_SET_CHUID:
+                DoRequestPIVSetChuId();
+                break;
             case Command.COMMAND_HID_FIRMWARE_RESET:
                 // 認証器のリセット処理を実行
                 DoRequestFirmwareReset();
@@ -128,6 +131,20 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // ID設定処理
+        //
+        private void DoRequestPIVSetChuId()
+        {
+            new PIVSetIdProcess().DoProcess(Parameter, DoResponsePIVSetChuId);
+        }
+
+        private void DoResponsePIVSetChuId(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);
