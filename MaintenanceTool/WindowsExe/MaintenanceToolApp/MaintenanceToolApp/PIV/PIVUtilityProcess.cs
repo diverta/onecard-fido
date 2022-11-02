@@ -34,8 +34,8 @@ namespace MaintenanceToolApp.PIV
                 DoRequestCardReset();
 
             } else {
-                // 設定情報照会を実行
-                DoRequestCardStatus();
+                // 設定情報照会を実行（リトライカウンター照会から開始）
+                DoRequestRetrieveRetryCounter();
             }
         }
 
@@ -77,7 +77,34 @@ namespace MaintenanceToolApp.PIV
         //
         // 設定情報照会
         //
-        private void DoRequestCardStatus()
+        private void DoRequestRetrieveRetryCounter()
+        {
+            // PINリトライカウンター照会コマンドを実行
+            byte[] apdu = Array.Empty<byte>();
+            CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_VERIFY, 0x00, PIVConst.PIV_KEY_PIN, apdu, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseRetrieveRetryCounter);
+        }
+
+        private void DoResponseRetrieveRetryCounter(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            if ((responseSW >> 8) == 0x63) {
+                // PINリトライカウンターを取得
+                byte retries = (byte)(responseSW & 0x000f);
+                AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_PIV_PIN_RETRY_CNT_GET, retries));
+
+                // リトライカウンターを格納
+                Parameter.Retries = retries;
+
+                // PIVオブジェクト（CHUID）を取得
+                DoRequestRetrieveChuId();
+
+            } else {
+                // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED);
+            }
+        }
+
+        private void DoRequestRetrieveChuId()
         {
             // TODO: 仮の実装です。
             DoCommandResponse(true, AppCommon.MSG_NONE);

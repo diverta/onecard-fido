@@ -7,6 +7,7 @@ namespace MaintenanceToolApp.PIV
 {
     internal class PIVConst
     {
+        public const byte PIV_KEY_PIN = 0x80;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
         public const byte PIV_KEY_SIGNATURE = 0x9c;
@@ -52,6 +53,7 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
         public byte[] PivAuthChallenge = Array.Empty<byte>();
+        public byte Retries { get; set; }
 
         public PIVParameter()
         {
@@ -72,6 +74,7 @@ namespace MaintenanceToolApp.PIV
             ImportKeyParameter1 = null!;
             ImportKeyParameter2 = null!;
             ImportKeyParameter3 = null!;
+            Retries = 0;
         }
 
         public override string ToString()
