@@ -87,7 +87,24 @@ namespace MaintenanceToolApp.PIV
         //
         private void DoResponsePivSetCCC()
         {
-            // TODO: 仮の実装です。
+            // CCCを生成
+            byte[] apdu = PIVSetIdUtility.GenerateCccAPDU();
+
+            // コマンドを実行
+            CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_PUT_DATA, 0x3f, 0xff, apdu, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponsePivSetCCC);
+        }
+
+        private void DoResponsePivSetCCC(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (responseSW != CCIDProcessConst.SW_SUCCESS) {
+                DoCommandResponse(false, AppCommon.MSG_ERROR_PIV_IMPORT_CCC_FAILED);
+                return;
+            }
+
+            // 処理成功ログを出力
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_PIV_CCC_IMPORTED);
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }

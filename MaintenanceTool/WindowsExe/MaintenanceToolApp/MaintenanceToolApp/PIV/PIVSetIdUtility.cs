@@ -22,6 +22,12 @@ namespace MaintenanceToolApp.PIV
         // 乱数製造用
         private readonly Random Randomizer = new Random();
 
+        private static void GenerateRandomBytes(byte[] randomBytes)
+        {
+            // ランダム値を設定
+            Instance.Randomizer.NextBytes(randomBytes);
+        }
+
         //
         // CHUIDテンプレート
         //  0x30: FASC-N
@@ -39,6 +45,33 @@ namespace MaintenanceToolApp.PIV
         };
 
         //
+        // CCCテンプレート
+        //  f0: Card Identifier
+        //      0xa000000116 == GSC-IS RID
+        //      0xff == Manufacturer ID (dummy)
+        //      0x02 == Card type (javaCard)
+        //      next 14 bytes: card ID
+        private static readonly byte[] CccTemplate = {
+            0xf0, 0x15,
+            0xa0, 0x00, 0x00, 0x01, 0x16,
+            0xff,
+            0x02,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0xf1, 0x01, 0x21,
+            0xf2, 0x01, 0x21,
+            0xf3, 0x00,
+            0xf4, 0x01, 0x00,
+            0xf5, 0x01, 0x10,
+            0xf6, 0x00,
+            0xf7, 0x00,
+            0xfa, 0x00,
+            0xfb, 0x00,
+            0xfc, 0x00,
+            0xfd, 0x00,
+            0xfe, 0x00
+        };
+
+        //
         // CHUIDインポート用リクエストデータ生成
         //
         public static byte[] GenerateChuidAPDU()
@@ -52,7 +85,7 @@ namespace MaintenanceToolApp.PIV
 
             // ランダムなIDを設定
             byte[] randomBytes = new byte[PIVSetIdConst.PIV_CARDID_SIZE];
-            Instance.Randomizer.NextBytes(randomBytes);
+            GenerateRandomBytes(randomBytes);
             Array.Copy(randomBytes, 0, template, leadingOffset + PIVSetIdConst.PIV_CARDID_OFFSET, PIVSetIdConst.PIV_CARDID_SIZE);
 
             // 有効期限を10年後に設定
@@ -72,6 +105,37 @@ namespace MaintenanceToolApp.PIV
             // タグとデータ長を設定
             template[5] = PIVConst.TAG_DATA_OBJECT_VALUE;
             template[6] = (byte)ChuidTemplate.Length;
+            return template;
+        }
+
+        //
+        // CCCインポート用リクエストデータ生成
+        //
+        public static byte[] GenerateCccAPDU()
+        {
+            // テンプレートをコピー
+            //   先頭５バイトはオブジェクトID
+            //   先頭２バイトはTLVのタグ／データ長
+            int leadingOffset = 5 + 2;
+            byte[] template = new byte[leadingOffset + CccTemplate.Length];
+            Array.Copy(CccTemplate, 0, template, leadingOffset, CccTemplate.Length);
+
+            // ランダムなIDを設定
+            byte[] randomBytes = new byte[PIVSetIdConst.PIV_CCCID_SIZE];
+            GenerateRandomBytes(randomBytes);
+            Array.Copy(randomBytes, 0, template, leadingOffset + PIVSetIdConst.PIV_CCCID_OFFSET, PIVSetIdConst.PIV_CCCID_SIZE);
+
+            // オブジェクトIDを設定
+            template[0] = PIVConst.TAG_DATA_OBJECT;
+            template[1] = 3;
+            UInt32 objectId = PIVConst.PIV_OBJ_CAPABILITY;
+            template[2] = (byte)((objectId >> 16) & 0xff);
+            template[3] = (byte)((objectId >> 8) & 0xff);
+            template[4] = (byte)(objectId & 0xff);
+
+            // タグとデータ長を設定
+            template[5] = PIVConst.TAG_DATA_OBJECT_VALUE;
+            template[6] = (byte)CccTemplate.Length;
             return template;
         }
     }
