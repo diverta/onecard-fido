@@ -113,7 +113,25 @@ namespace MaintenanceToolApp.PIV
         private void DoRequestRetrieveCCC()
         {
             // PIVオブジェクト（CCC）を取得
-            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CAPABILITY, Parameter.PIVSettings, DoRequestRetrieveDataTerminate);
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CAPABILITY, Parameter.PIVSettings, DoRequestRetrieveCertAuthentication);
+        }
+
+        private void DoRequestRetrieveCertAuthentication()
+        {
+            // PIVオブジェクト（証明書１）を取得
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_AUTHENTICATION, Parameter.PIVSettings, DoRequestRetrieveCertSignature);
+        }
+
+        private void DoRequestRetrieveCertSignature()
+        {
+            // PIVオブジェクト（証明書２）を取得
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_SIGNATURE, Parameter.PIVSettings, DoRequestRetrieveCertKeyManagement);
+        }
+
+        private void DoRequestRetrieveCertKeyManagement()
+        {
+            // PIVオブジェクト（証明書３）を取得
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_KEY_MANAGEMENT, Parameter.PIVSettings, DoRequestRetrieveDataTerminate);
         }
 
         private void DoRequestRetrieveDataTerminate()
