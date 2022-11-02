@@ -231,9 +231,6 @@ namespace MaintenanceToolApp.PIV
             byte slotId = parameter.PkeySlotId;
             byte[] certApdu = parameter.CertAPDUBytes;
 
-            // スロットIDからオブジェクトIDを取得
-            UInt32 objectId = PIVImportKeyUtility.GetObjectIdFromSlotId(slotId);
-
             // コマンドを実行
             CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_PUT_DATA, 0x3f, 0xff, certApdu, 0xff);
             CCIDProcess.DoRequestCommand(param, handler);
