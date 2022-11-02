@@ -54,6 +54,7 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
         public byte[] PivAuthChallenge = Array.Empty<byte>();
         public byte Retries { get; set; }
+        public PIVSettingDataObjects PIVSettings { get; set; }
 
         public PIVParameter()
         {
@@ -75,6 +76,7 @@ namespace MaintenanceToolApp.PIV
             ImportKeyParameter2 = null!;
             ImportKeyParameter3 = null!;
             Retries = 0;
+            PIVSettings = new PIVSettingDataObjects();
         }
 
         public override string ToString()

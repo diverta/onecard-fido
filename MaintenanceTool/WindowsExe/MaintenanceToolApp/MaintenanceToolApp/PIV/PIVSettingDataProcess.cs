@@ -19,7 +19,11 @@ namespace MaintenanceToolApp.PIV
 
         public byte[] Get(UInt32 objectId)
         {
-            return DataObject[objectId];
+            if (DataObject.ContainsKey(objectId)) {
+                return DataObject[objectId];
+            } else {
+                return Array.Empty<byte>();
+            }
         }
     }
 
