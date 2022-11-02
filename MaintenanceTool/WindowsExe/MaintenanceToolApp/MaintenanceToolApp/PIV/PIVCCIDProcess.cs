@@ -67,6 +67,7 @@ namespace MaintenanceToolApp.PIV
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+            case Command.COMMAND_CCID_PIV_SET_CHUID:
                 // PIV管理機能認証を実行
                 DoRequestPivAdminAuth();
                 break;
@@ -102,7 +103,7 @@ namespace MaintenanceToolApp.PIV
                 break;
             default:
                 // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                DoCommandResponse(true, AppCommon.MSG_NONE);
                 break;
             }
         }
@@ -120,15 +121,6 @@ namespace MaintenanceToolApp.PIV
         {
             // 上位クラスに制御を戻す
             DoCommandResponse(success, errorMessage);
-        }
-
-        //
-        // 鍵・証明書インポート
-        //
-        private void DoRequestPivImportKey()
-        {
-            // TODO: 仮の実装です。
-            DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
 }
