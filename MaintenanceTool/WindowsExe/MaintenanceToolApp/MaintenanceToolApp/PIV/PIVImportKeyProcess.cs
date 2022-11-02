@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.PIV
             }
 
             // CCID I/F経由で、PIN番号による認証を実行
-            new PIVCCIDProcess().DoRequestPinAuth(Parameter, DoResponsePinAuth);
+            new PIVCCIDProcess().DoProcess(Parameter, DoResponsePinAuth);
         }
 
         private void DoResponsePinAuth(bool success, string errorMessage)

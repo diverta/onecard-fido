@@ -27,7 +27,7 @@ namespace MaintenanceToolApp.PIV
         //
         // PIV機能設定用関数
         // 
-        public void DoRequestPinAuth(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
+        public void DoProcess(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
         {
             // 引き渡されたパラメーターを退避
             Parameter = parameter;
