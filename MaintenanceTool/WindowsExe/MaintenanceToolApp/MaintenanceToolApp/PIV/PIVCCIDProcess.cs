@@ -9,6 +9,7 @@ namespace MaintenanceToolApp.PIV
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
+        public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
         public const byte YKPIV_INS_RESET = 0xfb;
         public const byte YKPIV_INS_IMPORT_ASYMM_KEY = 0xfe;
