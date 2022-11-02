@@ -1,4 +1,5 @@
-﻿using ToolAppCommon;
+﻿using System;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.PIV
@@ -50,8 +51,27 @@ namespace MaintenanceToolApp.PIV
         //
         private void DoRequestCardReset()
         {
-            // TODO: 仮の実装です。
-            DoCommandResponse(true, AppCommon.MSG_NONE);
+            // カードリセットコマンドを実行
+            byte[] apdu = Array.Empty<byte>();
+            CCIDParameter param = new CCIDParameter(PIVCCIDConst.YKPIV_INS_RESET, 0x00, 0x00, apdu, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseCardReset);
+        }
+
+        private void DoResponseCardReset(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // ステータスワードの内容に応じて分岐
+            if (responseSW == CCIDProcessConst.SW_SEC_STATUS_NOT_SATISFIED) {
+                // PIN／PUKがまだブロックされていない場合
+                DoCommandResponse(false, AppCommon.MSG_ERROR_PIV_RESET_FAIL);
+
+            } else if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                DoCommandResponse(false, string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW));
+
+            } else {
+                // 正常終了
+                DoCommandResponse(true, AppCommon.MSG_NONE);
+            }
         }
 
         //
