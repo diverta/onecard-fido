@@ -1,4 +1,5 @@
-﻿using ToolAppCommon;
+﻿using System;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -27,8 +28,23 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
-            // CCID I/F経由で、ID設定処理を実行
-            DoRequestPIVSetId();
+            // CCID I/F経由で、PIV管理機能認証を実行
+            new PIVCCIDProcess().DoProcess(Parameter, DoResponseAdminAuth);
+        }
+
+        private void DoResponseAdminAuth(bool success, string errorMessage)
+        {
+            if (success == false) {
+                DoCommandResponse(false, errorMessage);
+                return;
+
+            } else {
+                // PIV管理機能認証が成功
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_PIV_ADMIN_AUTH_SUCCESS);
+            }
+
+            // CHUIDインポート処理を実行
+            DoRequestPivSetChuId();
         }
 
         private void DoCommandResponse(bool success, string errorMessage)
@@ -38,7 +54,10 @@ namespace MaintenanceToolApp.PIV
             OnCommandResponse(success, errorMessage);
         }
 
-        private void DoRequestPIVSetId()
+        //
+        // CHUIDインポート処理
+        //
+        private void DoRequestPivSetChuId()
         {
             // TODO: 仮の実装です。
             DoCommandResponse(true, AppCommon.MSG_NONE);
