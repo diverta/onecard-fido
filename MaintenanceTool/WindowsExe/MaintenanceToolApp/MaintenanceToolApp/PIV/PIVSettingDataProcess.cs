@@ -31,6 +31,7 @@ namespace MaintenanceToolApp.PIV
     {
         // 後続処理の参照を保持
         public delegate void HandlerNextProcess();
+        private HandlerNextProcess HandlerNextProcessRef = null!;
 
         // このクラスのインスタンス
         private static readonly PIVSettingDataProcess Instance = new PIVSettingDataProcess();
@@ -38,23 +39,36 @@ namespace MaintenanceToolApp.PIV
         // 取得対象オブジェクトIDを保持
         private UInt32 ObjectIdToFetch { get; set; }
 
+        // PIV設定情報クラスの参照を保持
+        private PIVSettingDataObjects PIVSettingDataObjectsRef = null!;
+
         //
         // PIVデータオブジェクト照会
         //
-        public static void DoRequestPIVGetDataObject(UInt32 objectId, CCIDProcess.HandlerOnReceivedResponse handler)
+        public static void DoRequestPIVGetDataObject(UInt32 objectId, PIVSettingDataObjects settings, HandlerNextProcess handlerNextProcess)
         {
+            // 後続処理の参照を保持
+            Instance.HandlerNextProcessRef = handlerNextProcess;
+
+            // 後続処理の参照を保持
+            Instance.PIVSettingDataObjectsRef = settings;
+
             // 取得対象オブジェクトをAPDUに格納
             Instance.ObjectIdToFetch = objectId;
             byte[] apdu = GetPivInsGetApdu(objectId);
 
             // コマンドを実行
             CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_GET_DATA, 0x3f, 0xff, apdu, 0xff);
-            CCIDProcess.DoRequestCommand(param, handler);
+            CCIDProcess.DoRequestCommand(param, DoResponsePIVGetDataObject);
         }
 
-        public static void DoResponsePIVGetDataObject(PIVSettingDataObjects settings, bool success, byte[] responseData, UInt16 responseSW, HandlerNextProcess? handlerNextProcess)
+        private static void DoResponsePIVGetDataObject(bool success, byte[] responseData, UInt16 responseSW)
         {
+            // インスタンスで保持されている変数
             UInt32 objectId = Instance.ObjectIdToFetch;
+            PIVSettingDataObjects settings = Instance.PIVSettingDataObjectsRef;
+            HandlerNextProcess handlerNextProcess = Instance.HandlerNextProcessRef;
+
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
                 // 処理失敗ログを出力（エラーではなく警告扱いとする）
                 AppLogUtil.OutputLogWarn(string.Format(AppCommon.MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, objectId));

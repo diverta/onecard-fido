@@ -107,25 +107,13 @@ namespace MaintenanceToolApp.PIV
         private void DoRequestRetrieveChuId()
         {
             // PIVオブジェクト（CHUID）を取得
-            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CHUID, DoResponseRetrieveChuId);
-        }
-
-        private void DoResponseRetrieveChuId(bool success, byte[] responseData, UInt16 responseSW)
-        {
-            // レスポンスをチェックし、取得データを`PIVSettings`に格納後、次処理に移行
-            PIVSettingDataProcess.DoResponsePIVGetDataObject(Parameter.PIVSettings, success, responseData, responseSW, DoRequestRetrieveCCC);
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CHUID, Parameter.PIVSettings, DoRequestRetrieveCCC);
         }
 
         private void DoRequestRetrieveCCC()
         {
             // PIVオブジェクト（CCC）を取得
-            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CAPABILITY, DoResponseRetrieveCCC);
-        }
-
-        private void DoResponseRetrieveCCC(bool success, byte[] responseData, UInt16 responseSW)
-        {
-            // レスポンスをチェックし、取得データを`PIVSettings`に格納後、次処理に移行
-            PIVSettingDataProcess.DoResponsePIVGetDataObject(Parameter.PIVSettings, success, responseData, responseSW, DoRequestRetrieveDataTerminate);
+            PIVSettingDataProcess.DoRequestPIVGetDataObject(PIVConst.PIV_OBJ_CAPABILITY, Parameter.PIVSettings, DoRequestRetrieveDataTerminate);
         }
 
         private void DoRequestRetrieveDataTerminate()
