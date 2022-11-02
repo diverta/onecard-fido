@@ -12,7 +12,9 @@ namespace MaintenanceToolApp.PIV
         public const byte PIV_KEY_SIGNATURE = 0x9c;
         public const byte PIV_KEY_KEYMGM = 0x9d;
 
+        public const UInt32 PIV_OBJ_CHUID = 0x5fc102;
         public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
+        public const UInt32 PIV_OBJ_CAPABILITY = 0x5fc107;
         public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
         public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
 
