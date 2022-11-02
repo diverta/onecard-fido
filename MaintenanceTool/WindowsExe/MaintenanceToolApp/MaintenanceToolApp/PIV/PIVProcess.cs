@@ -112,6 +112,12 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_CCID_PIV_STATUS:
+                DoRequestPIVStatus();
+                break;
+            case Command.COMMAND_CCID_PIV_RESET:
+                DoRequestPIVReset();
+                break;
             case Command.COMMAND_CCID_PIV_SET_CHUID:
                 DoRequestPIVSetChuId();
                 break;
@@ -133,6 +139,34 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 設定情報照会
+        //
+        private void DoRequestPIVStatus()
+        {
+            new PIVUtilityProcess().DoProcess(Parameter, DoResponsePIVStatus);
+        }
+
+        private void DoResponsePIVStatus(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 設定情報消去
+        //
+        private void DoRequestPIVReset()
+        {
+            new PIVUtilityProcess().DoProcess(Parameter, DoResponsePIVReset);
+        }
+
+        private void DoResponsePIVReset(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);
