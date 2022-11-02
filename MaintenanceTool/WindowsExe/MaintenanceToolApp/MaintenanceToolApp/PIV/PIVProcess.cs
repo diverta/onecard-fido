@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp.CommonProcess;
+using System;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -109,6 +110,10 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_HID_FIRMWARE_RESET:
+                // 認証器のリセット処理を実行
+                DoRequestFirmwareReset();
+                break;
             default:
                 break;
             }
@@ -123,6 +128,20 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 認証器のリセット
+        //
+        private void DoRequestFirmwareReset()
+        {
+            new FirmwareResetProcess().DoProcess(DoResponseFirmwareReset);
+        }
+
+        private void DoResponseFirmwareReset(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);
