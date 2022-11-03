@@ -88,7 +88,7 @@ namespace MaintenanceToolApp.PIV
         private void DoRequestPivAdminAuth()
         {
             // PIV管理機能認証を実行
-            new PIVCCIDAdminAuthProcess().DoPIVCcidCommand(Parameter, DoResponsePIVAdminAuth);
+            new PIVCCIDAdminAuthProcess().DoPIVCcidCommand(DoResponsePIVAdminAuth);
         }
 
         private void DoResponsePIVAdminAuth(bool success, string errorMessage)

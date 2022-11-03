@@ -53,7 +53,6 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter1 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
-        public byte[] PivAuthChallenge = Array.Empty<byte>();
         public byte Retries { get; set; }
         public PIVSettingDataObjects PIVSettings { get; set; }
 
