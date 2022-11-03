@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToolAppCommon;
 
 namespace MaintenanceToolApp.PIV
 {
@@ -12,11 +13,11 @@ namespace MaintenanceToolApp.PIV
             InitializeComponent();
         }
 
-        public bool ShowDialogWithOwner(Window ownerWindow, string title, string infoString)
+        public bool ShowDialogWithOwner(Window ownerWindow, string title, PIVParameter parameter)
         {
             // 画面項目を設定
             Title = title;
-            textInfo.Text = infoString;
+            textInfo.Text = PIVStatusWindowUtility.EditDescriptionString(parameter, CCIDProcess.GetReaderName());
 
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
