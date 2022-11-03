@@ -117,6 +117,11 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_CCID_PIV_CHANGE_PIN:
+            case Command.COMMAND_CCID_PIV_CHANGE_PUK:
+            case Command.COMMAND_CCID_PIV_UNBLOCK_PIN:
+                DoRequestPIVPinManagement();
+                break;
             case Command.COMMAND_CCID_PIV_STATUS:
                 DoRequestPIVStatus();
                 break;
@@ -144,6 +149,21 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPIVPinManagement()
+        {
+            // TODO: 仮の実装です。
+            DoResponsePIVPinManagement(true, AppCommon.MSG_NONE);
+        }
+
+        private void DoResponsePIVPinManagement(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);
