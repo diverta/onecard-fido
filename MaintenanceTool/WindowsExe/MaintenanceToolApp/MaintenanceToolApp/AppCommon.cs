@@ -25,6 +25,7 @@
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
+        public const string PROCESS_NAME_PIV_STATUS = "PIV設定情報";
         public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
