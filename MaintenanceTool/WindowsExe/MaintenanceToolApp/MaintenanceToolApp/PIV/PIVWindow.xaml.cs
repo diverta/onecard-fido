@@ -107,6 +107,26 @@ namespace MaintenanceToolApp.PIV
             DoPIVProcess(param);
         }
 
+        private void DoPIVSetId()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string title = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, AppCommon.MSG_PIV_INITIAL_SETTING);
+            if (DialogUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_PIV_INITIAL_SETTING) == false) {
+                return;
+            }
+
+            // コマンドを実行
+            PIVParameter param = new PIVParameter();
+            param.Command = Command.COMMAND_CCID_PIV_SET_CHUID;
+            param.CommandTitle = AppCommon.MSG_PIV_INITIAL_SETTING;
+            DoPIVProcess(param);
+        }
+
         private void DoPIVReset()
         {
             // USB HID接続がない場合はエラーメッセージを表示
@@ -159,7 +179,7 @@ namespace MaintenanceToolApp.PIV
         {
             Task task = Task.Run(() => {
                 // コマンドを実行
-                Process.DoPIVProcess(param, new PIVProcess.HandlerOnNotifyProcessTerminated(OnPIVProcessTerminated));
+                Process.DoPIVProcess(param, OnPIVProcessTerminated);
             });
 
             // 進捗画面を表示
@@ -167,9 +187,14 @@ namespace MaintenanceToolApp.PIV
 
             // メッセージをポップアップ表示
             if (param.CommandSuccess) {
+                if (param.Command == Command.COMMAND_CCID_PIV_STATUS) {
+                    // メッセージの代わりに、PIV設定情報を、情報表示画面に表示
+                    new PIVStatusWindow().ShowDialogWithOwner(this, AppCommon.PROCESS_NAME_PIV_STATUS, param);
+                    return;
+                }
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
-                DialogUtil.ShowWarningMessage(this, Title, param.ResultMessage);
+                DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
             }
 
             // 全ての入力欄をクリア
@@ -542,6 +567,11 @@ namespace MaintenanceToolApp.PIV
         private void buttonPIVStatus_Click(object sender, RoutedEventArgs e)
         {
             DoPIVStatus();
+        }
+
+        private void buttonSetId_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIVSetId();
         }
 
         private void buttonPIVReset_Click(object sender, RoutedEventArgs e)

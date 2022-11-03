@@ -33,6 +33,9 @@
     <Compile Update="OpenPGP\OpenPGPWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="PIV\PIVStatusWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="PIV\PIVWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -75,6 +78,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OpenPGP\OpenPGPWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="PIV\PIVStatusWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="PIV\PIVWindow.xaml">
