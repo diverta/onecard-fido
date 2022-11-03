@@ -9,7 +9,9 @@ namespace MaintenanceToolApp.PIV
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
+        public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
+        public const byte YKPIV_INS_RESET = 0xfb;
         public const byte YKPIV_INS_IMPORT_ASYMM_KEY = 0xfe;
 
         public const byte PIV_KEY_PIN = 0x80;
@@ -27,7 +29,7 @@ namespace MaintenanceToolApp.PIV
         //
         // PIV機能設定用関数
         // 
-        public void DoRequestPinAuth(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
+        public void DoProcess(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
         {
             // 引き渡されたパラメーターを退避
             Parameter = parameter;
@@ -67,6 +69,7 @@ namespace MaintenanceToolApp.PIV
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
+            case Command.COMMAND_CCID_PIV_SET_CHUID:
                 // PIV管理機能認証を実行
                 DoRequestPivAdminAuth();
                 break;
@@ -102,7 +105,7 @@ namespace MaintenanceToolApp.PIV
                 break;
             default:
                 // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                DoCommandResponse(true, AppCommon.MSG_NONE);
                 break;
             }
         }
@@ -120,15 +123,6 @@ namespace MaintenanceToolApp.PIV
         {
             // 上位クラスに制御を戻す
             DoCommandResponse(success, errorMessage);
-        }
-
-        //
-        // 鍵・証明書インポート
-        //
-        private void DoRequestPivImportKey()
-        {
-            // TODO: 仮の実装です。
-            DoCommandResponse(true, AppCommon.MSG_NONE);
         }
     }
 }

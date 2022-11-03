@@ -160,7 +160,7 @@ namespace MaintenanceToolApp.PIV
             return true;
         }
 
-        public static UInt32 GetObjectIdFromSlotId(byte slotId)
+        private static UInt32 GetObjectIdFromSlotId(byte slotId)
         {
             // スロットIDからオブジェクトIDを取得
             UInt32 objectId;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp.CommonProcess;
+using System;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -6,12 +7,15 @@ namespace MaintenanceToolApp.PIV
 {
     internal class PIVConst
     {
+        public const byte PIV_KEY_PIN = 0x80;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
         public const byte PIV_KEY_SIGNATURE = 0x9c;
         public const byte PIV_KEY_KEYMGM = 0x9d;
 
+        public const UInt32 PIV_OBJ_CHUID = 0x5fc102;
         public const UInt32 PIV_OBJ_AUTHENTICATION = 0x5fc105;
+        public const UInt32 PIV_OBJ_CAPABILITY = 0x5fc107;
         public const UInt32 PIV_OBJ_SIGNATURE = 0x5fc10a;
         public const UInt32 PIV_OBJ_KEY_MANAGEMENT = 0x5fc10b;
 
@@ -49,6 +53,8 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
         public byte[] PivAuthChallenge = Array.Empty<byte>();
+        public byte Retries { get; set; }
+        public PIVSettingDataObjects PIVSettings { get; set; }
 
         public PIVParameter()
         {
@@ -69,6 +75,8 @@ namespace MaintenanceToolApp.PIV
             ImportKeyParameter1 = null!;
             ImportKeyParameter2 = null!;
             ImportKeyParameter3 = null!;
+            Retries = 0;
+            PIVSettings = new PIVSettingDataObjects();
         }
 
         public override string ToString()
@@ -109,6 +117,19 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_CCID_PIV_STATUS:
+                DoRequestPIVStatus();
+                break;
+            case Command.COMMAND_CCID_PIV_RESET:
+                DoRequestPIVReset();
+                break;
+            case Command.COMMAND_CCID_PIV_SET_CHUID:
+                DoRequestPIVSetChuId();
+                break;
+            case Command.COMMAND_HID_FIRMWARE_RESET:
+                // 認証器のリセット処理を実行
+                DoRequestFirmwareReset();
+                break;
             default:
                 break;
             }
@@ -123,6 +144,62 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 設定情報照会
+        //
+        private void DoRequestPIVStatus()
+        {
+            new PIVUtilityProcess().DoProcess(Parameter, DoResponsePIVStatus);
+        }
+
+        private void DoResponsePIVStatus(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 設定情報消去
+        //
+        private void DoRequestPIVReset()
+        {
+            new PIVUtilityProcess().DoProcess(Parameter, DoResponsePIVReset);
+        }
+
+        private void DoResponsePIVReset(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // ID設定処理
+        //
+        private void DoRequestPIVSetChuId()
+        {
+            new PIVSetIdProcess().DoProcess(Parameter, DoResponsePIVSetChuId);
+        }
+
+        private void DoResponsePIVSetChuId(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 認証器のリセット
+        //
+        private void DoRequestFirmwareReset()
+        {
+            new FirmwareResetProcess().DoProcess(DoResponseFirmwareReset);
+        }
+
+        private void DoResponseFirmwareReset(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);

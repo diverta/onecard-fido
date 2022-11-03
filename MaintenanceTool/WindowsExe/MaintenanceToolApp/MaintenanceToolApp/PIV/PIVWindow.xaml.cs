@@ -167,6 +167,11 @@ namespace MaintenanceToolApp.PIV
 
             // メッセージをポップアップ表示
             if (param.CommandSuccess) {
+                if (param.Command == Command.COMMAND_CCID_PIV_STATUS) {
+                    // メッセージの代わりに、PIV設定情報を、情報表示画面に表示
+                    new PIVStatusWindow().ShowDialogWithOwner(this, AppCommon.PROCESS_NAME_PIV_STATUS, param);
+                    return;
+                }
                 DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
             } else {
                 DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);

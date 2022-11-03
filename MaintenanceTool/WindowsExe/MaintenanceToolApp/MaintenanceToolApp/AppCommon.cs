@@ -25,6 +25,7 @@
         public const string PROCESS_NAME_AUTH_RESET = "FIDO認証情報の消去";
         public const string PROCESS_NAME_BLE_DFU = "FIDO認証器のファームウェア更新";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のリセット";
+        public const string PROCESS_NAME_PIV_STATUS = "PIV設定情報";
         public const string PROCESS_NAME_OPENPGP_STATUS = "OpenPGP設定情報";
         public const string PROCESS_NAME_BLE_CTAP2_HEALTHCHECK = "BLE CTAP2ヘルスチェック";
         public const string PROCESS_NAME_BLE_U2F_HEALTHCHECK = "BLE U2Fヘルスチェック";
@@ -118,6 +119,7 @@
         public const string MSG_ERROR_PIV_WRONG_PIN = "{0}が不正です。正しい{1}を入力してください（残り{2}回試行可能です）。";
         public const string MSG_ERROR_PIV_PIN_LOCKED = "PINがすでに無効です。PIN解除を実行し、新しいPINを登録して下さい。";
         public const string MSG_ERROR_PIV_PUK_LOCKED = "PUKがすでに無効です。PIV機能をリセットする必要があります。";
+        public const string MSG_ERROR_PIV_RESET_FAIL = "PINまたはPUKが未だ無効になっていないため、PIV機能をリセットできません。";
         public const string MSG_ERROR_PIV_UNKNOWN = "不明なエラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH = "PIV秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH = "PIV証明書ファイル(PEM)のパスを選択してください";
@@ -136,6 +138,14 @@
         public const string MSG_ERROR_PIV_IMPORT_CERT_FAILED = "PIV証明書インポート処理が失敗しました（slot=0x{0:x2}, alg=0x{1:x2}）。";
         public const string MSG_PIV_PKEY_PEM_IMPORTED = "PIV秘密鍵を正常にインポートしました（slot=0x{0:x2}, alg=0x{1:x2}）。";
         public const string MSG_PIV_CERT_PEM_IMPORTED = "PIV証明書を正常にインポートしました（slot=0x{0:x2}, alg=0x{1:x2}）。";
+        public const string MSG_ERROR_PIV_IMPORT_CHUID_FAILED = "PIV CHUIDインポート処理が失敗しました。";
+        public const string MSG_ERROR_PIV_IMPORT_CCC_FAILED = "PIV CCCインポート処理が失敗しました。";
+        public const string MSG_PIV_CHUID_IMPORTED = "PIV CHUIDを正常にインポートしました。";
+        public const string MSG_PIV_CCC_IMPORTED = "PIV CCCを正常にインポートしました。";
+        public const string MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED = "PIV PINリトライカウンターを取得できませんでした。";
+        public const string MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED = "PIVデータオブジェクトを取得できませんでした（ID=0x{0:x6}）。";
+        public const string MSG_PIV_PIN_RETRY_CNT_GET = "PIV PINリトライカウンターを取得しました（残り{0}回試行可能です）。";
+        public const string MSG_PIV_DATA_OBJECT_GET = "PIVデータオブジェクトを取得しました（ID=0x{0:x6}）。";
         public const string MSG_ERROR_PIV_CERT_INFO_GET_FAILED = "PIV証明書からの属性取得処理が失敗しました（{0}）";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_DIGIT = "{0}を6〜8桁で入力してください";
         public const string MSG_PROMPT_INPUT_PIV_PIN_PUK_NUM = "{0}を数字で入力してください";
@@ -152,6 +162,7 @@
         public const string MSG_PIV_CLEAR_SETTING = "設定情報の消去";
         public const string MSG_PROMPT_PIV_CLEAR_SETTING = "PIV機能の設定（鍵・証明書・PIN番号等）が全て削除され、PIV機能が使用できなくなります。\n\n処理を開始しますか？";
         public const string MSG_PIV_PIN_AUTH_SUCCESS = "PIN番号による認証が成功しました。";
+        public const string MSG_PIV_ADMIN_AUTH_SUCCESS = "PIV管理機能認証が成功しました。";
         public const string MSG_PIV_INSTALL_PKEY_CERT = "鍵・証明書ファイルのインストール";
         public const string MSG_PIV_LOAD_PKEY_FAILED = "鍵ファイルの読込が失敗しました。";
         public const string MSG_PIV_LOAD_CERT_FAILED = "証明書ファイルの読込が失敗しました。";

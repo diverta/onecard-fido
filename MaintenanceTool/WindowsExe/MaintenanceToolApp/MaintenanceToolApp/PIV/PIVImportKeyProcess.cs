@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.PIV
             }
 
             // CCID I/F経由で、PIN番号による認証を実行
-            new PIVCCIDProcess().DoRequestPinAuth(Parameter, DoResponsePinAuth);
+            new PIVCCIDProcess().DoProcess(Parameter, DoResponsePinAuth);
         }
 
         private void DoResponsePinAuth(bool success, string errorMessage)
@@ -230,9 +230,6 @@ namespace MaintenanceToolApp.PIV
             // パラメーターを取得
             byte slotId = parameter.PkeySlotId;
             byte[] certApdu = parameter.CertAPDUBytes;
-
-            // スロットIDからオブジェクトIDを取得
-            UInt32 objectId = PIVImportKeyUtility.GetObjectIdFromSlotId(slotId);
 
             // コマンドを実行
             CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_PUT_DATA, 0x3f, 0xff, certApdu, 0xff);
