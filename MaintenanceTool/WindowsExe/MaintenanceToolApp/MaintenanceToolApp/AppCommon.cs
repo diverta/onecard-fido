@@ -159,6 +159,8 @@
         public const string MSG_LABEL_NEW_PUK_FOR_CONFIRM = "新しいPUK番号（確認用）";
         public const string MSG_FORMAT_WILL_PROCESS = "{0}を実行します。";
         public const string MSG_FORMAT_PROCESS_INFORMATIVE = "{0}\n\n処理を開始しますか？";
+        public const string MSG_PIV_INITIAL_SETTING = "ID設定の処理";
+        public const string MSG_PROMPT_PIV_INITIAL_SETTING = "新規にCHUID、CCCが設定されます。\n\n処理を開始しますか？";
         public const string MSG_PIV_CLEAR_SETTING = "設定情報の消去";
         public const string MSG_PROMPT_PIV_CLEAR_SETTING = "PIV機能の設定（鍵・証明書・PIN番号等）が全て削除され、PIV機能が使用できなくなります。\n\n処理を開始しますか？";
         public const string MSG_PIV_PIN_AUTH_SUCCESS = "PIN番号による認証が成功しました。";

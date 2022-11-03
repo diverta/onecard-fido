@@ -7,8 +7,8 @@ namespace MaintenanceToolApp.PIV
 {
     internal class PIVCCIDAdminAuthProcess
     {
-        // 処理実行のためのプロパティー
-        private PIVParameter Parameter = null!;
+        // Challenge（往路／復路用）を保持
+        private byte[] AuthChallenge = null!;
 
         // CCID I/Fからデータ受信時のコールバックを保持
         public delegate void HandlerOnCommandResponse(bool success, string errorMessage);
@@ -20,11 +20,8 @@ namespace MaintenanceToolApp.PIV
         //
         // PIV機能設定用関数
         // 
-        public void DoPIVCcidCommand(PIVParameter parameter, HandlerOnCommandResponse handlerRef)
+        public void DoPIVCcidCommand(HandlerOnCommandResponse handlerRef)
         {
-            // 引き渡されたパラメーターを退避
-            Parameter = parameter;
-
             // コールバックを保持
             OnCommandResponse = handlerRef;
 
@@ -36,7 +33,7 @@ namespace MaintenanceToolApp.PIV
         {
             // PIV管理機能認証（往路）のリクエストデータを生成
             byte[] apdu = { PIVConst.TAG_DYNAMIC_AUTH_TEMPLATE, 2, PIVConst.TAG_AUTH_WITNESS, 0 };
-            Parameter.PivAuthChallenge = Array.Empty<byte>();
+            AuthChallenge = Array.Empty<byte>();
 
             // コマンドを実行
             // 0x03: CRYPTO_ALG_3DES
@@ -61,7 +58,7 @@ namespace MaintenanceToolApp.PIV
 
             // 8バイトのランダムベクターを送信チャレンジに設定
             byte[] PivAuthChallenge = new byte[8];
-            random.NextBytes(Parameter.PivAuthChallenge);
+            random.NextBytes(PivAuthChallenge);
 
             // PIV管理機能認証（復路）のリクエストデータを生成
             byte[] apdu = new byte[22];
@@ -79,7 +76,7 @@ namespace MaintenanceToolApp.PIV
             Array.Copy(PivAuthChallenge, 0, apdu, offset, PivAuthChallenge.Length);
 
             // パラメーターに保持
-            Parameter.PivAuthChallenge = PivAuthChallenge;
+            AuthChallenge = PivAuthChallenge;
 
             // コマンドを実行
             // 0x03: CRYPTO_ALG_3DES
@@ -91,7 +88,7 @@ namespace MaintenanceToolApp.PIV
         {
             // 不明なエラーが発生時は以降の処理を行わない
             if (responseSW != CCIDProcessConst.SW_SUCCESS) {
-                if (Parameter.PivAuthChallenge == Array.Empty<byte>()) {
+                if (AuthChallenge == Array.Empty<byte>()) {
                     OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED);
                 } else {
                     OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED);
@@ -99,7 +96,7 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
-            if (Parameter.PivAuthChallenge == Array.Empty<byte>()) {
+            if (AuthChallenge == Array.Empty<byte>()) {
                 // PIV管理機能認証（復路）を実行
                 DoRequestPivAdminAuthSecond(responseData);
                 return;
@@ -120,7 +117,7 @@ namespace MaintenanceToolApp.PIV
             }
 
             // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
-            if (Parameter.PivAuthChallenge.SequenceEqual(witness) == false) {
+            if (AuthChallenge.SequenceEqual(witness) == false) {
                 OnCommandResponse(false, AppCommon.MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF);
                 return;
             }

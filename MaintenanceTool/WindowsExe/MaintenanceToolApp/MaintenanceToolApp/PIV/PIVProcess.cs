@@ -8,6 +8,7 @@ namespace MaintenanceToolApp.PIV
     internal class PIVConst
     {
         public const byte PIV_KEY_PIN = 0x80;
+        public const byte PIV_KEY_PUK = 0x81;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
         public const byte PIV_KEY_SIGNATURE = 0x9c;
@@ -52,7 +53,6 @@ namespace MaintenanceToolApp.PIV
         public PIVImportKeyParameter ImportKeyParameter1 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter2 { get; set; }
         public PIVImportKeyParameter ImportKeyParameter3 { get; set; }
-        public byte[] PivAuthChallenge = Array.Empty<byte>();
         public byte Retries { get; set; }
         public PIVSettingDataObjects PIVSettings { get; set; }
 
@@ -117,6 +117,11 @@ namespace MaintenanceToolApp.PIV
             case Command.COMMAND_CCID_PIV_IMPORT_KEY:
                 DoRequestPIVImportKey();
                 break;
+            case Command.COMMAND_CCID_PIV_CHANGE_PIN:
+            case Command.COMMAND_CCID_PIV_CHANGE_PUK:
+            case Command.COMMAND_CCID_PIV_UNBLOCK_PIN:
+                DoRequestPIVPinManagement();
+                break;
             case Command.COMMAND_CCID_PIV_STATUS:
                 DoRequestPIVStatus();
                 break;
@@ -144,6 +149,20 @@ namespace MaintenanceToolApp.PIV
         }
 
         private void DoResponsePIVImportKey(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPIVPinManagement()
+        {
+            new PIVPinManagementProcess().DoProcess(Parameter, DoResponsePIVPinManagement);
+        }
+
+        private void DoResponsePIVPinManagement(bool success, string errorMessage)
         {
             // 画面に制御を戻す
             NotifyProcessTerminated(success, errorMessage);

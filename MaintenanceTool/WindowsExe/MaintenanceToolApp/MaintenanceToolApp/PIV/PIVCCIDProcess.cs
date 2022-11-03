@@ -8,6 +8,8 @@ namespace MaintenanceToolApp.PIV
     {
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
+        public const byte PIV_INS_CHANGE_REFERENCE = 0x24;
+        public const byte PIV_INS_RESET_RETRY = 0x2c;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
         public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
@@ -75,7 +77,7 @@ namespace MaintenanceToolApp.PIV
                 break;
             default:
                 // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                DoCommandResponse(true, AppCommon.MSG_NONE);
                 break;
             }
         }
@@ -86,7 +88,7 @@ namespace MaintenanceToolApp.PIV
         private void DoRequestPivAdminAuth()
         {
             // PIV管理機能認証を実行
-            new PIVCCIDAdminAuthProcess().DoPIVCcidCommand(Parameter, DoResponsePIVAdminAuth);
+            new PIVCCIDAdminAuthProcess().DoPIVCcidCommand(DoResponsePIVAdminAuth);
         }
 
         private void DoResponsePIVAdminAuth(bool success, string errorMessage)

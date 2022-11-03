@@ -61,9 +61,14 @@ namespace MaintenanceToolApp.PIV
         //
         // PIN認証応答チェック処理
         //
-        private static bool CheckPIVPinVerifyResponseSW(UInt16 responseSW, out string errorMessage)
+        public static bool CheckPIVPinVerifyResponseSW(UInt16 responseSW, out string errorMessage)
         {
             return CheckPIVPinOrPukVerifyResponseSW(responseSW, true, out errorMessage);
+        }
+
+        public static bool CheckPIVPukVerifyResponseSW(UInt16 responseSW, out string errorMessage)
+        {
+            return CheckPIVPinOrPukVerifyResponseSW(responseSW, false, out errorMessage);
         }
 
         private static bool CheckPIVPinOrPukVerifyResponseSW(UInt16 responseSW, bool isPinAuth, out string errorMessage)
@@ -104,7 +109,7 @@ namespace MaintenanceToolApp.PIV
         //
         // ユーティリティー
         //
-        private static byte[] GeneratePinBytes(string pinCode)
+        public static byte[] GeneratePinBytes(string pinCode)
         {
             // バイト配列に、引数のPINを設定
             // ８文字に足りない場合は、足りない部分を0xffで埋める
