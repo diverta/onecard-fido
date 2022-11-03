@@ -48,6 +48,8 @@ namespace MaintenanceToolApp.PIV
             StatusInfoString += string.Format("CHUID:  {0}", PrintableCHUIDString(settings)) + CRLF;
             StatusInfoString += string.Format("CCC:    {0}", PrintableCCCString(settings)) + CRLF + CRLF;
             StatusInfoString += EditCertDescription(PIVConst.PIV_OBJ_AUTHENTICATION, "PIV authenticate", settings, certData);
+            StatusInfoString += EditCertDescription(PIVConst.PIV_OBJ_SIGNATURE, "signature", settings, certData);
+            StatusInfoString += EditCertDescription(PIVConst.PIV_OBJ_KEY_MANAGEMENT, "key management", settings, certData);
             StatusInfoString += string.Format("PIN tries left: {0}", retries);
             return StatusInfoString;
         }
