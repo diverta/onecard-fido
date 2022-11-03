@@ -8,6 +8,7 @@ namespace MaintenanceToolApp.PIV
     internal class PIVConst
     {
         public const byte PIV_KEY_PIN = 0x80;
+        public const byte PIV_KEY_PUK = 0x81;
         public const byte PIV_KEY_AUTHENTICATION = 0x9a;
         public const byte PIV_KEY_CARDMGM = 0x9b;
         public const byte PIV_KEY_SIGNATURE = 0x9c;

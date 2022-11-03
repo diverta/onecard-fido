@@ -8,6 +8,8 @@ namespace MaintenanceToolApp.PIV
     {
         public const byte PIV_INS_SELECT = 0xA4;
         public const byte PIV_INS_VERIFY = 0x20;
+        public const byte PIV_INS_CHANGE_REFERENCE = 0x24;
+        public const byte PIV_INS_RESET_RETRY = 0x2c;
         public const byte PIV_INS_AUTHENTICATE = 0x87;
         public const byte PIV_INS_GET_DATA = 0xcb;
         public const byte PIV_INS_PUT_DATA = 0xdb;
