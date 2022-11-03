@@ -159,8 +159,7 @@ namespace MaintenanceToolApp.PIV
         //
         private void DoRequestPIVPinManagement()
         {
-            // TODO: 仮の実装です。
-            DoResponsePIVPinManagement(true, AppCommon.MSG_NONE);
+            new PIVPinManagementProcess().DoProcess(Parameter, DoResponsePIVPinManagement);
         }
 
         private void DoResponsePIVPinManagement(bool success, string errorMessage)
