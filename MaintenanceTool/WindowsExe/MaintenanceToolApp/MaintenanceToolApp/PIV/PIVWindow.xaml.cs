@@ -107,6 +107,26 @@ namespace MaintenanceToolApp.PIV
             DoPIVProcess(param);
         }
 
+        private void DoPIVSetId()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string title = string.Format(AppCommon.MSG_FORMAT_WILL_PROCESS, AppCommon.MSG_PIV_INITIAL_SETTING);
+            if (DialogUtil.DisplayPromptPopup(this, title, AppCommon.MSG_PROMPT_PIV_INITIAL_SETTING) == false) {
+                return;
+            }
+
+            // コマンドを実行
+            PIVParameter param = new PIVParameter();
+            param.Command = Command.COMMAND_CCID_PIV_SET_CHUID;
+            param.CommandTitle = AppCommon.MSG_PIV_INITIAL_SETTING;
+            DoPIVProcess(param);
+        }
+
         private void DoPIVReset()
         {
             // USB HID接続がない場合はエラーメッセージを表示
@@ -547,6 +567,11 @@ namespace MaintenanceToolApp.PIV
         private void buttonPIVStatus_Click(object sender, RoutedEventArgs e)
         {
             DoPIVStatus();
+        }
+
+        private void buttonSetId_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIVSetId();
         }
 
         private void buttonPIVReset_Click(object sender, RoutedEventArgs e)
