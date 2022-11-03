@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.PIV
                 break;
             default:
                 // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                DoCommandResponse(true, AppCommon.MSG_NONE);
                 break;
             }
         }

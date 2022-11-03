@@ -27,7 +27,14 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
+            // CCID I/F経由で、PIVアプレットselectを実行
+            new PIVCCIDProcess().DoProcess(Parameter, DoResponsePIVSelectApplication);
+        }
+
+        private void DoResponsePIVSelectApplication(bool success, string errorMessage)
+        {
             // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug("PIV applet selected");
             DoCommandResponse(true, AppCommon.MSG_NONE);
         }
 
