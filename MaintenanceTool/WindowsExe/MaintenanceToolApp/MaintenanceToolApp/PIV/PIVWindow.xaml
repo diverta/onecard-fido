@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="PIV設定" Width="480" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
-    <Grid Height="560">
+    <Grid Height="610">
         <Button x:Name="buttonPIVStatus" Content="設定情報を参照" HorizontalAlignment="Center" Margin="0,515,340,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonPIVStatus_Click"/>
-        <Button x:Name="buttonPIVReset" Content="設定情報を消去" HorizontalAlignment="Center" Margin="0,515,115,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonPIVReset_Click"/>
-        <Button x:Name="buttonFirmwareReset" Content="認証器のリセット" HorizontalAlignment="Center" Margin="110,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonFirmwareReset_Click"/>
-        <Button x:Name="buttonClose" Content="閉じる" HorizontalAlignment="Center" Margin="340,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonClose_Click"/>
+        <Button x:Name="buttonSetId" Content="ID設定を実行" HorizontalAlignment="Center" Margin="0,515,115,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonSetId_Click"/>
+        <Button x:Name="buttonPIVReset" Content="設定情報を消去" HorizontalAlignment="Center" Margin="110,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonPIVReset_Click"/>
+        <Button x:Name="buttonFirmwareReset" Content="認証器のリセット" HorizontalAlignment="Center" Margin="340,515,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonFirmwareReset_Click"/>
+        <Button x:Name="buttonClose" Content="閉じる" HorizontalAlignment="Center" Margin="0,560,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonClose_Click"/>
         <TabControl x:Name="tabControl" Height="485" Width="440" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0">
             <TabItem Header="鍵・証明書管理" Name="tabPagePkeyCertManagement">
                 <Grid Background="#FFFAFAFA">
