@@ -22,11 +22,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\add_sub_key.bat" />
+    <None Remove="Resources\add_sub_key.param" />
     <None Remove="Resources\appkg.PCA10059_01.0.3.5.zip" />
     <None Remove="Resources\appkg.PCA10059_02.0.3.5.zip" />
     <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <None Remove="Resources\card_reset.bat" />
+    <None Remove="Resources\card_reset.param" />
+    <None Remove="Resources\card_status.bat" />
+    <None Remove="Resources\export_pubkey_and_backup.bat" />
+    <None Remove="Resources\generate_main_key.bat" />
+    <None Remove="Resources\generate_main_key.param" />
+    <None Remove="Resources\transfer_subkey_to_card.bat" />
+    <None Remove="Resources\transfer_subkey_to_card.param" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +45,8 @@
     <Compile Include="..\..\ToolAppCommon\AppUtil.cs" Link="ToolAppCommon\AppUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\BLEProcess.cs" Link="ToolAppCommon\BLEProcess.cs" />
     <Compile Include="..\..\ToolAppCommon\BLEService.cs" Link="ToolAppCommon\BLEService.cs" />
+    <Compile Include="..\..\ToolAppCommon\CCIDDevice.cs" Link="ToolAppCommon\CCIDDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\CCIDProcess.cs" Link="ToolAppCommon\CCIDProcess.cs" />
     <Compile Include="..\..\ToolAppCommon\DialogUtil.cs" Link="ToolAppCommon\DialogUtil.cs" />
     <Compile Include="..\..\ToolAppCommon\FIDODefine.cs" Link="ToolAppCommon\FIDODefine.cs" />
     <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
@@ -48,11 +60,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\add_sub_key.bat" />
+    <EmbeddedResource Include="Resources\add_sub_key.param" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.5.zip" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.5.zip" />
     <EmbeddedResource Include="Resources\app_update.PCA10095.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\card_reset.bat" />
+    <EmbeddedResource Include="Resources\card_reset.param" />
+    <EmbeddedResource Include="Resources\card_status.bat" />
+    <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
+    <EmbeddedResource Include="Resources\generate_main_key.bat" />
+    <EmbeddedResource Include="Resources\generate_main_key.param" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
   </ItemGroup>
 
   <ItemGroup>
