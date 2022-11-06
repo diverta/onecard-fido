@@ -4,14 +4,15 @@ OUTPUT_DIRECTORY := _build
 # target board
 #  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059_02
+#  PCA10059_03  MDBT50Q Dongle(rev2.2, without ATECC608A)
+TARGET_BOARD     := PCA10059_03
 
 # Pin for DFU mode
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_BUTTON=0
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_GPREGRET=1
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_PINRESET=0
 
-SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../..
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
@@ -161,7 +162,7 @@ INC_FOLDERS += \
 
 # Libraries common to all targets
 LIB_FILES += \
-  $(SDK_ROOT)/external/nrf_oberon/lib/cortex-m4/hard-float/liboberon_3.0.6.a \
+  $(SDK_ROOT)/external/nrf_oberon/lib/cortex-m4/hard-float/liboberon_3.0.8.a \
   $(SDK_ROOT)/external/nrf_cc310_bl/lib/cortex-m4/hard-float/libnrf_cc310_bl_0.9.13.a \
 
 # Optimization flags

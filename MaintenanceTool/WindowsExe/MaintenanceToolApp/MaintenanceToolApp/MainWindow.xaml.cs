@@ -2,6 +2,8 @@
 using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
+using MaintenanceToolApp.OpenPGP;
+using MaintenanceToolApp.PIV;
 using MaintenanceToolApp.Utility;
 using System;
 using System.Windows;
@@ -55,8 +57,8 @@ namespace MaintenanceToolApp
             buttonBLE.IsEnabled = enable;
             buttonFIDO.IsEnabled = enable;
             buttonDFU.IsEnabled = enable;
-            buttonSetPivParam.IsEnabled = enable;
-            buttonSetPgpParam.IsEnabled = enable;
+            buttonPIV.IsEnabled = enable;
+            buttonOpenPGP.IsEnabled = enable;
             buttonOATH.IsEnabled = enable;
             buttonQuit.IsEnabled = enable;
             buttonHealthCheck.IsEnabled = enable;
@@ -102,6 +104,18 @@ namespace MaintenanceToolApp
                 // ファームウェア更新画面を開き、実行を指示
                 new DFUProcess(this, param).StartDFUProcess();
             }
+        }
+
+        private void DoPIV()
+        {
+            // PIV設定画面を開く
+            new PIVWindow().ShowDialogWithOwner(this);
+        }
+
+        private void DoOpenPGP()
+        {
+            // OpenPGP設定画面を開く
+            new OpenPGPWindow().ShowDialogWithOwner(this);
         }
 
         private void DoHealthCheck()
@@ -163,6 +177,16 @@ namespace MaintenanceToolApp
         private void buttonFIDO_Click(object sender, RoutedEventArgs e)
         {
             DoFIDOSettings();
+        }
+
+        private void buttonOpenPGP_Click(object sender, RoutedEventArgs e)
+        {
+            DoOpenPGP();
+        }
+
+        private void buttonPIV_Click(object sender, RoutedEventArgs e)
+        {
+            DoPIV();
         }
     }
 }

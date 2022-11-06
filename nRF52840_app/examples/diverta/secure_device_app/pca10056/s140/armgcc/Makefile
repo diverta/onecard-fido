@@ -1,13 +1,14 @@
 PROJECT_NAME     := secure_device_app_pca10059_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-# target board
-#  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
+# target board (without ATECC608A, unless noted)
+#  PCA10059_01  MDBT50Q Dongle(rev2)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059_01
+#  PCA10059_03  MDBT50Q Dongle(rev2.2)
+TARGET_BOARD     := PCA10059_03
 
 # application version info
-FW_REV := 0.3.5
+FW_REV := 0.3.6
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -19,8 +20,18 @@ CFLAGS += -DUSE_APP_CONFIG
 ifeq ("$(TARGET_BOARD)","PCA10056")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
     CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
-else
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_01")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_03")
+    # change TXD pin assignment
+    CFLAGS += -DNRF_LOG_BACKEND_UART_TX_PIN=25
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+    CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
 endif
 
 # for RSA & DES
@@ -40,6 +51,7 @@ FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
+PIVLIB_DIR := $(CCID_DIR)/piv_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
@@ -348,16 +360,17 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(CIDLIB_DIR)/ccid_apdu.c \
   $(CIDLIB_DIR)/ccid_main.c \
-  $(CIDLIB_DIR)/ccid_piv.c \
-  $(CIDLIB_DIR)/ccid_piv_general_auth.c \
-  $(CIDLIB_DIR)/ccid_piv_authenticate.c \
-  $(CIDLIB_DIR)/ccid_piv_object.c \
-  $(CIDLIB_DIR)/ccid_piv_object_import.c \
-  $(CIDLIB_DIR)/ccid_piv_pin.c \
-  $(CIDLIB_DIR)/ccid_piv_pin_auth.c \
-  $(CIDLIB_DIR)/ccid_piv_pin_update.c \
-  $(CIDLIB_DIR)/ccid_ykpiv.c \
-  $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
+  $(CIDLIB_DIR)/ccid_process.c \
+  $(PIVLIB_DIR)/ccid_piv.c \
+  $(PIVLIB_DIR)/ccid_piv_general_auth.c \
+  $(PIVLIB_DIR)/ccid_piv_authenticate.c \
+  $(PIVLIB_DIR)/ccid_piv_object.c \
+  $(PIVLIB_DIR)/ccid_piv_object_import.c \
+  $(PIVLIB_DIR)/ccid_piv_pin.c \
+  $(PIVLIB_DIR)/ccid_piv_pin_auth.c \
+  $(PIVLIB_DIR)/ccid_piv_pin_update.c \
+  $(PIVLIB_DIR)/ccid_ykpiv.c \
+  $(PIVLIB_DIR)/ccid_ykpiv_import_key.c \
   $(CT2LIB_DIR)/ctap2_cbor.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
@@ -375,6 +388,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command_common.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
+  $(FD2LIB_DIR)/fido_development.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
@@ -439,6 +453,7 @@ INC_FOLDERS += \
   $(CIDLIB_DIR) \
   $(CT2LIB_DIR) \
   $(FD2LIB_DIR) \
+  $(PIVLIB_DIR) \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
 

@@ -70,13 +70,13 @@
     - (void)doResponseCtapHidInit:(NSData *)message {
         // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、画面に制御を戻す
         if ([self isWrongNonceBytes:message]) {
-            [[self delegate] didResponseCommand:[self command] response:message success:false errorMessage:nil];
+            [[self delegate] didResponseCommand:[self command] CMD:HID_CMD_CTAPHID_INIT response:message success:false errorMessage:nil];
             return;
         }
         // レスポンスからCIDを抽出し、内部で保持
         [self setCid:[self getNewCIDFrom:message]];
         // 上位クラスに制御を戻す
-        [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
+        [[self delegate] didResponseCommand:[self command] CMD:HID_CMD_CTAPHID_INIT response:message success:true errorMessage:nil];
     }
 
     - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
@@ -111,12 +111,12 @@
             return;
         }
         // 正常終了扱い
-        [[self delegate] didResponseCommand:[self command] response:message success:true errorMessage:nil];
+        [[self delegate] didResponseCommand:[self command] CMD:cmd response:message success:true errorMessage:nil];
     }
 
     - (void)hidHelperDidResponseTimeout {
         // タイムアウト時はエラーメッセージを表示
-        [[self delegate] didResponseCommand:[self command] response:nil success:false errorMessage:MSG_HID_CMD_RESPONSE_TIMEOUT];
+        [[self delegate] didResponseCommand:[self command] CMD:HID_CMD_UNKNOWN_ERROR response:nil success:false errorMessage:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
 @end

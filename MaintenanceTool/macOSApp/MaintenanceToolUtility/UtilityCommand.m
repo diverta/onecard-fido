@@ -218,7 +218,7 @@
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
     }
 
-    - (void)didResponseCommand:(Command)command response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+    - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
         // 即時でアプリケーションに制御を戻す
         if (success == false) {
             [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];

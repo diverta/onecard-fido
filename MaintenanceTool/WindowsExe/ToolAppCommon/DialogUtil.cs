@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 
 namespace MaintenanceToolApp
@@ -151,6 +154,53 @@ namespace MaintenanceToolApp
 
             // Yesがクリックされた場合 true を戻す
             return (dialogResult == MessageBoxResult.Yes);
+        }
+    }
+
+    public class FileDialogUtil
+    {
+        //
+        // ファイル選択ダイアログでフォルダーを選択
+        //
+        public static void SelectFolderPath(Window owner, string dialogTitle, TextBox textBox)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.Title = dialogTitle;
+            dialog.IsFolderPicker = true;
+            dialog.InitialDirectory = textBox.Text;
+            if (dialog.ShowDialog(owner) == CommonFileDialogResult.Ok) {
+                if (dialog.FileName.Length > 0) {
+                    textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
+                }
+            }
+        }
+
+        //
+        // ファイル選択ダイアログでファイルを選択
+        //
+        public static void SelectFilePath(Window owner, string dialogTitle, TextBox textBox, string filter)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            var dialog = new OpenFileDialog();
+            dialog.Title = dialogTitle;
+            dialog.InitialDirectory = textBox.Text;
+            if (filter.Length > 0) {
+                dialog.Filter = filter;
+            }
+            if (dialog.ShowDialog(owner) == true) {
+                if (dialog.FileName.Length > 0) {
+                    textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
+                }
+            }
         }
     }
 }

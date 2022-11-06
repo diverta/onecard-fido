@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ToolAppCommon
 {
@@ -108,6 +109,15 @@ namespace ToolAppCommon
             return BitConverter.ToInt16(sub, 0);
         }
 
+        public static UInt16 ToUInt16(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 2);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToUInt16(sub, 0);
+        }
+
         private static byte[] GetSubArray(byte[] src, int startIndex, int count)
         {
             byte[] dst = new byte[count];
@@ -145,6 +155,11 @@ namespace ToolAppCommon
             for (int i = 0; i < s.Length; i++) {
                 b[i + offset] = s[s.Length - 1 - i];
             }
+        }
+
+        public static string ReplaceCRLF(string src)
+        {
+            return new Regex("\r\n|\n").Replace(src, "");
         }
     }
 }

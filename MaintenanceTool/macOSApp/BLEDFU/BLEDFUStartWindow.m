@@ -5,8 +5,10 @@
 //  Created by Makoto Morita on 2021/10/18.
 //
 #import "AppDefine.h"
+#import "AppCommonMessage.h"
 #import "BLEDFUStartWindow.h"
 #import "ToolBLEDFUCommand.h"
+#import "USBDFUCommand.h"
 
 @interface BLEDFUStartWindow ()
 
@@ -15,6 +17,7 @@
     @property (assign) IBOutlet NSButton            *buttonCancel;
     @property (assign) IBOutlet NSTextField         *labelUpdateVersion;
     @property (assign) IBOutlet NSTextField         *labelCurrentVersion;
+    @property (assign) IBOutlet NSTextField         *labelDescription;
 
 @end
 
@@ -34,7 +37,14 @@
 
     - (void)setWindowParameter:(id)toolBLEDFUCommandRef currentVersion:(NSString *)current updateVersion:(NSString *)update{
         // DFU処理クラスの参照を設定
-        [self setToolBLEDFUCommand:(ToolBLEDFUCommand *)toolBLEDFUCommandRef];
+        if ([toolBLEDFUCommandRef isMemberOfClass:[USBDFUCommand class]]) {
+            // 画面上の表示文言を変更
+            [[self labelDescription] setStringValue:MSG_DESCRIPTION_START_DFU_PROCESS];
+            [self setToolBLEDFUCommand:nil];
+        }
+        if ([toolBLEDFUCommandRef isMemberOfClass:[ToolBLEDFUCommand class]]) {
+            [self setToolBLEDFUCommand:(ToolBLEDFUCommand *)toolBLEDFUCommandRef];
+        }
         // バージョンラベルを設定
         [[self labelUpdateVersion] setStringValue:update];
         [[self labelCurrentVersion] setStringValue:current];
