@@ -1,13 +1,14 @@
 PROJECT_NAME     := secure_device_app_pca10059_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-# target board
-#  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
+# target board (without ATECC608A, unless noted)
+#  PCA10059_01  MDBT50Q Dongle(rev2)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10056
+#  PCA10059_03  MDBT50Q Dongle(rev2.2)
+TARGET_BOARD     := PCA10059_03
 
 # application version info
-FW_REV := 0.3.5
+FW_REV := 0.3.6
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -19,8 +20,18 @@ CFLAGS += -DUSE_APP_CONFIG
 ifeq ("$(TARGET_BOARD)","PCA10056")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
     CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
-else
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_01")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_03")
+    # change TXD pin assignment
+    CFLAGS += -DNRF_LOG_BACKEND_UART_TX_PIN=25
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+    CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
 endif
 
 # for RSA & DES
