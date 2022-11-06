@@ -9,7 +9,7 @@
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
 |1|`appkg.PCA10059_01.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
-|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)／[MDBT50Q Dongle Mini（rev1）](../../../FIDO2Device/MDBT50Q_Dongle_mini/pcb_rev1/README.md)用<br>ファームウェア更新イメージファイル|
 
 [管理ツール](../../../MaintenanceTool)に同梱され、管理ツールの[「ファームウェア更新機能」](../../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)でダウンロードされることを前提としております。<br>
 基板名「`PCA10059_01`」または「`PCA10059_02`」を指定し、NetBeansでビルドすると、このファイルが自動生成されるようになっております。

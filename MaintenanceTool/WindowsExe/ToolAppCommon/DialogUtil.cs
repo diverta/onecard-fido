@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -172,6 +173,32 @@ namespace MaintenanceToolApp
             if (dialog.ShowDialog(owner) == CommonFileDialogResult.Ok) {
                 if (dialog.FileName.Length > 0) {
                     textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
+                }
+            }
+        }
+
+        //
+        // ファイル選択ダイアログでファイルを選択
+        //
+        public static void SelectFilePath(Window owner, string dialogTitle, TextBox textBox, string filter)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            var dialog = new OpenFileDialog();
+            dialog.Title = dialogTitle;
+            dialog.InitialDirectory = textBox.Text;
+            if (filter.Length > 0) {
+                dialog.Filter = filter;
+            }
+            if (dialog.ShowDialog(owner) == true) {
+                if (dialog.FileName.Length > 0) {
+                    textBox.Text = dialog.FileName;
+
+                    // カーソルをテキストの末尾に移動
+                    textBox.ScrollToHorizontalOffset(textBox.ViewportWidth);
                 }
             }
         }
