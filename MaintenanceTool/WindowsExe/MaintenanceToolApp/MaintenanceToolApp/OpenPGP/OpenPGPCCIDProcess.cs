@@ -74,12 +74,14 @@ namespace MaintenanceToolApp.OpenPGP
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
             case Command.COMMAND_OPENPGP_INSTALL_KEYS:
-                DoRequestOpenPGPInsVerify();
+                DoRequestOpenPGPInsVerify(Parameter.Passphrase);
+                break;
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                DoRequestOpenPGPInsVerify(Parameter.CurrentPin);
                 break;
             case Command.COMMAND_OPENPGP_CHANGE_PIN:
             case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
-            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
-            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
             case Command.COMMAND_OPENPGP_UNBLOCK:
                 DoRequestPinManagement();
                 break;
@@ -93,10 +95,9 @@ namespace MaintenanceToolApp.OpenPGP
         //
         // 管理用PIN番号による認証
         //
-        private void DoRequestOpenPGPInsVerify()
+        private void DoRequestOpenPGPInsVerify(string pin)
         {
             // パラメーターの管理用PIN番号を使用し、PIN認証を実行
-            string pin = Parameter.Passphrase;
             byte[] pinBytes = Encoding.ASCII.GetBytes(pin);
             CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_VERIFY, 0x00, 0x83, pinBytes, 0xff);
             CCIDProcess.DoRequestCommand(param, DoResponseOpenPGPInsVerify);
@@ -118,8 +119,17 @@ namespace MaintenanceToolApp.OpenPGP
                 return;
             }
 
-            // 上位クラスに制御を戻す
-            DoCommandResponse(true, AppCommon.MSG_NONE);
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                DoRequestPinManagement();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(true, AppCommon.MSG_NONE);
+                break;
+            }
         }
 
         //
