@@ -178,7 +178,6 @@
                 <itemPath>../../../components/boards/boards.c</itemPath>
                 <itemPath>../../../components/boards/boards.h</itemPath>
                 <itemPath>../../../components/boards/pca10056.h</itemPath>
-                <itemPath>../../../components/boards/pca10059.h</itemPath>
                 <itemPath>../../../components/boards/pca10059_01.h</itemPath>
               </logicalFolder>
               <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
@@ -3695,8 +3694,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
             <pElem>../plat_lib</pElem>
-            <pElem>../../../../CCID/openpgp_lib</pElem>
             <pElem>../../../../CCID/piv_lib</pElem>
+            <pElem>../../../../CCID/openpgp_lib</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../ble_lib</pElem>
             <pElem>../secure_device_app/pca10056/s140/config</pElem>
@@ -5794,8 +5793,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
             <pElem>../../../../SECUREIC/atecc_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/timer</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../ble_lib</pElem>
+            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../secure_device_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/bsp</pElem>
