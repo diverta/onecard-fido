@@ -58,6 +58,15 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseChangePin(bool success, byte[] responseData, UInt16 responseSW)
         {
+            // 上位クラスに制御を戻す
+            DoResponsePinCommand(success, responseData, responseSW);
+        }
+
+        //
+        // 共通処理
+        //
+        private void DoResponsePinCommand(bool success, byte[] responseData, UInt16 responseSW)
+        {
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false) {
                 OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
