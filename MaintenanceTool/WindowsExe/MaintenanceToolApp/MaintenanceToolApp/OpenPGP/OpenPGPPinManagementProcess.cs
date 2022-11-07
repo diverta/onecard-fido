@@ -32,6 +32,9 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
                 DoRequestChangeAdminPin();
                 break;
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                DoRequestUnblock();
+                break;
             default:
                 // 上位クラスに制御を戻す
                 OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -88,6 +91,39 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         private void DoResponseChangeAdminPin(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 上位クラスに制御を戻す
+            DoResponsePinCommand(success, responseData, responseSW);
+        }
+
+        //
+        // リセットコードでPIN番号をリセット
+        //
+        private void DoRequestUnblock()
+        {
+            // パラメーターチェック
+            int digitRc = 8;
+            if (Parameter.CurrentPin.Length != digitRc) {
+                string errorMessage = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE, digitRc);
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+            int digitPin = 6;
+            if (Parameter.NewPin.Length != digitPin) {
+                string errorMessage = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, AppCommon.MSG_LABEL_ITEM_PGP_PIN, digitPin);
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // パラメーターを生成
+            byte[] paramPinBytes = GenerateParamPinBytes(Parameter.CurrentPin, Parameter.NewPin);
+
+            // PIN番号の変更を実行
+            CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_RESET_RETRY_COUNTER, 0x00, 0x81, paramPinBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseUnblock);
+        }
+
+        private void DoResponseUnblock(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 上位クラスに制御を戻す
             DoResponsePinCommand(success, responseData, responseSW);

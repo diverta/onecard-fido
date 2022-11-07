@@ -10,6 +10,7 @@ namespace MaintenanceToolApp.OpenPGP
         public const byte OPENPGP_INS_SELECT = 0xA4;
         public const byte OPENPGP_INS_VERIFY = 0x20;
         public const byte OPENPGP_INS_CHANGE_REFERENCE_DATA = 0x24;
+        public const byte OPENPGP_INS_RESET_RETRY_COUNTER = 0x2C;
     }
 
     internal class OpenPGPCCIDProcess
