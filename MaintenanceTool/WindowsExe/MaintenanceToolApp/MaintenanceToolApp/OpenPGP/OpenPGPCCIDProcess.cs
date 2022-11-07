@@ -136,5 +136,67 @@ namespace MaintenanceToolApp.OpenPGP
             // 上位クラスに制御を戻す
             DoCommandResponse(success, errorMessage);
         }
+
+        //
+        // ユーティリティー
+        //
+        public static bool CheckPinCommandResponseSW(Command command, UInt16 responseSW, out string errorMessage)
+        {
+            // エラーメッセージを初期化
+            errorMessage = AppCommon.MSG_NONE;
+
+            // ラベルを初期化
+            string pinName;
+            switch (command) {
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+                break;
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+                break;
+            default:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_PIN;
+                break;
+            }
+
+            // ステータスワードをチェックし、エラーの種類を判定
+            int retries = 3;
+            bool isPinBlocked = false;
+            if ((responseSW >> 8) == 0x63) {
+                // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+                retries = responseSW & 0x000f;
+                if (retries < 1) {
+                    isPinBlocked = true;
+                }
+
+            } else if (responseSW == CCIDProcessConst.SW_ERR_AUTH_BLOCKED) {
+                // 入力PIN／PUKがすでにブロックされている場合
+                isPinBlocked = true;
+
+            } else if (responseSW != CCIDProcessConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                errorMessage = string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW);
+            }
+
+            // PINブロック or リトライカウンターの状態に応じメッセージを編集
+            if (isPinBlocked) {
+                if (pinName.Equals(AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_ADMIN_PIN_LOCKED;
+
+                } else if (pinName.Equals(AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_RESET_CODE_LOCKED;
+
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_PIN_LOCKED;
+                }
+
+            } else if (retries < 3) {
+                errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, pinName, retries);
+            }
+
+            return (responseSW == CCIDProcessConst.SW_SUCCESS);
+        }
     }
 }
