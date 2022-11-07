@@ -29,6 +29,9 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_CHANGE_PIN:
                 DoRequestChangePin();
                 break;
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+                DoRequestChangeAdminPin();
+                break;
             default:
                 // 上位クラスに制御を戻す
                 OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -36,6 +39,9 @@ namespace MaintenanceToolApp.OpenPGP
             }
         }
 
+        //
+        // PIN番号を変更
+        //
         private void DoRequestChangePin()
         {
             // パラメーターチェック
@@ -55,6 +61,33 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         private void DoResponseChangePin(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 上位クラスに制御を戻す
+            DoResponsePinCommand(success, responseData, responseSW);
+        }
+
+        //
+        // 管理用PIN番号を変更
+        //
+        private void DoRequestChangeAdminPin()
+        {
+            // パラメーターチェック
+            int digit = 8;
+            if (Parameter.CurrentPin.Length != digit || Parameter.NewPin.Length != digit) {
+                string errorMessage = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, digit);
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // パラメーターを生成
+            byte[] paramPinBytes = GenerateParamPinBytes(Parameter.CurrentPin, Parameter.NewPin);
+
+            // PIN番号の変更を実行
+            CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_CHANGE_REFERENCE_DATA, 0x00, 0x83, paramPinBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseChangeAdminPin);
+        }
+
+        private void DoResponseChangeAdminPin(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 上位クラスに制御を戻す
             DoResponsePinCommand(success, responseData, responseSW);
