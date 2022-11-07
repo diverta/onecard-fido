@@ -104,17 +104,16 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoResponseOpenPGPInsVerify(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 不明なエラーが発生時は以降の処理を行わない
-            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
-                string errMsg;
-                if ((responseSW & 0xfff0) == 0x63c0) {
-                    // 入力PINが不正の場合はその旨のメッセージを出力
-                    int retries = responseSW & 0x000f;
-                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries);
+            string errorMessage;
+            if (success == false) {
+                errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
 
-                } else {
-                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
-                }
-                DoCommandResponse(false, errMsg);
+            // 認証が失敗した場合は以降の処理を行わない
+            if (CheckPinCommandResponseSW(Parameter.Command, responseSW, out errorMessage) == false) {
+                DoCommandResponse(false, errorMessage);
                 return;
             }
 
@@ -148,6 +147,7 @@ namespace MaintenanceToolApp.OpenPGP
             // ラベルを初期化
             string pinName;
             switch (command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
             case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
             case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
             case Command.COMMAND_OPENPGP_SET_RESET_CODE:
