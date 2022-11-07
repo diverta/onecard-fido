@@ -58,10 +58,20 @@ namespace MaintenanceToolApp.OpenPGP
 
         private void DoResponseChangePin(bool success, byte[] responseData, UInt16 responseSW)
         {
-            // TODO: 仮の実装です。
-            string dump1 = AppLogUtil.DumpMessage(responseData, responseData.Length);
-            AppLogUtil.OutputLogDebug(string.Format("DoResponseChangePin: SW=0x{0:x4}, {1} bytes\n{2}", responseSW, responseData.Length, dump1));
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false) {
+                OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                return;
+            }
 
+            // 認証が失敗した場合は以降の処理を行わない
+            string errorMessage;
+            if (OpenPGPCCIDProcess.CheckPinCommandResponseSW(Parameter.Command, responseSW, out errorMessage) == false) {
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // 上位クラスに制御を戻す
             OnCommandResponse(true, AppCommon.MSG_NONE);
         }
 
