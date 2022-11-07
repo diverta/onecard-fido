@@ -39,18 +39,8 @@ namespace MaintenanceToolApp.OpenPGP
                 return;
             }
 
-            // コマンドに応じ、以下の処理に分岐
-            switch (Parameter.Command) {
-            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
-                // 機能実行に先立ち、PIVアプレットをSELECT
-                DoRequestOpenPGPInsSelectApplication();
-                break;
-
-            default:
-                // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                break;
-            }
+            // 機能実行に先立ち、PIVアプレットをSELECT
+            DoRequestOpenPGPInsSelectApplication();
         }
 
         private void DoCommandResponse(bool success, string errorMessage)
@@ -79,10 +69,28 @@ namespace MaintenanceToolApp.OpenPGP
                 return;
             }
 
-            // 次の処理に移行
-            DoRequestOpenPGPInsVerify();
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
+                DoRequestOpenPGPInsVerify();
+                break;
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                DoRequestPinManagement();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
         }
 
+        //
+        // 管理用PIN番号による認証
+        //
         private void DoRequestOpenPGPInsVerify()
         {
             // パラメーターの管理用PIN番号を使用し、PIN認証を実行
@@ -111,6 +119,21 @@ namespace MaintenanceToolApp.OpenPGP
 
             // 上位クラスに制御を戻す
             DoCommandResponse(true, AppCommon.MSG_NONE);
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            // CCID I/F経由でPIN番号管理コマンドを実行
+            new OpenPGPPinManagementProcess().DoProcess(Parameter, DoResponsePinManagement);
+        }
+
+        private void DoResponsePinManagement(bool success, string errorMessage)
+        {
+            // 上位クラスに制御を戻す
+            DoCommandResponse(success, errorMessage);
         }
     }
 }
