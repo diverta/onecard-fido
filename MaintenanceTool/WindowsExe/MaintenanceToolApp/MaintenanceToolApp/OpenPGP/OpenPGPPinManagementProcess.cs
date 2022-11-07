@@ -35,6 +35,9 @@ namespace MaintenanceToolApp.OpenPGP
             case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
                 DoRequestUnblockPin();
                 break;
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                DoRequestSetResetCode();
+                break;
             case Command.COMMAND_OPENPGP_UNBLOCK:
                 DoRequestUnblock();
                 break;
@@ -121,6 +124,39 @@ namespace MaintenanceToolApp.OpenPGP
         }
 
         private void DoResponseUnblockPin(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                return;
+            }
+
+            // 上位クラスに制御を戻す
+            OnCommandResponse(true, AppCommon.MSG_NONE);
+        }
+
+        //
+        // リセットコードを変更
+        //
+        private void DoRequestSetResetCode()
+        {
+            // パラメーターチェック
+            int digitRc = 8;
+            if (Parameter.NewPin.Length != digitRc) {
+                string errorMessage = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE, digitRc);
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // パラメーターを生成
+            byte[] paramPinBytes = GenerateParamPinBytes(Parameter.NewPin, string.Empty);
+
+            // リセットコード変更を実行
+            CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_PUT_DATA, 0x00, 0xd3, paramPinBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseSetResetCode);
+        }
+
+        private void DoResponseSetResetCode(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
