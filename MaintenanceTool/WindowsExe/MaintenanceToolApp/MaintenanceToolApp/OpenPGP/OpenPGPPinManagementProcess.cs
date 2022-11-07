@@ -47,9 +47,7 @@ namespace MaintenanceToolApp.OpenPGP
             }
 
             // パラメーターを生成
-            byte[] curPinBytes = Encoding.ASCII.GetBytes(Parameter.CurrentPin);
-            byte[] newPinBytes = Encoding.ASCII.GetBytes(Parameter.NewPin);
-            byte[] paramPinBytes = curPinBytes.Concat(newPinBytes).ToArray();
+            byte[] paramPinBytes = GenerateParamPinBytes(Parameter.CurrentPin, Parameter.NewPin);
 
             // PIN番号の変更を実行
             CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_CHANGE_REFERENCE_DATA, 0x00, 0x81, paramPinBytes, 0xff);
@@ -65,6 +63,14 @@ namespace MaintenanceToolApp.OpenPGP
         //
         // 共通処理
         //
+        private static byte[] GenerateParamPinBytes(string currentPin, string newPin)
+        {
+            // パラメーターを生成
+            byte[] curPinBytes = Encoding.ASCII.GetBytes(currentPin);
+            byte[] newPinBytes = Encoding.ASCII.GetBytes(newPin);
+            return curPinBytes.Concat(newPinBytes).ToArray();
+        }
+
         private void DoResponsePinCommand(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 不明なエラーが発生時は以降の処理を行わない
