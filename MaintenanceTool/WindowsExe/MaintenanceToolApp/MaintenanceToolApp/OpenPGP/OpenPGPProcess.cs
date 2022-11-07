@@ -85,6 +85,14 @@ namespace MaintenanceToolApp.OpenPGP
                 // 管理用PIN番号検証から開始
                 DoRequestAdminPinVerify();
                 break;
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                // CCID I/F経由でPIN番号管理コマンドを実行
+                DoRequestPinManagement();
+                break;
             case Command.COMMAND_HID_FIRMWARE_RESET:
                 // 認証器のリセット処理を実行
                 DoRequestFirmwareReset();
@@ -218,6 +226,20 @@ namespace MaintenanceToolApp.OpenPGP
         {
             // 作業用フォルダー消去処理に移行
             DoRequestRemoveTempFolderWithInformative(success, errorMessage);
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            new OpenPGPCCIDProcess().DoOpenPGPCcidCommand(Parameter, DoResponsePinManagement);
+        }
+
+        private void DoResponsePinManagement(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         //

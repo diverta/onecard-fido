@@ -20,8 +20,6 @@ namespace MaintenanceToolApp.OpenPGP
             COMMAND_GPG_REMOVE_TEMP_FOLDER,
             COMMAND_GPG_CARD_STATUS,
             COMMAND_GPG_CARD_RESET,
-            COMMAND_GPG_CARD_EDIT_PASSWD,
-            COMMAND_GPG_CARD_EDIT_UNBLOCK,
         };
 
         // 実行するコマンド

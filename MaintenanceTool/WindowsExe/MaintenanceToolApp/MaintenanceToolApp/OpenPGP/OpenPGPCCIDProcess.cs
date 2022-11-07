@@ -9,6 +9,9 @@ namespace MaintenanceToolApp.OpenPGP
     {
         public const byte OPENPGP_INS_SELECT = 0xA4;
         public const byte OPENPGP_INS_VERIFY = 0x20;
+        public const byte OPENPGP_INS_CHANGE_REFERENCE_DATA = 0x24;
+        public const byte OPENPGP_INS_RESET_RETRY_COUNTER = 0x2C;
+        public const byte OPENPGP_INS_PUT_DATA = 0xDA;
     }
 
     internal class OpenPGPCCIDProcess
@@ -39,18 +42,8 @@ namespace MaintenanceToolApp.OpenPGP
                 return;
             }
 
-            // コマンドに応じ、以下の処理に分岐
-            switch (Parameter.Command) {
-            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
-                // 機能実行に先立ち、PIVアプレットをSELECT
-                DoRequestOpenPGPInsSelectApplication();
-                break;
-
-            default:
-                // 上位クラスに制御を戻す
-                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                break;
-            }
+            // 機能実行に先立ち、PIVアプレットをSELECT
+            DoRequestOpenPGPInsSelectApplication();
         }
 
         private void DoCommandResponse(bool success, string errorMessage)
@@ -79,14 +72,33 @@ namespace MaintenanceToolApp.OpenPGP
                 return;
             }
 
-            // 次の処理に移行
-            DoRequestOpenPGPInsVerify();
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
+                DoRequestOpenPGPInsVerify(Parameter.Passphrase);
+                break;
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                DoRequestOpenPGPInsVerify(Parameter.CurrentPin);
+                break;
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                DoRequestPinManagement();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
         }
 
-        private void DoRequestOpenPGPInsVerify()
+        //
+        // 管理用PIN番号による認証
+        //
+        private void DoRequestOpenPGPInsVerify(string pin)
         {
             // パラメーターの管理用PIN番号を使用し、PIN認証を実行
-            string pin = Parameter.Passphrase;
             byte[] pinBytes = Encoding.ASCII.GetBytes(pin);
             CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_VERIFY, 0x00, 0x83, pinBytes, 0xff);
             CCIDProcess.DoRequestCommand(param, DoResponseOpenPGPInsVerify);
@@ -95,22 +107,108 @@ namespace MaintenanceToolApp.OpenPGP
         private void DoResponseOpenPGPInsVerify(bool success, byte[] responseData, UInt16 responseSW)
         {
             // 不明なエラーが発生時は以降の処理を行わない
-            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
-                string errMsg;
-                if ((responseSW & 0xfff0) == 0x63c0) {
-                    // 入力PINが不正の場合はその旨のメッセージを出力
-                    int retries = responseSW & 0x000f;
-                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN, retries);
-
-                } else {
-                    errMsg = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
-                }
-                DoCommandResponse(false, errMsg);
+            string errorMessage;
+            if (success == false) {
+                errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_CARD_EDIT_PASSWD_ERR, AppCommon.MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY);
+                DoCommandResponse(false, errorMessage);
                 return;
             }
 
+            // 認証が失敗した場合は以降の処理を行わない
+            if (CheckPinCommandResponseSW(Parameter.Command, responseSW, out errorMessage) == false) {
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                DoRequestPinManagement();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                DoCommandResponse(true, AppCommon.MSG_NONE);
+                break;
+            }
+        }
+
+        //
+        // PIN番号管理
+        //
+        private void DoRequestPinManagement()
+        {
+            // CCID I/F経由でPIN番号管理コマンドを実行
+            new OpenPGPPinManagementProcess().DoProcess(Parameter, DoResponsePinManagement);
+        }
+
+        private void DoResponsePinManagement(bool success, string errorMessage)
+        {
             // 上位クラスに制御を戻す
-            DoCommandResponse(true, AppCommon.MSG_NONE);
+            DoCommandResponse(success, errorMessage);
+        }
+
+        //
+        // ユーティリティー
+        //
+        public static bool CheckPinCommandResponseSW(Command command, UInt16 responseSW, out string errorMessage)
+        {
+            // エラーメッセージを初期化
+            errorMessage = AppCommon.MSG_NONE;
+
+            // ラベルを初期化
+            string pinName;
+            switch (command) {
+            case Command.COMMAND_OPENPGP_INSTALL_KEYS:
+            case Command.COMMAND_OPENPGP_CHANGE_ADMIN_PIN:
+            case Command.COMMAND_OPENPGP_UNBLOCK_PIN:
+            case Command.COMMAND_OPENPGP_SET_RESET_CODE:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN;
+                break;
+            case Command.COMMAND_OPENPGP_UNBLOCK:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE;
+                break;
+            default:
+                pinName = AppCommon.MSG_LABEL_ITEM_PGP_PIN;
+                break;
+            }
+
+            // ステータスワードをチェックし、エラーの種類を判定
+            int retries = 3;
+            bool isPinBlocked = false;
+            if ((responseSW >> 8) == 0x63) {
+                // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+                retries = responseSW & 0x000f;
+                if (retries < 1) {
+                    isPinBlocked = true;
+                }
+
+            } else if (responseSW == CCIDProcessConst.SW_ERR_AUTH_BLOCKED) {
+                // 入力PIN／PUKがすでにブロックされている場合
+                isPinBlocked = true;
+
+            } else if (responseSW != CCIDProcessConst.SW_SUCCESS) {
+                // 不明なエラーが発生時
+                errorMessage = string.Format(AppCommon.MSG_ERROR_PIV_UNKNOWN, responseSW);
+            }
+
+            // PINブロック or リトライカウンターの状態に応じメッセージを編集
+            if (isPinBlocked) {
+                if (pinName.Equals(AppCommon.MSG_LABEL_ITEM_PGP_ADMIN_PIN)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_ADMIN_PIN_LOCKED;
+
+                } else if (pinName.Equals(AppCommon.MSG_LABEL_ITEM_PGP_RESET_CODE)) {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_RESET_CODE_LOCKED;
+
+                } else {
+                    errorMessage = AppCommon.MSG_ERROR_OPENPGP_PIN_LOCKED;
+                }
+
+            } else if (retries < 3) {
+                errorMessage = string.Format(AppCommon.MSG_FORMAT_OPENPGP_PIN_VERIFY_ERR, pinName, retries);
+            }
+
+            return (responseSW == CCIDProcessConst.SW_SUCCESS);
         }
     }
 }
