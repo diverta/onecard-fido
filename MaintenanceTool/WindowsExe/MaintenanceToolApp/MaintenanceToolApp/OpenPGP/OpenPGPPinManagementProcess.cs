@@ -1,4 +1,7 @@
-﻿using ToolAppCommon;
+﻿using System;
+using System.Linq;
+using System.Text;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.OpenPGP.Gpg4winParameter;
 
@@ -21,8 +24,45 @@ namespace MaintenanceToolApp.OpenPGP
             // コールバックを保持
             OnCommandResponse = handlerRef;
 
-            // Gpg4winの`card edit passwd/unblock`コマンドを実行
-            DoRequestCardEditPasswdCommand();
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_OPENPGP_CHANGE_PIN:
+                DoRequestChangePin();
+                break;
+            default:
+                // 上位クラスに制御を戻す
+                OnCommandResponse(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
+        }
+
+        private void DoRequestChangePin()
+        {
+            // パラメーターチェック
+            int digit = 6;
+            if (Parameter.CurrentPin.Length != digit || Parameter.NewPin.Length != digit) {
+                string errorMessage = string.Format(AppCommon.MSG_PROMPT_INPUT_PGP_PIN_DIGIT, AppCommon.MSG_LABEL_ITEM_PGP_PIN, digit);
+                OnCommandResponse(false, errorMessage);
+                return;
+            }
+
+            // パラメーターを生成
+            byte[] curPinBytes = Encoding.ASCII.GetBytes(Parameter.CurrentPin);
+            byte[] newPinBytes = Encoding.ASCII.GetBytes(Parameter.NewPin);
+            byte[] paramPinBytes = curPinBytes.Concat(newPinBytes).ToArray();
+
+            // PIN番号の変更を実行
+            CCIDParameter param = new CCIDParameter(OpenPGPCCIDConst.OPENPGP_INS_CHANGE_REFERENCE_DATA, 0x00, 0x81, paramPinBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseChangePin);
+        }
+
+        private void DoResponseChangePin(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // TODO: 仮の実装です。
+            string dump1 = AppLogUtil.DumpMessage(responseData, responseData.Length);
+            AppLogUtil.OutputLogDebug(string.Format("DoResponseChangePin: SW=0x{0:x4}, {1} bytes\n{2}", responseSW, responseData.Length, dump1));
+
+            OnCommandResponse(true, AppCommon.MSG_NONE);
         }
 
         private void DoRequestCardEditPasswdCommand()
