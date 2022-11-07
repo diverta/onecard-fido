@@ -29,6 +29,17 @@ namespace MaintenanceToolApp.PIV
                 return;
             }
 
+            // CCID I/F経由で、PIVアプレットselectを実行
+            new PIVCCIDProcess().DoProcess(Parameter, DoResponsePIVInsSelectApplication);
+        }
+
+        private void DoResponsePIVInsSelectApplication(bool success, string errorMessage)
+        {
+            if (success == false) {
+                DoCommandResponse(false, errorMessage);
+                return;
+            }
+
             if (Parameter.Command == Command.COMMAND_CCID_PIV_RESET) {
                 // 設定情報消去を実行
                 DoRequestCardReset();
