@@ -27,10 +27,13 @@ macOS版と、Windows版を用意しました。
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
-## [Windows版](../MaintenanceTool/WindowsExe/MNTTOOL.md)
+## [Windows版](../MaintenanceTool/dotNET/MNTTOOL.md)
 
 #### 画面イメージ
-<img src="assets/0002.jpg" width="500">
+<img src="../MaintenanceTool/dotNET/assets01/0002.jpg" width="500">
 
 #### 動作環境
-Windows 10 (64bit版)
+Windows 10 (64bit版)、Windows 11
+
+#### 旧バージョン
+[Windows版（v0.2）はこちら](../MaintenanceTool/WindowsExe/MNTTOOL.md)

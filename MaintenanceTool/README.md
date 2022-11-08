@@ -11,8 +11,10 @@ macOS版と、Windows版を用意しました。
 #### [macOS版](../MaintenanceTool/macOSApp/MNTTOOL.md)
 <img src="assets/0001.jpg" width="350">
 
-#### [Windows版](../MaintenanceTool/WindowsExe/MNTTOOL.md)
-<img src="assets/0002.jpg" width="350">
+#### [Windows版](../MaintenanceTool/dotNET/MNTTOOL.md)
+<img src="../MaintenanceTool/dotNET/assets01/0002.jpg" width="350">
+
+[Windows版（v0.2）はこちら](../MaintenanceTool/WindowsExe/MNTTOOL.md)
 
 ## [FIDO認証器開発ツール](../MaintenanceTool/DEVTOOL.md)
 ベンダー向けのツールです。
