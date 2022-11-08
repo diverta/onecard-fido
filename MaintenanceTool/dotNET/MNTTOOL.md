@@ -41,29 +41,29 @@ Windows 10のバージョン「Windows 10 November 2019 Update」以降におい
 
 #### 手順書
 
-- <b>[インストール手順](INSTALLPRG.md)</b><br>
+- <b>[インストール手順](../../MaintenanceTool/dotNET/INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをWindows環境にインストールする手順を掲載しています。
 
-- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+- <b>[BLEペアリング手順](../../MaintenanceTool/dotNET/BLEPAIRING.md)</b><br>
 FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
-- <b>[PINコードの設定手順](SETPIN.md)</b><br>
+- <b>[PINコードの設定手順](../../MaintenanceTool/dotNET/SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。
 
-- <b>[FIDO認証情報の消去手順](../../MaintenanceTool/WindowsExe/AUTHRESET.md)</b><br>
+- <b>[FIDO認証情報の消去手順](../../MaintenanceTool/dotNET/AUTHRESET.md)</b><br>
 FIDO認証器から、FIDO認証情報を消去する手順について掲載しています。
 
-- <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
+- <b>[CTAP2ヘルスチェック実行手順](../../MaintenanceTool/dotNET/CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
-- <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
+- <b>[PIV機能設定手順](../../MaintenanceTool/dotNET/PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
+- <b>[OpenPGP機能設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[ファームウェア更新手順（BLE）](UPDATEFW_BLE.md)</b><br>
-管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。
+- <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/dotNET/UPDATEFW_USB.md)</b><br>
+管理ツールから、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のファームウェアを更新する手順を掲載しています。
 
-- <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
+- <b>[管理ツールのログファイル](../../MaintenanceTool/dotNET/VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。
