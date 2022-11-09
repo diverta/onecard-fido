@@ -8,6 +8,8 @@
 #define RV3028C7_I2C_H
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool rv3028c7_initialize(void);
+bool rv3028c7_get_timestamp(char *buf, size_t size);
 
 #ifdef __cplusplus
 }

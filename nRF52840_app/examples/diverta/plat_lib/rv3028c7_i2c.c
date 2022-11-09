@@ -5,6 +5,9 @@
  * Created on 2022/11/09, 15:43
  */
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME rv3028c7_i2c
@@ -23,6 +26,7 @@ NRF_LOG_MODULE_REGISTER();
 // データ送受信用の一時領域
 static uint8_t read_buff[32];
 static uint8_t write_buff[32];
+static uint8_t m_datetime[DATETIME_COMPONENTS_SIZE];
 
 //
 // I2C write & read
@@ -42,6 +46,24 @@ static bool read_register(uint8_t reg_addr, uint8_t *reg_val)
     }
 
     *reg_val = read_buff[0];
+    return true;
+}
+
+static bool read_bytes_from_register(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+{
+    write_buff[0] = reg_addr;
+
+    // Send the address to read from
+    if (fido_twi_write(RV3028C7_ADDRESS, write_buff, 1) == false) {
+        return false;
+    }
+
+    // Read from device. STOP after this
+    if (fido_twi_read(RV3028C7_ADDRESS, read_buff, size) == false) {
+        return false;
+    }
+
+    memcpy(data, read_buff, size);
     return true;
 }
 
@@ -307,6 +329,35 @@ bool rv3028c7_initialize(void)
     if (enable_trickle_charge(false, tcr) == false) {
         NRF_LOG_DEBUG("RTCC tricle charge setting failed");
         return false;
+    }
+
+    return true;
+}
+
+//
+// 現在時刻を取得
+//
+static uint8_t convert_to_decimal(uint8_t bcd)
+{
+    return (bcd / 16 * 10) + (bcd % 16);
+}
+
+bool rv3028c7_get_timestamp(char *buf, size_t size)
+{
+    // レジスター（Clock register）から現在時刻を取得
+    if (read_bytes_from_register(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+        return false;
+    }
+
+    // フォーマットして指定のバッファに設定
+    if (buf != NULL) {
+        snprintf(buf, size, "20%02d/%02d/%02d %02d:%02d:%02d",
+                convert_to_decimal(m_datetime[DATETIME_YEAR]),
+                convert_to_decimal(m_datetime[DATETIME_MONTH]),
+                convert_to_decimal(m_datetime[DATETIME_DAY_OF_MONTH]),
+                convert_to_decimal(m_datetime[DATETIME_HOUR]),
+                convert_to_decimal(m_datetime[DATETIME_MINUTE]),
+                convert_to_decimal(m_datetime[DATETIME_SECOND]));    
     }
 
     return true;
