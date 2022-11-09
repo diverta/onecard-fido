@@ -255,6 +255,8 @@
                   <itemPath>../plat_lib/fido_timer_plat.h</itemPath>
                   <itemPath>../plat_lib/fido_twi.c</itemPath>
                   <itemPath>../plat_lib/fido_twi.h</itemPath>
+                  <itemPath>../plat_lib/rv3028c7_i2c.c</itemPath>
+                  <itemPath>../plat_lib/rv3028c7_i2c.h</itemPath>
                   <itemPath>../plat_lib/usbd_service.c</itemPath>
                   <itemPath>../plat_lib/usbd_service.h</itemPath>
                   <itemPath>../plat_lib/usbd_service_bos.c</itemPath>
@@ -6184,6 +6186,24 @@
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/delay</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
+            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../plat_lib/rv3028c7_i2c.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
+            <pElem>../secure_device_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
             <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
