@@ -20,6 +20,7 @@ extern "C" {
 //
 bool rv3028c7_initialize(void);
 bool rv3028c7_get_timestamp(char *buf, size_t size);
+bool rv3028c7_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours);
 
 #ifdef __cplusplus
 }

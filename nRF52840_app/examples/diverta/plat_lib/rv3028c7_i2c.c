@@ -9,6 +9,9 @@
 #include <stdint.h>
 #include <string.h>
 
+// for struct tm
+#include <time.h>
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME rv3028c7_i2c
 #include "nrf_log.h"
@@ -74,6 +77,19 @@ static bool write_register(uint8_t reg_addr, uint8_t reg_val)
 
     // Write to device. STOP after this
     if (fido_twi_write(RV3028C7_ADDRESS, write_buff, 2) == false) {
+        return false;
+    }
+
+    return true;
+}
+
+static bool write_bytes_to_register(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+{
+    write_buff[0] = reg_addr;
+    memcpy(write_buff + 1, data, size);
+
+    // Write to device. STOP after this
+    if (fido_twi_write(RV3028C7_ADDRESS, write_buff, size + 1) == false) {
         return false;
     }
 
@@ -280,6 +296,85 @@ static bool enable_trickle_charge(bool enable, uint8_t tcr)
 }
 
 //
+// UNIX timestamping
+//
+static uint8_t convert_to_bcd(uint8_t decimal) 
+{
+    return (decimal / 10 * 16) + (decimal % 10);
+}
+
+static bool set_datetime_components(uint8_t *datetime_components, uint16_t year, uint8_t month, uint8_t day_of_month, uint8_t day_of_week, uint8_t hour, uint8_t minute, uint8_t second) 
+{
+    // Year 2000 AD is the earliest allowed year in this implementation
+    // Century overflow is not considered yet 
+    // (i.e., only supports year 2000 to 2099)
+    if (year < 2000) {
+        return false;
+    }
+    datetime_components[DATETIME_YEAR] = convert_to_bcd(year - 2000);
+
+    if (month < 1 || month > 12) {
+        return false;
+    }
+    datetime_components[DATETIME_MONTH] = convert_to_bcd(month);
+
+    if (day_of_month < 1 || day_of_month > 31) {
+        return false;
+    }
+    datetime_components[DATETIME_DAY_OF_MONTH] = convert_to_bcd(day_of_month);
+
+    if (day_of_week > 6) {
+        return false;
+    }
+    datetime_components[DATETIME_DAY_OF_WEEK] = convert_to_bcd(day_of_week);
+
+    // Uses 24-hour notation by default
+    if (hour > 23) {
+        return false;
+    }
+    datetime_components[DATETIME_HOUR] = convert_to_bcd(hour);
+
+    if (minute > 59) {
+        return false;
+    }
+    datetime_components[DATETIME_MINUTE] = convert_to_bcd(minute);
+
+    if (second > 59) {
+        return false;
+    }
+    datetime_components[DATETIME_SECOND] = convert_to_bcd(second);
+
+    return true;
+}
+
+static bool set_unix_timestamp(uint32_t seconds_since_epoch, bool sync_calendar, uint8_t timezone_diff_hours) 
+{
+    uint8_t ts[4] = {
+        (uint8_t)seconds_since_epoch,
+        (uint8_t)(seconds_since_epoch >> 8),
+        (uint8_t)(seconds_since_epoch >> 16),
+        (uint8_t)(seconds_since_epoch >> 24)
+    };
+    if (write_bytes_to_register(RV3028C7_REG_UNIX_TIME_0, ts, 4) == false) {
+        return false;
+    }
+
+    if (sync_calendar) {
+        // カレンダーを引数のUNIX時間と同期させる
+        // ただし、タイムゾーン差分を考慮
+        time_t t = seconds_since_epoch + timezone_diff_hours * 3600;
+        struct tm *dt = gmtime(&t);
+        if (set_datetime_components(m_datetime, dt->tm_year + 1900, dt->tm_mon + 1, dt->tm_mday, 0, dt->tm_hour, dt->tm_min, dt->tm_sec) == false) {
+            return false;
+        }
+        if (write_bytes_to_register(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+            return false;
+        }
+    }
+    return true;
+}
+
+//
 // RTCCの初期化
 //
 bool rv3028c7_initialize(void)
@@ -358,6 +453,25 @@ bool rv3028c7_get_timestamp(char *buf, size_t size)
                 convert_to_decimal(m_datetime[DATETIME_HOUR]),
                 convert_to_decimal(m_datetime[DATETIME_MINUTE]),
                 convert_to_decimal(m_datetime[DATETIME_SECOND]));    
+    }
+
+    return true;
+}
+
+//
+// 現在時刻を設定
+//
+bool rv3028c7_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours)
+{
+    // UNIX時間を使って時刻合わせ
+    //  UNIX時間カウンターには、引数をそのまま設定し、
+    //  カレンダーには、タイムゾーンに対応した時刻を設定
+    //  例) 1609443121
+    //    2020年12月31日 19:32:01 UTC
+    //    2021年 1月 1日 04:32:01 JST <-- カレンダーから取得できるのはこちら
+    if (set_unix_timestamp(seconds_since_epoch, true, timezone_diff_hours) == false) {
+        NRF_LOG_DEBUG("Current timestamp setting failed");
+        return false;
     }
 
     return true;
