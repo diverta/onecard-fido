@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := _build
 #  PCA10059_01  MDBT50Q Dongle(rev2)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
 #  PCA10059_03  MDBT50Q Dongle(rev2.2)
-TARGET_BOARD     := PCA10059_03
+TARGET_BOARD     := PCA10056
 
 # application version info
 FW_REV := 0.3.6
