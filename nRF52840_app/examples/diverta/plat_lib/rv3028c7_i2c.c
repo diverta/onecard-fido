@@ -14,11 +14,8 @@ NRF_LOG_MODULE_REGISTER();
 // for I2C access
 #include "fido_twi.h"
 
-// I2Cスレーブアドレス
-#define RV3028C7_ADDRESS                0x52
-
-// レジスターアドレス
-#define RV3028C7_REG_CONTROL_2          0x10
+// for defines
+#include "rv3028c7_define.h"
 
 // データ送受信用の一時領域
 static uint8_t read_buff[32];
@@ -65,6 +62,6 @@ bool rv3028c7_initialize(void)
         NRF_LOG_DEBUG("RTCC is not available");
         return false;
     }
-    
+
     return true;
 }
