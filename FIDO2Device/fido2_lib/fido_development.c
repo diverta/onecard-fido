@@ -213,3 +213,44 @@ void fido_development_command_token_counter_file_deleted(void)
         }
     }
 }
+
+//
+// For nRF52840
+//
+void fido_development_command_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+        case MNT_COMMAND_RESET_ATTESTATION:
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+            fido_log_error("Reset FIDO attestation failed");
+            break;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+            fido_log_error("Install FIDO attestation failed");
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_development_command_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+        case MNT_COMMAND_RESET_ATTESTATION:
+            fido_log_warning("Reset FIDO attestation retry: FDS GC done ");
+            command_reset_attestation();
+            break;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+            fido_log_warning("Install FIDO attestation retry: FDS GC done ");
+            command_install_attestation();
+            break;
+        default:
+            break;
+    }
+}
