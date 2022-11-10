@@ -234,34 +234,31 @@
         });
     }
 
-    - (void)notifyErrorToProcessingWindow {
-        // 処理タイムアウト監視を停止
-        [self stopDFUTimeoutMonitor];
-        dispatch_async([self mainQueue], ^{
-            // 処理進捗画面に対し、処理失敗の旨を通知する
-            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
-        });
-    }
-
 #pragma mark - Process timeout monitor
 
     - (void)stopDFUTimeoutMonitor {
-        // 処理タイムアウト監視を停止
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト監視を停止
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        });
     }
 
     - (void)startDFUTimeoutMonitor {
-        // 処理タイムアウト監視を事前停止
-        [self stopDFUTimeoutMonitor];
-        // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
-        [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト監視を事前停止
+            [self stopDFUTimeoutMonitor];
+            // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
+            [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        });
     }
 
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウトを検知したので、異常終了と判断
         [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-        // 処理進捗画面に対し、処理失敗の旨を通知する
-        [self notifyErrorToProcessingWindow];
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        });
     }
 
 #pragma mark - Call back from AppHIDCommand
