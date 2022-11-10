@@ -86,42 +86,42 @@ OpenPGP機能では、PGP秘密鍵をMDBT50Q Dongleに導入する必要があ�
 - メールアドレス
 - コメント
 
-<img src="assets04/0007.jpg" width="350">
+<img src="assets04/0007.jpg" width="300">
 
 次に、各種ファイルの出力先フォルダーを選択します。<br>
 「PGP公開鍵」欄右側の「参照」ボタンをクリックします。
 
-<img src="assets04/0008.jpg" width="350">
+<img src="assets04/0008.jpg" width="300">
 
 フォルダー参照ダイアログから、該当の出力先フォルダーを選択し「選択」ボタンをクリックします。
 
-<img src="assets04/0009.jpg" width="280">
+<img src="assets04/0009.jpg" width="475">
 
 フォルダー欄に、選択された出力先フォルダーのパスが表示されます。
 
-<img src="assets04/0010.jpg" width="350">
+<img src="assets04/0010.jpg" width="300">
 
 同様に、バックアップファイルの出力先フォルダーも選択します。
 
-<img src="assets04/0011.jpg" width="350">
+<img src="assets04/0011.jpg" width="300">
 
 PGP公開鍵、バックアップ両方の出力先フォルダーを選択したら、下部の認証情報欄に、OpenPGP機能で使用する管理用PIN番号を入力します。[注1]
 
 PIN番号を入力したら、下部の「PGP秘密鍵のインストール」ボタンをクリックします。
 
-<img src="assets04/0012.jpg" width="350">
+<img src="assets04/0012.jpg" width="300">
 
 下記のような確認ダイアログが表示されますので、「はい」ボタンをクリックします。
 
-<img src="assets04/0013.jpg" width="350">
+<img src="assets04/0013.jpg" width="300">
 
 PGP秘密鍵のインストール処理が実行されます。
 
-<img src="assets04/0014.jpg" width="350">
+<img src="assets04/0014.jpg" width="300">
 
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets04/0015.jpg" width="350">
+<img src="assets04/0015.jpg" width="300">
 
 [注1] 管理用PIN番号は初期状態では「`12345678`」となっております。変更したい場合は、別ドキュメント「[OpenPGP機能の各種設定手順](../../MaintenanceTool/WindowsExe/PGPSETTING_OPT.md)」をご参照願います。
 
@@ -130,7 +130,7 @@ PGP秘密鍵のインストール処理が実行されます。
 インストールされた証明書は「OpenPGP設定情報取得画面」で確認できます。<br>
 OpenPGP機能設定画面の左下部のボタン「設定情報を参照」をクリックします。
 
-<img src="assets04/0016.jpg" width="350">
+<img src="assets04/0016.jpg" width="300">
 
 下図のようなOpenPGP設定情報取得画面がポップアップ表示されます。<br>
 以下の３点が設定されていることが確認できます。
@@ -139,7 +139,7 @@ OpenPGP機能設定画面の左下部のボタン「設定情報を参照」を�
 - 暗号／復号化用（Encryption key）の設定情報
 - PGP認証用（Authentication key）の設定情報
 
-<img src="assets04/0017.jpg" width="350">
+<img src="assets04/0017.jpg" width="320">
 
 以上で、PGP秘密鍵のインストールは完了です。
 
@@ -157,19 +157,19 @@ OpenPGP機能設定画面の左下部のボタン「設定情報を参照」を�
 
 OpenPGP機能設定情報の消去を実行するためには、OpenPGP機能設定画面の右下部「設定情報を消去」ボタンをクリックします。
 
-<img src="assets04/0018.jpg" width="350">
+<img src="assets04/0018.jpg" width="300">
 
 下記のような確認ダイアログが表示されますので、Yesボタンをクリックします。
 
-<img src="assets04/0019.jpg" width="350">
+<img src="assets04/0019.jpg" width="300">
 
 設定情報消去処理が実行されます。
 
-<img src="assets04/0020.jpg" width="350">
+<img src="assets04/0020.jpg" width="300">
 
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets04/0021.jpg" width="350">
+<img src="assets04/0021.jpg" width="300">
 
 OpenPGP設定情報取得画面で確認すると、下記３点の設定情報が消去されたことを示しています。
 
@@ -177,7 +177,7 @@ OpenPGP設定情報取得画面で確認すると、下記３点の設定情報�
 - 暗号／復号化用（Encryption key）
 - PGP認証用（Authentication key）
 
-<img src="assets04/0022.jpg" width="350">
+<img src="assets04/0022.jpg" width="320">
 
 これでOpenPGP機能設定の消去は完了です。
 
@@ -185,17 +185,17 @@ OpenPGP設定情報取得画面で確認すると、下記３点の設定情報�
 
 前述の各機能を実行時、下図のようなエラーメッセージが表示されることがあります。
 
-<img src="assets04/0023.jpg" width="350">
+<img src="assets04/0023.jpg" width="300">
 
 この場合は、認証器のリセットをお試しいただくことにより、認証器の再装着が不要となる場合があります。<br>
 画面下部のボタン「認証器のリセット」をクリックします。
 
-<img src="assets04/0024.jpg" width="350">
+<img src="assets04/0024.jpg" width="300">
 
 認証器がUSBに装着されたまま、ファームウェアが再始動されます。<br>
 程なく、下図のようなメッセージがポップアップ表示され、処理が完了します。
 
-<img src="assets04/0025.jpg" width="350">
+<img src="assets04/0025.jpg" width="300">
 
 万が一、上記手順でも解消しない場合は、一旦MDBT50Q DongleをPCのUSBポートから取り出し、再度装着した後、処理を再試行していただけますようお願いします。
 
