@@ -234,15 +234,6 @@
         });
     }
 
-    - (void)notifyErrorToProcessingWindow {
-        // 処理タイムアウト監視を停止
-        [self stopDFUTimeoutMonitor];
-        dispatch_async([self mainQueue], ^{
-            // 処理進捗画面に対し、処理失敗の旨を通知する
-            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
-        });
-    }
-
 #pragma mark - Process timeout monitor
 
     - (void)stopDFUTimeoutMonitor {
@@ -260,8 +251,10 @@
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウトを検知したので、異常終了と判断
         [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-        // 処理進捗画面に対し、処理失敗の旨を通知する
-        [self notifyErrorToProcessingWindow];
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        });
     }
 
 #pragma mark - Call back from AppHIDCommand
