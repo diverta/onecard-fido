@@ -123,7 +123,7 @@ PGP秘密鍵のインストール処理が実行されます。
 
 <img src="assets04/0015.jpg" width="300">
 
-[注1] 管理用PIN番号は初期状態では「`12345678`」となっております。変更したい場合は、別ドキュメント「[OpenPGP機能の各種設定手順](../../MaintenanceTool/WindowsExe/PGPSETTING_OPT.md)」をご参照願います。
+[注1] 管理用PIN番号は初期状態では「`12345678`」となっております。変更したい場合は、別ドキュメント「[OpenPGP機能の各種設定手順](../../MaintenanceTool/dotNET/PGPSETTING_OPT.md)」をご参照願います。
 
 ### 確認手順
 
