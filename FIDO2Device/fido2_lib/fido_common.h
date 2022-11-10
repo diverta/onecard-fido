@@ -65,6 +65,7 @@ extern "C" {
 #define MNT_COMMAND_SYSTEM_RESET        0xc7
 #define MNT_COMMAND_INSTALL_ATTESTATION 0xc8
 #define MNT_COMMAND_RESET_ATTESTATION   0xc9
+#define MNT_COMMAND_GET_TIMESTAMP       0xca
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {

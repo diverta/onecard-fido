@@ -260,6 +260,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_BOOTLOADER_MODE:
         case MNT_COMMAND_ERASE_BONDING_DATA:
         case MNT_COMMAND_SYSTEM_RESET:
+        case MNT_COMMAND_GET_TIMESTAMP:
             fido_maintenance_command(TRANSPORT_HID);
             break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
@@ -391,6 +392,7 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_BOOTLOADER_MODE:
         case MNT_COMMAND_ERASE_BONDING_DATA:
         case MNT_COMMAND_SYSTEM_RESET:
+        case MNT_COMMAND_GET_TIMESTAMP:
             fido_maintenance_command_report_sent();
             break;
         case MNT_COMMAND_INSTALL_ATTESTATION:

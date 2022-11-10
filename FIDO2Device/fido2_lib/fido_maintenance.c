@@ -230,6 +230,20 @@ static void command_system_reset(void)
     send_command_response(CTAP1_ERR_SUCCESS, 1);
 }
 
+static void command_get_timestamp(void)
+{
+    // レスポンスを送信（20バイト固定長）
+    // 0: ステータス
+    // 1: "yyyy/mm/dd hh:mm:ss"形式の文字列
+    size_t length = 20;
+    if (rv3028c7_get_timestamp((char *)response_buffer + 1, length)) {
+        send_command_response(CTAP1_ERR_SUCCESS, length);
+
+    } else {
+        send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
+    }
+}
+
 void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -252,6 +266,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
         case MNT_COMMAND_SYSTEM_RESET:
             command_system_reset();
+            break;
+        case MNT_COMMAND_GET_TIMESTAMP:
+            command_get_timestamp();
             break;
 #ifndef FIDO_ZEPHYR
         case MNT_COMMAND_BOOTLOADER_MODE:
