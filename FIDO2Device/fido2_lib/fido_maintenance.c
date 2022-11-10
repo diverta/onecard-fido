@@ -244,6 +244,30 @@ static void command_get_timestamp(void)
     }
 }
 
+static void command_set_timestamp(void)
+{
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    uint16_t length = fido_hid_receive_apdu()->Lc;
+
+    // 元データチェック
+    if (data == NULL || length != 4) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        return;
+    }
+
+    // 現在時刻を設定
+    // リクエスト＝４バイトのUNIX時間整数（ビッグエンディアン）
+    uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(data);
+    uint8_t timezone_diff_hours = 9;
+    if (rv3028c7_set_timestamp(seconds_since_epoch, timezone_diff_hours) == false) {
+        send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
+        return;
+    }
+    
+    // レスポンスとして、現在時刻を送信
+    command_get_timestamp();
+}
+
 void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -269,6 +293,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
         case MNT_COMMAND_GET_TIMESTAMP:
             command_get_timestamp();
+            break;
+        case MNT_COMMAND_SET_TIMESTAMP:
+            command_set_timestamp();
             break;
 #ifndef FIDO_ZEPHYR
         case MNT_COMMAND_BOOTLOADER_MODE:
