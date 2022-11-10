@@ -18,6 +18,9 @@
 // for initialize ATECC608A
 #include "atecc.h"
 
+// for RTCC module use
+#include "rv3028c7_i2c.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME application_init
 #include "nrf_log.h"
@@ -162,6 +165,17 @@ static void application_init_resume(void)
         NRF_LOG_INFO("Secure IC was detected: SN(%s)", atecc_get_serial_num_str());
     } else {
         NRF_LOG_INFO("Secure IC was not detected. Flash ROM will be used instead.");
+    }
+#endif
+
+#if defined(NO_RTCC_MODULE)
+    NRF_LOG_INFO("Realtime clock calendar is not installed.");
+#else
+    // RTCC初期化と接続検知
+    if (rv3028c7_initialize()) {
+        NRF_LOG_INFO("Realtime clock calendar was detected.");
+    } else {
+        NRF_LOG_INFO("Realtime clock calendar was not detected.");
     }
 #endif
 
