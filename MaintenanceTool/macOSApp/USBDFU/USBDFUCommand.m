@@ -237,15 +237,19 @@
 #pragma mark - Process timeout monitor
 
     - (void)stopDFUTimeoutMonitor {
-        // 処理タイムアウト監視を停止
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト監視を停止
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        });
     }
 
     - (void)startDFUTimeoutMonitor {
-        // 処理タイムアウト監視を事前停止
-        [self stopDFUTimeoutMonitor];
-        // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
-        [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト監視を事前停止
+            [self stopDFUTimeoutMonitor];
+            // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
+            [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        });
     }
 
     - (void)DFUProcessDidTimeout {
