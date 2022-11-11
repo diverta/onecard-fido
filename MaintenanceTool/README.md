@@ -3,7 +3,7 @@
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うツールです。
 
-macOS版と、Windows版を用意しました。
+[macOS版](../MaintenanceTool/macOSApp/README.md)と、[Windows版](../MaintenanceTool/dotNET/README.md)を用意しました。
 
 ## [FIDO認証器管理ツール](../MaintenanceTool/MNTTOOL.md)
 エンドユーザー向けのツールです。
