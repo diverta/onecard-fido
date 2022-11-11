@@ -15,29 +15,29 @@
 ## 手順書（macOS環境）
 
 - <b>[PGP鍵を使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTION.md)</b><br>
-[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)にインストールしたPGP鍵を使用し、macOS上でファイルを暗号化／復号化をする手順について掲載しています。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にインストールしたPGP鍵を使用し、macOS上でファイルを暗号化／復号化をする手順について掲載しています。
 
 - [CCIDドライバーインストール手順](../../CCID/INSTALLPRG.md)<br>
-[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールする手順について掲載しています。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールする手順について掲載しています。
 
 - [GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)<br>
 GPGツール群「[GPG Suite](https://gpgtools.org)」を、macOS環境にインストールする手順について掲載しています。<br>
 GPG Suiteは、macOS環境へのPGP鍵インストール時に必要となりますので、事前にインストール願います。
 
 - [PGP鍵インストール手順書](../../MaintenanceTool/macOSApp/PGPKEYINST.md)<br>
-管理ツールを使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
+管理ツールを使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
 
 ## 手順書（Windows環境）
 
 - <b>[PGP鍵を使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTIONWIN.md)</b><br>
-[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)にインストールしたPGP鍵を使用し、Windows上でファイルを暗号化／復号化をする手順について掲載しています。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にインストールしたPGP鍵を使用し、Windows上でファイルを暗号化／復号化をする手順について掲載しています。
 
 - [Gpg4winインストール手順](../../CCID/OpenPGP/GPGINSTWIN.md)<br>
 GPGツール群「[Gpg4win](https://www.gnupg.org)」を、Windows環境にインストールする手順について掲載しています。<br>
 Gpg4winは、Windows環境へのPGP鍵インストール時に必要となりますので、事前にインストール願います。
 
-- [PGP鍵インストール手順書](../../MaintenanceTool/WindowsExe/PGPKEYINST.md)<br>
-管理ツールを使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
+- [PGP鍵インストール手順書](../../MaintenanceTool/dotNET/PGPKEYINST.md)<br>
+管理ツールを使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、PGP鍵をインストールする手順について掲載しています。
 
 Windows 10環境では、CCIDドライバーのインストールは不要になります。
 
