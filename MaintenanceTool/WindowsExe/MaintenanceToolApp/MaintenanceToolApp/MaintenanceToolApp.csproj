@@ -61,12 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\appkg.PCA10059_02.0.3.6.zip">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\add_sub_key.bat" />
     <EmbeddedResource Include="Resources\add_sub_key.param" />
     <EmbeddedResource Include="Resources\appkg.PCA10059_01.0.3.6.zip" />
