@@ -5,12 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="ペアリング実行" Width="360" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
-    <Grid Height="290">
-        <Label x:Name="labelToolName1" Content="FIDO認証器とペアリングする場合は、&#xD;&#xA;基板背面に記載されたパスコードを入力し、&#xD;&#xA;下のボタンをクリックしてください。" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="305" Height="70"/>
-        <GroupBox x:Name="groupBox1" Header="ペアリング実行" Margin="25,85,25,76"/>
-        <Label x:Name="labelToolName2" Content="パスコード（半角数字6桁）" HorizontalAlignment="Left" Margin="35,117,0,0" VerticalAlignment="Top" Width="140"/>
-        <PasswordBox x:Name="passwordBoxPasscode" HorizontalAlignment="Left" Margin="185,121,0,0" VerticalAlignment="Top" Width="130"/>
-        <Button x:Name="buttonOK" Content="ペアリングを実行する" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="150" Margin="0,164,0,0" Click="buttonOK_Click"/>
-        <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,240,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
+    <Grid Height="390">
+        <GroupBox x:Name="groupBox1" Header="MDBT50Q用" Margin="25,15,25,250"/>
+        <Label x:Name="labelToolName1" Content="FIDO認証器（MDBT50Q）とペアリングする場合は、&#xA;下のボタンをクリックしてください。" HorizontalAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="280" Height="42" Margin="0,40,0,0"/>
+        <Button x:Name="buttonPairing52" Content="ペアリングを実行する" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="150" Margin="0,95,0,0" Click="buttonPairing52_Click"/>
+        <GroupBox x:Name="groupBox2" Header="MDBT53用" Margin="25,155,25,55"/>
+        <Label x:Name="labelToolName2" Content="FIDO認証器（MDBT53）とペアリングする場合は、&#xA;基板背面に記載されたパスコードを入力し、&#xA;下のボタンをクリックしてください。" HorizontalAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="280" Height="60" Margin="0,175,0,0"/>
+        <Label x:Name="labelToolName3" Content="パスコード（半角数字6桁）" HorizontalAlignment="Left" Margin="40,245,0,0" VerticalAlignment="Top" Width="140"/>
+        <PasswordBox x:Name="passwordBoxPasscode" HorizontalAlignment="Left" Margin="190,250,0,0" VerticalAlignment="Top" Width="130"/>
+        <Button x:Name="buttonPairing53" Content="ペアリングを実行する" HorizontalAlignment="Center" VerticalAlignment="Top" Height="26" Width="150" Margin="0,290,0,0" Click="buttonPairing53_Click"/>
+        <Button x:Name="buttonCancel"  Content="Cancel" HorizontalAlignment="Center" Margin="0,350,0,0" VerticalAlignment="Top" Height="25" Width="150" Click="buttonCancel_Click"/>
     </Grid>
 </Window>

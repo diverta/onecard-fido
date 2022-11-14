@@ -65,7 +65,7 @@
         public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定された認証情報を消去します。";
         public const string MSG_PROMPT_CLEAR_PIN_CODE = "消去後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nFIDO認証情報の消去処理を実行しますか？";
         public const string MSG_CLEAR_PIN_CODE_COMMENT1 = "  ユーザー確認が必要となりますので、";
-        public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上のユーザー確認LEDが高速点滅したら、";
+        public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上の赤色LEDが高速点滅したら、";
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  ボタンを１回押してください.";
         public const string MSG_AUTH_RESET_COMMAND_ERROR = "FIDO認証情報消去コマンドの実行に失敗しました。";
 
@@ -279,13 +279,13 @@
         public const string MSG_CTAP2_ERR_HMAC_INVALID = "ログインテスト時の暗号検証に失敗しました。";
         public const string MSG_HCHK_CTAP2_LOGIN_TEST_START = "ログインテストを開始します.";
         public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
-        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
-        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  MAIN SWを１回押してください.";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上の緑色LEDが点滅したら、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  ボタンを１回押してください.";
         public const string MSG_HCHK_U2F_REGISTER_SUCCESS = "U2F Registerが成功しました。";
         public const string MSG_HCHK_U2F_AUTHENTICATE_START = "U2F Authenticateを開始します.";
         public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
-        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
-        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT3 = "  MAIN SWを１回押してください.";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT2 = "  FIDO認証器上の緑色LEDが点滅したら、";
+        public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT3 = "  ボタンを１回押してください.";
         public const string MSG_HCHK_U2F_AUTHENTICATE_SUCCESS = "U2F Authenticateが成功しました。";
         public const string MSG_OCCUR_KEYHANDLE_ERROR = "キーハンドルが存在しません。再度ユーザー登録を実行してください。";
         public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
@@ -338,7 +338,7 @@
         public const string MSG_BLE_PARING_ERR_BT_STATUS_CANNOT_GET = "Bluetooth状態を確認できません。";
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
         public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
-        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
+        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のボタンを３秒間以上長押して、ペアリングモードに遷移させてください。";
         public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
     }
 }

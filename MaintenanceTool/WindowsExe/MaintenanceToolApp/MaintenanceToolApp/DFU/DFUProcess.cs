@@ -84,6 +84,9 @@ namespace MaintenanceToolApp.DFU
         //
         // 更新対象アプリケーション＝version 0.3.0
         public const int DFU_UPD_TARGET_APP_VERSION_FOR_52 = 300;
+
+        // イメージ反映所要時間（秒）
+        public const int USBDFU_WAITING_SEC_ESTIMATED = 15;
     }
 
     public class DFUProcess

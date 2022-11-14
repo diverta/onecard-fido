@@ -38,7 +38,14 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
-        private void DoOK()
+        private void DoPairing52()
+        {
+            // 画面を閉じる
+            Parameter.Passcode = string.Empty;
+            TerminateWindow(true);
+        }
+
+        private void DoPairing53()
         {
             // 入力チェックがNGの場合は中止
             if (CheckEntries() == false) {
@@ -75,9 +82,14 @@ namespace MaintenanceToolApp.BLESettings
         //
         // イベント処理部
         // 
-        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        private void buttonPairing52_Click(object sender, RoutedEventArgs e)
         {
-            DoOK();
+            DoPairing52();
+        }
+
+        private void buttonPairing53_Click(object sender, RoutedEventArgs e)
+        {
+            DoPairing53();
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)

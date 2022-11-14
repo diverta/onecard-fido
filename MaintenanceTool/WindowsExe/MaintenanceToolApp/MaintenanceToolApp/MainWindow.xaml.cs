@@ -118,6 +118,11 @@ namespace MaintenanceToolApp
             new OpenPGPWindow().ShowDialogWithOwner(this);
         }
 
+        private void DoOATH()
+        {
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
         private void DoHealthCheck()
         {
             // ヘルスチェック実行画面を開き、実行コマンド種別を設定
@@ -187,6 +192,11 @@ namespace MaintenanceToolApp
         private void buttonPIV_Click(object sender, RoutedEventArgs e)
         {
             DoPIV();
+        }
+
+        private void buttonOATH_Click(object sender, RoutedEventArgs e)
+        {
+            DoOATH();
         }
     }
 }
