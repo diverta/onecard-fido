@@ -228,10 +228,6 @@ namespace MaintenanceToolApp.DFU
                     // ステータスを変更
                     Parameter.Status = DFUStatus.CheckUpdateVersion;
                 }
-
-            } else {
-                // 画面に制御を戻す
-                TerminateDFUTransferProcess(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
             }
         }
 
