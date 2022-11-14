@@ -15,7 +15,7 @@ Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q
 - <b>[PCツール](MaintenanceTool)</b><br>
 PC環境から、[FIDO認証器](FIDO2Device)の動作に必要な各種設定／動作テスト等を行う、デスクトップ・ツールです。<br>
 エンドユーザー向けの「[FIDO認証器管理ツール](MaintenanceTool/MNTTOOL.md)」と、ベンダー向けの「[FIDO認証器開発ツール](MaintenanceTool/DEVTOOL.md)」を用意しております。<br>
-両者とも、[Windows版](MaintenanceTool/WindowsExe/README.md)、[macOS版](MaintenanceTool/macOSApp/README.md)を用意しております。
+両者とも、[Windows版](MaintenanceTool/dotNET/README.md)、[macOS版](MaintenanceTool/macOSApp/README.md)を用意しております。
 
 - <b>[オープンソースコードライセンスについて](OSSL.md)</b><br>
 上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。

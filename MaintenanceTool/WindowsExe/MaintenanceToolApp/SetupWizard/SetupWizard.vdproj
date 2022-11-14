@@ -59,7 +59,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\..\\MaintenanceToolWin\\SetupWizard.msi"
+        "OutputFilename" = "8:..\\..\\..\\dotNET\\MaintenanceToolWin\\SetupWizard.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -724,7 +724,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8446F57A5A2B46A6B31967E2F41C3ADE"
             {
-            "SourcePath" = "8:..\\MaintenanceToolApp\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\MaintenanceToolApp\\obj\\Release\\net6.0-windows10.0.22000.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DDD110837E1848B4ACECA4AF09FDEECD"
