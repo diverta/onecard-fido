@@ -15,6 +15,7 @@ NRF_LOG_MODULE_REGISTER();
 // プラットフォーム非依存コード
 //
 #include "fido_ctap2_command.h"
+#include "fido_development.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_skcert.h"
 #include "fido_u2f_command.h"
@@ -88,11 +89,11 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
 
     } else if (p_evt->write.record_key == FIDO_AESKEYS_RECORD_KEY) {
         // 管理用コマンドの処理を実行
-        fido_maintenance_command_aes_password_record_updated();
+        fido_development_command_aes_password_record_updated();
 
     } else if (p_evt->write.record_key == FIDO_SKEY_CERT_RECORD_KEY) {
         // 管理用コマンドの処理を実行
-        fido_maintenance_command_skey_cert_record_updated();
+        fido_development_command_attestation_record_updated();
 
     } else if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
         // CTAP2コマンドの処理を実行
@@ -114,13 +115,13 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
 {
     if (p_evt->del.file_id == FIDO_SKEY_CERT_FILE_ID) {
         // 管理用コマンドの処理を実行
-        fido_maintenance_command_skey_cert_file_deleted();
+        fido_development_command_attestation_file_deleted();
 
     } else if (p_evt->del.file_id == FIDO_TOKEN_COUNTER_FILE_ID) {
         // CTAP2コマンドの処理を実行
         fido_ctap2_command_token_counter_file_deleted();
         // 管理用コマンドの処理を実行
-        fido_maintenance_command_token_counter_file_deleted();
+        fido_development_command_token_counter_file_deleted();
     }
 
     // CCID関連処理を実行

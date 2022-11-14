@@ -68,7 +68,7 @@ namespace MaintenanceToolApp.DFU
             Parameter.Status = DFUStatus.GetCurrentVersion;
 
             // DFU処理開始時の画面処理
-            int maximum = 100;
+            int maximum = 100 + DFUProcessConst.USBDFU_WAITING_SEC_ESTIMATED;
             DFUProcess.NotifyDFUProcessStarting(maximum);
 
             // DFU本処理を開始（処理の終了は、処理進捗画面に通知される）
@@ -92,12 +92,45 @@ namespace MaintenanceToolApp.DFU
                 return;
             }
 
-            // DFU転送成功時は、処理進捗画面に通知
+            // 正常時は以降の処理を続行
+            // USB再接続時のコールバックを設定
+            HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+
+            // ステータスを更新（DFU反映待ち）
+            Parameter.Status = DFUStatus.WaitForBoot;
+
+            // DFU反映待ち処理を起動
+            PerformDFUUpdateMonitor();
+        }
+
+        // 
+        // DFU反映待ち処理
+        // 
+        private void PerformDFUUpdateMonitor()
+        {
+            // 処理進捗画面に通知
             DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100);
 
-            // 再接続まで待機
+            // 反映待ち（リセットによるファームウェア再始動完了まで待機）
+            for (int i = 0; i < DFUProcessConst.USBDFU_WAITING_SEC_ESTIMATED; i++) {
+                // USB接続が検知された場合はループを終了
+                if (Parameter.Status == DFUStatus.CheckUpdateVersion) {
+                    break;
+                }
+
+                // 処理進捗画面に通知
+                DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_WAITING_UPDATE, 100 + i);
+                System.Threading.Thread.Sleep(1000);
+            }
+
+            // 処理進捗画面に通知
+            DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_CONFIRM_VERSION, 100 + DFUProcessConst.USBDFU_WAITING_SEC_ESTIMATED);
+
+            // ステータスを更新（バージョン更新判定）
             Parameter.Status = DFUStatus.CheckUpdateVersion;
-            HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+
+            // バージョン情報照会処理に遷移
+            DFUProcess.CheckUpdateVersionInfo();
         }
 
         //
@@ -183,7 +216,7 @@ namespace MaintenanceToolApp.DFU
                     EstablishDFUConnection();
                 }
 
-            } else if (Parameter.Status == DFUStatus.CheckUpdateVersion) {
+            } else if (Parameter.Status == DFUStatus.WaitForBoot) {
                 if (connected == false) {
                     // 画面に制御を戻す
                     TerminateDFUTransferProcess(false, AppCommon.MSG_DFU_TARGET_NOT_NORMAL_MODE);
@@ -192,16 +225,9 @@ namespace MaintenanceToolApp.DFU
                     // ファームウェア再始動完了
                     AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_NORMAL_MODE);
 
-                    // 処理進捗画面に通知
-                    DFUProcess.NotifyDFUProgress(AppCommon.MSG_DFU_PROCESS_CONFIRM_VERSION, 100);
-
-                    // バージョン情報照会処理に遷移
-                    DFUProcess.CheckUpdateVersionInfo();
+                    // ステータスを変更
+                    Parameter.Status = DFUStatus.CheckUpdateVersion;
                 }
-
-            } else {
-                // 画面に制御を戻す
-                TerminateDFUTransferProcess(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
             }
         }
 

@@ -19,6 +19,8 @@ void        fido_development_command_attestation_record_updated(void);
 void        fido_development_command_aes_password_record_updated(void);
 void        fido_development_command_attestation_file_deleted(void);
 void        fido_development_command_token_counter_file_deleted(void);
+void        fido_development_command_flash_failed(void);
+void        fido_development_command_flash_gc_done(void);
 
 #ifdef __cplusplus
 }
