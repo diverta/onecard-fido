@@ -35,10 +35,10 @@ FIDO認証器管理ツールをmacOS環境にインストールする手順を�
 - <b>[BLEペアリング手順](../../MaintenanceTool/macOSApp/BLEPAIRING.md)</b><br>
 FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
-- <b>[PINコードの設定手順](SETPIN.md)</b><br>
+- <b>[PINコードの設定手順](../../MaintenanceTool/macOSApp/SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。
 
-- <b>[FIDO認証情報の消去手順](AUTHRESET.md)</b><br>
+- <b>[FIDO認証情報の消去手順](../../MaintenanceTool/macOSApp/AUTHRESET.md)</b><br>
 FIDO認証器から、FIDO認証情報を消去する手順について掲載しています。
 
 - <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>

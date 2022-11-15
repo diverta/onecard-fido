@@ -8,9 +8,9 @@
 
 #### 使用機材
 
-本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
@@ -46,7 +46,7 @@ FIDO認証情報（認証器に登録されているユーザー情報やログ�
 
 <img src="assets/0026.jpg" width="400">
 
-認証器上の赤色LEDが高速点滅するので、認証器上のMAIN SW（タクトスイッチ）を１回プッシュしてください。
+認証器上の赤色LEDが高速点滅するので、認証器上のボタンを１回プッシュしてください。
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0010.jpg" width="300">
 
