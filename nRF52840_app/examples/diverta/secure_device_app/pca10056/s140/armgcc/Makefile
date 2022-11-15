@@ -475,6 +475,23 @@ SRC_FILES += \
 INC_FOLDERS += \
   $(OPGLIB_DIR) \
 
+# Source files for OATH
+OATLIB_DIR := $(CCID_DIR)/oath_lib
+UTLLIB_DIR := $(FIDO_DIR)/util_lib
+SRC_FILES += \
+  $(OATLIB_DIR)/ccid_oath.c \
+  $(OATLIB_DIR)/ccid_oath_account.c \
+  $(OATLIB_DIR)/ccid_oath_calculate.c \
+  $(OATLIB_DIR)/ccid_oath_list.c \
+  $(OATLIB_DIR)/ccid_oath_object.c \
+  $(OATLIB_DIR)/ccid_oath_totp.c \
+  $(PLTLIB_DIR)/ccid_flash_oath_object.c \
+  $(UTLLIB_DIR)/rtcc.c \
+
+INC_FOLDERS += \
+  $(OATLIB_DIR) \
+  $(UTLLIB_DIR) \
+
 # Libraries common to all targets
 LIB_FILES += \
   $(SDK_ROOT)/external/nrf_cc310/lib/cortex-m4/hard-float/libnrf_cc310_0.9.13.a \

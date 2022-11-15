@@ -188,6 +188,14 @@ bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be,
     return true;
 }
 
+void fido_crypto_calculate_hmac_sha1(
+    uint8_t *key_data, size_t key_data_size, 
+    uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
+    uint8_t *dest_data)
+{
+    // TODO: 仮の実装です。
+}
+
 void fido_crypto_calculate_hmac_sha256(
     uint8_t *key_data, size_t key_data_size, 
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
