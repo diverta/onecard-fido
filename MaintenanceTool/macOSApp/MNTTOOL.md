@@ -47,7 +47,7 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[PIV機能設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
+- <b>[OpenPGP機能設定手順](../../MaintenanceTool/macOSApp/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b><br>
