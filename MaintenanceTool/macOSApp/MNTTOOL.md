@@ -41,7 +41,7 @@ FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載�
 - <b>[FIDO認証情報の消去手順](../../MaintenanceTool/macOSApp/AUTHRESET.md)</b><br>
 FIDO認証器から、FIDO認証情報を消去する手順について掲載しています。
 
-- <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
+- <b>[CTAP2ヘルスチェック実行手順](../../MaintenanceTool/macOSApp/CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
 - <b>[PIV機能設定手順](PIVSETTING.md)</b><br>

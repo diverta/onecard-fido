@@ -14,9 +14,9 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 使用機材
 
-本ドキュメントでは「[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)」を、FIDO2認証器として使用します。
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/BT40Dongle/assets01/0001.jpg" width="300">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
@@ -31,7 +31,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 （最新ファームウェアは、FIDO認証器管理ツールに同梱されています）<br>
 以下の手順書をご参照願います。
 
-* <b>[ファームウェア更新手順書](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b>
+* <b>[ファームウェア更新手順書](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>
 
 #### PIN設定
 
