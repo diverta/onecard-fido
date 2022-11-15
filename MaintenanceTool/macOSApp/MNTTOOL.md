@@ -1,6 +1,6 @@
 # macOS版 FIDO認証器管理ツール
 
-最終更新日：2022/6/27
+最終更新日：2022/11/15
 
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行う、エンドユーザー向けのツールです。
@@ -9,7 +9,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 ## 機能
-* ペアリング実行／解除
+* ペアリング実行／ペアリング情報削除
 * PINコード設定
 * FIDO認証情報消去
 * CTAP2ヘルスチェック実行
@@ -19,6 +19,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
+* OATH機能設定（最終更新日現在、開発中）
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
@@ -28,25 +29,25 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 #### 手順書
 
-- <b>[インストール手順](INSTALLPRG.md)</b><br>
+- <b>[インストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
-- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+- <b>[BLEペアリング手順](../../MaintenanceTool/macOSApp/BLEPAIRING.md)</b><br>
 FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
-- <b>[PINコードの設定手順](SETPIN.md)</b><br>
+- <b>[PINコードの設定手順](../../MaintenanceTool/macOSApp/SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。
 
-- <b>[FIDO認証情報の消去手順](AUTHRESET.md)</b><br>
+- <b>[FIDO認証情報の消去手順](../../MaintenanceTool/macOSApp/AUTHRESET.md)</b><br>
 FIDO認証器から、FIDO認証情報を消去する手順について掲載しています。
 
-- <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
+- <b>[CTAP2ヘルスチェック実行手順](../../MaintenanceTool/macOSApp/CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
-- <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
+- <b>[PIV機能設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[OpenPGP機能設定手順](PGPSETTING.md)</b><br>
+- <b>[OpenPGP機能設定手順](../../MaintenanceTool/macOSApp/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b><br>

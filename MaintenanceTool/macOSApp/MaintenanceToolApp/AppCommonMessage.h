@@ -119,8 +119,8 @@
 #define MSG_HCHK_U2F_REGISTER_SUCCESS       @"U2F Registerが成功しました。"
 #define MSG_HCHK_U2F_AUTHENTICATE_START     @"U2F Authenticateを開始します."
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
-#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"
-#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
+#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  FIDO認証器上の緑色LEDが点滅したら、"
+#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  ボタンを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 #define MSG_PROMPT_START_HCHK_BLE_AUTH      @"自動認証で使用するBLEデバイスを近づけてください。"
 #define MSG_COMMENT_START_HCHK_BLE_AUTH     @"BLE自動認証機能が有効化されている場合は、BLEデバイスによりユーザー所在確認を行います。\nスキャン対象サービスUUIDを持つBLEデバイスを始動させ、FIDO認証器に近づけてください。\n\nYesをクリックすると、ヘルスチェックを実行します。"
@@ -144,8 +144,8 @@
 #define MSG_CLEAR_PIN_CODE                  @"FIDO認証器に設定された認証情報を消去します。"
 #define MSG_PROMPT_CLEAR_PIN_CODE           @"消去後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nFIDO認証情報の消去処理を実行しますか？"
 #define MSG_CLEAR_PIN_CODE_COMMENT1         @"  ユーザー確認が必要となりますので、"
-#define MSG_CLEAR_PIN_CODE_COMMENT2         @"  FIDO認証器上のユーザー確認LEDが高速点滅したら、"
-#define MSG_CLEAR_PIN_CODE_COMMENT3         @"  MAIN SWを１回押してください."
+#define MSG_CLEAR_PIN_CODE_COMMENT2         @"  FIDO認証器上の赤色LEDが高速点滅したら"
+#define MSG_CLEAR_PIN_CODE_COMMENT3         @"  ボタンを１回押してください."
 
 #pragma mark - PINコードチェック関連メッセージ
 #define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"
@@ -156,8 +156,8 @@
 #pragma mark - CTAP2ヘルスチェック関連メッセージ
 #define MSG_HCHK_CTAP2_LOGIN_TEST_START     @"ログインテストを開始します."
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
-#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"
-#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  MAIN SWを１回押してください."
+#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上の緑色LEDが点滅したら、"
+#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  ボタンを１回押してください."
 
 #pragma mark - Flash ROM情報取得関連メッセージ
 #define MSG_FSTAT_REMAINING_RATE            @"Flash ROMの空き容量は%.1f％です。"
@@ -176,7 +176,7 @@
 #pragma mark - BLEペアリング関連のメッセージ文言
 #define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
 #define MSG_BLE_PARING_ERR_TIMED_OUT        @"FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。"
-#define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。"
+#define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のボタンを３秒間以上長押して、ペアリングモードに遷移させてください。"
 #define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
 
 #pragma mark - ツール設定画面

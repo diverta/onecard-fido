@@ -84,6 +84,7 @@
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonOATHSetting] setEnabled:enabled];
         [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
@@ -100,6 +101,9 @@
     }
 
     - (IBAction)buttonOATHSettingDidPress:(id)sender {
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:self forSelector:@selector(displayCommandResultDone)
+                                     parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
@@ -137,17 +141,7 @@
         [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
     }
 
-#pragma mark - Call back from ToolAppCommand
-
-    - (void)disableUserInterface {
-        // メニュー、ボタンを非活性化
-        [self enableButtons:false];
-    }
-
-    - (void)enableUserInterface {
-        // メニュー、ボタンを活性化
-        [self enableButtons:true];
-    }
+#pragma mark - Common method called by callback
 
     - (void)notifyAppCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
@@ -155,8 +149,6 @@
             [self appendLogMessage:message];
         }
     }
-
-#pragma mark - Common method called by callback
 
     - (void)commandStartedProcess:(NSString *)processNameOfCommand {
         if (processNameOfCommand) {
