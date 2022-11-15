@@ -32,7 +32,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 - <b>[インストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
-- <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
+- <b>[BLEペアリング手順](../../MaintenanceTool/macOSApp/BLEPAIRING.md)</b><br>
 FIDO認証器管理ツールを使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
 
 - <b>[PINコードの設定手順](SETPIN.md)</b><br>
