@@ -137,17 +137,7 @@
         [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
     }
 
-#pragma mark - Call back from ToolAppCommand
-
-    - (void)disableUserInterface {
-        // メニュー、ボタンを非活性化
-        [self enableButtons:false];
-    }
-
-    - (void)enableUserInterface {
-        // メニュー、ボタンを活性化
-        [self enableButtons:true];
-    }
+#pragma mark - Common method called by callback
 
     - (void)notifyAppCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
@@ -155,8 +145,6 @@
             [self appendLogMessage:message];
         }
     }
-
-#pragma mark - Common method called by callback
 
     - (void)commandStartedProcess:(NSString *)processNameOfCommand {
         if (processNameOfCommand) {

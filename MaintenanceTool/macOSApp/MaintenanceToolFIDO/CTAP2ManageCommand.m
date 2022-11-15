@@ -132,7 +132,7 @@
     }
 
     - (void)doRequestCommandAuthReset {
-        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
+        // リクエスト転送の前に、基板上のボタンを押してもらうように促すメッセージを表示
         [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
         [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
         [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
