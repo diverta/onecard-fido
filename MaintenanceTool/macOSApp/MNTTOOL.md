@@ -1,6 +1,6 @@
 # macOS版 FIDO認証器管理ツール
 
-最終更新日：2022/6/27
+最終更新日：2022/11/15
 
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行う、エンドユーザー向けのツールです。
@@ -9,7 +9,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 ## 機能
-* ペアリング実行／解除
+* ペアリング実行／ペアリング情報削除
 * PINコード設定
 * FIDO認証情報消去
 * CTAP2ヘルスチェック実行
@@ -19,6 +19,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
+* OATH機能設定（最終更新日現在、開発中）
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
@@ -28,7 +29,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 #### 手順書
 
-- <b>[インストール手順](INSTALLPRG.md)</b><br>
+- <b>[インストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
 - <b>[BLEペアリング手順](BLEPAIRING.md)</b><br>
