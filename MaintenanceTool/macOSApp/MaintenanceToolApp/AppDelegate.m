@@ -84,6 +84,7 @@
         [[self buttonSetPivParam] setEnabled:enabled];
         [[self buttonDFU] setEnabled:enabled];
         [[self buttonSetPgpParam] setEnabled:enabled];
+        [[self buttonOATHSetting] setEnabled:enabled];
         [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
@@ -100,6 +101,9 @@
     }
 
     - (IBAction)buttonOATHSettingDidPress:(id)sender {
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:self forSelector:@selector(displayCommandResultDone)
+                                     parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
