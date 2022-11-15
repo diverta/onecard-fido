@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		RPSohYaDeUt6VQ/ywC+6KiRN5uk=
+		G5uOhZGhXTrOknyQO5B/1PXaa2Y=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
@@ -18,11 +18,15 @@
 		</data>
 		<key>Resources/BLEDFUStartWindow.nib</key>
 		<data>
-		eqGG43tYRTW77o7OOxEzaQ8Y8gU=
+		RQC6mmQZJl/wKWQ8Z4tLoUVVkJY=
 		</data>
 		<key>Resources/BLESettingWindow.nib</key>
 		<data>
-		g6UopkcXweYBTNrjhz6ph7OLHAk=
+		gSWd9cJ3ls+CNXH3QdH8j1+6VQE=
+		</data>
+		<key>Resources/DFUWindow.nib</key>
+		<data>
+		7JaTm/LVxsg6y/DdRWLDSrn4COw=
 		</data>
 		<key>Resources/Entitlements.plist</key>
 		<data>
@@ -80,6 +84,18 @@
 		<data>
 		sO9btJVOMXrNP4fbWGkJdfpDUmw=
 		</data>
+		<key>Resources/appkg.PCA10059_01.0.3.6.zip</key>
+		<data>
+		h3ZBBOXS0DcvDDM5aMoX9o2xS4M=
+		</data>
+		<key>Resources/appkg.PCA10059_02.0.3.6.zip</key>
+		<data>
+		JsBGm644xEk95ONIx3QG0IY45xw=
+		</data>
+		<key>Resources/appkg.PCA10059_03.0.3.6.zip</key>
+		<data>
+		5OlDiwwwmDbnrSGeHmWV+PvbQsc=
+		</data>
 		<key>Resources/card_edit_passwd.param</key>
 		<data>
 		ebF0P59GTFbLmLegqw2VHjFj66Y=
@@ -117,7 +133,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			ObzJhlAZrCKh7tmrH/hR/YiCxZc=
+			gwiptouUopn/lqCvpDTUak2yyPA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -160,7 +176,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			vmwMxDWWRpRSw3/qIF3znzdNz0RQ9PRHrDyAvZhrMBU=
+			68fEVzsH0I/QSAHMh5Vz5sqtKdZXCiJk8zCOmmSIQEk=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
@@ -174,14 +190,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			y0fUDSYprfOYZ0E3DFqmIpu/NIL2BkeOJhdRuvVh8JM=
+			t25YzhrXphCVDZ/c+uD5h2PDzkzH0FQq2yC+O4nPoCA=
 			</data>
 		</dict>
 		<key>Resources/BLESettingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0yzt8f6K8igiKTNMOT4UAODe8GSooR6hhfl5WZ/zcuY=
+			FyUbSzrd6SHuMq8hsCmU6Hd+3yw6HwQS5k7tOGRuA5w=
+			</data>
+		</dict>
+		<key>Resources/DFUWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			cWvRBoapLqYB+7H7eOUG4YrGzwq/XSZocVIHO+3iZTo=
 			</data>
 		</dict>
 		<key>Resources/Entitlements.plist</key>
@@ -282,6 +305,27 @@
 			y2aunvK8Rw0+NgzmwXgQ6cS0vMfgzfGcnEk17luCGes=
 			</data>
 		</dict>
+		<key>Resources/appkg.PCA10059_01.0.3.6.zip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			LjoU5aJdajga8Ips9sX2vCbBREPj3Qp/tAOxWkdG4ck=
+			</data>
+		</dict>
+		<key>Resources/appkg.PCA10059_02.0.3.6.zip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			q/TmUEGWNXFBog7+CoTC94fbzbA/pwlazbhzLDTnZC8=
+			</data>
+		</dict>
+		<key>Resources/appkg.PCA10059_03.0.3.6.zip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			t8/cMnIEZrwu2yltCT8Xa+ibM7ckiFQ8NiY4WcsZyRI=
+			</data>
+		</dict>
 		<key>Resources/card_edit_passwd.param</key>
 		<dict>
 			<key>hash2</key>
@@ -337,7 +381,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			bVOrsj7JnK/l6MoANvLVwIaszHH/t7undp3FI/pBQJs=
+			GGcbHs79gn7dIzkhEYZUm+X1RpPJVeZawj0ku3sgjEg=
 			</data>
 			<key>optional</key>
 			<true/>
