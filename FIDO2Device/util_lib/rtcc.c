@@ -9,7 +9,6 @@
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(rtcc);
-#endif
 
 // モジュール利用の可否を保持
 #ifdef CONFIG_USE_EXTERNAL_RTCC
@@ -64,3 +63,18 @@ bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime)
     fido_log_info("Current timestamp (updated by unixtime): %s", log_strdup(work_buf));
     return true;
 }
+
+#else
+
+void rtcc_init(void)
+{
+    // TODO: 仮の実装です。
+}
+
+bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime)
+{
+    // TODO: 仮の実装です。
+    return true;
+}
+
+#endif
