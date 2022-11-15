@@ -240,7 +240,7 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウントデータをFlash ROMから削除
-    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset, m_account_name_size);
+    uint16_t sw = ccid_oath_object_account_delete((char *)capdu->data + name_offset, m_account_name_size);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         ccid_process_resume_prepare(capdu, rapdu);
@@ -301,7 +301,7 @@ void ccid_oath_account_resume(bool success)
         uint16_t sw = SW_NO_ERROR;
         if (m_flash_func == ccid_oath_account_add) {
             // TOTPカウンターを使用し、時刻同期を実行
-            sw = ccid_oath_totp_set_timestamp(m_secret, m_challange);
+            sw = ccid_oath_totp_set_timestamp((uint8_t *)m_secret, m_challange);
             if (sw == SW_NO_ERROR) {
                 // 正常終了
                 fido_log_info("OATH account registration success");

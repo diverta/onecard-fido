@@ -88,7 +88,7 @@ uint16_t ccid_oath_object_account_set(char *account_name, uint8_t account_name_s
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -112,7 +112,7 @@ uint16_t ccid_oath_object_account_delete(char *account_name, uint8_t account_nam
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -154,7 +154,7 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
     // Flash ROMから対象レコードを検索
     //
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
