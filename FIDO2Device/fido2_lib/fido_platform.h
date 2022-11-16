@@ -34,6 +34,7 @@ extern "C" {
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"
+#include "rtcc.h"
 
 // Zephyrに依存する処理
 #include "app_crypto.h"
