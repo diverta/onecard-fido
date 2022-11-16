@@ -40,8 +40,31 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
 
 bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size, bool use_serial, uint16_t serial)
 {
-    // TODO: 仮の実装です。
-    return false;
+    // ファイル名を取得
+    uint16_t file_id = OATH_DATA_OBJ_FILE_ID;
+
+    // レコードキーを取得
+    uint16_t record_key;
+    if (get_record_key_by_tag(obj_tag, &record_key) == false) {
+        return false;
+    }
+    
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピー
+    //   オブジェクトデータの長さ: 1ワード（4バイト）
+    //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+    uint8_t *rec_bytes = ccid_flash_object_write_buffer();
+    uint32_t size32_t = (uint32_t)obj_size;
+    memcpy(rec_bytes, &size32_t, sizeof(uint32_t));
+    memcpy(rec_bytes + 4, obj_buff, obj_size);
+
+    // オブジェクトデータの長さから、必要ワード数を計算
+    size_t record_words = ccid_flash_object_calculate_words(size32_t) + 1;
+
+    // データをFlash ROMに書込
+    m_flash_func = (void *)ccid_flash_oath_object_write;
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+    uint32_t *write_buffer = (uint32_t *)ccid_flash_object_write_buffer();
+    return fido_flash_fds_record_write(file_id, record_key, record_words, read_buffer, write_buffer);
 }
 
 bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
@@ -131,7 +154,18 @@ void ccid_flash_oath_object_gc_done(void)
 
 void ccid_flash_oath_object_record_updated(void)
 {
-    // TODO: 仮の実装です。
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
+    if (flash_func == ccid_flash_oath_object_write) {
+        ccid_oath_object_write_resume(true);
+    }
 }
 
 void ccid_flash_oath_object_record_deleted(void)
