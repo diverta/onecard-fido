@@ -28,6 +28,16 @@ static void *m_flash_func = NULL;
 //
 // オブジェクトのRead／Write
 //
+static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
+{
+    switch (tag) {
+        default:
+            *record_key = OATH_DATA_OBJ_01_RECORD_KEY;
+            break;
+    }
+    return true;
+}
+
 bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size, bool use_serial, uint16_t serial)
 {
     // TODO: 仮の実装です。
@@ -36,8 +46,28 @@ bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t ob
 
 bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
 {
+    // ファイル名を取得
+    uint16_t file_id = OATH_DATA_OBJ_FILE_ID;
+
+    // レコードキーを取得
+    uint16_t record_key;
+    if (get_record_key_by_tag(obj_tag, &record_key) == false) {
+        return false;
+    }
+    
+    // Flash ROMから属性データ（オブジェクト長＝１ワード）を読込
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+    if (fido_flash_fds_record_read(file_id, record_key, OATH_DATA_OBJ_ATTR_WORDS, read_buffer, exist) == false) {
+        return false;
+    }
+    // 既存データがなければ、最初の連番をセットして終了
+    if (*exist == false) {
+        *serial = 1;
+        return true;
+    }
+
     // TODO: 仮の実装です。
-    return false;
+    return true;
 }
 
 bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)

@@ -125,6 +125,7 @@ extern "C" {
 //   オブジェクトデータの長さ: 1ワード（4バイト）
 //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
 #define OATH_DATA_OBJ_FILE_ID           (0xBF9E)
+#define OATH_DATA_OBJ_ATTR_WORDS        1
 #define OATH_DATA_OBJ_WORDS_MAX         256
 //
 // OATHオブジェクト格納ファイルで
