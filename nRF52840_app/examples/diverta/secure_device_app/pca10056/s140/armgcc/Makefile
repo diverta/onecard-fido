@@ -417,6 +417,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
+  $(PLTLIB_DIR)/rtcc.c \
   $(PLTLIB_DIR)/rv3028c7_i2c.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(PLTLIB_DIR)/usbd_service_bos.c \
@@ -477,7 +478,6 @@ INC_FOLDERS += \
 
 # Source files for OATH
 OATLIB_DIR := $(CCID_DIR)/oath_lib
-UTLLIB_DIR := $(FIDO_DIR)/util_lib
 SRC_FILES += \
   $(OATLIB_DIR)/ccid_oath.c \
   $(OATLIB_DIR)/ccid_oath_account.c \
@@ -486,11 +486,9 @@ SRC_FILES += \
   $(OATLIB_DIR)/ccid_oath_object.c \
   $(OATLIB_DIR)/ccid_oath_totp.c \
   $(PLTLIB_DIR)/ccid_flash_oath_object.c \
-  $(UTLLIB_DIR)/rtcc.c \
 
 INC_FOLDERS += \
   $(OATLIB_DIR) \
-  $(UTLLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \
