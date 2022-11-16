@@ -67,6 +67,31 @@ bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t ob
     return fido_flash_fds_record_write(file_id, record_key, record_words, read_buffer, write_buffer);
 }
 
+static bool record_find(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset)
+{
+    ret_code_t ret;
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+    
+    // Flash ROMから既存データを走査
+    bool found = false;
+    fds_record_desc_t record_desc;
+    fds_find_token_t  ftok = {0};
+    do {
+        ret = fds_record_find(file_id, record_key, &record_desc, &ftok);
+        if (ret == NRF_SUCCESS) {
+            // 同じキーのレコードかどうか判定 (先頭バイトを比較)
+            fido_flash_fds_record_get(&record_desc, read_buffer);
+            uint8_t *p_read_buffer = (uint8_t *)read_buffer;
+            if (memcmp(p_unique_key, p_read_buffer + unique_key_offset, unique_key_size) == 0) {
+                found = true;
+                break;
+            }
+        }
+    } while (ret == NRF_SUCCESS && found == false);
+
+    return found;
+}
+
 bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
 {
     // ファイル名を取得
@@ -77,16 +102,16 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     if (get_record_key_by_tag(obj_tag, &record_key) == false) {
         return false;
     }
-    
+
     // Flash ROMから属性データ（オブジェクト長＝１ワード）を読込
-    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
-    if (fido_flash_fds_record_read(file_id, record_key, OATH_DATA_OBJ_ATTR_WORDS, read_buffer, exist) == false) {
-        return false;
-    }
     // 既存データがなければ、最初の連番をセットして終了
+    size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
+    *exist = record_find(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset);
     if (*exist == false) {
-        *serial = 1;
+        *serial = 0;
         return true;
+    } else {
+        *serial = 1;
     }
 
     // 属性データを取出し、一時変数に保持
@@ -112,6 +137,7 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     //   m_record_buf_Rの２ワード目を先頭とし、
     //   オブジェクトデータが格納されます
     //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
     return fido_flash_fds_record_read(file_id, record_key, record_words, read_buffer, exist);
 }
 
