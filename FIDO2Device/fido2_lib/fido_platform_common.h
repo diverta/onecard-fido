@@ -124,7 +124,7 @@ void usbd_service_stop_for_bootloader(void);
 #include "ccid_flash_piv_object.h"
 
 // RTCC関連
-#include "rv3028c7_i2c.h"
+#include "rtcc.h"
 
 #ifdef __cplusplus
 }
