@@ -6,9 +6,7 @@
  */
 #include "ccid_apdu.h"
 #include "ccid_piv.h"
-#ifdef FIDO_ZEPHYR
 #include "ccid_oath.h"
-#endif
 #include "ccid_openpgp.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -32,11 +30,9 @@ void ccid_process_stop_applet(void)
         case APPLET_OPENPGP:
             ccid_openpgp_stop_applet();
             break;
-#ifdef FIDO_ZEPHYR
         case APPLET_OATH:
             ccid_oath_stop_applet();
             break;
-#endif
         default:
             break;
     }
@@ -67,7 +63,6 @@ static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
         fido_log_debug("select_applet: applet switched to OpenPGP");
         return true;
 
-#ifdef FIDO_ZEPHYR
     } else if (ccid_oath_aid_is_applet(capdu)) {
         // OATH
         if (current_applet != APPLET_OATH) {
@@ -76,7 +71,6 @@ static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
         current_applet = APPLET_OATH;
         fido_log_debug("select_applet: applet switched to OATH");
         return true;
-#endif
     }
 
     // appletを選択できなかった場合
