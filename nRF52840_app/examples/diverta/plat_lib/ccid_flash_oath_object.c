@@ -27,6 +27,9 @@ NRF_LOG_MODULE_REGISTER();
 //
 static fds_record_desc_t m_fds_record_desc;
 
+// レコード走査（fetch）時に実行する関数
+static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist);
+
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 
@@ -40,6 +43,34 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
             *record_key = OATH_DATA_OBJ_01_RECORD_KEY;
             break;
     }
+    return true;
+}
+
+static bool write_record(fds_record_desc_t *record_desc)
+{
+    // TODO: 仮の実装です。
+    NRF_LOG_INFO("fetch records found a record for update")
+    return true;
+}
+
+static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_t record_words, uint8_t *record_bytes)
+{
+    // record_bytesから、該当レコードのユニークキーを取得
+    size_t unique_key_size = 64;
+    size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
+    uint8_t *p_unique_key = record_bytes + unique_key_offset;
+
+    // Flash ROMから既存データを走査
+    bool found;
+    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, write_record, &found) == false) {
+        return false;
+    }
+
+    if (found == false) {
+        // TODO: 仮の実装です。
+        NRF_LOG_INFO("fetch records not found a record for update");
+    }
+
     return true;
 }
 
@@ -67,9 +98,7 @@ bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t ob
 
     // データをFlash ROMに書込
     m_flash_func = (void *)ccid_flash_oath_object_write;
-    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
-    uint32_t *write_buffer = (uint32_t *)ccid_flash_object_write_buffer();
-    return fido_flash_fds_record_write(file_id, record_key, record_words, read_buffer, write_buffer);
+    return fetch_record_for_update(file_id, record_key, record_words, rec_bytes);
 }
 
 static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist)
