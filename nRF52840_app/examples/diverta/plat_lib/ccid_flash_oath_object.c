@@ -150,13 +150,32 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     return fido_flash_fds_record_read(file_id, record_key, record_words, read_buffer, exist);
 }
 
+static bool delete_record(fds_record_desc_t *record_desc)
+{
+    // レコードをFlash ROMから削除
+    ret_code_t ret = fds_record_delete(record_desc);
+    return (ret == NRF_SUCCESS);
+}
+
 bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
 {
+    // ファイル名を取得
+    uint16_t file_id = OATH_DATA_OBJ_FILE_ID;
+
+    // レコードキーを取得
+    uint16_t record_key;
+    if (get_record_key_by_tag(obj_tag, &record_key) == false) {
+        return false;
+    }
+
     // Flash ROMから既存データを削除
     m_flash_func = (void *)ccid_flash_oath_object_delete;
-
-    // TODO: 仮の実装です。
-    return false;
+    size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
+    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, delete_record, exist) == false) {
+        return false;
+    }
+    
+    return true;
 }
 
 bool ccid_flash_oath_object_delete_all(void)
