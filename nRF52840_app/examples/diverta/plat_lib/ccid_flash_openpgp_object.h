@@ -24,7 +24,7 @@ bool        ccid_flash_openpgp_object_delete_all(uint8_t applet_id);
 void        ccid_flash_openpgp_object_failed(void);
 void        ccid_flash_openpgp_object_gc_done(void);
 void        ccid_flash_openpgp_object_record_updated(void);
-void        ccid_flash_openpgp_object_record_deleted(void);
+void        ccid_flash_openpgp_object_file_deleted(void);
 
 #ifdef __cplusplus
 }

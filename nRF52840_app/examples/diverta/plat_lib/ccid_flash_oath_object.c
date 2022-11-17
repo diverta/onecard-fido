@@ -143,6 +143,9 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
 
 bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size_t unique_key_size, uint8_t *p_record_buffer, bool *exist, uint16_t *serial)
 {
+    // Flash ROMから既存データを削除
+    m_flash_func = (void *)ccid_flash_oath_object_delete;
+
     // TODO: 仮の実装です。
     return false;
 }
@@ -217,6 +220,22 @@ void ccid_flash_oath_object_record_updated(void)
 }
 
 void ccid_flash_oath_object_record_deleted(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
+    if (flash_func == ccid_flash_oath_object_delete) {
+        ccid_oath_object_write_resume(true);
+    }
+}
+
+void ccid_flash_oath_object_file_deleted(void)
 {
     if (m_flash_func == NULL) {
         return;

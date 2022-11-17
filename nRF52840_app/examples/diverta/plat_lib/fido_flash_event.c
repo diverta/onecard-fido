@@ -111,6 +111,12 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
     ccid_flash_object_record_updated();
 }
 
+static void fido_flash_event_record_deleted(fds_evt_t const *p_evt)
+{
+    // CCID関連処理を実行
+    ccid_flash_object_record_deleted();
+}
+
 static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
 {
     if (p_evt->del.file_id == FIDO_SKEY_CERT_FILE_ID) {
@@ -125,7 +131,7 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
     }
 
     // CCID関連処理を実行
-    ccid_flash_object_record_deleted();
+    ccid_flash_object_file_deleted();
 }
 
 static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
@@ -148,6 +154,10 @@ static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
     if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レコード書込時
         fido_flash_event_updated(p_evt);
+
+    } else if (p_evt->id == FDS_EVT_DEL_RECORD) {
+        // レコード削除時
+        fido_flash_event_record_deleted(p_evt);
 
     } else if (p_evt->id == FDS_EVT_DEL_FILE) {
         // ファイル削除時

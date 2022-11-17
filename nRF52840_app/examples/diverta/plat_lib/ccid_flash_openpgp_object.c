@@ -253,7 +253,7 @@ void ccid_flash_openpgp_object_record_updated(void)
     }
 }
 
-void ccid_flash_openpgp_object_record_deleted(void)
+void ccid_flash_openpgp_object_file_deleted(void)
 {
     if (m_flash_func == NULL) {
         return;

@@ -79,7 +79,13 @@ void ccid_flash_object_record_updated(void)
 void ccid_flash_object_record_deleted(void)
 {
     // CCID関連処理を実行
-    ccid_flash_piv_object_record_deleted();
-    ccid_flash_openpgp_object_record_deleted();
     ccid_flash_oath_object_record_deleted();
+}
+
+void ccid_flash_object_file_deleted(void)
+{
+    // CCID関連処理を実行
+    ccid_flash_piv_object_file_deleted();
+    ccid_flash_openpgp_object_file_deleted();
+    ccid_flash_oath_object_file_deleted();
 }

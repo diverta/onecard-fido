@@ -30,7 +30,7 @@ bool ccid_flash_piv_object_data_erase(void);
 void ccid_flash_piv_object_failed(void);
 void ccid_flash_piv_object_gc_done(void);
 void ccid_flash_piv_object_record_updated(void);
-void ccid_flash_piv_object_record_deleted(void);
+void ccid_flash_piv_object_file_deleted(void);
 
 #ifdef __cplusplus
 }
