@@ -46,13 +46,6 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
     return true;
 }
 
-static bool write_record(fds_record_desc_t *record_desc)
-{
-    // TODO: 仮の実装です。
-    NRF_LOG_INFO("fetch records found a record for update")
-    return true;
-}
-
 static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_t record_words, uint8_t *record_bytes)
 {
     // record_bytesから、該当レコードのユニークキーを取得
@@ -62,13 +55,43 @@ static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_
 
     // Flash ROMから既存データを走査
     bool found;
-    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, write_record, &found) == false) {
+    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, NULL, &found) == false) {
         return false;
     }
 
-    if (found == false) {
-        // TODO: 仮の実装です。
-        NRF_LOG_INFO("fetch records not found a record for update");
+    // Flash ROMに書込むレコードを生成
+    fds_record_t record;
+    record.file_id           = file_id;
+    record.key               = record_key;
+    record.data.p_data       = (uint32_t *)record_bytes;
+    record.data.length_words = record_words;
+
+    ret_code_t ret;
+    if (found) {
+        // 既存のデータが存在する場合は上書き
+        ret = fds_record_update(&m_fds_record_desc, &record);
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("fetch_record_for_update: fds_record_update returns 0x%02x ", ret);
+            return false;
+        }
+        NRF_LOG_INFO("fetch records found a record for update")
+
+    } else {
+        // 既存のデータが存在しない場合は新規追加
+        fds_record_desc_t record_desc;
+        ret = fds_record_write(&record_desc, &record);
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("fetch_record_for_update: fds_record_write returns 0x%02x ", ret);
+            return false;
+        }
+        NRF_LOG_INFO("fetch records found no records for update")
+    }
+
+    if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
+        // 書込みができない場合、ガベージコレクションを実行
+        // (fds_gcが実行される。NGであればシステムエラー扱い)
+        NRF_LOG_ERROR("fetch_record_for_update: no space in flash, calling FDS GC ");
+        fido_flash_fds_force_gc();
     }
 
     return true;
@@ -237,7 +260,9 @@ void ccid_flash_oath_object_failed(void)
     m_flash_func = NULL;
 
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
-    if (flash_func == ccid_flash_oath_object_delete_all) {
+    if (flash_func == ccid_flash_oath_object_write ||
+        flash_func == ccid_flash_oath_object_delete ||
+        flash_func == ccid_flash_oath_object_delete_all) {
         ccid_oath_object_write_resume(false);
     }
 }
@@ -255,7 +280,9 @@ void ccid_flash_oath_object_gc_done(void)
     // for nRF52840:
     // FDSリソース不足解消のためGCが実行された場合は、
     // GC実行直前の処理を再実行
-    if (flash_func == ccid_flash_oath_object_delete_all) {
+    if (flash_func == ccid_flash_oath_object_write ||
+        flash_func == ccid_flash_oath_object_delete ||
+        flash_func == ccid_flash_oath_object_delete_all) {
         ccid_oath_object_write_retry();
     }
 }
