@@ -27,12 +27,6 @@ NRF_LOG_MODULE_REGISTER();
 //
 static fds_record_desc_t m_fds_record_desc;
 
-// レコード走査（fetch）時に実行する関数
-static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist)
-{
-    return false;
-}
-
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 
@@ -51,17 +45,29 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
 
 static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_t record_words, uint8_t *record_bytes, uint16_t serial)
 {
-    // record_bytesから、該当レコードのユニークキーを取得
-    size_t unique_key_size = 64;
-    size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
-    uint8_t *p_unique_key = record_bytes + unique_key_offset;
+    ret_code_t ret;
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
 
     // Flash ROMから既存データを走査
-    bool found;
-    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, NULL, &found) == false) {
-        return false;
-    }
+    bool found = false;
+    fds_find_token_t ftok = {0};
+    do {
+        ret = fds_record_find(file_id, record_key, &m_fds_record_desc, &ftok);
+        if (ret == NRF_SUCCESS) {
+            // 連番を抽出（レコードの３・４バイト目を参照）
+            fido_flash_fds_record_get(&m_fds_record_desc, read_buffer);
+            uint16_t _serial;
+            uint8_t *p_serial = (uint8_t *)read_buffer + 2;
+            memcpy(&_serial, p_serial, sizeof(uint16_t));
 
+            // 同じ連番のレコードかどうか判定
+            if (serial == _serial) {
+                found = true;
+                break;
+            }
+        }
+    } while (ret == NRF_SUCCESS && found == false);
+    
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
     record.file_id           = file_id;
@@ -69,7 +75,6 @@ static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_
     record.data.p_data       = (uint32_t *)record_bytes;
     record.data.length_words = record_words;
 
-    ret_code_t ret;
     if (found) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&m_fds_record_desc, &record);
