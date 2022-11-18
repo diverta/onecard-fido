@@ -49,7 +49,7 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
     return true;
 }
 
-static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_t record_words, uint8_t *record_bytes)
+static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_t record_words, uint8_t *record_bytes, uint16_t serial)
 {
     // record_bytesから、該当レコードのユニークキーを取得
     size_t unique_key_size = 64;
@@ -110,19 +110,22 @@ bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t ob
     }
     
     // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピー
-    //   オブジェクトデータの長さ: 1ワード（4バイト）
+    //   オブジェクト属性 = 1ワード（4バイト）
+    //     オブジェクトデータの長さ: 2バイト
+    //     オブジェクトデータの連番: 2バイト
     //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
     uint8_t *rec_bytes = ccid_flash_object_write_buffer();
-    uint32_t size32_t = (uint32_t)obj_size;
-    memcpy(rec_bytes, &size32_t, sizeof(uint32_t));
+    uint16_t size_ = (uint16_t)obj_size;
+    memcpy(rec_bytes,     &size_,   sizeof(uint16_t));
+    memcpy(rec_bytes + 2, &serial,  sizeof(uint16_t));
     memcpy(rec_bytes + 4, obj_buff, obj_size);
 
     // オブジェクトデータの長さから、必要ワード数を計算
-    size_t record_words = ccid_flash_object_calculate_words(size32_t) + OATH_DATA_OBJ_ATTR_WORDS;
+    size_t record_words = ccid_flash_object_calculate_words(obj_size) + OATH_DATA_OBJ_ATTR_WORDS;
 
     // データをFlash ROMに書込
     m_flash_func = (void *)ccid_flash_oath_object_write;
-    return fetch_record_for_update(file_id, record_key, record_words, rec_bytes);
+    return fetch_record_for_update(file_id, record_key, record_words, rec_bytes, serial);
 }
 
 static bool find_unique_record(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist, uint16_t *serial)
