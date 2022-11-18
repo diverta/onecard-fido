@@ -242,8 +242,38 @@ bool ccid_flash_oath_object_delete_all(void)
 
 bool ccid_flash_oath_object_fetch(uint16_t obj_tag, int (*_fetch_func)(const char *key, void *data, size_t size))
 {
-    // TODO: 仮の実装です。
-    return false;
+    // ファイル名を取得
+    uint16_t file_id = OATH_DATA_OBJ_FILE_ID;
+
+    // レコードキーを取得
+    uint16_t record_key;
+    if (get_record_key_by_tag(obj_tag, &record_key) == false) {
+        return false;
+    }
+
+    // Flash ROMから既存データを走査
+    ret_code_t ret;
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+    fds_find_token_t ftok = {0};
+    do {
+        ret = fds_record_find(file_id, record_key, &m_fds_record_desc, &ftok);
+        if (ret == NRF_SUCCESS) {
+            // レコードを取得
+            fido_flash_fds_record_get(&m_fds_record_desc, read_buffer);
+            uint8_t *p_read_buffer = (uint8_t *)read_buffer;
+
+            // レコード長を先頭４バイトから取得
+            uint32_t size32_t;
+            memcpy(&size32_t, p_read_buffer, sizeof(uint32_t));
+
+            // コールバック関数を実行
+            if ((*_fetch_func)("", p_read_buffer, size32_t) != 0) {
+                return false;
+            }
+        }
+    } while (ret == NRF_SUCCESS);
+
+    return true;
 }
 
 //
