@@ -260,12 +260,12 @@ bool ccid_flash_oath_object_fetch(uint16_t obj_tag, int (*_fetch_func)(const cha
             fido_flash_fds_record_get(&m_fds_record_desc, read_buffer);
             uint8_t *p_read_buffer = (uint8_t *)read_buffer;
 
-            // レコード長を先頭４バイトから取得
-            uint32_t size32_t;
-            memcpy(&size32_t, p_read_buffer, sizeof(uint32_t));
+            // レコード長を先頭２バイトから取得
+            uint32_t size16_t;
+            memcpy(&size16_t, p_read_buffer, sizeof(uint16_t));
 
             // コールバック関数を実行
-            if ((*_fetch_func)("", p_read_buffer, size32_t) != 0) {
+            if ((*_fetch_func)("", p_read_buffer, size16_t) != 0) {
                 return false;
             }
         }
