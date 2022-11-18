@@ -74,7 +74,6 @@ static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_
             NRF_LOG_ERROR("fetch_record_for_update: fds_record_update returns 0x%02x ", ret);
             return false;
         }
-        NRF_LOG_INFO("fetch records found a record for update")
 
     } else {
         // 既存のデータが存在しない場合は新規追加
@@ -84,7 +83,6 @@ static bool fetch_record_for_update(uint16_t file_id, uint16_t record_key, size_
             NRF_LOG_ERROR("fetch_record_for_update: fds_record_write returns 0x%02x ", ret);
             return false;
         }
-        NRF_LOG_INFO("fetch records found no records for update")
     }
 
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {

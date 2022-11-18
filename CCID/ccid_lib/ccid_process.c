@@ -94,11 +94,9 @@ void ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
         case APPLET_OPENPGP:
             ccid_openpgp_apdu_process(capdu, rapdu);
             break;
-#ifdef FIDO_ZEPHYR
         case APPLET_OATH:
             ccid_oath_apdu_process(capdu, rapdu);
             break;
-#endif
         default:
             rapdu->len = 0;
             rapdu->sw = SW_FILE_NOT_FOUND;
