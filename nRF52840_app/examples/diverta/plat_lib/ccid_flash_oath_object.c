@@ -28,7 +28,10 @@ NRF_LOG_MODULE_REGISTER();
 static fds_record_desc_t m_fds_record_desc;
 
 // レコード走査（fetch）時に実行する関数
-static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist);
+static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist)
+{
+    return false;
+}
 
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
@@ -122,11 +125,14 @@ bool ccid_flash_oath_object_write(uint16_t obj_tag, uint8_t *obj_buff, size_t ob
     return fetch_record_for_update(file_id, record_key, record_words, rec_bytes);
 }
 
-static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist)
+static bool find_unique_record(uint16_t file_id, uint16_t record_key, uint8_t *p_unique_key, size_t unique_key_size, size_t unique_key_offset, bool (*function)(fds_record_desc_t *record_desc), bool *exist, uint16_t *serial)
 {
     ret_code_t ret;
     uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
-    
+
+    // 最大連番をクリア
+    *serial = 0;
+
     // Flash ROMから既存データを走査
     bool success = true;
     bool found = false;
@@ -134,8 +140,18 @@ static bool fetch_records(uint16_t file_id, uint16_t record_key, uint8_t *p_uniq
     do {
         ret = fds_record_find(file_id, record_key, &m_fds_record_desc, &ftok);
         if (ret == NRF_SUCCESS) {
-            // 同じキーのレコードかどうか判定 (先頭バイトを比較)
+            // 連番を抽出（レコードの３・４バイト目を参照）
             fido_flash_fds_record_get(&m_fds_record_desc, read_buffer);
+            uint16_t _serial;
+            uint8_t *p_serial = (uint8_t *)read_buffer + 2;
+            memcpy(&_serial, p_serial, sizeof(uint16_t));
+
+            // 最大の連番を、引数の領域に設定
+            if (_serial > *serial) {
+                *serial = _serial;
+            }
+
+            // 同じキーのレコードかどうか判定 (先頭バイトを比較)
             uint8_t *p_read_buffer = (uint8_t *)read_buffer;
             if (memcmp(p_unique_key, p_read_buffer + unique_key_offset, unique_key_size) == 0) {
                 found = true;
@@ -162,15 +178,13 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
         return false;
     }
 
-    // Flash ROMから属性データ（オブジェクト長＝１ワード）を読込
-    // 既存データがなければ、最初の連番をセットして終了
+    // Flash ROMから属性データ（１ワード）を読込
+    // 既存データがなければ、新しい連番（現在の最大連番＋１）をセットして終了
     size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
-    fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, NULL, exist);
+    find_unique_record(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, NULL, exist, serial);
     if (*exist == false) {
-        *serial = 0;
+        *serial += 1;
         return true;
-    } else {
-        *serial = 1;
     }
 
     // 属性データを取出し、一時変数に保持
@@ -221,7 +235,7 @@ bool ccid_flash_oath_object_delete(uint16_t obj_tag, uint8_t *p_unique_key, size
     // Flash ROMから既存データを削除
     m_flash_func = (void *)ccid_flash_oath_object_delete;
     size_t unique_key_offset = OATH_DATA_OBJ_ATTR_WORDS * 4;
-    if (fetch_records(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, delete_record, exist) == false) {
+    if (find_unique_record(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, delete_record, exist, serial) == false) {
         return false;
     }
     
