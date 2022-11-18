@@ -184,34 +184,8 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     find_unique_record(file_id, record_key, p_unique_key, unique_key_size, unique_key_offset, NULL, exist, serial);
     if (*exist == false) {
         *serial += 1;
-        return true;
     }
-
-    // 属性データを取出し、一時変数に保持
-    //   オブジェクト属性 = 1ワード
-    //     オブジェクトデータの長さ: 1ワード（4バイト）
-    uint8_t *rec_bytes = ccid_flash_object_read_buffer();
-    uint32_t size32_t;
-    memcpy(&size32_t, rec_bytes, sizeof(uint32_t));
-
-#if HEXDUMP_DEBUG_OBJECT_FOUND
-    size_t total_size = size32_t + 4;
-    NRF_LOG_DEBUG("ccid_flash_oath_object_find (%d bytes)", total_size);
-    NRF_LOG_HEXDUMP_DEBUG(rec_bytes, 32);
-    NRF_LOG_DEBUG("last 16 bytes:");
-    NRF_LOG_HEXDUMP_DEBUG(rec_bytes + total_size - 16, 16);
-#endif
-
-    // オブジェクトデータの長さから、必要ワード数を計算
-    size_t record_words = ccid_flash_object_calculate_words(size32_t) + OATH_DATA_OBJ_ATTR_WORDS;
-
-    // Flash ROMからオブジェクトデータを読込
-    //   データが存在する場合は、
-    //   m_record_buf_Rの２ワード目を先頭とし、
-    //   オブジェクトデータが格納されます
-    //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
-    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
-    return fido_flash_fds_record_read(file_id, record_key, record_words, read_buffer, exist);
+    return true;
 }
 
 static bool delete_record(fds_record_desc_t *record_desc)
