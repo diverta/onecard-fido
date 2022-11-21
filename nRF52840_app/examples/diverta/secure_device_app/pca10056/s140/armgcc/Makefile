@@ -50,6 +50,7 @@ CCID_DIR := $(PROJ_DIR)/../../../../CCID
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+WRPHDR_DIR := $(FIDO_DIR)/wrapper_lib
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PIVLIB_DIR := $(CCID_DIR)/piv_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
@@ -461,7 +462,7 @@ INC_FOLDERS += \
   $(PIVLIB_DIR) \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
-  $(WRPLIB_DIR) \
+  $(WRPHDR_DIR) \
 
 # Source files of OpenPGP card emulation
 OPGLIB_DIR := $(CCID_DIR)/openpgp_lib
