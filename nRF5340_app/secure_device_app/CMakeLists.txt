@@ -73,7 +73,6 @@ target_sources(app PRIVATE
 )
 target_include_directories(app PRIVATE 
     include
-    wrapper
     ../../FIDO2Device/ctap2_lib
     ../../FIDO2Device/fido2_lib
     ../../FIDO2Device/u2f_lib
