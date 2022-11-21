@@ -21,6 +21,7 @@
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/util_lib</sourceRootElem>
+                <sourceRootElem>../wrapper_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
