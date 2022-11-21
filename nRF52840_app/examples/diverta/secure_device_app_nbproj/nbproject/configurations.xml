@@ -974,23 +974,10 @@
       <itemPath>../../../../CCID/piv_lib/ccid_ykpiv_import_key.c</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_ykpiv_import_key.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="plat_lib"
-                   displayName="plat_lib"
-                   projectFiles="true"
-                   root="../plat_lib">
+    <logicalFolder name="plat_lib" displayName="plat_lib" projectFiles="true">
       <itemPath>../plat_lib/application_init.c</itemPath>
       <itemPath>../plat_lib/application_init.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
-      <itemPath>../plat_lib/ccid_crypto.c</itemPath>
-      <itemPath>../plat_lib/ccid_crypto.h</itemPath>
-      <itemPath>../plat_lib/ccid_flash_oath_object.c</itemPath>
-      <itemPath>../plat_lib/ccid_flash_oath_object.h</itemPath>
-      <itemPath>../plat_lib/ccid_flash_object.c</itemPath>
-      <itemPath>../plat_lib/ccid_flash_object.h</itemPath>
-      <itemPath>../plat_lib/ccid_flash_openpgp_object.c</itemPath>
-      <itemPath>../plat_lib/ccid_flash_openpgp_object.h</itemPath>
-      <itemPath>../plat_lib/ccid_flash_piv_object.c</itemPath>
-      <itemPath>../plat_lib/ccid_flash_piv_object.h</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
@@ -1019,8 +1006,6 @@
       <itemPath>../plat_lib/fido_timer_plat.h</itemPath>
       <itemPath>../plat_lib/fido_twi.c</itemPath>
       <itemPath>../plat_lib/fido_twi.h</itemPath>
-      <itemPath>../plat_lib/rtcc.c</itemPath>
-      <itemPath>../plat_lib/rtcc.h</itemPath>
       <itemPath>../plat_lib/rv3028c7_define.h</itemPath>
       <itemPath>../plat_lib/rv3028c7_i2c.c</itemPath>
       <itemPath>../plat_lib/rv3028c7_i2c.h</itemPath>
@@ -1050,6 +1035,28 @@
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="wrapper_header"
+                   displayName="wrapper_header"
+                   projectFiles="true">
+      <itemPath>../../../../FIDO2Device/wrapper_header/ccid_crypto.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_oath_object.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_object.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_openpgp_object.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_piv_object.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/fido_crypto.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/fido_flash.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/fido_timer.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/platform_common.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/rtcc.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="wrapper_lib" displayName="wrapper_lib" projectFiles="true">
+      <itemPath>../wrapper_lib/ccid_crypto.c</itemPath>
+      <itemPath>../wrapper_lib/ccid_flash_oath_object.c</itemPath>
+      <itemPath>../wrapper_lib/ccid_flash_object.c</itemPath>
+      <itemPath>../wrapper_lib/ccid_flash_openpgp_object.c</itemPath>
+      <itemPath>../wrapper_lib/ccid_flash_piv_object.c</itemPath>
+      <itemPath>../wrapper_lib/rtcc.c</itemPath>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
                    projectFiles="false"
@@ -1070,6 +1077,8 @@
     <Elem>../../../../FIDO2Device/fido2_lib</Elem>
     <Elem>../../../../FIDO2Device/u2f_lib</Elem>
     <Elem>../../../../FIDO2Device/util_lib</Elem>
+    <Elem>../wrapper_lib</Elem>
+    <Elem>../../../../FIDO2Device/wrapper_header</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -5125,6 +5134,56 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../../FIDO2Device/wrapper_header/ccid_crypto.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/ccid_flash_oath_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/ccid_flash_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/ccid_flash_openpgp_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/ccid_flash_piv_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/fido_crypto.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/fido_flash.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/fido_timer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/platform_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/wrapper_header/rtcc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../SECUREIC/atecc_lib/atecc.c"
             ex="false"
             tool="0"
@@ -5526,760 +5585,141 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/application_init.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/sortlist</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../../../SECUREIC/atecc_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/common</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/application_init.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/delay</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../SECUREIC/atecc_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/application_init.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_lib/ccid_crypto.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include/mbedtls</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../CCID/ccid_lib</pElem>
-            <pElem>../../../../CCID/piv_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/ccid_flash_oath_object.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../CCID/oath_lib</pElem>
-            <pElem>../../../../CCID/ccid_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_board.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/ccid_flash_object.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_board.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_lib/ccid_flash_openpgp_object.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../CCID/ccid_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../CCID/openpgp_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../plat_lib/ccid_flash_piv_object.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../CCID/piv_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../CCID/ccid_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../plat_lib/fido_board.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/button</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../SECUREIC/atecc_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/timer</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/bsp</pElem>
-            <pElem>../../../components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/sortlist</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include/mbedtls</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_crypto_aes_cbc_256.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/mem_manager</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cifra</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/fido_crypto_sskey.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/external/mbedtls/include</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_crypto_keypair.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_plat.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_sskey.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_sskey.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_blp_auth_param.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_client_pin_store.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash_common.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_flash_common.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash_event.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/common</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_flash_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_event.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_pairing_mode.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_flash_pairing_mode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash_skey_cert.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_plat.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_skey_cert.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_token_counter.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_token_counter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_log.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/fido_status_indicator.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_timer.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/sortlist</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../ble_lib</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_status_indicator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="../plat_lib/fido_twi.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/delay</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_timer.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/rtcc.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_timer_plat.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_lib/rv3028c7_i2c.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/delay</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_twi.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/usbd_service.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/delay</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/bootloader</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/fido_twi.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_lib/usbd_service_bos.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/rv3028c7_define.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_lib/usbd_service_ccid.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../CCID/ccid_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/rv3028c7_i2c.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/usbd_service_hid.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd/class/hid/generic</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd/class/hid</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/atomic</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/queue</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/log/src</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/integration/nrfx</pElem>
-            <pElem>../secure_device_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/softdevice/s140/headers/nrf52</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_17.1.0/components/libraries/strerror</pElem>
-            <pElem>../secure_device_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../plat_lib/rv3028c7_i2c.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_bos.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_bos.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_ccid.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_ccid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_hid.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_hid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../secure_device_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
         </cTool>
+      </item>
+      <item path="../wrapper_lib/ccid_crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../wrapper_lib/ccid_flash_oath_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../wrapper_lib/ccid_flash_object.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../wrapper_lib/ccid_flash_openpgp_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../wrapper_lib/ccid_flash_piv_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../wrapper_lib/rtcc.c" ex="false" tool="0" flavor2="0">
       </item>
       <folder path="0">
         <cTool>
