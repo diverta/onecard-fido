@@ -10,6 +10,56 @@
 #include <zephyr.h>
 
 //
+// LED操作関数群
+//
+#include "app_status_indicator.h"
+
+void fido_status_indicator_none(void)
+{
+    app_status_indicator_none();
+}
+
+void fido_status_indicator_idle(void)
+{
+    app_status_indicator_idle();
+}
+
+void fido_status_indicator_busy(void)
+{
+    app_status_indicator_busy();
+}
+
+void fido_status_indicator_prompt_reset(void)
+{
+    app_status_indicator_prompt_reset();
+}
+
+void fido_status_indicator_prompt_tup(void)
+{
+    app_status_indicator_prompt_tup();
+}
+
+void fido_status_indicator_pairing_mode(void)
+{
+    app_status_indicator_pairing_mode();
+}
+
+void fido_status_indicator_pairing_fail(void)
+{
+    app_status_indicator_pairing_fail();
+}
+
+void fido_status_indicator_abort(void)
+{
+    app_status_indicator_abort();
+}
+
+void fido_status_indicator_ble_scanning(void)
+{
+    app_status_indicator_ble_scanning();
+}
+
+//
 // トランスポート関連
 //
 #include "app_ble_fido.h"
