@@ -23,6 +23,7 @@
 
 // 近接認証機能
 #include "ble_peripheral_auth.h"
+#include "fido_flash_blp_auth_param.h"
 
 // for debug log and hexdump
 #define LOG_HEXDUMP_DEBUG_ADVDATA   false

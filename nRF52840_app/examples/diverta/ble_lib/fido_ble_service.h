@@ -41,6 +41,7 @@ struct ble_u2f_s
 void       fido_ble_advertising_init(void *p_init);
 void       fido_ble_services_init(void);
 ble_u2f_t *fido_ble_get_U2F_context(void);
+void       fido_ble_service_disconnect_force(void);
 
 #ifdef __cplusplus
 }

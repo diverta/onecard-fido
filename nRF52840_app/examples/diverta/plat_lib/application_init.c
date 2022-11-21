@@ -11,6 +11,7 @@
 
 // for nrf_drv_usbd_is_enabled
 #include "nrf_drv_usbd.h"
+#include "app_usbd.h"
 
 // for fido_button_timers_init
 #include "fido_board.h"
