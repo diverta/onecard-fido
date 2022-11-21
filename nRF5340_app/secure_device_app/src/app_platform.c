@@ -130,6 +130,18 @@ bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
 }
 
 //
+// [Dummy] DFU関連
+//
+bool usbd_service_support_bootloader_mode(void)
+{
+    return false;
+}
+
+void usbd_service_stop_for_bootloader(void)
+{
+}
+
+//
 // [Dummy] BLE自動認証関連
 //
 void ble_peripheral_auth_param_init(void)
