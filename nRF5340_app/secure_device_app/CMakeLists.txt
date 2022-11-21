@@ -76,7 +76,7 @@ target_include_directories(app PRIVATE
     ../../FIDO2Device/ctap2_lib
     ../../FIDO2Device/fido2_lib
     ../../FIDO2Device/u2f_lib
-    ../../FIDO2Device/wrapper_lib
+    ../../FIDO2Device/wrapper_header
     ../../CCID/ccid_lib
     ../../CCID/oath_lib
     ../../CCID/openpgp_lib
