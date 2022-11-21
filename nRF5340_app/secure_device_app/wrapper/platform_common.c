@@ -1,13 +1,12 @@
 /* 
- * File:   app_platform.c
+ * File:   platform_common.c
  * Author: makmorit
  *
- * Created on 2021/08/19, 9:52
+ * Created on 2022/11/21, 14:25
  */
-#include <stdio.h>
-#include <string.h>
-#include <zephyr/types.h>
-#include <zephyr.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 //
 // LED操作関数群

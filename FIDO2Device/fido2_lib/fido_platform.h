@@ -33,6 +33,7 @@ extern "C" {
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"
+#include "platform_common.h"
 #include "rtcc.h"
 
 #ifdef FIDO_ZEPHYR
