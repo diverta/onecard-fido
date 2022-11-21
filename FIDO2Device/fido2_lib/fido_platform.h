@@ -24,25 +24,20 @@ extern "C" {
 #define SSKEY_HASH_SIZE         32
 #define HMAC_SHA_256_SIZE       32
 
-#ifdef FIDO_ZEPHYR
-// Zephyrに依存しない処理
+// ラッパーモジュール群のヘッダーファイル
 #include "ccid_crypto.h"
 #include "ccid_flash_object.h"
+#include "ccid_flash_oath_object.h"
 #include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
-#include "ccid_flash_oath_object.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"
 #include "rtcc.h"
 
+#ifdef FIDO_ZEPHYR
 // Zephyrに依存する処理
-#include "app_crypto.h"
-#include "app_crypto_ec.h"
 #include "app_platform.h"
-#include "app_rtcc.h"
-#include "app_settings.h"
-#include "app_timer.h"
 
 #else
 // ハードウェアの差異に依存しない定義を集約

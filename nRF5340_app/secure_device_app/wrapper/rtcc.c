@@ -7,6 +7,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_rtcc.h"
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(rtcc);
 #endif

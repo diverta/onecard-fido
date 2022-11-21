@@ -16,6 +16,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_event.h"
+#include "app_settings.h"
+
 // バッファサイズの最大長
 #define MAX_BUF_SIZE     (OPGP_DATA_OBJ_WORDS_MAX+1)
 
