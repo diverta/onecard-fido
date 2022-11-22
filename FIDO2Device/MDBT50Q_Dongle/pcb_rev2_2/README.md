@@ -4,13 +4,13 @@
 
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」をそのまま使用し、USB回路、ユーザーインターフェース回路、外部電源回路を追加した、USBドングル基板です。
 
-#### 表面
+### 表面
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0002.jpg" width="600">
 
-#### 裏面
+### 裏面
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0003.jpg" width="600">
 
 ## 動作の概要
 
@@ -24,39 +24,38 @@ PCのUSBポートへの装着状態で、動作モードが自動的に切り替
 PCのUSBポートに装着すると、USB HIDデバイスとして動作します。[注1][注2]<br>
 アイドル時は緑色LEDが点滅します。
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="400">
 
 #### BLEペリフェラルモード（非ペアリングモード）
 
 基板背面の電池ホルダーにボタン乾電池（CR1225）をセットすると、BLEペリフェラルデバイスとして動作します。[注2]<br>
 アイドル時は青色LEDが点滅します。
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0004.jpg" width="400">
 
 #### BLEペリフェラルモード（ペアリングモード）
 
 ボタンを３秒以上長押しすると、ペアリングモードに遷移します。[注3]<br>
-下図のように、ペアリングモードであることを示す、橙色LEDが点灯します。[注4]
+下図のように、ペアリングモードであることを示す、橙色LEDが点灯します。
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0005.jpg" width="400">
 
 [注1] ボタン乾電池がセットされていない場合は、PCのUSBから電源を取得し、USB HIDデバイスとして動作します。<br>
 [注2] ボタン乾電池がセットされている状態でも、PCのUSBポートに装着している間は、常にUSB HIDデバイスとして動作します。<br>
 [注3] [管理ツール](../../../MaintenanceTool/README.md)を使用し、macOS、Windowsとのペアリングができるようになります。<br>
-[注4] ボタン長押しから３秒経過すると橙色LEDが点灯し、その後ボタンから指を話すと、いったん橙色LEDが消灯してしまいますが、プログラム制御（リセット実行）による動きであり、異常ではありません。
 
 #### USB CDCモード（ブートローダーモード）
 
 [管理ツール](../../../MaintenanceTool/README.md)から「ファームウェア更新」を実行すると、ブートローダーモードに遷移し、ファームウェアが転送可能な状態となります。<br>
 下図のように、橙色LEDと緑色LEDが同時に点灯します。
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0006.jpg" width="400">
 
 ### LED点灯制御
 
 基板上に４点のLEDが配置されています。
 
-<< Now printing >>
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0004.jpg" width="450">
 
 各LEDの点灯制御は以下の通りです。
 

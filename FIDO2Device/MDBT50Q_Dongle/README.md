@@ -15,7 +15,7 @@
 - 署名検証機能付きUSBブートローダーを採用し、不正ファームウェアの書込みを抑止
 - CCIDインターフェースを装備し、PIV/OpenPGP/OATHカードエミュレーションが可能
 
-### [MDBT50Q Dongleの概要](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)
+### [MDBT50Q Dongleの概要](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/README.md)
 
 基板、動作についての概要を説明しています。
 
@@ -29,7 +29,7 @@ MDBT50Q Dongleで使用するファームウェアです。
 
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 
-MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール（macOS版）](MaintenanceTool/macOSApp)により更新する手順について説明しています。
+MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/MNTTOOL.md)により更新する手順について説明しています。
 
 ## 動作確認手順
 
