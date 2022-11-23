@@ -193,6 +193,9 @@ bool ccid_flash_oath_object_find(uint16_t obj_tag, uint8_t *p_unique_key, size_t
     if (*exist == false) {
         *serial += 1;
     }
+    
+    // 既存データがあれば、レコード内容を`p_record_buffer`にコピー
+    memcpy(p_record_buffer, ccid_flash_object_read_buffer(), ccid_flash_object_rw_buffer_size());
     return true;
 }
 
