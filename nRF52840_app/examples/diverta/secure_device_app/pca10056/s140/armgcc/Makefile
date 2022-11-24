@@ -403,6 +403,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
+  $(PLTLIB_DIR)/fido_crypto_hmac_sha1.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
