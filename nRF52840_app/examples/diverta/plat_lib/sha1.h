@@ -18,7 +18,6 @@ extern "C" {
 // 関数群
 //
 void sha1_vector(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac);
-void hmac_sha1_vector(uint8_t *key, size_t key_len, size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac);
 
 #ifdef __cplusplus
 }

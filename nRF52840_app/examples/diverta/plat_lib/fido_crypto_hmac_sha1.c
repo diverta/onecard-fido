@@ -26,6 +26,11 @@ static size_t   challenge_sizes[2];
 //
 // HMAC-SHA1計算処理
 //
+static void calculate_hmac_sha1(uint8_t *key, size_t key_len, size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac)
+{
+    // TODO: 仮の実装です。
+}
+
 void fido_crypto_hmac_sha1_calculate(
     uint8_t *key_data, size_t key_data_size, 
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
@@ -36,9 +41,9 @@ void fido_crypto_hmac_sha1_calculate(
     if (src_data_2 != NULL && src_data_2_size > 0) {
         challenge_addrs[1] = src_data_2;
         challenge_sizes[1] = src_data_2_size;
-        hmac_sha1_vector(key_data, key_data_size, 2, challenge_addrs, challenge_sizes, dest_data);
+        calculate_hmac_sha1(key_data, key_data_size, 2, challenge_addrs, challenge_sizes, dest_data);
 
     } else {
-        hmac_sha1_vector(key_data, key_data_size, 1, challenge_addrs, challenge_sizes, dest_data);
+        calculate_hmac_sha1(key_data, key_data_size, 1, challenge_addrs, challenge_sizes, dest_data);
     }
 }
