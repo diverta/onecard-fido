@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-void sha1_vector(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac)
+void sha1_hash_calculate(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac)
 {
     // TODO: 仮の実装です。
 }

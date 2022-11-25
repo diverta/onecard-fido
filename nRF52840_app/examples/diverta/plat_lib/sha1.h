@@ -17,7 +17,7 @@ extern "C" {
 //
 // 関数群
 //
-void sha1_vector(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac);
+void sha1_hash_calculate(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac);
 
 #ifdef __cplusplus
 }
