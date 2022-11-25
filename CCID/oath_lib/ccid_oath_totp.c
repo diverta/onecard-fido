@@ -7,7 +7,9 @@
 #include "ccid_apdu.h"
 #include "ccid_oath_define.h"
 #include "fido_common.h"
-#include "rtcc.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 static uint8_t get_oath_type(uint8_t alg_byte)
 {
@@ -35,7 +37,8 @@ uint16_t ccid_oath_totp_set_timestamp(uint8_t *secret, uint8_t *challange)
     }
 
     // カウンターをRTCCに設定
-    if (rtcc_update_timestamp_by_unixtime((uint32_t)counter) == false) {
+    uint8_t timezone_diff_hours = 9;
+    if (rtcc_update_timestamp_by_unixtime((uint32_t)counter, timezone_diff_hours) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 

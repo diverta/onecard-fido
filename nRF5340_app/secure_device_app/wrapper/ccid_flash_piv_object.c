@@ -18,6 +18,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_event.h"
+#include "app_settings.h"
+
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 
@@ -316,7 +320,7 @@ void ccid_flash_piv_object_record_updated(void)
     }
 }
 
-void ccid_flash_piv_object_record_deleted(void)
+void ccid_flash_piv_object_file_deleted(void)
 {
     if (m_flash_func == NULL) {
         return;

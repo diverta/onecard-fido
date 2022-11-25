@@ -20,6 +20,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for calculate hmac
 #include "nrf_crypto_hmac.h"
+#include "fido_crypto_hmac_sha1.h"
 
 // for mbed tls
 #include "mbedtls/des.h"
@@ -186,6 +187,14 @@ bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be,
         return false;
     }
     return true;
+}
+
+void fido_crypto_calculate_hmac_sha1(
+    uint8_t *key_data, size_t key_data_size, 
+    uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
+    uint8_t *dest_data)
+{
+    fido_crypto_hmac_sha1_calculate(key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
 }
 
 void fido_crypto_calculate_hmac_sha256(

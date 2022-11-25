@@ -11,6 +11,7 @@
 
 // for nrf_drv_usbd_is_enabled
 #include "nrf_drv_usbd.h"
+#include "app_usbd.h"
 
 // for fido_button_timers_init
 #include "fido_board.h"
@@ -19,7 +20,7 @@
 #include "atecc.h"
 
 // for RTCC module use
-#include "rv3028c7_i2c.h"
+#include "rtcc.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME application_init
@@ -172,11 +173,7 @@ static void application_init_resume(void)
     NRF_LOG_INFO("Realtime clock calendar is not installed.");
 #else
     // RTCC初期化と接続検知
-    if (rv3028c7_initialize()) {
-        NRF_LOG_INFO("Realtime clock calendar was detected.");
-    } else {
-        NRF_LOG_INFO("Realtime clock calendar was not detected.");
-    }
+    rtcc_init();
 #endif
 
     // アプリケーション初期化完了フラグを設定

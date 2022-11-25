@@ -24,54 +24,26 @@ extern "C" {
 #define SSKEY_HASH_SIZE         32
 #define HMAC_SHA_256_SIZE       32
 
-#ifdef FIDO_ZEPHYR
-// Zephyrに依存しない処理
+// ラッパーモジュール群のヘッダーファイル
 #include "ccid_crypto.h"
 #include "ccid_flash_object.h"
+#include "ccid_flash_oath_object.h"
 #include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
-#include "ccid_flash_oath_object.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_timer.h"
+#include "platform_common.h"
+#include "rtcc.h"
 
+#ifdef FIDO_ZEPHYR
 // Zephyrに依存する処理
-#include "app_crypto.h"
-#include "app_crypto_ec.h"
 #include "app_platform.h"
-#include "app_rtcc.h"
-#include "app_settings.h"
-#include "app_timer.h"
 
 #else
-// ハードウェアの差異に依存しない定義を集約
-#include "fido_platform_common.h"
+// nRF5 SDKに依存する処理
+#include "fido_log.h"
 
-// ハードウェアの差異に依存する定義を集約
-#include "ble_service_common.h"
-#include "ccid_crypto.h"
-#include "fido_crypto_plat.h"
-#include "fido_crypto_keypair.h"
-#include "fido_crypto_sskey.h"
-
-//
-// fido_flash_skey_cert.c
-//
-bool      fido_flash_skey_cert_delete(void);
-bool      fido_flash_skey_cert_write(void);
-bool      fido_flash_skey_cert_read(void);
-bool      fido_flash_skey_cert_available(void);
-bool      fido_flash_skey_cert_data_prepare(uint8_t *data, uint16_t length);
-uint32_t *fido_flash_skey_cert_data(void);
-uint8_t  *fido_flash_skey_data(void);
-uint8_t  *fido_flash_cert_data(void);
-uint32_t  fido_flash_cert_data_length(void);
-
-//
-// fido_flash_password.c
-//
-uint8_t *fido_flash_password_get(void);
-bool     fido_flash_password_set(uint8_t *random_vector);
 #endif
 
 #ifdef __cplusplus

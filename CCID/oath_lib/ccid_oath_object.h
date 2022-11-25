@@ -17,6 +17,8 @@ extern "C" {
 //
 // 関数群
 //
+void        ccid_oath_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu);
+void        ccid_oath_object_resume_response(uint16_t sw);
 uint16_t    ccid_oath_object_account_set(char *account_name, uint8_t account_name_size, char *secret, uint8_t secret_size, uint8_t property, uint8_t *challenge);
 uint16_t    ccid_oath_object_account_delete(char *account_name, uint8_t account_name_size);
 uint16_t    ccid_oath_object_delete_all(void);

@@ -15,6 +15,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_event.h"
+#include "app_settings.h"
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_flash_oath_object);
 #endif
@@ -298,6 +302,19 @@ void ccid_flash_oath_object_record_deleted(void)
     if (flash_func == ccid_flash_oath_object_delete) {
         ccid_oath_object_write_resume(true);
     }
+}
+
+void ccid_flash_oath_object_file_deleted(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
     if (flash_func == ccid_flash_oath_object_delete_all) {
         ccid_oath_object_write_resume(true);
     }

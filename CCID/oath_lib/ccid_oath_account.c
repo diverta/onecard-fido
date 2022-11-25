@@ -204,7 +204,7 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
     uint16_t sw = ccid_oath_object_account_set(m_account_name, m_account_name_size, m_secret, m_secret_size, m_property, m_challange);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
-        ccid_process_resume_prepare(capdu, rapdu);
+        ccid_oath_object_resume_prepare(capdu, rapdu);
         m_flash_func = ccid_oath_account_add;
     }
     return sw;
@@ -240,10 +240,10 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // アカウントデータをFlash ROMから削除
-    uint16_t sw = ccid_oath_object_account_delete(capdu->data + name_offset, m_account_name_size);
+    uint16_t sw = ccid_oath_object_account_delete((char *)capdu->data + name_offset, m_account_name_size);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
-        ccid_process_resume_prepare(capdu, rapdu);
+        ccid_oath_object_resume_prepare(capdu, rapdu);
         m_flash_func = ccid_oath_account_delete;
     }
     return sw;
@@ -260,7 +260,7 @@ uint16_t ccid_oath_account_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
     uint16_t sw = ccid_oath_object_delete_all();
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
-        ccid_process_resume_prepare(capdu, rapdu);
+        ccid_oath_object_resume_prepare(capdu, rapdu);
         m_flash_func = ccid_oath_account_reset;
     }
     return sw;
@@ -290,7 +290,7 @@ void ccid_oath_account_retry(void)
     } else {
         // 異常時はエラーレスポンス処理を指示
         fido_log_error("OATH data object registration retry fail");
-        ccid_process_resume_response(sw);        
+        ccid_oath_object_resume_response(sw);        
     }
 }
 
@@ -301,7 +301,7 @@ void ccid_oath_account_resume(bool success)
         uint16_t sw = SW_NO_ERROR;
         if (m_flash_func == ccid_oath_account_add) {
             // TOTPカウンターを使用し、時刻同期を実行
-            sw = ccid_oath_totp_set_timestamp(m_secret, m_challange);
+            sw = ccid_oath_totp_set_timestamp((uint8_t *)m_secret, m_challange);
             if (sw == SW_NO_ERROR) {
                 // 正常終了
                 fido_log_info("OATH account registration success");
@@ -315,11 +315,11 @@ void ccid_oath_account_resume(bool success)
             // 正常終了
             fido_log_info("OATH account reset success");
         }
-        ccid_process_resume_response(sw);
+        ccid_oath_object_resume_response(sw);
 
     } else {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
         fido_log_error("OATH data object registration fail");
-        ccid_process_resume_response(SW_UNABLE_TO_PROCESS);
+        ccid_oath_object_resume_response(SW_UNABLE_TO_PROCESS);
     }
 }

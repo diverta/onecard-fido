@@ -180,7 +180,6 @@ static void command_preference_parameter_maintenance(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
-#ifndef FIDO_ZEPHYR
 static void command_bootloader_mode(void)
 {
     // 最初にレスポンスを送信
@@ -199,7 +198,6 @@ static void jump_to_bootloader_mode(void)
         usbd_service_stop_for_bootloader();
     }
 }
-#endif
 
 static void command_erase_bonding_data(void)
 {
@@ -236,7 +234,7 @@ static void command_get_timestamp(void)
     // 0: ステータス
     // 1: "yyyy/mm/dd hh:mm:ss"形式の文字列
     size_t length = 20;
-    if (rv3028c7_get_timestamp((char *)response_buffer + 1, length)) {
+    if (rtcc_get_timestamp_string((char *)response_buffer + 1, length)) {
         send_command_response(CTAP1_ERR_SUCCESS, length);
 
     } else {
@@ -259,7 +257,7 @@ static void command_set_timestamp(void)
     // リクエスト＝４バイトのUNIX時間整数（ビッグエンディアン）
     uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(data);
     uint8_t timezone_diff_hours = 9;
-    if (rv3028c7_set_timestamp(seconds_since_epoch, timezone_diff_hours) == false) {
+    if (rtcc_update_timestamp_by_unixtime(seconds_since_epoch, timezone_diff_hours) == false) {
         send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
         return;
     }
@@ -297,11 +295,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_SET_TIMESTAMP:
             command_set_timestamp();
             break;
-#ifndef FIDO_ZEPHYR
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
             break;
-#endif
         default:
             break;
     }
@@ -334,11 +330,9 @@ void fido_maintenance_command_report_sent(void)
             // nRF52840のシステムリセットを実行
             NVIC_SystemReset();
             break;
-#ifndef FIDO_ZEPHYR
         case MNT_COMMAND_BOOTLOADER_MODE:
             jump_to_bootloader_mode();
             break;
-#endif
         default:
             break;
     }

@@ -16,6 +16,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_event.h"
+#include "app_settings.h"
+
 // バッファサイズの最大長
 #define MAX_BUF_SIZE     (OPGP_DATA_OBJ_WORDS_MAX+1)
 
@@ -246,13 +250,12 @@ void ccid_flash_openpgp_object_record_updated(void)
     m_flash_func = NULL;
 
     // 正常系の後続処理を実行
-    if (flash_func == ccid_flash_openpgp_object_write || 
-        flash_func == ccid_flash_openpgp_object_delete_all) {
+    if (flash_func == ccid_flash_openpgp_object_write) {
         ccid_openpgp_object_write_resume(true);
     }
 }
 
-void ccid_flash_openpgp_object_record_deleted(void)
+void ccid_flash_openpgp_object_file_deleted(void)
 {
     if (m_flash_func == NULL) {
         return;
@@ -263,8 +266,7 @@ void ccid_flash_openpgp_object_record_deleted(void)
     m_flash_func = NULL;
 
     // 正常系の後続処理を実行
-    if (flash_func == ccid_flash_openpgp_object_write || 
-        flash_func == ccid_flash_openpgp_object_delete_all) {
+    if (flash_func == ccid_flash_openpgp_object_delete_all) {
         ccid_openpgp_object_write_resume(true);
     }
 }

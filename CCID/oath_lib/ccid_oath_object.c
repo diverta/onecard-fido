@@ -25,6 +25,31 @@ fido_log_module_register(ccid_oath_object);
 static void *m_flash_func = NULL;
 
 //
+// Flash ROM書込時のレスポンス制御
+//
+// APDU格納領域の参照を待避
+static command_apdu_t  *m_capdu;
+static response_apdu_t *m_rapdu;
+
+void ccid_oath_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    ccid_apdu_response_set_pending(true);
+
+    // APDU格納領域の参照を待避
+    m_capdu = capdu;
+    m_rapdu = rapdu;
+}
+
+void ccid_oath_object_resume_response(uint16_t sw)
+{
+    // レスポンス処理再開を指示
+    m_rapdu->sw = sw;
+    ccid_apdu_response_set_pending(false);
+    ccid_apdu_resume_process(m_capdu, m_rapdu);
+}
+
+//
 // アカウント登録
 //
 static uint8_t account_read_buff[160];
@@ -88,7 +113,7 @@ uint16_t ccid_oath_object_account_set(char *account_name, uint8_t account_name_s
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -112,7 +137,7 @@ uint16_t ccid_oath_object_account_delete(char *account_name, uint8_t account_nam
     //
     bool exist;
     uint16_t serial;
-    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
+    if (ccid_flash_oath_object_delete(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, &exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -154,7 +179,7 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
     // Flash ROMから対象レコードを検索
     //
     uint16_t serial;
-    if (ccid_flash_oath_object_find(OATH_TAG_NAME, account_name, account_name_size, account_read_buff, exist, &serial) == false) {
+    if (ccid_flash_oath_object_find(OATH_TAG_NAME, (uint8_t *)account_name, account_name_size, account_read_buff, exist, &serial) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 

@@ -2,7 +2,7 @@
  * File:   ccid_flash_oath_object.h
  * Author: makmorit
  *
- * Created on 2022/06/15, 15:09
+ * Created on 2022/11/15, 17:44
  */
 #ifndef CCID_FLASH_OATH_OBJECT_H
 #define CCID_FLASH_OATH_OBJECT_H
@@ -27,8 +27,11 @@ bool        ccid_flash_oath_object_fetch(uint16_t obj_tag, int (*_fetch_func)(co
 //
 // コールバック関数群
 //
+void        ccid_flash_oath_object_failed(void);
+void        ccid_flash_oath_object_gc_done(void);
 void        ccid_flash_oath_object_record_updated(void);
 void        ccid_flash_oath_object_record_deleted(void);
+void        ccid_flash_oath_object_file_deleted(void);
 
 #ifdef __cplusplus
 }

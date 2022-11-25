@@ -69,7 +69,7 @@ uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu)
     //
     bool exist = false;
     uint8_t secret_size;
-    uint16_t sw = ccid_oath_object_account_read(m_account_name, name_len, m_secret, &secret_size, &m_property, m_challenge, &exist);
+    uint16_t sw = ccid_oath_object_account_read(m_account_name, name_len, (char *)m_secret, &secret_size, &m_property, m_challenge, &exist);
 
 #if LOG_ACCOUNT_EXIST_AND_READ
     fido_log_debug("account record(%s): exist=%d", log_strdup(m_account_name), exist);

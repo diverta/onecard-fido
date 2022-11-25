@@ -2,10 +2,13 @@
  * File:   rtcc.c
  * Author: makmorit
  *
- * Created on 2022/06/01, 12:06
+ * Created on 2022/11/16, 10:16
  */
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// プラットフォーム依存コード
+#include "app_rtcc.h"
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(rtcc);
@@ -25,7 +28,7 @@ void rtcc_init(void)
 {
     // RTCCが搭載されていない場合は終了
     if (rtcc_is_available == false) {
-        fido_log_info("RTCC is unavailable");
+        LOG_INF("RTCC is unavailable");
         return;
     }
     
@@ -38,19 +41,18 @@ void rtcc_init(void)
     }
 
     // 現在時刻を表示
-    fido_log_info("RTCC is available. Current timestamp: %s", log_strdup(work_buf));
+    LOG_INF("RTCC is available. Current timestamp: %s", log_strdup(work_buf));
 }
 
-bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime)
+bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime, uint8_t timezone_diff_hours)
 {
     // RTCCが搭載されていない場合は終了
     if (rtcc_is_available == false) {
-        fido_log_error("RTCC is unavailable");
+        LOG_ERR("RTCC is unavailable");
         return false;
     }
 
     // カウンターをRTCCに設定
-    uint8_t timezone_diff_hours = 9;
     if (app_rtcc_set_timestamp(unixtime, timezone_diff_hours) == false) {
         return false;
     }
@@ -61,6 +63,12 @@ bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime)
     }
 
     // 現在時刻を表示
-    fido_log_info("Current timestamp (updated by unixtime): %s", log_strdup(work_buf));
+    LOG_INF("Current timestamp (updated by unixtime): %s", log_strdup(work_buf));
     return true;
+}
+
+bool rtcc_get_timestamp_string(char *buf, size_t size)
+{
+    // 設定された現在時刻を取得
+    return app_rtcc_get_timestamp(buf, size);
 }

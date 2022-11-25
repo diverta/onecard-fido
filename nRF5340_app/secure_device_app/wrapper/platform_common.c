@@ -1,13 +1,62 @@
 /* 
- * File:   app_platform.c
+ * File:   platform_common.c
  * Author: makmorit
  *
- * Created on 2021/08/19, 9:52
+ * Created on 2022/11/21, 14:25
  */
-#include <stdio.h>
-#include <string.h>
-#include <zephyr/types.h>
-#include <zephyr.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+//
+// LED操作関数群
+//
+#include "app_status_indicator.h"
+
+void fido_status_indicator_none(void)
+{
+    app_status_indicator_none();
+}
+
+void fido_status_indicator_idle(void)
+{
+    app_status_indicator_idle();
+}
+
+void fido_status_indicator_busy(void)
+{
+    app_status_indicator_busy();
+}
+
+void fido_status_indicator_prompt_reset(void)
+{
+    app_status_indicator_prompt_reset();
+}
+
+void fido_status_indicator_prompt_tup(void)
+{
+    app_status_indicator_prompt_tup();
+}
+
+void fido_status_indicator_pairing_mode(void)
+{
+    app_status_indicator_pairing_mode();
+}
+
+void fido_status_indicator_pairing_fail(void)
+{
+    app_status_indicator_pairing_fail();
+}
+
+void fido_status_indicator_abort(void)
+{
+    app_status_indicator_abort();
+}
+
+void fido_status_indicator_ble_scanning(void)
+{
+    app_status_indicator_ble_scanning();
+}
 
 //
 // トランスポート関連
@@ -77,6 +126,18 @@ bool ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, siz
 bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
 {
     return app_ble_pairing_erase_bond_data(_response_func);
+}
+
+//
+// [Dummy] DFU関連
+//
+bool usbd_service_support_bootloader_mode(void)
+{
+    return false;
+}
+
+void usbd_service_stop_for_bootloader(void)
+{
 }
 
 //

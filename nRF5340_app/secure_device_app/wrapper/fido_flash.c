@@ -17,6 +17,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// プラットフォーム依存コード
+#include "app_event.h"
+#include "app_settings.h"
+
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_flash);
 #endif
