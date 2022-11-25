@@ -24,7 +24,14 @@ struct sha1_context {
 };
 typedef struct sha1_context SHA1_CTX;
 
-static void sha1_init(SHA1_CTX* context)
+static void wipe_sha1_context(SHA1_CTX *context)
+{
+    memset(context->state,  0, 5);
+    memset(context->count,  0, 2);
+    memset(context->buffer, 0, 64);
+}
+
+static void sha1_init(SHA1_CTX *context)
 {
     // SHA1 initialization constants
     context->state[0] = 0x67452301;
@@ -161,7 +168,7 @@ static void sha1_transform(uint32_t state[5], uint8_t buffer[64])
 #endif
 }
 
-void sha1_update(SHA1_CTX* context, void *_data, uint32_t len)
+static void sha1_update(SHA1_CTX *context, void *_data, uint32_t len)
 {
     uint32_t i, j;
     uint8_t *data = _data;
@@ -189,6 +196,35 @@ void sha1_update(SHA1_CTX* context, void *_data, uint32_t len)
     memcpy(&context->buffer[j], &data[i], len - i);
 }
 
+static void sha1_final(uint8_t *digest, SHA1_CTX *context)
+{
+    //
+    // Add padding and return the message digest.
+    //
+    uint32_t i;
+    uint8_t finalcount[8];
+    for (i = 0; i < 8; i++) {
+        // Endian independent
+        finalcount[i] = (uint8_t)((context->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
+    }
+
+    sha1_update(context, (uint8_t *) "\200", 1);
+    while ((context->count[0] & 504) != 448) {
+        sha1_update(context, (uint8_t *) "\0", 1);
+    }
+    // Should cause a SHA1Transform()
+    sha1_update(context, finalcount, 8);
+
+    for (i = 0; i < SHA1_MAC_LEN; i++) {
+        digest[i] = (uint8_t)((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
+    }
+
+    // Wipe variables
+    i = 0;
+    wipe_sha1_context(context);
+    memset(finalcount, 0, 8);
+}
+
 void sha1_hash_calculate(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t *mac)
 {
     SHA1_CTX ctx;
@@ -198,4 +234,6 @@ void sha1_hash_calculate(size_t num_elem, uint8_t *addr[], size_t *len, uint8_t 
     for (size_t i = 0; i < num_elem; i++) {
         sha1_update(&ctx, addr[i], len[i]);
     }
+
+    sha1_final(mac, &ctx);
 }
