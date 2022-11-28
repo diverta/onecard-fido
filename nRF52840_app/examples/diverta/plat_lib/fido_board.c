@@ -87,7 +87,13 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
                 fido_button_long_push_timer_stop();
 
                 // FIDO固有の処理を実行
-                fido_command_mainsw_event_handler();
+                if (fido_command_mainsw_event_handler() == false) {
+                    if (ble_service_peripheral_mode()) {
+                        // BLEペリフェラルモードの場合、
+                        // ボタン短押しでスリープ状態に遷移
+                        fido_board_prepare_for_deep_sleep();
+                    }
+                }
             }
             break;
 
