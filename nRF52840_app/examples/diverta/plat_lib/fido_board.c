@@ -204,3 +204,24 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;
 }
+
+//
+// ディープスリープ（system off）状態に遷移
+// --> ボタン押下でシステムが再始動
+//
+#include "nrf_log_ctrl.h"
+#include "nrf_soc.h"
+#include "fido_ble_event.h"
+
+void fido_board_prepare_for_deep_sleep(void)
+{
+    // FIDO Authenticator固有の処理
+    fido_ble_sleep_mode_enter();
+
+    NRF_LOG_INFO("Entering system off; press BUTTON to restart...\n\r");
+    NRF_LOG_FINAL_FLUSH();
+    
+    // Go to system-off mode (this function will not return; wakeup will cause a reset).
+    ret_code_t err_code = sd_power_system_off();
+    APP_ERROR_CHECK(err_code);
+}
