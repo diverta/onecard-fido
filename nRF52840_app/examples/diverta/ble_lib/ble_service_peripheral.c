@@ -134,18 +134,6 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-static void sleep_mode_enter(void)
-{
-    ret_code_t err_code;
-
-    // FIDO Authenticator固有の処理
-    fido_ble_sleep_mode_enter();
-
-    // Go to system-off mode (this function will not return; wakeup will cause a reset).
-    err_code = sd_power_system_off();
-    APP_ERROR_CHECK(err_code);
-}
-
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 {
     switch (ble_adv_evt)
@@ -155,7 +143,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
             break;
 
         case BLE_ADV_EVT_IDLE:
-            sleep_mode_enter();
+            fido_board_prepare_for_deep_sleep();
             break;
 
         default:

@@ -28,8 +28,10 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_platform.h"
 
+#if !defined(NO_SECURE_IC)
 // for atecc_get_serial_num_str
 #include "atecc.h"
+#endif
 
 //
 // ボタンのピン番号
@@ -85,7 +87,13 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
                 fido_button_long_push_timer_stop();
 
                 // FIDO固有の処理を実行
-                fido_command_mainsw_event_handler();
+                if (fido_command_mainsw_event_handler() == false) {
+                    if (ble_service_peripheral_mode()) {
+                        // BLEペリフェラルモードの場合、
+                        // ボタン短押しでスリープ状態に遷移
+                        fido_board_prepare_for_deep_sleep();
+                    }
+                }
             }
             break;
 
@@ -191,12 +199,35 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     sprintf((char *)info_csv_data, 
         "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", DEVICE_NAME, FW_REV, HW_REV);
 
+#if !defined(NO_SECURE_IC)
     // ATECC608Aの固有情報を追加（非実装の場合はブランク）
     char *info_csv_data_ = (char *)info_csv_data;
     sprintf((char *)info_csv_data, 
         "%s,ATECC608A=\"%s\"", info_csv_data_, atecc_get_serial_num_str());
+#endif
 
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;
+}
+
+//
+// ディープスリープ（system off）状態に遷移
+// --> ボタン押下でシステムが再始動
+//
+#include "nrf_log_ctrl.h"
+#include "nrf_soc.h"
+#include "fido_ble_event.h"
+
+void fido_board_prepare_for_deep_sleep(void)
+{
+    // FIDO Authenticator固有の処理
+    fido_ble_sleep_mode_enter();
+
+    NRF_LOG_INFO("Entering system off; press BUTTON to restart...\n\r");
+    NRF_LOG_FINAL_FLUSH();
+    
+    // Go to system-off mode (this function will not return; wakeup will cause a reset).
+    ret_code_t err_code = sd_power_system_off();
+    APP_ERROR_CHECK(err_code);
 }
