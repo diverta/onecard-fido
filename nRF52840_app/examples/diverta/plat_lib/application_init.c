@@ -16,8 +16,10 @@
 // for fido_button_timers_init
 #include "fido_board.h"
 
+#if !defined(NO_SECURE_IC)
 // for initialize ATECC608A
 #include "atecc.h"
+#endif
 
 // for RTCC module use
 #include "rtcc.h"

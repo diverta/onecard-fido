@@ -434,6 +434,7 @@ SRC_FILES += \
   $(WRPLIB_DIR)/ccid_flash_piv_object.c \
   $(WRPLIB_DIR)/rtcc.c \
 
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
 # Source files to targets (Boards with ATECC608A)
 SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
 ATELIB_DIR := $(SCIC_DIR)/atecc_lib
@@ -453,10 +454,16 @@ SRC_FILES += \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
 
 INC_FOLDERS += \
+  $(ATELIB_DIR) \
+
+else
+CFLAGS += -DNO_SECURE_IC
+endif
+
+INC_FOLDERS += \
   $(SDK_ROOT)/components/ble/nrf_ble_scan \
   $(SDK_ROOT)/components/libraries/bootloader \
   $(TINYCBOR_ROOT)/src \
-  $(ATELIB_DIR) \
   $(BLELIB_DIR) \
   $(CIDLIB_DIR) \
   $(CT2LIB_DIR) \
