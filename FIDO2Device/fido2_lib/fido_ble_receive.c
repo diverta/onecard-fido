@@ -302,15 +302,25 @@ bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
     }
 }
 
-static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
+static uint8_t error_response_buffer[1] = {CTAP1_ERR_OTHER};
+
+static bool invalid_command_in_pairing_mode(void)
 {
     if (fido_ble_pairing_mode_get()) {
-        if (cmd == U2F_COMMAND_MSG && ins == U2F_INS_INSTALL_PAIRING) {
+        if (m_ctap2_command == MNT_BLE_COMMAND_PAIRING_REQUEST) {
             // ペアリングモード時に実行できる
             // ペアリング機能なら false を戻す
             return false;
         } else {
-            // ペアリングモード時に実行できない機能なら 
+            // ペアリングモード時に実行できない機能の場合
+            uint8_t cmd = fido_ble_receive_header()->CMD;
+            if (fido_ble_receive_ctap2_command() != 0x00) {
+                // CTAP2コマンドに対しては、エラーコードを戻す
+                fido_ble_send_command_response(cmd, error_response_buffer, sizeof(error_response_buffer));
+            } else {
+                // U2Fコマンドに対しては、エラーステータスワード (0x9601) を戻す
+                fido_ble_send_status_word(cmd, 0x9601);
+            }
             // true を戻す
             return true;
         }
@@ -322,10 +332,8 @@ static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
 
 void fido_ble_receive_on_request_received(void)
 {
-    // BLEヘッダー、APDUの参照を取得
+    // BLEヘッダーの参照を取得
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
-
     if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
@@ -334,9 +342,8 @@ void fido_ble_receive_on_request_received(void)
     }
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
-    // エラーステータスワード (0x9601) を戻す
-    if (invalid_command_in_pairing_mode(p_ble_header->CMD, p_apdu->INS)) {
-        fido_ble_send_status_word(p_ble_header->CMD, 0x9601);
+    // エラーコードまたはエラーステータスワード (0x9601) を戻す
+    if (invalid_command_in_pairing_mode()) {
         return;
     }
     

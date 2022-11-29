@@ -199,6 +199,12 @@ static void jump_to_bootloader_mode(void)
     }
 }
 
+static void command_pairing_request(void)
+{
+    // レスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
 static void command_erase_bonding_data(void)
 {
     fido_log_info("Erase bonding data start");
@@ -297,6 +303,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
+            break;
+        case MNT_BLE_COMMAND_PAIRING_REQUEST:
+            command_pairing_request();
             break;
         default:
             break;
