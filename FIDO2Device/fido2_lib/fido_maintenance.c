@@ -35,7 +35,7 @@ static uint8_t get_command_byte(void)
             cmd = fido_hid_receive_header()->CMD;
             break;
         case TRANSPORT_BLE:
-            cmd = fido_ble_receive_header()->CMD;
+            cmd = fido_ble_receive_ctap2_command();
             break;
         default:
             cmd = 0x00;

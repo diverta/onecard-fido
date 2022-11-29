@@ -42,6 +42,12 @@ static uint8_t received_frame_count;
 static BLE_HEADER_T ble_header_t;
 static FIDO_APDU_T  apdu_t;
 
+//
+// BLE経由でCTAP2コマンド／管理用コマンドが
+// 実行された時のコマンドバイトを保持
+//
+static uint8_t m_ctap2_command;
+
 BLE_HEADER_T *fido_ble_receive_header(void)
 {
     return &ble_header_t;
@@ -50,6 +56,11 @@ BLE_HEADER_T *fido_ble_receive_header(void)
 FIDO_APDU_T *fido_ble_receive_apdu(void)
 {
     return &apdu_t;
+}
+
+uint8_t fido_ble_receive_ctap2_command(void)
+{
+    return m_ctap2_command;
 }
 
 void fido_ble_receive_frame_count_clear(void)
@@ -116,6 +127,9 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
     if (control_point_buffer_length == 3) {
         return true;
     }
+    
+    // CTAP2コマンドをクリア
+    m_ctap2_command = 0x00;
 
     // Control Point参照用の先頭インデックス
     // （＝処理済みバイト数）を保持
@@ -126,14 +140,15 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         // データ長だけセットしておく
         p_apdu->Lc = p_ble_header->LEN;
     } else {
-        p_apdu->CLA = control_point_buffer[offset];
-        if (p_apdu->CLA != 0x00) {
-            // CLA部（control pointの先頭から4バイトめ）が
-            // 0x00以外の場合は、CTAP2とみなし、
-            // CLA部およびデータ長だけをセットしておく
+        uint8_t first_byte = control_point_buffer[offset];
+        if (first_byte != 0x00) {
+            // control pointの先頭から4バイトめが
+            // 0x00以外の場合は、CTAP2（または管理用）コマンドとみなし、
+            // m_ctap2_commandおよびデータ長だけをセットしておく
+            m_ctap2_command = first_byte;
             p_apdu->Lc = p_ble_header->LEN;
             fido_log_debug("CTAP2 command(0x%02x) CBOR size(%d) ", 
-                p_apdu->CLA, p_apdu->Lc - 1);
+                m_ctap2_command, p_apdu->Lc - 1);
         } else {
             // コマンドがPING以外で、U2Fの場合
             // APDUヘッダー項目を編集して保持

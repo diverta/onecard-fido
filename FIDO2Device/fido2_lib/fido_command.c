@@ -280,7 +280,6 @@ static void on_hid_request_receive_completed(void)
 static void on_ble_request_receive_completed(void)
 {
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
 
     // データ受信後に実行すべき処理を判定
     uint8_t       cmd = p_ble_header->CMD;
@@ -290,12 +289,16 @@ static void on_ble_request_receive_completed(void)
     }
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            if (p_apdu->CLA != 0x00) {
-                // CTAP2コマンドを処理する。
-                fido_ctap2_command_cbor(TRANSPORT_BLE);
-
+            if (fido_ble_receive_ctap2_command() != 0x00) {
+                if (fido_ble_receive_ctap2_command() < MNT_BLE_COMMAND_BASE) {
+                    // CTAP2コマンドを処理する。
+                    fido_ctap2_command_cbor(TRANSPORT_BLE);
+                } else {
+                    // 管理用コマンドを処理する。
+                    fido_maintenance_command(TRANSPORT_BLE);
+                }
             } else {
-                // U2Fコマンド／管理用コマンドを処理する。
+                // U2Fコマンドを処理する。
                 fido_u2f_command_msg(TRANSPORT_BLE);
             }
             break;
@@ -347,12 +350,16 @@ static void on_ble_response_send_completed(void)
     uint8_t cmd = fido_ble_receive_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            if (fido_ble_receive_apdu()->CLA != 0x00) {
-                // CTAP2コマンドを処理する。
-                fido_ctap2_command_cbor_response_sent();
-
+            if (fido_ble_receive_ctap2_command() != 0x00) {
+                if (fido_ble_receive_ctap2_command() < MNT_BLE_COMMAND_BASE) {
+                    // CTAP2コマンドを処理する。
+                    fido_ctap2_command_cbor_response_sent();
+                } else {
+                    // 管理用コマンドを処理する。
+                    fido_maintenance_command_report_sent();
+                }
             } else {
-                // U2Fコマンド／管理用コマンドを処理する。
+                // U2Fコマンドを処理する。
                 fido_u2f_command_msg_response_sent();
             }
             break;
