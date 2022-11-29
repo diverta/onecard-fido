@@ -31,7 +31,7 @@ static uint8_t get_command_byte(void)
     uint8_t cmd;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD;
+            cmd = fido_hid_receive_header()->CMD & 0x7f;
             break;
         case TRANSPORT_BLE:
             cmd = fido_ble_receive_ctap2_command();
