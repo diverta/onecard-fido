@@ -290,7 +290,7 @@ static void on_ble_request_receive_completed(void)
     switch (cmd) {
         case U2F_COMMAND_MSG:
             if (fido_ble_receive_ctap2_command() != 0x00) {
-                if (fido_ble_receive_ctap2_command() < MNT_BLE_COMMAND_BASE) {
+                if (fido_ble_receive_ctap2_command() < MNT_COMMAND_BASE) {
                     // CTAP2コマンドを処理する。
                     fido_ctap2_command_cbor(TRANSPORT_BLE);
                 } else {
@@ -351,7 +351,7 @@ static void on_ble_response_send_completed(void)
     switch (cmd) {
         case U2F_COMMAND_MSG:
             if (fido_ble_receive_ctap2_command() != 0x00) {
-                if (fido_ble_receive_ctap2_command() < MNT_BLE_COMMAND_BASE) {
+                if (fido_ble_receive_ctap2_command() < MNT_COMMAND_BASE) {
                     // CTAP2コマンドを処理する。
                     fido_ctap2_command_cbor_response_sent();
                 } else {
