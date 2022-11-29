@@ -304,7 +304,7 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
             break;
-        case MNT_BLE_COMMAND_PAIRING_REQUEST:
+        case MNT_COMMAND_PAIRING_REQUEST:
             command_pairing_request();
             break;
         default:

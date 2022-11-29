@@ -71,7 +71,7 @@ extern "C" {
 // 管理コマンドの識別用（BLE経由）
 #define MNT_BLE_COMMAND_BASE            0x40
 #define MNT_BLE_COMMAND_GET_APP_VERSION 0x43
-#define MNT_BLE_COMMAND_PAIRING_REQUEST 0x45
+#define MNT_COMMAND_PAIRING_REQUEST     0x4c
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {

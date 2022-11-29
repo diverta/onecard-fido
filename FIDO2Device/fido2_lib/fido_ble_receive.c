@@ -307,7 +307,7 @@ static uint8_t error_response_buffer[1] = {CTAP1_ERR_OTHER};
 static bool invalid_command_in_pairing_mode(void)
 {
     if (fido_ble_pairing_mode_get()) {
-        if (m_ctap2_command == MNT_BLE_COMMAND_PAIRING_REQUEST) {
+        if (m_ctap2_command == MNT_COMMAND_PAIRING_REQUEST) {
             // ペアリングモード時に実行できる
             // ペアリング機能なら false を戻す
             return false;
