@@ -257,19 +257,17 @@ static void on_hid_request_receive_completed(void)
             fido_development_command(TRANSPORT_HID);
             break;
         default:
+            // 管理用コマンドの場合の処理
+            if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
+                fido_maintenance_command(TRANSPORT_HID);
+                return;
+            }
+            // 不正なコマンドであるため
+            // エラーレスポンスを送信
+            fido_log_error("Invalid command (0x%02x) ", cmd);
+            fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
-
-    // 管理用コマンドの場合の処理
-    if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
-        fido_maintenance_command(TRANSPORT_HID);
-        return;
-    }
-
-    // 不正なコマンドであるため
-    // エラーレスポンスを送信
-    fido_log_error("Invalid command (0x%02x) ", cmd);
-    fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
 }
 
 static void on_ble_request_receive_completed(void)
