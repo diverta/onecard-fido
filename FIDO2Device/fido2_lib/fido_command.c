@@ -252,29 +252,24 @@ static void on_hid_request_receive_completed(void)
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor(TRANSPORT_HID);
             break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-        case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_PREFERENCE_PARAM:
-        case MNT_COMMAND_BOOTLOADER_MODE:
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-        case MNT_COMMAND_SYSTEM_RESET:
-        case MNT_COMMAND_GET_TIMESTAMP:
-        case MNT_COMMAND_SET_TIMESTAMP:
-            fido_maintenance_command(TRANSPORT_HID);
-            break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command(TRANSPORT_HID);
             break;
         default:
-            // 不正なコマンドであるため
-            // エラーレスポンスを送信
-            fido_log_error("Invalid command (0x%02x) ", cmd);
-            fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
+
+    // 管理用コマンドの場合の処理
+    if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
+        fido_maintenance_command(TRANSPORT_HID);
+        return;
+    }
+
+    // 不正なコマンドであるため
+    // エラーレスポンスを送信
+    fido_log_error("Invalid command (0x%02x) ", cmd);
+    fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
 }
 
 static void on_ble_request_receive_completed(void)
@@ -391,24 +386,17 @@ void on_hid_response_send_completed(void)
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_response_sent();
             break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-        case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_PREFERENCE_PARAM:
-        case MNT_COMMAND_BOOTLOADER_MODE:
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-        case MNT_COMMAND_SYSTEM_RESET:
-        case MNT_COMMAND_GET_TIMESTAMP:
-        case MNT_COMMAND_SET_TIMESTAMP:
-            fido_maintenance_command_report_sent();
-            break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command_report_sent();
             break;
         default:
             break;
+    }
+
+    // 管理用コマンドの場合の処理
+    if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
+        fido_maintenance_command_report_sent();
     }
 }
 
