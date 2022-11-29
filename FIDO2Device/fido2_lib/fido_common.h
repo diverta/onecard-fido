@@ -55,8 +55,6 @@ extern "C" {
 
 // 管理コマンドの識別用（HID経由）
 #define MNT_COMMAND_BASE                0x40
-#define MNT_COMMAND_ERASE_SKEY_CERT     0xc0
-#define MNT_COMMAND_INSTALL_SKEY_CERT   0xc1
 #define MNT_COMMAND_GET_FLASH_STAT      0xc2
 #define MNT_COMMAND_GET_APP_VERSION     0xc3
 #define MNT_COMMAND_PREFERENCE_PARAM    0xc4

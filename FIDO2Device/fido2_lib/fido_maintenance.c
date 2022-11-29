@@ -1,5 +1,5 @@
 /* 
- * File:   fido_maintenance.h
+ * File:   fido_maintenance.c
  * Author: makmorit
  *
  * Created on 2019/03/26, 13:35
@@ -15,7 +15,6 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
-#include "fido_maintenance_skcert.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -311,9 +310,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
     }
 
-    // 鍵・証明書インストール関連処理を実行
-    fido_maintenance_command_skey_cert();
-
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
 }
@@ -346,9 +342,28 @@ void fido_maintenance_command_report_sent(void)
             break;
     }
 
-    // 鍵・証明書インストール関連処理を実行
-    fido_maintenance_command_skey_cert_report_sent();
-
     // LEDをアイドル状態に遷移
     fido_status_indicator_idle();
+}
+
+void fido_maintenance_command_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    uint8_t cmd = get_command_byte();
+    switch (cmd) {
+        default:
+            break;
+    }
+}
+
+void fido_maintenance_command_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    uint8_t cmd = get_command_byte();
+    switch (cmd) {
+        default:
+            break;
+    }
 }

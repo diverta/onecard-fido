@@ -13,6 +13,8 @@ extern "C" {
 
 void fido_maintenance_command(TRANSPORT_TYPE transport_type);
 void fido_maintenance_command_report_sent(void);
+void fido_maintenance_command_flash_failed(void);
+void fido_maintenance_command_flash_gc_done(void);
 
 #ifdef __cplusplus
 }
