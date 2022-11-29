@@ -72,18 +72,6 @@ void fido_ble_receive_init(void)
     memset(&apdu_t, 0x00, sizeof(FIDO_APDU_T));
 }
 
-static bool is_valid_command(uint8_t command)
-{
-    switch (command) {
-        case U2F_COMMAND_PING:
-        case U2F_COMMAND_MSG:
-        case MNT_COMMAND_GET_APP_VERSION:
-            return true;
-        default:
-            return false;
-    }
-}
-
 static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
 {
     if (control_point_buffer_length < 3) {
@@ -106,7 +94,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
     fido_log_debug("recv INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
-    if (is_valid_command(p_ble_header->CMD) == false) {
+    if (fido_command_is_valid_ble_command(p_ble_header->CMD) == false) {
         // BLEヘッダーに設定されたコマンドが不正の場合、
         // ここで処理を終了
         fido_log_error("u2f_request_receive: invalid command (0x%02x) ", p_ble_header->CMD);

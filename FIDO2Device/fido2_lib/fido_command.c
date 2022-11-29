@@ -303,9 +303,8 @@ static void on_ble_request_receive_completed(void)
             // PINGレスポンスを実行
             fido_u2f_command_ping(TRANSPORT_BLE);
             break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            // バージョン情報取得コマンドを実行
-            fido_maintenance_command(TRANSPORT_BLE);
+        case U2F_COMMAND_CANCEL:
+            // TODO: 後日実装
             break;
         default:
             break;
@@ -360,8 +359,8 @@ static void on_ble_response_send_completed(void)
         case CTAP2_COMMAND_PING:
             fido_u2f_command_ping_response_sent();
             break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            fido_maintenance_command_report_sent();
+        case U2F_COMMAND_CANCEL:
+            // TODO: 後日実装
             break;
         default:
             break;
@@ -427,5 +426,22 @@ void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
         // レスポンス完了後の処理を停止させる場合は、
         // 全色LEDを点灯させたのち、全業務を閉塞
         fido_status_indicator_abort();
+    }
+}
+
+//
+// FIDO BLE関連
+//
+bool fido_command_is_valid_ble_command(uint8_t command)
+{
+    // FIDO BLEの仕様で定義されている
+    // 受信可能コマンドである場合、true を戻す
+    switch (command) {
+        case U2F_COMMAND_PING:
+        case U2F_COMMAND_MSG:
+        case U2F_COMMAND_CANCEL:
+            return true;
+        default:
+            return false;
     }
 }
