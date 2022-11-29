@@ -53,7 +53,7 @@ extern "C" {
 // 独自エラーステータス
 #define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
-// 管理コマンドの識別用
+// 管理コマンドの識別用（HID経由）
 #define MNT_COMMAND_BASE                0xc0
 #define MNT_COMMAND_ERASE_SKEY_CERT     0xc0
 #define MNT_COMMAND_INSTALL_SKEY_CERT   0xc1
@@ -67,6 +67,11 @@ extern "C" {
 #define MNT_COMMAND_RESET_ATTESTATION   0xc9
 #define MNT_COMMAND_GET_TIMESTAMP       0xca
 #define MNT_COMMAND_SET_TIMESTAMP       0xcb
+
+// 管理コマンドの識別用（BLE経由）
+#define MNT_BLE_COMMAND_BASE            0x40
+#define MNT_BLE_COMMAND_GET_APP_VERSION 0x43
+#define MNT_BLE_COMMAND_PAIRING_REQUEST 0x45
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
