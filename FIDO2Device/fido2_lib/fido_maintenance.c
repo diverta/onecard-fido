@@ -243,7 +243,7 @@ static void command_get_timestamp(void)
         send_command_response(CTAP1_ERR_SUCCESS, length);
 
     } else {
-        send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
     }
 }
 
