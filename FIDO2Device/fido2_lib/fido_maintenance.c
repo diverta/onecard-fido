@@ -310,8 +310,17 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
     }
 
-    // LEDをビジー状態に遷移
-    fido_status_indicator_busy();
+    switch (cmd) {
+        case MNT_COMMAND_GET_FLASH_STAT:
+        case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_PREFERENCE_PARAM:
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            // LEDをビジー状態に遷移
+            fido_status_indicator_busy();
+            break;
+        default:
+            break;
+    }
 }
 
 void fido_maintenance_command_report_sent(void)
