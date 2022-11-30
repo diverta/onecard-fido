@@ -302,8 +302,6 @@ bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
     }
 }
 
-static uint8_t error_response_buffer[1] = {CTAP1_ERR_OTHER};
-
 static bool invalid_command_in_pairing_mode(void)
 {
     if (fido_ble_pairing_mode_get()) {
@@ -313,14 +311,6 @@ static bool invalid_command_in_pairing_mode(void)
             return false;
         } else {
             // ペアリングモード時に実行できない機能の場合
-            uint8_t cmd = fido_ble_receive_header()->CMD;
-            if (fido_ble_receive_ctap2_command() != 0x00) {
-                // CTAP2コマンドに対しては、エラーコードを戻す
-                fido_ble_send_command_response(cmd, error_response_buffer, sizeof(error_response_buffer));
-            } else {
-                // U2Fコマンドに対しては、エラーステータスワード (0x9601) を戻す
-                fido_ble_send_status_word(cmd, 0x9601);
-            }
             // true を戻す
             return true;
         }
