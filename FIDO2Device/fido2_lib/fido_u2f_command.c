@@ -266,17 +266,6 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 
 static bool u2f_command_register_is_tup_needed(void)
 {
-    // BLEデバイスによる近接認証が有効化されている場合は、
-    // リクエストパラメーターの内容に関係なく、
-    // ユーザー所在確認の代わりとなる
-    // BLEデバイススキャンが行われるようにする
-    // （管理ツールの設定画面で設定したサービスUUIDを使用）
-    ble_peripheral_auth_param_init();
-    if (ble_peripheral_auth_scan_enable()) {
-        return true;
-    }
-
-    // BLEデバイスによる近接認証が有効化されていない場合は、
     // リクエストパラメーター（P1）により、
     // ユーザー所在確認の必要／不要を判定
     // 条件：P1 == 0x03 ("enforce-user-presence-and-sign")
@@ -357,10 +346,6 @@ static void u2f_register_resume_process(void)
 
 static bool u2f_command_authenticate_is_tup_needed(void)
 {
-    // BLEデバイスによる近接認証が有効化されている場合に
-    // 使用するBLEデバイススキャンパラメーターをロード
-    ble_peripheral_auth_param_init();
-
     // リクエストパラメーター（P1）により、
     // ユーザー所在確認の必要／不要を判定
     // 条件：P1 == 0x03 ("enforce-user-presence-and-sign")

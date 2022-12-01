@@ -50,11 +50,6 @@ void u2f_keyhandle_generate(uint8_t *p_appid_hash)
     memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key_value, private_key_length);
     size_t offset = U2F_APPID_SIZE + U2F_PRIVKEY_SIZE;
 
-    // BLE近接認証機能用のスキャンパラメーターを末尾に追加
-    //  先頭バイト: パラメーター長
-    //  後続バイト: パラメーターのバイト配列を格納
-    offset += ble_peripheral_auth_scan_param_prepare(keyhandle_base_buffer + offset);
-
     // 暗号化対象ブロックサイズを設定
     //   AESの仕様上、16の倍数でなければならない
     keyhandle_buffer_block_size = fido_calculate_aes_block_size(offset);

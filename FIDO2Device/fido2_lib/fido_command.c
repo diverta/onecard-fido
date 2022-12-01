@@ -110,15 +110,6 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
 
-    // BLE近接認証機能が有効な場合は
-    // ボタンを押す代わりに
-    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (ble_peripheral_auth_start_scan(context)) {
-        // スキャン動作中フラグを設定
-        ble_peripheral_auth_scan_started = true;
-        return;
-    }
-
     // LED点滅を開始し、ボタンの押下を待つ
     fido_status_indicator_prompt_tup();
 }
