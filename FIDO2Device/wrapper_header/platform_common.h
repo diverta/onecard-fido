@@ -52,14 +52,6 @@ bool        ble_service_common_erase_bond_data(void (*_response_func)(bool));
 bool        usbd_service_support_bootloader_mode(void);
 void        usbd_service_stop_for_bootloader(void);
 
-//
-// [Dummy] BLE自動認証関連
-//
-void        ble_peripheral_auth_param_init(void);
-bool        ble_peripheral_auth_scan_enable(void);
-bool        ble_peripheral_auth_start_scan(void *context);
-size_t      ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff);
-
 #ifdef __cplusplus
 }
 #endif

@@ -9,6 +9,10 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
+// for flushing logs
+#include "nrf_log_ctrl.h"
+#include "nrf_delay.h"
+
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
@@ -201,7 +205,8 @@ void fido_ble_pairing_on_disconnect(void)
 
         // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
         // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
-        NRF_LOG_DEBUG("ble_u2f_pairing_on_disconnect called. ");
+        NRF_LOG_FINAL_FLUSH();
+        nrf_delay_ms(500);
         NVIC_SystemReset();
     }
 }

@@ -351,9 +351,6 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
-  $(BLELIB_DIR)/ble_peripheral_auth.c \
-  $(BLELIB_DIR)/ble_service_central.c \
-  $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
   $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \
@@ -396,7 +393,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_maintenance_cryption.c \
-  $(FD2LIB_DIR)/fido_maintenance_skcert.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \

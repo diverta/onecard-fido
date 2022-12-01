@@ -109,7 +109,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
         p_hid_header->CMD == FIDO_COMMAND_INIT ||
         p_hid_header->CMD == FIDO_COMMAND_LOCK ||
         p_hid_header->CMD == FIDO_COMMAND_CBOR ||
-        p_hid_header->CMD >= MNT_COMMAND_BASE) {
+        p_hid_header->CMD >= (MNT_COMMAND_BASE | 0x80)) {
         // コマンドがPING、INIT、LOCK、CBOR、管理コマンドの場合は、APDUではないため
         // データ長だけセットしておく
         p_apdu->Lc = p_hid_header->LEN;
@@ -259,7 +259,7 @@ static void extract_request_from_init_frame(uint32_t cid, uint8_t *payload, size
 
     // 受信データに設定されたコマンドバイトを取得
     uint8_t recv_cmd = control_point_buffer[0];
-    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT && recv_cmd < MNT_COMMAND_BASE) {
+    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT && recv_cmd < (MNT_COMMAND_BASE | 0x80)) {
         // CMDがINITまたは管理コマンド以外の場合
         // エラーレスポンスメッセージを作成
         fido_log_error("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
@@ -443,7 +443,7 @@ void fido_hid_receive_on_request_received(void)
 
     uint32_t cid = fido_hid_receive_header()->CID;
     uint32_t cid_curr = fido_hid_channel_current_cid();
-    if (cmd != FIDO_COMMAND_INIT && cmd < MNT_COMMAND_BASE && cid != cid_curr) {
+    if (cmd != FIDO_COMMAND_INIT && cmd < (MNT_COMMAND_BASE | 0x80) && cid != cid_curr) {
         // INIT以外のコマンドを受信したら、
         // INITで発行されたCIDであるかどうかチェックし、
         // 違っている場合はエラー CTAP1_ERR_INVALID_CHANNEL をレスポンス

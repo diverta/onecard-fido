@@ -110,15 +110,6 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
 
-    // BLE近接認証機能が有効な場合は
-    // ボタンを押す代わりに
-    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (ble_peripheral_auth_start_scan(context)) {
-        // スキャン動作中フラグを設定
-        ble_peripheral_auth_scan_started = true;
-        return;
-    }
-
     // LED点滅を開始し、ボタンの押下を待つ
     fido_status_indicator_prompt_tup();
 }
@@ -252,23 +243,19 @@ static void on_hid_request_receive_completed(void)
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor(TRANSPORT_HID);
             break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-        case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_PREFERENCE_PARAM:
-        case MNT_COMMAND_BOOTLOADER_MODE:
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-        case MNT_COMMAND_SYSTEM_RESET:
-        case MNT_COMMAND_GET_TIMESTAMP:
-        case MNT_COMMAND_SET_TIMESTAMP:
-            fido_maintenance_command(TRANSPORT_HID);
-            break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command(TRANSPORT_HID);
             break;
+        case MNT_COMMAND_BASE:
+            fido_maintenance_command(TRANSPORT_HID);
+            break;
         default:
+            // 管理用コマンドの場合の処理
+            if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
+                fido_maintenance_command(TRANSPORT_HID);
+                return;
+            }
             // 不正なコマンドであるため
             // エラーレスポンスを送信
             fido_log_error("Invalid command (0x%02x) ", cmd);
@@ -280,7 +267,6 @@ static void on_hid_request_receive_completed(void)
 static void on_ble_request_receive_completed(void)
 {
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
 
     // データ受信後に実行すべき処理を判定
     uint8_t       cmd = p_ble_header->CMD;
@@ -290,12 +276,16 @@ static void on_ble_request_receive_completed(void)
     }
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            if (p_apdu->CLA != 0x00) {
-                // CTAP2コマンドを処理する。
-                fido_ctap2_command_cbor(TRANSPORT_BLE);
-
+            if (fido_ble_receive_ctap2_command() != 0x00) {
+                if (fido_ble_receive_ctap2_command() < MNT_COMMAND_BASE) {
+                    // CTAP2コマンドを処理する。
+                    fido_ctap2_command_cbor(TRANSPORT_BLE);
+                } else {
+                    // 管理用コマンドを処理する。
+                    fido_maintenance_command(TRANSPORT_BLE);
+                }
             } else {
-                // U2Fコマンド／管理用コマンドを処理する。
+                // U2Fコマンドを処理する。
                 fido_u2f_command_msg(TRANSPORT_BLE);
             }
             break;
@@ -303,9 +293,8 @@ static void on_ble_request_receive_completed(void)
             // PINGレスポンスを実行
             fido_u2f_command_ping(TRANSPORT_BLE);
             break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            // バージョン情報取得コマンドを実行
-            fido_maintenance_command(TRANSPORT_BLE);
+        case U2F_COMMAND_CANCEL:
+            // TODO: 後日実装
             break;
         default:
             break;
@@ -348,20 +337,24 @@ static void on_ble_response_send_completed(void)
     uint8_t cmd = fido_ble_receive_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            if (fido_ble_receive_apdu()->CLA != 0x00) {
-                // CTAP2コマンドを処理する。
-                fido_ctap2_command_cbor_response_sent();
-
+            if (fido_ble_receive_ctap2_command() != 0x00) {
+                if (fido_ble_receive_ctap2_command() < MNT_COMMAND_BASE) {
+                    // CTAP2コマンドを処理する。
+                    fido_ctap2_command_cbor_response_sent();
+                } else {
+                    // 管理用コマンドを処理する。
+                    fido_maintenance_command_report_sent();
+                }
             } else {
-                // U2Fコマンド／管理用コマンドを処理する。
+                // U2Fコマンドを処理する。
                 fido_u2f_command_msg_response_sent();
             }
             break;
         case CTAP2_COMMAND_PING:
             fido_u2f_command_ping_response_sent();
             break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            fido_maintenance_command_report_sent();
+        case U2F_COMMAND_CANCEL:
+            // TODO: 後日実装
             break;
         default:
             break;
@@ -385,24 +378,20 @@ void on_hid_response_send_completed(void)
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_response_sent();
             break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-        case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_PREFERENCE_PARAM:
-        case MNT_COMMAND_BOOTLOADER_MODE:
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-        case MNT_COMMAND_SYSTEM_RESET:
-        case MNT_COMMAND_GET_TIMESTAMP:
-        case MNT_COMMAND_SET_TIMESTAMP:
-            fido_maintenance_command_report_sent();
-            break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command_report_sent();
             break;
+        case MNT_COMMAND_BASE:
+            fido_maintenance_command_report_sent();
+            break;
         default:
             break;
+    }
+
+    // 管理用コマンドの場合の処理
+    if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
+        fido_maintenance_command_report_sent();
     }
 }
 
@@ -427,5 +416,22 @@ void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
         // レスポンス完了後の処理を停止させる場合は、
         // 全色LEDを点灯させたのち、全業務を閉塞
         fido_status_indicator_abort();
+    }
+}
+
+//
+// FIDO BLE関連
+//
+bool fido_command_is_valid_ble_command(uint8_t command)
+{
+    // FIDO BLEの仕様で定義されている
+    // 受信可能コマンドである場合、true を戻す
+    switch (command) {
+        case U2F_COMMAND_PING:
+        case U2F_COMMAND_MSG:
+        case U2F_COMMAND_CANCEL:
+            return true;
+        default:
+            return false;
     }
 }

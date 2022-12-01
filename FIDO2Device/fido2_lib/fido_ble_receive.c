@@ -42,6 +42,12 @@ static uint8_t received_frame_count;
 static BLE_HEADER_T ble_header_t;
 static FIDO_APDU_T  apdu_t;
 
+//
+// BLE経由でCTAP2コマンド／管理用コマンドが
+// 実行された時のコマンドバイトを保持
+//
+static uint8_t m_ctap2_command;
+
 BLE_HEADER_T *fido_ble_receive_header(void)
 {
     return &ble_header_t;
@@ -50,6 +56,11 @@ BLE_HEADER_T *fido_ble_receive_header(void)
 FIDO_APDU_T *fido_ble_receive_apdu(void)
 {
     return &apdu_t;
+}
+
+uint8_t fido_ble_receive_ctap2_command(void)
+{
+    return m_ctap2_command;
 }
 
 void fido_ble_receive_frame_count_clear(void)
@@ -70,18 +81,6 @@ void fido_ble_receive_init(void)
     control_point_buffer_length = 0;
     memset(&ble_header_t, 0x00, sizeof(BLE_HEADER_T));
     memset(&apdu_t, 0x00, sizeof(FIDO_APDU_T));
-}
-
-static bool is_valid_command(uint8_t command)
-{
-    switch (command) {
-        case U2F_COMMAND_PING:
-        case U2F_COMMAND_MSG:
-        case MNT_COMMAND_GET_APP_VERSION:
-            return true;
-        default:
-            return false;
-    }
 }
 
 static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
@@ -106,7 +105,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
     fido_log_debug("recv INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
-    if (is_valid_command(p_ble_header->CMD) == false) {
+    if (fido_command_is_valid_ble_command(p_ble_header->CMD) == false) {
         // BLEヘッダーに設定されたコマンドが不正の場合、
         // ここで処理を終了
         fido_log_error("u2f_request_receive: invalid command (0x%02x) ", p_ble_header->CMD);
@@ -128,6 +127,9 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
     if (control_point_buffer_length == 3) {
         return true;
     }
+    
+    // CTAP2コマンドをクリア
+    m_ctap2_command = 0x00;
 
     // Control Point参照用の先頭インデックス
     // （＝処理済みバイト数）を保持
@@ -138,14 +140,15 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         // データ長だけセットしておく
         p_apdu->Lc = p_ble_header->LEN;
     } else {
-        p_apdu->CLA = control_point_buffer[offset];
-        if (p_apdu->CLA != 0x00) {
-            // CLA部（control pointの先頭から4バイトめ）が
-            // 0x00以外の場合は、CTAP2とみなし、
-            // CLA部およびデータ長だけをセットしておく
+        uint8_t first_byte = control_point_buffer[offset];
+        if (first_byte != 0x00) {
+            // control pointの先頭から4バイトめが
+            // 0x00以外の場合は、CTAP2（または管理用）コマンドとみなし、
+            // m_ctap2_commandおよびデータ長だけをセットしておく
+            m_ctap2_command = first_byte;
             p_apdu->Lc = p_ble_header->LEN;
             fido_log_debug("CTAP2 command(0x%02x) CBOR size(%d) ", 
-                p_apdu->CLA, p_apdu->Lc - 1);
+                m_ctap2_command, p_apdu->Lc - 1);
         } else {
             // コマンドがPING以外で、U2Fの場合
             // APDUヘッダー項目を編集して保持
@@ -299,15 +302,15 @@ bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
     }
 }
 
-static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
+static bool invalid_command_in_pairing_mode(void)
 {
     if (fido_ble_pairing_mode_get()) {
-        if (cmd == U2F_COMMAND_MSG && ins == U2F_INS_INSTALL_PAIRING) {
+        if (m_ctap2_command == MNT_COMMAND_PAIRING_REQUEST) {
             // ペアリングモード時に実行できる
             // ペアリング機能なら false を戻す
             return false;
         } else {
-            // ペアリングモード時に実行できない機能なら 
+            // ペアリングモード時に実行できない機能の場合
             // true を戻す
             return true;
         }
@@ -319,10 +322,8 @@ static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
 
 void fido_ble_receive_on_request_received(void)
 {
-    // BLEヘッダー、APDUの参照を取得
+    // BLEヘッダーの参照を取得
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
-
     if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
@@ -331,9 +332,8 @@ void fido_ble_receive_on_request_received(void)
     }
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
-    // エラーステータスワード (0x9601) を戻す
-    if (invalid_command_in_pairing_mode(p_ble_header->CMD, p_apdu->INS)) {
-        fido_ble_send_status_word(p_ble_header->CMD, 0x9601);
+    // エラーコードまたはエラーステータスワード (0x9601) を戻す
+    if (invalid_command_in_pairing_mode()) {
         return;
     }
     

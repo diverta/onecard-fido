@@ -1,5 +1,5 @@
 /* 
- * File:   fido_maintenance.h
+ * File:   fido_maintenance.c
  * Author: makmorit
  *
  * Created on 2019/03/26, 13:35
@@ -15,7 +15,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
-#include "fido_maintenance_skcert.h"
+#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -32,16 +32,73 @@ static uint8_t get_command_byte(void)
     uint8_t cmd;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD;
+            cmd = fido_hid_receive_header()->CMD & 0x7f;
             break;
         case TRANSPORT_BLE:
-            cmd = fido_ble_receive_header()->CMD;
+            cmd = fido_ble_receive_ctap2_command();
             break;
         default:
             cmd = 0x00;
             break;
     }
     return cmd;
+}
+
+static uint8_t get_maintenance_command_byte(void)
+{
+    //
+    // 管理用コマンドバイトを、データ部の先頭から抽出
+    //
+    uint8_t cmd = 0x00;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            if (fido_hid_receive_header()->CMD == (0x80 | MNT_COMMAND_BASE)) {
+                cmd = fido_hid_receive_apdu()->data[0];
+            }
+            break;
+        case TRANSPORT_BLE:
+            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+                cmd = fido_ble_receive_apdu()->data[0];
+            }
+            break;
+        default:
+            break;
+    }
+    return cmd;
+}
+
+static uint8_t *get_maintenance_data_buffer(void)
+{
+    uint8_t *buffer;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            buffer = fido_hid_receive_apdu()->data + 1;
+            break;
+        case TRANSPORT_BLE:
+            buffer = fido_ble_receive_apdu()->data + 1;
+            break;
+        default:
+            buffer = NULL;
+            break;
+    }
+    return buffer;
+}
+
+static size_t get_maintenance_data_buffer_size(void)
+{
+    size_t size;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            size = fido_hid_receive_apdu()->Lc - 1;
+            break;
+        case TRANSPORT_BLE:
+            size = fido_ble_receive_apdu()->Lc - 1;
+            break;
+        default:
+            size = 0;
+            break;
+    }
+    return size;
 }
 
 // 関数プロトタイプ
@@ -130,56 +187,6 @@ static void command_get_app_version(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
-static void command_preference_parameter_maintenance(void)
-{
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    uint16_t length = fido_hid_receive_apdu()->Lc;
-
-    // 元データチェック
-    if (data == NULL || length == 0) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 6);
-        return;
-    }
-    fido_log_info("Preference parameter maintenance start");
-
-    // データの１バイト目からコマンド種別を取得
-    uint8_t cmd_type = data[0];
-
-    //
-    // 各種設定用パラメーター管理
-    //  response_bufferの先頭にステータスバイトを格納するため、
-    //  レスポンス格納領域は、response_bufferの２バイト目を先頭とします。
-    //
-    uint8_t *buffer = response_buffer + 1;
-    size_t   buffer_size = sizeof(response_buffer - 1);
-    bool     ret = false;
-    switch (cmd_type) {
-        case 1:
-        case 2:
-        case 3:
-            ble_peripheral_auth_param_request(data, length);
-            ret = ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
-            break;
-        default:
-            fido_log_error("Unknown preference parameter maintenance command type");
-            break;
-    }
-    if (ret == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 11);
-        return;
-    }
-    //
-    // レスポンスを送信
-    //  データ形式
-    //  0-3: CID
-    //  4:   CMD（0xc4）
-    //  5-6: データサイズ（CSVデータの長さ）
-    //  7:   ステータスバイト（成功時は 0x00）
-    //  8-n: CSVデータ
-    //
-    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
-}
-
 static void command_bootloader_mode(void)
 {
     // 最初にレスポンスを送信
@@ -197,6 +204,12 @@ static void jump_to_bootloader_mode(void)
     if (usbd_service_support_bootloader_mode()) {
         usbd_service_stop_for_bootloader();
     }
+}
+
+static void command_pairing_request(void)
+{
+    // レスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
 }
 
 static void command_erase_bonding_data(void)
@@ -238,14 +251,14 @@ static void command_get_timestamp(void)
         send_command_response(CTAP1_ERR_SUCCESS, length);
 
     } else {
-        send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
     }
 }
 
 static void command_set_timestamp(void)
 {
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    uint16_t length = fido_hid_receive_apdu()->Lc;
+    uint8_t *data = get_maintenance_data_buffer();
+    uint16_t length = get_maintenance_data_buffer_size();
 
     // 元データチェック
     if (data == NULL || length != 4) {
@@ -261,7 +274,7 @@ static void command_set_timestamp(void)
         send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
         return;
     }
-    
+
     // レスポンスとして、現在時刻を送信
     command_get_timestamp();
 }
@@ -272,6 +285,18 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     m_transport_type = transport_type;
 
     // リクエストデータ受信後に実行すべき処理を判定
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
+        case MNT_COMMAND_GET_TIMESTAMP:
+            command_get_timestamp();
+            return;
+        case MNT_COMMAND_SET_TIMESTAMP:
+            command_set_timestamp();
+            return;
+        default:
+            break;
+    }
+
     uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
@@ -280,38 +305,46 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_GET_APP_VERSION:
             command_get_app_version();
             break;
-        case MNT_COMMAND_PREFERENCE_PARAM:
-            command_preference_parameter_maintenance();
-            break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
             break;
         case MNT_COMMAND_SYSTEM_RESET:
             command_system_reset();
             break;
-        case MNT_COMMAND_GET_TIMESTAMP:
-            command_get_timestamp();
-            break;
-        case MNT_COMMAND_SET_TIMESTAMP:
-            command_set_timestamp();
-            break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
+            break;
+        case MNT_COMMAND_PAIRING_REQUEST:
+            command_pairing_request();
             break;
         default:
             break;
     }
 
-    // 鍵・証明書インストール関連処理を実行
-    fido_maintenance_command_skey_cert();
-
-    // LEDをビジー状態に遷移
-    fido_status_indicator_busy();
+    switch (cmd) {
+        case MNT_COMMAND_GET_FLASH_STAT:
+        case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            // LEDをビジー状態に遷移
+            fido_status_indicator_busy();
+            break;
+        default:
+            break;
+    }
 }
 
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
+        case MNT_COMMAND_GET_TIMESTAMP:
+        case MNT_COMMAND_SET_TIMESTAMP:
+            return;
+        default:
+            break;
+    }
+
     uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
@@ -319,9 +352,6 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             fido_log_info("Get application version info end");
-            break;
-        case MNT_COMMAND_PREFERENCE_PARAM:
-            fido_log_info("Preference parameter maintenance end");
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
@@ -337,9 +367,28 @@ void fido_maintenance_command_report_sent(void)
             break;
     }
 
-    // 鍵・証明書インストール関連処理を実行
-    fido_maintenance_command_skey_cert_report_sent();
-
     // LEDをアイドル状態に遷移
     fido_status_indicator_idle();
+}
+
+void fido_maintenance_command_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    uint8_t cmd = get_command_byte();
+    switch (cmd) {
+        default:
+            break;
+    }
+}
+
+void fido_maintenance_command_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    uint8_t cmd = get_command_byte();
+    switch (cmd) {
+        default:
+            break;
+    }
 }

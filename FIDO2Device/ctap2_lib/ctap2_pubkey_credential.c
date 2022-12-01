@@ -133,11 +133,6 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
-    // BLE近接認証機能用のスキャンパラメーターを末尾に追加
-    //  先頭バイト: パラメーター長
-    //  後続バイト: パラメーターのバイト配列を格納
-    offset += ble_peripheral_auth_scan_param_prepare(pubkey_cred_source + offset);
-
 #if LOG_DEBUG_CRED_SOURCE
     fido_log_debug("Public Key Credential Source contents");
     fido_log_debug("USER ID (%d bytes):", user->id_size);

@@ -117,7 +117,7 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     if (p_ble_evt == NULL) {
         return false;
     }
-    NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
+    // NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
     bool ret = false;
     ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
