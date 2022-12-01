@@ -76,6 +76,9 @@
 #define BLE_CMD_MSG                 0x83
 
 // 管理用コマンド
+#define MNT_COMMAND_BASE            0x40
+#define MNT_COMMAND_GET_TIMESTAMP   0x4a
+#define MNT_COMMAND_SET_TIMESTAMP   0x4b
 #define MNT_COMMAND_PAIRING_REQUEST 0x4c
 
 #endif /* FIDODefines_h */
