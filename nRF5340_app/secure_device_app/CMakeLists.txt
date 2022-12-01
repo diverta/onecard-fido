@@ -33,7 +33,6 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_hid_send.c
     ../../FIDO2Device/fido2_lib/fido_maintenance.c
     ../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c
-    ../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c
     ../../FIDO2Device/fido2_lib/fido_receive_apdu.c
     ../../FIDO2Device/fido2_lib/fido_u2f_command.c
     ../../FIDO2Device/u2f_lib/u2f_authenticate.c
