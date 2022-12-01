@@ -351,8 +351,6 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
-  $(BLELIB_DIR)/ble_service_central.c \
-  $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
   $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \

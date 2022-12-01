@@ -22,7 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "ble_service_peripheral.h"
-#include "ble_service_central.h"
 
 //業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -61,14 +60,12 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
             ble_service_peripheral_gap_connected(p_ble_evt);
-            ble_service_central_gap_connected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             ble_service_peripheral_gap_disconnected(p_ble_evt);
-            ble_service_central_gap_disconnected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -124,11 +121,9 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
                           p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
-            ble_service_central_gap_evt_auth_status(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_ADV_REPORT:
-            ble_service_central_gap_adv_report(p_ble_evt);
             break;
 
         default:
@@ -255,11 +250,6 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
         if (fido_ble_pm_evt_handler(p_evt)) {
             return;
         }
-    } else {
-        // BLEセントラル固有の処理
-        if (ble_service_central_pm_evt(p_evt)) {
-            return;
-        }
     }
 
     pm_handler_on_pm_evt(p_evt);
@@ -378,7 +368,6 @@ void ble_service_common_init(void)
     gap_params_init();
 
     ble_service_peripheral_init();
-    ble_service_central_init();
 }
 
 void ble_service_common_disable_peripheral(void)
