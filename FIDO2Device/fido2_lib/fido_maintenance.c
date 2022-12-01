@@ -187,56 +187,6 @@ static void command_get_app_version(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
-static void command_preference_parameter_maintenance(void)
-{
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    uint16_t length = fido_hid_receive_apdu()->Lc;
-
-    // 元データチェック
-    if (data == NULL || length == 0) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 6);
-        return;
-    }
-    fido_log_info("Preference parameter maintenance start");
-
-    // データの１バイト目からコマンド種別を取得
-    uint8_t cmd_type = data[0];
-
-    //
-    // 各種設定用パラメーター管理
-    //  response_bufferの先頭にステータスバイトを格納するため、
-    //  レスポンス格納領域は、response_bufferの２バイト目を先頭とします。
-    //
-    uint8_t *buffer = response_buffer + 1;
-    size_t   buffer_size = sizeof(response_buffer - 1);
-    bool     ret = false;
-    switch (cmd_type) {
-        case 1:
-        case 2:
-        case 3:
-            ble_peripheral_auth_param_request(data, length);
-            ret = ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
-            break;
-        default:
-            fido_log_error("Unknown preference parameter maintenance command type");
-            break;
-    }
-    if (ret == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 11);
-        return;
-    }
-    //
-    // レスポンスを送信
-    //  データ形式
-    //  0-3: CID
-    //  4:   CMD（0xc4）
-    //  5-6: データサイズ（CSVデータの長さ）
-    //  7:   ステータスバイト（成功時は 0x00）
-    //  8-n: CSVデータ
-    //
-    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
-}
-
 static void command_bootloader_mode(void)
 {
     // 最初にレスポンスを送信
@@ -355,9 +305,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_GET_APP_VERSION:
             command_get_app_version();
             break;
-        case MNT_COMMAND_PREFERENCE_PARAM:
-            command_preference_parameter_maintenance();
-            break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
             break;
@@ -377,7 +324,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_PREFERENCE_PARAM:
         case MNT_COMMAND_ERASE_BONDING_DATA:
             // LEDをビジー状態に遷移
             fido_status_indicator_busy();
@@ -406,9 +352,6 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             fido_log_info("Get application version info end");
-            break;
-        case MNT_COMMAND_PREFERENCE_PARAM:
-            fido_log_info("Preference parameter maintenance end");
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
