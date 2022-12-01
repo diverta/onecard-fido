@@ -524,9 +524,9 @@ typedef enum : NSInteger {
 
     - (void)doRequestBLEGetVersionInfo {
         // BLE経由でバージョン情報を取得
-        unsigned char arr[] = {0x00};
+        unsigned char arr[] = {MNT_COMMAND_GET_APP_VERSION};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        [[self appBLECommand] doRequestCommand:COMMAND_BLE_GET_VERSION_INFO withCMD:HID_CMD_GET_VERSION_INFO withData:commandData];
+        [[self appBLECommand] doRequestCommand:COMMAND_BLE_GET_VERSION_INFO withCMD:BLE_CMD_MSG withData:commandData];
     }
 
     - (void)getVersionInfoDidCompleted:(bool)success message:(NSString *)message {
