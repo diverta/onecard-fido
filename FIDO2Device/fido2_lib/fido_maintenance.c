@@ -15,6 +15,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
+#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -38,6 +39,29 @@ static uint8_t get_command_byte(void)
             break;
         default:
             cmd = 0x00;
+            break;
+    }
+    return cmd;
+}
+
+static uint8_t get_maintenance_command_byte(void)
+{
+    //
+    // 管理用コマンドバイトを、データ部の先頭から抽出
+    //
+    uint8_t cmd = 0x00;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            if (fido_hid_receive_header()->CMD == (0x80 | MNT_COMMAND_BASE)) {
+                cmd = fido_hid_receive_apdu()->data[0];
+            }
+            break;
+        case TRANSPORT_BLE:
+            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+                cmd = fido_ble_receive_apdu()->data[0];
+            }
+            break;
+        default:
             break;
     }
     return cmd;
@@ -277,6 +301,18 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     m_transport_type = transport_type;
 
     // リクエストデータ受信後に実行すべき処理を判定
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
+        case MNT_COMMAND_GET_TIMESTAMP:
+            command_get_timestamp();
+            return;
+        case MNT_COMMAND_SET_TIMESTAMP:
+            command_set_timestamp();
+            return;
+        default:
+            break;
+    }
+
     uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
@@ -293,12 +329,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             break;
         case MNT_COMMAND_SYSTEM_RESET:
             command_system_reset();
-            break;
-        case MNT_COMMAND_GET_TIMESTAMP:
-            command_get_timestamp();
-            break;
-        case MNT_COMMAND_SET_TIMESTAMP:
-            command_set_timestamp();
             break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
@@ -326,6 +356,15 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
+        case MNT_COMMAND_GET_TIMESTAMP:
+        case MNT_COMMAND_SET_TIMESTAMP:
+            return;
+        default:
+            break;
+    }
+
     uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
