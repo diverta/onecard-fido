@@ -67,6 +67,40 @@ static uint8_t get_maintenance_command_byte(void)
     return cmd;
 }
 
+static uint8_t *get_maintenance_data_buffer(void)
+{
+    uint8_t *buffer;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            buffer = fido_hid_receive_apdu()->data + 1;
+            break;
+        case TRANSPORT_BLE:
+            buffer = fido_ble_receive_apdu()->data + 1;
+            break;
+        default:
+            buffer = NULL;
+            break;
+    }
+    return buffer;
+}
+
+static size_t get_maintenance_data_buffer_size(void)
+{
+    size_t size;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            size = fido_hid_receive_apdu()->Lc - 1;
+            break;
+        case TRANSPORT_BLE:
+            size = fido_ble_receive_apdu()->Lc - 1;
+            break;
+        default:
+            size = 0;
+            break;
+    }
+    return size;
+}
+
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
 
@@ -273,23 +307,18 @@ static void command_get_timestamp(void)
 
 static void command_set_timestamp(void)
 {
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    uint16_t length = fido_hid_receive_apdu()->Lc;
+    uint8_t *data = get_maintenance_data_buffer();
+    uint16_t length = get_maintenance_data_buffer_size();
 
     // 元データチェック
-    if (data == NULL || length != 5) {
+    if (data == NULL || length != 4) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
-    // データの先頭アドレスを取得
-    //   最初の１バイト目が管理用コマンドバイトで、
-    //   残りは全てデータバイトとなっている
-    uint8_t *p_data = data + 1;
-
     // 現在時刻を設定
     // リクエスト＝４バイトのUNIX時間整数（ビッグエンディアン）
-    uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(p_data);
+    uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(data);
     uint8_t timezone_diff_hours = 9;
     if (rtcc_update_timestamp_by_unixtime(seconds_since_epoch, timezone_diff_hours) == false) {
         send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
