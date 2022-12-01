@@ -74,6 +74,8 @@
 
 // BLEコマンドバイト
 #define BLE_CMD_MSG                 0x83
-#define BLE_CMD_PAIRING_REQUEST     0x4c
+
+// 管理用コマンド
+#define MNT_COMMAND_PAIRING_REQUEST 0x4c
 
 #endif /* FIDODefines_h */
