@@ -277,20 +277,25 @@ static void command_set_timestamp(void)
     uint16_t length = fido_hid_receive_apdu()->Lc;
 
     // 元データチェック
-    if (data == NULL || length != 4) {
+    if (data == NULL || length != 5) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
+    // データの先頭アドレスを取得
+    //   最初の１バイト目が管理用コマンドバイトで、
+    //   残りは全てデータバイトとなっている
+    uint8_t *p_data = data + 1;
+
     // 現在時刻を設定
     // リクエスト＝４バイトのUNIX時間整数（ビッグエンディアン）
-    uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(data);
+    uint32_t seconds_since_epoch = fido_get_uint32_from_bytes(p_data);
     uint8_t timezone_diff_hours = 9;
     if (rtcc_update_timestamp_by_unixtime(seconds_since_epoch, timezone_diff_hours) == false) {
         send_command_response(CTAP2_ERR_VENDOR_FIRST, 1);
         return;
     }
-    
+
     // レスポンスとして、現在時刻を送信
     command_get_timestamp();
 }
