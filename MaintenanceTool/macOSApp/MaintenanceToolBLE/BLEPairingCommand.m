@@ -96,10 +96,7 @@
         [self setTransportType:TRANSPORT_BLE];
         // BLEペアリング処理を実行
         [self setCommand:COMMAND_PAIRING];
-        // 書き込むコマンド（APDU）を編集
-        unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
-        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        [self doRequestCtap2Command:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:commandData];
+        [self doRequestCtap2Command:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:[ToolCommonFunc commandDataForPairingRequest]];
     }
 
     - (void)doResponseBlePairing:(NSData *)message {

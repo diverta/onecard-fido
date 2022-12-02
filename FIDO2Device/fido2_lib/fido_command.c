@@ -247,15 +247,10 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command(TRANSPORT_HID);
             break;
-        case MNT_COMMAND_BASE:
+        case (0x80 | MNT_COMMAND_BASE):
             fido_maintenance_command(TRANSPORT_HID);
             break;
         default:
-            // 管理用コマンドの場合の処理
-            if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
-                fido_maintenance_command(TRANSPORT_HID);
-                return;
-            }
             // 不正なコマンドであるため
             // エラーレスポンスを送信
             fido_log_error("Invalid command (0x%02x) ", cmd);
@@ -382,16 +377,11 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_development_command_report_sent();
             break;
-        case MNT_COMMAND_BASE:
+        case (0x80 | MNT_COMMAND_BASE):
             fido_maintenance_command_report_sent();
             break;
         default:
             break;
-    }
-
-    // 管理用コマンドの場合の処理
-    if ((cmd & 0x7f) >= MNT_COMMAND_BASE) {
-        fido_maintenance_command_report_sent();
     }
 }
 

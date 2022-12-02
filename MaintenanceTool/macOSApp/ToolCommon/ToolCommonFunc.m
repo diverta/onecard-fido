@@ -55,6 +55,13 @@
 
 #pragma mark - Utilities for maintenance commands
 
+    + (NSData *)commandDataForPairingRequest {
+        // ペアリング要求コマンド用のデータを生成
+        unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
+    }
+
     + (NSData *)commandDataForEraseBondingData {
         // ペアリング情報削除コマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_ERASE_BONDING_DATA};
