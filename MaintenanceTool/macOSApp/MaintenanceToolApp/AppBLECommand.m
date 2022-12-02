@@ -322,7 +322,6 @@
         switch (commandByte) {
             case 0x81:
             case 0x83:
-            case HID_CMD_GET_VERSION_INFO:
             case HID_CMD_UNKNOWN_ERROR:
                 return true;
             default:

@@ -414,7 +414,7 @@ bool app_rtcc_initialize(void)
     // 1 = Direct Switching Mode
     // 2 = Standby Mode
     // 3 = Level Switching Mode
-    uint8_t val = 0x03;
+    uint8_t val = 0x00;
     if (set_backup_switchover_mode(val) == false) {
         LOG_ERR("RTCC backup switchover mode setting failed");
         return false;

@@ -11,6 +11,7 @@
 #import "BLEPairingCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
+#import "ToolCommonFunc.h"
 
 @interface BLEPairingCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
@@ -74,8 +75,8 @@
 
     - (void)doRequestEraseBonds {
         // メッセージを編集し、コマンド 0xC6 を実行
-        NSData *commandData = [[NSData alloc] init];
-        [self doRequestCtap2Command:COMMAND_ERASE_BONDS withCMD:HID_CMD_ERASE_BONDS withData:commandData];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [self doRequestCtap2Command:COMMAND_ERASE_BONDS withCMD:cmd withData:[ToolCommonFunc commandDataForEraseBondingData]];
     }
 
     - (void)doResponseEraseBonds:(NSData *)message {
@@ -95,10 +96,7 @@
         [self setTransportType:TRANSPORT_BLE];
         // BLEペアリング処理を実行
         [self setCommand:COMMAND_PAIRING];
-        // 書き込むコマンド（APDU）を編集
-        unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
-        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        [self doRequestCtap2Command:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:commandData];
+        [self doRequestCtap2Command:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:[ToolCommonFunc commandDataForPairingRequest]];
     }
 
     - (void)doResponseBlePairing:(NSData *)message {

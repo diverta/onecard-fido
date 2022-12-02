@@ -56,29 +56,26 @@
 #define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
 // HIDコマンドバイト
-#define HID_CMD_CTAPHID_PING        0x81
-#define HID_CMD_MSG                 0x83
-#define HID_CMD_CTAPHID_INIT        0x86
-#define HID_CMD_CTAPHID_CBOR        0x90
-#define HID_CMD_ERASE_SKEY_CERT     0xC0
-#define HID_CMD_INSTALL_SKEY_CERT   0xC1
-#define HID_CMD_GET_FLASH_STAT      0xC2
-#define HID_CMD_GET_VERSION_INFO    0xC3
-#define HID_CMD_TOOL_PREF_PARAM     0xC4
-#define HID_CMD_BOOTLOADER_MODE     0xC5
-#define HID_CMD_ERASE_BONDS         0xC6
-#define HID_CMD_FIRMWARE_RESET      0xC7
-#define HID_CMD_INSTALL_ATTESTATION 0xC8
-#define HID_CMD_RESET_ATTESTATION   0xC9
-#define HID_CMD_UNKNOWN_ERROR       0xBF
+#define HID_CMD_CTAPHID_PING            0x81
+#define HID_CMD_MSG                     0x83
+#define HID_CMD_CTAPHID_INIT            0x86
+#define HID_CMD_CTAPHID_CBOR            0x90
+#define HID_CMD_INSTALL_ATTESTATION     0xC8
+#define HID_CMD_RESET_ATTESTATION       0xC9
+#define HID_CMD_UNKNOWN_ERROR           0xBF
 
 // BLEコマンドバイト
-#define BLE_CMD_MSG                 0x83
+#define BLE_CMD_MSG                     0x83
 
 // 管理用コマンド
-#define MNT_COMMAND_BASE            0x40
-#define MNT_COMMAND_GET_TIMESTAMP   0x4a
-#define MNT_COMMAND_SET_TIMESTAMP   0x4b
-#define MNT_COMMAND_PAIRING_REQUEST 0x4c
+#define MNT_COMMAND_BASE                0x40
+#define MNT_COMMAND_GET_FLASH_STAT      0x42
+#define MNT_COMMAND_GET_APP_VERSION     0x43
+#define MNT_COMMAND_BOOTLOADER_MODE     0x45
+#define MNT_COMMAND_ERASE_BONDING_DATA  0x46
+#define MNT_COMMAND_SYSTEM_RESET        0x47
+#define MNT_COMMAND_GET_TIMESTAMP       0x4a
+#define MNT_COMMAND_SET_TIMESTAMP       0x4b
+#define MNT_COMMAND_PAIRING_REQUEST     0x4c
 
 #endif /* FIDODefines_h */

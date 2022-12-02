@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "ccid_apdu.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

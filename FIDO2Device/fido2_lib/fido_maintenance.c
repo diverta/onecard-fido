@@ -27,23 +27,6 @@ fido_log_module_register(fido_maintenance);
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 
-static uint8_t get_command_byte(void)
-{
-    uint8_t cmd;
-    switch (m_transport_type) {
-        case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD & 0x7f;
-            break;
-        case TRANSPORT_BLE:
-            cmd = fido_ble_receive_ctap2_command();
-            break;
-        default:
-            cmd = 0x00;
-            break;
-    }
-    return cmd;
-}
-
 static uint8_t get_maintenance_command_byte(void)
 {
     //
@@ -287,47 +270,30 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     // リクエストデータ受信後に実行すべき処理を判定
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_PAIRING_REQUEST:
+            command_pairing_request();
+            return;
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            command_erase_bonding_data();
+            return;
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            command_bootloader_mode();
+            return;
+        case MNT_COMMAND_SYSTEM_RESET:
+            command_system_reset();
+            return;
+        case MNT_COMMAND_GET_FLASH_STAT:
+            command_get_flash_stat();
+            return;
+        case MNT_COMMAND_GET_APP_VERSION:
+            command_get_app_version();
+            return;
         case MNT_COMMAND_GET_TIMESTAMP:
             command_get_timestamp();
             return;
         case MNT_COMMAND_SET_TIMESTAMP:
             command_set_timestamp();
             return;
-        default:
-            break;
-    }
-
-    uint8_t cmd = get_command_byte();
-    switch (cmd) {
-        case MNT_COMMAND_GET_FLASH_STAT:
-            command_get_flash_stat();
-            break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            command_get_app_version();
-            break;
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            command_erase_bonding_data();
-            break;
-        case MNT_COMMAND_SYSTEM_RESET:
-            command_system_reset();
-            break;
-        case MNT_COMMAND_BOOTLOADER_MODE:
-            command_bootloader_mode();
-            break;
-        case MNT_COMMAND_PAIRING_REQUEST:
-            command_pairing_request();
-            break;
-        default:
-            break;
-    }
-
-    switch (cmd) {
-        case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            // LEDをビジー状態に遷移
-            fido_status_indicator_busy();
-            break;
         default:
             break;
     }
@@ -338,44 +304,35 @@ void fido_maintenance_command_report_sent(void)
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            fido_log_info("Erase bonding data end");
+            return;
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            jump_to_bootloader_mode();
+            return;
+        case MNT_COMMAND_SYSTEM_RESET:
+            // nRF52840のシステムリセットを実行
+            NVIC_SystemReset();
+            return;
+        case MNT_COMMAND_GET_FLASH_STAT:
+            fido_log_info("Get flash ROM statistics end");
+            return;
+        case MNT_COMMAND_GET_APP_VERSION:
+            fido_log_info("Get application version info end");
+            return;
         case MNT_COMMAND_GET_TIMESTAMP:
         case MNT_COMMAND_SET_TIMESTAMP:
             return;
         default:
             break;
     }
-
-    uint8_t cmd = get_command_byte();
-    switch (cmd) {
-        case MNT_COMMAND_GET_FLASH_STAT:
-            fido_log_info("Get flash ROM statistics end");
-            break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            fido_log_info("Get application version info end");
-            break;
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            fido_log_info("Erase bonding data end");
-            break;
-        case MNT_COMMAND_SYSTEM_RESET:
-            // nRF52840のシステムリセットを実行
-            NVIC_SystemReset();
-            break;
-        case MNT_COMMAND_BOOTLOADER_MODE:
-            jump_to_bootloader_mode();
-            break;
-        default:
-            break;
-    }
-
-    // LEDをアイドル状態に遷移
-    fido_status_indicator_idle();
 }
 
 void fido_maintenance_command_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
-    uint8_t cmd = get_command_byte();
-    switch (cmd) {
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
         default:
             break;
     }
@@ -386,8 +343,8 @@ void fido_maintenance_command_flash_gc_done(void)
     // for nRF52840:
     // FDSリソース不足解消のためGCが実行された場合は、
     // GC実行直前の処理を再実行
-    uint8_t cmd = get_command_byte();
-    switch (cmd) {
+    uint8_t mnt_cmd = get_maintenance_command_byte();
+    switch (mnt_cmd) {
         default:
             break;
     }

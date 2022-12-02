@@ -12,6 +12,7 @@
 #import "DFUCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "USBDFUACMCommand.h"
 #import "USBDFUDefine.h"
@@ -74,13 +75,21 @@
 
     - (void)doRequestHidBootloaderMode {
         // メッセージを編集し、コマンド 0xC6 を実行
-        NSData *commandData = [[NSData alloc] init];
-        [[self appHIDCommand] doRequestCtap2Command:COMMAND_HID_BOOTLOADER_MODE withCMD:HID_CMD_BOOTLOADER_MODE withData:commandData];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCtap2Command:COMMAND_HID_BOOTLOADER_MODE withCMD:cmd withData:[ToolCommonFunc commandDataForChangeToBootloaderMode]];
     }
 
     - (void)doResponseHidBootloaderMode:(uint8_t)cmd response:(NSData *)response {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [[self delegate] notifyErrorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
+            [self terminateTransferCommand:false];
+            return;
+        }
         // ブートローダーモード遷移コマンド成功時
-        if (cmd == HID_CMD_BOOTLOADER_MODE) {
+        if (cmd != HID_CMD_UNKNOWN_ERROR) {
             // 処理ステータスを設定 --> USB切断検知により処理続行
             [[self commandParameter] setDfuStatus:DFU_ST_TO_BOOTLOADER_MODE];
 
@@ -380,7 +389,8 @@
         // ステータスを更新（更新後バージョン照会）
         [[self commandParameter] setDfuStatus:DFU_ST_CHECK_UPDATE_VERSION];
         // HID経由でFlash ROM情報を取得（コマンド 0xC3 を実行、メッセージ無し）
-        [[self appHIDCommand] doRequestCommand:COMMAND_HID_GET_VERSION_INFO withCMD:HID_CMD_GET_VERSION_INFO withData:nil];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCommand:COMMAND_HID_GET_VERSION_INFO withCMD:cmd withData:[ToolCommonFunc commandDataForGetVersionInfo]];
     }
 
     - (void)doResponseHIDGetVersionInfo:(NSData *)versionInfoResponse {
