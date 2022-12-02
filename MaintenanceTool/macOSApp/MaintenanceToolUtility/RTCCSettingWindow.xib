@@ -33,6 +33,57 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <box fixedFrame="YES" boxType="secondary" title="現在時刻照会・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                        <rect key="frame" x="17" y="176" width="324" height="136"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="lLQ-Iq-3Cq">
+                            <rect key="frame" x="3" y="3" width="318" height="116"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonGetTimestamp">
+                                    <rect key="frame" x="17" y="67" width="126" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="現在時刻照会" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonGetTimestampDidPress:" target="-2" id="31q-mn-c2u"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FvJ-5d-Ckw" userLabel="TitleGetTimestamp">
+                                    <rect key="frame" x="152" y="69" width="146" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器に設定されている現在時刻を取得します。" id="cLw-cu-Zy2">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonSetTimestamp">
+                                    <rect key="frame" x="17" y="18" width="126" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="現在時刻設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonSetTimestampDidPress:" target="-2" id="x91-4G-ccL"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fkO-3i-mzz" userLabel="TitleSetTimestamp">
+                                    <rect key="frame" x="152" y="20" width="146" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="PCの現在時刻を認証器に設定します。" id="tGy-D5-CKP">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
                     <box boxType="secondary" title="照会・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
                         <rect key="frame" x="17" y="57" width="324" height="108"/>
                         <view key="contentView" id="HzA-xp-MO5">
@@ -102,51 +153,6 @@
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box fixedFrame="YES" boxType="secondary" title="現在時刻照会・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
-                        <rect key="frame" x="17" y="176" width="324" height="136"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView" id="lLQ-Iq-3Cq">
-                            <rect key="frame" x="3" y="3" width="318" height="116"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonGetTimestamp">
-                                    <rect key="frame" x="17" y="67" width="126" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="push" title="現在時刻照会" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
-                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                </button>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FvJ-5d-Ckw" userLabel="TitleGetTimestamp">
-                                    <rect key="frame" x="152" y="69" width="146" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器に設定されている現在時刻を取得します。" id="cLw-cu-Zy2">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonSetTimestamp">
-                                    <rect key="frame" x="17" y="18" width="126" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="push" title="現在時刻設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
-                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                </button>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fkO-3i-mzz" userLabel="TitleSetTimestamp">
-                                    <rect key="frame" x="152" y="20" width="146" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="PCの現在時刻を認証器に設定します。" id="tGy-D5-CKP">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                            </subviews>
-                        </view>
-                        <font key="titleFont" metaFont="system"/>
-                    </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
                         <rect key="frame" x="138" y="13" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -157,6 +163,9 @@
 Gw
 </string>
                         </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="Zp6-CW-GCA"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
