@@ -109,7 +109,8 @@
         // コマンド開始メッセージを画面表示
         [self notifyCommandStarted:[self commandName]];
         // HID経由でFlash ROM情報を取得（コマンド 0xC2 を実行、メッセージ無し）
-        [[self appHIDCommand] doRequestCommand:[self command] withCMD:HID_CMD_GET_FLASH_STAT withData:nil];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCommand:[self command] withCMD:cmd withData:[ToolCommonFunc commandDataForGetGetFlashStat]];
     }
 
     - (void)doResponseHIDGetFlashStat:(NSData *)message {
