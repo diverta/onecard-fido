@@ -159,6 +159,10 @@
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上の緑色LEDが点滅したら、"
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  ボタンを１回押してください."
 
+#pragma mark - 時刻同期関連メッセージ
+#define MSG_PROMPT_RTCC_SET_TIMESTAMP       @"PCの現在時刻を認証器に設定します。"
+#define MSG_COMMENT_RTCC_SET_TIMESTAMP      @"処理を実行しますか？"
+
 #pragma mark - Flash ROM情報取得関連メッセージ
 #define MSG_FSTAT_REMAINING_RATE            @"Flash ROMの空き容量は%.1f％です。"
 #define MSG_FSTAT_NON_REMAINING_RATE        @"Flash ROMの空き容量を取得できませんでした。"
