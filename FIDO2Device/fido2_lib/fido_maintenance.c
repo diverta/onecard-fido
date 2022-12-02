@@ -287,6 +287,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     // リクエストデータ受信後に実行すべき処理を判定
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_GET_APP_VERSION:
+            command_get_app_version();
+            return;
         case MNT_COMMAND_GET_TIMESTAMP:
             command_get_timestamp();
             return;
@@ -301,9 +304,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
             command_get_flash_stat();
-            break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            command_get_app_version();
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
@@ -323,7 +323,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
-        case MNT_COMMAND_GET_APP_VERSION:
         case MNT_COMMAND_ERASE_BONDING_DATA:
             // LEDをビジー状態に遷移
             fido_status_indicator_busy();
@@ -338,6 +337,9 @@ void fido_maintenance_command_report_sent(void)
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_GET_APP_VERSION:
+            fido_log_info("Get application version info end");
+            return;
         case MNT_COMMAND_GET_TIMESTAMP:
         case MNT_COMMAND_SET_TIMESTAMP:
             return;
@@ -349,9 +351,6 @@ void fido_maintenance_command_report_sent(void)
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");
-            break;
-        case MNT_COMMAND_GET_APP_VERSION:
-            fido_log_info("Get application version info end");
             break;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");

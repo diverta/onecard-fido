@@ -158,7 +158,8 @@
         // コマンド開始メッセージを画面表示
         [self notifyCommandStarted:[self commandName]];
         // HID経由でFlash ROM情報を取得（コマンド 0xC3 を実行、メッセージ無し）
-        [[self appHIDCommand] doRequestCommand:[self command] withCMD:HID_CMD_GET_VERSION_INFO withData:nil];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCommand:[self command] withCMD:cmd withData:[self commandDataForGetVersionInfo]];
     }
 
     - (void)doResponseHIDGetVersionInfo:(NSData *)message {
@@ -183,6 +184,13 @@
             [[self delegate] notifyMessageToMainUI:MSG_VERSION_INFO_SECURE_IC_UNAVAIL];
         }
         [self notifyCommandTerminated:[self commandName] message:nil success:true fromWindow:[self parentWindow]];
+    }
+
+    - (NSData *)commandDataForGetVersionInfo {
+        // BLE経由でタイムスタンプを取得
+        unsigned char arr[] = {MNT_COMMAND_GET_APP_VERSION};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
     }
 
 #pragma mark - Version window
