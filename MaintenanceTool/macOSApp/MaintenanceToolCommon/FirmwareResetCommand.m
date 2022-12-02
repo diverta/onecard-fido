@@ -8,6 +8,7 @@
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
 #import "FirmwareResetCommand.h"
+#import "ToolCommonFunc.h"
 
 @interface FirmwareResetCommand () <AppHIDCommandDelegate>
 
@@ -73,8 +74,8 @@
         // HID接続検知フラグをクリア
         [self setNeedNotifyDetectConnect:false];
         // コマンド 0xC7 を実行（メッセージはブランクとする）
-        NSData *message = [[NSData alloc] init];
-        [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:HID_CMD_FIRMWARE_RESET withData:message];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:cmd withData:[ToolCommonFunc commandDataForSystemReset]];
     }
 
     - (void)doResponseHidFirmwareReset:(NSData *)response {

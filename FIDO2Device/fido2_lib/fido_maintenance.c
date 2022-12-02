@@ -290,6 +290,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();
             return;
+        case MNT_COMMAND_SYSTEM_RESET:
+            command_system_reset();
+            return;
         case MNT_COMMAND_GET_FLASH_STAT:
             command_get_flash_stat();
             return;
@@ -308,9 +311,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 
     uint8_t cmd = get_command_byte();
     switch (cmd) {
-        case MNT_COMMAND_SYSTEM_RESET:
-            command_system_reset();
-            break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
             break;
@@ -330,6 +330,10 @@ void fido_maintenance_command_report_sent(void)
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
             return;
+        case MNT_COMMAND_SYSTEM_RESET:
+            // nRF52840のシステムリセットを実行
+            NVIC_SystemReset();
+            return;
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");
             return;
@@ -345,10 +349,6 @@ void fido_maintenance_command_report_sent(void)
 
     uint8_t cmd = get_command_byte();
     switch (cmd) {
-        case MNT_COMMAND_SYSTEM_RESET:
-            // nRF52840のシステムリセットを実行
-            NVIC_SystemReset();
-            break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             jump_to_bootloader_mode();
             break;

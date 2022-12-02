@@ -62,6 +62,13 @@
         return commandData;
     }
 
+    + (NSData *)commandDataForSystemReset {
+        // BLE経由でタイムスタンプを取得
+        unsigned char arr[] = {MNT_COMMAND_SYSTEM_RESET};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
+    }
+
     + (NSData *)commandDataForGetGetFlashStat {
         // BLE経由でタイムスタンプを取得
         unsigned char arr[] = {MNT_COMMAND_GET_FLASH_STAT};
