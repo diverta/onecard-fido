@@ -110,7 +110,7 @@
         [self notifyCommandStarted:[self commandName]];
         // HID経由でFlash ROM情報を取得（コマンド 0xC2 を実行、メッセージ無し）
         uint8_t cmd = MNT_COMMAND_BASE | 0x80;
-        [[self appHIDCommand] doRequestCommand:[self command] withCMD:cmd withData:[ToolCommonFunc commandDataForGetGetFlashStat]];
+        [[self appHIDCommand] doRequestCommand:[self command] withCMD:cmd withData:[ToolCommonFunc commandDataForGetFlashStat]];
     }
 
     - (void)doResponseHIDGetFlashStat:(NSData *)message {

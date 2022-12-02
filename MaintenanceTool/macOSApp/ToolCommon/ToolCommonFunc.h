@@ -18,7 +18,7 @@
 
     + (NSData *)commandDataForEraseBondingData;
     + (NSData *)commandDataForSystemReset;
-    + (NSData *)commandDataForGetGetFlashStat;
+    + (NSData *)commandDataForGetFlashStat;
     + (NSData *)commandDataForGetVersionInfo;
 
 @end

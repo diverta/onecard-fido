@@ -56,21 +56,21 @@
 #pragma mark - Utilities for maintenance commands
 
     + (NSData *)commandDataForEraseBondingData {
-        // BLE経由でタイムスタンプを取得
+        // ペアリング情報削除コマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_ERASE_BONDING_DATA};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         return commandData;
     }
 
     + (NSData *)commandDataForSystemReset {
-        // BLE経由でタイムスタンプを取得
+        // ファームウェアリセットコマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_SYSTEM_RESET};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         return commandData;
     }
 
-    + (NSData *)commandDataForGetGetFlashStat {
-        // BLE経由でタイムスタンプを取得
+    + (NSData *)commandDataForGetFlashStat {
+        // Flash ROM情報照会コマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_GET_FLASH_STAT};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         return commandData;

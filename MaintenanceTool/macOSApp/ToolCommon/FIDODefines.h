@@ -56,17 +56,17 @@
 #define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
 // HIDコマンドバイト
-#define HID_CMD_CTAPHID_PING        0x81
-#define HID_CMD_MSG                 0x83
-#define HID_CMD_CTAPHID_INIT        0x86
-#define HID_CMD_CTAPHID_CBOR        0x90
-#define HID_CMD_BOOTLOADER_MODE     0xC5
-#define HID_CMD_INSTALL_ATTESTATION 0xC8
-#define HID_CMD_RESET_ATTESTATION   0xC9
-#define HID_CMD_UNKNOWN_ERROR       0xBF
+#define HID_CMD_CTAPHID_PING            0x81
+#define HID_CMD_MSG                     0x83
+#define HID_CMD_CTAPHID_INIT            0x86
+#define HID_CMD_CTAPHID_CBOR            0x90
+#define HID_CMD_BOOTLOADER_MODE         0xC5
+#define HID_CMD_INSTALL_ATTESTATION     0xC8
+#define HID_CMD_RESET_ATTESTATION       0xC9
+#define HID_CMD_UNKNOWN_ERROR           0xBF
 
 // BLEコマンドバイト
-#define BLE_CMD_MSG                 0x83
+#define BLE_CMD_MSG                     0x83
 
 // 管理用コマンド
 #define MNT_COMMAND_BASE                0x40
