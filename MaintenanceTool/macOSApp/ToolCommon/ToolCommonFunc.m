@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/06/08.
 //
+#import "FIDODefines.h"
 #import "ToolCommonMessage.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
@@ -50,6 +51,15 @@
             return false;
         }
         return true;
+    }
+
+#pragma mark - Utilities for maintenance commands
+
+    + (NSData *)commandDataForGetVersionInfo {
+        // バージョン照会コマンド用のデータを生成
+        unsigned char arr[] = {MNT_COMMAND_GET_APP_VERSION};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
     }
 
 @end

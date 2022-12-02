@@ -9,6 +9,7 @@
 #import "DFUCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
+#import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 #import "USBDFUCommand.h"
@@ -95,7 +96,8 @@
         // ステータスを更新（現在バージョン照会）
         [[self commandParameter] setDfuStatus:DFU_ST_GET_CURRENT_VERSION];
         // HID経由でFlash ROM情報を取得（コマンド 0xC3 を実行、メッセージ無し）
-        [[self appHIDCommand] doRequestCommand:COMMAND_HID_GET_VERSION_INFO withCMD:HID_CMD_GET_VERSION_INFO withData:nil];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCommand:COMMAND_HID_GET_VERSION_INFO withCMD:cmd withData:[ToolCommonFunc commandDataForGetVersionInfo]];
     }
 
     - (void)doResponseHIDGetVersionInfo:(NSData *)versionInfoResponse {

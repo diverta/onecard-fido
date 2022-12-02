@@ -16,6 +16,8 @@
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected;
 
+    + (NSData *)commandDataForGetVersionInfo;
+
 @end
 
 #endif /* ToolCommonFunc_h */

@@ -60,11 +60,7 @@
 #define HID_CMD_MSG                 0x83
 #define HID_CMD_CTAPHID_INIT        0x86
 #define HID_CMD_CTAPHID_CBOR        0x90
-#define HID_CMD_ERASE_SKEY_CERT     0xC0
-#define HID_CMD_INSTALL_SKEY_CERT   0xC1
 #define HID_CMD_GET_FLASH_STAT      0xC2
-#define HID_CMD_GET_VERSION_INFO    0xC3
-#define HID_CMD_TOOL_PREF_PARAM     0xC4
 #define HID_CMD_BOOTLOADER_MODE     0xC5
 #define HID_CMD_ERASE_BONDS         0xC6
 #define HID_CMD_FIRMWARE_RESET      0xC7
