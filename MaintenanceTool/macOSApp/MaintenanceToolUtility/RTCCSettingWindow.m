@@ -11,6 +11,10 @@
 
 @interface RTCCSettingWindow ()
 
+    // 画面項目を保持
+    @property (assign) IBOutlet NSButton            *buttonTransportUSB;
+    @property (assign) IBOutlet NSButton            *buttonTransportBLE;
+
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
 
@@ -25,6 +29,14 @@
     - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef {
         // 親画面の参照を保持
         [self setParentWindow:(NSWindow *)ref];
+    }
+
+    - (IBAction)buttonTransportSelected:(id)sender {
+        // トランスポート種別を設定
+        if (sender == [self buttonTransportUSB]) {
+        }
+        if (sender == [self buttonTransportBLE]) {
+        }
     }
 
     - (IBAction)buttonGetTimestampDidPress:(id)sender {

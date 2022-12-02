@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="RTCCSettingWindow">
             <connections>
+                <outlet property="buttonTransportBLE" destination="UpY-Ld-vc7" id="V0h-S6-wf6"/>
+                <outlet property="buttonTransportUSB" destination="HuD-Uh-Xe0" id="lQI-eI-LH7"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -16,14 +18,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="358" height="346"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="417"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="358" height="346"/>
+                <rect key="frame" x="0.0" y="0.0" width="358" height="417"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
-                        <rect key="frame" x="29" y="320" width="300" height="17"/>
+                        <rect key="frame" x="29" y="391" width="300" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
@@ -33,6 +35,39 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <box fixedFrame="YES" boxType="secondary" title="通信方法の選択" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
+                        <rect key="frame" x="17" y="323" width="324" height="65"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="vwy-KZ-ZkM">
+                            <rect key="frame" x="3" y="3" width="318" height="45"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HuD-Uh-Xe0" userLabel="buttonTransportUSB">
+                                    <rect key="frame" x="19" y="16" width="73" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="USB経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="I2L-ng-cbR">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="kV2-mo-05q"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UpY-Ld-vc7" userLabel="buttonTransportBLE">
+                                    <rect key="frame" x="120" y="16" width="70" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="BLE経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2RU-zL-BEr">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="14x-3j-fO0"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
                     <box fixedFrame="YES" boxType="secondary" title="現在時刻照会・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
                         <rect key="frame" x="17" y="176" width="324" height="136"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -171,7 +206,7 @@ Gw
                 <constraints>
                     <constraint firstItem="B1y-5G-Fg0" firstAttribute="centerX" secondItem="kD7-1A-1Hy" secondAttribute="centerX" id="0Xc-EE-wNw"/>
                     <constraint firstItem="B1y-5G-Fg0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ICe-ik-bNC"/>
-                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="top" secondItem="kD7-1A-1Hy" secondAttribute="bottom" constant="155" id="Odt-ZK-UqB"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="top" secondItem="kD7-1A-1Hy" secondAttribute="bottom" constant="226" id="Odt-ZK-UqB"/>
                     <constraint firstItem="kD7-1A-1Hy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="9" id="Tpv-7k-n2x"/>
                     <constraint firstItem="kD7-1A-1Hy" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="31" id="VN2-f1-3cU"/>
                     <constraint firstItem="kD7-1A-1Hy" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="gLv-qF-EhC"/>
@@ -180,7 +215,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
             </connections>
-            <point key="canvasLocation" x="122" y="200"/>
+            <point key="canvasLocation" x="122" y="235.5"/>
         </window>
     </objects>
 </document>
