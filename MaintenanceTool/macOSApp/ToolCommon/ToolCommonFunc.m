@@ -62,6 +62,13 @@
         return commandData;
     }
 
+    + (NSData *)commandDataForChangeToBootloaderMode {
+        // ブートローダーモード遷移コマンド用のデータを生成
+        unsigned char arr[] = {MNT_COMMAND_BOOTLOADER_MODE};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
+    }
+
     + (NSData *)commandDataForSystemReset {
         // ファームウェアリセットコマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_SYSTEM_RESET};

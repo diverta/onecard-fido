@@ -17,6 +17,7 @@
     + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected;
 
     + (NSData *)commandDataForEraseBondingData;
+    + (NSData *)commandDataForChangeToBootloaderMode;
     + (NSData *)commandDataForSystemReset;
     + (NSData *)commandDataForGetFlashStat;
     + (NSData *)commandDataForGetVersionInfo;
