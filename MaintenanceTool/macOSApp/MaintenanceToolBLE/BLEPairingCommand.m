@@ -11,6 +11,7 @@
 #import "BLEPairingCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommon.h"
+#import "ToolCommonFunc.h"
 
 @interface BLEPairingCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
@@ -74,8 +75,8 @@
 
     - (void)doRequestEraseBonds {
         // メッセージを編集し、コマンド 0xC6 を実行
-        NSData *commandData = [[NSData alloc] init];
-        [self doRequestCtap2Command:COMMAND_ERASE_BONDS withCMD:HID_CMD_ERASE_BONDS withData:commandData];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [self doRequestCtap2Command:COMMAND_ERASE_BONDS withCMD:cmd withData:[ToolCommonFunc commandDataForEraseBondingData]];
     }
 
     - (void)doResponseEraseBonds:(NSData *)message {

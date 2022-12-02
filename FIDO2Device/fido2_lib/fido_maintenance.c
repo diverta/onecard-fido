@@ -287,6 +287,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     // リクエストデータ受信後に実行すべき処理を判定
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            command_erase_bonding_data();
+            return;
         case MNT_COMMAND_GET_FLASH_STAT:
             command_get_flash_stat();
             return;
@@ -305,9 +308,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 
     uint8_t cmd = get_command_byte();
     switch (cmd) {
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            command_erase_bonding_data();
-            break;
         case MNT_COMMAND_SYSTEM_RESET:
             command_system_reset();
             break;
@@ -320,15 +320,6 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         default:
             break;
     }
-
-    switch (cmd) {
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            // LEDをビジー状態に遷移
-            fido_status_indicator_busy();
-            break;
-        default:
-            break;
-    }
 }
 
 void fido_maintenance_command_report_sent(void)
@@ -336,6 +327,9 @@ void fido_maintenance_command_report_sent(void)
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t mnt_cmd = get_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            fido_log_info("Erase bonding data end");
+            return;
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");
             return;
@@ -351,9 +345,6 @@ void fido_maintenance_command_report_sent(void)
 
     uint8_t cmd = get_command_byte();
     switch (cmd) {
-        case MNT_COMMAND_ERASE_BONDING_DATA:
-            fido_log_info("Erase bonding data end");
-            break;
         case MNT_COMMAND_SYSTEM_RESET:
             // nRF52840のシステムリセットを実行
             NVIC_SystemReset();
@@ -364,9 +355,6 @@ void fido_maintenance_command_report_sent(void)
         default:
             break;
     }
-
-    // LEDをアイドル状態に遷移
-    fido_status_indicator_idle();
 }
 
 void fido_maintenance_command_flash_failed(void)
