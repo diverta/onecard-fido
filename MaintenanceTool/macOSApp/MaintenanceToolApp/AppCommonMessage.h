@@ -75,6 +75,8 @@
 #define PROCESS_NAME_OPENPGP_INSTALL_KEYS           @"PGP秘密鍵インストール"
 #define PROCESS_NAME_OPENPGP_STATUS                 @"OpenPGP設定情報取得"
 #define PROCESS_NAME_OPENPGP_RESET                  @"OpenPGP機能リセット"
+#define PROCESS_NAME_RTCC_GET_TIMESTAMP             @"認証器の現在時刻参照"
+#define PROCESS_NAME_RTCC_SET_TIMESTAMP             @"認証器の現在時刻設定"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"

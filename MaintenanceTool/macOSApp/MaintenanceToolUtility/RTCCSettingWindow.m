@@ -61,6 +61,8 @@
                 return;
             }
         }
+        // 現在時刻参照を実行
+        [[self commandRef] commandWillPerform:COMMAND_RTCC_GET_TIMESTAMP withTransportType:[self transportType]];
     }
 
     - (bool)checkUSBHIDConnection {
@@ -85,8 +87,8 @@
         if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
-        // このウィンドウを終了
-        [self terminateWindow:NSModalResponseOK];
+        // 現在時刻設定を実行
+        [[self commandRef] commandWillPerform:COMMAND_RTCC_SET_TIMESTAMP withTransportType:[self transportType]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {

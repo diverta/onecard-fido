@@ -8,10 +8,12 @@
 #define RTCCSettingCommand_h
 
 #import <Foundation/Foundation.h>
+#import "AppDefine.h"
 
 @interface RTCCSettingCommand : NSObject
 
     - (bool)isUSBHIDConnected;
+    - (void)commandWillPerform:(Command)command withTransportType:(TransportType)type;
 
 @end
 
