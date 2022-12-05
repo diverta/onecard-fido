@@ -18,6 +18,7 @@
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
+		7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EC404293D8B450078833B /* RTCCSettingCommand.m */; };
 		7A154FEE2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */; };
 		7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */; };
 		7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */; };
@@ -142,6 +143,8 @@
 		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		7A0EB1862580768F004ED59C /* tool_pcsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_pcsc.h; sourceTree = "<group>"; };
 		7A0EB1872580768F004ED59C /* tool_pcsc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_pcsc.c; sourceTree = "<group>"; };
+		7A0EC403293D8A090078833B /* RTCCSettingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCCSettingCommand.h; sourceTree = "<group>"; };
+		7A0EC404293D8B450078833B /* RTCCSettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCCSettingCommand.m; sourceTree = "<group>"; };
 		7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095_01.0.4.8.bin; sourceTree = "<group>"; };
 		7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
 		7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
@@ -434,6 +437,8 @@
 		7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */ = {
 			isa = PBXGroup;
 			children = (
+				7A0EC403293D8A090078833B /* RTCCSettingCommand.h */,
+				7A0EC404293D8B450078833B /* RTCCSettingCommand.m */,
 				7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */,
 				7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */,
 				7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */,
@@ -859,6 +864,7 @@
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
 				7A3F4F2328755FB1003CFE67 /* ToolVersionWindow.m in Sources */,
 				7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */,
+				7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */,
 				7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,
