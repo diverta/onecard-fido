@@ -12,8 +12,10 @@
 @interface RTCCSettingWindow ()
 
     // 画面項目を保持
-    @property (assign) IBOutlet NSButton            *buttonTransportUSB;
-    @property (assign) IBOutlet NSButton            *buttonTransportBLE;
+    @property (assign) IBOutlet NSButton               *buttonTransportUSB;
+    @property (assign) IBOutlet NSButton               *buttonTransportBLE;
+    @property (assign) IBOutlet NSTextField            *LabelToolTimestamp;
+    @property (assign) IBOutlet NSTextField            *LabelDeviceTimestamp;
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;

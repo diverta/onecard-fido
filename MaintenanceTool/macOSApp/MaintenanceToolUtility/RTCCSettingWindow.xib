@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="RTCCSettingWindow">
             <connections>
+                <outlet property="LabelDeviceTimestamp" destination="adx-xe-gGC" id="3UW-xM-Tg3"/>
+                <outlet property="LabelToolTimestamp" destination="xwQ-Ka-K4x" id="MVf-NB-kbb"/>
                 <outlet property="buttonTransportBLE" destination="UpY-Ld-vc7" id="V0h-S6-wf6"/>
                 <outlet property="buttonTransportUSB" destination="HuD-Uh-Xe0" id="lQI-eI-LH7"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
