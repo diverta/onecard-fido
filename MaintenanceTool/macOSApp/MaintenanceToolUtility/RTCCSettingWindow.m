@@ -26,11 +26,12 @@
 
     - (void)windowDidLoad {
         [super windowDidLoad];
+        [self initFieldValue];
     }
 
-    - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef {
-        // 親画面の参照を保持
-        [self setParentWindow:(NSWindow *)ref];
+    - (void)initFieldValue {
+        // ラジオボタン「USB経由」を選択状態にする
+        [[self buttonTransportUSB] setState:NSControlStateValueOn];
     }
 
     - (IBAction)buttonTransportSelected:(id)sender {
@@ -80,6 +81,34 @@
     - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+#pragma mark - For RTCCSettingWindow open/close
+
+    - (bool)windowWillOpenWithCommandRef:(id)ref parentWindow:(NSWindow *)parent {
+        // 親画面の参照を保持
+        [self setParentWindow:parent];
+        // すでにダイアログが開いている場合は終了
+        if ([[[self parentWindow] sheets] count] > 0) {
+            return false;
+        }
+        // すでにダイアログがロード済みの場合は、画面項目を再度初期化
+        if ([self isWindowLoaded]) {
+            [self initFieldValue];
+        }
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [self window];
+        RTCCSettingWindow * __weak weakSelf = self;
+        [[self parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf windowDidCloseWithSender:ref modalResponse:response];
+        }];
+        return true;
+    }
+
+    - (void)windowDidCloseWithSender:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [self close];
     }
 
 @end
