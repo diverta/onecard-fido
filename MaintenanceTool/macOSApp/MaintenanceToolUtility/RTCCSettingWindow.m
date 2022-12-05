@@ -5,6 +5,8 @@
 //  Created by Makoto Morita on 2022/10/18.
 //
 #import "AppCommonMessage.h"
+#import "AppDefine.h"
+#import "RTCCSettingCommand.h"
 #import "RTCCSettingWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
@@ -16,9 +18,12 @@
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
     @property (assign) IBOutlet NSTextField            *LabelToolTimestamp;
     @property (assign) IBOutlet NSTextField            *LabelDeviceTimestamp;
-
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
+    // コマンドクラスの参照を保持
+    @property (nonatomic) RTCCSettingCommand           *commandRef;
+    // トランスポート種別を保持
+    @property (nonatomic) TransportType                 transportType;
 
 @end
 
@@ -26,12 +31,14 @@
 
     - (void)windowDidLoad {
         [super windowDidLoad];
+        [self setCommandRef:[[RTCCSettingCommand alloc] init]];
         [self initFieldValue];
     }
 
     - (void)initFieldValue {
         // ラジオボタン「USB経由」を選択状態にする
         [[self buttonTransportUSB] setState:NSControlStateValueOn];
+        [self setTransportType:TRANSPORT_HID];
         // 時刻表示ラベルをブランクにする
         [[self LabelToolTimestamp] setStringValue:@""];
         [[self LabelDeviceTimestamp] setStringValue:@""];
@@ -40,31 +47,37 @@
     - (IBAction)buttonTransportSelected:(id)sender {
         // トランスポート種別を設定
         if (sender == [self buttonTransportUSB]) {
+            [self setTransportType:TRANSPORT_HID];
         }
         if (sender == [self buttonTransportBLE]) {
+            [self setTransportType:TRANSPORT_BLE];
         }
     }
 
     - (IBAction)buttonGetTimestampDidPress:(id)sender {
         // USB接続チェック
-        if ([self checkUSBHIDConnection]) {
-            // このウィンドウを終了
-            [self terminateWindow:NSModalResponseOK];
+        if ([self transportType] == TRANSPORT_HID) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
         }
     }
 
     - (bool)checkUSBHIDConnection {
-        // TODO: 仮の実装です。
-        return true;
+        // USBポートに接続されていない場合は処理中止
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[self commandRef] isUSBHIDConnected]];
     }
 
     - (IBAction)buttonSetTimestampDidPress:(id)sender {
         // USB接続チェック
-        if ([self checkUSBHIDConnection]) {
-            // 処理を実行するかどうかのプロンプトを表示
-            [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_RTCC_SET_TIMESTAMP informativeText:MSG_COMMENT_RTCC_SET_TIMESTAMP
-                                                      withObject:self forSelector:@selector(SetTimestampCommandPromptDone) parentWindow:[self window]];
+        if ([self transportType] == TRANSPORT_HID) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
         }
+        // 処理を実行するかどうかのプロンプトを表示
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_PROMPT_RTCC_SET_TIMESTAMP informativeText:MSG_COMMENT_RTCC_SET_TIMESTAMP
+                                                  withObject:self forSelector:@selector(SetTimestampCommandPromptDone) parentWindow:[self window]];
     }
 
     - (void)SetTimestampCommandPromptDone {
