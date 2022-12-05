@@ -7,6 +7,7 @@
 #import "AppBLECommand.h"
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
+#import "FIDODefines.h"
 #import "RTCCSettingCommand.h"
 #import "ToolLogFile.h"
 
@@ -27,6 +28,9 @@
     @property (nonatomic) bool                          commandSuccess;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString                     *errorMessageOfCommand;
+    // タイムスタンプを保持
+    @property (nonatomic) NSString                     *toolTimestamp;
+    @property (nonatomic) NSString                     *deviceTimestamp;
 
 @end
 
@@ -58,11 +62,57 @@
         [self notifyProcessStarted];
         // コマンドにより分岐
         switch (command) {
+            case COMMAND_RTCC_GET_TIMESTAMP:
+                [self doRequestGetTimestamp];
+                break;
             default:
                 // 画面に制御を戻す
                 [self notifyProcessTerminated:false];
                 break;
         }
+    }
+
+
+#pragma mark - Get timestamp from RTCC
+
+    - (void)doRequestGetTimestamp {
+        // あらかじめ領域を初期化
+        [self setToolTimestamp:@""];
+        [self setDeviceTimestamp:@""];
+        if ([self transportType] == TRANSPORT_HID) {
+            // HID経由でタイムスタンプを取得
+            uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+            [[self appHIDCommand] doRequestCommand:COMMAND_RTCC_GET_TIMESTAMP withCMD:cmd withData:[self commandDataForGetTimestamp]];
+        }
+    }
+
+    - (void)doResponseHIDGetTimestamp:(NSData *)response {
+        // レスポンスを画面表示
+        [self doResponseGetTimestamp:response];
+        // 画面に制御を戻す
+        [self notifyProcessTerminated:true];
+    }
+
+    - (void)doResponseGetTimestamp:(NSData *)response {
+        // タイムスタンプ文字列はレスポンスの２バイト目から19文字
+        char timestampString[20];
+        size_t lastPos = sizeof(timestampString) - 1;
+        memcpy(timestampString, [response bytes] + 1, lastPos);
+        timestampString[lastPos] = 0;
+        // 認証器のタイムスタンプ文字列を保持
+        [self setDeviceTimestamp:[[NSString alloc] initWithUTF8String:timestampString]];
+        // 管理ツールのタイムスタンプを取得して保持
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JP"]];
+        [df setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
+        [self setToolTimestamp:[df stringFromDate:[NSDate date]]];
+    }
+
+    - (NSData *)commandDataForGetTimestamp {
+        // タイムスタンプ取得用のリクエストデータを生成
+        unsigned char arr[] = {MNT_COMMAND_GET_TIMESTAMP};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
     }
 
 #pragma mark - Private common methods
@@ -101,9 +151,7 @@
         }
         // 戻り先がある場合は制御を戻す
         if ([self delegate]) {
-            // TODO: 仮の実装です。
-            NSArray<NSString *> *timestamps = @[@"2022/12/05 13:00:00", @"2022/12/05 13:00:00"];
-            [self setErrorMessageOfCommand:@"TODO: 仮の実装です。"];
+            NSArray<NSString *> *timestamps = @[[self toolTimestamp], [self deviceTimestamp]];
             [[self delegate] RTCCSettingCommandDidProcess:[self command] commandName:[self nameOfCommand]
                                             withTimestamp:timestamps withResult:success withErrorMessage:[self errorMessageOfCommand]];
         }
@@ -118,6 +166,22 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 即時でアプリケーションに制御を戻す
+        if (success == false) {
+            [self setErrorMessageOfCommand:errorMessage];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [self setErrorMessageOfCommand:MSG_OCCUR_UNKNOWN_ERROR];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // 画面に制御を戻す
+        [self doResponseHIDGetTimestamp:response];
     }
 
 #pragma mark - Call back from AppBLECommand
