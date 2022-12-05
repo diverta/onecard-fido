@@ -88,7 +88,7 @@
 
 #pragma mark - For RTCCSettingWindow open/close
 
-    - (bool)windowWillOpenWithCommandRef:(id)ref parentWindow:(NSWindow *)parent {
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent {
         // 親画面の参照を保持
         [self setParentWindow:parent];
         // すでにダイアログが開いている場合は終了
@@ -104,12 +104,12 @@
         RTCCSettingWindow * __weak weakSelf = self;
         [[self parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf windowDidCloseWithSender:ref modalResponse:response];
+            [weakSelf windowDidCloseWithModalResponse:response];
         }];
         return true;
     }
 
-    - (void)windowDidCloseWithSender:(id)sender modalResponse:(NSInteger)modalResponse {
+    - (void)windowDidCloseWithModalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
     }

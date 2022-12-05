@@ -76,7 +76,7 @@
         switch ([[self utilityWindow] commandToPerform]) {
             case COMMAND_RTCC_SETTING:
                 // 時刻同期
-                [[self rtccSettingWindow] windowWillOpenWithCommandRef:nil parentWindow:[self parentWindow]];
+                [[self rtccSettingWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             case COMMAND_HID_GET_FLASH_STAT:
                 // Flash ROM情報取得

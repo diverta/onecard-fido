@@ -11,7 +11,7 @@
 
 @interface RTCCSettingWindow : NSWindowController
 
-    - (bool)windowWillOpenWithCommandRef:(id)ref parentWindow:(NSWindow *)parent;
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent;
 
 @end
 
