@@ -129,4 +129,21 @@
         [self close];
     }
 
+#pragma mark - For RTCCSettingCommand functions
+
+    - (void)RTCCSettingCommandDidProcess:(Command)command commandName:(NSString *)commandName withTimestamp:(NSArray<NSString *>*)timestamps
+                              withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
+        // タイムスタンプを画面に表示 0:PCの現在時刻 1:認証器の現在時刻
+        [[self LabelToolTimestamp] setStringValue:timestamps[0]];
+        [[self LabelDeviceTimestamp] setStringValue:timestamps[1]];
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, commandName, result ? MSG_SUCCESS:MSG_FAILURE];
+        // 処理終了メッセージをポップアップ表示
+        if (result) {
+            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
+        } else {
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:errorMessage withObject:nil forSelector:nil parentWindow:[self window]];
+        }
+    }
+
 @end
