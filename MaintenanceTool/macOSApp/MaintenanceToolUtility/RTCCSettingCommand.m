@@ -84,6 +84,10 @@
             uint8_t cmd = MNT_COMMAND_BASE | 0x80;
             [[self appHIDCommand] doRequestCommand:COMMAND_RTCC_GET_TIMESTAMP withCMD:cmd withData:[self commandDataForGetTimestamp]];
         }
+        if ([self transportType] == TRANSPORT_BLE) {
+            // BLE経由でタイムスタンプを取得
+            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_GET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForGetTimestamp]];
+        }
     }
 
     - (void)doResponseHIDGetTimestamp:(NSData *)response {
@@ -187,9 +191,23 @@
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            return;
+        }
+        // レスポンスを画面表示
+        [self doResponseGetTimestamp:response];
+        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
+        [[self appBLECommand] commandDidProcess:true message:nil];
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        // 画面に制御を戻す
+        [self setErrorMessageOfCommand:errorMessage];
+        [self notifyProcessTerminated:success];
     }
 
 @end
