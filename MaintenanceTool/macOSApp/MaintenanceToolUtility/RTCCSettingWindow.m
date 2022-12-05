@@ -10,6 +10,7 @@
 #import "RTCCSettingWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 
 @interface RTCCSettingWindow () <RTCCSettingCommandDelegate>
 
@@ -61,6 +62,8 @@
                 return;
             }
         }
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // 現在時刻参照を実行
         [[self commandRef] commandWillPerform:COMMAND_RTCC_GET_TIMESTAMP withTransportType:[self transportType]];
     }
@@ -87,6 +90,8 @@
         if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
         // 現在時刻設定を実行
         [[self commandRef] commandWillPerform:COMMAND_RTCC_SET_TIMESTAMP withTransportType:[self transportType]];
     }
@@ -138,11 +143,11 @@
         [[self LabelDeviceTimestamp] setStringValue:timestamps[1]];
         // ポップアップ表示させるメッセージを編集
         NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, commandName, result ? MSG_SUCCESS:MSG_FAILURE];
-        // 処理終了メッセージをポップアップ表示
+        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
         if (result) {
-            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
         } else {
-            [[ToolPopupWindow defaultWindow] critical:message informativeText:errorMessage withObject:nil forSelector:nil parentWindow:[self window]];
+            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
         }
     }
 
