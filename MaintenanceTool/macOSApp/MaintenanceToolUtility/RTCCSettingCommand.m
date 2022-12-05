@@ -12,6 +12,8 @@
 
 @interface RTCCSettingCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
+    // 上位クラスの参照を保持（nilを許容します）
+    @property (nonatomic, weak) id                      delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
     @property (nonatomic) AppBLECommand                *appBLECommand;
@@ -23,17 +25,21 @@
     @property (nonatomic) NSString                     *nameOfCommand;
     // コマンドが成功したかどうかを保持
     @property (nonatomic) bool                          commandSuccess;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString                     *errorMessageOfCommand;
 
 @end
 
 @implementation RTCCSettingCommand
 
-    - (id)init {
+    - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
+            // 上位クラスの参照を保持
+            [self setDelegate:delegate];
         }
         return self;
     }
@@ -93,7 +99,14 @@
                 [[ToolLogFile defaultLogger] info:endMsg];
             }
         }
-        // TODO: 戻り先がある場合は制御を戻す
+        // 戻り先がある場合は制御を戻す
+        if ([self delegate]) {
+            // TODO: 仮の実装です。
+            NSArray<NSString *> *timestamps = @[@"2022/12/05 13:00:00", @"2022/12/05 13:00:00"];
+            [self setErrorMessageOfCommand:@"TODO: 仮の実装です。"];
+            [[self delegate] RTCCSettingCommandDidProcess:[self command] commandName:[self nameOfCommand]
+                                            withTimestamp:timestamps withResult:success withErrorMessage:[self errorMessageOfCommand]];
+        }
     }
 
 #pragma mark - Call back from AppHIDCommand

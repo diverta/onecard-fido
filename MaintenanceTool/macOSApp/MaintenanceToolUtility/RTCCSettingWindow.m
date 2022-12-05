@@ -11,7 +11,7 @@
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
 
-@interface RTCCSettingWindow ()
+@interface RTCCSettingWindow () <RTCCSettingCommandDelegate>
 
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
@@ -31,7 +31,7 @@
 
     - (void)windowDidLoad {
         [super windowDidLoad];
-        [self setCommandRef:[[RTCCSettingCommand alloc] init]];
+        [self setCommandRef:[[RTCCSettingCommand alloc] initWithDelegate:self]];
         [self initFieldValue];
     }
 
