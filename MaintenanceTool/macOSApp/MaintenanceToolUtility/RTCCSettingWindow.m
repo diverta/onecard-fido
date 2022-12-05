@@ -32,6 +32,9 @@
     - (void)initFieldValue {
         // ラジオボタン「USB経由」を選択状態にする
         [[self buttonTransportUSB] setState:NSControlStateValueOn];
+        // 時刻表示ラベルをブランクにする
+        [[self LabelToolTimestamp] setStringValue:@""];
+        [[self LabelDeviceTimestamp] setStringValue:@""];
     }
 
     - (IBAction)buttonTransportSelected:(id)sender {

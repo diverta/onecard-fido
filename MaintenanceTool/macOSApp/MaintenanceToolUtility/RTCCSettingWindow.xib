@@ -31,13 +31,13 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="時刻同期" id="Wzj-Q9-FAI">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="認証器の時刻を参照・設定" id="Wzj-Q9-FAI">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box fixedFrame="YES" boxType="secondary" title="通信方法の選択" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
+                    <box fixedFrame="YES" boxType="secondary" title="接続方法" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
                         <rect key="frame" x="17" y="323" width="324" height="65"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="vwy-KZ-ZkM">
@@ -70,7 +70,7 @@
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box fixedFrame="YES" boxType="secondary" title="現在時刻照会・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                    <box fixedFrame="YES" boxType="secondary" title="現在時刻参照・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
                         <rect key="frame" x="17" y="176" width="324" height="136"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="lLQ-Iq-3Cq">
@@ -80,7 +80,7 @@
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonGetTimestamp">
                                     <rect key="frame" x="17" y="67" width="126" height="32"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="push" title="現在時刻照会" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
+                                    <buttonCell key="cell" type="push" title="現在時刻参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
@@ -89,9 +89,9 @@
                                     </connections>
                                 </button>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FvJ-5d-Ckw" userLabel="TitleGetTimestamp">
-                                    <rect key="frame" x="152" y="69" width="146" height="32"/>
+                                    <rect key="frame" x="152" y="62" width="146" height="40"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器に設定されている現在時刻を取得します。" id="cLw-cu-Zy2">
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器に設定されている現在時刻を参照します。" id="cLw-cu-Zy2">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -109,7 +109,7 @@
                                     </connections>
                                 </button>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fkO-3i-mzz" userLabel="TitleSetTimestamp">
-                                    <rect key="frame" x="152" y="20" width="146" height="32"/>
+                                    <rect key="frame" x="152" y="12" width="146" height="40"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="PCの現在時刻を認証器に設定します。" id="tGy-D5-CKP">
                                         <font key="font" metaFont="system"/>
@@ -121,7 +121,7 @@
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box boxType="secondary" title="照会・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                    <box boxType="secondary" title="参照・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
                         <rect key="frame" x="17" y="57" width="324" height="108"/>
                         <view key="contentView" id="HzA-xp-MO5">
                             <rect key="frame" x="3" y="3" width="318" height="88"/>
@@ -140,10 +140,10 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwQ-Ka-K4x" userLabel="LabelToolTimestamp">
-                                    <rect key="frame" x="146" y="53" width="136" height="16"/>
+                                    <rect key="frame" x="146" y="52" width="136" height="18"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="132" id="3oZ-UJ-mAn"/>
-                                        <constraint firstAttribute="height" constant="16" id="eVg-Oy-FDo"/>
+                                        <constraint firstAttribute="height" constant="18" id="eVg-Oy-FDo"/>
                                     </constraints>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="2022/00/00 11:22:33" id="aPz-nR-tho">
                                         <font key="font" metaFont="system"/>
@@ -177,14 +177,14 @@
                                 </textField>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="bottom" secondItem="xwQ-Ka-K4x" secondAttribute="bottom" constant="53" id="0K2-iq-L2k"/>
+                                <constraint firstAttribute="bottom" secondItem="xwQ-Ka-K4x" secondAttribute="bottom" constant="52" id="0K2-iq-L2k"/>
                                 <constraint firstItem="adx-xe-gGC" firstAttribute="baseline" secondItem="qih-aq-CI8" secondAttribute="firstBaseline" constant="2" id="BrU-bM-aPw"/>
                                 <constraint firstItem="qih-aq-CI8" firstAttribute="top" secondItem="qhR-Hk-dUR" secondAttribute="bottom" constant="14" id="I9S-4I-OKl"/>
                                 <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="qhR-Hk-dUR" secondAttribute="trailing" constant="20" id="Noz-pa-WPR"/>
                                 <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="HzA-xp-MO5" secondAttribute="leading" constant="148" id="WkM-53-xvh"/>
-                                <constraint firstItem="qhR-Hk-dUR" firstAttribute="baseline" secondItem="xwQ-Ka-K4x" secondAttribute="baseline" constant="1" id="Xoq-VR-zLh"/>
+                                <constraint firstItem="qhR-Hk-dUR" firstAttribute="baseline" secondItem="xwQ-Ka-K4x" secondAttribute="baseline" id="Xoq-VR-zLh"/>
                                 <constraint firstItem="qhR-Hk-dUR" firstAttribute="leading" secondItem="qih-aq-CI8" secondAttribute="leading" id="jke-hA-b9a"/>
-                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="top" secondItem="HzA-xp-MO5" secondAttribute="top" constant="19" id="kBT-uY-SQa"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="top" secondItem="HzA-xp-MO5" secondAttribute="top" constant="18" id="kBT-uY-SQa"/>
                                 <constraint firstItem="adx-xe-gGC" firstAttribute="leading" secondItem="xwQ-Ka-K4x" secondAttribute="leading" id="rSg-Ug-HCY"/>
                             </constraints>
                         </view>
