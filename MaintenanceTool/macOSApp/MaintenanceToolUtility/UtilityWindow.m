@@ -42,6 +42,11 @@
         [self setUtilityCommandRef:ref];
     }
 
+    - (IBAction)buttonRTCCSettingDidPress:(id)sender {
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK withCommand:COMMAND_RTCC_SETTING];
+    }
+
     - (IBAction)buttonFlashROMInfoDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
         if ([self checkUSBHIDConnection] == false) {
