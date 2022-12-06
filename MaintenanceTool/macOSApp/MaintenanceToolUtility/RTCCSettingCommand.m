@@ -9,6 +9,7 @@
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
 #import "RTCCSettingCommand.h"
+#import "ToolCommon.h"
 #import "ToolLogFile.h"
 
 @interface RTCCSettingCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
@@ -62,6 +63,9 @@
         [self notifyProcessStarted];
         // コマンドにより分岐
         switch (command) {
+            case COMMAND_RTCC_SET_TIMESTAMP:
+                [self doRequestSetTimestamp];
+                break;
             case COMMAND_RTCC_GET_TIMESTAMP:
                 [self doRequestGetTimestamp];
                 break;
@@ -72,6 +76,42 @@
         }
     }
 
+#pragma mark - Set timestamp to RTCC
+
+    - (void)doRequestSetTimestamp {
+        if ([self transportType] == TRANSPORT_HID) {
+            // CTAPHID_INITから実行
+            [[self appHIDCommand] doRequestCtapHidInit];
+        }
+    }
+
+    - (void)doResponseHIDCtap2Init {
+        // 認証器に現在時刻を設定
+        [self doRequestHIDSetTimestamp];
+    }
+
+    - (void)doRequestHIDSetTimestamp {
+        // HID経由でタイムスタンプを設定
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCtap2Command:COMMAND_RTCC_SET_TIMESTAMP withCMD:cmd withData:[self commandDataForSetTimestamp]];
+    }
+
+    - (void)doResponseHIDSetTimestamp:(NSData *)response {
+        // レスポンスを画面表示
+        [self doResponseGetTimestamp:response];
+        // 画面に制御を戻す
+        [self notifyProcessTerminated:true];
+    }
+
+    - (NSData *)commandDataForSetTimestamp {
+        // タイムスタンプ設定用のリクエストデータを生成
+        unsigned char arr[] = {MNT_COMMAND_SET_TIMESTAMP, 0x00, 0x00, 0x00, 0x00};
+        NSDate *now = [NSDate date];
+        NSTimeInterval nowEpochSeconds = [now timeIntervalSince1970];
+        [ToolCommon setLENumber32:(uint32_t)nowEpochSeconds toBEBytes:(arr + 1)];
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        return commandData;
+    }
 
 #pragma mark - Get timestamp from RTCC
 
@@ -174,6 +214,11 @@
         if (success == false) {
             [self setErrorMessageOfCommand:errorMessage];
             [self notifyProcessTerminated:false];
+            return;
+        }
+        // INITの場合
+        if (command == COMMAND_HID_CTAP2_INIT) {
+            [self doResponseHIDCtap2Init];
             return;
         }
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
