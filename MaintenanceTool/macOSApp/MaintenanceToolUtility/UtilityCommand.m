@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
+#import "RTCCSettingWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonFunc.h"
 #import "ToolCommonMessage.h"
@@ -22,6 +23,7 @@
     // 画面の参照を保持
     @property (nonatomic) UtilityWindow                *utilityWindow;
     @property (nonatomic) ToolVersionWindow            *toolVersionWindow;
+    @property (nonatomic) RTCCSettingWindow            *rtccSettingWindow;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppHIDCommand                *appHIDCommand;
 
@@ -35,6 +37,7 @@
             // 画面のインスタンスを生成
             [self setUtilityWindow:[[UtilityWindow alloc] initWithWindowNibName:@"UtilityWindow"]];
             [self setToolVersionWindow:[[ToolVersionWindow alloc] initWithWindowNibName:@"ToolVersionWindow"]];
+            [self setRtccSettingWindow:[[RTCCSettingWindow alloc] initWithWindowNibName:@"RTCCSettingWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             // バージョン情報をセット
@@ -71,6 +74,10 @@
         [[self utilityWindow] close];
         // 実行コマンドにより処理分岐
         switch ([[self utilityWindow] commandToPerform]) {
+            case COMMAND_RTCC_SETTING:
+                // 時刻同期
+                [[self rtccSettingWindow] windowWillOpenWithParentWindow:[self parentWindow]];
+                break;
             case COMMAND_HID_GET_FLASH_STAT:
                 // Flash ROM情報取得
                 [self doRequestHIDGetFlashStat];

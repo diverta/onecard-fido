@@ -18,6 +18,7 @@
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
+		7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EC404293D8B450078833B /* RTCCSettingCommand.m */; };
 		7A154FEE2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */; };
 		7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */; };
 		7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */; };
@@ -65,6 +66,8 @@
 		7A8640282900D7AC008E9D1C /* USBDFUACMCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8640272900D7AC008E9D1C /* USBDFUACMCommand.m */; };
 		7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402B2900E35E008E9D1C /* usb_dfu_util.c */; };
 		7A8640302900E35F008E9D1C /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402D2900E35F008E9D1C /* usb_cdc_util.c */; };
+		7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
+		7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */; };
 		7A9167FB28FE2B1E0096A848 /* DFUWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9167FA28FE2B1E0096A848 /* DFUWindow.xib */; };
 		7A9167FE28FE30870096A848 /* DFUWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9167FC28FE30870096A848 /* DFUWindow.m */; };
 		7A91680228FE497E0096A848 /* USBDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680128FE497E0096A848 /* USBDFUCommand.m */; };
@@ -140,6 +143,8 @@
 		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		7A0EB1862580768F004ED59C /* tool_pcsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_pcsc.h; sourceTree = "<group>"; };
 		7A0EB1872580768F004ED59C /* tool_pcsc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_pcsc.c; sourceTree = "<group>"; };
+		7A0EC403293D8A090078833B /* RTCCSettingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCCSettingCommand.h; sourceTree = "<group>"; };
+		7A0EC404293D8B450078833B /* RTCCSettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCCSettingCommand.m; sourceTree = "<group>"; };
 		7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095_01.0.4.8.bin; sourceTree = "<group>"; };
 		7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
 		7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
@@ -219,6 +224,9 @@
 		7A86402C2900E35E008E9D1C /* usb_cdc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_cdc_util.h; sourceTree = "<group>"; };
 		7A86402D2900E35F008E9D1C /* usb_cdc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
 		7A86402E2900E35F008E9D1C /* usb_dfu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_dfu_util.h; sourceTree = "<group>"; };
+		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
+		7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCCSettingWindow.h; sourceTree = "<group>"; };
+		7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCCSettingWindow.m; sourceTree = "<group>"; };
 		7A9167FA28FE2B1E0096A848 /* DFUWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DFUWindow.xib; sourceTree = "<group>"; };
 		7A9167FC28FE30870096A848 /* DFUWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DFUWindow.m; sourceTree = "<group>"; };
 		7A9167FD28FE30870096A848 /* DFUWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DFUWindow.h; sourceTree = "<group>"; };
@@ -429,6 +437,11 @@
 		7A3F4F0D28755A0E003CFE67 /* MaintenanceToolUtility */ = {
 			isa = PBXGroup;
 			children = (
+				7A0EC403293D8A090078833B /* RTCCSettingCommand.h */,
+				7A0EC404293D8B450078833B /* RTCCSettingCommand.m */,
+				7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */,
+				7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */,
+				7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */,
 				7A3F4F1828755F91003CFE67 /* UtilityCommand.h */,
 				7A3F4F1B28755F91003CFE67 /* UtilityCommand.m */,
 				7A3F4F1928755F91003CFE67 /* UtilityWindow.h */,
@@ -775,6 +788,7 @@
 				7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */,
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
+				7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
@@ -803,6 +817,7 @@
 				7ACABD862887D00500756123 /* DFUCommand.m in Sources */,
 				7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */,
 				7A91680228FE497E0096A848 /* USBDFUCommand.m in Sources */,
+				7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */,
 				7AD9827E287FF982002A6846 /* AppBLECommand.m in Sources */,
 				7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */,
 				7A9167FE28FE30870096A848 /* DFUWindow.m in Sources */,
@@ -849,6 +864,7 @@
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
 				7A3F4F2328755FB1003CFE67 /* ToolVersionWindow.m in Sources */,
 				7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */,
+				7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */,
 				7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,

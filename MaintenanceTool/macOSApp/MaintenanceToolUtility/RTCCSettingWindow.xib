@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="RTCCSettingWindow">
+            <connections>
+                <outlet property="LabelDeviceTimestamp" destination="adx-xe-gGC" id="3UW-xM-Tg3"/>
+                <outlet property="LabelToolTimestamp" destination="xwQ-Ka-K4x" id="MVf-NB-kbb"/>
+                <outlet property="buttonTransportBLE" destination="UpY-Ld-vc7" id="V0h-S6-wf6"/>
+                <outlet property="buttonTransportUSB" destination="HuD-Uh-Xe0" id="lQI-eI-LH7"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="358" height="417"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
+                        <rect key="frame" x="29" y="391" width="300" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="認証器の時刻を参照・設定" id="Wzj-Q9-FAI">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <box fixedFrame="YES" boxType="secondary" title="接続方法" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
+                        <rect key="frame" x="17" y="323" width="324" height="65"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="vwy-KZ-ZkM">
+                            <rect key="frame" x="3" y="3" width="318" height="45"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HuD-Uh-Xe0" userLabel="buttonTransportUSB">
+                                    <rect key="frame" x="19" y="16" width="73" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="USB経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="I2L-ng-cbR">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="kV2-mo-05q"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UpY-Ld-vc7" userLabel="buttonTransportBLE">
+                                    <rect key="frame" x="120" y="16" width="70" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="BLE経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2RU-zL-BEr">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="14x-3j-fO0"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <box fixedFrame="YES" boxType="secondary" title="現在時刻参照・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                        <rect key="frame" x="17" y="176" width="324" height="136"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="lLQ-Iq-3Cq">
+                            <rect key="frame" x="3" y="3" width="318" height="116"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonGetTimestamp">
+                                    <rect key="frame" x="17" y="67" width="126" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="現在時刻参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonGetTimestampDidPress:" target="-2" id="31q-mn-c2u"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FvJ-5d-Ckw" userLabel="TitleGetTimestamp">
+                                    <rect key="frame" x="152" y="62" width="146" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器に設定されている現在時刻を参照します。" id="cLw-cu-Zy2">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonSetTimestamp">
+                                    <rect key="frame" x="17" y="18" width="126" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="現在時刻設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonSetTimestampDidPress:" target="-2" id="x91-4G-ccL"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fkO-3i-mzz" userLabel="TitleSetTimestamp">
+                                    <rect key="frame" x="152" y="12" width="146" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="PCの現在時刻を認証器に設定します。" id="tGy-D5-CKP">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <box boxType="secondary" title="参照・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                        <rect key="frame" x="17" y="57" width="324" height="108"/>
+                        <view key="contentView" id="HzA-xp-MO5">
+                            <rect key="frame" x="3" y="3" width="318" height="88"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qhR-Hk-dUR" userLabel="Title">
+                                    <rect key="frame" x="30" y="52" width="100" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="96" id="ymc-ja-2os"/>
+                                        <constraint firstAttribute="height" constant="18" id="zFD-rD-VnR"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="PCの時刻" id="rzn-4Y-DPg">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwQ-Ka-K4x" userLabel="LabelToolTimestamp">
+                                    <rect key="frame" x="146" y="52" width="136" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="132" id="3oZ-UJ-mAn"/>
+                                        <constraint firstAttribute="height" constant="18" id="eVg-Oy-FDo"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="2022/00/00 11:22:33" id="aPz-nR-tho">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qih-aq-CI8" userLabel="Title">
+                                    <rect key="frame" x="30" y="20" width="100" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="18" id="QnT-l1-N2j"/>
+                                        <constraint firstAttribute="width" constant="96" id="Ycw-zd-Jft"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="認証器の時刻" id="ahW-Ut-9Q9">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="adx-xe-gGC" userLabel="LabelDeviceTimestamp">
+                                    <rect key="frame" x="146" y="20" width="136" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="132" id="8OC-Vc-Ak7"/>
+                                        <constraint firstAttribute="height" constant="18" id="qjz-ld-Ku2"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="2022/00/00 11:22:33" id="Ubh-oZ-FxD">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="xwQ-Ka-K4x" secondAttribute="bottom" constant="52" id="0K2-iq-L2k"/>
+                                <constraint firstItem="adx-xe-gGC" firstAttribute="baseline" secondItem="qih-aq-CI8" secondAttribute="firstBaseline" constant="2" id="BrU-bM-aPw"/>
+                                <constraint firstItem="qih-aq-CI8" firstAttribute="top" secondItem="qhR-Hk-dUR" secondAttribute="bottom" constant="14" id="I9S-4I-OKl"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="qhR-Hk-dUR" secondAttribute="trailing" constant="20" id="Noz-pa-WPR"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="leading" secondItem="HzA-xp-MO5" secondAttribute="leading" constant="148" id="WkM-53-xvh"/>
+                                <constraint firstItem="qhR-Hk-dUR" firstAttribute="baseline" secondItem="xwQ-Ka-K4x" secondAttribute="baseline" id="Xoq-VR-zLh"/>
+                                <constraint firstItem="qhR-Hk-dUR" firstAttribute="leading" secondItem="qih-aq-CI8" secondAttribute="leading" id="jke-hA-b9a"/>
+                                <constraint firstItem="xwQ-Ka-K4x" firstAttribute="top" secondItem="HzA-xp-MO5" secondAttribute="top" constant="18" id="kBT-uY-SQa"/>
+                                <constraint firstItem="adx-xe-gGC" firstAttribute="leading" secondItem="xwQ-Ka-K4x" secondAttribute="leading" id="rSg-Ug-HCY"/>
+                            </constraints>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
+                        <rect key="frame" x="138" y="13" width="82" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="Zp6-CW-GCA"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="centerX" secondItem="kD7-1A-1Hy" secondAttribute="centerX" id="0Xc-EE-wNw"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="ICe-ik-bNC"/>
+                    <constraint firstItem="B1y-5G-Fg0" firstAttribute="top" secondItem="kD7-1A-1Hy" secondAttribute="bottom" constant="226" id="Odt-ZK-UqB"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="9" id="Tpv-7k-n2x"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="31" id="VN2-f1-3cU"/>
+                    <constraint firstItem="kD7-1A-1Hy" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="gLv-qF-EhC"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
+            </connections>
+            <point key="canvasLocation" x="122" y="235.5"/>
+        </window>
+    </objects>
+</document>

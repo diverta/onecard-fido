@@ -75,6 +75,8 @@
 #define PROCESS_NAME_OPENPGP_INSTALL_KEYS           @"PGP秘密鍵インストール"
 #define PROCESS_NAME_OPENPGP_STATUS                 @"OpenPGP設定情報取得"
 #define PROCESS_NAME_OPENPGP_RESET                  @"OpenPGP機能リセット"
+#define PROCESS_NAME_RTCC_GET_TIMESTAMP             @"認証器の現在時刻参照"
+#define PROCESS_NAME_RTCC_SET_TIMESTAMP             @"認証器の現在時刻設定"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -158,6 +160,10 @@
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上の緑色LEDが点滅したら、"
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  ボタンを１回押してください."
+
+#pragma mark - 時刻同期関連メッセージ
+#define MSG_PROMPT_RTCC_SET_TIMESTAMP       @"PCの現在時刻を認証器に設定します。"
+#define MSG_COMMENT_RTCC_SET_TIMESTAMP      @"処理を実行しますか？"
 
 #pragma mark - Flash ROM情報取得関連メッセージ
 #define MSG_FSTAT_REMAINING_RATE            @"Flash ROMの空き容量は%.1f％です。"
