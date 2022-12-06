@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp.CommonWindow;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp.Utility
@@ -8,8 +11,16 @@ namespace MaintenanceToolApp.Utility
     /// </summary>
     public partial class RTCCSettingWindow : Window
     {
+        // 時刻設定処理の参照を保持
+        private readonly RTCCSettingProcess Process = null!;
+        private readonly RTCCSettingParameter Parameter = null!;
+
         public RTCCSettingWindow()
         {
+            // 時刻設定処理クラスの参照を保持
+            Process = new RTCCSettingProcess();
+            Parameter = new RTCCSettingParameter();
+
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();
@@ -50,6 +61,7 @@ namespace MaintenanceToolApp.Utility
         private void DoSetParameter(Transport transport)
         {
             // トランスポート種別を設定
+            Parameter.Transport = transport;
         }
 
         //
@@ -58,16 +70,42 @@ namespace MaintenanceToolApp.Utility
         private void DoSetTimestamp()
         {
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_PROMPT_RTCC_SET_TIMESTAMP, AppCommon.MSG_COMMENT_RTCC_SET_TIMESTAMP) == false) {
-                return;
+            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_PROMPT_RTCC_SET_TIMESTAMP, AppCommon.MSG_COMMENT_RTCC_SET_TIMESTAMP)) {
+                DoRTCCSettingProcess(Command.COMMAND_RTCC_SET_TIMESTAMP, AppCommon.PROCESS_NAME_RTCC_SET_TIMESTAMP);
             }
         }
 
-        //
-        // 時刻参照処理
-        //
         private void DoGetTimestamp()
         {
+            DoRTCCSettingProcess(Command.COMMAND_RTCC_GET_TIMESTAMP, AppCommon.PROCESS_NAME_RTCC_GET_TIMESTAMP);
+        }
+
+        private void DoRTCCSettingProcess(Command command, string commandTitle)
+        {
+            // パラメーターを設定し、コマンドを実行
+            Parameter.Command = command;
+            Parameter.CommandTitle = commandTitle;
+            Task task = Task.Run(() => {
+                Process.DoRTCCSettingProcess(Parameter, OnRTCCSettingProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            // メッセージをポップアップ表示
+            if (Parameter.CommandSuccess) {
+                DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
+            } else {
+                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+            }
+        }
+
+        private void OnRTCCSettingProcessTerminated(RTCCSettingParameter param)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //

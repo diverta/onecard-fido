@@ -37,6 +37,8 @@
         public const string PROCESS_NAME_GET_VERSION_INFO = "ファームウェアバージョン情報取得";
         public const string PROCESS_NAME_TOOL_VERSION_INFO = "管理ツールのバージョンを参照";
         public const string PROCESS_NAME_VIEW_LOG_FILE = "管理ツールのログを参照";
+        public const string PROCESS_NAME_RTCC_GET_TIMESTAMP = "認証器の現在時刻参照";
+        public const string PROCESS_NAME_RTCC_SET_TIMESTAMP = "認証器の現在時刻設定";
         public const string PROCESS_NAME_NONE = "";
 
         // ホーム画面
