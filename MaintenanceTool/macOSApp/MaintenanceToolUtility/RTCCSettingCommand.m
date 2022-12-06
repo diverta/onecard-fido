@@ -83,6 +83,10 @@
             // CTAPHID_INITから実行
             [[self appHIDCommand] doRequestCtapHidInit];
         }
+        if ([self transportType] == TRANSPORT_BLE) {
+            // BLE経由で現在時刻を設定
+            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_SET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForGetTimestamp]];
+        }
     }
 
     - (void)doResponseHIDCtap2Init {
