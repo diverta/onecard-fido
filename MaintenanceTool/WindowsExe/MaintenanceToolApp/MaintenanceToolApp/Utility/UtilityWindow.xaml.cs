@@ -31,6 +31,13 @@ namespace MaintenanceToolApp.Utility
             }
         }
 
+        private void DoRTCCSetting()
+        {
+            // 実行するユーティリティー機能の名称を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_RTCC_SETTING;
+            TerminateWindow(true);
+        }
+
         private void DoFlashROMInfo()
         {
             // USB HID接続がない場合はエラーメッセージを表示
@@ -79,6 +86,11 @@ namespace MaintenanceToolApp.Utility
         //
         // イベント処理部
         // 
+        private void buttonRTCCSetting_Click(object sender, RoutedEventArgs e)
+        {
+            DoRTCCSetting();
+        }
+
         private void buttonFlashROMInfo_Click(object sender, RoutedEventArgs e)
         {
             DoFlashROMInfo();
