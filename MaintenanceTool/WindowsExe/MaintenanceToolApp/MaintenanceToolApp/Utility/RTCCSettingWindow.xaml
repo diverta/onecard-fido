@@ -7,12 +7,12 @@
         Title="認証器の時刻を参照・設定" Width="350" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height">
     <Grid Height="380">
         <GroupBox x:Name="groupBoxTransport" Header="接続方法" VerticalAlignment="Top" Margin="20,15,20,0" Height="60"/>
-        <RadioButton x:Name="buttonTransportUSB" Content="USB経由" HorizontalAlignment="Left" Margin="45,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
-        <RadioButton x:Name="buttonTransportBLE" Content="BLE経由" HorizontalAlignment="Left" Margin="135,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+        <RadioButton x:Name="buttonTransportUSB" Content="USB経由" HorizontalAlignment="Left" Margin="45,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="buttonTransportUSB_Checked"/>
+        <RadioButton x:Name="buttonTransportBLE" Content="BLE経由" HorizontalAlignment="Left" Margin="135,40,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="buttonTransportBLE_Checked"/>
         <GroupBox x:Name="groupBoxSettings" Header="現在時刻参照・設定" VerticalAlignment="Top" Margin="20,85,20,0" Height="125"/>
-        <Button x:Name="buttonGetTimestamp"  Content="現在時刻参照" HorizontalAlignment="Left" Margin="45,115,0,0" VerticalAlignment="Top" Height="25" Width="100"/>
+        <Button x:Name="buttonGetTimestamp"  Content="現在時刻参照" HorizontalAlignment="Left" Margin="45,115,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonGetTimestamp_Click"/>
         <Label x:Name="TitleGetTimestamp" Content="認証器に設定されている&#xD;&#xA;現在時刻を参照します。" HorizontalAlignment="Left" Margin="165,104,0,0" VerticalAlignment="Top" Width="145" Height="45" VerticalContentAlignment="Center" FontStretch="Normal" UseLayoutRounding="False"/>
-        <Button x:Name="buttonSetTimestamp"  Content="現在時刻設定" HorizontalAlignment="Left" Margin="45,165,0,0" VerticalAlignment="Top" Height="25" Width="100"/>
+        <Button x:Name="buttonSetTimestamp"  Content="現在時刻設定" HorizontalAlignment="Left" Margin="45,165,0,0" VerticalAlignment="Top" Height="25" Width="100" Click="buttonSetTimestamp_Click"/>
         <Label x:Name="TitleSetTimestamp" Content="PCの現在時刻を&#xD;&#xA;認証器に設定します。" HorizontalAlignment="Left" Margin="165,153,0,0" VerticalAlignment="Top" Width="145" Height="45" VerticalContentAlignment="Center" FontStretch="Normal" UseLayoutRounding="False"/>
         <GroupBox x:Name="groupBoxTimestamps" Header="参照・設定した時刻が表示されます。" VerticalAlignment="Top" Margin="20,220,20,0" Height="90"/>
         <Label x:Name="TitleToolTimestamp" Content="PCの時刻" HorizontalAlignment="Left" Margin="45,242,0,0" VerticalAlignment="Top" Width="90" Height="25"/>

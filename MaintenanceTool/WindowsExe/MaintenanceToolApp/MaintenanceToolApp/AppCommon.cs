@@ -291,6 +291,10 @@
         public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
         public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。ペアリングモードを解除してから、機能を再度実行してください。";
 
+        // 時刻設定機能
+        public const string MSG_PROMPT_RTCC_SET_TIMESTAMP = "PCの現在時刻を認証器に設定します。";
+        public const string MSG_COMMENT_RTCC_SET_TIMESTAMP = "処理を実行しますか？";
+
         // ユーティリティー機能
         public const string MSG_LABEL_NAME_TOOL_VERSION_INFO = "管理ツールのバージョン";
         public const string MSG_FORMAT_UTILITY_VIEW_LOG_FILE_ERR = "管理ツールのログファイル格納フォルダーを参照できませんでした。{0}";
