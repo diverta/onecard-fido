@@ -29,7 +29,7 @@
     @property (nonatomic) bool                          commandSuccess;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString                     *errorMessageOfCommand;
-    // タイムスタンプを保持
+    // 現在時刻を保持
     @property (nonatomic) NSString                     *toolTimestamp;
     @property (nonatomic) NSString                     *deviceTimestamp;
 
@@ -70,7 +70,7 @@
                 [self doRequestGetTimestamp];
                 break;
             default:
-                // 画面に制御を戻す
+                // 上位クラスに制御を戻す
                 [self notifyProcessTerminated:false];
                 break;
         }
@@ -91,20 +91,20 @@
     }
 
     - (void)doRequestHIDSetTimestamp {
-        // HID経由でタイムスタンプを設定
+        // HID経由で現在時刻を設定
         uint8_t cmd = MNT_COMMAND_BASE | 0x80;
         [[self appHIDCommand] doRequestCtap2Command:COMMAND_RTCC_SET_TIMESTAMP withCMD:cmd withData:[self commandDataForSetTimestamp]];
     }
 
     - (void)doResponseHIDSetTimestamp:(NSData *)response {
-        // レスポンスを画面表示
+        // レスポンスの現在時刻を保持
         [self doResponseGetTimestamp:response];
-        // 画面に制御を戻す
+        // 現在時刻設定処理が正常終了
         [self notifyProcessTerminated:true];
     }
 
     - (NSData *)commandDataForSetTimestamp {
-        // タイムスタンプ設定用のリクエストデータを生成
+        // 現在時刻設定用のリクエストデータを生成
         unsigned char arr[] = {MNT_COMMAND_SET_TIMESTAMP, 0x00, 0x00, 0x00, 0x00};
         NSDate *now = [NSDate date];
         NSTimeInterval nowEpochSeconds = [now timeIntervalSince1970];
@@ -120,32 +120,32 @@
         [self setToolTimestamp:@""];
         [self setDeviceTimestamp:@""];
         if ([self transportType] == TRANSPORT_HID) {
-            // HID経由でタイムスタンプを取得
+            // HID経由で現在時刻を取得
             uint8_t cmd = MNT_COMMAND_BASE | 0x80;
             [[self appHIDCommand] doRequestCommand:COMMAND_RTCC_GET_TIMESTAMP withCMD:cmd withData:[self commandDataForGetTimestamp]];
         }
         if ([self transportType] == TRANSPORT_BLE) {
-            // BLE経由でタイムスタンプを取得
+            // BLE経由で現在時刻を取得
             [[self appBLECommand] doRequestCommand:COMMAND_RTCC_GET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForGetTimestamp]];
         }
     }
 
     - (void)doResponseHIDGetTimestamp:(NSData *)response {
-        // レスポンスを画面表示
+        // レスポンスの現在時刻を保持
         [self doResponseGetTimestamp:response];
-        // 画面に制御を戻す
+        // 現在時刻取得処理が正常終了
         [self notifyProcessTerminated:true];
     }
 
     - (void)doResponseGetTimestamp:(NSData *)response {
-        // タイムスタンプ文字列はレスポンスの２バイト目から19文字
+        // 現在時刻文字列はレスポンスの２バイト目から19文字
         char timestampString[20];
         size_t lastPos = sizeof(timestampString) - 1;
         memcpy(timestampString, [response bytes] + 1, lastPos);
         timestampString[lastPos] = 0;
-        // 認証器のタイムスタンプ文字列を保持
+        // 認証器の現在時刻文字列を保持
         [self setDeviceTimestamp:[[NSString alloc] initWithUTF8String:timestampString]];
-        // 管理ツールのタイムスタンプを取得して保持
+        // 管理ツールの現在時刻を取得して保持
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JP"]];
         [df setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
@@ -153,7 +153,7 @@
     }
 
     - (NSData *)commandDataForGetTimestamp {
-        // タイムスタンプ取得用のリクエストデータを生成
+        // 現在時刻取得用のリクエストデータを生成
         unsigned char arr[] = {MNT_COMMAND_GET_TIMESTAMP};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         return commandData;
@@ -210,13 +210,13 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時でアプリケーションに制御を戻す
+        // エラーの場合は異常終了
         if (success == false) {
             [self setErrorMessageOfCommand:errorMessage];
             [self notifyProcessTerminated:false];
             return;
         }
-        // INITの場合
+        // INITの場合は後続処理を実行
         if (command == COMMAND_HID_CTAP2_INIT) {
             [self doResponseHIDCtap2Init];
             return;
@@ -224,12 +224,12 @@
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *requestBytes = (uint8_t *)[response bytes];
         if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合は画面に制御を戻す
+            // エラーの場合はHID経由の処理が異常終了
             [self setErrorMessageOfCommand:MSG_OCCUR_UNKNOWN_ERROR];
             [self notifyProcessTerminated:false];
             return;
         }
-        // 画面に制御を戻す
+        // HID経由の処理が正常終了
         [self doResponseHIDGetTimestamp:response];
     }
 
@@ -239,18 +239,18 @@
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合は画面に制御を戻す
+            // エラーの場合はヘルパークラスに制御を戻す
             [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
             return;
         }
-        // レスポンスを画面表示
+        // レスポンスの現在時刻を保持
         [self doResponseGetTimestamp:response];
         // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
         [[self appBLECommand] commandDidProcess:true message:nil];
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 画面に制御を戻す
+        // BLE経由の処理が終了
         [self setErrorMessageOfCommand:errorMessage];
         [self notifyProcessTerminated:success];
     }
