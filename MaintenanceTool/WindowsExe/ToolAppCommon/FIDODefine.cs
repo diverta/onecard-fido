@@ -4,6 +4,7 @@
     {
         // FIDO機能関連コマンドバイト
         public const byte MNT_COMMAND_BASE = 0x40;
+        public const byte MNT_COMMAND_ERASE_BONDING_DATA = 0x46;
         public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
         public const byte MNT_COMMAND_SET_TIMESTAMP = 0x4b;
 
