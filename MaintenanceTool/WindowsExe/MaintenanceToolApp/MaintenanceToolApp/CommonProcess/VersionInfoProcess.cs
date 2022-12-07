@@ -1,6 +1,7 @@
 ﻿using MaintenanceToolApp.Common;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
@@ -59,14 +60,14 @@ namespace MaintenanceToolApp.CommonProcess
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestBleCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[1]);
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, new byte[] { MNT_COMMAND_GET_APP_VERSION });
         }
 
         private void DoRequestHIDGetVersionInfo()
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[0]);
+            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_GET_APP_VERSION });
         }
 
         private void DoResponseGetVersionInfo(byte[] responseData)
