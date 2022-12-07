@@ -1,5 +1,8 @@
-﻿using ToolAppCommon;
+﻿using System;
+using System.Text;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.Utility
 {
@@ -38,16 +41,22 @@ namespace MaintenanceToolApp.Utility
         public delegate void HandlerOnNotifyProcessTerminated(RTCCSettingParameter parameter);
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
 
+        // HIDインターフェースからデータ受信時のコールバック参照
+        private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
+
         public RTCCSettingProcess(RTCCSettingParameter parameter)
         {
             // パラメーターの参照を保持
             Parameter = parameter;
+
+            // コールバック参照を初期化
+            OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
         }
 
         //
         // 時刻設定用関数
         // 
-        public void DoRTCCSettingProcess(HandlerOnNotifyProcessTerminated handlerRef) 
+        public void DoRTCCSettingProcess(HandlerOnNotifyProcessTerminated handlerRef)
         {
             // タイムスタンプをクリア
             Parameter.ToolTimestamp = string.Empty;
@@ -59,9 +68,8 @@ namespace MaintenanceToolApp.Utility
             // 処理開始を通知
             NotifyProcessStarted();
 
-            // TODO: 仮の実装です。
-            System.Threading.Thread.Sleep(2000);
-            NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+            // 現在時刻を参照
+            DoRequestGetTimestamp();
         }
 
         // 
@@ -99,6 +107,70 @@ namespace MaintenanceToolApp.Utility
 
             // 画面に制御を戻す            
             OnNotifyProcessTerminated(Parameter);
+        }
+
+        //
+        // 内部処理
+        //
+        private void DoRequestGetTimestamp()
+        {
+            // HID経由で現在時刻を取得
+            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+                // コマンドバイトだけを送信する
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, CommandDataForGetTimestamp());
+            }
+        }
+
+        private void DoResponseHIDGetTimestamp(byte[] response)
+        {
+            // レスポンスの現在時刻を保持
+            DoResponseGetTimestamp(response);
+
+            // 現在時刻取得処理が正常終了
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        }
+
+        private void DoResponseGetTimestamp(byte[] response)
+        {
+            // 現在時刻文字列はレスポンスの２バイト目から19文字
+            byte[] data = AppUtil.ExtractCBORBytesFromResponse(response, response.Length);
+
+            // 認証器の現在時刻文字列を保持
+            Parameter.DeviceTimestamp = Encoding.UTF8.GetString(data);
+
+            // 管理ツールの現在時刻を取得して保持
+            Parameter.ToolTimestamp = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+        }
+
+        private byte[] CommandDataForGetTimestamp()
+        {
+            return new byte[] { MNT_COMMAND_GET_TIMESTAMP };
+        }
+
+        //
+        // HIDからのレスポンス振分け処理
+        //
+        private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
+        {
+            // イベントを解除
+            CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
+
+            // 即時でアプリケーションに制御を戻す
+            if (success == false) {
+                NotifyProcessTerminated(false, errorMessage);
+                return;
+            }
+
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] != 0x00) {
+                // エラーの場合はHID経由の処理が異常終了
+                NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                return;
+            }
+
+            // HID経由の処理が正常終了
+            DoResponseHIDGetTimestamp(responseData);
         }
     }
 }

@@ -2,6 +2,10 @@
 {
     internal class FIDODefine
     {
+        // FIDO機能関連コマンドバイト
+        public const byte MNT_COMMAND_BASE = 0x40;
+        public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
+
         // FIDO機能関連エラーステータス
         public const int CTAP1_ERR_SUCCESS = 0x00;
         public const int CTAP2_ERR_PIN_INVALID = 0x31;
