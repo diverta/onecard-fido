@@ -13,14 +13,12 @@ namespace MaintenanceToolApp.Utility
     public partial class RTCCSettingWindow : Window
     {
         // 時刻設定処理の参照を保持
-        private readonly RTCCSettingProcess Process = null!;
         private readonly RTCCSettingParameter Parameter = null!;
 
         public RTCCSettingWindow()
         {
             // 時刻設定処理クラスの参照を保持
             Parameter = new RTCCSettingParameter();
-            Process = new RTCCSettingProcess(Parameter);
 
             // 画面項目の初期化
             InitializeComponent();
@@ -103,7 +101,7 @@ namespace MaintenanceToolApp.Utility
             Parameter.Command = command;
             Parameter.CommandTitle = commandTitle;
             Task task = Task.Run(() => {
-                Process.DoRTCCSettingProcess(OnRTCCSettingProcessTerminated);
+                new RTCCSettingProcess(Parameter).DoRTCCSettingProcess(OnRTCCSettingProcessTerminated);
             });
 
             // 進捗画面を表示
