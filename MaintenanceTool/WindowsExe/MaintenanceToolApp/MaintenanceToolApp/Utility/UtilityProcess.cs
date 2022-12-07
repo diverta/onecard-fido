@@ -98,7 +98,7 @@ namespace MaintenanceToolApp.Utility
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_FLASH_STAT, new byte[0]);
+            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_GET_FLASH_STAT });
         }
 
         private void DoResponseHIDGetFlashStat(byte[] responseData)

@@ -15,8 +15,6 @@ namespace ToolAppCommon
         // HIDコマンドバイトに関する定義
         public const int HID_CMD_CTAPHID_PING = 0x81;
         public const int HID_CMD_CTAPHID_INIT = 0x86;
-        public const int HID_CMD_GET_FLASH_STAT = 0xc2;
-        public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
         public const int HID_CMD_FIRMWARE_RESET = 0xc7;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;

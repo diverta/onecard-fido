@@ -5,6 +5,7 @@
         // FIDO機能関連コマンドバイト
         public const byte FIDO_CMD_MSG = 0x03;
         public const byte MNT_COMMAND_BASE = 0x40;
+        public const byte MNT_COMMAND_GET_FLASH_STAT = 0x42;
         public const byte MNT_COMMAND_GET_APP_VERSION = 0x43;
         public const byte MNT_COMMAND_BOOTLOADER_MODE = 0x45;
         public const byte MNT_COMMAND_ERASE_BONDING_DATA = 0x46;
