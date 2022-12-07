@@ -28,6 +28,9 @@ namespace MaintenanceToolApp.Utility
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
+            // 画面項目の初期化
+            InitFieldValue();
+
             // ユーティリティー画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -91,6 +94,10 @@ namespace MaintenanceToolApp.Utility
 
             // 進捗画面を表示
             CommonProcessingWindow.OpenForm(this);
+
+            // タイムスタンプを画面表示
+            LabelToolTimestamp.Content = Parameter.ToolTimestamp;
+            LabelDeviceTimestamp.Content = Parameter.DeviceTimestamp;
 
             // メッセージをポップアップ表示
             if (Parameter.CommandSuccess) {

@@ -46,6 +46,10 @@ namespace MaintenanceToolApp.Utility
             // 画面から引き渡されたパラメーターを退避
             Parameter = parameter;
 
+            // タイムスタンプをクリア
+            Parameter.ToolTimestamp = string.Empty;
+            Parameter.DeviceTimestamp = string.Empty;
+
             // コールバックを保持
             OnNotifyProcessTerminated = handlerRef;
 
