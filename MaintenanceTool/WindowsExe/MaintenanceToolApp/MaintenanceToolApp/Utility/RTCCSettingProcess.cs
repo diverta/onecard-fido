@@ -69,7 +69,17 @@ namespace MaintenanceToolApp.Utility
             NotifyProcessStarted();
 
             // 現在時刻を参照
-            DoRequestGetTimestamp();
+            switch(Parameter.Command) {
+            case Command.COMMAND_RTCC_SET_TIMESTAMP:
+                DoRequestSetTimestamp();
+                break;
+            case Command.COMMAND_RTCC_GET_TIMESTAMP:
+                DoRequestGetTimestamp();
+                break;
+            default:
+                NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                break;
+            }
         }
 
         // 
@@ -110,7 +120,51 @@ namespace MaintenanceToolApp.Utility
         }
 
         //
-        // 内部処理
+        // 現在時刻の設定
+        //
+        private void DoRequestSetTimestamp()
+        {
+            // HID経由で現在時刻を取得
+            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+                // CTAPHID_INITから実行
+                DoRequestCtapHidInit();
+            }
+        }
+
+        private void DoRequestCtapHidInit()
+        {
+            // INITコマンドを実行し、nonce を送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidInit();
+        }
+
+        private void DoResponseCtapHidInit()
+        {
+            // CTAPHID_INIT応答後の処理を実行
+            DoRequestHidSetTimestamp();
+        }
+
+        private void DoRequestHidSetTimestamp()
+        {
+            // HID経由で現在時刻を設定
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, CommandDataForSetTimestamp());
+        }
+
+        private byte[] CommandDataForSetTimestamp()
+        {
+            // 現在のUNIX時刻を取得
+            TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            UInt32 nowEpochSeconds = (UInt32)t.TotalSeconds;
+
+            // 現在時刻設定用のリクエストデータを生成
+            byte[] data = new byte[] { MNT_COMMAND_SET_TIMESTAMP, 0x00, 0x00, 0x00, 0x00 };
+            AppUtil.ConvertUint32ToBEBytes(nowEpochSeconds, data, 1);
+            return data;
+        }
+
+        //
+        // 現在時刻の参照
         //
         private void DoRequestGetTimestamp()
         {
@@ -159,6 +213,12 @@ namespace MaintenanceToolApp.Utility
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 NotifyProcessTerminated(false, errorMessage);
+                return;
+            }
+
+            // INITからの戻りの場合
+            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_INIT) {
+                DoResponseCtapHidInit();
                 return;
             }
 
