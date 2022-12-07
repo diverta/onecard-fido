@@ -148,7 +148,7 @@ namespace MaintenanceToolApp.Utility
         {
             // HID経由で現在時刻を設定
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, CommandDataForSetTimestamp());
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, CommandDataForSetTimestamp());
         }
 
         private byte[] CommandDataForSetTimestamp()
