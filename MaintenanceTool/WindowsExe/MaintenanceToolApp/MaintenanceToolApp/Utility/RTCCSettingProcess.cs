@@ -174,18 +174,24 @@ namespace MaintenanceToolApp.Utility
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
                 CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, CommandDataForGetTimestamp());
             }
+            // BLE経由で現在時刻を取得
+            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                // コマンドバイトだけを送信する
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForGetTimestamp());
+            }
         }
 
-        private void DoResponseHIDGetTimestamp(byte[] response)
+        private void DoResponseGetTimestamp(byte[] response)
         {
             // レスポンスの現在時刻を保持
-            DoResponseGetTimestamp(response);
+            SaveTimestampParameter(response);
 
             // 現在時刻取得処理が正常終了
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
-        private void DoResponseGetTimestamp(byte[] response)
+        private void SaveTimestampParameter(byte[] response)
         {
             // 現在時刻文字列はレスポンスの２バイト目から19文字
             byte[] data = AppUtil.ExtractCBORBytesFromResponse(response, response.Length);
@@ -203,7 +209,7 @@ namespace MaintenanceToolApp.Utility
         }
 
         //
-        // HIDからのレスポンス振分け処理
+        // トランスポートからのレスポンス振分け処理
         //
         private void OnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
@@ -224,13 +230,13 @@ namespace MaintenanceToolApp.Utility
 
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
-                // エラーの場合はHID経由の処理が異常終了
+                // エラーの場合は処理異常終了
                 NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 return;
             }
 
-            // HID経由の処理が正常終了
-            DoResponseHIDGetTimestamp(responseData);
+            // 処理正常終了
+            DoResponseGetTimestamp(responseData);
         }
     }
 }
