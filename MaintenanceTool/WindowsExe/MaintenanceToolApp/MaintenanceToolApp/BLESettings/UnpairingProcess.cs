@@ -1,5 +1,6 @@
 ﻿using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -67,7 +68,7 @@ namespace MaintenanceToolApp.BLESettings
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_ERASE_BONDS, new byte[0]);
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_ERASE_BONDING_DATA });
         }
 
         public void DoResponseCommandEraseBonds(byte[] responseData)

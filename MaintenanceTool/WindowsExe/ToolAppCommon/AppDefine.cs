@@ -62,6 +62,9 @@
             COMMAND_HID_U2F_HCHECK,
             COMMAND_CTAP2_GET_KEY_AGREEMENT,
             COMMAND_CTAP2_GET_PIN_TOKEN,
+            COMMAND_RTCC_SETTING,
+            COMMAND_RTCC_GET_TIMESTAMP,
+            COMMAND_RTCC_SET_TIMESTAMP,
         }
 
         // トランスポート種別

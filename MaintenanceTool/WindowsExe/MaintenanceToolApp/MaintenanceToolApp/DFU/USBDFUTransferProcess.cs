@@ -1,7 +1,7 @@
-﻿using MaintenanceToolApp.CommonProcess;
-using System;
+﻿using System;
 using ToolAppCommon;
 using static MaintenanceToolApp.DFU.DFUParameter;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -156,12 +156,13 @@ namespace MaintenanceToolApp.DFU
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_BOOTLOADER_MODE, System.Array.Empty<byte>());
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_BOOTLOADER_MODE });
         }
 
         public void DoResponseCommandBootloaderMode(byte CMD, byte[] responseData)
         {
-            if (CMD == HIDProcessConst.HID_CMD_BOOTLOADER_MODE) {
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] == 0x00) {
                 // ブートローダーモード遷移コマンド成功時
                 Parameter.Status = DFUStatus.ToBootloaderMode;
                 HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);

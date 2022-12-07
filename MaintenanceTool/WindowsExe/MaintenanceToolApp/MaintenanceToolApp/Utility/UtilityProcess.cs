@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.Utility
 {
@@ -48,6 +49,11 @@ namespace MaintenanceToolApp.Utility
         {
             // 実行コマンドにより処理分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_RTCC_SETTING:
+                // メイン画面を親ウィンドウとし、時刻設定画面を開く
+                new RTCCSettingWindow().ShowDialogWithOwner(ParentWindow);
+                break;
+
             case Command.COMMAND_HID_GET_FLASH_STAT:
                 // 処理開始メッセージを表示
                 Parameter.CommandTitle = AppCommon.PROCESS_NAME_GET_FLASH_STAT;
@@ -92,7 +98,7 @@ namespace MaintenanceToolApp.Utility
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_FLASH_STAT, new byte[0]);
+            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_GET_FLASH_STAT });
         }
 
         private void DoResponseHIDGetFlashStat(byte[] responseData)
@@ -145,7 +151,7 @@ namespace MaintenanceToolApp.Utility
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCommand(HIDProcessConst.HID_CMD_GET_VERSION_INFO, new byte[0]);
+            CommandProcess.DoRequestCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_GET_APP_VERSION });
         }
 
         private void DoResponseHIDGetVersionInfo(byte[] responseData)

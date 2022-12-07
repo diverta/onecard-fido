@@ -2,6 +2,17 @@
 {
     internal class FIDODefine
     {
+        // FIDO機能関連コマンドバイト
+        public const byte FIDO_CMD_MSG = 0x03;
+        public const byte MNT_COMMAND_BASE = 0x40;
+        public const byte MNT_COMMAND_GET_FLASH_STAT = 0x42;
+        public const byte MNT_COMMAND_GET_APP_VERSION = 0x43;
+        public const byte MNT_COMMAND_BOOTLOADER_MODE = 0x45;
+        public const byte MNT_COMMAND_ERASE_BONDING_DATA = 0x46;
+        public const byte MNT_COMMAND_SYSTEM_RESET = 0x47;
+        public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
+        public const byte MNT_COMMAND_SET_TIMESTAMP = 0x4b;
+
         // FIDO機能関連エラーステータス
         public const int CTAP1_ERR_SUCCESS = 0x00;
         public const int CTAP2_ERR_PIN_INVALID = 0x31;

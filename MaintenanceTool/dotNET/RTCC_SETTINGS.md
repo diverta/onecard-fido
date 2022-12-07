@@ -1,10 +1,10 @@
 # 認証器の時刻設定手順
 
-最終更新日：2022/12/6
+最終更新日：2022/12/7
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、FIDO認証器の現在時刻を設定する手順について掲載しています。
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)を使用して、FIDO認証器の現在時刻を設定する手順について掲載しています。
 
 ## 認証器の準備
 
@@ -18,10 +18,10 @@
 
 #### 管理ツールを導入
 
-最新バージョンの[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
+最新バージョンの[管理ツール（Windows版）](../../MaintenanceTool/dotNET/MNTTOOL.md)を、PC環境（Windows）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
+* <b>[インストール手順（Windows版）](../../MaintenanceTool/dotNET/INSTALLPRG.md) </b>
 
 ## 時刻設定手順
 
@@ -37,16 +37,16 @@ USB経由、BLE経由の両方が選択可能ですが、本文では、USB経�
 
 管理ツール画面の「ユーティリティー」ボタンをクリックします。
 
-<img src="assets03/0001.jpg" width="400">
+<img src="assets07/0001.jpg" width="400">
 
 ユーティリティー画面がポップアップ表示されたら、画面上部の「認証器の時刻を参照・設定」ボタンをクリックします。
 
-<img src="assets03/0002.jpg" width="400">
+<img src="assets07/0002.jpg" width="400">
 
 時刻設定画面がポップアップ表示されます。<br>
 （タイトルは「認証器の時刻を参照・設定」となっています）
 
-<img src="assets03/0003.jpg" width="400">
+<img src="assets07/0003.jpg" width="400">
 
 以降の作業は、すべてこの「時刻設定画面」で実行します。
 
@@ -54,12 +54,16 @@ USB経由、BLE経由の両方が選択可能ですが、本文では、USB経�
 
 時刻設定画面の「現在時刻参照」ボタンをクリックします。
 
-<img src="assets03/0004.jpg" width="400">
+<img src="assets07/0004.jpg" width="400">
 
 管理ツールがUSB経由で認証器から取得した現在時刻が、時刻設定画面の下部に表示されます。<br>
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 
-<img src="assets03/0005.jpg" width="400">
+<img src="assets07/0005.jpg" width="400">
+
+ポップアップ画面を閉じると、認証器から取得した現在時刻と、取得時点におけるPC（管理ツール）の現在時刻を確認できます。
+
+<img src="assets07/0006.jpg" width="400">
 
 これで、現在時刻の参照は完了です。
 
@@ -67,15 +71,19 @@ USB経由、BLE経由の両方が選択可能ですが、本文では、USB経�
 
 時刻設定画面の「現在時刻設定」ボタンをクリックします。
 
-<img src="assets03/0006.jpg" width="400">
+<img src="assets07/0007.jpg" width="400">
 
-下図のような確認ポップアップ表示されますので、Yesをクリックします。
+下図のような確認ポップアップ表示されますので「はい」をクリックします。
 
-<img src="assets03/0007.jpg" width="400">
+<img src="assets07/0008.jpg" width="400">
 
 管理ツールがPCから取得した現在時刻が、認証器に登録され、同時にその現在時刻が、画面下部に表示されます。<br>
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 
-<img src="assets03/0008.jpg" width="400">
+<img src="assets07/0009.jpg" width="400">
+
+ポップアップ画面を閉じると、認証器に登録された現在時刻と、登録時点におけるPC（管理ツール）の現在時刻を確認できます。
+
+<img src="assets07/0010.jpg" width="400">
 
 これで、現在時刻の設定は完了です。
