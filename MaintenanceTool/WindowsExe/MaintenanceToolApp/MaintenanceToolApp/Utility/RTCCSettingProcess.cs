@@ -129,6 +129,11 @@ namespace MaintenanceToolApp.Utility
                 // CTAPHID_INITから実行
                 DoRequestCtapHidInit();
             }
+            // BLE経由で現在時刻を設定
+            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForSetTimestamp());
+            }
         }
 
         private void DoRequestCtapHidInit()
