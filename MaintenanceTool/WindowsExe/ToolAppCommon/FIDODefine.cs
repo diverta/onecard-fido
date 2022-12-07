@@ -6,6 +6,7 @@
         public const byte FIDO_CMD_MSG = 0x03;
         public const byte MNT_COMMAND_BASE = 0x40;
         public const byte MNT_COMMAND_GET_APP_VERSION = 0x43;
+        public const byte MNT_COMMAND_BOOTLOADER_MODE = 0x45;
         public const byte MNT_COMMAND_ERASE_BONDING_DATA = 0x46;
         public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
         public const byte MNT_COMMAND_SET_TIMESTAMP = 0x4b;
