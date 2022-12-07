@@ -38,14 +38,17 @@ namespace MaintenanceToolApp.Utility
         public delegate void HandlerOnNotifyProcessTerminated(RTCCSettingParameter parameter);
         private HandlerOnNotifyProcessTerminated OnNotifyProcessTerminated = null!;
 
+        public RTCCSettingProcess(RTCCSettingParameter parameter)
+        {
+            // パラメーターの参照を保持
+            Parameter = parameter;
+        }
+
         //
         // 時刻設定用関数
         // 
-        public void DoRTCCSettingProcess(RTCCSettingParameter parameter, HandlerOnNotifyProcessTerminated handlerRef) 
+        public void DoRTCCSettingProcess(HandlerOnNotifyProcessTerminated handlerRef) 
         {
-            // 画面から引き渡されたパラメーターを退避
-            Parameter = parameter;
-
             // タイムスタンプをクリア
             Parameter.ToolTimestamp = string.Empty;
             Parameter.DeviceTimestamp = string.Empty;
