@@ -1,5 +1,6 @@
 ﻿using System;
 using ToolAppCommon;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
@@ -60,7 +61,7 @@ namespace MaintenanceToolApp.CommonProcess
         {
             // ファームウェアリセットコマンドを実行する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidCommand(HIDProcessConst.HID_CMD_FIRMWARE_RESET, Array.Empty<byte>());
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_SYSTEM_RESET });
         }
 
         private void DoResponseFirmwareResetCommand(byte[] responseData)
