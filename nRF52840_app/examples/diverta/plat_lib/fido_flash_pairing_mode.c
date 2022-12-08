@@ -114,7 +114,7 @@ static bool read_pairing_mode(void)
         // レコードが存在するときは領域にデータを格納
         return read_pairing_record(&record_desc, &m_pairing_mode);
 
-    } else if (ret == NRF_ERROR_NOT_FOUND) {
+    } else if (ret == FDS_ERR_NOT_FOUND) {
         // レコードが存在しないときは、非ペアリングモードとする
         m_pairing_mode = NON_PAIRING_MODE;
         NRF_LOG_DEBUG("Pairing mode record not found");
