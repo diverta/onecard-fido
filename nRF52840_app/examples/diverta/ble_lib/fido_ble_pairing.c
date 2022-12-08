@@ -157,7 +157,8 @@ void fido_ble_pairing_get_mode(void)
 {
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
-    run_as_pairing_mode = fido_flash_pairing_mode_flag();
+    bool exist;
+    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist);
     NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 

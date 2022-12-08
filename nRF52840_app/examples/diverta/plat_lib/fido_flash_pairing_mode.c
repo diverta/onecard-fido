@@ -101,22 +101,23 @@ static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_b
     return true;
 }
 
-static bool read_pairing_mode(void)
+static bool read_pairing_mode(bool *p_exist)
 {
     // 非ペアリングモードで初期化
-    m_pairing_mode = 0;
-    
+    m_pairing_mode = NON_PAIRING_MODE;
+    *p_exist = false;
+
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret_code_t ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == NRF_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
+        *p_exist = true;
         return read_pairing_record(&record_desc, &m_pairing_mode);
 
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // レコードが存在しないときは、非ペアリングモードとする
-        m_pairing_mode = NON_PAIRING_MODE;
         NRF_LOG_DEBUG("Pairing mode record not found");
         return false;
 
@@ -127,9 +128,9 @@ static bool read_pairing_mode(void)
     }
 }
 
-bool fido_flash_pairing_mode_flag(void)
+bool fido_flash_pairing_mode_flag(bool *p_exist)
 {
-    if (read_pairing_mode()) {
+    if (read_pairing_mode(p_exist)) {
         // ペアリングモードレコードの設定内容から
         // ペアリングモードかどうかを取得
         return (m_pairing_mode == PAIRING_MODE);
