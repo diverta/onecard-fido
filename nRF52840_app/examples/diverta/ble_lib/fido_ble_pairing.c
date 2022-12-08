@@ -37,6 +37,14 @@ static bool pairing_completed;
 // ペアリングモード変更中の旨を保持
 static bool change_pairing_mode = false;
 
+//
+// USB接続が検出されなかった場合
+// スリープ状態に遷移させるためのフラグ。
+// Flash ROMにペアリングモードレコードが
+// 存在していない場合に true を設定
+//
+static bool sleep_after_boot;
+
 uint8_t fido_ble_pairing_advertising_flag(void)
 {
     uint8_t advdata_flags;
@@ -162,6 +170,12 @@ void fido_ble_pairing_get_mode(void)
     NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 
+    // USB接続が検出されなかった場合
+    // スリープ状態に遷移させるためのフラグを設定。
+    // Flash ROMにペアリングモードレコードが
+    // 存在していない場合は true
+    sleep_after_boot = (exist == false);
+
     // Flash ROM上は非ペアリングモードに設定
     //   (SoftDevice再起動時に
     //   非ペアリングモードで起動させるための措置)
@@ -251,4 +265,13 @@ void fido_ble_pairing_flash_deleted(void)
 {
     NRF_LOG_DEBUG("Pairing mode record deleted");
     application_init_ble_pairing_has_reset();
+}
+
+bool fido_ble_pairing_sleep_after_boot_mode(void)
+{
+    // USB接続が検出されなかった場合
+    // スリープ状態に遷移させるためのフラグ。
+    // Flash ROMにペアリングモードレコードが
+    // 存在していない場合は true
+    return sleep_after_boot;
 }
