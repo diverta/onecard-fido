@@ -17,6 +17,7 @@ extern "C" {
 // 関数群
 //
 void         application_init_start(void);
+void         application_init_ble_pairing_has_reset(void);
 void         application_main(void);
 
 #ifdef __cplusplus

@@ -33,6 +33,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_hid_channel.h"
 #include "ctap2_client_pin.h"
 #include "fido_ble_event.h"
+#include "fido_ble_pairing.h"
 #include "usbd_service.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -139,10 +140,23 @@ static void start_ble_peripheral(void)
         // BLEペリフェラル・モードに遷移
         ble_service_peripheral_start();
 
+        // アプリケーション初期化完了フラグを設定
+        // (初期化処理が実行可能)
+        application_init_status = APP_INI_STAT_EN_INIT;
+
     } else {
-        // LED制御をアイドル中（秒間２回点滅）に変更
-        fido_status_indicator_idle();
+        // ペアリングモードレコードをFlash ROMから削除
+        //   USB接続が解除-->システムのリスタート時
+        //   BLEアイドル状態に遷移するのを抑止するための措置
+        fido_ble_pairing_reset();
     }
+}
+
+void application_init_ble_pairing_has_reset(void)
+{
+    // Flash ROMからペアリングモード削除後の処理
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 
     // アプリケーション初期化完了フラグを設定
     // (初期化処理が実行可能)

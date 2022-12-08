@@ -22,6 +22,17 @@ static uint32_t m_pairing_mode;
 #define PAIRING_MODE     0x00000001
 #define NON_PAIRING_MODE 0x00000000
 
+static bool delete_pairing_mode(void)
+{
+    // Flash ROM領域から削除
+    ret_code_t err_code = fds_file_delete(FIDO_PAIRING_MODE_FILE_ID);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
+        return false;
+    }
+    return true;
+}
+
 static bool write_pairing_mode(void)
 {
     ret_code_t ret;
@@ -103,8 +114,13 @@ static bool read_pairing_mode(void)
         // レコードが存在するときは領域にデータを格納
         return read_pairing_record(&record_desc, &m_pairing_mode);
 
+    } else if (ret == NRF_ERROR_NOT_FOUND) {
+        // レコードが存在しないときは、非ペアリングモードとする
+        m_pairing_mode = NON_PAIRING_MODE;
+        NRF_LOG_DEBUG("Pairing mode record not found");
+        return false;
+
     } else {
-        // レコードが存在しないときや
         // その他エラー発生時
         NRF_LOG_DEBUG("read_pairing_mode: fds_record_find returns 0x%02x ", ret);
         return false;
@@ -136,3 +152,10 @@ void fido_flash_pairing_mode_flag_set(void)
     m_pairing_mode = PAIRING_MODE;
     write_pairing_mode();
 }
+
+void fido_flash_pairing_mode_flag_reset(void)
+{
+    m_pairing_mode = NON_PAIRING_MODE;
+    delete_pairing_mode();
+}
+

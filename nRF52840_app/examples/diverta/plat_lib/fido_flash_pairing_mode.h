@@ -14,6 +14,7 @@ extern "C" {
 bool fido_flash_pairing_mode_flag(void);
 void fido_flash_pairing_mode_flag_set(void);
 void fido_flash_pairing_mode_flag_clear(void);
+void fido_flash_pairing_mode_flag_reset(void);
 
 #ifdef __cplusplus
 }
