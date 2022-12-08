@@ -135,6 +135,16 @@ static void start_ble_peripheral(void)
         enable_usbd ? "active, BLE peripheral is inactive" : "inactive: starting BLE peripheral");
 
     if (enable_usbd == false) {
+        if (fido_ble_pairing_sleep_after_boot_mode()) {
+            // ペアリングモードレコードが存在していない場合、
+            // スリープ状態に遷移
+            //   ボタン押下でアイドル状態に復帰できるよう、
+            //   アプリケーションで使用するボタンを事前に設定
+            fido_button_init();
+            fido_board_prepare_for_deep_sleep();
+            return;
+        }
+
         // USB接続・HIDサービスが始動していない場合は
         // アドバタイジングを開始させ、
         // BLEペリフェラル・モードに遷移
