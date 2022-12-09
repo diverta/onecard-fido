@@ -45,6 +45,12 @@
         [self terminateWindow:NSModalResponseOK];
     }
 
+    - (IBAction)buttonUnpairingRequestDidPress:(id)sender {
+        // 実行コマンドを設定して画面を閉じる
+        [[self commandParameterRef] setCommand:COMMAND_UNPAIRING_REQUEST];
+        [self terminateWindow:NSModalResponseOK];
+    }
+
     - (IBAction)buttonUnpairingDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
         if ([self checkUSBHIDConnection] == false) {

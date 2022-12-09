@@ -58,6 +58,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonUnpairingRequestDidPress:" target="-2" id="zDK-3P-Iy3"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X6s-TD-efs" userLabel="buttonUnpairing">
                                     <rect key="frame" x="14" y="20" width="290" height="32"/>
