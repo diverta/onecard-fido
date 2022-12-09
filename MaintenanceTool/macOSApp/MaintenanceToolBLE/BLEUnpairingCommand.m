@@ -15,6 +15,8 @@
     @property (nonatomic, weak) id                  delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppBLECommand            *appBLECommand;
+    // 切断待機フラグ
+    @property (nonatomic) bool                      waitingDisconnect;
 
 @end
 
@@ -38,6 +40,8 @@
 #pragma mark - BLE Command/subcommand process
 
     - (void)doRequestBleConnectForUnpairing {
+        // 切断待機フラグをクリア
+        [self setWaitingDisconnect:false];
         // BLE接続キープ要求コマンド用のデータを生成
         unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
@@ -53,6 +57,10 @@
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        // 誤動作抑止
+        if (command != COMMAND_UNPAIRING_REQUEST) {
+            return;
+        }
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
@@ -60,11 +68,20 @@
             [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
             return;
         }
-        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
-        [[self appBLECommand] commandDidProcess:true message:nil];
+        // 接続が切断されるまで待機
+        if ([self waitingDisconnect] == false) {
+            [self setWaitingDisconnect:true];
+        }
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        if ([self waitingDisconnect]) {
+            // 切断待機フラグをクリア
+            [self setWaitingDisconnect:false];
+            // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
+            [[self appBLECommand] commandDidProcess:true message:nil];
+            return;
+        }
         // 上位クラスに制御を戻す
         [self doResponseBleConnectForUnpairing:success message:errorMessage];
     }
