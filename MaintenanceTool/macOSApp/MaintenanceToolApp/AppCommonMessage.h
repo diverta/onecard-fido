@@ -53,6 +53,7 @@
 #define PROCESS_NAME_HID_CTAP2_HEALTHCHECK          @"HID CTAP2ヘルスチェック"
 #define PROCESS_NAME_BLE_CTAP2_HEALTHCHECK          @"BLE CTAP2ヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
+#define PROCESS_NAME_UNPAIRING_REQUEST              @"ペアリング解除要求"
 #define PROCESS_NAME_TEST_CTAPHID_PING              @"HID PINGテスト"
 #define PROCESS_NAME_TEST_BLE_PING                  @"BLE PINGテスト"
 #define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"

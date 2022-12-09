@@ -8,12 +8,13 @@
 #import "BLEPairingCommand.h"
 #import "BLESettingCommand.h"
 #import "BLESettingWindow.h"
+#import "BLEUnpairingCommand.h"
 
 @implementation BLESettingCommandParameter
 
 @end
 
-@interface BLESettingCommand () <BLEPairingCommandDelegate>
+@interface BLESettingCommand () <BLEPairingCommandDelegate, BLEUnpairingCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
@@ -21,6 +22,7 @@
     @property (nonatomic) BLESettingWindow             *bleSettingWindow;
     // 下位クラスの参照を保持
     @property (nonatomic) BLEPairingCommand            *blePairingCommand;
+    @property (nonatomic) BLEUnpairingCommand          *bleUnpairingCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) BLESettingCommandParameter   *commandParameter;
 
@@ -36,6 +38,7 @@
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[BLESettingCommandParameter alloc] init]];
             [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
+            [self setBleUnpairingCommand:[[BLEUnpairingCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -74,6 +77,10 @@
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_ERASE_BONDS];
                 [[self blePairingCommand] doRequestHidEraseBonds];
                 break;
+            case COMMAND_UNPAIRING_REQUEST:
+                [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
+                [[self bleUnpairingCommand] doRequestBleConnectForUnpairing];
+                break;
             default:
                 // メイン画面に制御を戻す
                 break;
@@ -96,6 +103,13 @@
     - (void)notifyMessage:(NSString *)message {
         // メイン画面にテキストを表示
         [[self delegate] notifyMessageToMainUI:message];
+    }
+
+#pragma mark - Call back from BLEPairingCommand
+
+    - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
+        // メイン画面に制御を戻す
+        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }
 
 @end
