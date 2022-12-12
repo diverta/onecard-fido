@@ -48,11 +48,38 @@
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         // BLE接続キープ要求処理を実行
         [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
+        // タイムアウト監視を開始
+        [self startWaitingForUnpairTimeoutMonitor];
     }
 
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
+        // タイムアウト監視を終了
+        [self cancelWaitingForUnpairTimeoutMonitor];
         // 上位クラスに制御を戻す
         [[self delegate] doResponseBleConnectForUnpairing:success message:message];
+    }
+
+#pragma mark - Waiting for unpair Timeout Monitor
+
+    - (void)startWaitingForUnpairTimeoutMonitor {
+        // タイムアウト監視を開始（30秒後にタイムアウト）
+        [[ToolLogFile defaultLogger] debug:@"startWaitingForUnpairTimeoutMonitor"];
+        [self performSelector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) withObject:nil afterDelay:30.0];
+    }
+
+    - (void)cancelWaitingForUnpairTimeoutMonitor {
+        // タイムアウト監視を停止
+        [[ToolLogFile defaultLogger] debug:@"cancelWaitingForUnpairTimeoutMonitor"];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) object:nil];
+    }
+
+    - (void)waitingForUnpairTimeoutMonitorDidTimeout {
+        // 切断待機フラグをクリア
+        [self setWaitingDisconnect:false];
+        // メイン画面にメッセージを表示
+        [[self delegate] notifyUnpairingMessageToMainUI:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
+        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
+        [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
     }
 
 #pragma mark - Call back from AppBLECommand
@@ -71,7 +98,10 @@
         }
         // 接続が切断されるまで待機
         if ([self waitingDisconnect] == false) {
-            [[ToolLogFile defaultLogger] infoWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
+            // メイン画面にメッセージを表示
+            NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
+            [[self delegate] notifyUnpairingMessageToMainUI:message];
+            [[ToolLogFile defaultLogger] info:message];
             [self setWaitingDisconnect:true];
         }
     }

@@ -112,4 +112,8 @@
         [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }
 
+    - (void)notifyUnpairingMessageToMainUI:(NSString *)message {
+        [[self delegate] notifyMessageToMainUI:message];
+    }
+
 @end

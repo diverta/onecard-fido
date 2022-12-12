@@ -21,6 +21,7 @@
 @protocol BLEUnpairingCommandDelegate <NSObject>
 
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message;
+    - (void)notifyUnpairingMessageToMainUI:(NSString *)message;
 
 @end
 
