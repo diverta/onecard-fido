@@ -105,7 +105,7 @@
         [[self delegate] notifyMessageToMainUI:message];
     }
 
-#pragma mark - Call back from BLEPairingCommand
+#pragma mark - Call back from BLEUnpairingCommand
 
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
         // メイン画面に制御を戻す

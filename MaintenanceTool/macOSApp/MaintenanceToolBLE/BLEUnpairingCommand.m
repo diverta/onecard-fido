@@ -71,7 +71,7 @@
         }
         // 接続が切断されるまで待機
         if ([self waitingDisconnect] == false) {
-            [[ToolLogFile defaultLogger] infoWithFormat:@"Bluetooth環境設定からデバイス「%@」が削除されるまで待機しています。", [[self appBLECommand] nameOfScannedPeripheral]];
+            [[ToolLogFile defaultLogger] infoWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
             [self setWaitingDisconnect:true];
         }
     }
