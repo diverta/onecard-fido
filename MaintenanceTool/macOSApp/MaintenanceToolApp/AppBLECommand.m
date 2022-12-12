@@ -32,6 +32,7 @@
     @property (nonatomic) bool                  bleTransactionStarted;
     @property (nonatomic) NSString             *lastCommandMessage;
     @property (nonatomic) bool                  lastCommandSuccess;
+    @property (nonatomic) NSString             *scannedPeripheralName;
 
 @end
 
@@ -97,6 +98,7 @@
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:@"FFFD"]) {
             [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
+            [self setScannedPeripheralName:[[self toolBLEHelper] nameOfScannedPeripheral]];
         }
     }
 
@@ -191,6 +193,11 @@
         }
         // 上位クラスに完了通知を行う
         [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
+    }
+
+    - (NSString *)nameOfScannedPeripheral {
+        // スキャンが成功したペリフェラルの名前を戻す
+        return [self scannedPeripheralName];
     }
 
 #pragma mark - Function for sending data frames

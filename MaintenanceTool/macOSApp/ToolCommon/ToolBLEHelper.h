@@ -24,6 +24,7 @@
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
     - (bool)helperIsSubscribingCharacteristic;
+    - (NSString *)nameOfScannedPeripheral;
 
 @end
 

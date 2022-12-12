@@ -8,6 +8,7 @@
 #import "AppCommonMessage.h"
 #import "BLEUnpairingCommand.h"
 #import "FIDODefines.h"
+#import "ToolLogFile.h"
 
 @interface BLEUnpairingCommand () <AppBLECommandDelegate>
 
@@ -70,6 +71,7 @@
         }
         // 接続が切断されるまで待機
         if ([self waitingDisconnect] == false) {
+            [[ToolLogFile defaultLogger] infoWithFormat:@"Bluetooth環境設定からデバイス「%@」が削除されるまで待機しています。", [[self appBLECommand] nameOfScannedPeripheral]];
             [self setWaitingDisconnect:true];
         }
     }
