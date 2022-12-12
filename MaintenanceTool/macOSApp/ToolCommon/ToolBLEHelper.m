@@ -141,7 +141,7 @@
         // ペリフェラルの参照を解除
         [self setConnectedPeripheral:nil];
         // 切断完了を通知
-        [[self delegate] helperDidDisconnectWithError:error];
+        [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
     }
 
     - (void)connectionDidTimeout {
@@ -353,7 +353,16 @@
         if ([self connectedPeripheral] != nil) {
             [[self manager] cancelPeripheralConnection:[self connectedPeripheral]];
         } else {
-            [[self delegate] helperDidDisconnectWithError:nil];
+            [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
+        }
+    }
+
+    - (void)helperWillDisconnectForce:(id)peripheralRef {
+        // ペリフェラル接続を切断
+        if (peripheralRef) {
+            [[self manager] cancelPeripheralConnection:(CBPeripheral *)peripheralRef];
+        } else {
+            [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
         }
     }
 

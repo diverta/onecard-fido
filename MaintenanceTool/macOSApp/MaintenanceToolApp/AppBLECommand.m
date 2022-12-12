@@ -182,10 +182,12 @@
         [[self toolBLEHelper] helperWillDisconnect];
     }
 
-    - (void)helperDidDisconnectWithError:(NSError *)error {
-        // エラーをログ出力
+    - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef {
         if (error) {
+            // エラーをログ出力した後、接続を切断
             [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
+            [[self toolBLEHelper] helperWillDisconnectForce:peripheralRef];
+            return;
         }
         // 上位クラスに完了通知を行う
         [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
