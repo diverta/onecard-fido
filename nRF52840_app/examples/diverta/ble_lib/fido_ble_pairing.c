@@ -60,7 +60,11 @@ static bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
             NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
             uint16_t conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_UNSPECIFIED, NULL, NULL);
-            APP_ERROR_CHECK(code);
+            if (code != NRF_SUCCESS) {
+                // nRF52から強制的にBLEコネクションを切断
+                NRF_LOG_DEBUG("sd_ble_gap_sec_params_reply returns 0x%04x", code);
+                sd_ble_gap_disconnect(conn_handle, BLE_HCI_STATUS_CODE_COMMAND_DISALLOWED);
+            }
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
             fido_status_indicator_pairing_fail();
