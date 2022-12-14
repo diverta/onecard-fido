@@ -14,8 +14,6 @@
 @interface BLEPairingCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (bool)isUSBHIDConnected;
-    - (void)doRequestHidEraseBonds;
     - (void)doRequestBlePairing;
 
 @end
