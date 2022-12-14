@@ -39,9 +39,10 @@
     }
 
     - (void)notifyCommandTerminated:(NSString *)commandName message:(NSString *)message success:(bool)success fromWindow:(NSWindow *)window {
-        if (success == false) {
-            // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
+        if (success == false && message != nil) {
+            // 処理失敗時は、引数に格納されたエラーメッセージを画面出力し、ログファイルにも出力
             [[self delegate] notifyMessageToMainUI:message];
+            [[ToolLogFile defaultLogger] error:message];
         }
         if (commandName == nil) {
             // ボタンを活性化
