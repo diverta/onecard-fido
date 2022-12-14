@@ -86,7 +86,7 @@
 
     - (void)doResponseBLEPairing:(bool)result message:(NSString *)message {
         // 上位クラスに制御を戻す
-        [[self delegate] doResponseBLEPairing:result message:message];
+        [[self delegate] doResponseBLESettingCommand:result message:message];
     }
 
 #pragma mark - BLE Command/subcommand process
@@ -214,7 +214,7 @@
 
     - (void)displayMessage:(NSString *)message {
         // メッセージを画面表示
-        [[self delegate] notifyMessage:message];
+        [[self delegate] notifyCommandMessageToMainUI:message];
     }
 
     - (NSUInteger)getStatusWordFrom:(NSData *)bleResponseData {

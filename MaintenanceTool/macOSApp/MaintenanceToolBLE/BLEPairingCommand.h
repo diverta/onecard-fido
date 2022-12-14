@@ -22,8 +22,8 @@
 
 @protocol BLEPairingCommandDelegate <NSObject>
 
-    - (void)notifyMessage:(NSString *)message;
-    - (void)doResponseBLEPairing:(bool)success message:(NSString *)message;
+    - (void)doResponseBLESettingCommand:(bool)success message:(NSString *)message;
+    - (void)notifyCommandMessageToMainUI:(NSString *)message;
 
 @end
 

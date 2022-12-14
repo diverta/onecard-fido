@@ -93,26 +93,14 @@
         [self notifyCommandStarted:[self commandName]];
     }
 
-#pragma mark - Call back from BLEPairingCommand
+#pragma mark - Call back from BLEPairingCommand, BLEUnpairingCommand
 
-    - (void)doResponseBLEPairing:(bool)success message:(NSString *)message {
+    - (void)doResponseBLESettingCommand:(bool)success message:(NSString *)message {
         // メイン画面に制御を戻す
         [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }
 
-    - (void)notifyMessage:(NSString *)message {
-        // メイン画面にテキストを表示
-        [[self delegate] notifyMessageToMainUI:message];
-    }
-
-#pragma mark - Call back from BLEUnpairingCommand
-
-    - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
-        // メイン画面に制御を戻す
-        [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
-    }
-
-    - (void)notifyUnpairingMessageToMainUI:(NSString *)message {
+    - (void)notifyCommandMessageToMainUI:(NSString *)message {
         [[self delegate] notifyMessageToMainUI:message];
     }
 

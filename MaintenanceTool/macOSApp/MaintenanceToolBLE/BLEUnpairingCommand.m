@@ -56,7 +56,7 @@
         // タイムアウト監視を終了
         [self cancelWaitingForUnpairTimeoutMonitor];
         // 上位クラスに制御を戻す
-        [[self delegate] doResponseBleConnectForUnpairing:success message:message];
+        [[self delegate] doResponseBLESettingCommand:success message:message];
     }
 
 #pragma mark - Waiting for unpair Timeout Monitor
@@ -77,7 +77,7 @@
         // 切断待機フラグをクリア
         [self setWaitingDisconnect:false];
         // メイン画面にメッセージを表示
-        [[self delegate] notifyUnpairingMessageToMainUI:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
+        [[self delegate] notifyCommandMessageToMainUI:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
         // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
         [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
     }
@@ -100,7 +100,7 @@
         if ([self waitingDisconnect] == false) {
             // メイン画面にメッセージを表示
             NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
-            [[self delegate] notifyUnpairingMessageToMainUI:message];
+            [[self delegate] notifyCommandMessageToMainUI:message];
             [[ToolLogFile defaultLogger] info:message];
             [self setWaitingDisconnect:true];
         }
