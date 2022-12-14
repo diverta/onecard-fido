@@ -9,6 +9,7 @@
 #import "BLEPairingCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommonFunc.h"
+#import "ToolLogFile.h"
 
 @interface BLEPairingCommand () <AppBLECommandDelegate>
 
@@ -40,77 +41,44 @@
 
 #pragma mark - Command/subcommand process
 
-    - (void)doResponseBLEPairing:(bool)result message:(NSString *)message {
-        // 上位クラスに制御を戻す
-        [[self delegate] doResponseBLESettingCommand:result message:message];
-    }
-
-#pragma mark - BLE Command/subcommand process
-
-    - (void)doRequestBlePairing {
+    - (void)doRequestBLEPairing {
         // BLEペアリング処理を実行
         [self setCommand:COMMAND_PAIRING];
-        [self doRequestCtap2Command:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:[ToolCommonFunc commandDataForPairingRequest]];
+        [[self appBLECommand] doRequestCommand:COMMAND_PAIRING withCMD:BLE_CMD_MSG withData:[ToolCommonFunc commandDataForPairingRequest]];
     }
 
-    - (void)doResponseBlePairing:(NSData *)message {
+    - (void)doResponseBlePairingCommand:(NSData *)response {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合はヘルパークラスに制御を戻す
+            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            return;
+        }
+        // 一旦ヘルパークラスに制御を戻し、BLE切断処理を実行
+        [[self appBLECommand] commandDidProcess:true message:nil];
+    }
+
+    - (void)doResponseBLEPairing:(bool)success message:(NSString *)message {
+        // 処理失敗時はログを出力
+        if (success == false) {
+            [[ToolLogFile defaultLogger] error:message];
+        }
         // 上位クラスに制御を戻す
-        [self commandDidProcess:[self checkStatusCode:message] message:nil];
+        [[self delegate] doResponseBLESettingCommand:success message:message];
     }
 
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
-        // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_PAIRING:
-                [self doResponseBlePairing:response];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
-                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        if (command == COMMAND_PAIRING) {
+            [self doResponseBlePairingCommand:response];
         }
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
         // 上位クラスに制御を戻す
         [self doResponseBLEPairing:success message:errorMessage];
-    }
-
-#pragma mark - Private functions
-
-    - (void)doRequestCtap2Command:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
-        // コマンドリクエストを、BLEトランスポート経由で実行
-        [[self appBLECommand] doRequestCommand:command withCMD:cmd withData:data];
-    }
-
-    - (void)commandDidProcess:(bool)success message:(NSString *)message {
-        // 一旦ヘルパークラスに制御を戻し、BLE切断処理を実行
-        [[self appBLECommand] commandDidProcess:success message:message];
-    }
-
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスデータが揃っていない場合はNG
-        if (responseMessage == nil || [responseMessage length] == 0) {
-            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
-            return false;
-        }
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        switch (requestBytes[0]) {
-            case CTAP1_ERR_SUCCESS:
-                return true;
-            default:
-                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
-        }
-        return false;
-    }
-
-    - (void)displayMessage:(NSString *)message {
-        // メッセージを画面表示
-        [[self delegate] notifyCommandMessageToMainUI:message];
     }
 
 @end

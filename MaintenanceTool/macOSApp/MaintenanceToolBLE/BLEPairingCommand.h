@@ -14,7 +14,7 @@
 @interface BLEPairingCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)doRequestBlePairing;
+    - (void)doRequestBLEPairing;
 
 @end
 

@@ -74,7 +74,7 @@
         switch ([[self commandParameter] command]) {
             case COMMAND_PAIRING:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_PAIRING];
-                [[self blePairingCommand] doRequestBlePairing];
+                [[self blePairingCommand] doRequestBLEPairing];
                 break;
             case COMMAND_ERASE_BONDS:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_ERASE_BONDS];
