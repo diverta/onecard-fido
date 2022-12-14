@@ -61,7 +61,7 @@
 
     - (void)doResponseBLEPairing:(bool)success message:(NSString *)message {
         // 処理失敗時はログを出力
-        if (success == false) {
+        if (success == false && message != nil) {
             [[ToolLogFile defaultLogger] error:message];
         }
         // 上位クラスに制御を戻す

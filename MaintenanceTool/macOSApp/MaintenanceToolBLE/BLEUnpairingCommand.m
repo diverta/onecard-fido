@@ -55,6 +55,10 @@
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
         // タイムアウト監視を終了
         [self cancelWaitingForUnpairTimeoutMonitor];
+        // 処理失敗時はログを出力
+        if (success == false && message != nil) {
+            [[ToolLogFile defaultLogger] error:message];
+        }
         // 上位クラスに制御を戻す
         [[self delegate] doResponseBLESettingCommand:success message:message];
     }
