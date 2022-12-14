@@ -105,7 +105,6 @@
 
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時は呼出元に制御を戻す
-        [[ToolLogFile defaultLogger] error:MSG_HID_CMD_RESPONSE_TIMEOUT];
         [[self delegate] hidHelperDidResponseTimeout];
         // リクエスト送信時のCIDをクリア
         [self setRequestCID:nil];
