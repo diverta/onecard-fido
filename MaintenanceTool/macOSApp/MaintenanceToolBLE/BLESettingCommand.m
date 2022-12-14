@@ -9,6 +9,7 @@
 #import "BLESettingCommand.h"
 #import "BLESettingWindow.h"
 #import "BLEUnpairingCommand.h"
+#import "EraseBondsCommand.h"
 
 @implementation BLESettingCommandParameter
 
@@ -23,6 +24,7 @@
     // 下位クラスの参照を保持
     @property (nonatomic) BLEPairingCommand            *blePairingCommand;
     @property (nonatomic) BLEUnpairingCommand          *bleUnpairingCommand;
+    @property (nonatomic) EraseBondsCommand            *eraseBondsCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) BLESettingCommandParameter   *commandParameter;
 
@@ -39,6 +41,7 @@
             [self setCommandParameter:[[BLESettingCommandParameter alloc] init]];
             [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
             [self setBleUnpairingCommand:[[BLEUnpairingCommand alloc] initWithDelegate:self]];
+            [self setEraseBondsCommand:[[EraseBondsCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -59,7 +62,7 @@
 
     - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        return [[self blePairingCommand] isUSBHIDConnected];
+        return [[self eraseBondsCommand] isUSBHIDConnected];
     }
 
 #pragma mark - Perform functions
@@ -75,7 +78,7 @@
                 break;
             case COMMAND_ERASE_BONDS:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_ERASE_BONDS];
-                [[self blePairingCommand] doRequestHidEraseBonds];
+                [[self eraseBondsCommand] doRequestHidEraseBonds];
                 break;
             case COMMAND_UNPAIRING_REQUEST:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
