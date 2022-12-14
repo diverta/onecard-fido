@@ -52,6 +52,25 @@
         [self startWaitingForUnpairTimeoutMonitor];
     }
 
+    - (void)doResponseBleConnectForUnpairingCommand:(NSData *)response {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合はヘルパークラスに制御を戻す
+            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            return;
+        }
+        // 接続が切断されるまで待機
+        if ([self waitingDisconnect] == false) {
+            // メイン画面にメッセージを表示
+            NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
+            [[self delegate] notifyCommandMessageToMainUI:message];
+            [[ToolLogFile defaultLogger] info:message];
+            // 切断待機フラグを設定
+            [self setWaitingDisconnect:true];
+        }
+    }
+
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
         // タイムアウト監視を終了
         [self cancelWaitingForUnpairTimeoutMonitor];
@@ -87,24 +106,8 @@
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
-        // 誤動作抑止
-        if (command != COMMAND_UNPAIRING_REQUEST) {
-            return;
-        }
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *responseBytes = (uint8_t *)[response bytes];
-        if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合はヘルパークラスに制御を戻す
-            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
-            return;
-        }
-        // 接続が切断されるまで待機
-        if ([self waitingDisconnect] == false) {
-            // メイン画面にメッセージを表示
-            NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
-            [[self delegate] notifyCommandMessageToMainUI:message];
-            [[ToolLogFile defaultLogger] info:message];
-            [self setWaitingDisconnect:true];
+        if (command == COMMAND_UNPAIRING_REQUEST) {
+            [self doResponseBleConnectForUnpairingCommand:response];
         }
     }
 
