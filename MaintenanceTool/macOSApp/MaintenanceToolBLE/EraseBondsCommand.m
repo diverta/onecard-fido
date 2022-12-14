@@ -9,7 +9,6 @@
 #import "EraseBondsCommand.h"
 #import "FIDODefines.h"
 #import "ToolCommonFunc.h"
-#import "ToolLogFile.h"
 
 @interface EraseBondsCommand () <AppHIDCommandDelegate>
 
@@ -76,10 +75,6 @@
     }
 
     - (void)doResponseHidEraseBonds:(bool)success message:(NSString *)message {
-        // 処理失敗時はログを出力
-        if (success == false && message != nil) {
-            [[ToolLogFile defaultLogger] error:message];
-        }
         // 上位クラスに制御を戻す
         [[self delegate] doResponseBLESettingCommand:success message:message];
     }

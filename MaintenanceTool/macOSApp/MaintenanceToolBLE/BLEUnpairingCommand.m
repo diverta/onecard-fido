@@ -74,10 +74,6 @@
     - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
         // タイムアウト監視を終了
         [self cancelWaitingForUnpairTimeoutMonitor];
-        // 処理失敗時はログを出力
-        if (success == false && message != nil) {
-            [[ToolLogFile defaultLogger] error:message];
-        }
         // 上位クラスに制御を戻す
         [[self delegate] doResponseBLESettingCommand:success message:message];
     }
@@ -86,13 +82,11 @@
 
     - (void)startWaitingForUnpairTimeoutMonitor {
         // タイムアウト監視を開始（30秒後にタイムアウト）
-        [[ToolLogFile defaultLogger] debug:@"startWaitingForUnpairTimeoutMonitor"];
         [self performSelector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) withObject:nil afterDelay:30.0];
     }
 
     - (void)cancelWaitingForUnpairTimeoutMonitor {
         // タイムアウト監視を停止
-        [[ToolLogFile defaultLogger] debug:@"cancelWaitingForUnpairTimeoutMonitor"];
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) object:nil];
     }
 
