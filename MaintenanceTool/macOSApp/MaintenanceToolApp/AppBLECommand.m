@@ -167,11 +167,6 @@
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
         // ログをファイル出力
         NSString *message = [self helperMessageOnFailConnection:reason];
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
-        } else {
-            [[ToolLogFile defaultLogger] error:message];
-        }
         // 画面上のテキストエリアにもメッセージを表示する
         [self setLastCommandMessage:message];
         // トランザクション完了済とし、接続再試行を回避

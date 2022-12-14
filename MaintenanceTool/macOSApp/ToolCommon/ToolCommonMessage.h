@@ -17,6 +17,7 @@
 #define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
 #define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
+#define MSG_HID_CMD_INIT_WRONG_NONCE            @"認証器から不正な応答が検出されました。"
 #define MSG_PROMPT_USB_PORT_SET                 @"FIDO認証器をUSBポートに装着してから実行してください。"
 
 #pragma mark - BLE関連
