@@ -70,7 +70,7 @@
     - (void)doResponseCtapHidInit:(NSData *)message {
         // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、画面に制御を戻す
         if ([self isWrongNonceBytes:message]) {
-            [[self delegate] didResponseCommand:[self command] CMD:HID_CMD_CTAPHID_INIT response:message success:false errorMessage:nil];
+            [[self delegate] didResponseCommand:[self command] CMD:HID_CMD_CTAPHID_INIT response:message success:false errorMessage:MSG_HID_CMD_INIT_WRONG_NONCE];
             return;
         }
         // レスポンスからCIDを抽出し、内部で保持
