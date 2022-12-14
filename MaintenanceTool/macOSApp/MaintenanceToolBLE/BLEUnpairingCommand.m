@@ -80,8 +80,6 @@
     - (void)waitingForUnpairTimeoutMonitorDidTimeout {
         // 切断待機フラグをクリア
         [self setWaitingDisconnect:false];
-        // メイン画面にメッセージを表示
-        [[self delegate] notifyCommandMessageToMainUI:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
         // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
         [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
     }
