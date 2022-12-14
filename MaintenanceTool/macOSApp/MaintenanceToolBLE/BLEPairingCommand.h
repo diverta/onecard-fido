@@ -14,16 +14,14 @@
 @interface BLEPairingCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (bool)isUSBHIDConnected;
-    - (void)doRequestHidEraseBonds;
-    - (void)doRequestBlePairing;
+    - (void)doRequestBLEPairing;
 
 @end
 
 @protocol BLEPairingCommandDelegate <NSObject>
 
-    - (void)notifyMessage:(NSString *)message;
-    - (void)doResponseBLEPairing:(bool)success message:(NSString *)message;
+    - (void)doResponseBLESettingCommand:(bool)success message:(NSString *)message;
+    - (void)notifyCommandMessageToMainUI:(NSString *)message;
 
 @end
 

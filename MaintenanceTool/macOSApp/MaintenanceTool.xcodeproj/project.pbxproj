@@ -24,6 +24,7 @@
 		7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */; };
 		7A199C15288545DB00AF8B62 /* FIDOSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A199C12288545DB00AF8B62 /* FIDOSettingWindow.xib */; };
 		7A199C16288545DB00AF8B62 /* FIDOSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C14288545DB00AF8B62 /* FIDOSettingWindow.m */; };
+		7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */; };
 		7A1BCD4B28862DA6007AEE12 /* FIDOPinSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */; };
 		7A1BCD4C28862DA6007AEE12 /* FIDOPinSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */; };
 		7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A23613528867A4200322E93 /* BLESettingWindow.xib */; };
@@ -76,6 +77,7 @@
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
 		7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
+		7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AAADCF62923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AAADCF32923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip */; };
 		7AAADCF72923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AAADCF42923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip */; };
@@ -154,6 +156,8 @@
 		7A199C12288545DB00AF8B62 /* FIDOSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOSettingWindow.xib; sourceTree = "<group>"; };
 		7A199C13288545DB00AF8B62 /* FIDOSettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDOSettingWindow.h; sourceTree = "<group>"; };
 		7A199C14288545DB00AF8B62 /* FIDOSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOSettingWindow.m; sourceTree = "<group>"; };
+		7A1AC4522949609C002CFA5E /* EraseBondsCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EraseBondsCommand.h; sourceTree = "<group>"; };
+		7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EraseBondsCommand.m; sourceTree = "<group>"; };
 		7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOPinSettingWindow.m; sourceTree = "<group>"; };
 		7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOPinSettingWindow.xib; sourceTree = "<group>"; };
 		7A1BCD4D2886304E007AEE12 /* FIDOPinSettingWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOPinSettingWindow.h; sourceTree = "<group>"; };
@@ -245,6 +249,8 @@
 		7A95408D28FFCBE7006D5C33 /* USBDFUDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USBDFUDefine.h; sourceTree = "<group>"; };
 		7A95408E28FFCFD4006D5C33 /* USBDFUTransferCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USBDFUTransferCommand.h; sourceTree = "<group>"; };
 		7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USBDFUTransferCommand.m; sourceTree = "<group>"; };
+		7A986E682942DEFE000FC524 /* BLEUnpairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEUnpairingCommand.h; sourceTree = "<group>"; };
+		7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEUnpairingCommand.m; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AAADCF32923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.6.zip; sourceTree = "<group>"; };
 		7AAADCF42923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.6.zip; sourceTree = "<group>"; };
@@ -663,6 +669,10 @@
 				7A23613628867A4200322E93 /* BLESettingWindow.h */,
 				7A23613728867A4200322E93 /* BLESettingWindow.m */,
 				7A23613528867A4200322E93 /* BLESettingWindow.xib */,
+				7A986E682942DEFE000FC524 /* BLEUnpairingCommand.h */,
+				7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */,
+				7A1AC4522949609C002CFA5E /* EraseBondsCommand.h */,
+				7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */,
 			);
 			path = MaintenanceToolBLE;
 			sourceTree = "<group>";
@@ -860,6 +870,7 @@
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
+				7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */,
 				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
 				7A3F4F2328755FB1003CFE67 /* ToolVersionWindow.m in Sources */,
@@ -873,6 +884,7 @@
 				7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */,
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */,
+				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,

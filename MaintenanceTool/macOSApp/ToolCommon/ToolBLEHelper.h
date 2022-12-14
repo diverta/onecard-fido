@@ -16,6 +16,7 @@
     - (id)initWithDelegate:(id<ToolBLEHelperDelegate>)delegate;
     - (void)helperWillConnectWithUUID:(NSString *)uuidString;
     - (void)helperWillDisconnect;
+    - (void)helperWillDisconnectForce:(id)peripheralRef;
     - (void)helperWillConnectPeripheral:(id)peripheralRef;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
     - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids;
@@ -23,6 +24,7 @@
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
     - (bool)helperIsSubscribingCharacteristic;
+    - (NSString *)nameOfScannedPeripheral;
 
 @end
 
@@ -31,7 +33,7 @@
     - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString;
     - (void)helperDidConnectPeripheral;
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason;
-    - (void)helperDidDisconnectWithError:(NSError *)error;
+    - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef;
     - (void)helperDidDiscoverService;
     - (void)helperDidDiscoverCharacteristics;
     - (void)helperDidSubscribeCharacteristic;

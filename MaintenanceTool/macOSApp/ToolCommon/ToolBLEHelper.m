@@ -22,6 +22,7 @@
     @property(nonatomic) CBCharacteristic   *characteristicForNotify;
     @property(nonatomic, strong) NSArray    *serviceUUIDs;
     @property(nonatomic, strong) NSArray    *characteristicUUIDs;
+    @property(nonatomic) NSString           *scannedPeripheralName;
 
 @end
 
@@ -94,6 +95,7 @@
             [self cancelScanningTimeoutMonitor];
             // スキャンを停止し、スキャン完了を通知
             [self cancelScanForPeripherals];
+            [self setScannedPeripheralName:[advertisementData objectForKey:CBAdvertisementDataLocalNameKey]];
             [[self delegate] helperDidScanForPeripheral:peripheral withUUID:[foundServiceUUIDs UUIDString]];
             break;
         }
@@ -104,6 +106,11 @@
         [self cancelScanForPeripherals];
         // スキャンタイムアウトの場合は通知
         [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_SCAN_TIMEOUT];
+    }
+
+    - (NSString *)nameOfScannedPeripheral {
+        // スキャンが成功したペリフェラルの名前を戻す
+        return [self scannedPeripheralName];
     }
 
 #pragma mark - Connect peripheral
@@ -141,7 +148,7 @@
         // ペリフェラルの参照を解除
         [self setConnectedPeripheral:nil];
         // 切断完了を通知
-        [[self delegate] helperDidDisconnectWithError:error];
+        [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
     }
 
     - (void)connectionDidTimeout {
@@ -353,7 +360,16 @@
         if ([self connectedPeripheral] != nil) {
             [[self manager] cancelPeripheralConnection:[self connectedPeripheral]];
         } else {
-            [[self delegate] helperDidDisconnectWithError:nil];
+            [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
+        }
+    }
+
+    - (void)helperWillDisconnectForce:(id)peripheralRef {
+        // ペリフェラル接続を切断
+        if (peripheralRef) {
+            [[self manager] cancelPeripheralConnection:(CBPeripheral *)peripheralRef];
+        } else {
+            [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
         }
     }
 

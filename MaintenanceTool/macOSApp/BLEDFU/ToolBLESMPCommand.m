@@ -295,7 +295,7 @@
         [self doDisconnectByError:true];
     }
 
-    - (void)helperDidDisconnectWithError:(NSError *)error {
+    - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef {
         // 物理切断が検知された場合は、接続復旧までその旨を保持
         if (error) {
             [self setUnexpectedDisconnection:true];
