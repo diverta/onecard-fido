@@ -97,7 +97,13 @@
     - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:@"FFFD"]) {
-            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
+            // タイムアウトを設定
+            NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
+            if ([self command] == COMMAND_PAIRING) {
+                // ペアリング時はタイムアウトを延長
+                timeoutSec = U2FSubscrCharTimeoutSecOnPair;
+            }
+            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef withTimeoutSec:timeoutSec];
             [self setScannedPeripheralName:[[self toolBLEHelper] nameOfScannedPeripheral]];
         }
     }

@@ -115,12 +115,12 @@
 
 #pragma mark - Connect peripheral
 
-    - (void)helperWillConnectPeripheral:(id)peripheralRef {
+    - (void)helperWillConnectPeripheral:(id)peripheralRef withTimeoutSec:(NSTimeInterval)timeoutSec {
         // ペリフェラルに接続
         CBPeripheral *peripheral = (CBPeripheral *)peripheralRef;
         [[self manager] connectPeripheral:peripheral options:nil];
         // 接続完了タイムアウト監視を開始
-        [self startCompleteConnectionTimeoutMonitor:peripheral withTimeoutSec:10.0];
+        [self startCompleteConnectionTimeoutMonitor:peripheral withTimeoutSec:timeoutSec];
     }
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {

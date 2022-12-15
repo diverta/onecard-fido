@@ -17,7 +17,7 @@
     - (void)helperWillConnectWithUUID:(NSString *)uuidString;
     - (void)helperWillDisconnect;
     - (void)helperWillDisconnectForce:(id)peripheralRef;
-    - (void)helperWillConnectPeripheral:(id)peripheralRef;
+    - (void)helperWillConnectPeripheral:(id)peripheralRef withTimeoutSec:(NSTimeInterval)timeoutSec;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
     - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids;
     - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec;
