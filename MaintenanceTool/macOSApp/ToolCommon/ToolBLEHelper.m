@@ -178,15 +178,15 @@
             return;
         }
         // サービスを判定し、その参照を保持
-        [self setConnectedService:nil];
+        CBService *connectedService = nil;
         for (CBService *service in [peripheral services]) {
             if ([[self serviceUUIDs] containsObject:service.UUID]) {
-                [self setConnectedService:service];
+                connectedService = service;
                 break;
             }
         }
         // サービスがない場合
-        if ([self connectedService] == nil) {
+        if (connectedService == nil) {
             // 接続完了タイムアウト監視を停止
             [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // サービスがない旨を通知
@@ -194,6 +194,7 @@
             return;
         }
         // ディスカバー完了を通知
+        [self setConnectedService:connectedService];
         [[self delegate] helperDidDiscoverService];
     }
 
@@ -278,9 +279,6 @@
     }
 
     - (bool)helperIsSubscribingCharacteristic {
-        if ([self connectedService] == nil) {
-            return false;
-        }
         if ([self connectedPeripheral] == nil) {
             return false;
         }
