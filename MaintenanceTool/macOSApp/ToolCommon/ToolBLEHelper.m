@@ -187,6 +187,13 @@
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SERVICE_NOT_FOUND];
             return;
         }
+        // サービスにキャラクタリスティックがない場合は通知
+        if ([[[self connectedService] characteristics] count] < 1) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
+            return;
+        }
         // ディスカバー完了を通知
         [[self delegate] helperDidDiscoverService];
     }
@@ -221,17 +228,11 @@
 #pragma mark - Subscribe characteristic
 
     - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec {
-        // サービスにキャラクタリスティックがない場合は通知
-        CBService *service = [self connectedService];
-        if (service == nil || [[service characteristics] count] < 1) {
-            [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
-            return;
-        }
         // Write／Notifyキャラクタリスティックの参照を保持
         [self setCharacteristicForWrite:nil];
         [self setCharacteristicForWriteNoResp:nil];
         [self setCharacteristicForNotify:nil];
-        for (CBCharacteristic *characteristic in [service characteristics]) {
+        for (CBCharacteristic *characteristic in [[self connectedService] characteristics]) {
             if ([characteristic properties] & CBCharacteristicPropertyWrite) {
                 [self setCharacteristicForWrite:characteristic];
             }
