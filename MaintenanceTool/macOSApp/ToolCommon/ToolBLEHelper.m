@@ -123,10 +123,12 @@
     }
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-        // 接続されたペリフェラルの参照を保持
-        [self setConnectedPeripheral:peripheral];
-        // 接続完了を通知
-        [[self delegate] helperDidConnectPeripheral];
+        if ([peripheral isEqual:[self connectedPeripheral]] == false) {
+            // 接続完了を通知
+            [self setConnectedPeripheral:peripheral];
+            // 接続されたペリフェラルの参照を保持
+            [[self delegate] helperDidConnectPeripheral];
+        }
     }
 
     - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral
