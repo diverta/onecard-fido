@@ -23,6 +23,9 @@ void    fido_ble_pairing_on_disconnect(void);
 void    fido_ble_pairing_flash_failed(void);
 void    fido_ble_pairing_flash_gc_done(void);
 void    fido_ble_pairing_flash_updated(void);
+void    fido_ble_pairing_reset(void);
+void    fido_ble_pairing_flash_deleted(void);
+bool    fido_ble_pairing_sleep_after_boot_mode(void);
 
 #ifdef __cplusplus
 }

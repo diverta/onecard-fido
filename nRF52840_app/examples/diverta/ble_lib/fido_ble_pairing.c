@@ -16,6 +16,7 @@
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
+#include "application_init.h"
 #include "fido_flash_pairing_mode.h"
 #include "fido_timer_plat.h"
 
@@ -35,6 +36,14 @@ static bool pairing_completed;
 
 // ペアリングモード変更中の旨を保持
 static bool change_pairing_mode = false;
+
+//
+// USB接続が検出されなかった場合
+// スリープ状態に遷移させるためのフラグ。
+// Flash ROMにペアリングモードレコードが
+// 存在していない場合に true を設定
+//
+static bool sleep_after_boot;
 
 uint8_t fido_ble_pairing_advertising_flag(void)
 {
@@ -160,9 +169,16 @@ void fido_ble_pairing_get_mode(void)
 {
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
-    run_as_pairing_mode = fido_flash_pairing_mode_flag();
+    bool exist;
+    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist);
     NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
+
+    // USB接続が検出されなかった場合
+    // スリープ状態に遷移させるためのフラグを設定。
+    // Flash ROMにペアリングモードレコードが
+    // 存在していない場合は true
+    sleep_after_boot = (exist == false);
 
     // Flash ROM上は非ペアリングモードに設定
     //   (SoftDevice再起動時に
@@ -236,4 +252,30 @@ bool fido_ble_pairing_mode_get(void)
 {
     // ペアリングモードであればtrueを戻す
     return run_as_pairing_mode;
+}
+
+//
+// ペアリングモードのリセット
+//
+void fido_ble_pairing_reset(void)
+{
+    // ペアリングモードレコードをFlash ROMから削除
+    //   システムのリスタート時、
+    //   BLEアイドル状態に遷移するのを抑止するための措置
+    fido_flash_pairing_mode_flag_reset();
+}
+
+void fido_ble_pairing_flash_deleted(void)
+{
+    NRF_LOG_DEBUG("Pairing mode record deleted");
+    application_init_ble_pairing_has_reset();
+}
+
+bool fido_ble_pairing_sleep_after_boot_mode(void)
+{
+    // USB接続が検出されなかった場合
+    // スリープ状態に遷移させるためのフラグ。
+    // Flash ROMにペアリングモードレコードが
+    // 存在していない場合は true
+    return sleep_after_boot;
 }
