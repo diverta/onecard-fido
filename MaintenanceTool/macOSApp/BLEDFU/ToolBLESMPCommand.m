@@ -235,9 +235,9 @@
         [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
-    - (void)helperDidDiscoverCharacteristics {
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:SmpSubscrCharTimeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef withTimeout:SmpSubscrCharTimeoutSec];
     }
 
     - (void)helperDidSubscribeCharacteristic {

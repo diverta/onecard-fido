@@ -20,7 +20,7 @@
     - (void)helperWillConnectPeripheral:(id)peripheralRef withTimeoutSec:(NSTimeInterval)timeoutSec;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
     - (void)helperWillDiscoverCharacteristics:(id)serviceRef withUUIDs:(NSArray<NSString *> *)uuids;
-    - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec;
+    - (void)helperWillSubscribeCharacteristic:(id)serviceRef withTimeout:(NSTimeInterval)timeoutSec;
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
     - (bool)helperIsSubscribingCharacteristic;
@@ -34,7 +34,7 @@
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason;
     - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef;
     - (void)helperDidDiscoverService:(id)serviceRef;
-    - (void)helperDidDiscoverCharacteristics;
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef;
     - (void)helperDidSubscribeCharacteristic;
     - (void)helperDidWriteForCharacteristics;
     - (void)helperDidReadForCharacteristic:(NSData *)responseMessage;

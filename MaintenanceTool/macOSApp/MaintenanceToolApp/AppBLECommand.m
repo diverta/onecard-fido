@@ -122,7 +122,7 @@
         [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
-    - (void)helperDidDiscoverCharacteristics {
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
         // データ受信監視開始までのタイムアウトを設定
         NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
         if ([self command] == COMMAND_PAIRING) {
@@ -130,7 +130,7 @@
             timeoutSec = U2FSubscrCharTimeoutSecOnPair;
         }
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:timeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef withTimeout:timeoutSec];
     }
 
     - (void)helperDidSubscribeCharacteristic {

@@ -16,7 +16,6 @@
     @property(nonatomic, weak) id<ToolBLEHelperDelegate> delegate;
     @property(nonatomic) CBCentralManager   *manager;
     @property(nonatomic) CBPeripheral       *connectedPeripheral;
-    @property(nonatomic) CBService          *connectedService;
     @property(nonatomic) CBCharacteristic   *characteristicForWrite;
     @property(nonatomic) CBCharacteristic   *characteristicForWriteNoResp;
     @property(nonatomic) CBCharacteristic   *characteristicForNotify;
@@ -223,17 +222,18 @@
             return;
         }
         // ディスカバー完了を通知
-        [[self delegate] helperDidDiscoverCharacteristics];
+        [[self delegate] helperDidDiscoverCharacteristics:service];
     }
 
 #pragma mark - Subscribe characteristic
 
-    - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec {
+    - (void)helperWillSubscribeCharacteristic:(id)serviceRef withTimeout:(NSTimeInterval)timeoutSec {
         // Write／Notifyキャラクタリスティックの参照を保持
         [self setCharacteristicForWrite:nil];
         [self setCharacteristicForWriteNoResp:nil];
         [self setCharacteristicForNotify:nil];
-        for (CBCharacteristic *characteristic in [[self connectedService] characteristics]) {
+        CBService *connectedService = (CBService *)serviceRef;
+        for (CBCharacteristic *characteristic in [connectedService characteristics]) {
             if ([characteristic properties] & CBCharacteristicPropertyWrite) {
                 [self setCharacteristicForWrite:characteristic];
             }
