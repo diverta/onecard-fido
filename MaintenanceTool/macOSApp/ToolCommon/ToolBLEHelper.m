@@ -124,9 +124,9 @@
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
         if ([peripheral isEqual:[self connectedPeripheral]] == false) {
-            // 接続完了を通知
-            [self setConnectedPeripheral:peripheral];
             // 接続されたペリフェラルの参照を保持
+            [self setConnectedPeripheral:peripheral];
+            // 接続完了を通知
             [[self delegate] helperDidConnectPeripheral];
         }
     }
