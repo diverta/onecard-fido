@@ -22,6 +22,17 @@ static uint32_t m_pairing_mode;
 #define PAIRING_MODE     0x00000001
 #define NON_PAIRING_MODE 0x00000000
 
+static bool delete_pairing_mode(void)
+{
+    // Flash ROM領域から削除
+    ret_code_t err_code = fds_file_delete(FIDO_PAIRING_MODE_FILE_ID);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
+        return false;
+    }
+    return true;
+}
+
 static bool write_pairing_mode(void)
 {
     ret_code_t ret;
@@ -90,30 +101,36 @@ static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_b
     return true;
 }
 
-static bool read_pairing_mode(void)
+static bool read_pairing_mode(bool *p_exist)
 {
     // 非ペアリングモードで初期化
-    m_pairing_mode = 0;
-    
+    m_pairing_mode = NON_PAIRING_MODE;
+    *p_exist = false;
+
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret_code_t ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == NRF_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
+        *p_exist = true;
         return read_pairing_record(&record_desc, &m_pairing_mode);
 
+    } else if (ret == FDS_ERR_NOT_FOUND) {
+        // レコードが存在しないときは、非ペアリングモードとする
+        NRF_LOG_DEBUG("Pairing mode record not found");
+        return false;
+
     } else {
-        // レコードが存在しないときや
         // その他エラー発生時
         NRF_LOG_DEBUG("read_pairing_mode: fds_record_find returns 0x%02x ", ret);
         return false;
     }
 }
 
-bool fido_flash_pairing_mode_flag(void)
+bool fido_flash_pairing_mode_flag(bool *p_exist)
 {
-    if (read_pairing_mode()) {
+    if (read_pairing_mode(p_exist)) {
         // ペアリングモードレコードの設定内容から
         // ペアリングモードかどうかを取得
         return (m_pairing_mode == PAIRING_MODE);
@@ -136,3 +153,10 @@ void fido_flash_pairing_mode_flag_set(void)
     m_pairing_mode = PAIRING_MODE;
     write_pairing_mode();
 }
+
+void fido_flash_pairing_mode_flag_reset(void)
+{
+    m_pairing_mode = NON_PAIRING_MODE;
+    delete_pairing_mode();
+}
+

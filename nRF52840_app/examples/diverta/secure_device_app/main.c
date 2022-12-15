@@ -175,6 +175,7 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
 #include "application_init.h"
 #include "ble_service_common.h"
 #include "fido_board.h"
+#include "fido_ble_pairing.h"
 #include "fido_flash_plat.h"
 #include "usbd_service.h"
 
@@ -1017,6 +1018,9 @@ int main(void)
     power_management_init();
     // FDS関連の初期化
     fido_flash_storage_init();
+    // BLE関連の初期化の前に、
+    // ペアリングモードをFDSから取得
+    fido_ble_pairing_get_mode();    
     // BLE関連の初期化
     ble_service_common_init();
     if (fido_ble_pairing_mode_get() == false) {

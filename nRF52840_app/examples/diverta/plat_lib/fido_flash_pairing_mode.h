@@ -11,9 +11,10 @@
 extern "C" {
 #endif
 
-bool fido_flash_pairing_mode_flag(void);
+bool fido_flash_pairing_mode_flag(bool *p_exist);
 void fido_flash_pairing_mode_flag_set(void);
 void fido_flash_pairing_mode_flag_clear(void);
+void fido_flash_pairing_mode_flag_reset(void);
 
 #ifdef __cplusplus
 }

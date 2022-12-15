@@ -70,10 +70,6 @@ static ble_u2f_t m_u2f;
 
 void fido_ble_advertising_init(void *p)
 {
-    // アドバタイジング設定の前に、
-    // ペアリングモードをFDSから取得
-    fido_ble_pairing_get_mode();
-    
     // ペアリングモードでない場合は、
     // ディスカバリーができないよう設定
     ble_advertising_init_t *p_init = (ble_advertising_init_t *)p;

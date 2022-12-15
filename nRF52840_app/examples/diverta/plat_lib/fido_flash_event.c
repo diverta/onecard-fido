@@ -127,6 +127,10 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
         fido_ctap2_command_token_counter_file_deleted();
         // 管理用コマンドの処理を実行
         fido_development_command_token_counter_file_deleted();
+
+    } else if (p_evt->del.file_id == FIDO_PAIRING_MODE_FILE_ID) {
+        // ペアリングモード削除後の処理を実行
+        fido_ble_pairing_flash_deleted();
     }
 
     // CCID関連処理を実行
