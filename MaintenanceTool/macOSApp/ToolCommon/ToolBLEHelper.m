@@ -196,14 +196,6 @@
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SERVICE_NOT_FOUND];
             return;
         }
-        // サービスにキャラクタリスティックがない場合は通知
-        if ([[[self connectedService] characteristics] count] < 1) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
-            // キャラクタリスティックがない旨を通知
-            [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
-            return;
-        }
         // ディスカバー完了を通知
         [[self delegate] helperDidDiscoverService];
     }
@@ -229,6 +221,14 @@
             [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // ディスカバー失敗を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_CHARACT_NOT_DISCOVERED];
+            return;
+        }
+        // サービスにキャラクタリスティックがない場合は通知
+        if ([[service characteristics] count] < 1) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // キャラクタリスティックがない旨を通知
+            [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
             return;
         }
         // ディスカバー完了を通知
