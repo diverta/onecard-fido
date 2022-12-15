@@ -403,6 +403,25 @@
         [self scanningDidTimeout];
     }
 
+#pragma mark - Connecting process completion Timeout Monitor
+
+    - (void)startCompleteConnectionTimeoutMonitor:(CBPeripheral *)peripheral withTimeoutSec:(NSTimeInterval)timeoutSec {
+        // 接続完了タイムアウト監視を開始（10秒後にタイムアウト）
+        [self startTimeoutMonitorForSelector:@selector(completeConnectionTimeoutMonitorDidTimeout)
+                                  withObject:peripheral afterDelay:timeoutSec];
+    }
+
+    - (void)cancelCompleteConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
+        // 接続完了タイムアウト監視を停止
+        [self cancelTimeoutMonitorForSelector:@selector(completeConnectionTimeoutMonitorDidTimeout)
+                                   withObject:peripheral];
+    }
+
+    - (void)completeConnectionTimeoutMonitorDidTimeout {
+        // 接続完了タイムアウト時の処理を実行
+        [self connectionDidTimeout];
+    }
+
 #pragma mark - Connecting Timeout Monitor
 
     - (void)startConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
