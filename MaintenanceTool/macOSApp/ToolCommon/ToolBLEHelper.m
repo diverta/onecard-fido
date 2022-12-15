@@ -124,10 +124,6 @@
     }
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-        // すでに接続されている状態の場合は終了
-        if ([self connectedPeripheral] != nil) {
-            return;
-        }
         // 接続されたペリフェラルの参照を保持
         [self setConnectedPeripheral:peripheral];
         // 接続完了を通知
