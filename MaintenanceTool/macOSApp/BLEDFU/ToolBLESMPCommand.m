@@ -228,11 +228,11 @@
         }
     }
 
-    - (void)helperDidDiscoverService {
+    - (void)helperDidDiscoverService:(id)serviceRef {
         // SMPキャラクタリスティックに接続
         [[ToolLogFile defaultLogger] info:@"SMP service discovered"];
         NSArray<NSString *> *characteristicUUIDs = @[SmpCharacteristicUUID];
-        [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
+        [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
     - (void)helperDidDiscoverCharacteristics {

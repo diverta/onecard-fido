@@ -189,20 +189,19 @@
             return;
         }
         // ディスカバー完了を通知
-        [self setConnectedService:connectedService];
-        [[self delegate] helperDidDiscoverService];
+        [[self delegate] helperDidDiscoverService:connectedService];
     }
 
 #pragma mark - Discover characteristics
 
-    - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids {
+    - (void)helperWillDiscoverCharacteristics:(id)serviceRef withUUIDs:(NSArray<NSString *> *)uuids {
         // ディスカバー対象のキャラクタリスティックUUIDを保持
         NSMutableArray *array = [[NSMutableArray alloc] init];
         for (NSString *uuidString in uuids) {
             [array addObject:[CBUUID UUIDWithString:uuidString]];
         }
         // サービス内のキャラクタリスティックをディスカバー
-        [[self connectedPeripheral] discoverCharacteristics:array forService:[self connectedService]];
+        [[self connectedPeripheral] discoverCharacteristics:array forService:(CBService *)serviceRef];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service

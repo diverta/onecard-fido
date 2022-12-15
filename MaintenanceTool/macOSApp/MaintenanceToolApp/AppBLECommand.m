@@ -115,11 +115,11 @@
         [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:uuidString];
     }
 
-    - (void)helperDidDiscoverService {
+    - (void)helperDidDiscoverService:(id)serviceRef {
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
         NSArray<NSString *> *characteristicUUIDs = @[U2FControlPointCharUUID, U2FStatusCharUUID];
-        [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
+        [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
     - (void)helperDidDiscoverCharacteristics {
