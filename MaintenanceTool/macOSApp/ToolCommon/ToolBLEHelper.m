@@ -21,7 +21,6 @@
     @property(nonatomic) CBCharacteristic   *characteristicForWriteNoResp;
     @property(nonatomic) CBCharacteristic   *characteristicForNotify;
     @property(nonatomic, strong) NSArray    *serviceUUIDs;
-    @property(nonatomic, strong) NSArray    *characteristicUUIDs;
     @property(nonatomic) NSString           *scannedPeripheralName;
 
 @end
@@ -204,9 +203,8 @@
         for (NSString *uuidString in uuids) {
             [array addObject:[CBUUID UUIDWithString:uuidString]];
         }
-        [self setCharacteristicUUIDs:array];
         // サービス内のキャラクタリスティックをディスカバー
-        [[self connectedPeripheral] discoverCharacteristics:[self characteristicUUIDs] forService:[self connectedService]];
+        [[self connectedPeripheral] discoverCharacteristics:array forService:[self connectedService]];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service
