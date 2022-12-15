@@ -92,7 +92,7 @@
 #define MSG_INVALID_SKEY_OR_CERT            @"秘密鍵または公開鍵の内容が不正です。"
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO認証器のスキャンがタイムアウトしました。"
-#define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO認証器の接続要求がタイムアウトしました。"
+#define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO認証器の接続処理がタイムアウトしました。"
 #define MSG_U2F_DEVICE_CONNECTED            @"FIDO認証器に接続しました。"
 #define MSG_U2F_DEVICE_CONNECT_FAILED       @"FIDO認証器の接続に失敗しました。"
 #define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO認証器の接続が切断されました。"

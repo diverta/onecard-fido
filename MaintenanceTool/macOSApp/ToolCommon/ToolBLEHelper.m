@@ -168,6 +168,9 @@
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
         // BLEサービスディスカバーに失敗の場合
         if (error) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // ディスカバー失敗を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_SERVICE_NOT_DISCOVERED];
             return;
         }
@@ -203,8 +206,11 @@
 
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service
             error:(NSError *)error {
-        // キャラクタリスティックのディスカバーエラー発生の場合
+        // キャラクタリスティックのディスカバーに失敗の場合
         if (error) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // ディスカバー失敗を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_CHARACT_NOT_DISCOVERED];
             return;
         }
@@ -246,6 +252,9 @@
                  error:(NSError *)error {
         // 監視開始エラー発生の場合
         if (error) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // 監視開始エラー発生を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_NOTIFICATION_FAILED];
             return;
         }
