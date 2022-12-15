@@ -208,7 +208,7 @@
 
 #pragma mark - Callback from ToolBLEHelper
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:SmpServiceUUID]) {
             [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef withTimeoutSec:SmpSubscrCharTimeoutSec];

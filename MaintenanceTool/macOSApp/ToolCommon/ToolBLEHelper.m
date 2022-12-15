@@ -21,7 +21,6 @@
     @property(nonatomic) CBCharacteristic   *characteristicForWriteNoResp;
     @property(nonatomic) CBCharacteristic   *characteristicForNotify;
     @property(nonatomic, strong) NSArray    *serviceUUIDs;
-    @property(nonatomic) NSString           *scannedPeripheralName;
 
 @end
 
@@ -94,8 +93,8 @@
             [self cancelScanningTimeoutMonitor];
             // スキャンを停止し、スキャン完了を通知
             [self cancelScanForPeripherals];
-            [self setScannedPeripheralName:[advertisementData objectForKey:CBAdvertisementDataLocalNameKey]];
-            [[self delegate] helperDidScanForPeripheral:peripheral withUUID:[foundServiceUUIDs UUIDString]];
+            NSString *scannedPeripheralName = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
+            [[self delegate] helperDidScanForPeripheral:peripheral scannedPeripheralName:scannedPeripheralName withUUID:[foundServiceUUIDs UUIDString]];
             break;
         }
     }
@@ -105,11 +104,6 @@
         [self cancelScanForPeripherals];
         // スキャンタイムアウトの場合は通知
         [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_SCAN_TIMEOUT];
-    }
-
-    - (NSString *)nameOfScannedPeripheral {
-        // スキャンが成功したペリフェラルの名前を戻す
-        return [self scannedPeripheralName];
     }
 
 #pragma mark - Connect peripheral
