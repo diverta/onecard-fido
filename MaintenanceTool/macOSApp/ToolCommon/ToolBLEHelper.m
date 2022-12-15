@@ -48,7 +48,8 @@
     - (void)helperWillConnectWithUUID:(NSString *)uuidString {
         // すでに接続が確立されている場合は通知
         if ([self connectedPeripheral] != nil) {
-            [[self delegate] helperDidConnectPeripheral];
+            [[ToolLogFile defaultLogger] error:@"helperWillConnectWithUUID: Connected peripheral already exist"];
+            [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_CONNECT_FAILED];
             return;
         }
         // BLEが無効化されている場合は通知
