@@ -354,12 +354,8 @@
                 return MSG_BLE_SERVICE_NOT_DISCOVERED;
             case BLE_ERR_SERVICE_NOT_FOUND:
                 return MSG_BLE_U2F_SERVICE_NOT_FOUND;
-            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
-                return MSG_DISCOVER_U2F_SERVICES_TIMEOUT;
             case BLE_ERR_CHARACT_NOT_DISCOVERED:
                 return MSG_BLE_CHARACT_NOT_DISCOVERED;
-            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
-                return MSG_DISCOVER_U2F_CHARAS_TIMEOUT;
             case BLE_ERR_CHARACT_NOT_EXIST:
                 return MSG_BLE_CHARACT_NOT_EXIST;
             case BLE_ERR_NOTIFICATION_FAILED:
@@ -370,8 +366,6 @@
                 }
             case BLE_ERR_NOTIFICATION_STOP:
                 return MSG_BLE_NOTIFICATION_STOP;
-            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
-                return MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT;
             case BLE_ERR_REQUEST_SEND_FAILED:
                 return MSG_REQUEST_SEND_FAILED;
             case BLE_ERR_RESPONSE_RECEIVE_FAILED:

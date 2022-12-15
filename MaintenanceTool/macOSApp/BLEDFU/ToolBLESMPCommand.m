@@ -376,20 +376,14 @@
                 return MSG_BLE_SERVICE_NOT_DISCOVERED;
             case BLE_ERR_SERVICE_NOT_FOUND:
                 return @"SMP service not found";
-            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
-                return @"SMP service discover timed out";
             case BLE_ERR_CHARACT_NOT_DISCOVERED:
                 return @"SMP characteristic not found";
-            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
-                return @"SMP characteristic discover timed out";
             case BLE_ERR_CHARACT_NOT_EXIST:
                 return @"SMP characteristic not exist";
             case BLE_ERR_NOTIFICATION_FAILED:
                 return @"SMP characteristic notification failed";
             case BLE_ERR_NOTIFICATION_STOP:
                 return MSG_BLE_NOTIFICATION_STOP;
-            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
-                return @"SMP characteristic subscription timed out";
             case BLE_ERR_REQUEST_SEND_FAILED:
                 return MSG_REQUEST_SEND_FAILED;
             case BLE_ERR_RESPONSE_RECEIVE_FAILED:
