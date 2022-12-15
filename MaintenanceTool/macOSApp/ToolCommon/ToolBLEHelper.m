@@ -144,6 +144,12 @@
 
     - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
+        // 接続完了タイムアウト監視を停止
+        [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+        // レスポンスタイムアウト監視を停止
+        if ([self characteristicForNotify]) {
+            [self cancelResponseTimeoutMonitor:[self characteristicForNotify]];
+        }
         // ペリフェラルの参照を解除
         [self setConnectedPeripheral:nil];
         // 切断完了を通知
@@ -182,8 +188,11 @@
                 break;
             }
         }
-        // サービスがない場合は通知
+        // サービスがない場合
         if ([self connectedService] == nil) {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // サービスがない旨を通知
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SERVICE_NOT_FOUND];
             return;
         }
@@ -191,6 +200,7 @@
         if ([[[self connectedService] characteristics] count] < 1) {
             // 接続完了タイムアウト監視を停止
             [self cancelCompleteConnectionTimeoutMonitor:peripheral];
+            // キャラクタリスティックがない旨を通知
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
             return;
         }
@@ -243,18 +253,21 @@
                 [self setCharacteristicForNotify:characteristic];
             }
         }
-        // Notifyキャラクタリスティックに対する監視を開始
         if ([self characteristicForNotify]) {
+            // Notifyキャラクタリスティックに対する監視を開始
             [[self connectedPeripheral] setNotifyValue:YES forCharacteristic:[self characteristicForNotify]];
+        } else {
+            // 接続完了タイムアウト監視を停止
+            [self cancelCompleteConnectionTimeoutMonitor:[self connectedPeripheral]];
         }
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
                  error:(NSError *)error {
+        // 接続完了タイムアウト監視を停止
+        [self cancelCompleteConnectionTimeoutMonitor:peripheral];
         // 監視開始エラー発生の場合
         if (error) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // 監視開始エラー発生を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_NOTIFICATION_FAILED];
             return;
