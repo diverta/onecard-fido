@@ -15,7 +15,7 @@
 
     @property(nonatomic, weak) id<ToolBLEHelperDelegate> delegate;
     @property(nonatomic) CBCentralManager   *manager;
-    @property(nonatomic) CBPeripheral       *connectedPeripheral;
+    @property(nonatomic) CBPeripheral       *discoveredPeripheral;
     @property(nonatomic) CBCharacteristic   *characteristicForWrite;
     @property(nonatomic) CBCharacteristic   *characteristicForWriteNoResp;
     @property(nonatomic) CBCharacteristic   *characteristicForNotify;
@@ -34,7 +34,7 @@
         if (self) {
             [self setDelegate:delegate];
             [self setManager:[[CBCentralManager alloc] initWithDelegate:self queue:nil]];
-            [self setConnectedPeripheral:nil];
+            [self setDiscoveredPeripheral:nil];
         }
         return self;
     }
@@ -46,7 +46,7 @@
 
     - (void)helperWillConnectWithUUID:(NSString *)uuidString {
         // すでに接続が確立されている場合は通知
-        if ([self connectedPeripheral] != nil) {
+        if ([self discoveredPeripheral] != nil) {
             [[ToolLogFile defaultLogger] error:@"helperWillConnectWithUUID: Connected peripheral already exist"];
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_CONNECT_FAILED];
             return;
@@ -67,7 +67,7 @@
         // スキャン設定
         NSDictionary *scanningOptions = @{CBCentralManagerScanOptionAllowDuplicatesKey : @NO};
         // BLEペリフェラルをスキャン
-        [self setConnectedPeripheral:nil];
+        [self setDiscoveredPeripheral:nil];
         [[self manager] scanForPeripheralsWithServices:nil options:scanningOptions];
         [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_START];
         // スキャンタイムアウト監視を開始
@@ -89,6 +89,8 @@
             if ([[self serviceUUIDs] containsObject:foundServiceUUIDs] == false) {
                 continue;
             }
+            // ペリフェラルの参照を保持（`API MISUSE: Cancelling connection for unused peripheral`というエラー発生の回避措置）
+            [self setDiscoveredPeripheral:peripheral];
             // スキャンタイムアウト監視を停止
             [self cancelScanningTimeoutMonitor];
             // スキャンを停止し、スキャン完了を通知
@@ -115,12 +117,8 @@
     }
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-        if ([peripheral isEqual:[self connectedPeripheral]] == false) {
-            // 接続されたペリフェラルの参照を保持
-            [self setConnectedPeripheral:peripheral];
-            // 接続完了を通知
-            [[self delegate] helperDidConnectPeripheral];
-        }
+        // 接続完了を通知
+        [[self delegate] helperDidConnectPeripheral];
     }
 
     - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral
@@ -135,8 +133,11 @@
         if ([self characteristicForNotify]) {
             [self cancelResponseTimeoutMonitor:[self characteristicForNotify]];
         }
-        // ペリフェラルの参照を解除
-        [self setConnectedPeripheral:nil];
+        // 切断が正常完了した場合は、接続参照を解除
+        if ([error code] == 0) {
+            [[ToolLogFile defaultLogger] debug:@"BLE connection has terminated successfully."];
+            [self setDiscoveredPeripheral:nil];
+        }
         // 切断完了を通知
         [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
     }
@@ -145,7 +146,7 @@
 
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString {
         // サービスのディスカバーを開始
-        CBPeripheral *peripheral = [self connectedPeripheral];
+        CBPeripheral *peripheral = [self discoveredPeripheral];
         [peripheral setDelegate:self];
         [peripheral discoverServices:nil];
         [self setServiceUUIDs:@[[CBUUID UUIDWithString:uuidString]]];
@@ -185,7 +186,7 @@
             [array addObject:[CBUUID UUIDWithString:uuidString]];
         }
         // サービス内のキャラクタリスティックをディスカバー
-        [[self connectedPeripheral] discoverCharacteristics:array forService:(CBService *)serviceRef];
+        [[self discoveredPeripheral] discoverCharacteristics:array forService:(CBService *)serviceRef];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service
@@ -227,7 +228,7 @@
         }
         if ([self characteristicForNotify]) {
             // Notifyキャラクタリスティックに対する監視を開始
-            [[self connectedPeripheral] setNotifyValue:YES forCharacteristic:[self characteristicForNotify]];
+            [[self discoveredPeripheral] setNotifyValue:YES forCharacteristic:[self characteristicForNotify]];
         }
     }
 
@@ -249,7 +250,7 @@
     }
 
     - (bool)helperIsSubscribingCharacteristic {
-        if ([self connectedPeripheral] == nil) {
+        if ([self discoveredPeripheral] == nil) {
             return false;
         }
         if ([self characteristicForNotify] == nil) {
@@ -263,11 +264,11 @@
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage {
         // Writeキャラクタリスティックへの書き込みを開始
         if ([self characteristicForWrite]) {
-            [[self connectedPeripheral] writeValue:requestMessage
+            [[self discoveredPeripheral] writeValue:requestMessage
                                  forCharacteristic:[self characteristicForWrite]
                                               type:CBCharacteristicWriteWithResponse];
         } else if ([self characteristicForWriteNoResp]) {
-            [[self connectedPeripheral] writeValue:requestMessage
+            [[self discoveredPeripheral] writeValue:requestMessage
                                  forCharacteristic:[self characteristicForWriteNoResp]
                                               type:CBCharacteristicWriteWithoutResponse];
             [[self delegate] helperDidWriteForCharacteristics];
@@ -316,8 +317,8 @@
 
     - (void)helperWillDisconnect {
         // ペリフェラル接続を切断
-        if ([self connectedPeripheral] != nil) {
-            [[self manager] cancelPeripheralConnection:[self connectedPeripheral]];
+        if ([self discoveredPeripheral] != nil) {
+            [[self manager] cancelPeripheralConnection:[self discoveredPeripheral]];
         } else {
             [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
         }
