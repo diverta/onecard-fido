@@ -23,5 +23,6 @@
 #pragma mark - BLE関連
 #define MSG_U2F_DEVICE_SCAN_START               @"FIDO認証器のスキャンを開始します。"
 #define MSG_U2F_DEVICE_SCAN_STOPPED             @"FIDO認証器のスキャンを停止しました。"
+#define MSG_U2F_DEVICE_ESTABLISH_CONN_TIMEOUT   @"FIDO認証器の接続処理がタイムアウトしました。"
 
 #endif /* ToolCommonMessage_h */
