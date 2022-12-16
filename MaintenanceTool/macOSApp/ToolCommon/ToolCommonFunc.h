@@ -23,6 +23,9 @@
     + (NSData *)commandDataForGetFlashStat;
     + (NSData *)commandDataForGetVersionInfo;
 
+    + (void)startTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef withTimeoutSec:(NSTimeInterval)timeoutSec;
+    + (void)stopTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef;
+
 @end
 
 #endif /* ToolCommonFunc_h */

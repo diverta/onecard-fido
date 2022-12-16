@@ -10,6 +10,7 @@
 #import "FIDODefines.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLEHelperDefine.h"
+#import "ToolCommonFunc.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
@@ -33,6 +34,8 @@
     @property (nonatomic) NSString             *lastCommandMessage;
     @property (nonatomic) bool                  lastCommandSuccess;
     @property (nonatomic) NSString             *scannedPeripheralName;
+    // BLE接続完了済みかどうかを保持（２重デリゲート回避措置）
+    @property (nonatomic) bool                  connectedPeripheral;
 
 @end
 
@@ -94,40 +97,49 @@
 
 #pragma mark - Call back from ToolBLEHelper
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:@"FFFD"]) {
+            // タイムアウトを設定
+            NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
+            if ([self command] == COMMAND_PAIRING) {
+                // ペアリング時はタイムアウトを延長
+                timeoutSec = U2FSubscrCharTimeoutSecOnPair;
+            }
             [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
-            [self setScannedPeripheralName:[[self toolBLEHelper] nameOfScannedPeripheral]];
+            [self setConnectedPeripheral:false];
+            [self setScannedPeripheralName:peripheralName];
+            // 接続完了タイマーを開始
+            [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:timeoutSec];
         }
     }
 
     - (void)helperDidConnectPeripheral {
-        // ログを出力
-        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
-        NSString *uuidString = U2FServiceUUID;
-        [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:uuidString];
+        // ２重デリゲート回避措置
+        if ([self connectedPeripheral] == false) {
+            // ログを出力
+            [self setConnectedPeripheral:true];
+            [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
+            NSString *uuidString = U2FServiceUUID;
+            [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:uuidString];
+        }
     }
 
-    - (void)helperDidDiscoverService {
+    - (void)helperDidDiscoverService:(id)serviceRef {
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
         NSArray<NSString *> *characteristicUUIDs = @[U2FControlPointCharUUID, U2FStatusCharUUID];
-        [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
+        [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
-    - (void)helperDidDiscoverCharacteristics {
-        // データ受信監視開始までのタイムアウトを設定
-        NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
-        if ([self command] == COMMAND_PAIRING) {
-            // ペアリング時はタイムアウトを延長
-            timeoutSec = U2FSubscrCharTimeoutSecOnPair;
-        }
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:timeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef];
     }
 
     - (void)helperDidSubscribeCharacteristic {
+        // 接続完了タイマーを停止
+        [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
         // 送信済フレーム数をクリア
@@ -167,6 +179,8 @@
     }
 
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
+        // 接続完了タイマーを停止（接続処理完了前にこのイベントが発生することがあるため）
+        [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // ログをファイル出力
         NSString *message = [self helperMessageOnFailConnection:reason];
         // 画面上のテキストエリアにもメッセージを表示する
@@ -181,6 +195,8 @@
 
     - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef {
         if (error) {
+            // 接続完了タイマーを停止（接続処理完了前にこのイベントが発生することがあるため）
+            [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
             // エラーをログ出力した後、接続を切断
             [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
             [[self toolBLEHelper] helperWillDisconnectForce:peripheralRef];
@@ -193,6 +209,14 @@
     - (NSString *)nameOfScannedPeripheral {
         // スキャンが成功したペリフェラルの名前を戻す
         return [self scannedPeripheralName];
+    }
+
+    - (void)establishConnectionTimedOut {
+        // 接続完了タイムアウト発生時の処理
+        [self setLastCommandMessage:MSG_U2F_DEVICE_ESTABLISH_CONN_TIMEOUT];
+        [self setLastCommandSuccess:false];
+        // デバイス接続を切断
+        [[self toolBLEHelper] helperWillDisconnect];
     }
 
 #pragma mark - Function for sending data frames
@@ -342,8 +366,6 @@
                 return MSG_BLE_PARING_ERR_BT_OFF;
             case BLE_ERR_DEVICE_CONNECT_FAILED:
                 return MSG_U2F_DEVICE_CONNECT_FAILED;
-            case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
-                return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
             case BLE_ERR_DEVICE_SCAN_TIMEOUT:
                 if ([self command] == COMMAND_PAIRING) {
                     return MSG_BLE_PARING_ERR_TIMED_OUT;
@@ -354,12 +376,8 @@
                 return MSG_BLE_SERVICE_NOT_DISCOVERED;
             case BLE_ERR_SERVICE_NOT_FOUND:
                 return MSG_BLE_U2F_SERVICE_NOT_FOUND;
-            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
-                return MSG_DISCOVER_U2F_SERVICES_TIMEOUT;
             case BLE_ERR_CHARACT_NOT_DISCOVERED:
                 return MSG_BLE_CHARACT_NOT_DISCOVERED;
-            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
-                return MSG_DISCOVER_U2F_CHARAS_TIMEOUT;
             case BLE_ERR_CHARACT_NOT_EXIST:
                 return MSG_BLE_CHARACT_NOT_EXIST;
             case BLE_ERR_NOTIFICATION_FAILED:
@@ -370,8 +388,6 @@
                 }
             case BLE_ERR_NOTIFICATION_STOP:
                 return MSG_BLE_NOTIFICATION_STOP;
-            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
-                return MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT;
             case BLE_ERR_REQUEST_SEND_FAILED:
                 return MSG_REQUEST_SEND_FAILED;
             case BLE_ERR_RESPONSE_RECEIVE_FAILED:

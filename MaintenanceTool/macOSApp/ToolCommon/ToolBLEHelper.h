@@ -19,23 +19,22 @@
     - (void)helperWillDisconnectForce:(id)peripheralRef;
     - (void)helperWillConnectPeripheral:(id)peripheralRef;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
-    - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids;
-    - (void)helperWillSubscribeCharacteristicWithTimeout:(NSTimeInterval)timeoutSec;
+    - (void)helperWillDiscoverCharacteristics:(id)serviceRef withUUIDs:(NSArray<NSString *> *)uuids;
+    - (void)helperWillSubscribeCharacteristic:(id)serviceRef;
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
     - (bool)helperIsSubscribingCharacteristic;
-    - (NSString *)nameOfScannedPeripheral;
 
 @end
 
 @protocol ToolBLEHelperDelegate <NSObject>
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString;
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString;
     - (void)helperDidConnectPeripheral;
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason;
     - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef;
-    - (void)helperDidDiscoverService;
-    - (void)helperDidDiscoverCharacteristics;
+    - (void)helperDidDiscoverService:(id)serviceRef;
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef;
     - (void)helperDidSubscribeCharacteristic;
     - (void)helperDidWriteForCharacteristics;
     - (void)helperDidReadForCharacteristic:(NSData *)responseMessage;

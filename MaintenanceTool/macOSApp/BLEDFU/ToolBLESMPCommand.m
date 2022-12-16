@@ -10,6 +10,8 @@
 #import "ToolBLEHelper.h"
 #import "ToolBLEHelperDefine.h"
 #import "ToolBLESMPCommand.h"
+#import "ToolCommonFunc.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 #define SmpServiceUUID          @"8D53DC1D-1DB7-4CD3-868B-8A527460AA84"
@@ -42,6 +44,8 @@
     // リクエスト、レスポンスを保持
     @property (nonatomic) NSData            *requestData;
     @property (nonatomic) NSMutableData     *responseData;
+    // BLE接続完了済みかどうかを保持（２重デリゲート回避措置）
+    @property (nonatomic) bool               connectedPeripheral;
     // 物理接続が切れた旨を保持
     @property (nonatomic) bool               unexpectedDisconnection;
     // デバイス接続の切断理由を保持
@@ -208,10 +212,13 @@
 
 #pragma mark - Callback from ToolBLEHelper
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:SmpServiceUUID]) {
+            [self setConnectedPeripheral:false];
             [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
+            // 接続完了タイマーを開始
+            [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:SmpSubscrCharTimeoutSec];
         }
     }
 
@@ -222,25 +229,31 @@
             [self doDisconnectByError:false];
 
         } else {
-            // SMPサービスUUIDによる接続検知の場合は、SMPサービス接続を試行
-            [[ToolLogFile defaultLogger] info:@"SMP server scanned"];
-            [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:SmpServiceUUID];
+            // ２重デリゲート回避措置
+            if ([self connectedPeripheral] == false) {
+                // SMPサービスUUIDによる接続検知の場合は、SMPサービス接続を試行
+                [self setConnectedPeripheral:true];
+                [[ToolLogFile defaultLogger] info:@"SMP server scanned"];
+                [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:SmpServiceUUID];
+            }
         }
     }
 
-    - (void)helperDidDiscoverService {
+    - (void)helperDidDiscoverService:(id)serviceRef {
         // SMPキャラクタリスティックに接続
         [[ToolLogFile defaultLogger] info:@"SMP service discovered"];
         NSArray<NSString *> *characteristicUUIDs = @[SmpCharacteristicUUID];
-        [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
+        [[self toolBLEHelper] helperWillDiscoverCharacteristics:serviceRef withUUIDs:characteristicUUIDs];
     }
 
-    - (void)helperDidDiscoverCharacteristics {
+    - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristicWithTimeout:SmpSubscrCharTimeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef];
     }
 
     - (void)helperDidSubscribeCharacteristic {
+        // 接続完了タイマーを停止
+        [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // 接続を通知
         [[ToolLogFile defaultLogger] info:@"SMP service connected"];
         [[self delegate] bleSmpCommandDidConnect];
@@ -284,6 +297,8 @@
     }
 
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason {
+        // 接続完了タイマーを停止（接続処理完了前にこのイベントが発生することがあるため）
+        [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // エラーログを出力
         NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
         if (error) {
@@ -296,6 +311,8 @@
     }
 
     - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef {
+        // 接続完了タイマーを停止（接続処理完了前にこのイベントが発生することがあるため）
+        [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // 物理切断が検知された場合は、接続復旧までその旨を保持
         if (error) {
             [self setUnexpectedDisconnection:true];
@@ -310,6 +327,13 @@
             // 切断をコマンドクラスに通知
             [[self delegate] bleSmpCommandDidDisconnectWithError:error];
         }
+    }
+
+    - (void)establishConnectionTimedOut {
+        // 接続完了タイムアウト発生時の処理
+        [[ToolLogFile defaultLogger] error:MSG_U2F_DEVICE_ESTABLISH_CONN_TIMEOUT];
+        // デバイス接続を切断
+        [[self toolBLEHelper] helperWillDisconnect];
     }
 
 #pragma mark - Private methods
@@ -368,28 +392,20 @@
                 return MSG_BLE_PARING_ERR_BT_OFF;
             case BLE_ERR_DEVICE_CONNECT_FAILED:
                 return MSG_U2F_DEVICE_CONNECT_FAILED;
-            case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
-                return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
             case BLE_ERR_DEVICE_SCAN_TIMEOUT:
                 return MSG_U2F_DEVICE_SCAN_TIMEOUT;
             case BLE_ERR_SERVICE_NOT_DISCOVERED:
                 return MSG_BLE_SERVICE_NOT_DISCOVERED;
             case BLE_ERR_SERVICE_NOT_FOUND:
                 return @"SMP service not found";
-            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
-                return @"SMP service discover timed out";
             case BLE_ERR_CHARACT_NOT_DISCOVERED:
                 return @"SMP characteristic not found";
-            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
-                return @"SMP characteristic discover timed out";
             case BLE_ERR_CHARACT_NOT_EXIST:
                 return @"SMP characteristic not exist";
             case BLE_ERR_NOTIFICATION_FAILED:
                 return @"SMP characteristic notification failed";
             case BLE_ERR_NOTIFICATION_STOP:
                 return MSG_BLE_NOTIFICATION_STOP;
-            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
-                return @"SMP characteristic subscription timed out";
             case BLE_ERR_REQUEST_SEND_FAILED:
                 return MSG_REQUEST_SEND_FAILED;
             case BLE_ERR_RESPONSE_RECEIVE_FAILED:
