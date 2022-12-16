@@ -108,7 +108,7 @@
 
 #pragma mark - Connect peripheral
 
-    - (void)helperWillConnectPeripheral:(id)peripheralRef withTimeoutSec:(NSTimeInterval)timeoutSec {
+    - (void)helperWillConnectPeripheral:(id)peripheralRef {
         // ペリフェラルに接続
         CBPeripheral *peripheral = (CBPeripheral *)peripheralRef;
         [[self manager] connectPeripheral:peripheral options:nil];
@@ -208,7 +208,7 @@
 
 #pragma mark - Subscribe characteristic
 
-    - (void)helperWillSubscribeCharacteristic:(id)serviceRef withTimeout:(NSTimeInterval)timeoutSec {
+    - (void)helperWillSubscribeCharacteristic:(id)serviceRef {
         // Write／Notifyキャラクタリスティックの参照を保持
         [self setCharacteristicForWrite:nil];
         [self setCharacteristicForWriteNoResp:nil];

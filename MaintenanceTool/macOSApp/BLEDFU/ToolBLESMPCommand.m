@@ -211,7 +211,7 @@
     - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:SmpServiceUUID]) {
-            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef withTimeoutSec:SmpSubscrCharTimeoutSec];
+            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
         }
     }
 
@@ -237,7 +237,7 @@
 
     - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef withTimeout:SmpSubscrCharTimeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef];
     }
 
     - (void)helperDidSubscribeCharacteristic {

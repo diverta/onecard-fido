@@ -103,7 +103,7 @@
                 // ペアリング時はタイムアウトを延長
                 timeoutSec = U2FSubscrCharTimeoutSecOnPair;
             }
-            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef withTimeoutSec:timeoutSec];
+            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
             [self setScannedPeripheralName:peripheralName];
         }
     }
@@ -123,14 +123,8 @@
     }
 
     - (void)helperDidDiscoverCharacteristics:(id)serviceRef {
-        // データ受信監視開始までのタイムアウトを設定
-        NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
-        if ([self command] == COMMAND_PAIRING) {
-            // ペアリング時はタイムアウトを延長
-            timeoutSec = U2FSubscrCharTimeoutSecOnPair;
-        }
         // データ受信監視を開始
-        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef withTimeout:timeoutSec];
+        [[self toolBLEHelper] helperWillSubscribeCharacteristic:serviceRef];
     }
 
     - (void)helperDidSubscribeCharacteristic {

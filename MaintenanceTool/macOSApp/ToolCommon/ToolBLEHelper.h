@@ -17,10 +17,10 @@
     - (void)helperWillConnectWithUUID:(NSString *)uuidString;
     - (void)helperWillDisconnect;
     - (void)helperWillDisconnectForce:(id)peripheralRef;
-    - (void)helperWillConnectPeripheral:(id)peripheralRef withTimeoutSec:(NSTimeInterval)timeoutSec;
+    - (void)helperWillConnectPeripheral:(id)peripheralRef;
     - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
     - (void)helperWillDiscoverCharacteristics:(id)serviceRef withUUIDs:(NSArray<NSString *> *)uuids;
-    - (void)helperWillSubscribeCharacteristic:(id)serviceRef withTimeout:(NSTimeInterval)timeoutSec;
+    - (void)helperWillSubscribeCharacteristic:(id)serviceRef;
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
     - (void)helperWillReadForCharacteristics;
     - (bool)helperIsSubscribingCharacteristic;
