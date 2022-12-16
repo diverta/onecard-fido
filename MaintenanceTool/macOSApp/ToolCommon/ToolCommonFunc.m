@@ -7,6 +7,7 @@
 #import "FIDODefines.h"
 #import "ToolCommonMessage.h"
 #import "ToolCommonFunc.h"
+#import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
 @interface ToolCommonFunc ()
@@ -95,6 +96,21 @@
         unsigned char arr[] = {MNT_COMMAND_GET_APP_VERSION};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         return commandData;
+    }
+
+#pragma mark - Timeout monitor for NSObject
+
+    + (void)startTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef withTimeoutSec:(NSTimeInterval)timeoutSec {
+        // ターゲットのクラス上で、タイムアウト監視を開始（指定秒数の経過後にタイムアウト）
+        [NSObject cancelPreviousPerformRequestsWithTarget:targetRef selector:selectorRef object:objectRef];
+        [[ToolLogFile defaultLogger] debug:@"startTimerWithTarget"];
+        [targetRef performSelector:selectorRef withObject:objectRef afterDelay:timeoutSec];
+    }
+
+    + (void)stopTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef {
+        // ターゲットのクラス上で、タイムアウト監視を停止
+        [[ToolLogFile defaultLogger] debug:@"stopTimerWithTarget"];
+        [NSObject cancelPreviousPerformRequestsWithTarget:targetRef selector:selectorRef object:objectRef];
     }
 
 @end
