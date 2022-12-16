@@ -103,13 +103,11 @@
     + (void)startTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef withTimeoutSec:(NSTimeInterval)timeoutSec {
         // ターゲットのクラス上で、タイムアウト監視を開始（指定秒数の経過後にタイムアウト）
         [NSObject cancelPreviousPerformRequestsWithTarget:targetRef selector:selectorRef object:objectRef];
-        [[ToolLogFile defaultLogger] debug:@"startTimerWithTarget"];
         [targetRef performSelector:selectorRef withObject:objectRef afterDelay:timeoutSec];
     }
 
     + (void)stopTimerWithTarget:(id)targetRef forSelector:(SEL)selectorRef withObject:(id)objectRef {
         // ターゲットのクラス上で、タイムアウト監視を停止
-        [[ToolLogFile defaultLogger] debug:@"stopTimerWithTarget"];
         [NSObject cancelPreviousPerformRequestsWithTarget:targetRef selector:selectorRef object:objectRef];
     }
 
