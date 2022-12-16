@@ -112,8 +112,6 @@
         // ペリフェラルに接続
         CBPeripheral *peripheral = (CBPeripheral *)peripheralRef;
         [[self manager] connectPeripheral:peripheral options:nil];
-        // 接続完了タイムアウト監視を開始
-        [self startCompleteConnectionTimeoutMonitor:peripheral withTimeoutSec:timeoutSec];
     }
 
     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
@@ -127,16 +125,12 @@
 
     - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
-        // 接続完了タイムアウト監視を停止
-        [self cancelCompleteConnectionTimeoutMonitor:peripheral];
         // 接続失敗を通知
         [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_DEVICE_CONNECT_FAILED];
     }
 
     - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
-        // 接続完了タイムアウト監視を停止
-        [self cancelCompleteConnectionTimeoutMonitor:peripheral];
         // レスポンスタイムアウト監視を停止
         if ([self characteristicForNotify]) {
             [self cancelResponseTimeoutMonitor:[self characteristicForNotify]];
@@ -145,11 +139,6 @@
         [self setConnectedPeripheral:nil];
         // 切断完了を通知
         [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
-    }
-
-    - (void)connectionDidTimeout {
-        // 接続タイムアウトを通知
-        [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_CONNREQ_TIMEOUT];
     }
 
 #pragma mark - Discover services
@@ -165,8 +154,6 @@
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
         // BLEサービスディスカバーに失敗の場合
         if (error) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // ディスカバー失敗を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_SERVICE_NOT_DISCOVERED];
             return;
@@ -181,8 +168,6 @@
         }
         // サービスがない場合
         if (connectedService == nil) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // サービスがない旨を通知
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_SERVICE_NOT_FOUND];
             return;
@@ -207,16 +192,12 @@
             error:(NSError *)error {
         // キャラクタリスティックのディスカバーに失敗の場合
         if (error) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // ディスカバー失敗を通知
             [[self delegate] helperDidFailConnectionWithError:error reason:BLE_ERR_CHARACT_NOT_DISCOVERED];
             return;
         }
         // サービスにキャラクタリスティックがない場合は通知
         if ([[service characteristics] count] < 1) {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:peripheral];
             // キャラクタリスティックがない旨を通知
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_CHARACT_NOT_EXIST];
             return;
@@ -247,16 +228,11 @@
         if ([self characteristicForNotify]) {
             // Notifyキャラクタリスティックに対する監視を開始
             [[self connectedPeripheral] setNotifyValue:YES forCharacteristic:[self characteristicForNotify]];
-        } else {
-            // 接続完了タイムアウト監視を停止
-            [self cancelCompleteConnectionTimeoutMonitor:[self connectedPeripheral]];
         }
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
                  error:(NSError *)error {
-        // 接続完了タイムアウト監視を停止
-        [self cancelCompleteConnectionTimeoutMonitor:peripheral];
         // 監視開始エラー発生の場合
         if (error) {
             // 監視開始エラー発生を通知
@@ -384,25 +360,6 @@
     - (void)scanningTimeoutMonitorDidTimeout {
         // スキャンタイムアウト時の処理を実行
         [self scanningDidTimeout];
-    }
-
-#pragma mark - Connecting process completion Timeout Monitor
-
-    - (void)startCompleteConnectionTimeoutMonitor:(CBPeripheral *)peripheral withTimeoutSec:(NSTimeInterval)timeoutSec {
-        // 接続完了タイムアウト監視を開始（10秒後にタイムアウト）
-        [self startTimeoutMonitorForSelector:@selector(completeConnectionTimeoutMonitorDidTimeout)
-                                  withObject:peripheral afterDelay:timeoutSec];
-    }
-
-    - (void)cancelCompleteConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
-        // 接続完了タイムアウト監視を停止
-        [self cancelTimeoutMonitorForSelector:@selector(completeConnectionTimeoutMonitorDidTimeout)
-                                   withObject:peripheral];
-    }
-
-    - (void)completeConnectionTimeoutMonitorDidTimeout {
-        // 接続完了タイムアウト時の処理を実行
-        [self connectionDidTimeout];
     }
 
 #pragma mark - Response Timeout Monitor
