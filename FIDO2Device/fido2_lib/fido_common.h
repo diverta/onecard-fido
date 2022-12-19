@@ -53,19 +53,6 @@ extern "C" {
 // 独自エラーステータス
 #define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
-// 管理コマンドの識別用
-#define MNT_COMMAND_BASE                0x40
-#define MNT_COMMAND_GET_FLASH_STAT      0x42
-#define MNT_COMMAND_GET_APP_VERSION     0x43
-#define MNT_COMMAND_BOOTLOADER_MODE     0x45
-#define MNT_COMMAND_ERASE_BONDING_DATA  0x46
-#define MNT_COMMAND_SYSTEM_RESET        0x47
-#define MNT_COMMAND_INSTALL_ATTESTATION 0xc8
-#define MNT_COMMAND_RESET_ATTESTATION   0xc9
-#define MNT_COMMAND_GET_TIMESTAMP       0x4a
-#define MNT_COMMAND_SET_TIMESTAMP       0x4b
-#define MNT_COMMAND_PAIRING_REQUEST     0x4c
-
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
     uint8_t  CLA;

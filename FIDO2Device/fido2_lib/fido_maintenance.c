@@ -15,6 +15,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
+#include "fido_maintenance_define.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
