@@ -19,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool        fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, uint8_t *response_buffer, size_t *response_size);
+void        fido_ble_unpairing_on_disconnect(void);
 
 #ifdef __cplusplus
 }

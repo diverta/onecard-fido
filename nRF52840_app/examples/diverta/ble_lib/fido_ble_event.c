@@ -45,6 +45,9 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     UNUSED_PARAMETER(p_ble_evt);
     p_u2f->conn_handle = BLE_CONN_HANDLE_INVALID;
 
+    // ペアリング解除を実行
+    fido_ble_unpairing_on_disconnect();
+    
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     fido_ble_pairing_on_disconnect();
 }
