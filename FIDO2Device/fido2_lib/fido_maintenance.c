@@ -198,20 +198,22 @@ static void command_pairing_request(void)
 
 static void command_unpairing_request(void)
 {
-    uint8_t *data = get_maintenance_data_buffer();
-    uint16_t length = get_maintenance_data_buffer_size();
+    // リクエスト格納領域
+    uint8_t *request_data = get_maintenance_data_buffer();
+    size_t   request_size = get_maintenance_data_buffer_size();
 
-    // 元データチェック
-    if (length > 1) {
+    // レスポンス格納領域
+    uint8_t *response_data = response_buffer + 1;
+    size_t   response_size = sizeof(response_buffer - 1);
+
+    // ペアリング解除要求コマンドを実行し、レスポンスを生成
+    if (fido_ble_unpairing_request(request_data, request_size, response_data, &response_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
-    // TODO: 仮の実装です。
-    fido_log_debug("Command unpairing request 0x%02x", data[0]);
-    
     // レスポンスを送信
-    send_command_response(CTAP1_ERR_SUCCESS, 1);
+    send_command_response(CTAP1_ERR_SUCCESS, response_size + 1);
 }
 
 static void command_erase_bonding_data(void)
