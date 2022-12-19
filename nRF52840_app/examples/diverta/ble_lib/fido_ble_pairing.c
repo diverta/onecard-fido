@@ -17,6 +17,7 @@
 #include "fido_ble_send.h"
 
 #include "application_init.h"
+#include "fido_ble_service.h"
 #include "fido_flash_pairing_mode.h"
 #include "fido_timer_plat.h"
 
@@ -278,4 +279,27 @@ bool fido_ble_pairing_sleep_after_boot_mode(void)
     // Flash ROMにペアリングモードレコードが
     // 存在していない場合は true
     return sleep_after_boot;
+}
+
+//
+// ペアリング解除関連
+//
+bool fido_ble_pairing_get_peer_id(uint16_t *p_peer_id) 
+{
+    // コネクションハンドルからpeer_idを取得
+    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    uint16_t conn_handle = p_u2f->conn_handle;
+    ret_code_t ret = pm_peer_id_get(conn_handle, p_peer_id);
+    if (ret == NRF_SUCCESS) {
+        NRF_LOG_DEBUG("Connected peer id=0x%04x", *p_peer_id);
+        return true;
+
+    } else if (ret == NRF_ERROR_NULL) {
+        NRF_LOG_DEBUG("peer id is not exist");
+        return false;
+
+    } else {
+        NRF_LOG_ERROR("pm_peer_id_get returns %d", ret);
+        return false;
+    }
 }
