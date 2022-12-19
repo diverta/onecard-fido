@@ -196,6 +196,24 @@ static void command_pairing_request(void)
     send_command_response(CTAP1_ERR_SUCCESS, 1);
 }
 
+static void command_unpairing_request(void)
+{
+    uint8_t *data = get_maintenance_data_buffer();
+    uint16_t length = get_maintenance_data_buffer_size();
+
+    // 元データチェック
+    if (length > 1) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        return;
+    }
+
+    // TODO: 仮の実装です。
+    fido_log_debug("Command unpairing request 0x%02x", data[0]);
+    
+    // レスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
 static void command_erase_bonding_data(void)
 {
     fido_log_info("Erase bonding data start");
@@ -273,6 +291,9 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     switch (mnt_cmd) {
         case MNT_COMMAND_PAIRING_REQUEST:
             command_pairing_request();
+            return;
+        case MNT_COMMAND_UNPAIRING_REQUEST:
+            command_unpairing_request();
             return;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();

@@ -44,7 +44,7 @@
         // 切断待機フラグをクリア
         [self setWaitingDisconnect:false];
         // BLE接続キープ要求コマンド用のデータを生成
-        unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
+        unsigned char arr[] = {MNT_COMMAND_UNPAIRING_REQUEST};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
         // BLE接続キープ要求処理を実行
         [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
