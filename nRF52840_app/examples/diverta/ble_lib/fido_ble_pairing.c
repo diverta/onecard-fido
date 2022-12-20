@@ -61,49 +61,31 @@ uint8_t fido_ble_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
-static bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
-{
-    if (run_as_pairing_mode == false) {
-        if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
-            // ペアリングモードでない場合は、
-            // ペアリング要求に応じないようにする
-            NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
-            uint16_t conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_UNSPECIFIED, NULL, NULL);
-            if (code != NRF_SUCCESS) {
-                // nRF52から強制的にBLEコネクションを切断
-                NRF_LOG_DEBUG("sd_ble_gap_sec_params_reply returns 0x%04x", code);
-                sd_ble_gap_disconnect(conn_handle, BLE_HCI_STATUS_CODE_COMMAND_DISALLOWED);
-            }
-            // ペアリングモードLED点滅を開始し、
-            // 再度ペアリングが必要であることを通知
-            fido_status_indicator_pairing_fail();
-            return true;
-        }
-    }
-    return false;
-}
-
-void fido_ble_pairing_on_evt_sec_params_request(ble_evt_t const *p_ble_evt)
-{
-    // ペアリングモードでない場合は、
-    // ペアリング要求に応じないようにする
-    fido_ble_pairing_reject_request(p_ble_evt);
-}
-
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
 {
     if (run_as_pairing_mode == false) {
-        // ペアリングモードでない場合は何もしない
-        return false;
-    }
-    if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
-        // ペアリング済みである端末からの
-        // 再ペアリング要求を受入れるようにする
-        NRF_LOG_DEBUG("Accept pairing request from an already bonded peer. ");
-        pm_conn_sec_config_t conn_sec_config = {.allow_repairing = true};
-        pm_conn_sec_config_reply(p_evt->conn_handle, &conn_sec_config);
-        return true;
+        if (p_evt->evt_id == PM_EVT_CONN_SEC_PARAMS_REQ) {
+            // ペアリングモードでない場合は、
+            // ペアリング要求に応じないようにする
+            uint16_t conn_handle = p_evt->conn_handle;
+            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, p_evt->params.conn_sec_params_req.p_context);
+            if (code == NRF_SUCCESS) {
+                // ペアリングモードLED点滅を開始し、
+                // 再度ペアリングが必要であることを通知
+                NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
+                fido_status_indicator_pairing_fail();
+                return true;
+            }
+        }
+    } else {
+        if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
+            // ペアリング済みである端末からの
+            // 再ペアリング要求を受入れるようにする
+            NRF_LOG_DEBUG("Accept pairing request from an already bonded peer. ");
+            pm_conn_sec_config_t conn_sec_config = {.allow_repairing = true};
+            pm_conn_sec_config_reply(p_evt->conn_handle, &conn_sec_config);
+            return true;
+        }
     }
     return false;
 }

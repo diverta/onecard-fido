@@ -13,7 +13,6 @@ extern "C" {
 #endif
 
 uint8_t fido_ble_pairing_advertising_flag(void);
-void    fido_ble_pairing_on_evt_sec_params_request(ble_evt_t const *p_ble_evt);
 bool    fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt);
 void    fido_ble_pairing_change_mode(void);
 void    fido_ble_pairing_get_mode(void);
