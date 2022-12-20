@@ -70,6 +70,17 @@ void fido_ble_unpairing_on_disconnect(void)
         // 接続の切断検知時点で、
         // peer_id に対応するペアリング情報を削除
         m_peer_id_set = false;
-        NRF_LOG_DEBUG("Unpairing process for peer_id=0x%04x done.", m_peer_id_to_unpair);
+        fido_ble_pairing_delete_peer_id(m_peer_id_set);
+        NRF_LOG_DEBUG("Unpairing process for peer_id=0x%04x processing...", m_peer_id_to_unpair);
+    }
+}
+
+void fido_ble_unpairing_done(bool success, uint16_t peer_id)
+{
+    if (success) {
+        NRF_LOG_INFO("Unpairing process for peer_id=0x%04x done.", peer_id);
+
+    } else {
+        NRF_LOG_ERROR("Unpairing process for peer_id=0x%04x failed.", peer_id);
     }
 }

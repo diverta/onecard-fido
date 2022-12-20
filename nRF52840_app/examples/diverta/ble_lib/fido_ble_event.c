@@ -159,6 +159,9 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
 bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 {
+    // ペアリング情報削除後の処理
+    fido_ble_pairing_peer_deleted(p_evt);
+
     // ペアリング済みである端末からの
     // 再ペアリング要求を受入れるようにする
     fido_ble_pairing_allow_repairing(p_evt);

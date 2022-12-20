@@ -21,6 +21,7 @@ extern "C" {
 bool        fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, uint8_t *response_buffer, size_t *response_size);
 void        fido_ble_unpairing_cancel_request(void);
 void        fido_ble_unpairing_on_disconnect(void);
+void        fido_ble_unpairing_done(bool success, uint16_t peer_id);
 
 #ifdef __cplusplus
 }

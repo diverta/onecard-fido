@@ -26,6 +26,8 @@ void    fido_ble_pairing_reset(void);
 void    fido_ble_pairing_flash_deleted(void);
 bool    fido_ble_pairing_sleep_after_boot_mode(void);
 bool    fido_ble_pairing_get_peer_id(uint16_t *p_peer_id);
+bool    fido_ble_pairing_delete_peer_id(uint16_t peer_id);
+void    fido_ble_pairing_peer_deleted(pm_evt_t *p_evt);
 
 #ifdef __cplusplus
 }
