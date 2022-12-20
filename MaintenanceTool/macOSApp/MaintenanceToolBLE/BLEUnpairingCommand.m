@@ -50,6 +50,15 @@
         [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
     }
 
+    - (void)doRequestUnpairingCommandWithPeerId:(NSData *)response {
+        // ペアリング解除要求コマンド用のデータを生成（レスポンスの２・３バイト目＝peer_idを設定）
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        uint8_t arr[] = {MNT_COMMAND_UNPAIRING_REQUEST, responseBytes[1], responseBytes[2]};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        // ペアリング解除要求コマンドを実行
+        [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
+    }
+
     - (void)doResponseUnpairingCommand:(NSData *)response {
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
@@ -58,7 +67,10 @@
             [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
             return;
         }
-        if ([response length] == 0) {
+        if ([response length] == 3) {
+            // レスポンスにpeer_idが設定されている場合は次のコマンドを実行
+            [self doRequestUnpairingCommandWithPeerId:response];
+        } else {
             // レスポンスがブランクの場合は、ペアリング解除による切断 or タイムアウト／キャンセル応答まで待機
             [self startWaitingForUnpair];
         }
