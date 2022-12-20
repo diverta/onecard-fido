@@ -57,6 +57,13 @@ bool fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, ui
     }
 }
 
+void fido_ble_unpairing_cancel_request(void)
+{
+    // ペアリング情報削除の実行を回避
+    m_peer_id_set = false;
+    NRF_LOG_DEBUG("Unpairing process for peer_id=0x%04x canceled.", m_peer_id_to_unpair);
+}
+
 void fido_ble_unpairing_on_disconnect(void)
 {
     if (m_peer_id_set) {
