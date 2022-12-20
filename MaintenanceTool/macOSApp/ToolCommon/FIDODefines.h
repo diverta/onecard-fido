@@ -78,5 +78,6 @@
 #define MNT_COMMAND_SET_TIMESTAMP       0x4b
 #define MNT_COMMAND_PAIRING_REQUEST     0x4c
 #define MNT_COMMAND_UNPAIRING_REQUEST   0x4d
+#define MNT_COMMAND_UNPAIRING_CANCEL    0x4e
 
 #endif /* FIDODefines_h */
