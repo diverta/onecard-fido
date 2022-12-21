@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2022/12/16.
 //
+#import "AppCommonMessage.h"
 #import "UnpairingRequestWindow.h"
 
 @interface UnpairingRequestWindow ()
@@ -30,6 +31,8 @@
     }
 
     - (void)initFieldValue {
+        [[self labelTitle] setStringValue:MSG_BLE_UNPAIRING_PREPARATION];
+        [[self labelProgress] setStringValue:MSG_NONE];
         [[self levelIndicator] setIntegerValue:0];
     }
 
@@ -57,6 +60,7 @@
         // 画面項目を初期化
         [self initFieldValue];
         [[self levelIndicator] setMaxValue:progressMax];
+        [[self levelIndicator] setIntValue:progressMax];
         // Cancelボタンを使用可とする
         [[self buttonCancel] setEnabled:true];
     }

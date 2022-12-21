@@ -28,7 +28,7 @@
                 <subviews>
                     <levelIndicator verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Trg-eO-TjT" userLabel="LevelIndicator">
                         <rect key="frame" x="20" y="87" width="358" height="18"/>
-                        <levelIndicatorCell key="cell" alignment="left" doubleValue="10" maxValue="30" levelIndicatorStyle="continuousCapacity" id="sYE-cE-mWL"/>
+                        <levelIndicatorCell key="cell" alignment="left" doubleValue="30" maxValue="30" levelIndicatorStyle="continuousCapacity" id="sYE-cE-mWL"/>
                     </levelIndicator>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xO2-hg-Sis" userLabel="ButtonCancel">
                         <rect key="frame" x="158" y="13" width="82" height="32"/>
@@ -49,7 +49,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="Oto-lb-8aq"/>
                         </constraints>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="あと 10 秒" id="DLc-a9-gyJ">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="DLc-a9-gyJ">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -62,9 +62,6 @@ Gw
                         </constraints>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="mpP-Vk-uTa">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Bluetooth環境設定から
-デバイス「Secure Dongle」が
-削除されるのを待機しています。</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
