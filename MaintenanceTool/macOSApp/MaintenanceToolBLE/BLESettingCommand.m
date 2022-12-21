@@ -29,6 +29,9 @@
     @property (nonatomic) EraseBondsCommand            *eraseBondsCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) BLESettingCommandParameter   *commandParameter;
+    // 非同期処理用のキュー（画面用／カウントダウン処理用）
+    @property (nonatomic) dispatch_queue_t              mainQueue;
+    @property (nonatomic) dispatch_queue_t              subQueue;
 
 @end
 
@@ -45,6 +48,9 @@
             [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
             [self setBleUnpairingCommand:[[BLEUnpairingCommand alloc] initWithDelegate:self]];
             [self setEraseBondsCommand:[[EraseBondsCommand alloc] initWithDelegate:self]];
+            // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
+            [self setMainQueue:dispatch_get_main_queue()];
+            [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.blesetting", DISPATCH_QUEUE_SERIAL)];
         }
         return self;
     }
@@ -85,7 +91,7 @@
                 [[self eraseBondsCommand] doRequestHidEraseBonds];
                 break;
             case COMMAND_UNPAIRING_REQUEST:
-                [self unpairingRequestWindowWillOpen];
+                [self invokeUnpairingRequestProcess];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -112,6 +118,16 @@
 
 #pragma mark - Interface for UnpairingRequestWindow
 
+    - (void)invokeUnpairingRequestProcess {
+        // ペアリング解除要求画面（ダイアログ）をモーダルで表示
+        [self unpairingRequestWindowWillOpen];
+        // ペアリング解除要求画面にカウントダウン開始を通知
+        [[self unpairingRequestWindow] commandDidStartUnpairingRequestProcessForTarget:self
+            forSelector:@selector(unpairingRequestWindowNotifyCancel) withProgressMax:30];
+        // ペアリング解除要求処理を開始
+        [self startUnpairingRequestProcess];
+    }
+
     - (void)unpairingRequestWindowWillOpen {
         NSWindow *dialog = [[self unpairingRequestWindow] window];
         BLESettingCommand * __weak weakSelf = self;
@@ -125,7 +141,23 @@
         // ペアリング解除要求画面を閉じる
         [[self unpairingRequestWindow] close];
         // TODO: 仮の実装です。
-        [self notifyCommandTerminated:nil message:nil success:true fromWindow:[self parentWindow]];
+        [self notifyCommandTerminated:PROCESS_NAME_UNPAIRING_REQUEST message:nil success:true fromWindow:[self parentWindow]];
+    }
+
+    - (void)unpairingRequestWindowNotifyCancel {
+        // ペアリング解除要求画面のCancelボタンがクリックされた場合
+        // TODO: 仮の実装です。
+        dispatch_async([self mainQueue], ^{
+            // ペアリング解除要求画面に対し、処理キャンセルの旨を通知する
+            [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
+        });
+    }
+
+#pragma mark - Unpairing request process
+
+    - (void)startUnpairingRequestProcess {
+        // TODO: 仮の実装です。
+        [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
     }
 
 @end

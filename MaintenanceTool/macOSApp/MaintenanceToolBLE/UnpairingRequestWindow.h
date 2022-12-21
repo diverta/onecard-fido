@@ -12,6 +12,8 @@
 @interface UnpairingRequestWindow : NSWindowController
 
     - (void)setParentWindowRef:(id)ref;
+    - (void)commandDidStartUnpairingRequestProcessForTarget:(id)target forSelector:(SEL)selector withProgressMax:(int)progressMax;
+    - (void)commandDidCancelUnpairingRequestProcess;
 
 @end
 
