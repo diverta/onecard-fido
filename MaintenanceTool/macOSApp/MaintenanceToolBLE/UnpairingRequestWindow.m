@@ -9,8 +9,6 @@
 
 @interface UnpairingRequestWindow ()
 
-    // 親画面の参照を保持
-    @property (nonatomic) NSWindow                  *parentWindow;
     // 画面項目の参照を保持
     @property (assign) IBOutlet NSTextField         *labelTitle;
     @property (assign) IBOutlet NSTextField         *labelProgress;
@@ -34,6 +32,9 @@
         [[self labelTitle] setStringValue:MSG_BLE_UNPAIRING_PREPARATION];
         [[self labelProgress] setStringValue:MSG_NONE];
         [[self levelIndicator] setIntegerValue:0];
+        [[self levelIndicator] setIntValue:0];
+        // Cancelボタンを使用不可とする
+        [[self buttonCancel] setEnabled:false];
     }
 
     - (void)setParentWindowRef:(id)ref {

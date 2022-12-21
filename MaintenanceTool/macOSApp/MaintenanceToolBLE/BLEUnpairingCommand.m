@@ -7,6 +7,7 @@
 #import "AppBLECommand.h"
 #import "AppCommonMessage.h"
 #import "BLEUnpairingCommand.h"
+#import "BLEUnpairingDefine.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
 #import "UnpairingRequestWindow.h"
@@ -19,6 +20,9 @@
     @property (nonatomic) AppBLECommand            *appBLECommand;
     // 画面の参照を保持
     @property (nonatomic) UnpairingRequestWindow   *unpairingRequestWindow;
+    // 非同期処理用のキュー（画面用／待機処理用）
+    @property (nonatomic) dispatch_queue_t          mainQueue;
+    @property (nonatomic) dispatch_queue_t          subQueue;
     // 切断待機フラグ
     @property (nonatomic) bool                      waitingDisconnect;
 
@@ -39,6 +43,9 @@
             [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
             // 画面の参照を保持
             [self setUnpairingRequestWindow:(UnpairingRequestWindow *)windowRef];
+            // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
+            [self setMainQueue:dispatch_get_main_queue()];
+            [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.ble.unpair", DISPATCH_QUEUE_SERIAL)];
         }
         return self;
     }
@@ -157,6 +164,35 @@
 #pragma mark - Interface for UnpairingRequestWindow
 
     - (void)invokeUnpairingRequestProcess {
+        // ペアリング解除要求画面（ダイアログ）をモーダルで表示
+        [self unpairingRequestWindowWillOpen];
+        // キャンセルボタンがクリックされた時に実行されるコールバック、待機秒数を設定
+        [[self unpairingRequestWindow] commandDidStartUnpairingRequestProcessForTarget:self
+            forSelector:@selector(unpairingRequestWindowNotifyCancel) withProgressMax:UNPAIRING_REQUEST_WAITING_SEC];
+    }
+
+    - (void)unpairingRequestWindowWillOpen {
+        NSWindow *dialog = [[self unpairingRequestWindow] window];
+        BLEUnpairingCommand * __weak weakSelf = self;
+        [[[self unpairingRequestWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf unpairingRequestWindowDidClose:self modalResponse:response];
+        }];
+    }
+
+    - (void)unpairingRequestWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // ペアリング解除要求画面を閉じる
+        [[self unpairingRequestWindow] close];
+        // TODO: 仮の実装です。
+        [[self delegate] doResponseBLESettingCommand:true message:nil];
+    }
+
+    - (void)unpairingRequestWindowNotifyCancel {
+        // ペアリング解除要求画面のCancelボタンがクリックされた場合
+        dispatch_async([self mainQueue], ^{
+            // ペアリング解除要求画面に対し、処理キャンセルの旨を通知する
+            [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
+        });
     }
 
 @end

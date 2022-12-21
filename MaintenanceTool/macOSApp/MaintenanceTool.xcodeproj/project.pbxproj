@@ -300,6 +300,7 @@
 		7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7ACFD89C27213EAF00AAEFE2 /* BLEDFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUProcessingWindow.h; sourceTree = "<group>"; };
 		7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUProcessingWindow.m; sourceTree = "<group>"; };
+		7AD4C2882952CDAE00434792 /* BLEUnpairingDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEUnpairingDefine.h; sourceTree = "<group>"; };
 		7AD501B92578883D00494B7C /* tool_piv_admin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_piv_admin.h; sourceTree = "<group>"; };
 		7AD501BA2578883D00494B7C /* tool_piv_admin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_piv_admin.c; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
@@ -681,6 +682,7 @@
 				7A775B4D294C4C8F00EDE37F /* UnpairingRequestWindow.h */,
 				7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */,
 				7A775B4C294C4C8F00EDE37F /* UnpairingRequestWindow.xib */,
+				7AD4C2882952CDAE00434792 /* BLEUnpairingDefine.h */,
 			);
 			path = MaintenanceToolBLE;
 			sourceTree = "<group>";

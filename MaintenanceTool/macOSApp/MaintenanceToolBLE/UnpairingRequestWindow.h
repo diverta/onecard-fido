@@ -11,6 +11,9 @@
 
 @interface UnpairingRequestWindow : NSWindowController
 
+    // 親画面の参照を保持
+    @property (nonatomic) NSWindow *parentWindow;
+
     - (void)setParentWindowRef:(id)ref;
     - (void)commandDidStartUnpairingRequestProcessForTarget:(id)target forSelector:(SEL)selector withProgressMax:(int)progressMax;
     - (void)commandDidCancelUnpairingRequestProcess;
