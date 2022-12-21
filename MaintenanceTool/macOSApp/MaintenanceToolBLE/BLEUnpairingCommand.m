@@ -9,6 +9,7 @@
 #import "BLEUnpairingCommand.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
+#import "UnpairingRequestWindow.h"
 
 @interface BLEUnpairingCommand () <AppBLECommandDelegate>
 
@@ -16,6 +17,8 @@
     @property (nonatomic, weak) id                  delegate;
     // ヘルパークラスの参照を保持
     @property (nonatomic) AppBLECommand            *appBLECommand;
+    // 画面の参照を保持
+    @property (nonatomic) UnpairingRequestWindow   *unpairingRequestWindow;
     // 切断待機フラグ
     @property (nonatomic) bool                      waitingDisconnect;
 
@@ -24,16 +27,18 @@
 @implementation BLEUnpairingCommand
 
     - (id)init {
-        return [self initWithDelegate:nil];
+        return [self initWithDelegate:nil withUnpairingRequestWindowRef:nil];
     }
 
-    - (id)initWithDelegate:(id)delegate {
+    - (id)initWithDelegate:(id)delegate withUnpairingRequestWindowRef:(id)windowRef {
         self = [super init];
         if (self) {
             // 上位クラスの参照を保持
             [self setDelegate:delegate];
             // ヘルパークラスのインスタンスを生成
             [self setAppBLECommand:[[AppBLECommand alloc] initWithDelegate:self]];
+            // 画面の参照を保持
+            [self setUnpairingRequestWindow:(UnpairingRequestWindow *)windowRef];
         }
         return self;
     }
@@ -147,6 +152,11 @@
         }
         // 上位クラスに制御を戻す
         [self terminateUnpairingCommand:success message:errorMessage];
+    }
+
+#pragma mark - Interface for UnpairingRequestWindow
+
+    - (void)invokeUnpairingRequestProcess {
     }
 
 @end
