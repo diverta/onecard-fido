@@ -11,6 +11,7 @@
 #include "u2f.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_maintenance_define.h"
 #include "fido_receive_apdu.h"
 
 // コマンド実行関数群

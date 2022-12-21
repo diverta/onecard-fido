@@ -15,6 +15,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
+#include "fido_maintenance_define.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -195,6 +196,35 @@ static void command_pairing_request(void)
     send_command_response(CTAP1_ERR_SUCCESS, 1);
 }
 
+static void command_unpairing_request(void)
+{
+    // リクエスト格納領域
+    uint8_t *request_data = get_maintenance_data_buffer();
+    size_t   request_size = get_maintenance_data_buffer_size();
+
+    // レスポンス格納領域
+    uint8_t *response_data = response_buffer + 1;
+    size_t   response_size = sizeof(response_buffer - 1);
+
+    // ペアリング解除要求コマンドを実行し、レスポンスを生成
+    if (fido_ble_unpairing_request(request_data, request_size, response_data, &response_size) == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        return;
+    }
+
+    // レスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, response_size + 1);
+}
+
+static void command_unpairing_cancel(void)
+{
+    // ペアリング解除要求キャンセルコマンドを実行
+    fido_ble_unpairing_cancel_request();
+
+    // レスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
 static void command_erase_bonding_data(void)
 {
     fido_log_info("Erase bonding data start");
@@ -272,6 +302,12 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     switch (mnt_cmd) {
         case MNT_COMMAND_PAIRING_REQUEST:
             command_pairing_request();
+            return;
+        case MNT_COMMAND_UNPAIRING_REQUEST:
+            command_unpairing_request();
+            return;
+        case MNT_COMMAND_UNPAIRING_CANCEL:
+            command_unpairing_cancel();
             return;
         case MNT_COMMAND_ERASE_BONDING_DATA:
             command_erase_bonding_data();

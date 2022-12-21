@@ -40,19 +40,26 @@
 
 #pragma mark - BLE Command/subcommand process
 
-    - (void)doRequestBleConnectForUnpairing {
+    - (void)doRequestUnpairingCommand {
         // 切断待機フラグをクリア
         [self setWaitingDisconnect:false];
-        // BLE接続キープ要求コマンド用のデータを生成
-        unsigned char arr[] = {MNT_COMMAND_PAIRING_REQUEST};
+        // ペアリング解除要求コマンド用のデータを生成
+        uint8_t arr[] = {MNT_COMMAND_UNPAIRING_REQUEST};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        // BLE接続キープ要求処理を実行
+        // ペアリング解除要求コマンドを実行
         [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
-        // タイムアウト監視を開始
-        [self startWaitingForUnpairTimeoutMonitor];
     }
 
-    - (void)doResponseBleConnectForUnpairingCommand:(NSData *)response {
+    - (void)doRequestUnpairingCommandWithPeerId:(NSData *)response {
+        // ペアリング解除要求コマンド用のデータを生成（レスポンスの２・３バイト目＝peer_idを設定）
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        uint8_t arr[] = {MNT_COMMAND_UNPAIRING_REQUEST, responseBytes[1], responseBytes[2]};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        // ペアリング解除要求コマンドを実行
+        [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
+    }
+
+    - (void)doResponseUnpairingCommand:(NSData *)response {
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
@@ -60,18 +67,42 @@
             [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
             return;
         }
-        // 接続が切断されるまで待機
-        if ([self waitingDisconnect] == false) {
-            // メイン画面にメッセージを表示
-            NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
-            [[self delegate] notifyCommandMessageToMainUI:message];
-            [[ToolLogFile defaultLogger] info:message];
-            // 切断待機フラグを設定
-            [self setWaitingDisconnect:true];
+        if ([response length] == 3) {
+            // レスポンスにpeer_idが設定されている場合は次のコマンドを実行
+            [self doRequestUnpairingCommandWithPeerId:response];
+        } else {
+            // レスポンスがブランクの場合は、ペアリング解除による切断 or タイムアウト／キャンセル応答まで待機
+            [self startWaitingForUnpair];
         }
     }
 
-    - (void)doResponseBleConnectForUnpairing:(bool)success message:(NSString *)message {
+    - (void)startWaitingForUnpair {
+        // メイン画面にメッセージを表示
+        NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
+        [[self delegate] notifyCommandMessageToMainUI:message];
+        [[ToolLogFile defaultLogger] info:message];
+        // タイムアウト監視を開始
+        [self startWaitingForUnpairTimeoutMonitor];
+        // 切断待機フラグを設定
+        [self setWaitingDisconnect:true];
+    }
+
+    - (void)doRequestUnpairingCancelCommand {
+        // ペアリング解除要求キャンセルコマンド用のデータを生成
+        unsigned char arr[] = {MNT_COMMAND_UNPAIRING_CANCEL};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        // ペアリング解除要求キャンセルコマンドを実行
+        [[self appBLECommand] doRequestCommand:COMMAND_UNPAIRING_CANCEL_REQUEST withCMD:BLE_CMD_MSG withData:commandData];
+    }
+
+    - (void)doResponseUnpairingCancelCommand {
+        // 切断待機フラグをクリア
+        [self setWaitingDisconnect:false];
+        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
+        [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
+    }
+
+    - (void)terminateUnpairingCommand:(bool)success message:(NSString *)message {
         // タイムアウト監視を終了
         [self cancelWaitingForUnpairTimeoutMonitor];
         // 上位クラスに制御を戻す
@@ -91,17 +122,18 @@
     }
 
     - (void)waitingForUnpairTimeoutMonitorDidTimeout {
-        // 切断待機フラグをクリア
-        [self setWaitingDisconnect:false];
-        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
-        [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
+        // ペアリング解除要求キャンセルコマンドを実行
+        [self doRequestUnpairingCancelCommand];
     }
 
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
         if (command == COMMAND_UNPAIRING_REQUEST) {
-            [self doResponseBleConnectForUnpairingCommand:response];
+            [self doResponseUnpairingCommand:response];
+        }
+        if (command == COMMAND_UNPAIRING_CANCEL_REQUEST) {
+            [self doResponseUnpairingCancelCommand];
         }
     }
 
@@ -114,7 +146,7 @@
             return;
         }
         // 上位クラスに制御を戻す
-        [self doResponseBleConnectForUnpairing:success message:errorMessage];
+        [self terminateUnpairingCommand:success message:errorMessage];
     }
 
 @end

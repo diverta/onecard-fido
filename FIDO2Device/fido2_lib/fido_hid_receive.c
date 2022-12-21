@@ -13,6 +13,7 @@
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
+#include "fido_maintenance_define.h"
 #include "fido_receive_apdu.h"
 #include "fido_hid_send.h"
 #include "u2f.h"

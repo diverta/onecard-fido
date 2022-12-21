@@ -82,7 +82,7 @@
                 break;
             case COMMAND_UNPAIRING_REQUEST:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
-                [[self bleUnpairingCommand] doRequestBleConnectForUnpairing];
+                [[self bleUnpairingCommand] doRequestUnpairingCommand];
                 break;
             default:
                 // メイン画面に制御を戻す
