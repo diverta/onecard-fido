@@ -238,6 +238,7 @@
       <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_object.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_openpgp_object.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/ccid_flash_piv_object.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/fido_ble_utility.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_crypto.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_flash.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_timer.h</itemPath>
@@ -250,6 +251,7 @@
       <itemPath>../wrapper_lib/ccid_flash_object.c</itemPath>
       <itemPath>../wrapper_lib/ccid_flash_openpgp_object.c</itemPath>
       <itemPath>../wrapper_lib/ccid_flash_piv_object.c</itemPath>
+      <itemPath>../wrapper_lib/fido_ble_utility.c</itemPath>
       <itemPath>../wrapper_lib/rtcc.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -1711,6 +1713,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../../FIDO2Device/wrapper_header/fido_ble_utility.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../FIDO2Device/wrapper_header/fido_crypto.h"
             ex="false"
             tool="3"
@@ -1920,6 +1927,8 @@
             ex="false"
             tool="0"
             flavor2="0">
+      </item>
+      <item path="../wrapper_lib/fido_ble_utility.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../wrapper_lib/rtcc.c" ex="false" tool="0" flavor2="0">
       </item>

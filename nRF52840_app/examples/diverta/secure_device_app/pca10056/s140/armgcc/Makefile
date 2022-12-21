@@ -428,6 +428,7 @@ SRC_FILES += \
   $(WRPLIB_DIR)/ccid_flash_object.c \
   $(WRPLIB_DIR)/ccid_flash_openpgp_object.c \
   $(WRPLIB_DIR)/ccid_flash_piv_object.c \
+  $(WRPLIB_DIR)/fido_ble_utility.c \
   $(WRPLIB_DIR)/rtcc.c \
 
 ifeq ("$(TARGET_BOARD)","PCA10059_02")

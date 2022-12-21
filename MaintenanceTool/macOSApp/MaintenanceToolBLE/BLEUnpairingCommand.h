@@ -14,7 +14,7 @@
 @interface BLEUnpairingCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)doRequestBleConnectForUnpairing;
+    - (void)doRequestUnpairingCommand;
 
 @end
 

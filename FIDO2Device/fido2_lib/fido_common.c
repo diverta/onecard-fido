@@ -32,6 +32,17 @@ void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes)
     p_dest_buffer[1] = bytes >>  0 & 0xff;
 }
 
+uint16_t fido_get_uint16_from_bytes(uint8_t *p_src_buffer)
+{
+    // ２バイトのビッグエンディアン形式配列を、
+    // ２バイト整数に変換
+    uint16_t uint16;
+    uint8_t *p_dest_buffer = (uint8_t *)&uint16;
+    p_dest_buffer[0] = p_src_buffer[1];
+    p_dest_buffer[1] = p_src_buffer[0];
+    return uint16;
+}
+
 uint32_t fido_get_uint32_from_bytes(uint8_t *p_src_buffer)
 {
     // ４バイトのビッグエンディアン形式配列を、
