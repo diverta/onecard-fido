@@ -62,6 +62,14 @@
         [self initFieldValue];
         [[self levelIndicator] setMaxValue:progressMax];
         [[self levelIndicator] setIntValue:progressMax];
+    }
+
+    - (void)commandDidStartWaitingForUnpairWithDeviceName:(NSString *)deviceName {
+        // メッセージを表示
+        NSString *message = [NSString stringWithFormat:MSG_BLE_UNPAIRING_WAIT_DISCONNECT, deviceName];
+        [[self labelTitle] setStringValue:message];
+        NSString *progress = [NSString stringWithFormat:MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT, 30];
+        [[self labelProgress] setStringValue:progress];
         // Cancelボタンを使用可とする
         [[self buttonCancel] setEnabled:true];
     }
@@ -69,6 +77,15 @@
     - (void)commandDidCancelUnpairingRequestProcess {
         // 処理がキャンセルされた場合はCancelを戻す
         [self terminateWindow:NSModalResponseCancel];
+    }
+
+    - (void)commandDidTerminateUnpairingRequestProcess:(bool)success {
+        // 処理が正常終了した場合はOK、異常終了した場合はAbortを戻す
+        if (success) {
+            [self terminateWindow:NSModalResponseOK];
+        } else {
+            [self terminateWindow:NSModalResponseAbort];
+        }
     }
 
 @end

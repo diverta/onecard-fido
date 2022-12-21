@@ -25,6 +25,8 @@
     @property (nonatomic) dispatch_queue_t          subQueue;
     // 切断待機フラグ
     @property (nonatomic) bool                      waitingDisconnect;
+    // メイン画面に戻すエラーメッセージを保持
+    @property (nonatomic) NSString                 *commandErrorMessage;
 
 @end
 
@@ -75,7 +77,7 @@
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合はヘルパークラスに制御を戻す
+            // エラーの場合はヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand-->terminateUnpairingCommand が呼び出される
             [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
             return;
         }
@@ -89,14 +91,12 @@
     }
 
     - (void)startWaitingForUnpair {
-        // メイン画面にメッセージを表示
-        NSString *message = [NSString stringWithFormat:MSG_BLE_UNPARING_WAIT_DISCONNECT, [[self appBLECommand] nameOfScannedPeripheral]];
-        [[self delegate] notifyCommandMessageToMainUI:message];
-        [[ToolLogFile defaultLogger] info:message];
-        // タイムアウト監視を開始
-        [self startWaitingForUnpairTimeoutMonitor];
         // 切断待機フラグを設定
         [self setWaitingDisconnect:true];
+        dispatch_async([self mainQueue], ^{
+            // ペアリング解除要求画面にデバイス名を通知
+            [[self unpairingRequestWindow] commandDidStartWaitingForUnpairWithDeviceName:[[self appBLECommand] nameOfScannedPeripheral]];
+        });
     }
 
     - (void)doRequestUnpairingCancelCommand {
@@ -110,15 +110,24 @@
     - (void)doResponseUnpairingCancelCommand {
         // 切断待機フラグをクリア
         [self setWaitingDisconnect:false];
-        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
-        [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT];
+        // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand-->terminateUnpairingCommand が呼び出される
+        [[self appBLECommand] commandDidProcess:false message:MSG_BLE_UNPAIRING_WAIT_CANCELED];
     }
 
     - (void)terminateUnpairingCommand:(bool)success message:(NSString *)message {
-        // タイムアウト監視を終了
-        [self cancelWaitingForUnpairTimeoutMonitor];
-        // 上位クラスに制御を戻す
-        [[self delegate] doResponseBLESettingCommand:success message:message];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"terminateUnpairingCommand: waitingDisconnect: %@", success ? @"success" : @"false"];
+        // メッセージを退避
+        [self setCommandErrorMessage:message];
+        dispatch_async([self mainQueue], ^{
+            // ペアリング解除要求画面を閉じる-->unpairingRequestWindowDidClose が呼び出される
+            if ([message isEqualToString:MSG_BLE_UNPAIRING_WAIT_CANCELED]) {
+                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: 1"];
+                [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
+            } else {
+                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: 2"];
+                [[self unpairingRequestWindow] commandDidTerminateUnpairingRequestProcess:success];
+            }
+        });
     }
 
 #pragma mark - Waiting for unpair Timeout Monitor
@@ -150,14 +159,17 @@
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
+        [[ToolLogFile defaultLogger] debugWithFormat:@"didCompleteCommand: waitingDisconnect: %@", success ? @"success" : @"false"];
         if ([self waitingDisconnect]) {
+            [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect true"];
             // 切断待機フラグをクリア
             [self setWaitingDisconnect:false];
             // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
             [[self appBLECommand] commandDidProcess:true message:nil];
             return;
         }
-        // 上位クラスに制御を戻す
+        // ペアリング解除要求画面を閉じ、上位クラスに制御を戻す
+        [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect false"];
         [self terminateUnpairingCommand:success message:errorMessage];
     }
 
@@ -169,6 +181,8 @@
         // キャンセルボタンがクリックされた時に実行されるコールバック、待機秒数を設定
         [[self unpairingRequestWindow] commandDidStartUnpairingRequestProcessForTarget:self
             forSelector:@selector(unpairingRequestWindowNotifyCancel) withProgressMax:UNPAIRING_REQUEST_WAITING_SEC];
+        // ペアリング解除要求コマンドを実行
+        [self doRequestUnpairingCommand];
     }
 
     - (void)unpairingRequestWindowWillOpen {
@@ -183,16 +197,21 @@
     - (void)unpairingRequestWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // ペアリング解除要求画面を閉じる
         [[self unpairingRequestWindow] close];
-        // TODO: 仮の実装です。
-        [[self delegate] doResponseBLESettingCommand:true message:nil];
+        // 上位クラスに制御を戻す
+        switch (modalResponse) {
+            case NSModalResponseOK:
+                [[self delegate] doResponseBLESettingCommand:true message:nil];
+                break;
+            default:
+                [[self delegate] doResponseBLESettingCommand:false message:[self commandErrorMessage]];
+                break;
+        }
+        
     }
 
     - (void)unpairingRequestWindowNotifyCancel {
-        // ペアリング解除要求画面のCancelボタンがクリックされた場合
-        dispatch_async([self mainQueue], ^{
-            // ペアリング解除要求画面に対し、処理キャンセルの旨を通知する
-            [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
-        });
+        // ペアリング解除要求画面のCancelボタンがクリックされた場合、ペアリング解除要求キャンセルコマンドを実行
+        [self doRequestUnpairingCancelCommand];
     }
 
 @end

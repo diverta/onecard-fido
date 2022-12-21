@@ -10,6 +10,7 @@
 #import "BLESettingWindow.h"
 #import "BLEUnpairingCommand.h"
 #import "EraseBondsCommand.h"
+#import "ToolPopupWindow.h"
 #import "UnpairingRequestWindow.h"
 
 @implementation BLESettingCommandParameter
@@ -103,6 +104,13 @@
 #pragma mark - Call back from BLEPairingCommand, BLEUnpairingCommand
 
     - (void)doResponseBLESettingCommand:(bool)success message:(NSString *)message {
+        if ([message isEqualToString:MSG_BLE_UNPAIRING_WAIT_CANCELED]) {
+            // メイン画面に制御を戻す
+            [self notifyCommandTerminated:nil message:message success:success fromWindow:[self parentWindow]];
+            // ポップアップを表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_BLE_UNPAIRING_WAIT_CANCELED informativeText:nil withObject:self forSelector:nil parentWindow:[self parentWindow]];
+            return;
+        }
         // メイン画面に制御を戻す
         [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }

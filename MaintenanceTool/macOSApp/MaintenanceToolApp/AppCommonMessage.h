@@ -183,6 +183,9 @@
 #define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のボタンを３秒間以上長押して、ペアリングモードに遷移させてください。"
 #define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
 #define MSG_BLE_UNPAIRING_PREPARATION       @"ペアリング解除要求の準備中です。"
+#define MSG_BLE_UNPAIRING_WAIT_DISCONNECT   @"Bluetooth環境設定から\nデバイス「%@」が\n削除されるのを待機しています。"
+#define MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT   @"あと %d 秒"
+#define MSG_BLE_UNPAIRING_WAIT_CANCELED     @"ペアリング解除要求が中断されました。"
 #define MSG_BLE_UNPARING_WAIT_DISCONNECT    @"Bluetooth環境設定からデバイス「%@」が削除されるまで、３０秒間待機します。"
 #define MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT  @"Bluetooth環境設定からのデバイス削除が検知されませんでした。ペアリング解除要求を中止します。"
 
