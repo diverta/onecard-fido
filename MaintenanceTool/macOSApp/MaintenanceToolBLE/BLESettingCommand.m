@@ -10,6 +10,7 @@
 #import "BLESettingWindow.h"
 #import "BLEUnpairingCommand.h"
 #import "EraseBondsCommand.h"
+#import "UnpairingRequestWindow.h"
 
 @implementation BLESettingCommandParameter
 
@@ -21,6 +22,7 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) BLESettingWindow             *bleSettingWindow;
+    @property (nonatomic) UnpairingRequestWindow       *unpairingRequestWindow;
     // 下位クラスの参照を保持
     @property (nonatomic) BLEPairingCommand            *blePairingCommand;
     @property (nonatomic) BLEUnpairingCommand          *bleUnpairingCommand;
@@ -37,6 +39,7 @@
         if (self) {
             // 画面のインスタンスを生成
             [self setBleSettingWindow:[[BLESettingWindow alloc] initWithWindowNibName:@"BLESettingWindow"]];
+            [self setUnpairingRequestWindow:[[UnpairingRequestWindow alloc] initWithWindowNibName:@"UnpairingRequestWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[BLESettingCommandParameter alloc] init]];
             [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
@@ -51,6 +54,7 @@
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
         [[self bleSettingWindow] setParentWindowRef:parentWindow withCommandRef:self withParameterRef:[self commandParameter]];
+        [[self unpairingRequestWindow] setParentWindowRef:parentWindow];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self bleSettingWindow] window];
         BLESettingCommand * __weak weakSelf = self;
@@ -81,8 +85,7 @@
                 [[self eraseBondsCommand] doRequestHidEraseBonds];
                 break;
             case COMMAND_UNPAIRING_REQUEST:
-                [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
-                [[self bleUnpairingCommand] doRequestUnpairingCommand];
+                [self unpairingRequestWindowWillOpen];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -105,6 +108,24 @@
 
     - (void)notifyCommandMessageToMainUI:(NSString *)message {
         [[self delegate] notifyMessageToMainUI:message];
+    }
+
+#pragma mark - Interface for UnpairingRequestWindow
+
+    - (void)unpairingRequestWindowWillOpen {
+        NSWindow *dialog = [[self unpairingRequestWindow] window];
+        BLESettingCommand * __weak weakSelf = self;
+        [[self parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf unpairingRequestWindowDidClose:self modalResponse:response];
+        }];
+    }
+
+    - (void)unpairingRequestWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // ペアリング解除要求画面を閉じる
+        [[self unpairingRequestWindow] close];
+        // TODO: 仮の実装です。
+        [self notifyCommandTerminated:nil message:nil success:true fromWindow:[self parentWindow]];
     }
 
 @end
