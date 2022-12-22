@@ -25,6 +25,8 @@
     @property (nonatomic) dispatch_queue_t          subQueue;
     // 切断待機フラグ
     @property (nonatomic) bool                      waitingDisconnect;
+    // タイムアウト監視フラグ
+    @property (nonatomic) bool                      WaitingForUnpairTimeout;
     // メイン画面に戻すエラーメッセージを保持
     @property (nonatomic) NSString                 *commandErrorMessage;
 
@@ -97,6 +99,11 @@
             // ペアリング解除要求画面にデバイス名を通知
             [[self unpairingRequestWindow] commandDidStartWaitingForUnpairWithDeviceName:[[self appBLECommand] nameOfScannedPeripheral]];
         });
+        // タイムアウト監視に移行
+        dispatch_async([self subQueue], ^{
+            [self setWaitingForUnpairTimeout:true];
+            [self startWaitingForUnpairTimeoutMonitor];
+        });
     }
 
     - (void)doRequestUnpairingCancelCommand {
@@ -133,13 +140,35 @@
 #pragma mark - Waiting for unpair Timeout Monitor
 
     - (void)startWaitingForUnpairTimeoutMonitor {
-        // タイムアウト監視を開始（30秒後にタイムアウト）
-        [self performSelector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) withObject:nil afterDelay:30.0];
+        // タイムアウト監視（最大30秒）
+        for (int i = 0; i < UNPAIRING_REQUEST_WAITING_SEC; i++) {
+            // 残り秒数をペアリング解除要求画面に通知
+            int sec = UNPAIRING_REQUEST_WAITING_SEC - i;
+            [self notifyProgressValue:sec];
+            for (int j = 0; j < 5; j++) {
+                if ([self WaitingForUnpairTimeout] == false) {
+                    return;
+                }
+                [NSThread sleepForTimeInterval:0.2];
+            }
+        }
+        // 残り秒数をペアリング解除要求画面に通知
+        [self notifyProgressValue:0];
+        // タイムアウトと判定
+        [self waitingForUnpairTimeoutMonitorDidTimeout];
+    }
+
+    - (void)notifyProgressValue:(int)remaining {
+        dispatch_async([self mainQueue], ^{
+            // 残り秒数をペアリング解除要求画面に通知
+            NSString *message = [NSString stringWithFormat:MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT, remaining];
+            [[self unpairingRequestWindow] commandDidNotifyProcessWithMessage:message withProgress:remaining];
+        });
     }
 
     - (void)cancelWaitingForUnpairTimeoutMonitor {
         // タイムアウト監視を停止
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(waitingForUnpairTimeoutMonitorDidTimeout) object:nil];
+        [self setWaitingForUnpairTimeout:false];
     }
 
     - (void)waitingForUnpairTimeoutMonitorDidTimeout {
@@ -164,6 +193,8 @@
             [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect is true"];
             // 切断待機フラグをクリア
             [self setWaitingDisconnect:false];
+            // タイムアウト監視を停止
+            [self cancelWaitingForUnpairTimeoutMonitor];
             // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
             [[self appBLECommand] commandDidProcess:true message:nil];
             return;
@@ -210,6 +241,8 @@
     }
 
     - (void)unpairingRequestWindowNotifyCancel {
+        // タイムアウト監視を停止
+        [self cancelWaitingForUnpairTimeoutMonitor];
         // ペアリング解除要求画面のCancelボタンがクリックされた場合、ペアリング解除要求キャンセルコマンドを実行
         [self doRequestUnpairingCancelCommand];
     }

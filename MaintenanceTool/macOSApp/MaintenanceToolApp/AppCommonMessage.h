@@ -186,8 +186,7 @@
 #define MSG_BLE_UNPAIRING_WAIT_DISCONNECT   @"Bluetooth環境設定から\nデバイス「%@」が\n削除されるのを待機しています。"
 #define MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT   @"あと %d 秒"
 #define MSG_BLE_UNPAIRING_WAIT_CANCELED     @"ペアリング解除要求が中断されました。"
-#define MSG_BLE_UNPARING_WAIT_DISCONNECT    @"Bluetooth環境設定からデバイス「%@」が削除されるまで、３０秒間待機します。"
-#define MSG_BLE_UNPARING_WAIT_DISC_TIMEOUT  @"Bluetooth環境設定からのデバイス削除が検知されませんでした。ペアリング解除要求を中止します。"
+#define MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT @"Bluetooth環境設定からの\nデバイス削除が検知されませんでした。\nペアリング解除要求を中止します。"
 
 #pragma mark - ツール設定画面
 #define MSG_LABEL_AUTH_PARAM_GET                @"自動認証設定の読込"
