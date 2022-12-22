@@ -172,10 +172,23 @@ bool fido_ble_pairing_get_peer_count(uint8_t *p_count)
 
 void fido_ble_pairing_get_mode(void)
 {
+    // ペアリング情報が存在しない場合は、優先してペアリングモードとする
+    bool no_peer = true;
+
+    // ペアリング情報の有無を照会
+    uint8_t peer_count;
+    if (fido_ble_pairing_get_peer_count(&peer_count) && (peer_count > 0)) {
+        // ペアリング情報が１件以上存在すれば、非ペアリングモードとする
+        NRF_LOG_INFO("Already bonded peer is exist (count=%d).", peer_count);
+        no_peer = false;
+    } else {
+        NRF_LOG_INFO("Already bonded peer is not exist.");
+    }
+
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
     bool exist;
-    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist);
+    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist) | no_peer;
     NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 
