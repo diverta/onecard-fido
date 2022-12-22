@@ -148,6 +148,28 @@ void fido_ble_pairing_flash_updated(void)
     }
 }
 
+bool fido_ble_pairing_get_peer_count(uint8_t *p_count)
+{
+    // ペアリング情報（IRK）を含む peer_id の配列を抽出
+    pm_peer_id_t peer_list[10];
+    uint32_t list_size = sizeof(peer_list) / sizeof(pm_peer_id_t);
+    ret_code_t ret_code = pm_peer_id_list(peer_list, &list_size, PM_PEER_ID_INVALID, PM_PEER_ID_LIST_SKIP_NO_IRK);
+    if (ret_code != NRF_SUCCESS) {
+        *p_count = 0;
+        return false;
+    }
+
+#if LOG_DEBUG_PEER_ID_LIST
+    for (uint8_t i = 0; i < list_size; i++) {
+        NRF_LOG_DEBUG("fido_ble_pairing_get_mode: peer_id[%d]=%d", i, peer_list[i]);
+    }
+#endif
+
+    // ペアリング情報（IRK）を含む peer_id の数を戻す
+    *p_count = (uint8_t)list_size;
+    return true;
+}
+
 void fido_ble_pairing_get_mode(void)
 {
     // ペアリングモードがFlash ROMに設定されていれば
