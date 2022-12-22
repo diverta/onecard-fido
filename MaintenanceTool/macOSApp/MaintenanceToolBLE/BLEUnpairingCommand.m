@@ -115,16 +115,16 @@
     }
 
     - (void)terminateUnpairingCommand:(bool)success message:(NSString *)message {
-        [[ToolLogFile defaultLogger] debugWithFormat:@"terminateUnpairingCommand: waitingDisconnect: %@", success ? @"success" : @"false"];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"terminateUnpairingCommand: success: %@", success ? @"success" : @"false"];
         // メッセージを退避
         [self setCommandErrorMessage:message];
         dispatch_async([self mainQueue], ^{
             // ペアリング解除要求画面を閉じる-->unpairingRequestWindowDidClose が呼び出される
             if ([message isEqualToString:MSG_BLE_UNPAIRING_WAIT_CANCELED]) {
-                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: 1"];
+                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: unpairing canceled"];
                 [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
             } else {
-                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: 2"];
+                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: unpairing terminated"];
                 [[self unpairingRequestWindow] commandDidTerminateUnpairingRequestProcess:success];
             }
         });
@@ -159,9 +159,9 @@
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
-        [[ToolLogFile defaultLogger] debugWithFormat:@"didCompleteCommand: waitingDisconnect: %@", success ? @"success" : @"false"];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"didCompleteCommand: success: %@", success ? @"success" : @"false"];
         if ([self waitingDisconnect]) {
-            [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect true"];
+            [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect is true"];
             // 切断待機フラグをクリア
             [self setWaitingDisconnect:false];
             // 一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand が呼び出される
@@ -169,7 +169,7 @@
             return;
         }
         // ペアリング解除要求画面を閉じ、上位クラスに制御を戻す
-        [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect false"];
+        [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect is false"];
         [self terminateUnpairingCommand:success message:errorMessage];
     }
 
