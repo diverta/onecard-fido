@@ -17,6 +17,7 @@
     - (void)setParentWindowRef:(id)ref;
     - (void)commandDidStartUnpairingRequestProcessForTarget:(id)target forSelector:(SEL)selector withProgressMax:(int)progressMax;
     - (void)commandDidStartWaitingForUnpairWithDeviceName:(NSString *)deviceName;
+    - (void)commandDidNotifyProcessWithMessage:(NSString *)message withProgress:(int)progress;
     - (void)commandDidCancelUnpairingRequestProcess;
     - (void)commandDidTerminateUnpairingRequestProcess:(bool)success;
 

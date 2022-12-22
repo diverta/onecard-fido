@@ -52,6 +52,8 @@
     - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+        // 画面項目を初期化
+        [self initFieldValue];
     }
 
     - (void)commandDidStartUnpairingRequestProcessForTarget:(id)target forSelector:(SEL)selector withProgressMax:(int)progressMax {
@@ -68,10 +70,21 @@
         // メッセージを表示
         NSString *message = [NSString stringWithFormat:MSG_BLE_UNPAIRING_WAIT_DISCONNECT, deviceName];
         [[self labelTitle] setStringValue:message];
-        NSString *progress = [NSString stringWithFormat:MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT, 30];
-        [[self labelProgress] setStringValue:progress];
         // Cancelボタンを使用可とする
         [[self buttonCancel] setEnabled:true];
+    }
+
+    - (void)commandDidNotifyProcessWithMessage:(NSString *)message withProgress:(int)progress {
+        // 残り秒数が０になった場合
+        if (progress == 0) {
+            // Cancelボタンを使用不可とする
+            [[self buttonCancel] setEnabled:false];
+            // ラベルを更新
+            [[self labelTitle] setStringValue:MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT];
+        }
+        // 残り秒数表示ラベル、プログレスバーを更新
+        [[self labelProgress] setStringValue:message];
+        [[self levelIndicator] setIntValue:progress];
     }
 
     - (void)commandDidCancelUnpairingRequestProcess {
