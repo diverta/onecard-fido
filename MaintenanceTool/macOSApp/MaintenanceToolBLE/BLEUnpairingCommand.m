@@ -9,7 +9,6 @@
 #import "BLEUnpairingCommand.h"
 #import "BLEUnpairingDefine.h"
 #import "FIDODefines.h"
-#import "ToolLogFile.h"
 #import "UnpairingRequestWindow.h"
 
 @interface BLEUnpairingCommand () <AppBLECommandDelegate>
@@ -122,16 +121,13 @@
     }
 
     - (void)terminateUnpairingCommand:(bool)success message:(NSString *)message {
-        [[ToolLogFile defaultLogger] debugWithFormat:@"terminateUnpairingCommand: success: %@", success ? @"success" : @"false"];
         // メッセージを退避
         [self setCommandErrorMessage:message];
         dispatch_async([self mainQueue], ^{
             // ペアリング解除要求画面を閉じる-->unpairingRequestWindowDidClose が呼び出される
             if ([message isEqualToString:MSG_BLE_UNPAIRING_WAIT_CANCELED]) {
-                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: unpairing canceled"];
                 [[self unpairingRequestWindow] commandDidCancelUnpairingRequestProcess];
             } else {
-                [[ToolLogFile defaultLogger] debug:@"terminateUnpairingCommand: unpairing terminated"];
                 [[self unpairingRequestWindow] commandDidTerminateUnpairingRequestProcess:success];
             }
         });
@@ -188,9 +184,7 @@
     }
 
     - (void)didCompleteCommand:(Command)command success:(bool)success errorMessage:(NSString *)errorMessage {
-        [[ToolLogFile defaultLogger] debugWithFormat:@"didCompleteCommand: success: %@", success ? @"success" : @"false"];
         if ([self waitingDisconnect]) {
-            [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect is true"];
             // 切断待機フラグをクリア
             [self setWaitingDisconnect:false];
             // タイムアウト監視を停止
@@ -200,7 +194,6 @@
             return;
         }
         // ペアリング解除要求画面を閉じ、上位クラスに制御を戻す
-        [[ToolLogFile defaultLogger] debug:@"didCompleteCommand: waitingDisconnect is false"];
         [self terminateUnpairingCommand:success message:errorMessage];
     }
 
