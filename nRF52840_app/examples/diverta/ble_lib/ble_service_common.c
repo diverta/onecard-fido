@@ -366,8 +366,6 @@ void ble_service_common_init(void)
     gatt_init();
     peer_manager_init();
     gap_params_init();
-
-    ble_service_peripheral_init();
 }
 
 void ble_service_common_disable_peripheral(void)
