@@ -13,8 +13,8 @@
 
 @interface BLEUnpairingCommand : NSObject
 
-    - (id)initWithDelegate:(id)delegate;
-    - (void)doRequestUnpairingCommand;
+    - (id)initWithDelegate:(id)delegate withUnpairingRequestWindowRef:(id)windowRef;
+    - (void)invokeUnpairingRequestProcess;
 
 @end
 

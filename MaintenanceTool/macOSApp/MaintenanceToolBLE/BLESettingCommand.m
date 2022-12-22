@@ -10,6 +10,8 @@
 #import "BLESettingWindow.h"
 #import "BLEUnpairingCommand.h"
 #import "EraseBondsCommand.h"
+#import "ToolPopupWindow.h"
+#import "UnpairingRequestWindow.h"
 
 @implementation BLESettingCommandParameter
 
@@ -21,6 +23,7 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) BLESettingWindow             *bleSettingWindow;
+    @property (nonatomic) UnpairingRequestWindow       *unpairingRequestWindow;
     // 下位クラスの参照を保持
     @property (nonatomic) BLEPairingCommand            *blePairingCommand;
     @property (nonatomic) BLEUnpairingCommand          *bleUnpairingCommand;
@@ -37,10 +40,11 @@
         if (self) {
             // 画面のインスタンスを生成
             [self setBleSettingWindow:[[BLESettingWindow alloc] initWithWindowNibName:@"BLESettingWindow"]];
+            [self setUnpairingRequestWindow:[[UnpairingRequestWindow alloc] initWithWindowNibName:@"UnpairingRequestWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[BLESettingCommandParameter alloc] init]];
             [self setBlePairingCommand:[[BLEPairingCommand alloc] initWithDelegate:self]];
-            [self setBleUnpairingCommand:[[BLEUnpairingCommand alloc] initWithDelegate:self]];
+            [self setBleUnpairingCommand:[[BLEUnpairingCommand alloc] initWithDelegate:self withUnpairingRequestWindowRef:[self unpairingRequestWindow]]];
             [self setEraseBondsCommand:[[EraseBondsCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -51,6 +55,7 @@
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
         [[self bleSettingWindow] setParentWindowRef:parentWindow withCommandRef:self withParameterRef:[self commandParameter]];
+        [[self unpairingRequestWindow] setParentWindowRef:parentWindow];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self bleSettingWindow] window];
         BLESettingCommand * __weak weakSelf = self;
@@ -82,7 +87,7 @@
                 break;
             case COMMAND_UNPAIRING_REQUEST:
                 [self notifyCommandStartedWithCommandName:PROCESS_NAME_UNPAIRING_REQUEST];
-                [[self bleUnpairingCommand] doRequestUnpairingCommand];
+                [[self bleUnpairingCommand] invokeUnpairingRequestProcess];
                 break;
             default:
                 // メイン画面に制御を戻す
@@ -99,6 +104,13 @@
 #pragma mark - Call back from BLEPairingCommand, BLEUnpairingCommand
 
     - (void)doResponseBLESettingCommand:(bool)success message:(NSString *)message {
+        if ([message isEqualToString:MSG_BLE_UNPAIRING_WAIT_CANCELED]) {
+            // メイン画面に制御を戻す
+            [self notifyCommandTerminated:nil message:message success:success fromWindow:[self parentWindow]];
+            // ポップアップを表示
+            [[ToolPopupWindow defaultWindow] critical:MSG_BLE_UNPAIRING_WAIT_CANCELED informativeText:nil withObject:self forSelector:nil parentWindow:[self parentWindow]];
+            return;
+        }
         // メイン画面に制御を戻す
         [self notifyCommandTerminated:[self commandName] message:message success:success fromWindow:[self parentWindow]];
     }

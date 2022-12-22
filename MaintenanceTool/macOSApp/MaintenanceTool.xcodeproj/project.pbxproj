@@ -59,6 +59,8 @@
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
 		7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
+		7A775B4E294C4C8F00EDE37F /* UnpairingRequestWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */; };
+		7A775B4F294C4C8F00EDE37F /* UnpairingRequestWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A775B4C294C4C8F00EDE37F /* UnpairingRequestWindow.xib */; };
 		7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80509B2819066A000BF498 /* CoreImage.framework */; };
 		7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A822077281A812F00FDBFA8 /* QRCodeUtil.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
@@ -216,6 +218,9 @@
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
+		7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnpairingRequestWindow.m; sourceTree = "<group>"; };
+		7A775B4C294C4C8F00EDE37F /* UnpairingRequestWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnpairingRequestWindow.xib; sourceTree = "<group>"; };
+		7A775B4D294C4C8F00EDE37F /* UnpairingRequestWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnpairingRequestWindow.h; sourceTree = "<group>"; };
 		7A80509B2819066A000BF498 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		7A822076281A811500FDBFA8 /* QRCodeUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QRCodeUtil.h; sourceTree = "<group>"; };
 		7A822077281A812F00FDBFA8 /* QRCodeUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRCodeUtil.m; sourceTree = "<group>"; };
@@ -295,6 +300,7 @@
 		7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7ACFD89C27213EAF00AAEFE2 /* BLEDFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUProcessingWindow.h; sourceTree = "<group>"; };
 		7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUProcessingWindow.m; sourceTree = "<group>"; };
+		7AD4C2882952CDAE00434792 /* BLEUnpairingDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEUnpairingDefine.h; sourceTree = "<group>"; };
 		7AD501B92578883D00494B7C /* tool_piv_admin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_piv_admin.h; sourceTree = "<group>"; };
 		7AD501BA2578883D00494B7C /* tool_piv_admin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_piv_admin.c; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
@@ -673,6 +679,10 @@
 				7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */,
 				7A1AC4522949609C002CFA5E /* EraseBondsCommand.h */,
 				7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */,
+				7A775B4D294C4C8F00EDE37F /* UnpairingRequestWindow.h */,
+				7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */,
+				7A775B4C294C4C8F00EDE37F /* UnpairingRequestWindow.xib */,
+				7AD4C2882952CDAE00434792 /* BLEUnpairingDefine.h */,
 			);
 			path = MaintenanceToolBLE;
 			sourceTree = "<group>";
@@ -783,6 +793,7 @@
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
 				7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
+				7A775B4F294C4C8F00EDE37F /* UnpairingRequestWindow.xib in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
@@ -824,6 +835,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */,
+				7A775B4E294C4C8F00EDE37F /* UnpairingRequestWindow.m in Sources */,
 				7ACABD862887D00500756123 /* DFUCommand.m in Sources */,
 				7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */,
 				7A91680228FE497E0096A848 /* USBDFUCommand.m in Sources */,
