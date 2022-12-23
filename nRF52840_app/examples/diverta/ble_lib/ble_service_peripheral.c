@@ -63,18 +63,6 @@ void ble_service_peripheral_advertising_start(void)
     NRF_LOG_DEBUG("Advertising started");
 }
 
-void ble_service_peripheral_advertising_stop(void)
-{
-    ret_code_t err_code = sd_ble_gap_adv_stop(m_advertising.adv_handle);
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("sd_ble_gap_adv_stop returns %d", err_code);
-        APP_ERROR_CHECK(err_code);
-
-    } else {
-        NRF_LOG_DEBUG("Advertising stopped");
-    }
-}
-
 static void nrf_qwr_error_handler(uint32_t nrf_error)
 {
     APP_ERROR_HANDLER(nrf_error);
