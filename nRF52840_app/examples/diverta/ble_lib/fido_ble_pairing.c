@@ -148,12 +148,47 @@ void fido_ble_pairing_flash_updated(void)
     }
 }
 
+bool fido_ble_pairing_get_peer_count(uint8_t *p_count)
+{
+    // ペアリング情報（IRK）を含む peer_id の配列を抽出
+    pm_peer_id_t peer_list[10];
+    uint32_t list_size = sizeof(peer_list) / sizeof(pm_peer_id_t);
+    ret_code_t ret_code = pm_peer_id_list(peer_list, &list_size, PM_PEER_ID_INVALID, PM_PEER_ID_LIST_SKIP_NO_IRK);
+    if (ret_code != NRF_SUCCESS) {
+        *p_count = 0;
+        return false;
+    }
+
+#if LOG_DEBUG_PEER_ID_LIST
+    for (uint8_t i = 0; i < list_size; i++) {
+        NRF_LOG_DEBUG("fido_ble_pairing_get_mode: peer_id[%d]=%d", i, peer_list[i]);
+    }
+#endif
+
+    // ペアリング情報（IRK）を含む peer_id の数を戻す
+    *p_count = (uint8_t)list_size;
+    return true;
+}
+
 void fido_ble_pairing_get_mode(void)
 {
+    // ペアリング情報が存在しない場合は、優先してペアリングモードとする
+    bool no_peer = true;
+
+    // ペアリング情報の有無を照会
+    uint8_t peer_count;
+    if (fido_ble_pairing_get_peer_count(&peer_count) && (peer_count > 0)) {
+        // ペアリング情報が１件以上存在すれば、非ペアリングモードとする
+        NRF_LOG_INFO("Already bonded peer is exist (count=%d).", peer_count);
+        no_peer = false;
+    } else {
+        NRF_LOG_INFO("Already bonded peer is not exist.");
+    }
+
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
     bool exist;
-    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist);
+    run_as_pairing_mode = fido_flash_pairing_mode_flag(&exist) | no_peer;
     NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 
