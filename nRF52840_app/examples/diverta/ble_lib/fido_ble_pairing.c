@@ -61,6 +61,17 @@ uint8_t fido_ble_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
+//
+// ペアリングモードの場合、アドバタイズデータに
+// サービスデータフィールドを追加設定
+//
+void fido_ble_pairing_add_service_data_field(void *p_init)
+{
+    // TODO: 仮の実装です。
+    ble_advertising_init_t *init = (ble_advertising_init_t *)p_init;
+    (void)init;
+}
+
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
 {
     if (run_as_pairing_mode == false) {
