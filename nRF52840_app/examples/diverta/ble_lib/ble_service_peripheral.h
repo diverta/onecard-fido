@@ -15,6 +15,7 @@ extern "C" {
 
 void ble_service_peripheral_init(void);
 void ble_service_peripheral_advertising_start(void);
+void ble_service_peripheral_advertising_stop(void);
 void ble_service_peripheral_start(void);
 void ble_service_peripheral_timer_start(void);
 
