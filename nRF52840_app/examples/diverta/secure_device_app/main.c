@@ -1026,11 +1026,8 @@ int main(void)
     fido_ble_pairing_get_mode();    
     // BLEペリフェラルの初期化
     ble_service_peripheral_init();
-    if (fido_ble_pairing_mode_get() == false) {
-        // ペアリングモードでない場合は
-        // USBデバイスを開始
-        usbd_service_start();
-    }
+    // USBデバイスを開始
+    usbd_service_start();
     // アプリケーション稼働に必要な初期化処理を開始
     application_init_start();
     // Enter main loop.
@@ -1041,5 +1038,3 @@ int main(void)
     }
 #endif
 }
-
-
