@@ -102,10 +102,6 @@
         if ([uuidString isEqualToString:@"FFFD"]) {
             // タイムアウトを設定
             NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
-            if ([self command] == COMMAND_PAIRING) {
-                // ペアリング時はタイムアウトを延長
-                timeoutSec = U2FSubscrCharTimeoutSecOnPair;
-            }
             [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
             [self setConnectedPeripheral:false];
             [self setScannedPeripheralName:peripheralName];

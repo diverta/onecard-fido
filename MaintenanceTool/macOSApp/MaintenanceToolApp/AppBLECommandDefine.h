@@ -12,6 +12,5 @@
 #define U2FStatusCharUUID               @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
 
 #define U2FSubscrCharTimeoutSec         10.0
-#define U2FSubscrCharTimeoutSecOnPair   60.0
 
 #endif /* AppBLECommandDefine_h */
