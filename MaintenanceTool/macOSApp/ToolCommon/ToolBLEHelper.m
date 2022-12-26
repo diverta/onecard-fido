@@ -108,6 +108,16 @@
         [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_DEVICE_SCAN_TIMEOUT];
     }
 
+    - (NSData *)retrieveServiceDataFieldFrom:(NSDictionary *)advertisementData withUUID:(CBUUID *)uuid {
+        // アドバタイズデータから、所定のサービスUUIDに対応するサービスデータフィールドを抽出
+        NSData *serviceDataField = nil;
+        NSDictionary *serviceData = [advertisementData objectForKey:CBAdvertisementDataServiceDataKey];
+        if (serviceData != nil) {
+            serviceDataField = [serviceData objectForKey:uuid];
+        }
+        return serviceDataField;
+    }
+
 #pragma mark - Connect peripheral
 
     - (void)helperWillConnectPeripheral:(id)peripheralRef {
