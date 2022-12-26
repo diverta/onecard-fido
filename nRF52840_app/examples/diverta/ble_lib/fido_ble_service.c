@@ -74,6 +74,10 @@ void fido_ble_advertising_init(void *p)
     // ディスカバリーができないよう設定
     ble_advertising_init_t *p_init = (ble_advertising_init_t *)p;
     p_init->advdata.flags = fido_ble_pairing_advertising_flag();
+    
+    // ペアリングモードの場合は、
+    // サービスデータフィールドを追加設定
+    fido_ble_pairing_add_service_data_field(p_init);
 }
 
 //
