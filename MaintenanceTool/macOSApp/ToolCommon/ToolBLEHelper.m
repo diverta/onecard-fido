@@ -89,6 +89,8 @@
             if ([[self serviceUUIDs] containsObject:foundServiceUUIDs] == false) {
                 continue;
             }
+            // サービスデータフィールドを取得
+            NSData *serviceDataField = [self retrieveServiceDataFieldFrom:advertisementData withUUID:foundServiceUUIDs];
             // ペリフェラルの参照を保持（`API MISUSE: Cancelling connection for unused peripheral`というエラー発生の回避措置）
             [self setDiscoveredPeripheral:peripheral];
             // スキャンタイムアウト監視を停止
@@ -96,7 +98,8 @@
             // スキャンを停止し、スキャン完了を通知
             [self cancelScanForPeripherals];
             NSString *scannedPeripheralName = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
-            [[self delegate] helperDidScanForPeripheral:peripheral scannedPeripheralName:scannedPeripheralName withUUID:[foundServiceUUIDs UUIDString]];
+            [[self delegate] helperDidScanForPeripheral:peripheral scannedPeripheralName:scannedPeripheralName
+                                               withUUID:[foundServiceUUIDs UUIDString] withServiceData:serviceDataField];
             break;
         }
     }

@@ -29,7 +29,7 @@
 
 @protocol ToolBLEHelperDelegate <NSObject>
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString;
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString withServiceData:(NSData *)serviceData;
     - (void)helperDidConnectPeripheral;
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(NSUInteger)reason;
     - (void)helperDidDisconnectWithError:(NSError *)error peripheral:(id)peripheralRef;
