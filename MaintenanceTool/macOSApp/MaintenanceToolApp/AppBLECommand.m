@@ -114,6 +114,15 @@
         }
     }
 
+    - (bool)deviceIsInPairingMode:(NSData *)serviceDataField {
+        // サービスデータフィールドが`0x80`（Device is in pairing mode）になっているかどうか判定
+        if (serviceDataField == nil || [serviceDataField length] != 1) {
+            return false;
+        }
+        uint8_t *bytes = (uint8_t *)[serviceDataField bytes];
+        return ((bytes[0] & 0x80) == 0x80);
+    }
+
     - (void)helperDidConnectPeripheral {
         // ２重デリゲート回避措置
         if ([self connectedPeripheral] == false) {
