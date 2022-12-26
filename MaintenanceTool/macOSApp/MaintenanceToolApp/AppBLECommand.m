@@ -98,16 +98,16 @@
 #pragma mark - Call back from ToolBLEHelper
 
     - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString withServiceData:(NSData *)serviceData {
-        // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
-        if ([uuidString isEqualToString:@"FFFD"]) {
-            // タイムアウトを設定
-            NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
-            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
-            [self setConnectedPeripheral:false];
-            [self setScannedPeripheralName:peripheralName];
-            // 接続完了タイマーを開始
-            [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:timeoutSec];
+        // スキャンされたサービスUUIDがFIDOでなければ何もしない
+        if ([uuidString isEqualToString:@"FFFD"] == false) {
+            return;
         }
+        // ペリフェラル接続を試行
+        [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
+        [self setConnectedPeripheral:false];
+        [self setScannedPeripheralName:peripheralName];
+        // 接続完了タイマーを開始
+        [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:U2FSubscrCharTimeoutSec];
     }
 
     - (bool)deviceIsInPairingMode:(NSData *)serviceDataField {
