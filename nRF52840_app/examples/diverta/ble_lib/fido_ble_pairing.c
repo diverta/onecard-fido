@@ -65,11 +65,31 @@ uint8_t fido_ble_pairing_advertising_flag(void)
 // ペアリングモードの場合、アドバタイズデータに
 // サービスデータフィールドを追加設定
 //
+static uint8_array_t service_flag_data;
+static ble_advdata_service_data_t service_data;
+
+// サービスデータフィールドのビット内容
+//   7: Device is in pairing mode.
+static uint8_t service_flag[] = {0x80};
+
 void fido_ble_pairing_add_service_data_field(void *p_init)
 {
-    // TODO: 仮の実装です。
+    if (run_as_pairing_mode == false) {
+        return;
+    }
+
+    // サービスデータフィールドの設定
+    service_flag_data.p_data = service_flag;
+    service_flag_data.size = (uint16_t)1;
+
+    // 対応するサービスUUID（FIDO）の設定
+    service_data.service_uuid = BLE_UUID_U2F_SERVICE;
+    service_data.data = service_flag_data;
+
+    // サービスデータフィールドをアドバタイズデータに設定
     ble_advertising_init_t *init = (ble_advertising_init_t *)p_init;
-    (void)init;
+    init->advdata.p_service_data_array = &service_data;
+    init->advdata.service_data_count = 1;
 }
 
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
