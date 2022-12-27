@@ -36,6 +36,8 @@
     @property (nonatomic) HcheckCommandParameter   *commandParameter;
     // 使用トランスポートを保持
     @property (nonatomic) TransportType             transportType;
+    // このコマンドで発生したエラーについてのメッセージを保持
+    @property (nonatomic) NSString                 *errorMessage;
 
 @end
 
@@ -141,7 +143,7 @@
     - (void)doResponseCommandGetPinToken:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN応答後の処理を実行
@@ -179,7 +181,7 @@
     - (void)doResponseCommandMakeCredential:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // レスポンスされたCBORを抽出
@@ -229,7 +231,7 @@
     - (void)doResponseCommandGetAssertion:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusCode:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // レスポンスされたCBORを抽出
@@ -494,7 +496,7 @@
     - (bool)checkStatusCode:(NSData *)responseMessage {
         // レスポンスデータが揃っていない場合はNG
         if (responseMessage == nil || [responseMessage length] == 0) {
-            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
             return false;
         }
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
@@ -504,22 +506,22 @@
                 return true;
             case CTAP2_ERR_PIN_INVALID:
             case CTAP2_ERR_PIN_AUTH_INVALID:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
+                [self setErrorMessage:MSG_CTAP2_ERR_PIN_INVALID];
                 break;
             case CTAP2_ERR_PIN_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
+                [self setErrorMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
                 break;
             case CTAP2_ERR_PIN_AUTH_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+                [self setErrorMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
                 break;
             case CTAP2_ERR_PIN_NOT_SET:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+                [self setErrorMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
                 break;
             case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
-                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+                [self setErrorMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
                 break;
             default:
-                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+                [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
         return false;

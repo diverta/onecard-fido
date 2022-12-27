@@ -27,6 +27,8 @@
     @property (nonatomic) NSData                   *pingData;
     // 使用トランスポートを保持
     @property (nonatomic) TransportType             transportType;
+    // このコマンドで発生したエラーについてのメッセージを保持
+    @property (nonatomic) NSString                 *errorMessage;
 
 @end
 
@@ -109,7 +111,7 @@
     - (void)doResponseCommandRegister:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // 中間メッセージを表示
@@ -144,7 +146,7 @@
     - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // U2Fヘルスチェックの後続テストを実行
@@ -165,7 +167,7 @@
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // 後続のU2F Authenticateを開始する前に、ボタンを押してもらうように促すメッセージを表示
@@ -191,7 +193,7 @@
     - (void)doResponseCommandAuthenticateUP:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
         // 結果メッセージを表示
@@ -375,7 +377,7 @@
     - (bool)checkStatusWordOfResponse:(NSData *)responseMessage {
         // レスポンスデータが揃っていない場合はNG
         if (responseMessage == nil || [responseMessage length] == 0) {
-            [[self delegate] notifyMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
             return false;
         }
 
@@ -391,24 +393,24 @@
         
         // invalid keyhandleエラーである場合はその旨を通知
         if (statusWord == 0x6a80) {
-            [[self delegate] notifyMessage:MSG_OCCUR_KEYHANDLE_ERROR];
+            [self setErrorMessage:MSG_OCCUR_KEYHANDLE_ERROR];
             return false;
         }
         
         // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
         if (statusWord == 0x9402) {
-            [[self delegate] notifyMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+            [self setErrorMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
             return false;
         }
         
         // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
         if (statusWord == 0x9601) {
-            [[self delegate] notifyMessage:MSG_OCCUR_PAIRINGMODE_ERROR];
+            [self setErrorMessage:MSG_OCCUR_PAIRINGMODE_ERROR];
             return false;
         }
         
         // ステータスワードチェックがNGの場合
-        [[self delegate] notifyMessage:MSG_OCCUR_UNKNOWN_BLE_ERROR];
+        [self setErrorMessage:MSG_OCCUR_UNKNOWN_BLE_ERROR];
         return false;
     }
 
