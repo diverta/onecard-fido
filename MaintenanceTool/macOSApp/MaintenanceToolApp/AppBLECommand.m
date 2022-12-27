@@ -97,21 +97,45 @@
 
 #pragma mark - Call back from ToolBLEHelper
 
-    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString {
-        // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
-        if ([uuidString isEqualToString:@"FFFD"]) {
-            // タイムアウトを設定
-            NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
-            if ([self command] == COMMAND_PAIRING) {
-                // ペアリング時はタイムアウトを延長
-                timeoutSec = U2FSubscrCharTimeoutSecOnPair;
-            }
-            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
-            [self setConnectedPeripheral:false];
-            [self setScannedPeripheralName:peripheralName];
-            // 接続完了タイマーを開始
-            [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:timeoutSec];
+    - (void)helperDidScanForPeripheral:(id)peripheralRef scannedPeripheralName:(NSString *)peripheralName withUUID:(NSString *)uuidString withServiceData:(NSData *)serviceData {
+        // スキャンされたサービスUUIDがFIDOでなければ何もしない
+        if ([uuidString isEqualToString:@"FFFD"] == false) {
+            return;
         }
+        // ペアリングモードによる処理続行可否の判定
+        bool deviceIsInPairingMode = [self deviceIsInPairingMode:serviceData];
+        if ([self command] == COMMAND_PAIRING && deviceIsInPairingMode == false) {
+            // ペアリング実行時に、デバイスがペアリングモードでない場合
+            [self helperWillDisconnectWith:MSG_BLE_PARING_ERR_PAIR_MODE];
+            return;
+        } else if ([self command] != COMMAND_PAIRING && deviceIsInPairingMode) {
+            // デバイスがペアリングモード時に、ペアリング実行以外の機能を実行した場合
+            [self helperWillDisconnectWith:MSG_OCCUR_PAIRINGMODE_ERROR];
+            return;
+        }
+        // ペリフェラル接続を試行
+        [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
+        [self setConnectedPeripheral:false];
+        [self setScannedPeripheralName:peripheralName];
+        // 接続完了タイマーを開始
+        [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:U2FSubscrCharTimeoutSec];
+    }
+
+    - (bool)deviceIsInPairingMode:(NSData *)serviceDataField {
+        // サービスデータフィールドが`0x80`（Device is in pairing mode）になっているかどうか判定
+        if (serviceDataField == nil || [serviceDataField length] != 1) {
+            return false;
+        }
+        uint8_t *bytes = (uint8_t *)[serviceDataField bytes];
+        return ((bytes[0] & 0x80) == 0x80);
+    }
+
+    - (void)helperWillDisconnectWith:(NSString *)errorMessage {
+        // エラーメッセージを設定し、デバイス接続を切断
+        [self setLastCommandMessage:errorMessage];
+        [self setBleTransactionStarted:false];
+        [self setLastCommandSuccess:false];
+        [[self toolBLEHelper] helperWillDisconnect];
     }
 
     - (void)helperDidConnectPeripheral {
