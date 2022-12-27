@@ -85,7 +85,7 @@
         }
         if ([self transportType] == TRANSPORT_BLE) {
             // BLE経由で現在時刻を設定
-            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_SET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForGetTimestamp]];
+            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_SET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForSetTimestamp]];
         }
     }
 
@@ -168,6 +168,9 @@
     - (void)notifyProcessStarted {
         // コマンド処理結果を初期化
         [self setCommandSuccess:false];
+        // あらかじめ戻り値格納領域を初期化
+        [self setDeviceTimestamp:@""];
+        [self setToolTimestamp:@""];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_RTCC_SET_TIMESTAMP:
