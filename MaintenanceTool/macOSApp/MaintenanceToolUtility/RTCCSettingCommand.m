@@ -171,6 +171,9 @@
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_RTCC_SET_TIMESTAMP:
+                // あらかじめ戻り値格納領域を初期化
+                [self setDeviceTimestamp:@""];
+                [self setToolTimestamp:@""];
                 [self setNameOfCommand:PROCESS_NAME_RTCC_SET_TIMESTAMP];
                 break;
             default:
