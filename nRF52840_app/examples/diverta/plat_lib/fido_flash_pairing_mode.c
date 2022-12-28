@@ -142,6 +142,13 @@ bool fido_flash_pairing_mode_flag(bool *p_exist)
     }
 }
 
+bool fido_flash_pairing_mode_flag_get(void)
+{
+    // ペアリングモードレコードがペアリングモードに
+    // 設定されている場合は true
+    return m_pairing_mode == PAIRING_MODE;
+}
+
 void fido_flash_pairing_mode_flag_clear(void)
 {
     m_pairing_mode = NON_PAIRING_MODE;

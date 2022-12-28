@@ -229,6 +229,12 @@ void fido_ble_pairing_get_mode(void)
     // 存在していない場合は true
     sleep_after_boot = (exist == false);
 
+    // ボタン長押しでペアリングモードに遷移させる場合は
+    // このタイミングで黄色LEDを点灯させる
+    if (fido_flash_pairing_mode_flag_get()) {
+        fido_status_indicator_pairing_mode();
+    }
+
     // Flash ROM上は非ペアリングモードに設定
     //   (SoftDevice再起動時に
     //   非ペアリングモードで起動させるための措置)
