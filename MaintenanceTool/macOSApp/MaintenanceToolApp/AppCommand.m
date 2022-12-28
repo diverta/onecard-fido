@@ -61,7 +61,7 @@
                                                forSelector:@selector(displayCommandResultDone) parentWindow:window];
         } else {
             [[ToolLogFile defaultLogger] error:str];
-            [[ToolPopupWindow defaultWindow] critical:str informativeText:nil withObject:self
+            [[ToolPopupWindow defaultWindow] critical:str informativeText:message withObject:self
                                           forSelector:@selector(displayCommandResultDone) parentWindow:window];
         }
     }
