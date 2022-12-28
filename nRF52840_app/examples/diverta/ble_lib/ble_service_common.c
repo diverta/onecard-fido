@@ -21,6 +21,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
+#include "fido_ble_pairing.h"
 #include "ble_service_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -31,6 +32,9 @@ NRF_LOG_MODULE_REGISTER();
 
 // BLEペアリング時にパスコード入力を要求する場合 true
 #define USE_MITM false
+
+// 接続時にセキュリティー障害が発生した場合 true
+static bool conn_sec_failed = false;
 
 // BLEペリフェラルモードかどうかを保持
 static bool ble_peripheral_mode = false;
@@ -66,6 +70,12 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             ble_service_peripheral_gap_disconnected(p_ble_evt);
+
+            // 接続時にセキュリティー障害が発生した場合は、アドバタイズを停止
+            if (conn_sec_failed) {
+                conn_sec_failed = false;
+                ble_service_peripheral_advertising_stop();
+            }
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -255,6 +265,11 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     pm_handler_on_pm_evt(p_evt);
     pm_handler_disconnect_on_sec_failure(p_evt);
     pm_handler_flash_clean(p_evt);
+
+    // 接続時にセキュリティー障害が発生した場合はアドバタイズを停止
+    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
+        conn_sec_failed = true;
+    }
 }
 
 static void peer_manager_init(void)
