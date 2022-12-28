@@ -170,9 +170,7 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
         return true;
     }
 
-    // ペアリングが無効になってしまった場合
-    // ペアリングモードLED点滅を開始させる
-    return fido_ble_pairing_notify_unavailable(p_evt);
+    return false;
 }
 
 void fido_ble_sleep_mode_enter(void)

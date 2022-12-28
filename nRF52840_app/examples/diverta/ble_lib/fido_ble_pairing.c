@@ -272,25 +272,6 @@ void fido_ble_pairing_on_disconnect(void)
     }
 }
 
-bool fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
-{
-    if (run_as_pairing_mode == true) {
-        // ペアリングモードの場合は何もしない
-        return false;
-    }
-    
-    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
-        // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_status_indicator_pairing_fail();
-    } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
-        // ペアリングが有効である場合、LED制御を
-        // ペアリングモード-->非ペアリングモードに変更
-        fido_status_indicator_idle();
-    }
-
-    return false;
-}
-
 bool fido_ble_pairing_mode_get(void)
 {
     // ペアリングモードであればtrueを戻す

@@ -49,6 +49,10 @@ void ble_service_peripheral_mode_set(bool b)
     ble_peripheral_mode = b;
 }
 
+// 関数プロトタイプ
+static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt);
+static void stop_advertising_on_disconnected(void);
+
 //
 // 初期化関連処理（BLE関連）
 // 
@@ -72,10 +76,7 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             ble_service_peripheral_gap_disconnected(p_ble_evt);
 
             // 接続時にセキュリティー障害が発生した場合は、アドバタイズを停止
-            if (conn_sec_failed) {
-                conn_sec_failed = false;
-                ble_service_peripheral_advertising_stop();
-            }
+            stop_advertising_on_disconnected();
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -277,9 +278,7 @@ static void pm_evt_handler(pm_evt_t const *p_evt)
     pm_handler_flash_clean(p_evt);
 
     // 接続時にセキュリティー障害が発生した場合はアドバタイズを停止
-    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
-        conn_sec_failed = true;
-    }
+    stop_advertising_request_on_conn_sec_failed(p_evt);
 }
 
 static void peer_manager_init(void)
@@ -399,5 +398,30 @@ void ble_service_common_disable_peripheral(void)
         // BLEペリフェラル稼働中にUSB接続された場合は、
         // ソフトデバイスを再起動
         NVIC_SystemReset();
+    }
+}
+
+//
+// アドバタイズ停止処理
+//
+static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt)
+{
+    // 接続時にセキュリティー障害が発生した場合は
+    // アドバタイズ停止を指示
+    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
+        conn_sec_failed = true;
+    }
+}
+
+static void stop_advertising_on_disconnected(void)
+{
+    // アドバタイズ停止指示があった場合
+    if (conn_sec_failed) {
+        // アドバタイズを停止
+        conn_sec_failed = false;
+        ble_service_peripheral_advertising_stop();
+
+        // オレンジ色LEDの点滅を開始
+        fido_status_indicator_pairing_fail();
     }
 }
