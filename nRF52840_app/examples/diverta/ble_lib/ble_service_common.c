@@ -406,10 +406,17 @@ void ble_service_common_disable_peripheral(void)
 //
 static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt)
 {
-    // 接続時にセキュリティー障害が発生した場合は
-    // アドバタイズ停止を指示
+    // 接続時にセキュリティー障害が発生した場合
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
+        // アドバタイズ停止を指示
         conn_sec_failed = true;
+
+        // セキュリティー障害の判別
+        pm_sec_error_code_t error = p_evt->params.conn_sec_failed.error;
+        if (error == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING) {
+            // このデバイスにペアリング情報が存在しない
+            NRF_LOG_ERROR("Pairing information is not exist in this device.");
+        }
     }
 }
 
