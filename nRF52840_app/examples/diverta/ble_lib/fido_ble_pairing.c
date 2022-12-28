@@ -94,21 +94,7 @@ void fido_ble_pairing_add_service_data_field(void *p_init)
 
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
 {
-    if (run_as_pairing_mode == false) {
-        if (p_evt->evt_id == PM_EVT_CONN_SEC_PARAMS_REQ) {
-            // ペアリングモードでない場合は、
-            // ペアリング要求に応じないようにする
-            uint16_t conn_handle = p_evt->conn_handle;
-            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, p_evt->params.conn_sec_params_req.p_context);
-            if (code == NRF_SUCCESS) {
-                // ペアリングモードLED点滅を開始し、
-                // 再度ペアリングが必要であることを通知
-                NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
-                fido_status_indicator_pairing_fail();
-                return true;
-            }
-        }
-    } else {
+    if (run_as_pairing_mode) {
         if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
             // ペアリング済みである端末からの
             // 再ペアリング要求を受入れるようにする
