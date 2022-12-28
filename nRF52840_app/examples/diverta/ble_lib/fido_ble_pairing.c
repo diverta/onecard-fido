@@ -272,11 +272,11 @@ void fido_ble_pairing_on_disconnect(void)
     }
 }
 
-void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
+bool fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
 {
     if (run_as_pairing_mode == true) {
         // ペアリングモードの場合は何もしない
-        return;
+        return false;
     }
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
@@ -287,6 +287,8 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
         // ペアリングモード-->非ペアリングモードに変更
         fido_status_indicator_idle();
     }
+
+    return false;
 }
 
 bool fido_ble_pairing_mode_get(void)
@@ -361,7 +363,7 @@ bool fido_ble_pairing_delete_peer_id(uint16_t peer_id)
     }
 }
 
-void fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
+bool fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
 {
     pm_evt_id_t evt_id = p_evt->evt_id;
     pm_peer_id_t peer_id = p_evt->peer_id;
@@ -369,10 +371,14 @@ void fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
     if (evt_id == PM_EVT_PEER_DELETE_SUCCEEDED) {
         // ペアリング情報削除成功時
         fido_ble_unpairing_done(true, peer_id);
+        return true;
     }
 
     if (evt_id == PM_EVT_PEER_DELETE_FAILED) {
         // ペアリング情報削除失敗時
         fido_ble_unpairing_done(false, peer_id);
+        return true;
     }
+
+    return false;
 }
