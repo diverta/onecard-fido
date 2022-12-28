@@ -223,6 +223,23 @@ static void perform_erase_bonding_data_response_func(bool success)
     erase_bonding_data_response_func = NULL;
 }
 
+static bool erase_bond_data_completed(pm_evt_t const *p_evt)
+{
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
+        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
+        perform_erase_bonding_data_response_func(true);
+        return true;
+    }
+
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
+        NRF_LOG_ERROR("pm_peers_delete has failed");
+        perform_erase_bonding_data_response_func(false);
+        return true;
+    }
+
+    return false;
+}
+
 //
 // 初期化関連処理（Peer Manager）
 // 
@@ -241,17 +258,10 @@ static void perform_erase_bonding_data_response_func(bool success)
 #define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
 #endif
 
-static void pm_evt_handler(pm_evt_t const * p_evt)
+static void pm_evt_handler(pm_evt_t const *p_evt)
 {
     // ペアリング情報削除時のイベントを最優先で処理
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
-        perform_erase_bonding_data_response_func(true);
-        return;
-    }
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        NRF_LOG_ERROR("pm_peers_delete has failed");
-        perform_erase_bonding_data_response_func(false);
+    if (erase_bond_data_completed(p_evt)) {
         return;
     }
 
