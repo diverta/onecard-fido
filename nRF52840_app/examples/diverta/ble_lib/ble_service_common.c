@@ -35,7 +35,9 @@ NRF_LOG_MODULE_REGISTER();
 
 // 接続時にセキュリティー障害が発生した場合 true
 static bool conn_sec_failed = false;
-static bool conn_sec_failed_by_key_miss = false;
+
+// セキュリティー障害の種別を保持
+static pm_sec_error_code_t conn_sec_failed_code = PM_CONN_SEC_ERROR_BASE;
 
 // BLEペリフェラルモードかどうかを保持
 static bool ble_peripheral_mode = false;
@@ -413,13 +415,10 @@ static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt)
         conn_sec_failed = true;
 
         // セキュリティー障害の判別
-        pm_sec_error_code_t error = p_evt->params.conn_sec_failed.error;
-        if (error == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING) {
-            // このデバイスにペアリング情報が存在しない
-            conn_sec_failed_by_key_miss = true;
+        conn_sec_failed_code = p_evt->params.conn_sec_failed.error;
+        if (conn_sec_failed_code == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING) {
+            // ペアリング情報の消失を検知（このデバイスにペアリング情報が存在しない）
             NRF_LOG_ERROR("Pairing information is not exist in this device.");
-        } else {
-            conn_sec_failed_by_key_miss = false;
         }
     }
 }
@@ -433,6 +432,8 @@ static void stop_advertising_on_disconnected(void)
         ble_service_peripheral_advertising_stop();
 
         // オレンジ色LEDの点滅を開始
-        fido_status_indicator_pairing_fail(conn_sec_failed_by_key_miss);
+        //  ペアリング情報の消失を検知時：高速点滅
+        //  ペアリング情報の無効を検知時：通常点滅
+        fido_status_indicator_pairing_fail(conn_sec_failed_code == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING);
     }
 }
