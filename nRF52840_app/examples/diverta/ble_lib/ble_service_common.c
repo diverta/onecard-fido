@@ -429,6 +429,6 @@ static void stop_advertising_on_disconnected(void)
         ble_service_peripheral_advertising_stop();
 
         // オレンジ色LEDの点滅を開始
-        fido_status_indicator_pairing_fail();
+        fido_status_indicator_pairing_fail(false);
     }
 }

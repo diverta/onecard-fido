@@ -183,7 +183,7 @@ void fido_status_indicator_pairing_mode(void)
     led_light_pin_set(LED_COLOR_PAIR,  true);
 }
 
-void fido_status_indicator_pairing_fail(void)
+void fido_status_indicator_pairing_fail(bool short_interval)
 {
     // LED点滅制御タイマーを停止
     stop_led_timers();
@@ -199,7 +199,11 @@ void fido_status_indicator_pairing_fail(void)
     //
     // 黄色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_PAIR;
-    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
+    if (short_interval) {
+        fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    } else {
+        fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
+    }
 }
 
 void fido_status_indicator_abort(void)
