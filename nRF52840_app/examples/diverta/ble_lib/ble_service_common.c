@@ -22,6 +22,7 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_pairing.h"
+#include "ble_service_common.h"
 #include "ble_service_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -50,6 +51,28 @@ bool ble_service_peripheral_mode(void)
 void ble_service_peripheral_mode_set(bool b)
 {
     ble_peripheral_mode = b;
+}
+
+bool ble_service_peripheral_mainsw_event_handler(void)
+{
+    //
+    // BLEペリフェラルモードにおける
+    // ボタン短押し時の処理
+    //
+    if (ble_service_peripheral_mode() == false) {
+        return false;
+    }
+
+    if (conn_sec_failed_code != PM_CONN_SEC_ERROR_BASE) {
+        // ペアリング情報の無効／消失を検知時は、
+        // ボタン短押しでペアリングモードに遷移
+        fido_ble_pairing_change_mode();
+
+    } else {
+        // ボタン短押しでスリープ状態に遷移
+        fido_board_prepare_for_deep_sleep();
+    }
+    return true;
 }
 
 // 関数プロトタイプ
