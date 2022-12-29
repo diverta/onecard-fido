@@ -24,7 +24,7 @@ void        fido_status_indicator_busy(void);
 void        fido_status_indicator_prompt_reset(void);
 void        fido_status_indicator_prompt_tup(void);
 void        fido_status_indicator_pairing_mode(void);
-void        fido_status_indicator_pairing_fail(void);
+void        fido_status_indicator_pairing_fail(bool short_interval);
 void        fido_status_indicator_abort(void);
 void        fido_status_indicator_ble_scanning(void);
 

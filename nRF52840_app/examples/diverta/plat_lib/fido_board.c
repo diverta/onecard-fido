@@ -24,6 +24,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for fido_ble_pairing_change_mode
 #include "ble_service_common.h"
+#include "ble_service_peripheral.h"
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"
@@ -88,11 +89,8 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 
                 // FIDO固有の処理を実行
                 if (fido_command_mainsw_event_handler() == false) {
-                    if (ble_service_peripheral_mode()) {
-                        // BLEペリフェラルモードの場合、
-                        // ボタン短押しでスリープ状態に遷移
-                        fido_board_prepare_for_deep_sleep();
-                    }
+                    // BLEペリフェラルモードに固有の処理を実行
+                    ble_service_peripheral_mainsw_event_handler();
                 }
             }
             break;

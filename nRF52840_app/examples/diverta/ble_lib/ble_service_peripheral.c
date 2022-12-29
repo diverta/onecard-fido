@@ -26,6 +26,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_service_common.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_pairing.h"
 #include "fido_ble_service.h"
 #include "fido_ble_event.h"
 
@@ -61,6 +62,18 @@ void ble_service_peripheral_advertising_start(void)
     ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
     NRF_LOG_DEBUG("Advertising started");
+}
+
+void ble_service_peripheral_advertising_stop(void)
+{
+    ret_code_t err_code = sd_ble_gap_adv_stop(m_advertising.adv_handle);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("sd_ble_gap_adv_stop returns %d", err_code);
+        APP_ERROR_CHECK(err_code);
+
+    } else {
+        NRF_LOG_DEBUG("Advertising stopped");
+    }
 }
 
 static void nrf_qwr_error_handler(uint32_t nrf_error)
@@ -193,12 +206,6 @@ void ble_service_peripheral_init(void)
     //   取得する必要があるための措置
     advertising_init();
     NRF_LOG_INFO("BLE peripheral initialized");
-
-    // ペアリングモードの場合は
-    // このタイミングで黄色LEDを点灯させる
-    if (fido_ble_pairing_mode_get()) {
-        fido_status_indicator_pairing_mode();
-    }
 }
 
 void ble_service_peripheral_start(void)
@@ -213,6 +220,10 @@ void ble_service_peripheral_start(void)
         //   ペアリングモードでない場合は
         //   青色LEDを秒間２回点滅
         fido_status_indicator_idle();
+    } else {
+        //   ペアリングモードの場合は
+        //   黄色LEDを連続点灯
+        fido_status_indicator_pairing_mode();
     }
 }
 

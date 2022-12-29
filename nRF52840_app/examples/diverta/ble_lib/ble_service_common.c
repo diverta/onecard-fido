@@ -21,6 +21,8 @@
 NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
+#include "fido_ble_pairing.h"
+#include "ble_service_common.h"
 #include "ble_service_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -31,6 +33,12 @@ NRF_LOG_MODULE_REGISTER();
 
 // BLEペアリング時にパスコード入力を要求する場合 true
 #define USE_MITM false
+
+// 接続時にセキュリティー障害が発生した場合 true
+static bool conn_sec_failed = false;
+
+// セキュリティー障害の種別を保持
+static pm_sec_error_code_t conn_sec_failed_code = PM_CONN_SEC_ERROR_BASE;
 
 // BLEペリフェラルモードかどうかを保持
 static bool ble_peripheral_mode = false;
@@ -44,6 +52,32 @@ void ble_service_peripheral_mode_set(bool b)
 {
     ble_peripheral_mode = b;
 }
+
+bool ble_service_peripheral_mainsw_event_handler(void)
+{
+    //
+    // BLEペリフェラルモードにおける
+    // ボタン短押し時の処理
+    //
+    if (ble_service_peripheral_mode() == false) {
+        return false;
+    }
+
+    if (conn_sec_failed_code != PM_CONN_SEC_ERROR_BASE) {
+        // ペアリング情報の無効／消失を検知時は、
+        // ボタン短押しでペアリングモードに遷移
+        fido_ble_pairing_change_mode();
+
+    } else {
+        // ボタン短押しでスリープ状態に遷移
+        fido_board_prepare_for_deep_sleep();
+    }
+    return true;
+}
+
+// 関数プロトタイプ
+static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt);
+static void stop_advertising_on_disconnected(void);
 
 //
 // 初期化関連処理（BLE関連）
@@ -66,6 +100,9 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             ble_service_peripheral_gap_disconnected(p_ble_evt);
+
+            // 接続時にセキュリティー障害が発生した場合は、アドバタイズを停止
+            stop_advertising_on_disconnected();
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -213,6 +250,23 @@ static void perform_erase_bonding_data_response_func(bool success)
     erase_bonding_data_response_func = NULL;
 }
 
+static bool erase_bond_data_completed(pm_evt_t const *p_evt)
+{
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
+        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
+        perform_erase_bonding_data_response_func(true);
+        return true;
+    }
+
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
+        NRF_LOG_ERROR("pm_peers_delete has failed");
+        perform_erase_bonding_data_response_func(false);
+        return true;
+    }
+
+    return false;
+}
+
 //
 // 初期化関連処理（Peer Manager）
 // 
@@ -231,17 +285,10 @@ static void perform_erase_bonding_data_response_func(bool success)
 #define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
 #endif
 
-static void pm_evt_handler(pm_evt_t const * p_evt)
+static void pm_evt_handler(pm_evt_t const *p_evt)
 {
     // ペアリング情報削除時のイベントを最優先で処理
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
-        perform_erase_bonding_data_response_func(true);
-        return;
-    }
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        NRF_LOG_ERROR("pm_peers_delete has failed");
-        perform_erase_bonding_data_response_func(false);
+    if (erase_bond_data_completed(p_evt)) {
         return;
     }
 
@@ -255,6 +302,9 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     pm_handler_on_pm_evt(p_evt);
     pm_handler_disconnect_on_sec_failure(p_evt);
     pm_handler_flash_clean(p_evt);
+
+    // 接続時にセキュリティー障害が発生した場合はアドバタイズを停止
+    stop_advertising_request_on_conn_sec_failed(p_evt);
 }
 
 static void peer_manager_init(void)
@@ -374,5 +424,39 @@ void ble_service_common_disable_peripheral(void)
         // BLEペリフェラル稼働中にUSB接続された場合は、
         // ソフトデバイスを再起動
         NVIC_SystemReset();
+    }
+}
+
+//
+// アドバタイズ停止処理
+//
+static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt)
+{
+    // 接続時にセキュリティー障害が発生した場合
+    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
+        // アドバタイズ停止を指示
+        conn_sec_failed = true;
+
+        // セキュリティー障害の判別
+        conn_sec_failed_code = p_evt->params.conn_sec_failed.error;
+        if (conn_sec_failed_code == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING) {
+            // ペアリング情報の消失を検知（このデバイスにペアリング情報が存在しない）
+            NRF_LOG_ERROR("Pairing information is not exist in this device.");
+        }
+    }
+}
+
+static void stop_advertising_on_disconnected(void)
+{
+    // アドバタイズ停止指示があった場合
+    if (conn_sec_failed) {
+        // アドバタイズを停止
+        conn_sec_failed = false;
+        ble_service_peripheral_advertising_stop();
+
+        // オレンジ色LEDの点滅を開始
+        //  ペアリング情報の消失を検知時：高速点滅
+        //  ペアリング情報の無効を検知時：通常点滅
+        fido_status_indicator_pairing_fail(conn_sec_failed_code == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING);
     }
 }

@@ -94,21 +94,7 @@ void fido_ble_pairing_add_service_data_field(void *p_init)
 
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
 {
-    if (run_as_pairing_mode == false) {
-        if (p_evt->evt_id == PM_EVT_CONN_SEC_PARAMS_REQ) {
-            // ペアリングモードでない場合は、
-            // ペアリング要求に応じないようにする
-            uint16_t conn_handle = p_evt->conn_handle;
-            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, p_evt->params.conn_sec_params_req.p_context);
-            if (code == NRF_SUCCESS) {
-                // ペアリングモードLED点滅を開始し、
-                // 再度ペアリングが必要であることを通知
-                NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
-                fido_status_indicator_pairing_fail();
-                return true;
-            }
-        }
-    } else {
+    if (run_as_pairing_mode) {
         if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
             // ペアリング済みである端末からの
             // 再ペアリング要求を受入れるようにする
@@ -229,6 +215,12 @@ void fido_ble_pairing_get_mode(void)
     // 存在していない場合は true
     sleep_after_boot = (exist == false);
 
+    // ボタン長押しでペアリングモードに遷移させる場合は
+    // このタイミングで黄色LEDを点灯させる
+    if (fido_flash_pairing_mode_flag_get()) {
+        fido_status_indicator_pairing_mode();
+    }
+
     // Flash ROM上は非ペアリングモードに設定
     //   (SoftDevice再起動時に
     //   非ペアリングモードで起動させるための措置)
@@ -277,23 +269,6 @@ void fido_ble_pairing_on_disconnect(void)
         NRF_LOG_FINAL_FLUSH();
         nrf_delay_ms(500);
         NVIC_SystemReset();
-    }
-}
-
-void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
-{
-    if (run_as_pairing_mode == true) {
-        // ペアリングモードの場合は何もしない
-        return;
-    }
-    
-    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
-        // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_status_indicator_pairing_fail();
-    } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
-        // ペアリングが有効である場合、LED制御を
-        // ペアリングモード-->非ペアリングモードに変更
-        fido_status_indicator_idle();
     }
 }
 
@@ -369,7 +344,7 @@ bool fido_ble_pairing_delete_peer_id(uint16_t peer_id)
     }
 }
 
-void fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
+bool fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
 {
     pm_evt_id_t evt_id = p_evt->evt_id;
     pm_peer_id_t peer_id = p_evt->peer_id;
@@ -377,10 +352,14 @@ void fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
     if (evt_id == PM_EVT_PEER_DELETE_SUCCEEDED) {
         // ペアリング情報削除成功時
         fido_ble_unpairing_done(true, peer_id);
+        return true;
     }
 
     if (evt_id == PM_EVT_PEER_DELETE_FAILED) {
         // ペアリング情報削除失敗時
         fido_ble_unpairing_done(false, peer_id);
+        return true;
     }
+
+    return false;
 }
