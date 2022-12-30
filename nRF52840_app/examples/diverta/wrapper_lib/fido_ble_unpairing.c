@@ -1,5 +1,5 @@
 /* 
- * File:   fido_ble_utility.c
+ * File:   fido_ble_unpairing.c
  * Author: makmorit
  *
  * Created on 2022/12/19, 16:54
@@ -7,7 +7,7 @@
 #include "sdk_common.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME fido_ble_utility
+#define NRF_LOG_MODULE_NAME fido_ble_unpairing
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 

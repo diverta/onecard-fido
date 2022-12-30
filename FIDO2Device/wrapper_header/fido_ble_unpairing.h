@@ -1,11 +1,11 @@
 /* 
- * File:   fido_ble_utility.h
+ * File:   fido_ble_unpairing.h
  * Author: makmorit
  *
  * Created on 2022/12/19, 16:54
  */
-#ifndef FIDO_BLE_UTILITY_H
-#define FIDO_BLE_UTILITY_H
+#ifndef FIDO_BLE_UNPAIRING_H
+#define FIDO_BLE_UNPAIRING_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -27,4 +27,4 @@ void        fido_ble_unpairing_done(bool success, uint16_t peer_id);
 }
 #endif
 
-#endif /* FIDO_BLE_UTILITY_H */
+#endif /* FIDO_BLE_UNPAIRING_H */
