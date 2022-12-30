@@ -220,52 +220,6 @@ static void gatt_init(void)
     err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
     APP_ERROR_CHECK(err_code);
 }
-//
-// ペアリング情報の全削除処理
-//
-static void (*erase_bonding_data_response_func)(bool) = NULL;
-
-bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
-{
-    // ペアリング情報削除後に実行される関数の参照を退避
-    erase_bonding_data_response_func = _response_func;
-
-    // 全てのペアリング情報を削除
-    ret_code_t err_code = pm_peers_delete();
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
-        return false;
-    }
-    return true;
-}
-
-static void perform_erase_bonding_data_response_func(bool success)
-{
-    if (erase_bonding_data_response_func == NULL) {
-        return;
-    }
-
-    // ペアリング情報削除後に実行される処理
-    (*erase_bonding_data_response_func)(success);
-    erase_bonding_data_response_func = NULL;
-}
-
-static bool erase_bond_data_completed(pm_evt_t const *p_evt)
-{
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
-        perform_erase_bonding_data_response_func(true);
-        return true;
-    }
-
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        NRF_LOG_ERROR("pm_peers_delete has failed");
-        perform_erase_bonding_data_response_func(false);
-        return true;
-    }
-
-    return false;
-}
 
 //
 // 初期化関連処理（Peer Manager）
@@ -288,7 +242,7 @@ static bool erase_bond_data_completed(pm_evt_t const *p_evt)
 static void pm_evt_handler(pm_evt_t const *p_evt)
 {
     // ペアリング情報削除時のイベントを最優先で処理
-    if (erase_bond_data_completed(p_evt)) {
+    if (fido_ble_unpairing_erase_bond_data_completed(p_evt)) {
         return;
     }
 

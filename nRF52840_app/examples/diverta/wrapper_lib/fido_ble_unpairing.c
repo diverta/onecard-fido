@@ -87,3 +87,51 @@ void fido_ble_unpairing_done(bool success, uint16_t peer_id)
         NRF_LOG_ERROR("Unpairing process for peer_id=0x%04x failed.", peer_id);
     }
 }
+//
+// ペアリング情報の全削除処理
+//
+static void (*erase_bonding_data_response_func)(bool) = NULL;
+
+bool fido_ble_unpairing_erase_bond_data(void (*_response_func)(bool))
+{
+    // ペアリング情報削除後に実行される関数の参照を退避
+    erase_bonding_data_response_func = _response_func;
+
+    // 全てのペアリング情報を削除
+    ret_code_t err_code = pm_peers_delete();
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
+        return false;
+    }
+
+    return true;
+}
+
+static void perform_erase_bond_data_response_func(bool success)
+{
+    if (erase_bonding_data_response_func == NULL) {
+        return;
+    }
+
+    // ペアリング情報削除後に実行される処理
+    (*erase_bonding_data_response_func)(success);
+    erase_bonding_data_response_func = NULL;
+}
+
+bool fido_ble_unpairing_erase_bond_data_completed(void const *evt)
+{
+    pm_evt_t const *p_evt = (pm_evt_t const *)evt;
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
+        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
+        perform_erase_bond_data_response_func(true);
+        return true;
+    }
+
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
+        NRF_LOG_ERROR("pm_peers_delete has failed");
+        perform_erase_bond_data_response_func(false);
+        return true;
+    }
+
+    return false;
+}

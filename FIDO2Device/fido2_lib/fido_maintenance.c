@@ -232,7 +232,7 @@ static void command_erase_bonding_data(void)
     // nRF52840のFlash ROM上に作成された
     // 全てのペアリング情報を削除
     //
-    if (ble_service_common_erase_bond_data(command_erase_bonding_data_response) == false) {
+    if (fido_ble_unpairing_erase_bond_data(command_erase_bonding_data_response) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 12);
     }
 }
