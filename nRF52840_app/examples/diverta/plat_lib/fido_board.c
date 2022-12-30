@@ -10,9 +10,6 @@
 #include "app_timer.h"
 #include "app_button.h"
 
-// for lighting LED
-#include "nrf_gpio.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_board
 #include "nrf_log.h"
@@ -28,11 +25,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"
-
-#if !defined(NO_SECURE_IC)
-// for atecc_get_serial_num_str
-#include "atecc.h"
-#endif
 
 //
 // ボタンのピン番号
@@ -100,7 +92,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
     }
 }
 
-void fido_command_long_push_timer_handler(void *p_context)
+void fido_board_button_long_pushed(void *p_context)
 {
     (void)p_context;
     m_long_pushed = true;
@@ -113,7 +105,7 @@ void fido_command_long_push_timer_handler(void *p_context)
 //
 // タイマーを追加
 //
-void fido_button_timers_init(void)
+void fido_board_button_timers_init(void)
 {
     // Initialize timer module.
     ret_code_t err_code = app_timer_init();
@@ -126,7 +118,7 @@ void fido_button_timers_init(void)
 //
 // ボタンをカスタマイズ
 //
-void fido_button_init(void)
+void fido_board_button_init(void)
 {
     ret_code_t err_code;
 
@@ -146,7 +138,7 @@ void fido_button_init(void)
 //
 // LED関連
 //
-void led_light_pin_set(LED_COLOR led_color, bool led_on)
+void fido_board_led_pin_set(LED_COLOR led_color, bool led_on)
 {
     // FIDO機能で使用するLEDのピン番号を設定
     // nRF52840 Dongleでは以下の割り当てになります。
@@ -156,13 +148,13 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
     uint32_t pin_number;
     switch (led_color) {
         case LED_COLOR_RED:
-            pin_number = LED_2;
+            pin_number = LED_R;
             break;
         case LED_COLOR_GREEN:
-            pin_number = LED_3;
+            pin_number = LED_G;
             break;
         case LED_COLOR_BLUE:
-            pin_number = LED_4;
+            pin_number = LED_B;
             break;
         case LED_COLOR_BUSY:
             pin_number = LED_R;
@@ -175,13 +167,13 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
     }
     
     // LEDを出力設定
-    nrf_gpio_cfg_output(pin_number);
+    fido_board_gpio_cfg_output(pin_number);
     if (led_on) {
         // LEDを点灯させる
-        nrf_gpio_pin_clear(pin_number);
+        fido_board_gpio_pin_clear(pin_number);
     } else {
         // LEDを消灯させる
-        nrf_gpio_pin_set(pin_number);
+        fido_board_gpio_pin_set(pin_number);
     }
 }
 

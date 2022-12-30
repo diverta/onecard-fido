@@ -228,7 +228,7 @@ static bool long_push_timer_created = false;
 
 static void button_long_push_timeout_handler(void *p_context)
 {
-    fido_command_long_push_timer_handler(p_context);
+    fido_board_button_long_pushed(p_context);
 }
 
 //

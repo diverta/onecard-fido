@@ -1015,7 +1015,7 @@ int main(void)
     log_init();
     usbd_service_init();
     usbd_service_pwr_detect_func(ble_service_common_disable_peripheral);
-    fido_button_timers_init();
+    fido_board_button_timers_init();
     power_management_init();
     // FDS関連の初期化
     fido_flash_storage_init();

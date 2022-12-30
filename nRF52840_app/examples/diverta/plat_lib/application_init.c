@@ -140,7 +140,7 @@ static void start_ble_peripheral(void)
             // スリープ状態に遷移
             //   ボタン押下でアイドル状態に復帰できるよう、
             //   アプリケーションで使用するボタンを事前に設定
-            fido_button_init();
+            fido_board_button_init();
             fido_board_prepare_for_deep_sleep();
             return;
         }
@@ -176,7 +176,7 @@ void application_init_ble_pairing_has_reset(void)
 static void application_init_resume(void)
 {
     // アプリケーションで使用するボタンの設定
-    fido_button_init();
+    fido_board_button_init();
 
     // アプリケーションで使用するCIDを初期化
     fido_hid_channel_initialize_cid();

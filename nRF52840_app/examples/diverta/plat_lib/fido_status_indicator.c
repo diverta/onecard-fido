@@ -31,7 +31,7 @@ void fido_processing_led_timedout_handler(void)
 {
     // LEDを点滅させる
     led_state = !led_state;
-    led_light_pin_set(m_led_for_processing, led_state);
+    fido_board_led_pin_set(m_led_for_processing, led_state);
 }
 
 void fido_idling_led_timedout_handler(void)
@@ -44,7 +44,7 @@ void fido_idling_led_timedout_handler(void)
     } else {
         led_state = false;
     }
-    led_light_pin_set(m_led_for_idling, led_state);
+    fido_board_led_pin_set(m_led_for_idling, led_state);
 }
 
 static void stop_led_timers(void)
@@ -64,11 +64,11 @@ void fido_status_indicator_none(void)
     stop_led_timers();
 
     // すべてのLEDを消灯
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 }
 
 void fido_status_indicator_idle(void)
@@ -78,10 +78,10 @@ void fido_status_indicator_idle(void)
 
     if (ble_service_peripheral_mode()) {
         // LEDを事前消灯
-        led_light_pin_set(LED_COLOR_RED,   false);
-        led_light_pin_set(LED_COLOR_GREEN, false);
-        led_light_pin_set(LED_COLOR_BUSY,  false);
-        led_light_pin_set(LED_COLOR_PAIR,  false);
+        fido_board_led_pin_set(LED_COLOR_RED,   false);
+        fido_board_led_pin_set(LED_COLOR_GREEN, false);
+        fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+        fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 
         // BLEペリフェラル稼働中かつ
         // 非ペアリングモード＝BLUE LED点滅
@@ -89,10 +89,10 @@ void fido_status_indicator_idle(void)
 
     } else {
         // LEDを事前消灯
-        led_light_pin_set(LED_COLOR_RED,   false);
-        led_light_pin_set(LED_COLOR_BLUE,  false);
-        led_light_pin_set(LED_COLOR_BUSY,  false);
-        led_light_pin_set(LED_COLOR_PAIR,  false);
+        fido_board_led_pin_set(LED_COLOR_RED,   false);
+        fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+        fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+        fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 
         // USB HID稼働中＝GREEN LED点滅
         m_led_for_idling = LED_COLOR_GREEN;
@@ -109,14 +109,14 @@ void fido_status_indicator_busy(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 
     // ビジーの場合は
     // 赤色LEDの連続点灯とします。
-    led_light_pin_set(LED_COLOR_BUSY,  true);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  true);
 }
 
 void fido_status_indicator_prompt_reset(void)
@@ -125,10 +125,10 @@ void fido_status_indicator_prompt_reset(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 
     // 赤色LEDを、秒間５回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_BUSY;
@@ -141,10 +141,10 @@ void fido_status_indicator_ble_scanning(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
     
     // 赤色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_RED;
@@ -157,10 +157,10 @@ void fido_status_indicator_prompt_tup(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
     
     // 緑色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_GREEN;
@@ -173,14 +173,14 @@ void fido_status_indicator_pairing_mode(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
 
     // ペアリングモードの場合は
     // 黄色LEDの連続点灯とします。
-    led_light_pin_set(LED_COLOR_PAIR,  true);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  true);
 }
 
 void fido_status_indicator_pairing_fail(bool short_interval)
@@ -189,10 +189,10 @@ void fido_status_indicator_pairing_fail(bool short_interval)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_RED,   false);
-    led_light_pin_set(LED_COLOR_GREEN, false);
-    led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_RED,   false);
+    fido_board_led_pin_set(LED_COLOR_GREEN, false);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
 
     // ペアリングモード表示用LEDを点滅させ、
     // 再度ペアリングが必要であることを通知
@@ -212,11 +212,11 @@ void fido_status_indicator_abort(void)
     stop_led_timers();
 
     // LEDを事前消灯
-    led_light_pin_set(LED_COLOR_BUSY,  false);
-    led_light_pin_set(LED_COLOR_PAIR,  false);
+    fido_board_led_pin_set(LED_COLOR_BUSY,  false);
+    fido_board_led_pin_set(LED_COLOR_PAIR,  false);
 
     // 全色LEDを点灯
-    led_light_pin_set(LED_COLOR_RED,   true);
-    led_light_pin_set(LED_COLOR_GREEN, true);
-    led_light_pin_set(LED_COLOR_BLUE,  true);
+    fido_board_led_pin_set(LED_COLOR_RED,   true);
+    fido_board_led_pin_set(LED_COLOR_GREEN, true);
+    fido_board_led_pin_set(LED_COLOR_BLUE,  true);
 }
