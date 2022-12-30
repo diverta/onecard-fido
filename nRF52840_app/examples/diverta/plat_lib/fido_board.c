@@ -222,3 +222,13 @@ void fido_board_prepare_for_deep_sleep(void)
     ret_code_t err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
 }
+
+//
+// システムリセット
+//
+void fido_board_system_reset(void)
+{
+    NRF_LOG_INFO("System will restart...\n\r");
+    NRF_LOG_FINAL_FLUSH();
+    sd_nvic_SystemReset();
+}

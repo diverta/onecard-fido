@@ -348,7 +348,7 @@ void fido_maintenance_command_report_sent(void)
             return;
         case MNT_COMMAND_SYSTEM_RESET:
             // nRF52840のシステムリセットを実行
-            NVIC_SystemReset();
+            fido_board_system_reset();
             return;
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");

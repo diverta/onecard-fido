@@ -30,6 +30,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // USB製品関連情報
 //  nRF5 SDKの app_usbd_string_desc.c 内で加工され、
@@ -97,17 +100,11 @@ static void usbd_service_stopped(void)
     uint32_t gpregret;
     uint32_t err_code = sd_power_gpregret_get(0, &gpregret);
     APP_ERROR_CHECK(err_code);
-    
-    if (gpregret == BOOTLOADER_DFU_START) {
-        // GPREGRETレジスターに値が設定されている場合、
-        // ブートローダーモードに遷移させる
-        // （ソフトデバイス経由でリセットを実行）
-        sd_nvic_SystemReset();
 
-    } else {
-        // リセットを実行
-        NVIC_SystemReset();
-    }
+    // システムリセットを実行
+    //   GPREGRETレジスターに値が設定されている場合、
+    //   ブートローダーモードに遷移
+    fido_board_system_reset();
 }
 
 static void usbd_user_ev_handler_custom(app_usbd_event_type_t event)

@@ -423,7 +423,7 @@ void ble_service_common_disable_peripheral(void)
     if (ble_service_peripheral_mode()) {
         // BLEペリフェラル稼働中にUSB接続された場合は、
         // ソフトデバイスを再起動
-        NVIC_SystemReset();
+        fido_board_system_reset();
     }
 }
 

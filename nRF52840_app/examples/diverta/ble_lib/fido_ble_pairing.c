@@ -161,7 +161,7 @@ void fido_ble_pairing_flash_updated(void)
         // fds_record_update/writeが正常完了の場合、
         // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
         // 変更したペアリングモード設定を反映するため、システムリセットを実行
-        NVIC_SystemReset();
+        fido_board_system_reset();
     }
 }
 
@@ -268,7 +268,7 @@ void fido_ble_pairing_on_disconnect(void)
         // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
         NRF_LOG_FINAL_FLUSH();
         nrf_delay_ms(500);
-        NVIC_SystemReset();
+        fido_board_system_reset();
     }
 }
 
