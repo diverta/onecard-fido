@@ -6,12 +6,14 @@
  */
 #include "sdk_common.h"
 #include "nrf_drv_twi.h"
-#include "nrf_delay.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME atecc608a_i2c_hal
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// for fido_board_delay_ms
+#include "fido_board.h"
 
 // for I2C access
 #include "fido_twi.h"
@@ -224,15 +226,15 @@ bool hal_iface_release(void *hal_data)
 
 void atecc_delay_us(uint32_t delay)
 {
-    nrf_delay_us(delay);
+    fido_board_delay_us(delay);
 }
 
 void atecc_delay_10us(uint32_t delay)
 {
-    nrf_delay_us(delay * 10);
+    fido_board_delay_us(delay * 10);
 }
 
 void atecc_delay_ms(uint32_t delay)
 {
-    nrf_delay_ms(delay);
+    fido_board_delay_ms(delay);
 }

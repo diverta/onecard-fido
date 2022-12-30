@@ -21,6 +21,9 @@
 #include "usbd_service_ccid.h"
 #include "usbd_service_hid.h"
 
+// for fido_board_delay_ms
+#include "fido_board.h"
+
 // for BOOTLOADER_DFU_START
 #include "nrf_bootloader_info.h"
 #include "nrf_delay.h"
@@ -93,7 +96,7 @@ static void usbd_service_stopped(void)
 {
     // USBを無効化
     app_usbd_disable();
-    nrf_delay_ms(500);
+    fido_board_delay_ms(500);
 
     // Get contents of the general purpose retention registers 
     // (NRF_POWER->GPREGRET*)

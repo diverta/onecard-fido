@@ -67,6 +67,11 @@ typedef enum _LED_COLOR {
     LED_COLOR_PAIR
 } LED_COLOR;
 
+// 遅延用マクロ
+#include <nrf_delay.h>
+#define fido_board_delay_us(us_time) nrf_delay_us(us_time)
+#define fido_board_delay_ms(ms_time) nrf_delay_ms(ms_time)
+
 // 関数群
 void fido_button_timers_init(void);
 void fido_button_init(void);

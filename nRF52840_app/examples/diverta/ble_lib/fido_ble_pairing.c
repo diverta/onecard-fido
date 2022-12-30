@@ -21,6 +21,9 @@
 #include "fido_flash_pairing_mode.h"
 #include "fido_timer_plat.h"
 
+// for fido_board_delay_ms
+#include "fido_board.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_pairing
 #include "nrf_log.h"
@@ -266,8 +269,7 @@ void fido_ble_pairing_on_disconnect(void)
 
         // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
         // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
-        NRF_LOG_FINAL_FLUSH();
-        nrf_delay_ms(500);
+        fido_board_delay_ms(500);
         fido_board_system_reset();
     }
 }
