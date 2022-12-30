@@ -410,7 +410,7 @@
         }
         
         // ステータスワードチェックがNGの場合
-        [self setErrorMessage:MSG_OCCUR_UNKNOWN_BLE_ERROR];
+        [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
         return false;
     }
 
