@@ -272,20 +272,14 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時で上位クラスに制御を戻す
-        if (success == false) {
-            [self usbDfuProcessDidCompleted:false message:errorMessage];
-            return;
-        }
-        // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_HID_GET_VERSION_INFO:
-                [self doResponseHIDGetVersionInfo:response];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self usbDfuProcessDidCompleted:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        if (command == COMMAND_HID_GET_VERSION_INFO) {
+            if (success == false) {
+                // 即時で上位クラスに制御を戻す
+                [self usbDfuProcessDidCompleted:false message:errorMessage];
+                return;
+            }
+            // 処理を続行
+            [self doResponseHIDGetVersionInfo:response];
         }
     }
 
