@@ -188,21 +188,6 @@
 #define MSG_BLE_UNPAIRING_WAIT_CANCELED     @"ペアリング解除要求が中断されました。"
 #define MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT @"Bluetooth環境設定からの\nデバイス削除が検知されませんでした。\nペアリング解除要求を中止します。"
 
-#pragma mark - ツール設定画面
-#define MSG_LABEL_AUTH_PARAM_GET                @"自動認証設定の読込"
-#define MSG_LABEL_AUTH_PARAM_SET                @"自動認証設定の書込"
-#define MSG_LABEL_AUTH_PARAM_RESET              @"自動認証設定の解除"
-#define MSG_PROMPT_INPUT_UUID_STRING_LEN        @"スキャン対象サービスUUIDを36桁で入力してください"
-#define MSG_PROMPT_INPUT_UUID_STRING_PATTERN    @"UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN      @"スキャン秒数を1桁で入力してください"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM      @"スキャン秒数を数字で入力してください"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE    @"スキャン秒数を1〜9の値で入力してください"
-#define MSG_PROMPT_CLEAR_UUID_SCAN_PARAM        @"解除後はBLEデバイススキャンによる自動認証ができなくなります。\n\n設定解除処理を実行しますか？"
-#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0      @"自動認証機能が無効化されているので、書込後もBLEデバイススキャンによる自動認証はできません。\n\n設定書込処理を実行しますか？"
-#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
-#define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
-#define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
-
 #pragma mark - BLE DFU関連
 #define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
 #define MSG_DFU_VERSION_INFO_GET_FAILED         @"FIDO認証器ファームウェアのバージョンが取得できませんでした。"
