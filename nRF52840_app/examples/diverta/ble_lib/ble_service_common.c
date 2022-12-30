@@ -135,8 +135,8 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, BLE_GAP_PASSKEY_LEN);
             passkey[BLE_GAP_PASSKEY_LEN] = 0x00;
             NRF_LOG_INFO("BLE_GAP_EVT_PASSKEY_DISPLAY: passkey=%s match_req=%d",
-                         nrf_log_push(passkey),
-                         p_ble_evt->evt.gap_evt.params.passkey_display.match_request);
+                            nrf_log_push(passkey),
+                            p_ble_evt->evt.gap_evt.params.passkey_display.match_request);
             break;
     
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -151,13 +151,13 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             NRF_LOG_DEBUG("BLE_GAP_EVT_LESC_DHKEY_REQUEST");
             break;
 
-         case BLE_GAP_EVT_AUTH_STATUS:
-             NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status=0x%x bond=0x%x lv4: %d kdist_own:0x%x kdist_peer:0x%x",
-                          p_ble_evt->evt.gap_evt.params.auth_status.auth_status,
-                          p_ble_evt->evt.gap_evt.params.auth_status.bonded,
-                          p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
-                          *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
-                          *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
+        case BLE_GAP_EVT_AUTH_STATUS:
+            NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status=0x%x bond=0x%x lv4: %d kdist_own:0x%x kdist_peer:0x%x",
+                            p_ble_evt->evt.gap_evt.params.auth_status.auth_status,
+                            p_ble_evt->evt.gap_evt.params.auth_status.bonded,
+                            p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
+                            *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
+                            *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
             break;
 
         case BLE_GAP_EVT_ADV_REPORT:

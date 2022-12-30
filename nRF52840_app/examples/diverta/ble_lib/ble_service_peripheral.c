@@ -100,7 +100,7 @@ static void services_init(void)
 
     // BLE U2Fサービスに必要な属性を追加
     ble_srv_ascii_to_utf8(&dis_init.model_num_str    , (char *)MODEL_NUM);
-	ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , (char *)FW_REV);
+    ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , (char *)FW_REV);
 
     dis_init.dis_char_rd_sec = SEC_JUST_WORKS;
 
