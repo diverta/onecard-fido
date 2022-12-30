@@ -232,7 +232,8 @@
         uint8_t *requestBytes = (uint8_t *)[response bytes];
         if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
             // エラーの場合はHID経由の処理が異常終了
-            [self setErrorMessageOfCommand:MSG_OCCUR_UNKNOWN_ERROR];
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, requestBytes[0]];
+            [self setErrorMessageOfCommand:message];
             [self notifyProcessTerminated:false];
             return;
         }
@@ -247,7 +248,8 @@
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
             // エラーの場合はヘルパークラスに制御を戻す
-            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, responseBytes[0]];
+            [[self appBLECommand] commandDidProcess:false message:message];
             return;
         }
         // レスポンスの現在時刻を保持

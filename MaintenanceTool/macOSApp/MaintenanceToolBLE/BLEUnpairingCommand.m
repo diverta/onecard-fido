@@ -79,7 +79,8 @@
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
             // エラーの場合はヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommand-->terminateUnpairingCommand が呼び出される
-            [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, responseBytes[0]];
+            [[self appBLECommand] commandDidProcess:false message:message];
             return;
         }
         if ([response length] == 3) {
