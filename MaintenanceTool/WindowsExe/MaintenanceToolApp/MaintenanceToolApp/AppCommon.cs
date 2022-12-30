@@ -312,8 +312,6 @@
         public const string MSG_VERSION_INFO_DEVICE_NAME = "  デバイス名: {0}";
         public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}";
         public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
-        public const string MSG_VERSION_INFO_SECURE_IC_AVAIL = "  セキュアIC: 搭載";
-        public const string MSG_VERSION_INFO_SECURE_IC_UNAVAIL = "  セキュアIC: 非搭載";
 
         // Windows版固有のメッセージ文言
         // BLE関連のメッセージ文言
