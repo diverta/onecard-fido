@@ -22,7 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_pairing.h"
-#include "ble_service_common.h"
 #include "ble_service_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース

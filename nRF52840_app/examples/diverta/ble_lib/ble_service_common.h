@@ -17,7 +17,6 @@ bool ble_service_peripheral_mainsw_event_handler(void);
 
 void ble_service_common_init(void);
 void ble_service_common_disable_peripheral(void);
-bool fido_ble_unpairing_erase_bond_data(void (*_response_func)(bool));
 
 #ifdef __cplusplus
 }
