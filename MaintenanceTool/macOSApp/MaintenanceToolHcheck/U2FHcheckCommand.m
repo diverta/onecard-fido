@@ -92,8 +92,6 @@
                 [self doRequestCtapHidPing];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -272,8 +270,6 @@
                 [self doResponseCtapHidPing:response];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseU2fHealthCheck:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -299,8 +295,6 @@
                 [self doResponseCtapHidPing:response];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
-                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -377,7 +371,7 @@
     - (bool)checkStatusWordOfResponse:(NSData *)responseMessage {
         // レスポンスデータが揃っていない場合はNG
         if (responseMessage == nil || [responseMessage length] == 0) {
-            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR_LEN];
             return false;
         }
 
@@ -403,14 +397,8 @@
             return false;
         }
         
-        // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
-        if (statusWord == 0x9601) {
-            [self setErrorMessage:MSG_OCCUR_PAIRINGMODE_ERROR];
-            return false;
-        }
-        
         // ステータスワードチェックがNGの場合
-        [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
+        [self setErrorMessage:[NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_SW, (uint16_t)statusWord]];
         return false;
     }
 
