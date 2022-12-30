@@ -13,6 +13,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // プラットフォーム依存モジュール
 #include "fido_ble_pairing.h"
+#include "fido_board.h"
 
 // プラットフォーム非依存モジュール
 #include "fido_common.h"
@@ -78,7 +79,9 @@ void fido_ble_unpairing_on_disconnect(void)
 void fido_ble_unpairing_done(bool success, uint16_t peer_id)
 {
     if (success) {
+        // ペアリング解除要求が成功時は、スリープ状態に遷移
         NRF_LOG_INFO("Unpairing process for peer_id=0x%04x done.", peer_id);
+        fido_board_prepare_for_deep_sleep();
 
     } else {
         NRF_LOG_ERROR("Unpairing process for peer_id=0x%04x failed.", peer_id);
