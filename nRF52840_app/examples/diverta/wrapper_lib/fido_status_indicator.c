@@ -2,7 +2,7 @@
  * File:   fido_status_indicator.c
  * Author: makmorit
  *
- * Created on 2019/07/15, 12:27
+ * Created on 2022/12/30, 16:22
  */
 #include "fido_board.h"
 #include "ble_service_common.h"
@@ -27,14 +27,14 @@ static LED_COLOR m_led_for_idling;
 // アイドル時LED点滅制御用変数
 static uint8_t led_status = 0;
 
-void fido_processing_led_timedout_handler(void)
+static void processing_led_timed_out(void)
 {
     // LEDを点滅させる
     led_state = !led_state;
     fido_board_led_pin_set(m_led_for_processing, led_state);
 }
 
-void fido_idling_led_timedout_handler(void)
+static void idling_led_timed_out(void)
 {
     // LEDを点滅させる
     // （点滅は約２秒間隔）
@@ -100,7 +100,7 @@ void fido_status_indicator_idle(void)
 
     // 該当色のLEDを、約２秒ごとに点滅させるタイマーを開始する
     led_status = 0;
-    fido_idling_led_timer_start(LED_BLINK_INTERVAL_MSEC);
+    fido_idling_led_timer_start(LED_BLINK_INTERVAL_MSEC, idling_led_timed_out);
 }
 
 void fido_status_indicator_busy(void)
@@ -132,7 +132,7 @@ void fido_status_indicator_prompt_reset(void)
 
     // 赤色LEDを、秒間５回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_BUSY;
-    fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC, processing_led_timed_out);
 }
 
 void fido_status_indicator_ble_scanning(void)
@@ -148,7 +148,7 @@ void fido_status_indicator_ble_scanning(void)
     
     // 赤色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_RED;
-    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
+    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC, processing_led_timed_out);
 }
 
 void fido_status_indicator_prompt_tup(void)
@@ -164,7 +164,7 @@ void fido_status_indicator_prompt_tup(void)
     
     // 緑色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_GREEN;
-    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
+    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC, processing_led_timed_out);
 }
 
 void fido_status_indicator_pairing_mode(void)
@@ -200,9 +200,9 @@ void fido_status_indicator_pairing_fail(bool short_interval)
     // 黄色LEDを、秒間２回点滅させるタイマーを開始する
     m_led_for_processing = LED_COLOR_PAIR;
     if (short_interval) {
-        fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
+        fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC, processing_led_timed_out);
     } else {
-        fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
+        fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC, processing_led_timed_out);
     }
 }
 
