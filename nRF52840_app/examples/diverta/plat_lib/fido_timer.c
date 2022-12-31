@@ -25,6 +25,7 @@ static bool comm_interval_timer_created = false;
 static void comm_interval_timeout_handler(void *p_context)
 {
     // BLE接続が行われていた場合は、切断等の処理を行う
+    (void)p_context;
     fido_ble_on_process_timedout();
 }
 
@@ -77,6 +78,7 @@ static bool user_presence_verify_timer_created = false;
 static void user_presence_verify_timeout_handler(void *p_context)
 {
     // ユーザー所在確認タイムアウト時の処理を実行
+    (void)p_context;
     fido_user_presence_verify_timeout_handler();
 }
 
@@ -125,10 +127,12 @@ void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_contex
 //
 APP_TIMER_DEF(m_led_on_off_timer_id);
 static bool led_on_off_timer_created = false;
+static void (*fido_processing_led_timedout_handler)(void) = NULL;
 
 static void processing_led_timeout_handler(void *p_context)
 {
-    fido_processing_led_timedout_handler();
+    (void)p_context;
+    (*fido_processing_led_timedout_handler)();
 }
 
 static ret_code_t processing_led_timer_init()
@@ -152,9 +156,10 @@ void fido_processing_led_timer_stop(void)
     app_timer_stop(m_led_on_off_timer_id);
 }
 
-void fido_processing_led_timer_start(uint32_t on_off_interval_msec)
+void fido_processing_led_timer_start(uint32_t on_off_interval_msec, void (*_handler)(void))
 {
     // タイマー生成
+    fido_processing_led_timedout_handler = _handler;
     ret_code_t err_code = processing_led_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;
@@ -175,10 +180,12 @@ void fido_processing_led_timer_start(uint32_t on_off_interval_msec)
 //
 APP_TIMER_DEF(m_idling_led_timer_id);
 static bool idling_led_timer_created = false;
+static void (*fido_idling_led_timedout_handler)(void) = NULL;
 
 static void idling_led_timeout_handler(void *p_context)
 {
-    fido_idling_led_timedout_handler();
+    (void)p_context;
+    (*fido_idling_led_timedout_handler)();
 }
 
 static ret_code_t idling_led_timer_init()
@@ -202,9 +209,10 @@ void fido_idling_led_timer_stop(void)
     app_timer_stop(m_idling_led_timer_id);
 }
 
-void fido_idling_led_timer_start(uint32_t on_off_interval_msec)
+void fido_idling_led_timer_start(uint32_t on_off_interval_msec, void (*_handler)(void))
 {
     // タイマー生成
+    fido_idling_led_timedout_handler = _handler;
     ret_code_t err_code = idling_led_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;
@@ -272,6 +280,7 @@ static bool hid_channel_lock_timer_created = false;
 
 static void hid_channel_lock_timeout_handler(void *p_context)
 {
+    (void)p_context;
     fido_hid_channel_lock_timedout_handler();
 }
 
