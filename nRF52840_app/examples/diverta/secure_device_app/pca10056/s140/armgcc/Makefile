@@ -410,6 +410,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
+  $(PLTLIB_DIR)/fido_timer_plat.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/rv3028c7_i2c.c \
   $(PLTLIB_DIR)/sha1.c \
