@@ -253,6 +253,7 @@ void app_board_prepare_for_deep_sleep(void)
 //
 void app_board_prepare_for_system_reset(void)
 {
+    printk("System will restart... \n\n\r");
     NVIC_SystemReset();
 }
 

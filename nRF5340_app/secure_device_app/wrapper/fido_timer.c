@@ -25,11 +25,10 @@ void fido_user_presence_verify_timer_stop(void)
     app_timer_stop_for_generic_oneshot();
 }
 
-void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
+void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void (*_handler)(void))
 {
     // 業務処理用 汎用ワンショットタイマーを開始させる
-    (void)p_context;
-    app_timer_start_for_generic_oneshot(timeout_msec, fido_user_presence_verify_timeout_handler);
+    app_timer_start_for_generic_oneshot(timeout_msec, _handler);
 }
 
 //
@@ -56,8 +55,8 @@ void fido_hid_channel_lock_timer_stop(void)
     app_timer_stop_for_generic_oneshot();
 }
 
-void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
+void fido_hid_channel_lock_timer_start(uint32_t lock_ms, void (*_handler)(void))
 {
     // 業務処理用 汎用ワンショットタイマーを開始させる
-    app_timer_start_for_generic_oneshot(lock_ms, fido_hid_channel_lock_timedout_handler);
+    app_timer_start_for_generic_oneshot(lock_ms, _handler);
 }
