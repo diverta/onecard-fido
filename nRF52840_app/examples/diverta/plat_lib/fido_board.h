@@ -18,7 +18,6 @@ extern "C" {
 // 関数群
 void fido_board_button_timers_init(void);
 void fido_board_button_init(void);
-void fido_board_button_long_pushed(void *p_context);
 void fido_board_led_pin_set(LED_COLOR led_color, bool led_on);
 void fido_board_prepare_for_deep_sleep(void);
 

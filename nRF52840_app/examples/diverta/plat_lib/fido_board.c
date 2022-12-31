@@ -53,6 +53,14 @@ static const app_button_cfg_t m_app_buttons[APP_BUTTON_NUM] = {
 static bool m_long_pushed = false;
 static bool m_push_initial = true;
 
+static void fido_board_button_long_pushed(void)
+{
+    // ペアリングモードに遷移させるための長押しの場合、
+    // このタイミングで、ペアリングモード変更を実行
+    m_long_pushed = true;
+    fido_ble_pairing_change_mode();
+}
+
 static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 {
     switch (button_action) {
@@ -61,7 +69,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
                 m_push_initial = false;
             }
             if (pin_no == PIN_MAIN_SW_IN) {
-                fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, NULL);
+                fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, fido_board_button_long_pushed);
             }
             break;
 
@@ -90,16 +98,6 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         default:
             break;
     }
-}
-
-void fido_board_button_long_pushed(void *p_context)
-{
-    (void)p_context;
-    m_long_pushed = true;
-    
-    // ペアリングモードに遷移させるための長押しの場合、
-    // このタイミングで、ペアリングモード変更を実行
-    fido_ble_pairing_change_mode();
 }
 
 //

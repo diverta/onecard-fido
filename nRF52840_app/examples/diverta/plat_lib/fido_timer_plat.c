@@ -12,22 +12,17 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// 移行措置（後日削除予定）
-#include "fido_ble_event.h"
-#include "fido_board.h"
-
 //
 // 無通信タイマー
 //
-#define COMMUNICATION_INTERVAL_MSEC 10000
 APP_TIMER_DEF(m_comm_interval_timer_id);
 static bool comm_interval_timer_created = false;
+static void (*fido_comm_interval_timeout_handler)(void) = NULL;
 
 static void comm_interval_timeout_handler(void *p_context)
 {
-    // BLE接続が行われていた場合は、切断等の処理を行う
     (void)p_context;
-    fido_ble_on_process_timedout();
+    (*fido_comm_interval_timeout_handler)();
 }
 
 static ret_code_t comm_interval_timer_init(void)
@@ -52,9 +47,10 @@ void fido_comm_interval_timer_stop(void)
     app_timer_stop(m_comm_interval_timer_id);
 }
 
-void fido_comm_interval_timer_start(void)
+void fido_comm_interval_timer_start(uint32_t timeout_msec, void (*_handler)(void))
 {
     // タイマー生成
+    fido_comm_interval_timeout_handler = _handler;
     ret_code_t err_code = comm_interval_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;
@@ -64,7 +60,7 @@ void fido_comm_interval_timer_start(void)
     fido_comm_interval_timer_stop();
 
     // 直近レスポンスからの経過秒数監視を開始
-    err_code = app_timer_start(m_comm_interval_timer_id, APP_TIMER_TICKS(COMMUNICATION_INTERVAL_MSEC), NULL);
+    err_code = app_timer_start(m_comm_interval_timer_id, APP_TIMER_TICKS(timeout_msec), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_comm_interval_timer_id) returns %d ", err_code);
     }
@@ -181,10 +177,12 @@ void fido_idling_led_timer_start(uint32_t on_off_interval_msec, void (*_handler)
 //
 APP_TIMER_DEF(m_long_push_timer_id);
 static bool long_push_timer_created = false;
+static void (*fido_button_long_push_timeout_handler)(void) = NULL;
 
 static void button_long_push_timeout_handler(void *p_context)
 {
-    fido_board_button_long_pushed(p_context);
+    (void)p_context;
+    (*fido_button_long_push_timeout_handler)();
 }
 
 //
@@ -211,10 +209,11 @@ void fido_button_long_push_timer_stop(void)
     app_timer_stop(m_long_push_timer_id);
 }
 
-void fido_button_long_push_timer_start(uint32_t timeout_msec, void *p_context)
+void fido_button_long_push_timer_start(uint32_t timeout_msec, void (*_handler)(void))
 {
     // タイマーを開始する
-    ret_code_t err_code = app_timer_start(m_long_push_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
+    fido_button_long_push_timeout_handler = _handler;
+    ret_code_t err_code = app_timer_start(m_long_push_timer_id, APP_TIMER_TICKS(timeout_msec), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_long_push_timer_id) returns %d ", err_code);
     }

@@ -13,6 +13,7 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_delay.h"
 
+#include "fido_ble_event.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
@@ -31,6 +32,9 @@ NRF_LOG_MODULE_REGISTER();
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// 直近レスポンスからの経過秒数監視するためのタイムアウト（ミリ秒単位）
+#define COMMUNICATION_INTERVAL_MSEC 10000
 
 // ペアリングモードを保持
 static bool run_as_pairing_mode;
@@ -249,7 +253,7 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
         
         // ペアリング先から切断されない可能性があるため、
         // 無通信タイムアウトのタイマー（10秒）をスタートさせる
-        fido_comm_interval_timer_start();
+        fido_comm_interval_timer_start(COMMUNICATION_INTERVAL_MSEC, fido_ble_on_process_timedout);
     }
     
     // 非ペアリングモードでペアリング要求があった場合も
@@ -257,7 +261,7 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
     // 無通信タイムアウトのタイマー（10秒）をスタートさせる
     if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
         NRF_LOG_INFO("Pairing rejected");
-        fido_comm_interval_timer_start();
+        fido_comm_interval_timer_start(COMMUNICATION_INTERVAL_MSEC, fido_ble_on_process_timedout);
     }
 }
 
