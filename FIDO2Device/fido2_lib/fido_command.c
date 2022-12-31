@@ -36,12 +36,6 @@ fido_log_module_register(fido_command);
 // ユーザー所在確認待ち状態を示すフラグ
 static bool waiting_for_tup = false;
 
-// スキャン動作中フラグ
-//   自動認証機能が有効な場合に行われる
-//   BLEペリフェラルのスキャン中は
-//   true が設定される
-static bool ble_peripheral_auth_scan_started = false;
-
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
 
@@ -55,12 +49,6 @@ void fido_command_abort_flag_set(bool flag)
 //
 bool fido_command_mainsw_event_handler(void)
 {
-    // 自動認証機能のBLEペリフェラルスキャン中は
-    // ボタン押下時の処理を無効化
-    if (ble_peripheral_auth_scan_started) {
-        return true;
-    }
-
     // ボタンが短押しされた時の処理を実行
     if (fido_u2f_command_on_mainsw_event() == true) {
         return true;
@@ -148,26 +136,6 @@ void fido_user_presence_verify_end(void)
 
     // ユーザー所在確認待ち完了
     waiting_for_tup = false;
-}
-
-void fido_user_presence_verify_on_ble_scan_end(bool success)
-{
-    // スキャン動作中フラグをクリア
-    ble_peripheral_auth_scan_started = false;
-
-    // 自動認証機能が有効時、指定のサービスUUIDをもつ
-    // BLEペリフェラルデバイスのスキャン完了時の処理
-    if (success) {
-        // スキャン成功時は、ボタン押下時と等価の処理を実行
-        fido_command_mainsw_event_handler();
-    } else {
-        // スキャン失敗時は、タイムアウト時と等価の処理を実行
-        fido_user_presence_verify_timeout_handler();
-        // タイムアウトの旨のステータスを戻す
-        //   BLEデバイススキャン自体が、HID経由で呼び出される処理なので、
-        //   HIDチャネルにレスポンスを送信
-        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_TIMEOUT);
-    }
 }
 
 void fido_user_presence_verify_end_message(const char *func_name, bool tup_done)
