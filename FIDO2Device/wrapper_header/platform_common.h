@@ -16,19 +16,6 @@ extern "C" {
 #endif
 
 //
-// LED操作関数群
-//
-void        fido_status_indicator_none(void);
-void        fido_status_indicator_idle(void);
-void        fido_status_indicator_busy(void);
-void        fido_status_indicator_prompt_reset(void);
-void        fido_status_indicator_prompt_tup(void);
-void        fido_status_indicator_pairing_mode(void);
-void        fido_status_indicator_pairing_fail(bool short_interval);
-void        fido_status_indicator_abort(void);
-void        fido_status_indicator_ble_scanning(void);
-
-//
 // FIDOトランスポート用関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);

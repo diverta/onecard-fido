@@ -33,6 +33,7 @@ extern "C" {
 #include "fido_ble_unpairing.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
+#include "fido_status_indicator.h"
 #include "fido_timer.h"
 #include "platform_common.h"
 #include "rtcc.h"
