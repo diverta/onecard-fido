@@ -59,7 +59,7 @@ void fido_hid_channel_set_cid_bytes(uint8_t *cid, uint32_t _CID)
 //
 // チャネルロック管理
 // 
-void fido_hid_channel_lock_timedout_handler(void)
+static void fido_hid_channel_lock_timedout_handler(void)
 {
     // 所定の秒数を経過した場合、
     // ロック対象CIDをクリア
@@ -76,7 +76,7 @@ void fido_hid_channel_lock_start(uint32_t cid, uint8_t lock_param)
     
     // ロックタイマーを開始
     uint32_t lock_ms = (uint32_t)lock_param * 1000;
-    fido_hid_channel_lock_timer_start(lock_ms);
+    fido_hid_channel_lock_timer_start(lock_ms, fido_hid_channel_lock_timedout_handler);
 
     // パラメーターが指定されていた場合
     // ロック対象CIDを設定

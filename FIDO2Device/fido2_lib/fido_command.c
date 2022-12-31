@@ -75,7 +75,7 @@ void fido_command_keepalive_timer_handler(void)
     fido_u2f_command_keepalive_timer_handler();
 }
 
-void fido_user_presence_verify_timeout_handler(void) 
+static void fido_user_presence_verify_timeout_handler(void) 
 {
     // ユーザー所在確認タイムアウト発生時の処理を実行
     //
@@ -91,7 +91,7 @@ void fido_user_presence_verify_timeout_handler(void)
 void fido_user_presence_verify_start_on_reset(void)
 {
     // ユーザー所在確認タイムアウト監視を開始
-    fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
+    fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, fido_user_presence_verify_timeout_handler);
 
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
@@ -106,7 +106,7 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
     fido_repeat_process_timer_start(timeout_msec, fido_command_keepalive_timer_handler);
 
     // ユーザー所在確認タイムアウト監視を開始
-    fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
+    fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, fido_user_presence_verify_timeout_handler);
 
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;

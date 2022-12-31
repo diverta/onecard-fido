@@ -12,21 +12,18 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// 移行措置（後日削除予定）
-#include "fido_command.h"
-#include "fido_hid_channel.h"
-
 //
 // ユーザー所在確認タイムアウト監視用タイマー（３０秒）
 //
 APP_TIMER_DEF(m_user_presence_verify_timer_id);
 static bool user_presence_verify_timer_created = false;
+static void (*fido_user_presence_verify_timeout_handler)(void) = NULL;
 
 static void user_presence_verify_timeout_handler(void *p_context)
 {
     // ユーザー所在確認タイムアウト時の処理を実行
     (void)p_context;
-    fido_user_presence_verify_timeout_handler();
+    (*fido_user_presence_verify_timeout_handler)();
 }
 
 static ret_code_t process_timeout_timer_init(void)
@@ -51,9 +48,10 @@ void fido_user_presence_verify_timer_stop(void)
     app_timer_stop(m_user_presence_verify_timer_id);
 }
 
-void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
+void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void (*_handler)(void))
 {
     // タイマー生成
+    fido_user_presence_verify_timeout_handler = _handler;
     ret_code_t err_code = process_timeout_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;
@@ -63,7 +61,7 @@ void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_contex
     fido_user_presence_verify_timer_stop();
 
     // ユーザー所在確認タイムアウト監視用タイマーを停止
-    err_code = app_timer_start(m_user_presence_verify_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
+    err_code = app_timer_start(m_user_presence_verify_timer_id, APP_TIMER_TICKS(timeout_msec), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_user_presence_verify_timer_id) returns %d ", err_code);
     }
@@ -74,11 +72,12 @@ void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_contex
 // 
 APP_TIMER_DEF(m_hid_channel_lock_timer_id);
 static bool hid_channel_lock_timer_created = false;
+static void (*fido_hid_channel_lock_timedout_handler)(void) = NULL;
 
 static void hid_channel_lock_timeout_handler(void *p_context)
 {
     (void)p_context;
-    fido_hid_channel_lock_timedout_handler();
+    (*fido_hid_channel_lock_timedout_handler)();
 }
 
 static ret_code_t hid_channel_lock_timer_init(void)
@@ -104,9 +103,10 @@ void fido_hid_channel_lock_timer_stop(void)
     app_timer_stop(m_hid_channel_lock_timer_id);
 }
 
-void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
+void fido_hid_channel_lock_timer_start(uint32_t lock_ms, void (*_handler)(void))
 {
     // タイマー生成
+    fido_hid_channel_lock_timedout_handler = _handler;
     ret_code_t err_code = hid_channel_lock_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;

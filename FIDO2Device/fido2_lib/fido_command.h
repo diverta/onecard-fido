@@ -21,7 +21,6 @@ extern "C" {
 void fido_command_abort_flag_set(bool flag);
 
 bool fido_command_mainsw_event_handler(void);
-void fido_user_presence_verify_timeout_handler(void);
 
 void fido_user_presence_verify_start_on_reset(void);
 void fido_user_presence_verify_start(uint32_t timeout_msec, void *context);
