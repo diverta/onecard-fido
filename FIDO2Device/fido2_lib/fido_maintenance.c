@@ -295,7 +295,7 @@ static void command_set_timestamp(void)
     command_get_timestamp();
 }
 
-void fido_maintenance_command(TRANSPORT_TYPE transport_type)
+static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
@@ -336,6 +336,16 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         default:
             break;
     }
+}
+
+void fido_maintenance_command_ble(void)
+{
+    fido_maintenance_command(TRANSPORT_BLE);
+}
+
+void fido_maintenance_command_hid(void)
+{
+    fido_maintenance_command(TRANSPORT_HID);
 }
 
 void fido_maintenance_command_report_sent(void)

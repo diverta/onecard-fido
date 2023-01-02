@@ -188,7 +188,7 @@ static void on_hid_request_receive_completed(void)
             fido_ctap2_command_hid_init();
             break;
         case CTAP2_COMMAND_PING:
-            fido_u2f_command_ping(TRANSPORT_HID);
+            fido_u2f_command_ping_hid();
             break;
         case CTAP2_COMMAND_WINK:
             fido_ctap2_command_wink();
@@ -208,17 +208,17 @@ static void on_hid_request_receive_completed(void)
             break;
 #endif
         case U2F_COMMAND_MSG:
-            fido_u2f_command_msg(TRANSPORT_HID);
+            fido_u2f_command_msg_hid();
             break;
         case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor(TRANSPORT_HID);
+            fido_ctap2_command_cbor_hid();
             break;
         case MNT_COMMAND_INSTALL_ATTESTATION:
         case MNT_COMMAND_RESET_ATTESTATION:
-            fido_development_command(TRANSPORT_HID);
+            fido_development_command_hid();
             break;
         case (0x80 | MNT_COMMAND_BASE):
-            fido_maintenance_command(TRANSPORT_HID);
+            fido_maintenance_command_hid();
             break;
         default:
             // 不正なコマンドであるため
@@ -242,19 +242,19 @@ static void on_ble_request_receive_completed(void)
             if (fido_ble_receive_ctap2_command() != 0x00) {
                 if (fido_ble_receive_ctap2_command() < MNT_COMMAND_BASE) {
                     // CTAP2コマンドを処理する。
-                    fido_ctap2_command_cbor(TRANSPORT_BLE);
+                    fido_ctap2_command_cbor_ble();
                 } else {
                     // 管理用コマンドを処理する。
-                    fido_maintenance_command(TRANSPORT_BLE);
+                    fido_maintenance_command_ble();
                 }
             } else {
                 // U2Fコマンドを処理する。
-                fido_u2f_command_msg(TRANSPORT_BLE);
+                fido_u2f_command_msg_ble();
             }
             break;
         case CTAP2_COMMAND_PING:
             // PINGレスポンスを実行
-            fido_u2f_command_ping(TRANSPORT_BLE);
+            fido_u2f_command_ping_ble();
             break;
         case U2F_COMMAND_CANCEL:
             // TODO: 後日実装
@@ -277,10 +277,6 @@ void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
             break;
         case TRANSPORT_BLE:
             on_ble_request_receive_completed();
-            break;
-        case TRANSPORT_NFC:
-            // 現在のところ、CTAP2コマンドのみをサポート
-            fido_ctap2_command_cbor(transport_type);
             break;
         default:
             break;

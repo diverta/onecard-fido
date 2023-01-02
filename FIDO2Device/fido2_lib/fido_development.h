@@ -7,13 +7,11 @@
 #ifndef FIDO_DEVELOPMENT_H
 #define FIDO_DEVELOPMENT_H
 
-#include "fido_transport_define.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void        fido_development_command(TRANSPORT_TYPE transport_type);
+void        fido_development_command_hid(void);
 void        fido_development_command_report_sent(void);
 void        fido_development_command_attestation_record_updated(void);
 void        fido_development_command_aes_password_record_updated(void);

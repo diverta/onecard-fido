@@ -484,6 +484,26 @@ void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
     fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
 }
 
+void fido_u2f_command_msg_ble(void)
+{
+    fido_u2f_command_msg(TRANSPORT_BLE);
+}
+
+void fido_u2f_command_msg_hid(void)
+{
+    fido_u2f_command_msg(TRANSPORT_HID);
+}
+
+void fido_u2f_command_ping_ble(void)
+{
+    fido_u2f_command_ping(TRANSPORT_BLE);
+}
+
+void fido_u2f_command_ping_hid(void)
+{
+    fido_u2f_command_ping(TRANSPORT_HID);
+}
+
 void fido_u2f_command_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信

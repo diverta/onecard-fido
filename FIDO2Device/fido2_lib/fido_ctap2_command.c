@@ -518,7 +518,7 @@ static void command_authenticator_reset_resume_process(void)
     }
 }
 
-void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
+static void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
@@ -545,6 +545,16 @@ void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
         default:
             break;
     }
+}
+
+void fido_ctap2_command_cbor_ble()
+{
+    fido_ctap2_command_cbor(TRANSPORT_BLE);
+}
+
+void fido_ctap2_command_cbor_hid()
+{
+    fido_ctap2_command_cbor(TRANSPORT_HID);
 }
 
 static bool verify_ctap2_cbor_command(void)

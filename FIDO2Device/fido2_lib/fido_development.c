@@ -13,6 +13,7 @@
 #include "fido_define.h"
 #include "fido_development.h"
 #include "fido_maintenance_define.h"
+#include "fido_transport_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -45,7 +46,7 @@ static uint8_t get_command_byte(void)
     return cmd;
 }
 
-void fido_development_command(TRANSPORT_TYPE transport_type)
+static void fido_development_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
@@ -65,6 +66,11 @@ void fido_development_command(TRANSPORT_TYPE transport_type)
 
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
+}
+
+void fido_development_command_hid(void)
+{
+    fido_development_command(TRANSPORT_HID);
 }
 
 void fido_development_command_report_sent(void)
