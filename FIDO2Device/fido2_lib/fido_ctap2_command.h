@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "fido_common.h"
+#include "fido_transport_define.h"
 
 #ifdef __cplusplus
 extern "C" {

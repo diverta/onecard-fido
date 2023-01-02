@@ -7,7 +7,7 @@
 #ifndef FIDO_DEVELOPMENT_H
 #define FIDO_DEVELOPMENT_H
 
-#include "fido_common.h"
+#include "fido_transport_define.h"
 
 #ifdef __cplusplus
 extern "C" {

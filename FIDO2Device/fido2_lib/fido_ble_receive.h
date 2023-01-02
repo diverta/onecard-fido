@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include "fido_common.h"
+#include "fido_transport_define.h"
     
 // リクエストデータに含まれるBLEヘッダーを保持
 typedef struct {
