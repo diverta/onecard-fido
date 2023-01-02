@@ -133,8 +133,10 @@ static uint16_t decipher(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_openpgp_crypto_pso(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_crypto_pso(void *p_capdu, void *p_rapdu) 
 {
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 == 0x9e && capdu->p2 == 0x9a) {
         // RSA鍵を使用し署名生成
         return compute_digital_signature(capdu, rapdu);

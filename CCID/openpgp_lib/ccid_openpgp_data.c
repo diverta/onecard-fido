@@ -37,9 +37,11 @@ static uint16_t update_attr_terminate(void)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_openpgp_data_terminate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_data_terminate(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -81,9 +83,11 @@ static uint16_t delete_all_objects(void)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_openpgp_data_activate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_data_activate(void *p_capdu, void *p_rapdu) 
 {
     // 無効化フラグを読み込み
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint8_t *terminated;
     if (ccid_openpgp_object_data_get(TAG_ATTR_TERMINATED, &terminated, NULL) == false) {
         return SW_UNABLE_TO_PROCESS;
@@ -182,7 +186,7 @@ static uint16_t update_data_object(command_apdu_t *capdu_)
     }
 }
 
-uint16_t ccid_openpgp_data_put(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_data_put(void *p_capdu, void *p_rapdu) 
 {
     // 管理機能認証が行われていない場合は終了
     if (ccid_pin_auth_assert_admin() == false) {
@@ -194,6 +198,8 @@ uint16_t ccid_openpgp_data_put(command_apdu_t *capdu, response_apdu_t *rapdu)
     //  ccid_openpgp_data_retry または
     //  ccid_openpgp_data_resume のいずれかが
     //  コールバックされます。
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint16_t sw = update_data_object(capdu);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
@@ -261,7 +267,7 @@ static uint16_t reset_sign_counter(void)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_openpgp_data_register_key(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t key_tag, uint8_t key_status) 
+uint16_t ccid_openpgp_data_register_key(void *p_capdu, void *p_rapdu, uint16_t key_tag, uint8_t key_status) 
 {
     // 鍵種別／ステータスを待避
     m_key_tag = key_tag;
@@ -275,6 +281,8 @@ uint16_t ccid_openpgp_data_register_key(command_apdu_t *capdu, response_apdu_t *
     uint16_t sw = register_key();
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+        response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
         ccid_openpgp_object_resume_prepare(capdu, rapdu);
         m_flash_func = ccid_openpgp_data_register_key;
     }

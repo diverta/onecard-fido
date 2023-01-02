@@ -7,7 +7,7 @@
 #ifndef CCID_OPENPGP_H
 #define CCID_OPENPGP_H
 
-#include "ccid_apdu.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,8 +82,8 @@ extern "C" {
 //
 // 関数群
 //
-bool ccid_openpgp_aid_is_applet(command_apdu_t *capdu);
-void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
+bool ccid_openpgp_aid_is_applet(void *p_capdu);
+void ccid_openpgp_apdu_process(void *p_capdu, void *p_rapdu);
 void ccid_openpgp_stop_applet(void);
 
 #ifdef __cplusplus

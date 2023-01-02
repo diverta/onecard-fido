@@ -72,9 +72,11 @@ void ccid_openpgp_pin_pw_clear_validated(void)
     pw3->is_validated = false;
 }
 
-uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_pin_auth(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
         return SW_WRONG_P1P2;
     }
@@ -154,9 +156,11 @@ static void ccid_openpgp_pin_auth_resume(void)
     ccid_openpgp_object_resume_process(SW_NO_ERROR);
 }
 
-uint16_t ccid_openpgp_pin_update(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_pin_update(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -278,9 +282,11 @@ static void auth_with_resetting_code_resume(void)
     }
 }
 
-uint16_t ccid_openpgp_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_pin_reset(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if ((capdu->p1 != 0x00 && capdu->p1 != 0x02) || capdu->p2 != 0x81) {
         return SW_WRONG_P1P2;
     }
@@ -336,7 +342,7 @@ static void ccid_openpgp_pin_reset_resume(void)
     ccid_openpgp_object_resume_process(SW_NO_ERROR);
 }
 
-uint16_t ccid_openpgp_pin_update_reset_code(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_pin_update_reset_code(void *p_capdu, void *p_rapdu) 
 {
     // 管理用PINによる認証が行われていない場合は終了
     if (ccid_pin_auth_assert_admin() == false) {
@@ -347,6 +353,8 @@ uint16_t ccid_openpgp_pin_update_reset_code(command_apdu_t *capdu, response_apdu
     m_pw = ccid_pin_auth_pin_t(OPGP_PIN_RC);
 
     // パラメーターチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if ((capdu->lc > 0 && capdu->lc < m_pw->size_min) || capdu->lc > m_pw->size_max) {
         return SW_WRONG_LENGTH;
     }

@@ -272,9 +272,11 @@ static void key_pair_generate_response(response_apdu_t *rapdu, uint8_t *key_attr
     }
 }
 
-uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_key_pair_generate(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -350,9 +352,11 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
 //
 // 鍵インポート処理
 // 
-uint16_t ccid_openpgp_key_import(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_key_import(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x3f || capdu->p2 != 0xff) {
         return SW_WRONG_P1P2;
     }

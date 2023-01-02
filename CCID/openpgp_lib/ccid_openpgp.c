@@ -66,8 +66,9 @@ static const uint8_t extended_capabilities[] = {
     HI(OPGP_MAX_DO_LENGTH), LO(OPGP_MAX_DO_LENGTH),
     0x00, 0x00};
 
-bool ccid_openpgp_aid_is_applet(command_apdu_t *capdu)
+bool ccid_openpgp_aid_is_applet(void *p_capdu)
 {
+    command_apdu_t *capdu = (command_apdu_t *)p_capdu;
     return (capdu->lc == 6 && memcmp(capdu->data, aid, capdu->lc) == 0);
 }
 
@@ -430,9 +431,11 @@ static uint16_t openpgp_ins_reset_retry_counter(command_apdu_t *capdu, response_
     return ccid_openpgp_pin_reset(capdu, rapdu);
 }
 
-void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_openpgp_apdu_process(void *p_capdu, void *p_rapdu)
 {
     // レスポンス長をゼロクリア
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     rapdu->len = 0;
 
     // CLAのチェック
