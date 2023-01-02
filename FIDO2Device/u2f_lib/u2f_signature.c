@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "fido_command_common.h"
+#include "u2f_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -17,14 +18,7 @@ fido_log_module_register(u2f_signature);
 // ハッシュ化データに関する情報
 static uint8_t hash_digest[SHA_256_HASH_SIZE];
 
-// ASN.1形式に変換された署名を格納する領域の大きさ
-#define ASN1_SIGNATURE_MAXLEN 72
-
-#define ASN_INT 0x02;
-#define ASN_SEQUENCE 0x30;
-
 // 署名ベースおよび署名を編集するための作業領域（固定長）
-#define SIGNATURE_BASE_BUFFER_LENGTH 384
 static uint8_t signature_data_buffer[SIGNATURE_BASE_BUFFER_LENGTH];
 static size_t  signature_data_size;
 

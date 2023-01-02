@@ -17,7 +17,6 @@
 //   keyhandle_buffer
 //     暗号化された後のキーハンドル。
 //     U2Fサーバー／クライアントとの受け渡しに使用
-#define KEYHANDLE_MAX_SIZE 96
 static uint8_t keyhandle_base_buffer[KEYHANDLE_MAX_SIZE];
 static uint8_t keyhandle_buffer[KEYHANDLE_MAX_SIZE];
 static size_t  keyhandle_buffer_block_size;
