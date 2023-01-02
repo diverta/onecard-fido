@@ -66,7 +66,7 @@ static uint8_t *get_cbor_data_buffer(void)
             buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
-            buffer = fido_ble_receive_apdu()->data + 1;
+            buffer = fido_ble_receive_apdu_data() + 1;
             break;
         default:
             buffer = NULL;
@@ -83,7 +83,7 @@ static size_t get_cbor_data_buffer_size(void)
             size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
-            size = fido_ble_receive_apdu()->Lc - 1;
+            size = fido_ble_receive_apdu_Lc() - 1;
             break;
         default:
             size = 0;
@@ -105,7 +105,7 @@ static uint8_t get_ctap2_command_byte(void)
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         case TRANSPORT_BLE:
-            ctap2_cbor_buffer = fido_ble_receive_apdu()->data;
+            ctap2_cbor_buffer = fido_ble_receive_apdu_data();
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         default:
@@ -230,7 +230,7 @@ void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response_buffer, length);
     } 
 }
@@ -556,7 +556,7 @@ static bool verify_ctap2_cbor_command(void)
             }
             break;
         case TRANSPORT_BLE:
-            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+            if (fido_ble_receive_header_CMD() == U2F_COMMAND_MSG) {
                 // BLE CTAP2 command
                 return true;
             }

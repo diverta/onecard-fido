@@ -18,6 +18,7 @@
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_define.h"
+#include "fido_transport_define.h"
 #include "u2f_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -43,8 +44,8 @@ static uint8_t get_maintenance_command_byte(void)
             }
             break;
         case TRANSPORT_BLE:
-            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
-                cmd = fido_ble_receive_apdu()->data[0];
+            if (fido_ble_receive_header_CMD() == U2F_COMMAND_MSG) {
+                cmd = fido_ble_receive_apdu_data()[0];
             }
             break;
         default:
@@ -61,7 +62,7 @@ static uint8_t *get_maintenance_data_buffer(void)
             buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
-            buffer = fido_ble_receive_apdu()->data + 1;
+            buffer = fido_ble_receive_apdu_data() + 1;
             break;
         default:
             buffer = NULL;
@@ -78,7 +79,7 @@ static size_t get_maintenance_data_buffer_size(void)
             size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
-            size = fido_ble_receive_apdu()->Lc - 1;
+            size = fido_ble_receive_apdu_Lc() - 1;
             break;
         default:
             size = 0;
@@ -107,7 +108,7 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response_buffer, length);
     } 
 }

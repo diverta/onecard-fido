@@ -70,7 +70,7 @@ static uint8_t get_u2f_command_byte(void)
             cmd = fido_hid_receive_header_CMD();
             break;
         case TRANSPORT_BLE:
-            cmd = fido_ble_receive_header()->CMD;
+            cmd = fido_ble_receive_header_CMD();
             break;
         case TRANSPORT_NFC:
             // ヘッダーが存在しないため、
@@ -93,7 +93,7 @@ static FIDO_APDU_T *get_receive_apdu(void)
             p_apdu = (FIDO_APDU_T *)fido_hid_receive_apdu();
             break;
         case TRANSPORT_BLE:
-            p_apdu = fido_ble_receive_apdu();
+            p_apdu = (FIDO_APDU_T *)fido_ble_receive_apdu();
             break;
         default:
             p_apdu = NULL;
@@ -198,7 +198,7 @@ void fido_u2f_command_send_response(uint8_t *response, size_t length)
         fido_hid_send_command_response(cid, cmd, response, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response, length);
     } 
 }

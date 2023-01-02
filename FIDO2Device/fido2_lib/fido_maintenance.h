@@ -7,6 +7,8 @@
 #ifndef FIDO_MAINTENANCE_H
 #define FIDO_MAINTENANCE_H
 
+#include "fido_transport_define.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

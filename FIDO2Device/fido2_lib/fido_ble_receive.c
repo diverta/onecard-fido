@@ -15,6 +15,7 @@
 #include "fido_define.h"
 #include "fido_maintenance_define.h"
 #include "fido_receive_apdu.h"
+#include "fido_transport_define.h"
 
 // コマンド実行関数群
 #include "fido_command.h"
@@ -50,14 +51,29 @@ static FIDO_APDU_T  apdu_t;
 //
 static uint8_t m_ctap2_command;
 
-BLE_HEADER_T *fido_ble_receive_header(void)
+uint8_t fido_ble_receive_header_CMD(void)
 {
-    return &ble_header_t;
+    return ble_header_t.CMD;
 }
 
-FIDO_APDU_T *fido_ble_receive_apdu(void)
+uint8_t fido_ble_receive_header_ERROR(void)
+{
+    return ble_header_t.ERROR;
+}
+
+void *fido_ble_receive_apdu(void)
 {
     return &apdu_t;
+}
+
+uint8_t *fido_ble_receive_apdu_data(void)
+{
+    return apdu_t.data;
+}
+
+uint32_t fido_ble_receive_apdu_Lc(void)
+{
+    return apdu_t.Lc;
 }
 
 uint8_t fido_ble_receive_ctap2_command(void)
@@ -325,11 +341,10 @@ static bool invalid_command_in_pairing_mode(void)
 void fido_ble_receive_on_request_received(void)
 {
     // BLEヘッダーの参照を取得
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
+    if (fido_ble_receive_header_CMD() == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        fido_ble_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header()->ERROR);
+        fido_ble_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header_ERROR());
         return;
     }
     

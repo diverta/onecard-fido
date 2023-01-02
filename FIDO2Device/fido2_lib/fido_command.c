@@ -231,10 +231,8 @@ static void on_hid_request_receive_completed(void)
 
 static void on_ble_request_receive_completed(void)
 {
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-
     // データ受信後に実行すべき処理を判定
-    uint8_t       cmd = p_ble_header->CMD;
+    uint8_t cmd = fido_ble_receive_header_CMD();
     if (is_waiting_user_presence_verify(TRANSPORT_BLE, cmd)) {
         // ユーザー所在確認中はエラーを戻す
         return;
@@ -299,7 +297,7 @@ static void on_ble_response_send_completed(void)
     fido_ble_receive_frame_count_clear();
 
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = fido_ble_receive_header()->CMD;
+    uint8_t cmd = fido_ble_receive_header_CMD();
     switch (cmd) {
         case U2F_COMMAND_MSG:
             if (fido_ble_receive_ctap2_command() != 0x00) {
