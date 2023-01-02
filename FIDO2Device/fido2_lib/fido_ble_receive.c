@@ -8,7 +8,7 @@
 //
 // プラットフォーム非依存コード
 //
-#include "u2f.h"
+#include "u2f_define.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_maintenance_define.h"

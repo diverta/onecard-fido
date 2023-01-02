@@ -12,7 +12,7 @@
 #include "u2f_signature.h"
 
 // for U2F keyhandle, CTAP2 credential id
-#include "u2f.h"
+#include "u2f_define.h"
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
 

@@ -21,7 +21,7 @@
 #include "fido_maintenance.h"
 #include "fido_maintenance_define.h"
 #include "ctap2_common.h"
-#include "u2f.h"
+#include "u2f_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

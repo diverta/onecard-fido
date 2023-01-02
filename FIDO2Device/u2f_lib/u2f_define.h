@@ -1,12 +1,12 @@
 /* 
- * File:   u2f.h
+ * File:   u2f_define.h
  * Author: makmorit
  *
  * Created on 2018/11/28, 16:03
  */
 
-#ifndef U2F_H
-#define U2F_H
+#ifndef U2F_DEFINE_H
+#define U2F_DEFINE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,5 +56,5 @@ extern "C" {
 }
 #endif
 
-#endif /* U2F_H */
+#endif /* U2F_DEFINE_H */
 

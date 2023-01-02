@@ -11,7 +11,7 @@
 //
 // プラットフォーム非依存コード
 //
-#include "u2f.h"
+#include "u2f_define.h"
 #include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"

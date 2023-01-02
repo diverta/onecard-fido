@@ -3,7 +3,7 @@
 
 #include "fido_command_common.h"
 #include "fido_common.h"
-#include "u2f.h"
+#include "u2f_define.h"
 #include "u2f_signature.h"
 #include "u2f_keyhandle.h"
 
