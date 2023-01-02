@@ -4,7 +4,7 @@
  *
  * Created on 2021/02/11, 15:46
  */
-#include "ccid.h"
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_pin.h"
 #include "ccid_openpgp.h"
@@ -234,7 +234,7 @@ bool ccid_openpgp_object_data_delete_all(void)
 //
 void ccid_openpgp_object_write_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -251,7 +251,7 @@ void ccid_openpgp_object_write_retry(void)
 
 void ccid_openpgp_object_write_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行

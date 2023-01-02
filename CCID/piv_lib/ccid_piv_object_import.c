@@ -4,7 +4,7 @@
  *
  * Created on 2020/09/16, 15:28
  */
-#include "ccid.h"
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_object.h"
@@ -107,7 +107,7 @@ uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 void ccid_piv_object_import_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 鍵インポート処理を再実行
@@ -124,7 +124,7 @@ void ccid_piv_object_import_retry(void)
 
 void ccid_piv_object_import_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success) {
         // Flash ROM書込みが完了した場合は正常レスポンス処理を指示

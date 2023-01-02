@@ -6,7 +6,7 @@
  */
 #include <string.h>
 
-#include "ccid.h"
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
@@ -77,7 +77,7 @@ uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu
 
 void ccid_ykpiv_ins_set_mgmkey_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // パスワード登録処理を再実行
@@ -94,7 +94,7 @@ void ccid_ykpiv_ins_set_mgmkey_retry(void)
 
 void ccid_ykpiv_ins_set_mgmkey_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success) {
         // Flash ROM書込みが完了した場合は正常レスポンス処理を指示
@@ -122,7 +122,7 @@ uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu
 
 void ccid_ykpiv_ins_import_key_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 鍵インポート処理を再実行
@@ -139,7 +139,7 @@ void ccid_ykpiv_ins_import_key_retry(void)
 
 void ccid_ykpiv_ins_import_key_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success) {
         // Flash ROM書込みが完了した場合は正常レスポンス処理を指示
@@ -207,7 +207,7 @@ uint16_t ccid_ykpiv_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 void ccid_ykpiv_ins_reset_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // PIVオブジェクトファイル消去処理を再実行
@@ -224,7 +224,7 @@ void ccid_ykpiv_ins_reset_retry(void)
 
 void ccid_ykpiv_ins_reset_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success) {
         // Flash ROM書込みが完了した場合は正常レスポンス処理を指示

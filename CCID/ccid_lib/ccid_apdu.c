@@ -404,3 +404,10 @@ void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu)
     // レスポンスAPDUの送信を指示
     ccid_resume_reader_to_pc_data_block();
 }
+
+void ccid_apdu_assert(void *p_capdu, void *p_rapdu)
+{
+    if (p_capdu == NULL || p_rapdu == NULL) {
+        while(true);
+    }
+}

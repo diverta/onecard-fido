@@ -45,6 +45,7 @@ void ccid_apdu_process(void);
 void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu);
 bool ccid_apdu_response_is_pending(void);
 void ccid_apdu_response_set_pending(bool b);
+void ccid_apdu_assert(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

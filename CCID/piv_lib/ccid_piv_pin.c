@@ -6,7 +6,7 @@
  */
 #include <string.h>
 
-#include "ccid.h"
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
@@ -313,7 +313,7 @@ static void ccid_piv_pin_auth_resume(command_apdu_t *capdu, response_apdu_t *rap
 //
 void ccid_piv_pin_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -351,7 +351,7 @@ void ccid_piv_pin_retry(void)
 
 void ccid_piv_pin_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success == false) {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
