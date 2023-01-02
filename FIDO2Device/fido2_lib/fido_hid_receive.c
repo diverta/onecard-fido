@@ -18,6 +18,7 @@
 #include "fido_maintenance_define.h"
 #include "fido_receive_apdu.h"
 #include "fido_hid_send.h"
+#include "fido_transport_define.h"
 #include "u2f_define.h"
 
 // コマンド実行関数群
@@ -62,14 +63,34 @@ static FIDO_APDU_T  apdu_t;
 static uint8_t request_frame_buffer[USBD_HID_MAX_PAYLOAD_SIZE];
 static size_t  request_frame_number = 0;
 
-HID_HEADER_T *fido_hid_receive_header(void)
+uint8_t fido_hid_receive_header_CMD(void)
 {
-    return &hid_header_t;
+    return hid_header_t.CMD;
 }
 
-FIDO_APDU_T *fido_hid_receive_apdu(void)
+uint32_t fido_hid_receive_header_CID(void)
+{
+    return hid_header_t.CID;
+}
+
+uint8_t fido_hid_receive_header_ERROR(void)
+{
+    return hid_header_t.ERROR;
+}
+
+void *fido_hid_receive_apdu(void)
 {
     return &apdu_t;
+}
+
+uint8_t *fido_hid_receive_apdu_data(void)
+{
+    return apdu_t.data;
+}
+
+uint32_t fido_hid_receive_apdu_Lc(void)
+{
+    return apdu_t.Lc;
 }
 
 static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_T *p_apdu)
@@ -437,14 +458,14 @@ void fido_hid_receive_on_request_received(void)
     // 受信リクエストフレーム数を初期化
     request_frame_number = 0;
 
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header_CMD();
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        fido_hid_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header()->ERROR);
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header_ERROR());
         return;
     }
 
-    uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cid = fido_hid_receive_header_CID();
     uint32_t cid_curr = fido_hid_channel_current_cid();
     if (cmd != FIDO_COMMAND_INIT && cmd < (MNT_COMMAND_BASE | 0x80) && cid != cid_curr) {
         // INIT以外のコマンドを受信したら、

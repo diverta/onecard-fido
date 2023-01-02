@@ -63,7 +63,7 @@ static uint8_t *get_cbor_data_buffer(void)
     uint8_t *buffer;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            buffer = fido_hid_receive_apdu()->data + 1;
+            buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
             buffer = fido_ble_receive_apdu()->data + 1;
@@ -80,7 +80,7 @@ static size_t get_cbor_data_buffer_size(void)
     size_t size;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            size = fido_hid_receive_apdu()->Lc - 1;
+            size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
             size = fido_ble_receive_apdu()->Lc - 1;
@@ -101,7 +101,7 @@ static uint8_t get_ctap2_command_byte(void)
     //   残りは全てCBORデータバイトとなっている
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            ctap2_cbor_buffer = fido_hid_receive_apdu()->data;
+            ctap2_cbor_buffer = fido_hid_receive_apdu_data();
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         case TRANSPORT_BLE:
@@ -171,7 +171,7 @@ void fido_ctap2_command_hid_init(void)
     memset(&init_res, 0x00, sizeof(init_res));
 
     // nonce を取得
-    uint8_t *nonce = fido_hid_receive_apdu()->data;
+    uint8_t *nonce = fido_hid_receive_apdu_data();
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -184,25 +184,25 @@ void fido_ctap2_command_hid_init(void)
     init_res.cflags        = CTAP2_CAPABILITY_WINK | CTAP2_CAPABILITY_LOCK | CTAP2_CAPABILITY_CBOR;
 
     // レスポンスデータを転送
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
 void fido_ctap2_command_wink(void)
 {
     // ステータスなしでレスポンスする
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 void fido_ctap2_command_lock(void)
 {
     // ロックコマンドのパラメーターを取得する
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
+    uint8_t  lock_param = fido_hid_receive_apdu_data()[0];
 
     if (lock_param > 0) {
         // パラメーターが指定されていた場合
@@ -225,8 +225,8 @@ void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     //   １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint32_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint32_t cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
@@ -551,7 +551,7 @@ static bool verify_ctap2_cbor_command(void)
 {
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            if (fido_hid_receive_header()->CMD == CTAP2_COMMAND_CBOR) {
+            if (fido_hid_receive_header_CMD() == CTAP2_COMMAND_CBOR) {
                 return true;
             }
             break;

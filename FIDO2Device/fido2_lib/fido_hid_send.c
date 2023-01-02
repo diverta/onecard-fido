@@ -211,6 +211,6 @@ void fido_hid_send_status_response(uint8_t cmd, uint8_t status_code)
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cid = fido_hid_receive_header_CID();
     fido_hid_send_command_response_no_callback(cid, cmd, status_code);
 }

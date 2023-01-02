@@ -177,7 +177,7 @@ static bool is_waiting_user_presence_verify(TRANSPORT_TYPE transport_type, uint8
 static void on_hid_request_receive_completed(void)
 {
     // データ受信後に実行すべき処理を判定
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header_CMD();
     if (is_waiting_user_presence_verify(TRANSPORT_HID, cmd)) {
         // ユーザー所在確認中はエラーを戻す
         return;
@@ -329,7 +329,7 @@ static void on_ble_response_send_completed(void)
 void on_hid_response_send_completed(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header_CMD();
     switch (cmd) {
         case CTAP2_COMMAND_INIT:
             fido_ctap2_command_init_response_sent();

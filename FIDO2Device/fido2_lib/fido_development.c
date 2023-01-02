@@ -36,7 +36,7 @@ static uint8_t get_command_byte(void)
     uint8_t cmd;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD;
+            cmd = fido_hid_receive_header_CMD();
             break;
         default:
             cmd = 0x00;
@@ -98,8 +98,8 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
 
     // レスポンスデータを送信パケットに設定し送信
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint8_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint8_t  cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
     } 
 }
@@ -116,8 +116,8 @@ static void send_command_error_response(uint8_t ctap2_status)
 //
 static void command_install_attestation(void)
 {
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    uint16_t length = fido_hid_receive_apdu()->Lc;
+    uint8_t *data   = fido_hid_receive_apdu_data();
+    uint16_t length = fido_hid_receive_apdu_Lc();
 
     // 元データチェック
     if (data == NULL || length == 0) {
@@ -154,7 +154,7 @@ static bool generate_random_password(void)
 
 void fido_development_command_attestation_record_updated(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION) {
+    if (fido_hid_receive_header_CMD() == MNT_COMMAND_INSTALL_ATTESTATION) {
         // 証明書データ書込完了
         fido_log_debug("Update FIDO attestation record completed ");
 
@@ -167,8 +167,8 @@ void fido_development_command_attestation_record_updated(void)
 
 void fido_development_command_aes_password_record_updated(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_ATTESTATION ||
-        fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
+    if (fido_hid_receive_header_CMD() == MNT_COMMAND_INSTALL_ATTESTATION ||
+        fido_hid_receive_header_CMD() == MNT_COMMAND_RESET_ATTESTATION) {
         // AESパスワード生成完了
         fido_log_debug("Update AES password record completed ");
 
@@ -192,7 +192,7 @@ static void command_reset_attestation(void)
 
 void fido_development_command_attestation_file_deleted(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
+    if (fido_hid_receive_header_CMD() == MNT_COMMAND_RESET_ATTESTATION) {
         // 秘密鍵／証明書削除が完了
         fido_log_debug("Erase FIDO attestation file completed ");
 
@@ -205,7 +205,7 @@ void fido_development_command_attestation_file_deleted(void)
 
 void fido_development_command_token_counter_file_deleted(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_RESET_ATTESTATION) {
+    if (fido_hid_receive_header_CMD() == MNT_COMMAND_RESET_ATTESTATION) {
         // 署名カウンター情報削除が完了
         fido_log_debug("Erase token counter file completed");
 
@@ -222,7 +222,7 @@ void fido_development_command_token_counter_file_deleted(void)
 void fido_development_command_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header_CMD();
     switch (cmd) {
         case MNT_COMMAND_RESET_ATTESTATION:
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
@@ -242,7 +242,7 @@ void fido_development_command_flash_gc_done(void)
     // for nRF52840:
     // FDSリソース不足解消のためGCが実行された場合は、
     // GC実行直前の処理を再実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header_CMD();
     switch (cmd) {
         case MNT_COMMAND_RESET_ATTESTATION:
             fido_log_warning("Reset FIDO attestation retry: FDS GC done ");

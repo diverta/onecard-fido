@@ -8,36 +8,22 @@
 #define FIDO_HID_RECEIVE_H
 
 #include <stdbool.h>
-#include "fido_common.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// リクエストデータに含まれるHIDヘッダーを保持
-typedef struct {
-    uint32_t CID;
-    uint8_t  CMD;
-    uint32_t LEN;
-    uint8_t  SEQ;
+bool        fido_hid_receive_request_frame(uint8_t *p_buff, size_t size);
+void        fido_hid_receive_on_request_received(void);
+uint8_t     fido_hid_receive_header_CMD(void);
+uint32_t    fido_hid_receive_header_CID(void);
+uint8_t     fido_hid_receive_header_ERROR(void);
+void       *fido_hid_receive_apdu(void);
+uint8_t    *fido_hid_receive_apdu_data(void);
+uint32_t    fido_hid_receive_apdu_Lc(void);
 
-    // リクエストデータの検査中に
-    // 確認されたエラーを保持
-    uint8_t ERROR;
-
-    // リクエストデータの検査中に
-    // 設定されたステータスワードを保持
-    uint16_t STATUS_WORD;
-
-    // 後続リクエストがあるかどうかを保持
-    bool CONT;
-} HID_HEADER_T;
-
-HID_HEADER_T *fido_hid_receive_header(void);
-FIDO_APDU_T  *fido_hid_receive_apdu(void);
-
-bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size);
-void fido_hid_receive_on_request_received(void);
 
 #ifdef __cplusplus
 }

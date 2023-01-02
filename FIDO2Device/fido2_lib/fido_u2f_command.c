@@ -67,7 +67,7 @@ static uint8_t get_u2f_command_byte(void)
     uint8_t cmd;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD;
+            cmd = fido_hid_receive_header_CMD();
             break;
         case TRANSPORT_BLE:
             cmd = fido_ble_receive_header()->CMD;
@@ -90,7 +90,7 @@ static FIDO_APDU_T *get_receive_apdu(void)
     FIDO_APDU_T *p_apdu;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            p_apdu = fido_hid_receive_apdu();
+            p_apdu = (FIDO_APDU_T *)fido_hid_receive_apdu();
             break;
         case TRANSPORT_BLE:
             p_apdu = fido_ble_receive_apdu();
@@ -193,8 +193,8 @@ void fido_u2f_command_send_response(uint8_t *response, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint8_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint8_t  cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
@@ -209,7 +209,7 @@ void fido_u2f_command_hid_init(void)
     memset(&init_res, 0x00, sizeof(init_res));
 
     // nonce を取得
-    uint8_t *nonce = fido_hid_receive_apdu()->data;
+    uint8_t *nonce = fido_hid_receive_apdu_data();
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -222,8 +222,8 @@ void fido_u2f_command_hid_init(void)
     init_res.cflags        = 0;
 
     // レスポンスデータを転送
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
     fido_log_info("U2F HID init done");
 }

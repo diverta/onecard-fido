@@ -37,8 +37,8 @@ static uint8_t get_maintenance_command_byte(void)
     uint8_t cmd = 0x00;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            if (fido_hid_receive_header()->CMD == (0x80 | MNT_COMMAND_BASE)) {
-                cmd = fido_hid_receive_apdu()->data[0];
+            if (fido_hid_receive_header_CMD() == (0x80 | MNT_COMMAND_BASE)) {
+                cmd = fido_hid_receive_apdu_data()[0];
             }
             break;
         case TRANSPORT_BLE:
@@ -57,7 +57,7 @@ static uint8_t *get_maintenance_data_buffer(void)
     uint8_t *buffer;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            buffer = fido_hid_receive_apdu()->data + 1;
+            buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
             buffer = fido_ble_receive_apdu()->data + 1;
@@ -74,7 +74,7 @@ static size_t get_maintenance_data_buffer_size(void)
     size_t size;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            size = fido_hid_receive_apdu()->Lc - 1;
+            size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
             size = fido_ble_receive_apdu()->Lc - 1;
@@ -101,8 +101,8 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
 
     // レスポンスデータを送信パケットに設定し送信
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint8_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint8_t  cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
