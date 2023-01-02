@@ -26,8 +26,10 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_service_common.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_define.h"
 #include "fido_ble_pairing.h"
 #include "fido_ble_service.h"
+#include "fido_ble_service_define.h"
 #include "fido_ble_event.h"
 
 #include "fido_platform.h"

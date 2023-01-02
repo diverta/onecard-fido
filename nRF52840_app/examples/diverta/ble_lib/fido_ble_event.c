@@ -15,6 +15,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "fido_ble_service.h"
+#include "fido_ble_service_define.h"
 #include "fido_ble_pairing.h"
 #include "fido_timer_plat.h"
 
@@ -123,7 +124,7 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     // NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
     bool ret = false;
-    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    ble_u2f_t *p_u2f = (ble_u2f_t *)fido_ble_get_U2F_context();
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             ble_u2f_on_connect(p_u2f, p_ble_evt);
