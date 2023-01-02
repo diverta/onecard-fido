@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"

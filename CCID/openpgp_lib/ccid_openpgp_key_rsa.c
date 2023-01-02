@@ -4,6 +4,8 @@
  *
  * Created on 2021/02/18, 15:05
  */
+#include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_key_rsa.h"

@@ -5,6 +5,7 @@
  * Created on 2020/09/16, 15:28
  */
 #include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_object.h"
 

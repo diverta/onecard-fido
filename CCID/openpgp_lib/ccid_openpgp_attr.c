@@ -6,6 +6,7 @@
  */
 #include <string.h>
 
+#include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_object.h"

@@ -4,8 +4,7 @@
  *
  * Created on 2020/05/29, 12:37
  */
-#include "ccid.h"
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_process.h"
 
 // 業務処理／HW依存処理間のインターフェース

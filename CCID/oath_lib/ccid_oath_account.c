@@ -6,6 +6,7 @@
  */
 #include <string.h>
 
+#include "ccid_define.h"
 #include "ccid_oath_account.h"
 #include "ccid_oath_define.h"
 #include "ccid_oath_object.h"

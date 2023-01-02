@@ -4,6 +4,7 @@
  *
  * Created on 2022/08/25, 16:12
  */
+#include "ccid_define.h"
 #include "ccid_oath.h"
 #include "ccid_oath_define.h"
 #include "ccid_oath_list.h"

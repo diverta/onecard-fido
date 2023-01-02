@@ -6,7 +6,7 @@
  */
 #include <string.h>
 
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin_auth.h"
 

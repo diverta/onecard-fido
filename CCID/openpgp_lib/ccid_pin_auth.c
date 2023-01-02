@@ -6,7 +6,7 @@
  */
 #include <string.h>
 
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_openpgp_object.h"
 #include "ccid_pin.h"
 

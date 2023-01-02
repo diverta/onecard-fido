@@ -4,6 +4,7 @@
  *
  * Created on 2021/02/10, 17:17
  */
+#include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_pin.h"
 #include "ccid_openpgp_object.h"

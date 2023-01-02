@@ -4,6 +4,7 @@
  *
  * Created on 2020/06/03, 14:55
  */
+#include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_authenticate.h"

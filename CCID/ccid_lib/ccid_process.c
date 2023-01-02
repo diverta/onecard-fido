@@ -4,7 +4,7 @@
  *
  * Created on 2022/04/29, 9:07
  */
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_oath.h"
 #include "ccid_openpgp.h"
