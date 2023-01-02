@@ -175,7 +175,7 @@ void fido_hid_send_input_report_complete(void)
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // FIDOレスポンス送信完了時の処理を実行
-        fido_command_on_response_send_completed(TRANSPORT_HID);
+        fido_command_on_hid_response_send_completed();
         
     } else {
         // 次のフレームの送信を実行

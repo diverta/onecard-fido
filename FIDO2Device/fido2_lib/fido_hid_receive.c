@@ -486,5 +486,5 @@ void fido_hid_receive_on_request_received(void)
     }
     
     // データ受信後に実行すべき処理
-    fido_command_on_request_receive_completed(TRANSPORT_HID);
+    fido_command_on_hid_request_receive_completed();
 }

@@ -9,7 +9,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "fido_transport_define.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,8 +27,10 @@ void fido_user_presence_verify_end(void);
 void fido_user_presence_verify_cancel(void);
 void fido_user_presence_verify_end_message(const char *func_name, bool tup_done);
 
-void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type);
-void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type);
+void fido_command_on_ble_request_receive_completed(void);
+void fido_command_on_ble_response_send_completed(void);
+void fido_command_on_hid_request_receive_completed(void);
+void fido_command_on_hid_response_send_completed(void);
 bool fido_command_is_valid_ble_command(uint8_t command);
 
 #ifdef __cplusplus
@@ -37,4 +38,3 @@ bool fido_command_is_valid_ble_command(uint8_t command);
 #endif
 
 #endif /* FIDO_COMMAND_H */
-

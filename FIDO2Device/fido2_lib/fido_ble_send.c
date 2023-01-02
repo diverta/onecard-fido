@@ -176,7 +176,7 @@ static void ble_u2f_status_response_send(bool no_callback)
         if (send_info_t.sent_length == send_info_t.data_length) {
             // FIDOレスポンス送信完了時の処理を実行
             if (!no_callback_flag) {
-                fido_command_on_response_send_completed(TRANSPORT_BLE);
+                fido_command_on_ble_response_send_completed();
             }
         }
     }

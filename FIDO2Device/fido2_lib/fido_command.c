@@ -21,6 +21,7 @@
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_define.h"
+#include "fido_transport_define.h"
 #include "ctap2_common.h"
 #include "u2f_define.h"
 
@@ -264,7 +265,7 @@ static void on_ble_request_receive_completed(void)
     }
 }
 
-void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
+static void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
 {
     if (abort_flag) {
         // 全業務閉塞中の場合はここで終了
@@ -281,6 +282,16 @@ void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
         default:
             break;
     }
+}
+
+void fido_command_on_ble_request_receive_completed(void)
+{
+    fido_command_on_request_receive_completed(TRANSPORT_BLE);
+}
+
+void fido_command_on_hid_request_receive_completed(void)
+{
+    fido_command_on_request_receive_completed(TRANSPORT_HID);
 }
 
 //
@@ -349,7 +360,7 @@ void on_hid_response_send_completed(void)
     }
 }
 
-void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
+static void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
 {
     switch (transport_type) {
         case TRANSPORT_HID:
@@ -371,6 +382,16 @@ void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
         // 全色LEDを点灯させたのち、全業務を閉塞
         fido_status_indicator_abort();
     }
+}
+
+void fido_command_on_ble_response_send_completed(void)
+{
+    fido_command_on_response_send_completed(TRANSPORT_BLE);
+}
+
+void fido_command_on_hid_response_send_completed(void)
+{
+    fido_command_on_response_send_completed(TRANSPORT_HID);
 }
 
 //

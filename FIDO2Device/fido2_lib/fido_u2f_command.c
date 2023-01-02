@@ -24,6 +24,7 @@
 #include "fido_hid_send.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_transport_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

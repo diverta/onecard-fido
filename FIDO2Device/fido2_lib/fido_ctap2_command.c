@@ -26,6 +26,7 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
+#include "fido_transport_define.h"
 #include "u2f_define.h"
 #include "ctap2_pubkey_credential.h"
 
