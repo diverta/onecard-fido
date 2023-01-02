@@ -10,6 +10,7 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
+#include "fido_define.h"
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {

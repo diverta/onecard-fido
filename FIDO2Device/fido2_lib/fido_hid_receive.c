@@ -11,6 +11,7 @@
 //
 #include "ctap2_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_maintenance_define.h"

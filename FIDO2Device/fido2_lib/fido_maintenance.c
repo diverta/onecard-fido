@@ -12,6 +12,7 @@
 //
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_define.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"

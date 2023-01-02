@@ -7,6 +7,7 @@
 #include "ctap2_cbor.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"

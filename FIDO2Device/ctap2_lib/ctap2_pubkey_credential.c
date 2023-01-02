@@ -11,6 +11,7 @@
 #include "ctap2_common.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"

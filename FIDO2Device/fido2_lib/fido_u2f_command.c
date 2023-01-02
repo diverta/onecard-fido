@@ -18,6 +18,7 @@
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"

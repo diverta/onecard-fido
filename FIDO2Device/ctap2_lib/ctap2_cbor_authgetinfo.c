@@ -6,6 +6,7 @@
  */
 #include "ctap2_cbor.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "ctap2_common.h"
 
 // 業務処理／HW依存処理間のインターフェース
