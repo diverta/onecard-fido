@@ -145,7 +145,7 @@ void fido_user_presence_verify_end_message(const char *func_name, bool tup_done)
         fido_log_info("%s: completed the test of user presence", func_name);
     } else {
         // ユーザー所在確認省略時のメッセージを出力
-        fido_log_info("%s: omitted the test of user presence", func_name);
+        fido_log_info("%s: skipped the test of user presence", func_name);
     }
 }
 
