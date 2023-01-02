@@ -9,6 +9,7 @@
 // プラットフォーム非依存コード
 //
 #include "u2f_define.h"
+#include "fido_ble_define.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_define.h"
@@ -30,8 +31,7 @@ fido_log_module_register(fido_ble_receive);
 
 // u2f control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
-#define U2F_MAX_RECV_CHAR_LEN 64
-static uint8_t  control_point_buffer[U2F_MAX_RECV_CHAR_LEN];
+static uint8_t  control_point_buffer[BLE_U2F_MAX_RECV_CHAR_LEN];
 static uint16_t control_point_buffer_length;
 
 // 無通信タイムアウトタイマーが開始後、
@@ -116,7 +116,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         return false;
     }
 
-    if (p_ble_header->LEN > U2F_MAX_RECV_CHAR_LEN - 3) {
+    if (p_ble_header->LEN > sizeof(control_point_buffer) - 3) {
         // BLEヘッダーに設定されたデータ長が
         // 61文字を超える場合、後続データがあると判断
         fido_log_debug("u2f_request_receive: CONT frame will receive ");

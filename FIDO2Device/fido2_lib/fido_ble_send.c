@@ -11,6 +11,7 @@
 #include "u2f_define.h"
 #include "fido_command.h"
 #include "fido_common.h"
+#include "fido_ble_define.h"
 #include "fido_ble_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -25,7 +26,6 @@ fido_log_module_register(fido_ble_send);
 
 // u2f_status（レスポンスバッファ）には、
 // 64バイトまで書込み可能とします
-#define BLE_U2F_MAX_SEND_CHAR_LEN 64
 static uint8_t  u2f_status_buffer[BLE_U2F_MAX_SEND_CHAR_LEN];
 static uint16_t u2f_status_buffer_length;
 
