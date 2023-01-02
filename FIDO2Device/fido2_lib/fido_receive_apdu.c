@@ -86,11 +86,12 @@ static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_bu
     return lc_length;
 }
 
-uint8_t fido_receive_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+uint8_t fido_receive_apdu_header(void *apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     uint8_t apdu_header_length = 4;
     
     // APDUヘッダー項目を保持
+    FIDO_APDU_T *p_apdu = (FIDO_APDU_T *)apdu;
     p_apdu->CLA = control_point_buffer[offset];
     p_apdu->INS = control_point_buffer[offset + 1];
     p_apdu->P1  = control_point_buffer[offset + 2];
@@ -112,12 +113,13 @@ uint8_t fido_receive_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buf
     return apdu_header_length + lc_length;
 }
 
-void fido_receive_apdu_initialize(FIDO_APDU_T *p_apdu)
+void fido_receive_apdu_initialize(void *apdu)
 {
     // 確保領域は0で初期化
     memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
 
     // 確保領域のアドレスをAPDU情報にも保持
+    FIDO_APDU_T *p_apdu = (FIDO_APDU_T *)apdu;
     p_apdu->data = apdu_data_buffer;
 }
 
@@ -157,13 +159,14 @@ static uint16_t get_apdu_le_value(FIDO_APDU_T *p_apdu, uint8_t *received_data, u
     return le_length;
 }
 
-void fido_receive_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+void fido_receive_apdu_from_init_frame(void *apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Control Pointに格納されている
     // 受信データの先頭アドレスとデータ長を取得
     uint8_t *received_data        = control_point_buffer + offset;
     int      received_data_length = control_point_buffer_length - offset;
 
+    FIDO_APDU_T *p_apdu = (FIDO_APDU_T *)apdu;
     if (received_data_length > p_apdu->Lc) {
         // データの先頭パケットだが、データ長をオーバーしている場合、
         // オーバーした部分はLeバイトとして扱い、
@@ -185,12 +188,13 @@ void fido_receive_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_poi
 #endif
 }
 
-void fido_receive_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
+void fido_receive_apdu_from_cont_frame(void *apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
 {
     // 受信データの先頭アドレスとデータ長を取得
     uint8_t *received_data        = control_point_buffer + 1;
     uint16_t received_data_length = control_point_buffer_length - 1;
 
+    FIDO_APDU_T *p_apdu = (FIDO_APDU_T *)apdu;
     if (p_apdu->data_length + received_data_length > p_apdu->Lc) {
         // データの最終パケットだが、データ長をオーバーしている場合、
         // オーバーした部分はLeバイトとして扱い、
