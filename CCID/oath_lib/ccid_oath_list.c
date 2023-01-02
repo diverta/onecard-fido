@@ -48,9 +48,11 @@ static int fetch_account_data(uint8_t *data, size_t size)
     return 0;
 }
 
-uint16_t ccid_oath_list(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_oath_list(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }

@@ -5,6 +5,7 @@
  * Created on 2022/06/15, 13:36
  */
 #include <string.h>
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_oath.h"
 #include "ccid_oath_account.h"

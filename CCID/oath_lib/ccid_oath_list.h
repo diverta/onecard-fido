@@ -14,7 +14,7 @@ extern "C" {
 //
 // 関数群
 //
-uint16_t    ccid_oath_list(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_oath_list(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

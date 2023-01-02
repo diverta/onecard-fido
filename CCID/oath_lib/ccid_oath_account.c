@@ -56,9 +56,11 @@ static void clear_buffers(void)
     memset(m_challange, 0, sizeof(m_challange));
 }
 
-uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_oath_account_add(void *p_capdu, void *p_rapdu)
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -211,9 +213,11 @@ uint16_t ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu)
     return sw;
 }
 
-uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_oath_account_delete(void *p_capdu, void *p_rapdu)
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -250,9 +254,11 @@ uint16_t ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu)
     return sw;
 }
 
-uint16_t ccid_oath_account_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_oath_account_reset(void *p_capdu, void *p_rapdu)
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }

@@ -7,7 +7,8 @@
 #ifndef CCID_ACCOUNT_H
 #define CCID_ACCOUNT_H
 
-#include "ccid_apdu.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,9 +17,9 @@ extern "C" {
 //
 // 関数群
 //
-uint16_t    ccid_oath_account_add(command_apdu_t *capdu, response_apdu_t *rapdu);
-uint16_t    ccid_oath_account_delete(command_apdu_t *capdu, response_apdu_t *rapdu);
-uint16_t    ccid_oath_account_reset(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_oath_account_add(void *p_capdu, void *p_rapdu);
+uint16_t    ccid_oath_account_delete(void *p_capdu, void *p_rapdu);
+uint16_t    ccid_oath_account_reset(void *p_capdu, void *p_rapdu);
 void        ccid_oath_account_retry(void);
 void        ccid_oath_account_resume(bool success);
 
