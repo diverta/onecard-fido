@@ -12,6 +12,7 @@
 #include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
 #include "fido_command.h"
 #include "fido_hid_channel.h"
+#include "fido_hid_define.h"
 #include "fido_hid_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース

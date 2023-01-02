@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "fido_hid_channel.h"
+#include "fido_hid_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -100,7 +101,8 @@ void fido_hid_channel_lock_cancel(void)
     fido_hid_channel_lock_timer_stop();
 }
 
-size_t fido_hid_payload_length_get(USB_HID_MSG_T *recv_msg)
+size_t fido_hid_payload_length_get(void *msg)
 {
+    USB_HID_MSG_T *recv_msg = (USB_HID_MSG_T *)msg;
     return ((recv_msg->pkt.init.bcnth << 8) & 0xff00) | (recv_msg->pkt.init.bcntl & 0x00ff);
 }
