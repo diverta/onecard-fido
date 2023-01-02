@@ -43,9 +43,11 @@ static void apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu, u
     ccid_apdu_resume_process(capdu, rapdu);
 }
 
-uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_ykpiv_ins_set_mgmkey(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0xff || capdu->p2 != 0xff) {
         return SW_WRONG_P1P2;
     }
@@ -107,9 +109,11 @@ void ccid_ykpiv_ins_set_mgmkey_resume(bool success)
     }
 }
 
-uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_ykpiv_ins_import_key(void *p_capdu, void *p_rapdu)
 {
     // 鍵インポート処理を実行
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint16_t sw = ccid_ykpiv_import_key(capdu, rapdu);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
@@ -192,9 +196,11 @@ static uint16_t erase_piv_object_file(command_apdu_t *capdu, response_apdu_t *ra
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_ykpiv_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_ykpiv_ins_reset(void *p_capdu, void *p_rapdu)
 {
     // PIVオブジェクトファイル消去処理を実行
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint16_t sw = erase_piv_object_file(capdu, rapdu);
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
@@ -237,9 +243,11 @@ void ccid_ykpiv_ins_reset_resume(bool success)
     }
 }
 
-uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_ykpiv_ins_get_version(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -261,9 +269,11 @@ uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapd
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_ykpiv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_ykpiv_ins_get_serial(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }

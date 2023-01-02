@@ -94,11 +94,11 @@ static bool parse_ber_tlv_info(uint8_t *data, BER_TLV_INFO *info)
     return true;
 }
 
-uint16_t ccid_piv_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r_apdu)
+uint16_t ccid_piv_general_authenticate(void *p_capdu, void *p_rapdu)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     // パラメーターのチェック
     if (capdu->data[0] != 0x7C) {

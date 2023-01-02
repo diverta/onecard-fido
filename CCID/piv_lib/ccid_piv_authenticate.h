@@ -7,7 +7,6 @@
 #ifndef CCID_PIV_AUTHENTICATE_H
 #define CCID_PIV_AUTHENTICATE_H
 
-#include "ccid_apdu.h"
 #include "ccid_piv_general_auth.h"
 
 #ifdef __cplusplus
@@ -43,10 +42,10 @@ extern "C" {
 // 関数群
 //
 void     ccid_piv_authenticate_reset_context(void);
-uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
-uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
-uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
-uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_internal(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_mutual_response(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info);
 
 #ifdef __cplusplus
 }

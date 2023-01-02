@@ -151,7 +151,7 @@ static uint16_t import_ecc_private_key(command_apdu_t *capdu)
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_ykpiv_import_key(command_apdu_t *capdu, response_apdu_t *rapdu)
+uint16_t ccid_ykpiv_import_key(void *p_capdu, void *p_rapdu)
 {
     // 管理コマンドが実行可能でない場合は終了
     if (ccid_piv_admin_mode_get() == false) {
@@ -159,6 +159,7 @@ uint16_t ccid_ykpiv_import_key(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // パラメーターのチェック
+    command_apdu_t *capdu = (command_apdu_t *)p_capdu;
     uint8_t alg = capdu->p1;
     uint8_t key_tag = capdu->p2;
     if (ccid_piv_object_is_key_tag_exist(key_tag) == false) {

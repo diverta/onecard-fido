@@ -7,7 +7,7 @@
 #ifndef CCID_PIV_GENERAL_AUTH_H
 #define CCID_PIV_GENERAL_AUTH_H
 
-#include "ccid_apdu.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +37,7 @@ typedef struct {
 //
 // 関数群
 //
-uint16_t ccid_piv_general_authenticate(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t ccid_piv_general_authenticate(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

@@ -167,11 +167,11 @@ static uint16_t authenticate_internal_RSA2048(uint8_t tag, uint8_t *input_data, 
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_internal(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("internal authenticate");
 
@@ -208,11 +208,11 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     }
 }
 
-uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     // ECDH with the PIV KMK
     // Documented in SP800-73-4 Part 2 Appendix A.5
@@ -262,11 +262,11 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("mutual authenticate request");
 
@@ -333,11 +333,11 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_mutual_response(void *p_capdu, void *p_rapdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("mutual authenticate response");
 

@@ -7,6 +7,7 @@
 #ifndef CCID_DEFINE_H
 #define CCID_DEFINE_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -86,6 +87,32 @@ extern "C" {
 #define SW_CLA_NOT_SUPPORTED        0x6E00
 #define SW_CHECKING_ERROR           0x6F00
 
+//
+// APDU関連定義
+//
+#define APDU_BUFFER_SIZE            1280
+#define APDU_DATA_SIZE              (APDU_BUFFER_SIZE + 2)
+
+typedef struct command_apdu {
+    uint8_t  cla;
+    uint8_t  ins;
+    uint8_t  p1;
+    uint8_t  p2;
+    size_t   lc;
+    size_t   le;
+    uint8_t *data;
+} command_apdu_t;
+
+typedef struct response_apdu {
+    uint8_t  data[APDU_BUFFER_SIZE];
+    uint16_t len;
+    uint16_t sw;
+    size_t   already_sent;
+} response_apdu_t;
+
+//
+// CCID Applet
+//
 typedef enum {
     APPLET_NONE,
     APPLET_PIV,

@@ -32,14 +32,14 @@ static void *m_flash_func = NULL;
 static command_apdu_t  *m_capdu;
 static response_apdu_t *m_rapdu;
 
-void ccid_oath_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_oath_object_resume_prepare(void *p_capdu, void *p_rapdu)
 {
     // Flash ROM書込みが完了するまで、レスポンスを抑止
     ccid_apdu_response_set_pending(true);
 
     // APDU格納領域の参照を待避
-    m_capdu = capdu;
-    m_rapdu = rapdu;
+    m_capdu = (command_apdu_t *)p_capdu;
+    m_rapdu = (response_apdu_t *)p_rapdu;
 }
 
 void ccid_oath_object_resume_response(uint16_t sw)

@@ -61,7 +61,7 @@ static size_t get_enough_space(uint8_t obj_tag)
     }
 }
 
-uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_object_import(void *p_capdu, void *p_rapdu) 
 {
     // 管理コマンドが実行可能でない場合は終了
     if (ccid_piv_admin_mode_get() == false) {
@@ -69,6 +69,8 @@ uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // 受信APDUデータの格納領域
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint8_t *data = capdu->data;
 
     // パラメーターのチェック

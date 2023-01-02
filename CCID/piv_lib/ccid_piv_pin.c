@@ -115,9 +115,11 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu, u
 //
 // PIN／PUK変更処理
 //
-uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_set(void *p_capdu, void *p_rapdu)
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -148,7 +150,7 @@ static uint16_t update_pin_code(command_apdu_t *capdu)
     return ccid_piv_pin_update(pin_type, update_pin);
 }
 
-void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     uint8_t pin_type = capdu->p2;
     char *tag_name = get_tagname(pin_type);
@@ -181,7 +183,7 @@ void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
-void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // PIN or PUK更新処理が正常に完了したので、正常レスポンス処理を指示
     fido_log_info("Update PIV %s success", get_tagname(capdu->p2));
@@ -191,8 +193,10 @@ void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapd
 //
 // PIN解除処理
 //
-uint16_t ccid_piv_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_reset(void *p_capdu, void *p_rapdu) 
 {
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -210,7 +214,7 @@ uint16_t ccid_piv_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
     return verify_pin_code(capdu, rapdu, TAG_KEY_PUK);
 }
 
-void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     if (ccid_piv_pin_auth_failed(TAG_KEY_PUK)) {
         // 認証NGの場合は、現在のリトライカウンターを戻す
@@ -241,7 +245,7 @@ void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
-void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // PIN更新処理が正常に完了したので、正常レスポンス処理を指示
     fido_log_info("Reset & update PIV PIN success");
@@ -251,12 +255,14 @@ void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *ra
 //
 // PIN認証処理
 //
-uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_auth(void *p_capdu, void *p_rapdu) 
 {
     // ステータスを初期化
     pin_is_validated = false;
 
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
         return SW_WRONG_P1P2;
     }

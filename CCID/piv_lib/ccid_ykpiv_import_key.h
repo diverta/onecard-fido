@@ -7,6 +7,8 @@
 #ifndef CCID_YKPIV_IMPORT_KEY_H
 #define CCID_YKPIV_IMPORT_KEY_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,7 +16,7 @@ extern "C" {
 //
 // 関数群
 //
-uint16_t ccid_ykpiv_import_key(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t ccid_ykpiv_import_key(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

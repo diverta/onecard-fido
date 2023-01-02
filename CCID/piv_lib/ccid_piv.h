@@ -7,7 +7,7 @@
 #ifndef CCID_PIV_H
 #define CCID_PIV_H
 
-#include "ccid_apdu.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,9 +25,9 @@ extern "C" {
 //
 // 関数群
 //
-bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu);
+bool ccid_piv_rid_is_piv_applet(void *p_capdu);
 
-void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
+void ccid_piv_apdu_process(void *p_capdu, void *p_rapdu);
 void ccid_piv_stop_applet(void);
 bool ccid_piv_admin_mode_get(void);
 void ccid_piv_admin_mode_set(bool mode);

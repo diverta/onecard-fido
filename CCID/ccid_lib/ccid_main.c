@@ -4,6 +4,7 @@
  *
  * Created on 2020/05/29, 12:37
  */
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_process.h"
 
