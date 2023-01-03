@@ -31,6 +31,7 @@ ifeq ("$(TARGET_BOARD)","PCA10059_03")
     # change TXD pin assignment
     CFLAGS += -DNRF_LOG_BACKEND_UART_TX_PIN=25
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+    CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
 endif
 
 # for RSA & DES

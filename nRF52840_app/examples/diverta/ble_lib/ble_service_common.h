@@ -7,6 +7,8 @@
 #ifndef BLE_SERVICE_COMMON_H
 #define BLE_SERVICE_COMMON_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

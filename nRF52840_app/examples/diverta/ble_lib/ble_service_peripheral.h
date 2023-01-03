@@ -7,8 +7,6 @@
 #ifndef BLE_SERVICE_PERIPHERAL_H
 #define BLE_SERVICE_PERIPHERAL_H
 
-#include "ble.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,8 +17,8 @@ void ble_service_peripheral_advertising_stop(void);
 void ble_service_peripheral_start(void);
 void ble_service_peripheral_timer_start(void);
 
-void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt);
-void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt);
+void ble_service_peripheral_gap_connected(void const *p_evt);
+void ble_service_peripheral_gap_disconnected(void const *p_evt);
 
 #ifdef __cplusplus
 }

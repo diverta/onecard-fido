@@ -232,11 +232,12 @@ void ble_service_peripheral_start(void)
 //
 // BLE GAPイベント関連処理
 //
-void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_connected(void const *p_evt)
 {
     if (ble_service_peripheral_mode() == false) {
         return;
     }
+    ble_evt_t const *p_ble_evt = (ble_evt_t const *)p_evt;
     m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
     ret_code_t err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
     APP_ERROR_CHECK(err_code);
@@ -247,8 +248,9 @@ void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
     }
 }
 
-void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_disconnected(void const *p_evt)
 {
+    (void)p_evt;
     if (ble_service_peripheral_mode() == false) {
         return;
     }

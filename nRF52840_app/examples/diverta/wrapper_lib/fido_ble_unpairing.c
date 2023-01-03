@@ -5,6 +5,7 @@
  * Created on 2022/12/19, 16:54
  */
 #include "sdk_common.h"
+#include "peer_manager.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_unpairing

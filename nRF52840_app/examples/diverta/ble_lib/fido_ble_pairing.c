@@ -101,8 +101,9 @@ void fido_ble_pairing_add_service_data_field(void *p_init)
     init->advdata.service_data_count = 1;
 }
 
-bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
+bool fido_ble_pairing_allow_repairing(void const *pm_evt)
 {
+    pm_evt_t const *p_evt = (pm_evt_t const *)pm_evt;
     if (run_as_pairing_mode) {
         if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
             // ペアリング済みである端末からの
@@ -241,9 +242,10 @@ void fido_ble_pairing_get_mode(void)
     pairing_completed = false;
 }
 
-void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
+void fido_ble_pairing_on_evt_auth_status(void *ble_evt)
 {
     // LESCペアリング完了時のステータスを確認
+    ble_evt_t *p_ble_evt = (ble_evt_t *)ble_evt;
     uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
     NRF_LOG_INFO("Authorization status: 0x%02x ", auth_status);
 
@@ -352,8 +354,9 @@ bool fido_ble_pairing_delete_peer_id(uint16_t peer_id)
     }
 }
 
-bool fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
+bool fido_ble_pairing_peer_deleted(void *pm_evt)
 {
+    pm_evt_t *p_evt = (pm_evt_t *)pm_evt;
     pm_evt_id_t evt_id = p_evt->evt_id;
     pm_peer_id_t peer_id = p_evt->peer_id;
 

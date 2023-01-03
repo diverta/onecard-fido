@@ -7,6 +7,7 @@
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
+#include "peer_manager.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_event
@@ -115,9 +116,10 @@ static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_e
     }
 }
 
-bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+bool fido_ble_evt_handler(void *ble_evt, void *p_context)
 {
     UNUSED_PARAMETER(p_context);
+    ble_evt_t *p_ble_evt = (ble_evt_t *)ble_evt;
     if (p_ble_evt == NULL) {
         return false;
     }
@@ -158,9 +160,10 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     return ret;
 }
 
-bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
+bool fido_ble_pm_evt_handler(void const *pm_evt)
 {
     // ペアリング情報削除後の処理
+    pm_evt_t *p_evt = (pm_evt_t *)pm_evt;
     if (fido_ble_pairing_peer_deleted(p_evt)) {
         return true;
     }
