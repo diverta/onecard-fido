@@ -9,7 +9,7 @@
 #include "ccid.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
-#include "ccid_piv_authenticate.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース

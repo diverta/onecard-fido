@@ -15,6 +15,7 @@ NRF_LOG_MODULE_REGISTER();
 #define LOG_DEBUG_RSA_EXPONENT      false
 
 #include "ccid.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 
 // for nrf_cc310

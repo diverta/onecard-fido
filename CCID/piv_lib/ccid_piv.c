@@ -7,6 +7,7 @@
 #include "ccid.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_object_import.h"

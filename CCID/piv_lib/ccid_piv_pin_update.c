@@ -7,11 +7,12 @@
 #include <string.h>
 
 #include "ccid_define.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin_auth.h"
 
 // 一時読込領域
-static uint8_t work_buf[PIN_DEFAULT_SIZE];
+static uint8_t work_buf[PIN_DEFAULT_BUFFER_SIZE];
 
 //
 // PIN更新処理

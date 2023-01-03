@@ -15,15 +15,6 @@ extern "C" {
 #endif
 
 //
-// Yubico vendor specific instructions
-//
-#define YKPIV_INS_SET_MGMKEY            0xff
-#define YKPIV_INS_IMPORT_ASYMMETRIC_KEY 0xfe
-#define YKPIV_INS_GET_VERSION           0xfd
-#define YKPIV_INS_RESET                 0xfb
-#define YKPIV_INS_GET_SERIAL            0xf8
-
-//
 // 関数群
 //
 uint16_t ccid_ykpiv_ins_set_mgmkey(void *p_capdu, void *p_rapdu);

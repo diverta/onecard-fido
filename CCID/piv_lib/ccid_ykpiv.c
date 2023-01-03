@@ -9,7 +9,7 @@
 #include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
-#include "ccid_piv_authenticate.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin_auth.h"
 #include "ccid_ykpiv_import_key.h"

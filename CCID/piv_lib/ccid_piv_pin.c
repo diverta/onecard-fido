@@ -8,6 +8,7 @@
 
 #include "ccid_apdu.h"
 #include "ccid_define.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 #include "ccid_piv_pin_auth.h"
@@ -95,7 +96,7 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu, u
 {
     // 入力されたPINで認証実行
     pin_is_validated = false;
-    uint16_t sw = ccid_piv_pin_auth_verify(pin_type, capdu->data, PIN_DEFAULT_SIZE);
+    uint16_t sw = ccid_piv_pin_auth_verify(pin_type, capdu->data, PIN_DEFAULT_BUFFER_SIZE);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
@@ -146,7 +147,7 @@ static char *get_tagname(uint8_t pin_type)
 static uint16_t update_pin_code(command_apdu_t *capdu)
 {
     uint8_t pin_type = capdu->p2;
-    uint8_t *update_pin = capdu->data + PIN_DEFAULT_SIZE;
+    uint8_t *update_pin = capdu->data + PIN_DEFAULT_BUFFER_SIZE;
     return ccid_piv_pin_update(pin_type, update_pin);
 }
 
@@ -290,7 +291,7 @@ uint16_t ccid_piv_pin_auth(void *p_capdu, void *p_rapdu)
     }
 
     // 入力されたPINが８文字でない場合はエラー
-    if (capdu->lc != PIN_DEFAULT_SIZE) {
+    if (capdu->lc != PIN_DEFAULT_BUFFER_SIZE) {
         return SW_WRONG_LENGTH;
     }
 
