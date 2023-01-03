@@ -7,8 +7,6 @@
 #ifndef CCID_PROCESS_H
 #define CCID_PROCESS_H
 
-#include "ccid_apdu.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +15,7 @@ extern "C" {
 // 関数群
 //
 void        ccid_process_stop_applet(void);
-void        ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu);
+void        ccid_process_applet(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,7 @@
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
+#include "peer_manager.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_event
@@ -15,6 +16,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "fido_ble_service.h"
+#include "fido_ble_service_define.h"
 #include "fido_ble_pairing.h"
 #include "fido_timer_plat.h"
 
@@ -114,16 +116,17 @@ static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_e
     }
 }
 
-bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+bool fido_ble_evt_handler(void *ble_evt, void *p_context)
 {
     UNUSED_PARAMETER(p_context);
+    ble_evt_t *p_ble_evt = (ble_evt_t *)ble_evt;
     if (p_ble_evt == NULL) {
         return false;
     }
     // NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
     bool ret = false;
-    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    ble_u2f_t *p_u2f = (ble_u2f_t *)fido_ble_get_U2F_context();
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             ble_u2f_on_connect(p_u2f, p_ble_evt);
@@ -157,9 +160,10 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     return ret;
 }
 
-bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
+bool fido_ble_pm_evt_handler(void const *pm_evt)
 {
     // ペアリング情報削除後の処理
+    pm_evt_t *p_evt = (pm_evt_t *)pm_evt;
     if (fido_ble_pairing_peer_deleted(p_evt)) {
         return true;
     }

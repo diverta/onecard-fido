@@ -7,8 +7,7 @@
 #ifndef CCID_OPENPGP_OBJECT_H
 #define CCID_OPENPGP_OBJECT_H
 
-#include "ccid_apdu.h"
-#include "ccid_pin.h"
+#include "ccid_openpgp_pin_define.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,7 +16,7 @@ extern "C" {
 //
 // 関数群
 //
-void        ccid_openpgp_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu);
+void        ccid_openpgp_object_resume_prepare(void *p_capdu, void *p_rapdu);
 void        ccid_openpgp_object_resume_process(uint16_t sw);
 void        ccid_openpgp_object_pin_clear(void);
 bool        ccid_openpgp_object_pin_get(PIN_T *pin, uint8_t **pin_code, uint8_t *pin_size, uint8_t *retries);

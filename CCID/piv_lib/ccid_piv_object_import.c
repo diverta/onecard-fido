@@ -4,8 +4,10 @@
  *
  * Created on 2020/09/16, 15:28
  */
-#include "ccid.h"
+#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -60,7 +62,7 @@ static size_t get_enough_space(uint8_t obj_tag)
     }
 }
 
-uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_object_import(void *p_capdu, void *p_rapdu) 
 {
     // 管理コマンドが実行可能でない場合は終了
     if (ccid_piv_admin_mode_get() == false) {
@@ -68,6 +70,8 @@ uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // 受信APDUデータの格納領域
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     uint8_t *data = capdu->data;
 
     // パラメーターのチェック
@@ -106,7 +110,7 @@ uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 void ccid_piv_object_import_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 鍵インポート処理を再実行
@@ -123,7 +127,7 @@ void ccid_piv_object_import_retry(void)
 
 void ccid_piv_object_import_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success) {
         // Flash ROM書込みが完了した場合は正常レスポンス処理を指示

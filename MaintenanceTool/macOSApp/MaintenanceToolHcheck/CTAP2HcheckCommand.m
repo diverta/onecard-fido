@@ -89,8 +89,6 @@
                 [self doRequestCommandGetKeyAgreement];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -118,8 +116,6 @@
                 [self doRequestCommandGetPinToken:message];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -157,8 +153,6 @@
                 [self doRequestCommandGetAssertion:message];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -310,8 +304,6 @@
                 [self doResponseCommandGetAssertion:response];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseCtap2HealthCheck:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -334,8 +326,6 @@
                 [self doResponseCommandGetAssertion:response];
                 break;
             default:
-                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す
-                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -496,7 +486,7 @@
     - (bool)checkStatusCode:(NSData *)responseMessage {
         // レスポンスデータが揃っていない場合はNG
         if (responseMessage == nil || [responseMessage length] == 0) {
-            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR_LEN];
             return false;
         }
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
@@ -521,7 +511,7 @@
                 [self setErrorMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
                 break;
             default:
-                [self setErrorMessage:MSG_OCCUR_UNKNOWN_ERROR];
+                [self setErrorMessage:[NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, requestBytes[0]]];
                 break;
         }
         return false;

@@ -6,10 +6,11 @@
  */
 #include "ctap2_cbor.h"
 #include "ctap2_cbor_define.h"
-#include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_define.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
+#include "fido_define.h"
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
@@ -29,12 +30,13 @@ uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
+uint8_t parse_rp_id(void *p_ctap_rp_id, CborValue *val)
 {
     if (cbor_value_get_type(val) != CborTextStringType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
     }
 
+    CTAP_RP_ID_T *rp = (CTAP_RP_ID_T *)p_ctap_rp_id;
     size_t sz = RP_ID_MAX_SIZE;
     CborError ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
     if (ret == CborErrorOutOfMemory) {
@@ -49,7 +51,7 @@ uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
+uint8_t parse_rp(void *p_ctap_rp_id, CborValue *val)
 {
     size_t    sz;
     size_t    map_length;
@@ -73,6 +75,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
         return ret;
     }
 
+    CTAP_RP_ID_T *rp = (CTAP_RP_ID_T *)p_ctap_rp_id;
     rp->id_size = 0;
     for (i = 0; i < map_length; i++) {
         if (cbor_value_get_type(&map) != CborTextStringType) {
@@ -128,7 +131,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
     return CborNoError;
 }
 
-uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
+uint8_t parse_user(void *ctap_user_entity, CborValue *val)
 {
     size_t    sz;
     size_t    map_length;
@@ -171,6 +174,7 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
             return ret;
         }
 
+        CTAP_USER_ENTITY_T *user = (CTAP_USER_ENTITY_T *)ctap_user_entity;
         if (strcmp((const char*)key, "id") == 0) {
             if (cbor_value_get_type(&map) != CborByteStringType) {
                 return CTAP2_ERR_INVALID_CBOR_TYPE;
@@ -300,7 +304,7 @@ static int pub_key_cred_param_supported(CTAP_PUBKEY_CRED_PARAM_T *cred_param)
     return CREDENTIAL_NOT_SUPPORTED;
 }
 
-uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValue *val)
+uint8_t parse_pub_key_cred_params(void *ctap_pubkey_cred_param, CborValue *val)
 {
     size_t    arr_length;
     CborError ret;
@@ -326,6 +330,7 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
         return CTAP2_ERR_CBOR_PARSING;
     }
 
+    CTAP_PUBKEY_CRED_PARAM_T *cred_param = (CTAP_PUBKEY_CRED_PARAM_T *)ctap_pubkey_cred_param;
     for (i = 0; i < arr_length; i++) {
         // 内容チェックを先に行う
         err = check_pub_key_cred_param(&array);
@@ -361,7 +366,7 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredential)
+uint8_t parse_options(void *ctap_options, CborValue *val, bool makeCredential)
 {
     CborError ret;
     CborValue map;
@@ -385,6 +390,7 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredenti
         return CTAP2_ERR_CBOR_PARSING;
     }
 
+    CTAP_OPTIONS_T *options = (CTAP_OPTIONS_T *)ctap_options;
     for (i = 0; i < map_length; i++) {
         if (cbor_value_get_type(&map) != CborTextStringType) {
             return CTAP2_ERR_INVALID_CBOR_TYPE;
@@ -546,7 +552,7 @@ uint8_t parse_verify_exclude_list(CborValue *val)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
+uint8_t parse_allow_list(void *ctap_allow_list, CborValue *it)
 {
     CborError ret;
     uint8_t   err;
@@ -568,6 +574,7 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
         return CTAP2_ERR_CBOR_PARSING;
     }
 
+    CTAP_ALLOW_LIST_T *allowList = (CTAP_ALLOW_LIST_T *)ctap_allow_list;
     allowList->size = 0;
     for(i = 0; i < len; i++) {
         if (i >= ALLOW_LIST_MAX_SIZE) {
@@ -590,11 +597,13 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_cose_pubkey(CborValue *it, CTAP_COSE_KEY *cose_key)
+uint8_t parse_cose_pubkey(CborValue *it, void *ctap_cose_key)
 {
     CborValue map;
     size_t map_length;
     int i, ret, key;
+
+    CTAP_COSE_KEY *cose_key = (CTAP_COSE_KEY *)ctap_cose_key;
     cose_key->kty = 0;
     cose_key->crv = 0;
 
@@ -788,7 +797,7 @@ static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
+uint8_t parse_extensions(CborValue *val, void *ctap_extensions)
 {
     CborValue map;
     size_t    sz, map_length;
@@ -811,6 +820,7 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
         return CTAP2_ERR_CBOR_PARSING;
     }
 
+    CTAP_EXTENSIONS_T *ext = (CTAP_EXTENSIONS_T *)ctap_extensions;
     for (i = 0; i < map_length; i++) {
         if (cbor_value_get_type(&map) != CborTextStringType) {
             return CTAP2_ERR_INVALID_CBOR_TYPE;

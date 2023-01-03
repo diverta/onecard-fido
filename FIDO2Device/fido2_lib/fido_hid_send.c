@@ -9,9 +9,10 @@
 //
 // プラットフォーム非依存コード
 //
-#include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
+#include "ctap2_define.h"
 #include "fido_command.h"
 #include "fido_hid_channel.h"
+#include "fido_hid_define.h"
 #include "fido_hid_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -174,7 +175,7 @@ void fido_hid_send_input_report_complete(void)
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // FIDOレスポンス送信完了時の処理を実行
-        fido_command_on_response_send_completed(TRANSPORT_HID);
+        fido_command_on_hid_response_send_completed();
         
     } else {
         // 次のフレームの送信を実行
@@ -210,6 +211,6 @@ void fido_hid_send_status_response(uint8_t cmd, uint8_t status_code)
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cid = fido_hid_receive_header_CID();
     fido_hid_send_command_response_no_callback(cid, cmd, status_code);
 }

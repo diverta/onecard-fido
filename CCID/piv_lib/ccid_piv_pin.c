@@ -6,6 +6,9 @@
  */
 #include <string.h>
 
+#include "ccid_apdu.h"
+#include "ccid_define.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 #include "ccid_piv_pin_auth.h"
@@ -93,7 +96,7 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu, u
 {
     // 入力されたPINで認証実行
     pin_is_validated = false;
-    uint16_t sw = ccid_piv_pin_auth_verify(pin_type, capdu->data, PIN_DEFAULT_SIZE);
+    uint16_t sw = ccid_piv_pin_auth_verify(pin_type, capdu->data, PIN_DEFAULT_BUFFER_SIZE);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
@@ -113,9 +116,11 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu, u
 //
 // PIN／PUK変更処理
 //
-uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_set(void *p_capdu, void *p_rapdu)
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -142,11 +147,11 @@ static char *get_tagname(uint8_t pin_type)
 static uint16_t update_pin_code(command_apdu_t *capdu)
 {
     uint8_t pin_type = capdu->p2;
-    uint8_t *update_pin = capdu->data + PIN_DEFAULT_SIZE;
+    uint8_t *update_pin = capdu->data + PIN_DEFAULT_BUFFER_SIZE;
     return ccid_piv_pin_update(pin_type, update_pin);
 }
 
-void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     uint8_t pin_type = capdu->p2;
     char *tag_name = get_tagname(pin_type);
@@ -179,7 +184,7 @@ void ccid_piv_pin_set_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
-void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // PIN or PUK更新処理が正常に完了したので、正常レスポンス処理を指示
     fido_log_info("Update PIV %s success", get_tagname(capdu->p2));
@@ -189,8 +194,10 @@ void ccid_piv_pin_set_second_resume(command_apdu_t *capdu, response_apdu_t *rapd
 //
 // PIN解除処理
 //
-uint16_t ccid_piv_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_reset(void *p_capdu, void *p_rapdu) 
 {
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -208,7 +215,7 @@ uint16_t ccid_piv_pin_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
     return verify_pin_code(capdu, rapdu, TAG_KEY_PUK);
 }
 
-void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     if (ccid_piv_pin_auth_failed(TAG_KEY_PUK)) {
         // 認証NGの場合は、現在のリトライカウンターを戻す
@@ -239,7 +246,7 @@ void ccid_piv_pin_reset_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
-void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
+static void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // PIN更新処理が正常に完了したので、正常レスポンス処理を指示
     fido_log_info("Reset & update PIV PIN success");
@@ -249,12 +256,14 @@ void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *ra
 //
 // PIN認証処理
 //
-uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_piv_pin_auth(void *p_capdu, void *p_rapdu) 
 {
     // ステータスを初期化
     pin_is_validated = false;
 
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
         return SW_WRONG_P1P2;
     }
@@ -282,7 +291,7 @@ uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // 入力されたPINが８文字でない場合はエラー
-    if (capdu->lc != PIN_DEFAULT_SIZE) {
+    if (capdu->lc != PIN_DEFAULT_BUFFER_SIZE) {
         return SW_WRONG_LENGTH;
     }
 
@@ -311,7 +320,7 @@ static void ccid_piv_pin_auth_resume(command_apdu_t *capdu, response_apdu_t *rap
 //
 void ccid_piv_pin_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -349,7 +358,7 @@ void ccid_piv_pin_retry(void)
 
 void ccid_piv_pin_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     if (success == false) {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示

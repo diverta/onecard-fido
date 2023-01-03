@@ -26,8 +26,10 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_service_common.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_define.h"
 #include "fido_ble_pairing.h"
 #include "fido_ble_service.h"
+#include "fido_ble_service_define.h"
 #include "fido_ble_event.h"
 
 #include "fido_platform.h"
@@ -100,7 +102,7 @@ static void services_init(void)
 
     // BLE U2Fサービスに必要な属性を追加
     ble_srv_ascii_to_utf8(&dis_init.model_num_str    , (char *)MODEL_NUM);
-	ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , (char *)FW_REV);
+    ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , (char *)FW_REV);
 
     dis_init.dis_char_rd_sec = SEC_JUST_WORKS;
 
@@ -230,11 +232,12 @@ void ble_service_peripheral_start(void)
 //
 // BLE GAPイベント関連処理
 //
-void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_connected(void const *p_evt)
 {
     if (ble_service_peripheral_mode() == false) {
         return;
     }
+    ble_evt_t const *p_ble_evt = (ble_evt_t const *)p_evt;
     m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
     ret_code_t err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
     APP_ERROR_CHECK(err_code);
@@ -245,8 +248,9 @@ void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
     }
 }
 
-void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_disconnected(void const *p_evt)
 {
+    (void)p_evt;
     if (ble_service_peripheral_mode() == false) {
         return;
     }

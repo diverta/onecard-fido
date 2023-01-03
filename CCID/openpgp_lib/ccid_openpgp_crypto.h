@@ -7,13 +7,13 @@
 #ifndef CCID_OPENPGP_CRYPTO_H
 #define CCID_OPENPGP_CRYPTO_H
 
-#include "ccid_apdu.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-uint16_t    ccid_openpgp_crypto_pso(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_crypto_pso(void *p_capdu, void *p_rapdu);
 
 #ifdef __cplusplus
 }

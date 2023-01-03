@@ -4,7 +4,7 @@
  *
  * Created on 2022/04/29, 9:07
  */
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_oath.h"
 #include "ccid_openpgp.h"
@@ -80,8 +80,11 @@ static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
     return false;
 }
 
-void ccid_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_process_applet(void *p_capdu, void *p_rapdu)
 {
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
+
     if (command_is_applet_selection(capdu)) {
         if (select_applet(capdu, rapdu) == false) {
             return;

@@ -11,18 +11,20 @@
 //
 // プラットフォーム非依存コード
 //
-#include "u2f.h"
+#include "u2f_define.h"
 #include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_transport_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -30,9 +32,6 @@
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_u2f_command);
 #endif
-
-// キープアライブ・タイマー
-#define U2F_KEEPALIVE_INTERVAL_MSEC 500
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
@@ -54,8 +53,6 @@ typedef struct {
 //
 static HID_INIT_RES_T init_res;
 static U2F_VERSION_RES_T version_res;
-static uint8_t response_buffer[1024];
-static size_t  response_length;
 
 // 関数プロトタイプ
 static void u2f_register_resume_process(void);
@@ -66,15 +63,10 @@ static uint8_t get_u2f_command_byte(void)
     uint8_t cmd;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            cmd = fido_hid_receive_header()->CMD;
+            cmd = fido_hid_receive_header_CMD();
             break;
         case TRANSPORT_BLE:
-            cmd = fido_ble_receive_header()->CMD;
-            break;
-        case TRANSPORT_NFC:
-            // ヘッダーが存在しないため、
-            // U2Fコマンドは常に U2F_COMMAND_MSG になります
-            cmd = U2F_COMMAND_MSG;
+            cmd = fido_ble_receive_header_CMD();
             break;
         default:
             cmd = 0x00;
@@ -89,10 +81,10 @@ static FIDO_APDU_T *get_receive_apdu(void)
     FIDO_APDU_T *p_apdu;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            p_apdu = fido_hid_receive_apdu();
+            p_apdu = (FIDO_APDU_T *)fido_hid_receive_apdu();
             break;
         case TRANSPORT_BLE:
-            p_apdu = fido_ble_receive_apdu();
+            p_apdu = (FIDO_APDU_T *)fido_ble_receive_apdu();
             break;
         default:
             p_apdu = NULL;
@@ -192,12 +184,12 @@ void fido_u2f_command_send_response(uint8_t *response, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint8_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint8_t  cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response, length);
     } 
 }
@@ -208,7 +200,7 @@ void fido_u2f_command_hid_init(void)
     memset(&init_res, 0x00, sizeof(init_res));
 
     // nonce を取得
-    uint8_t *nonce = fido_hid_receive_apdu()->data;
+    uint8_t *nonce = fido_hid_receive_apdu_data();
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -221,8 +213,8 @@ void fido_u2f_command_hid_init(void)
     init_res.cflags        = 0;
 
     // レスポンスデータを転送
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
     fido_log_info("U2F HID init done");
 }
@@ -246,9 +238,11 @@ static void u2f_command_version(void)
 static void send_u2f_error_status_response(uint16_t status_word)
 {
     // エラーステータスワードをビッグエンディアンで格納
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = (status_word >> 8) & 0x00ff;
     response_buffer[1] = (status_word >> 0) & 0x00ff;
-    response_length = 2;
+    size_t response_length = 2;
+    fido_command_response_data_size_set(response_length);
     
     // エラーステータスワードを送信
     fido_u2f_command_send_response(response_buffer, response_length);
@@ -327,7 +321,8 @@ static void u2f_register_resume_process(void)
 
     uint8_t *apdu_data = get_receive_apdu()->data;
     uint32_t apdu_le = get_receive_apdu()->Le;
-    response_length = sizeof(response_buffer);
+    uint8_t *response_buffer = fido_command_response_data();
+    size_t   response_length = fido_command_response_data_size_max();
     if (u2f_register_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
@@ -335,6 +330,9 @@ static void u2f_register_resume_process(void)
         send_u2f_error_status_response(u2f_register_status_word());
         return;
     }
+
+    // レスポンス長を設定
+    fido_command_response_data_size_set(response_length);
 
     // トークンカウンターレコードを追加
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -422,7 +420,8 @@ static void u2f_authenticate_resume_process(void)
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = get_receive_apdu()->data;
     uint32_t apdu_le = get_receive_apdu()->Le;
-    response_length = sizeof(response_buffer);
+    uint8_t *response_buffer = fido_command_response_data();
+    size_t   response_length = fido_command_response_data_size_max();
     if (u2f_authenticate_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
@@ -430,6 +429,9 @@ static void u2f_authenticate_resume_process(void)
         send_u2f_error_status_response(u2f_authenticate_status_word());
         return;
     }
+
+    // レスポンス長を設定
+    fido_command_response_data_size_set(response_length);
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新
@@ -483,6 +485,26 @@ void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
     fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
 }
 
+void fido_u2f_command_msg_ble(void)
+{
+    fido_u2f_command_msg(TRANSPORT_BLE);
+}
+
+void fido_u2f_command_msg_hid(void)
+{
+    fido_u2f_command_msg(TRANSPORT_HID);
+}
+
+void fido_u2f_command_ping_ble(void)
+{
+    fido_u2f_command_ping(TRANSPORT_BLE);
+}
+
+void fido_u2f_command_ping_hid(void)
+{
+    fido_u2f_command_ping(TRANSPORT_HID);
+}
+
 void fido_u2f_command_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
@@ -520,11 +542,11 @@ void fido_u2f_command_token_counter_record_updated(void)
     uint8_t ins = get_u2f_command_ins_byte();
     if (ins == U2F_REGISTER) {
         // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
+        fido_u2f_command_send_response(fido_command_response_data(), fido_command_response_data_size());
 
     } else if (ins == U2F_AUTHENTICATE) {
         // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
+        fido_u2f_command_send_response(fido_command_response_data(), fido_command_response_data_size());
     }
 }
 

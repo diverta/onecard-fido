@@ -179,18 +179,11 @@
         NSString *strDeviceName = array[0];
         NSString *strFWRev = array[1];
         NSString *strHWRev = array[2];
-        NSString *strSecic = array[3];
         // 画面に制御を戻す
         [[self delegate] notifyMessageToMainUI:MSG_VERSION_INFO_HEADER];
         [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
         [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
         [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
-        // セキュアICの搭載有無を表示
-        if ([strSecic length] > 0) {
-            [[self delegate] notifyMessageToMainUI:MSG_VERSION_INFO_SECURE_IC_AVAIL];
-        } else {
-            [[self delegate] notifyMessageToMainUI:MSG_VERSION_INFO_SECURE_IC_UNAVAIL];
-        }
         [self notifyCommandTerminated:[self commandName] message:nil success:true fromWindow:[self parentWindow]];
     }
 
@@ -228,30 +221,27 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時でアプリケーションに制御を戻す
-        if (success == false) {
-            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
-            return;
-        }
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[response bytes];
-        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            // エラーの場合は画面に制御を戻す
-            [self notifyCommandTerminated:[self commandName] message:MSG_OCCUR_UNKNOWN_ERROR success:false fromWindow:[self parentWindow]];
-            return;
-        }
-        // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_HID_GET_FLASH_STAT:
+        if (command == COMMAND_HID_GET_FLASH_STAT || command == COMMAND_HID_GET_VERSION_INFO) {
+            if (success == false) {
+                // 即時でアプリケーションに制御を戻す
+                [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+                return;
+            }
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            uint8_t *requestBytes = (uint8_t *)[response bytes];
+            if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+                // エラーの場合は画面に制御を戻す
+                NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, requestBytes[0]];
+                [self notifyCommandTerminated:[self commandName] message:message success:false fromWindow:[self parentWindow]];
+                return;
+            }
+            // 実行コマンドにより処理分岐
+            if (command == COMMAND_HID_GET_FLASH_STAT) {
                 [self doResponseHIDGetFlashStat:response];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
+            }
+            if (command == COMMAND_HID_GET_VERSION_INFO) {
                 [self doResponseHIDGetVersionInfo:response];
-                break;
-            default:
-                // メイン画面に制御を戻す
-                [self notifyCommandTerminated:[self commandName] message:nil success:success fromWindow:[self parentWindow]];
-                break;
+            }
         }
     }
 

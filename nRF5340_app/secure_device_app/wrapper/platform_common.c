@@ -108,6 +108,11 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     return app_board_get_version_info_csv(info_csv_data, info_csv_size);
 }
 
+void fido_board_system_reset(void)
+{
+    app_board_prepare_for_system_reset();
+}
+
 void ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
 {
     (void)request;
@@ -121,11 +126,6 @@ bool ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, siz
     (void)response;
     (void)response_size;
     return false;
-}
-
-bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
-{
-    return app_ble_pairing_erase_bond_data(_response_func);
 }
 
 //

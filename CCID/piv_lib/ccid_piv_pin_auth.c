@@ -6,7 +6,8 @@
  */
 #include <string.h>
 
-#include "ccid_apdu.h"
+#include "ccid_define.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_pin_auth.h"
 #include "ccid_piv_object.h"
 
@@ -85,7 +86,7 @@ static bool restore_pin_code(uint8_t pin_type, uint8_t *pin_buf)
 }
 
 // 一時読込み用領域
-static uint8_t pin_buf[PIN_DEFAULT_SIZE];
+static uint8_t pin_buf[PIN_DEFAULT_BUFFER_SIZE];
 
 //
 // 業務処理群
@@ -144,7 +145,7 @@ uint16_t ccid_piv_pin_auth_verify(uint8_t pin_type, uint8_t *buf, uint8_t len)
     if (buf == NULL) {
         return SW_UNABLE_TO_PROCESS;
     }
-    if (len != PIN_DEFAULT_SIZE) {
+    if (len != PIN_DEFAULT_BUFFER_SIZE) {
         return SW_WRONG_LENGTH;
     }
 

@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ccid_define.h"
 #include "ccid_piv.h"
-#include "ccid_piv_authenticate.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 #include "ccid_piv_pin_auth.h"
@@ -264,11 +265,11 @@ bool ccid_piv_object_pin_get(uint8_t obj_tag, uint8_t *pin_code, uint8_t *retrie
     if (is_exist == false) {
         // Flash ROMに登録されていない場合はデフォルトを設定
         pin_buffer[0] = PIN_DEFAULT_RETRY_CNT;
-        pin_buffer[1] = PIN_DEFAULT_SIZE;
+        pin_buffer[1] = PIN_DEFAULT_BUFFER_SIZE;
         if (obj_tag == TAG_KEY_PUK) {
-            memcpy(pin_buffer + 2, PUK_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+            memcpy(pin_buffer + 2, PUK_DEFAULT_CODE, PIN_DEFAULT_BUFFER_SIZE);
         } else {
-            memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+            memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_BUFFER_SIZE);
         }
         memset(pin_buffer + 10, 0, 6);
         fido_log_debug("PIV PIN is not registered, use default: tag=0x%02x", obj_tag);
@@ -300,8 +301,8 @@ bool ccid_piv_object_pin_set(uint8_t obj_tag, uint8_t *pin_code, uint8_t retries
     //
     uint8_t pin_buffer[16];
     pin_buffer[0] = retries;
-    pin_buffer[1] = PIN_DEFAULT_SIZE;
-    memcpy(pin_buffer + 2, pin_code, PIN_DEFAULT_SIZE);
+    pin_buffer[1] = PIN_DEFAULT_BUFFER_SIZE;
+    memcpy(pin_buffer + 2, pin_code, PIN_DEFAULT_BUFFER_SIZE);
     memset(pin_buffer + 10, 0, 6);
 
 #if LOG_DEBUG_PIN_BUFFER

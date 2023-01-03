@@ -5,8 +5,9 @@
  * Created on 2018/12/24, 9:32
  */
 #include "ctap2_cbor.h"
+#include "ctap2_define.h"
 #include "fido_common.h"
-#include "ctap2_common.h"
+#include "fido_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

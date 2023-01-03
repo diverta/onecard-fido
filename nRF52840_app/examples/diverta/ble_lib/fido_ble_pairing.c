@@ -13,13 +13,19 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_delay.h"
 
+#include "fido_ble_define.h"
+#include "fido_ble_event.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
 #include "application_init.h"
 #include "fido_ble_service.h"
+#include "fido_ble_service_define.h"
 #include "fido_flash_pairing_mode.h"
 #include "fido_timer_plat.h"
+
+// for fido_board_delay_ms
+#include "fido_board.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_pairing
@@ -28,6 +34,9 @@ NRF_LOG_MODULE_REGISTER();
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// 直近レスポンスからの経過秒数監視するためのタイムアウト（ミリ秒単位）
+#define COMMUNICATION_INTERVAL_MSEC 10000
 
 // ペアリングモードを保持
 static bool run_as_pairing_mode;
@@ -92,8 +101,9 @@ void fido_ble_pairing_add_service_data_field(void *p_init)
     init->advdata.service_data_count = 1;
 }
 
-bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
+bool fido_ble_pairing_allow_repairing(void const *pm_evt)
 {
+    pm_evt_t const *p_evt = (pm_evt_t const *)pm_evt;
     if (run_as_pairing_mode) {
         if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
             // ペアリング済みである端末からの
@@ -161,7 +171,7 @@ void fido_ble_pairing_flash_updated(void)
         // fds_record_update/writeが正常完了の場合、
         // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
         // 変更したペアリングモード設定を反映するため、システムリセットを実行
-        NVIC_SystemReset();
+        fido_board_system_reset();
     }
 }
 
@@ -232,9 +242,10 @@ void fido_ble_pairing_get_mode(void)
     pairing_completed = false;
 }
 
-void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
+void fido_ble_pairing_on_evt_auth_status(void *ble_evt)
 {
     // LESCペアリング完了時のステータスを確認
+    ble_evt_t *p_ble_evt = (ble_evt_t *)ble_evt;
     uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
     NRF_LOG_INFO("Authorization status: 0x%02x ", auth_status);
 
@@ -246,7 +257,7 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
         
         // ペアリング先から切断されない可能性があるため、
         // 無通信タイムアウトのタイマー（10秒）をスタートさせる
-        fido_comm_interval_timer_start();
+        fido_comm_interval_timer_start(COMMUNICATION_INTERVAL_MSEC, fido_ble_on_process_timedout);
     }
     
     // 非ペアリングモードでペアリング要求があった場合も
@@ -254,7 +265,7 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
     // 無通信タイムアウトのタイマー（10秒）をスタートさせる
     if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
         NRF_LOG_INFO("Pairing rejected");
-        fido_comm_interval_timer_start();
+        fido_comm_interval_timer_start(COMMUNICATION_INTERVAL_MSEC, fido_ble_on_process_timedout);
     }
 }
 
@@ -266,9 +277,8 @@ void fido_ble_pairing_on_disconnect(void)
 
         // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
         // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
-        NRF_LOG_FINAL_FLUSH();
-        nrf_delay_ms(500);
-        NVIC_SystemReset();
+        fido_board_delay_ms(500);
+        fido_board_system_reset();
     }
 }
 
@@ -310,7 +320,7 @@ bool fido_ble_pairing_sleep_after_boot_mode(void)
 bool fido_ble_pairing_get_peer_id(uint16_t *p_peer_id) 
 {
     // コネクションハンドルからpeer_idを取得
-    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    ble_u2f_t *p_u2f = (ble_u2f_t *)fido_ble_get_U2F_context();
     uint16_t conn_handle = p_u2f->conn_handle;
     ret_code_t ret = pm_peer_id_get(conn_handle, p_peer_id);
     if (ret == NRF_SUCCESS) {
@@ -344,8 +354,9 @@ bool fido_ble_pairing_delete_peer_id(uint16_t peer_id)
     }
 }
 
-bool fido_ble_pairing_peer_deleted(pm_evt_t *p_evt)
+bool fido_ble_pairing_peer_deleted(void *pm_evt)
 {
+    pm_evt_t *p_evt = (pm_evt_t *)pm_evt;
     pm_evt_id_t evt_id = p_evt->evt_id;
     pm_peer_id_t peer_id = p_evt->peer_id;
 

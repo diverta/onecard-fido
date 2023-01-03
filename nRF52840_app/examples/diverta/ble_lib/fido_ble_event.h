@@ -8,15 +8,14 @@
 #ifndef FIDO_BLE_EVENT_H
 #define FIDO_BLE_EVENT_H
 
-#include "ble.h"
-#include "peer_manager_types.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool fido_ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context);
-bool fido_ble_pm_evt_handler(pm_evt_t const *p_evt);
+bool fido_ble_evt_handler(void const *ble_evt, void *p_context);
+bool fido_ble_pm_evt_handler(void const *pm_evt);
 void fido_ble_sleep_mode_enter(void);
 void fido_ble_on_process_timedout(void);
 void fido_ble_do_process(void);

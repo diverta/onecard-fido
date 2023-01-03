@@ -21,6 +21,9 @@
 #include "usbd_service_ccid.h"
 #include "usbd_service_hid.h"
 
+// for fido_board_delay_ms
+#include "fido_board.h"
+
 // for BOOTLOADER_DFU_START
 #include "nrf_bootloader_info.h"
 #include "nrf_delay.h"
@@ -29,6 +32,9 @@
 #define NRF_LOG_MODULE_NAME usbd_service
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 //
 // USB製品関連情報
@@ -90,24 +96,18 @@ static void usbd_service_stopped(void)
 {
     // USBを無効化
     app_usbd_disable();
-    nrf_delay_ms(500);
+    fido_board_delay_ms(500);
 
     // Get contents of the general purpose retention registers 
     // (NRF_POWER->GPREGRET*)
     uint32_t gpregret;
     uint32_t err_code = sd_power_gpregret_get(0, &gpregret);
     APP_ERROR_CHECK(err_code);
-    
-    if (gpregret == BOOTLOADER_DFU_START) {
-        // GPREGRETレジスターに値が設定されている場合、
-        // ブートローダーモードに遷移させる
-        // （ソフトデバイス経由でリセットを実行）
-        sd_nvic_SystemReset();
 
-    } else {
-        // リセットを実行
-        NVIC_SystemReset();
-    }
+    // システムリセットを実行
+    //   GPREGRETレジスターに値が設定されている場合、
+    //   ブートローダーモードに遷移
+    fido_board_system_reset();
 }
 
 static void usbd_user_ev_handler_custom(app_usbd_event_type_t event)

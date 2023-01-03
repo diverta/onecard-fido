@@ -32,10 +32,11 @@
 #define MSG_OCCUR_BLECONN_ERROR     @"BLE接続エラーが発生しました。"
 #define MSG_OCCUR_KEYHANDLE_ERROR   @"ユーザー登録情報が存在しません。再度ユーザー登録を実行してください。"
 #define MSG_OCCUR_FDS_GC_ERROR      @"FIDO認証器のFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"
-#define MSG_OCCUR_UNKNOWN_BLE_ERROR @"BLEエラーが発生しました。処理を再試行してください。"
 #define MSG_OCCUR_SKEYNOEXIST_ERROR @"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
 #define MSG_OCCUR_PAIRINGMODE_ERROR @"ペアリングモードでは、ペアリング実行以外の機能は使用できません。ペアリングモードを解除してから、機能を再度実行してください。"
-#define MSG_OCCUR_UNKNOWN_ERROR     @"不明なエラーが発生しました。"
+#define MSG_OCCUR_UNKNOWN_ERROR_SW  @"不明なエラーが発生しました（SW=0x%04x）"
+#define MSG_OCCUR_UNKNOWN_ERROR_ST  @"不明なエラーが発生しました（Status=0x%02x）"
+#define MSG_OCCUR_UNKNOWN_ERROR_LEN @"応答データがありませんでした。"
 #define MSG_FORMAT_APP_VERSION      @"Version %@"
 #define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
@@ -43,12 +44,9 @@
 #define MSG_PROMPT_ERASE_BONDS      @"削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？"
 #define MSG_BOOT_LOADER_MODE_UNSUPP @"FIDO認証器をブートローダーモードに遷移できません。"
 #define MSG_BOOT_LOADER_MODE        @"FIDO認証器をブートローダーモードに遷移させます。"
-#define MSG_PROMPT_BOOT_LOADER_MODE @"ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？"
 #define MSG_FIRMWARE_RESET_UNSUPP   @"FIDO認証器のファームウェアをリセットさせることができません。"
 
 #pragma mark - コマンド種別に対応する処理名称
-#define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書の削除"
-#define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HID_U2F_HEALTHCHECK            @"HID U2Fヘルスチェック"
 #define PROCESS_NAME_BLE_U2F_HEALTHCHECK            @"BLE U2Fヘルスチェック"
 #define PROCESS_NAME_HID_CTAP2_HEALTHCHECK          @"HID CTAP2ヘルスチェック"
@@ -80,17 +78,6 @@
 #define PROCESS_NAME_RTCC_GET_TIMESTAMP             @"認証器の現在時刻参照"
 #define PROCESS_NAME_RTCC_SET_TIMESTAMP             @"認証器の現在時刻設定"
 
-#pragma mark - ToolCommandクラス専用メッセージ
-#define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
-#define MSG_INVALID_SKEY_HEADER_IN_PEM      @"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"
-#define MSG_CANNOT_READ_SKEY_PEM_FILE       @"鍵ファイルを読み込むことができません。"
-#define MSG_INVALID_SKEY_CONTENT_IN_PEM     @"鍵ファイルの内容が不正です。"
-#define MSG_CANNOT_READ_CERT_CRT_FILE       @"証明書ファイルを読み込むことができません。"
-#define MSG_INVALID_CERT_LENGTH_IN_CRT      @"証明書ファイルに格納されたデータの長さが不正です。"
-#define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。"
-#define MSG_CANNOT_CRYPTO_SKEY_CERT_DATA    @"鍵・証明書の転送データを暗号化できませんでした。"
-#define MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY   @"公開鍵を認証器から受け取ることができませんでした。"
-#define MSG_INVALID_SKEY_OR_CERT            @"秘密鍵または公開鍵の内容が不正です。"
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO認証器のスキャンがタイムアウトしました。"
 #define MSG_U2F_DEVICE_CONNECTED            @"FIDO認証器に接続しました。"
@@ -111,10 +98,6 @@
 #define MSG_RESPONSE_RECEIVED               @"レスポンスを受信しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
 
-#pragma mark - 接続再試行関連メッセージ
-#define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"
-#define MSG_BLE_CONNECTION_RETRY_END        @"処理中にBLE接続が消失しましたが、接続再試行の上限回数に達したため終了します。"
-
 #pragma mark - ヘルスチェック関連メッセージ
 #define MSG_HCHK_U2F_REGISTER_SUCCESS       @"U2F Registerが成功しました。"
 #define MSG_HCHK_U2F_AUTHENTICATE_START     @"U2F Authenticateを開始します."
@@ -122,8 +105,6 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  FIDO認証器上の緑色LEDが点滅したら、"
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  ボタンを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
-#define MSG_PROMPT_START_HCHK_BLE_AUTH      @"自動認証で使用するBLEデバイスを近づけてください。"
-#define MSG_COMMENT_START_HCHK_BLE_AUTH     @"BLE自動認証機能が有効化されている場合は、BLEデバイスによりユーザー所在確認を行います。\nスキャン対象サービスUUIDを持つBLEデバイスを始動させ、FIDO認証器に近づけてください。\n\nYesをクリックすると、ヘルスチェックを実行します。"
 
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_INVALID_NONCE            @"CTAPHID_INITコマンドが失敗しました。"
@@ -174,8 +155,6 @@
 #define MSG_VERSION_INFO_DEVICE_NAME        @"  デバイス名: %@"
 #define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@"
 #define MSG_VERSION_INFO_HW_REV             @"  ハードウェアのバージョン: %@"
-#define MSG_VERSION_INFO_SECURE_IC_AVAIL    @"  セキュアIC: 搭載"
-#define MSG_VERSION_INFO_SECURE_IC_UNAVAIL  @"  セキュアIC: 非搭載"
 
 #pragma mark - BLEペアリング関連のメッセージ文言
 #define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
@@ -187,21 +166,6 @@
 #define MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT   @"あと %d 秒"
 #define MSG_BLE_UNPAIRING_WAIT_CANCELED     @"ペアリング解除要求が中断されました。"
 #define MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT @"Bluetooth環境設定からの\nデバイス削除が検知されませんでした。\nペアリング解除要求を中止します。"
-
-#pragma mark - ツール設定画面
-#define MSG_LABEL_AUTH_PARAM_GET                @"自動認証設定の読込"
-#define MSG_LABEL_AUTH_PARAM_SET                @"自動認証設定の書込"
-#define MSG_LABEL_AUTH_PARAM_RESET              @"自動認証設定の解除"
-#define MSG_PROMPT_INPUT_UUID_STRING_LEN        @"スキャン対象サービスUUIDを36桁で入力してください"
-#define MSG_PROMPT_INPUT_UUID_STRING_PATTERN    @"UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN      @"スキャン秒数を1桁で入力してください"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM      @"スキャン秒数を数字で入力してください"
-#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE    @"スキャン秒数を1〜9の値で入力してください"
-#define MSG_PROMPT_CLEAR_UUID_SCAN_PARAM        @"解除後はBLEデバイススキャンによる自動認証ができなくなります。\n\n設定解除処理を実行しますか？"
-#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0      @"自動認証機能が無効化されているので、書込後もBLEデバイススキャンによる自動認証はできません。\n\n設定書込処理を実行しますか？"
-#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
-#define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
-#define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
 
 #pragma mark - BLE DFU関連
 #define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
@@ -215,7 +179,6 @@
 
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
-#define MSG_DFU_IMAGE_NEW_NOT_AVAILABLE         @"ファームウェア新規導入機能が利用できません。"
 #define MSG_DFU_IMAGE_FILENAME_CANNOT_GET       @"更新ファームウェアファイル名の取得に失敗しました。"
 #define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"
 #define MSG_DFU_IMAGE_TRANSFER_FAILED           @"更新ファームウェアの転送に失敗しました。"

@@ -392,7 +392,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
-  $(FD2LIB_DIR)/fido_maintenance_cryption.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \
@@ -402,7 +401,6 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_crypto_hmac_sha1.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_DIR)/fido_crypto_sskey.c \
-  $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_event.c \
@@ -410,8 +408,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
-  $(PLTLIB_DIR)/fido_status_indicator.c \
-  $(PLTLIB_DIR)/fido_timer.c \
+  $(PLTLIB_DIR)/fido_timer_plat.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/rv3028c7_i2c.c \
   $(PLTLIB_DIR)/sha1.c \
@@ -428,7 +425,9 @@ SRC_FILES += \
   $(WRPLIB_DIR)/ccid_flash_object.c \
   $(WRPLIB_DIR)/ccid_flash_openpgp_object.c \
   $(WRPLIB_DIR)/ccid_flash_piv_object.c \
-  $(WRPLIB_DIR)/fido_ble_utility.c \
+  $(WRPLIB_DIR)/fido_ble_unpairing.c \
+  $(WRPLIB_DIR)/fido_status_indicator.c \
+  $(WRPLIB_DIR)/fido_timer.c \
   $(WRPLIB_DIR)/rtcc.c \
 
 ifeq ("$(TARGET_BOARD)","PCA10059_02")

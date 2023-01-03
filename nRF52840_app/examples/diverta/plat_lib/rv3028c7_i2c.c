@@ -17,8 +17,8 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for nrf_delay_ms
-#include "nrf_delay.h"
+// for fido_board_delay_ms
+#include "fido_board.h"
 
 // for I2C access
 #include "fido_twi.h"
@@ -109,7 +109,7 @@ static bool wait_for_eeprom()
             return true;
         }
         // 10ms wait
-        nrf_delay_ms(10);
+        fido_board_delay_ms(10);
     }
     // タイムアウトの場合はfalse
     return false;

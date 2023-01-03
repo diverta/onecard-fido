@@ -17,9 +17,9 @@ extern "C" {
 void        fido_repeat_process_timer_stop(void);
 void        fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void));
 void        fido_user_presence_verify_timer_stop(void);
-void        fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
+void        fido_user_presence_verify_timer_start(uint32_t timeout_msec, void (*_handler)(void));
 void        fido_hid_channel_lock_timer_stop(void);
-void        fido_hid_channel_lock_timer_start(uint32_t lock_ms);
+void        fido_hid_channel_lock_timer_start(uint32_t lock_ms, void (*_handler)(void));
 
 #ifdef __cplusplus
 }

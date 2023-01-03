@@ -5,7 +5,9 @@
  * Created on 2020/06/01, 9:55
  */
 #include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_object_import.h"
@@ -29,8 +31,9 @@ static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
 static const uint8_t rid_size = sizeof(rid);
 static const uint8_t pix_size = sizeof(pix);
 
-bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu)
+bool ccid_piv_rid_is_piv_applet(void *p_capdu)
 {
+    command_apdu_t *capdu = (command_apdu_t *)p_capdu;
     return (capdu->lc >= rid_size &&
             memcmp(capdu->data, rid, rid_size) == 0);
 }
@@ -176,12 +179,14 @@ static void piv_init(void)
     initialized = true;
 }
 
-void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_piv_apdu_process(void *p_capdu, void *p_rapdu)
 {
     // 初期化処理を一度だけ実行
     piv_init();
 
     // レスポンス長をゼロクリア
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     rapdu->len = 0;
 
     // CLAのチェック

@@ -5,11 +5,12 @@
  * Created on 2019/02/18, 11:05
  */
 #include "ctap2_cbor.h"
+#include "ctap2_define.h"
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
-#include "ctap2_common.h"
+#include "fido_define.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"

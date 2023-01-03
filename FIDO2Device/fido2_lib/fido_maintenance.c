@@ -12,11 +12,14 @@
 //
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_common.h"
+#include "fido_define.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_define.h"
-#include "u2f.h"
+#include "fido_transport_define.h"
+#include "u2f_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -36,13 +39,13 @@ static uint8_t get_maintenance_command_byte(void)
     uint8_t cmd = 0x00;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            if (fido_hid_receive_header()->CMD == (0x80 | MNT_COMMAND_BASE)) {
-                cmd = fido_hid_receive_apdu()->data[0];
+            if (fido_hid_receive_header_CMD() == (0x80 | MNT_COMMAND_BASE)) {
+                cmd = fido_hid_receive_apdu_data()[0];
             }
             break;
         case TRANSPORT_BLE:
-            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
-                cmd = fido_ble_receive_apdu()->data[0];
+            if (fido_ble_receive_header_CMD() == U2F_COMMAND_MSG) {
+                cmd = fido_ble_receive_apdu_data()[0];
             }
             break;
         default:
@@ -56,10 +59,10 @@ static uint8_t *get_maintenance_data_buffer(void)
     uint8_t *buffer;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            buffer = fido_hid_receive_apdu()->data + 1;
+            buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
-            buffer = fido_ble_receive_apdu()->data + 1;
+            buffer = fido_ble_receive_apdu_data() + 1;
             break;
         default:
             buffer = NULL;
@@ -73,10 +76,10 @@ static size_t get_maintenance_data_buffer_size(void)
     size_t size;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            size = fido_hid_receive_apdu()->Lc - 1;
+            size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
-            size = fido_ble_receive_apdu()->Lc - 1;
+            size = fido_ble_receive_apdu_Lc() - 1;
             break;
         default:
             size = 0;
@@ -100,12 +103,12 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
 
     // レスポンスデータを送信パケットに設定し送信
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint8_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint8_t  cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response_buffer, length);
     } 
 }
@@ -232,7 +235,7 @@ static void command_erase_bonding_data(void)
     // nRF52840のFlash ROM上に作成された
     // 全てのペアリング情報を削除
     //
-    if (ble_service_common_erase_bond_data(command_erase_bonding_data_response) == false) {
+    if (fido_ble_unpairing_erase_bond_data(command_erase_bonding_data_response) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 12);
     }
 }
@@ -292,7 +295,7 @@ static void command_set_timestamp(void)
     command_get_timestamp();
 }
 
-void fido_maintenance_command(TRANSPORT_TYPE transport_type)
+static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
@@ -335,6 +338,16 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     }
 }
 
+void fido_maintenance_command_ble(void)
+{
+    fido_maintenance_command(TRANSPORT_BLE);
+}
+
+void fido_maintenance_command_hid(void)
+{
+    fido_maintenance_command(TRANSPORT_HID);
+}
+
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
@@ -348,7 +361,7 @@ void fido_maintenance_command_report_sent(void)
             return;
         case MNT_COMMAND_SYSTEM_RESET:
             // nRF52840のシステムリセットを実行
-            NVIC_SystemReset();
+            fido_board_system_reset();
             return;
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");

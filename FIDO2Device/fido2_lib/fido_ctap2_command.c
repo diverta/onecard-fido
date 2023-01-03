@@ -15,17 +15,20 @@
 #include "ctap2_client_pin.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_common.h"
+#include "ctap2_define.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "u2f.h"
+#include "fido_transport_define.h"
+#include "u2f_define.h"
 #include "ctap2_pubkey_credential.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -34,9 +37,6 @@
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_ctap2_command);
 #endif
-
-// キープアライブ・タイマー
-#define CTAP2_KEEPALIVE_INTERVAL_MSEC 500
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
@@ -49,8 +49,6 @@ static bool is_tup_needed = false;
 // （コマンド共通）
 //
 static HID_INIT_RES_T init_res;
-static uint8_t response_buffer[CTAP2_MAX_MESSAGE_SIZE];
-static size_t  response_length;
 
 // 関数プロトタイプ
 static void command_make_credential_resume_process(void);
@@ -62,10 +60,10 @@ static uint8_t *get_cbor_data_buffer(void)
     uint8_t *buffer;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            buffer = fido_hid_receive_apdu()->data + 1;
+            buffer = fido_hid_receive_apdu_data() + 1;
             break;
         case TRANSPORT_BLE:
-            buffer = fido_ble_receive_apdu()->data + 1;
+            buffer = fido_ble_receive_apdu_data() + 1;
             break;
         default:
             buffer = NULL;
@@ -79,10 +77,10 @@ static size_t get_cbor_data_buffer_size(void)
     size_t size;
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            size = fido_hid_receive_apdu()->Lc - 1;
+            size = fido_hid_receive_apdu_Lc() - 1;
             break;
         case TRANSPORT_BLE:
-            size = fido_ble_receive_apdu()->Lc - 1;
+            size = fido_ble_receive_apdu_Lc() - 1;
             break;
         default:
             size = 0;
@@ -100,11 +98,11 @@ static uint8_t get_ctap2_command_byte(void)
     //   残りは全てCBORデータバイトとなっている
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            ctap2_cbor_buffer = fido_hid_receive_apdu()->data;
+            ctap2_cbor_buffer = fido_hid_receive_apdu_data();
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         case TRANSPORT_BLE:
-            ctap2_cbor_buffer = fido_ble_receive_apdu()->data;
+            ctap2_cbor_buffer = fido_ble_receive_apdu_data();
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         default:
@@ -170,7 +168,7 @@ void fido_ctap2_command_hid_init(void)
     memset(&init_res, 0x00, sizeof(init_res));
 
     // nonce を取得
-    uint8_t *nonce = fido_hid_receive_apdu()->data;
+    uint8_t *nonce = fido_hid_receive_apdu_data();
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -183,25 +181,25 @@ void fido_ctap2_command_hid_init(void)
     init_res.cflags        = CTAP2_CAPABILITY_WINK | CTAP2_CAPABILITY_LOCK | CTAP2_CAPABILITY_CBOR;
 
     // レスポンスデータを転送
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
 void fido_ctap2_command_wink(void)
 {
     // ステータスなしでレスポンスする
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
     fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 void fido_ctap2_command_lock(void)
 {
     // ロックコマンドのパラメーターを取得する
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
+    uint32_t cid = fido_hid_receive_header_CID();
+    uint8_t  cmd = fido_hid_receive_header_CMD();
+    uint8_t  lock_param = fido_hid_receive_apdu_data()[0];
 
     if (lock_param > 0) {
         // パラメーターが指定されていた場合
@@ -222,14 +220,15 @@ void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     //   １バイトめにステータスコードをセット
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = ctap2_status;
     if (m_transport_type == TRANSPORT_HID) {
-        uint32_t cid = fido_hid_receive_header()->CID;
-        uint32_t cmd = fido_hid_receive_header()->CMD;
+        uint32_t cid = fido_hid_receive_header_CID();
+        uint32_t cmd = fido_hid_receive_header_CMD();
         fido_hid_send_command_response(cid, cmd, response_buffer, length);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        uint8_t cmd = fido_ble_receive_header()->CMD;
+        uint8_t cmd = fido_ble_receive_header_CMD();
         fido_ble_send_command_response(cmd, response_buffer, length);
     } 
 }
@@ -339,8 +338,9 @@ static void command_make_credential_resume_process(void)
 
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
 
     // authenticatorMakeCredentialレスポンスをエンコード
     ctap2_status = ctap2_make_credential_encode_response(cbor_data_buffer, &cbor_data_length);
@@ -351,7 +351,7 @@ static void command_make_credential_resume_process(void)
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
-    response_length = cbor_data_length + 1;
+    fido_command_response_data_size_set(cbor_data_length + 1);
 
     // トークンカウンターレコードを追加
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -428,8 +428,9 @@ static void command_get_assertion_resume_process(void)
 
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
 
     // authenticatorGetAssertionレスポンスをエンコード
     ctap2_status = ctap2_get_assertion_encode_response(cbor_data_buffer, &cbor_data_length);
@@ -440,7 +441,7 @@ static void command_get_assertion_resume_process(void)
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
-    response_length = cbor_data_length + 1;
+    fido_command_response_data_size_set(cbor_data_length + 1);
 
     // トークンカウンターレコードを更新
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -456,8 +457,9 @@ static void command_authenticator_get_info(void)
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
     uint8_t  ctap2_status;
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
     
     // authenticatorGetInfoレスポンスをエンコード
     ctap2_status = ctap2_cbor_authgetinfo_encode_request(cbor_data_buffer, &cbor_data_length);
@@ -486,7 +488,8 @@ static void command_authenticator_client_pin(void)
 
     // サブコマンドに応じた処理を実行し、
     // 処理結果のCBORレスポンスを格納
-    ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+    uint8_t *response_buffer = fido_command_response_data();
+    ctap2_client_pin_perform_subcommand(response_buffer, fido_command_response_data_size_max());
 }
 
 static void command_authenticator_reset(void)
@@ -517,7 +520,7 @@ static void command_authenticator_reset_resume_process(void)
     }
 }
 
-void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
+static void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
@@ -546,16 +549,26 @@ void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
     }
 }
 
+void fido_ctap2_command_cbor_ble()
+{
+    fido_ctap2_command_cbor(TRANSPORT_BLE);
+}
+
+void fido_ctap2_command_cbor_hid()
+{
+    fido_ctap2_command_cbor(TRANSPORT_HID);
+}
+
 static bool verify_ctap2_cbor_command(void)
 {
     switch (m_transport_type) {
         case TRANSPORT_HID:
-            if (fido_hid_receive_header()->CMD == CTAP2_COMMAND_CBOR) {
+            if (fido_hid_receive_header_CMD() == CTAP2_COMMAND_CBOR) {
                 return true;
             }
             break;
         case TRANSPORT_BLE:
-            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+            if (fido_ble_receive_header_CMD() == U2F_COMMAND_MSG) {
                 // BLE CTAP2 command
                 return true;
             }
@@ -645,7 +658,7 @@ void fido_ctap2_command_flash_gc_done(void)
             break;
         case CTAP2_CMD_CLIENT_PIN:
             fido_log_warning("authenticatorClientPIN retry: FDS GC done ");
-            ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+            ctap2_client_pin_perform_subcommand(fido_command_response_data(), fido_command_response_data_size_max());
             break;
         default:
             break;
@@ -686,11 +699,11 @@ void fido_ctap2_command_token_counter_record_updated(void)
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             // レスポンスを生成してWebAuthnクライアントに戻す
-            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, fido_command_response_data_size());
             break;
         case CTAP2_CMD_GET_ASSERTION:
             // レスポンスを生成してWebAuthnクライアントに戻す
-            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, fido_command_response_data_size());
             break;
         default:
             break;

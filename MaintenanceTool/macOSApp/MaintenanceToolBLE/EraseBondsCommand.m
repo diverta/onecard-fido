@@ -67,7 +67,8 @@
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {
             // エラーの場合は上位クラスに制御を戻す
-            [self doResponseHidEraseBonds:false message:MSG_OCCUR_UNKNOWN_ERROR];
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_ST, responseBytes[0]];
+            [self doResponseHidEraseBonds:false message:message];
             return;
         }
         // 上位クラスに制御を戻す
@@ -88,23 +89,19 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時で上位クラスに制御を戻す
-        if (success == false) {
-            [self doResponseHidEraseBonds:false message:errorMessage];
-            return;
+        if (command == COMMAND_HID_CTAP2_INIT || command == COMMAND_ERASE_BONDS) {
+            if (success == false) {
+                // 即時で上位クラスに制御を戻す
+                [self doResponseHidEraseBonds:false message:errorMessage];
+                return;
+            }
         }
         // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_HID_CTAP2_INIT:
-                [self doResponseHIDCtap2Init];
-                break;
-            case COMMAND_ERASE_BONDS:
-                [self doResponseEraseBondsCommand:response];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self doResponseHidEraseBonds:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        if (command == COMMAND_HID_CTAP2_INIT) {
+            [self doResponseHIDCtap2Init];
+        }
+        if (command == COMMAND_ERASE_BONDS) {
+            [self doResponseEraseBondsCommand:response];
         }
     }
 

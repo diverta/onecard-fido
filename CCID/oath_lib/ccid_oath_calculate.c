@@ -4,6 +4,7 @@
  *
  * Created on 2022/07/11, 17:03
  */
+#include "ccid_define.h"
 #include "ccid_oath.h"
 #include "ccid_oath_calculate.h"
 #include "ccid_oath_define.h"
@@ -33,9 +34,11 @@ static uint8_t m_challenge[MAX_CHALLENGE_LEN];
 static uint8_t m_challenge_temp[MAX_CHALLENGE_LEN];
 static uint8_t m_digest[SHA256_DIGEST_LENGTH];
 
-uint16_t ccid_oath_calculate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_oath_calculate(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }

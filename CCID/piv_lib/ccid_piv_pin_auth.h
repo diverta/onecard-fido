@@ -15,11 +15,6 @@
 extern "C" {
 #endif
 
-#define PUK_DEFAULT_CODE        "12345678"
-#define PIN_DEFAULT_CODE        "123456\xFF\xFF"
-#define PIN_DEFAULT_SIZE        8
-#define PIN_DEFAULT_RETRY_CNT   3
-
 bool     ccid_piv_pin_auth_failed(uint8_t pin_type);
 uint8_t  ccid_piv_pin_auth_current_retries(uint8_t pin_type);
 

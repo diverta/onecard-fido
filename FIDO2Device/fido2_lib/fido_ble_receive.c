@@ -8,11 +8,14 @@
 //
 // プラットフォーム非依存コード
 //
-#include "u2f.h"
+#include "u2f_define.h"
+#include "fido_ble_define.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_define.h"
 #include "fido_maintenance_define.h"
 #include "fido_receive_apdu.h"
+#include "fido_transport_define.h"
 
 // コマンド実行関数群
 #include "fido_command.h"
@@ -29,8 +32,7 @@ fido_log_module_register(fido_ble_receive);
 
 // u2f control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
-#define U2F_MAX_RECV_CHAR_LEN 64
-static uint8_t  control_point_buffer[U2F_MAX_RECV_CHAR_LEN];
+static uint8_t  control_point_buffer[BLE_U2F_MAX_RECV_CHAR_LEN];
 static uint16_t control_point_buffer_length;
 
 // 無通信タイムアウトタイマーが開始後、
@@ -49,14 +51,29 @@ static FIDO_APDU_T  apdu_t;
 //
 static uint8_t m_ctap2_command;
 
-BLE_HEADER_T *fido_ble_receive_header(void)
+uint8_t fido_ble_receive_header_CMD(void)
 {
-    return &ble_header_t;
+    return ble_header_t.CMD;
 }
 
-FIDO_APDU_T *fido_ble_receive_apdu(void)
+uint8_t fido_ble_receive_header_ERROR(void)
+{
+    return ble_header_t.ERROR;
+}
+
+void *fido_ble_receive_apdu(void)
 {
     return &apdu_t;
+}
+
+uint8_t *fido_ble_receive_apdu_data(void)
+{
+    return apdu_t.data;
+}
+
+uint32_t fido_ble_receive_apdu_Lc(void)
+{
+    return apdu_t.Lc;
 }
 
 uint8_t fido_ble_receive_ctap2_command(void)
@@ -115,7 +132,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         return false;
     }
 
-    if (p_ble_header->LEN > U2F_MAX_RECV_CHAR_LEN - 3) {
+    if (p_ble_header->LEN > sizeof(control_point_buffer) - 3) {
         // BLEヘッダーに設定されたデータ長が
         // 61文字を超える場合、後続データがあると判断
         fido_log_debug("u2f_request_receive: CONT frame will receive ");
@@ -324,11 +341,10 @@ static bool invalid_command_in_pairing_mode(void)
 void fido_ble_receive_on_request_received(void)
 {
     // BLEヘッダーの参照を取得
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
+    if (fido_ble_receive_header_CMD() == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        fido_ble_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header()->ERROR);
+        fido_ble_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header_ERROR());
         return;
     }
     
@@ -339,5 +355,5 @@ void fido_ble_receive_on_request_received(void)
     }
     
     // データ受信後に実行すべき処理
-    fido_command_on_request_receive_completed(TRANSPORT_BLE);
+    fido_command_on_ble_request_receive_completed();
 }

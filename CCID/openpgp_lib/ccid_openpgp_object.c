@@ -4,11 +4,12 @@
  *
  * Created on 2021/02/11, 15:46
  */
-#include "ccid_pin.h"
-#include "ccid_openpgp.h"
+#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_openpgp_data.h"
-#include "ccid_openpgp_object.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_pin.h"
+#include "ccid_openpgp_pin_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -28,14 +29,14 @@ static void *m_flash_func = NULL;
 static command_apdu_t  *m_capdu;
 static response_apdu_t *m_rapdu;
 
-void ccid_openpgp_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_openpgp_object_resume_prepare(void *p_capdu, void *p_rapdu)
 {
     // Flash ROM書込みが完了するまで、レスポンスを抑止
     ccid_apdu_response_set_pending(true);
 
     // APDU格納領域の参照を待避
-    m_capdu = capdu;
-    m_rapdu = rapdu;
+    m_capdu = (command_apdu_t *)p_capdu;
+    m_rapdu = (response_apdu_t *)p_rapdu;
 }
 
 void ccid_openpgp_object_resume_process(uint16_t sw)
@@ -232,7 +233,7 @@ bool ccid_openpgp_object_data_delete_all(void)
 //
 void ccid_openpgp_object_write_retry(void)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // リトライが必要な場合は
     // 呼び出し先に応じて、処理を再実行
@@ -249,7 +250,7 @@ void ccid_openpgp_object_write_retry(void)
 
 void ccid_openpgp_object_write_resume(bool success)
 {
-    ccid_assert_apdu(m_capdu, m_rapdu);
+    ccid_apdu_assert(m_capdu, m_rapdu);
 
     // Flash ROM書込みが完了した場合は
     // 正常系の後続処理を実行

@@ -59,14 +59,8 @@
 
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
-        switch ([self command]) {
-            case COMMAND_HID_FIRMWARE_RESET:
-                [self doRequestHidFirmwareReset];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        if ([self command] == COMMAND_HID_FIRMWARE_RESET) {
+            [self doRequestHidFirmwareReset];
         }
     }
 
@@ -108,23 +102,19 @@
     }
 
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        // 即時で上位クラスに制御を戻す
-        if (success == false) {
-            [self commandDidProcess:false message:errorMessage];
-            return;
+        if (command == COMMAND_HID_CTAP2_INIT || command == COMMAND_HID_FIRMWARE_RESET) {
+            if (success == false) {
+                // 即時で上位クラスに制御を戻す
+                [self commandDidProcess:false message:errorMessage];
+                return;
+            }
         }
         // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_HID_CTAP2_INIT:
-                [self doResponseHIDCtap2Init];
-                break;
-            case COMMAND_HID_FIRMWARE_RESET:
-                [self doResponseHidFirmwareReset:response];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、上位クラスに制御を戻す
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        if (command == COMMAND_HID_CTAP2_INIT) {
+            [self doResponseHIDCtap2Init];
+        }
+        if (command == COMMAND_HID_FIRMWARE_RESET) {
+            [self doResponseHidFirmwareReset:response];
         }
     }
 

@@ -6,10 +6,11 @@
  */
 #include <string.h>
 
-#include "ccid_openpgp.h"
+#include "ccid_define.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_crypto.h"
 #include "ccid_openpgp_data.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_pin.h"
 #include "ccid_pin_auth.h"
@@ -65,8 +66,9 @@ static const uint8_t extended_capabilities[] = {
     HI(OPGP_MAX_DO_LENGTH), LO(OPGP_MAX_DO_LENGTH),
     0x00, 0x00};
 
-bool ccid_openpgp_aid_is_applet(command_apdu_t *capdu)
+bool ccid_openpgp_aid_is_applet(void *p_capdu)
 {
+    command_apdu_t *capdu = (command_apdu_t *)p_capdu;
     return (capdu->lc == 6 && memcmp(capdu->data, aid, capdu->lc) == 0);
 }
 
@@ -187,7 +189,7 @@ static uint16_t get_application_related_data(response_apdu_t *rapdu)
     offset += len;
 
     rdata[offset++] = TAG_KEY_FINGERPRINTS;
-    rdata[offset++] = KEY_FINGERPRINT_LENGTH * 3;
+    rdata[offset++] = OPGP_KEY_FINGERPRINT_LENGTH * 3;
     sw = openpgp_key_get_fingerprint(TAG_KEY_SIG_FINGERPRINT, rdata + offset, &len);
     if (sw != SW_NO_ERROR) {
         return sw;
@@ -205,7 +207,7 @@ static uint16_t get_application_related_data(response_apdu_t *rapdu)
     offset += len;
 
     rdata[offset++] = TAG_CA_FINGERPRINTS;
-    rdata[offset++] = KEY_FINGERPRINT_LENGTH * 3;
+    rdata[offset++] = OPGP_KEY_FINGERPRINT_LENGTH * 3;
     sw = openpgp_key_get_fingerprint(TAG_KEY_CA1_FINGERPRINT, rdata + offset, &len);
     if (sw != SW_NO_ERROR) {
         return sw;
@@ -223,7 +225,7 @@ static uint16_t get_application_related_data(response_apdu_t *rapdu)
     offset += len;
 
     rdata[offset++] = TAG_KEY_GENERATION_DATES;
-    rdata[offset++] = KEY_DATETIME_LENGTH * 3;
+    rdata[offset++] = OPGP_KEY_DATETIME_LENGTH * 3;
     sw = openpgp_key_get_datetime(TAG_KEY_SIG_GENERATION_DATES, rdata + offset, &len);
     if (sw != SW_NO_ERROR) {
         return sw;
@@ -429,9 +431,11 @@ static uint16_t openpgp_ins_reset_retry_counter(command_apdu_t *capdu, response_
     return ccid_openpgp_pin_reset(capdu, rapdu);
 }
 
-void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_openpgp_apdu_process(void *p_capdu, void *p_rapdu)
 {
     // レスポンス長をゼロクリア
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     rapdu->len = 0;
 
     // CLAのチェック
@@ -463,7 +467,7 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case OPENPGP_INS_IMPORT_KEY:
             rapdu->sw = openpgp_ins_import_key(capdu, rapdu);
             break;
-        case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
+        case OPENPGP_INS_GENERATE_ASYMM_KEY_PAIR:
             rapdu->sw = openpgp_ins_generate_asymmetric_key_pair(capdu, rapdu);
             break;
         case OPENPGP_INS_PSO:

@@ -11,8 +11,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "fido_common.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,7 +19,8 @@ void fido_ctap2_command_hid_init(void);
 void fido_ctap2_command_wink(void);
 void fido_ctap2_command_lock(void);
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length);
-void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type);
+void fido_ctap2_command_cbor_ble();
+void fido_ctap2_command_cbor_hid();
 void fido_ctap2_command_tup_cancel(void);
 void fido_ctap2_command_cancel(void);
 void fido_ctap2_command_keepalive_timer_handler(void);

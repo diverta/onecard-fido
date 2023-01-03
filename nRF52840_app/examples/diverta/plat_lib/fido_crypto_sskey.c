@@ -22,6 +22,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_crypto_plat.h"
+#include "fido_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

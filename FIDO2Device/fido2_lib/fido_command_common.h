@@ -15,6 +15,10 @@
 extern "C" {
 #endif
 
+uint8_t *fido_command_response_data(void);
+size_t   fido_command_response_data_size(void);
+size_t   fido_command_response_data_size_max(void);
+void     fido_command_response_data_size_set(size_t size);
 void     fido_command_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
 bool     fido_command_check_skey_cert_exist(void);
 bool     fido_command_check_aes_password_exist(void);

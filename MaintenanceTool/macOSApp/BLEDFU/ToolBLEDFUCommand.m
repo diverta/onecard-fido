@@ -537,15 +537,9 @@ typedef enum : NSInteger {
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
-        // 実行コマンドにより処理分岐
-        switch (command) {
-            case COMMAND_BLE_GET_VERSION_INFO:
-                [self toolBLECommandDidProcess:command success:true response:response];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、一旦ヘルパークラスに制御を戻す-->BLE切断後、didCompleteCommandが呼び出される
-                [[self appBLECommand] commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
+        // 処理を続行
+        if (command == COMMAND_BLE_GET_VERSION_INFO) {
+            [self toolBLECommandDidProcess:command success:true response:response];
         }
     }
 

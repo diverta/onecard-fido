@@ -1,15 +1,15 @@
 /* 
- * File:   ccid_pin.h
+ * File:   ccid_openpgp_pin_define.h
  * Author: makmorit
  *
- * Created on 2021/02/11, 9:43
+ * Created on 2023/01/03, 14:23
  */
-#ifndef CCID_PIN_H
-#define CCID_PIN_H
+#ifndef CCID_OPENPGP_PIN_DEFINE_H
+#define CCID_OPENPGP_PIN_DEFINE_H
 
+#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,4 +38,4 @@ typedef struct {
 }
 #endif
 
-#endif /* CCID_PIN_H */
+#endif /* CCID_OPENPGP_PIN_DEFINE_H */

@@ -16,33 +16,6 @@ extern "C" {
 #endif
 
 //
-// データオブジェクトのタグ
-//
-#define TAG_OBJ_CHUID   0x02
-#define TAG_CERT_PAUTH  0x05
-#define TAG_OBJ_CCC     0x07
-#define TAG_CERT_DGSIG  0x0a
-#define TAG_CERT_KEYMN  0x0b
-#define TAG_KEY_PAUTH   0x9a
-#define TAG_KEY_CAADM   0x9b
-#define TAG_KEY_DGSIG   0x9c
-#define TAG_KEY_KEYMN   0x9d
-#define TAG_PIV_PIN     0x80
-#define TAG_KEY_PUK     0x81
-
-//
-// データオブジェクト関連定義
-//
-#define CAADM_KEY_SIZE    24
-#define ECC_PRV_KEY_SIZE  32
-#define RSA2048_KEY_SIZE  640
-#define RSA2048_N_LENGTH  256
-#define RSA2048_PQ_LENGTH 128
-#define MAX_CERT_SIZE     1024
-#define MAX_CCC_SIZE      288
-#define MAX_CHUID_SIZE    288
-
-//
 // 関数群
 //
 bool    ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);

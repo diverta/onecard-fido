@@ -7,6 +7,8 @@
 #ifndef BLE_SERVICE_COMMON_H
 #define BLE_SERVICE_COMMON_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +19,6 @@ bool ble_service_peripheral_mainsw_event_handler(void);
 
 void ble_service_common_init(void);
 void ble_service_common_disable_peripheral(void);
-bool ble_service_common_erase_bond_data(void (*_response_func)(bool));
 
 #ifdef __cplusplus
 }

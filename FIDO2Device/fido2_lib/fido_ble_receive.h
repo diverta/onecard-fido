@@ -7,41 +7,26 @@
 #ifndef FIDO_BLE_RECEIVE_H
 #define FIDO_BLE_RECEIVE_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdbool.h>
-#include "fido_common.h"
-    
-// リクエストデータに含まれるBLEヘッダーを保持
-typedef struct {
-    uint8_t  CMD;
-    uint32_t LEN;
-    uint8_t  SEQ;
+uint8_t     fido_ble_receive_header_CMD(void);
+uint8_t     fido_ble_receive_header_ERROR(void);
+void       *fido_ble_receive_apdu(void);
+uint8_t    *fido_ble_receive_apdu_data(void);
+uint32_t    fido_ble_receive_apdu_Lc(void);
+uint8_t     fido_ble_receive_ctap2_command(void);
 
-    // リクエストデータの検査中に
-    // 確認されたエラーを保持
-    uint8_t ERROR;
+void        fido_ble_receive_init(void);
+bool        fido_ble_receive_control_point(uint8_t *data, uint16_t length);
+void        fido_ble_receive_frame_count_clear(void);
+uint8_t     fido_ble_receive_frame_count(void);
 
-    // リクエストデータの検査中に
-    // 設定されたステータスワードを保持
-    uint16_t STATUS_WORD;
-
-    // 後続リクエストがあるかどうかを保持
-    bool CONT;
-} BLE_HEADER_T;
-
-BLE_HEADER_T *fido_ble_receive_header(void);
-FIDO_APDU_T  *fido_ble_receive_apdu(void);
-uint8_t       fido_ble_receive_ctap2_command(void);
-
-void          fido_ble_receive_init(void);
-bool          fido_ble_receive_control_point(uint8_t *data, uint16_t length);
-void          fido_ble_receive_frame_count_clear(void);
-uint8_t       fido_ble_receive_frame_count(void);
-
-void          fido_ble_receive_on_request_received(void);
+void        fido_ble_receive_on_request_received(void);
 
 #ifdef __cplusplus
 }

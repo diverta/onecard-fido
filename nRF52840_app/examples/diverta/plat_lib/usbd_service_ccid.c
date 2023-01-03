@@ -13,6 +13,8 @@
 #include "usbd_service_bos.h"
 #include "usbd_service_ccid.h"
 #include "ccid.h"
+#include "ccid_apdu.h"
+#include "ccid_define.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service_ccid

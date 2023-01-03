@@ -172,20 +172,12 @@ namespace MaintenanceToolApp.Utility
             string strDeviceName = array[0];
             string strFWRev = array[1];
             string strHWRev = array[2];
-            string strSecic = array[3];
 
             // 画面に制御を戻す
             CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_HEADER);
             CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_DEVICE_NAME, strDeviceName));
             CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev));
             CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_HW_REV, strHWRev));
-
-            // セキュアICの搭載有無を表示
-            if (strSecic.Length > 0) {
-                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_SECURE_IC_AVAIL);
-            } else {
-                CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_SECURE_IC_UNAVAIL);
-            }
 
             // 画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(Parameter.CommandTitle, "", true, ParentWindow);
@@ -198,7 +190,6 @@ namespace MaintenanceToolApp.Utility
             string strDeviceName = "";
             string strFWRev = "";
             string strHWRev = "";
-            string strSecic = "";
             foreach (string v in vars) {
                 if (v.StartsWith("DEVICE_NAME=")) {
                     strDeviceName = v.Split('=')[1].Replace("\"", "");
@@ -206,11 +197,9 @@ namespace MaintenanceToolApp.Utility
                     strFWRev = v.Split('=')[1].Replace("\"", "");
                 } else if (v.StartsWith("HW_REV=")) {
                     strHWRev = v.Split('=')[1].Replace("\"", "");
-                } else if (v.StartsWith("ATECC608A=")) {
-                    strSecic = v.Split('=')[1].Replace("\"", "");
                 }
             }
-            return new string[] { strDeviceName, strFWRev, strHWRev, strSecic };
+            return new string[] { strDeviceName, strFWRev, strHWRev };
         }
 
         private void ViewLogFile()

@@ -10,9 +10,6 @@
 #include "app_timer.h"
 #include "app_button.h"
 
-// for lighting LED
-#include "nrf_gpio.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_board
 #include "nrf_log.h"
@@ -28,11 +25,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"
-
-#if !defined(NO_SECURE_IC)
-// for atecc_get_serial_num_str
-#include "atecc.h"
-#endif
 
 //
 // ボタンのピン番号
@@ -61,6 +53,14 @@ static const app_button_cfg_t m_app_buttons[APP_BUTTON_NUM] = {
 static bool m_long_pushed = false;
 static bool m_push_initial = true;
 
+static void fido_board_button_long_pushed(void)
+{
+    // ペアリングモードに遷移させるための長押しの場合、
+    // このタイミングで、ペアリングモード変更を実行
+    m_long_pushed = true;
+    fido_ble_pairing_change_mode();
+}
+
 static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 {
     switch (button_action) {
@@ -69,7 +69,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
                 m_push_initial = false;
             }
             if (pin_no == PIN_MAIN_SW_IN) {
-                fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, NULL);
+                fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, fido_board_button_long_pushed);
             }
             break;
 
@@ -100,20 +100,10 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
     }
 }
 
-void fido_command_long_push_timer_handler(void *p_context)
-{
-    (void)p_context;
-    m_long_pushed = true;
-    
-    // ペアリングモードに遷移させるための長押しの場合、
-    // このタイミングで、ペアリングモード変更を実行
-    fido_ble_pairing_change_mode();
-}
-
 //
 // タイマーを追加
 //
-void fido_button_timers_init(void)
+void fido_board_button_timers_init(void)
 {
     // Initialize timer module.
     ret_code_t err_code = app_timer_init();
@@ -126,7 +116,7 @@ void fido_button_timers_init(void)
 //
 // ボタンをカスタマイズ
 //
-void fido_button_init(void)
+void fido_board_button_init(void)
 {
     ret_code_t err_code;
 
@@ -146,7 +136,7 @@ void fido_button_init(void)
 //
 // LED関連
 //
-void led_light_pin_set(LED_COLOR led_color, bool led_on)
+void fido_board_led_pin_set(LED_COLOR led_color, bool led_on)
 {
     // FIDO機能で使用するLEDのピン番号を設定
     // nRF52840 Dongleでは以下の割り当てになります。
@@ -156,13 +146,13 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
     uint32_t pin_number;
     switch (led_color) {
         case LED_COLOR_RED:
-            pin_number = LED_2;
+            pin_number = LED_R;
             break;
         case LED_COLOR_GREEN:
-            pin_number = LED_3;
+            pin_number = LED_G;
             break;
         case LED_COLOR_BLUE:
-            pin_number = LED_4;
+            pin_number = LED_B;
             break;
         case LED_COLOR_BUSY:
             pin_number = LED_R;
@@ -175,13 +165,13 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
     }
     
     // LEDを出力設定
-    nrf_gpio_cfg_output(pin_number);
+    fido_board_gpio_cfg_output(pin_number);
     if (led_on) {
         // LEDを点灯させる
-        nrf_gpio_pin_clear(pin_number);
+        fido_board_gpio_pin_clear(pin_number);
     } else {
         // LEDを消灯させる
-        nrf_gpio_pin_set(pin_number);
+        fido_board_gpio_pin_set(pin_number);
     }
 }
 
@@ -196,13 +186,6 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data, 
         "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", DEVICE_NAME, FW_REV, HW_REV);
-
-#if !defined(NO_SECURE_IC)
-    // ATECC608Aの固有情報を追加（非実装の場合はブランク）
-    char *info_csv_data_ = (char *)info_csv_data;
-    sprintf((char *)info_csv_data, 
-        "%s,ATECC608A=\"%s\"", info_csv_data_, atecc_get_serial_num_str());
-#endif
 
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
@@ -228,4 +211,14 @@ void fido_board_prepare_for_deep_sleep(void)
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
     ret_code_t err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
+}
+
+//
+// システムリセット
+//
+void fido_board_system_reset(void)
+{
+    NRF_LOG_INFO("System will restart...\n\r");
+    NRF_LOG_FINAL_FLUSH();
+    sd_nvic_SystemReset();
 }

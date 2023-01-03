@@ -11,7 +11,7 @@
 
 #include "ccid_flash_object.h"
 #include "ccid_ykpiv.h"
-#include "ccid_piv_authenticate.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_object_import.h"
 

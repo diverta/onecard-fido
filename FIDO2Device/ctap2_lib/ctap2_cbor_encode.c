@@ -9,6 +9,7 @@
 
 #include "fido_command_common.h"
 #include "fido_common.h"
+#include "fido_define.h"
 #include "ctap2_cbor.h"
 #include "ctap2_cbor_define.h"
 #include "ctap2_client_pin_token.h"

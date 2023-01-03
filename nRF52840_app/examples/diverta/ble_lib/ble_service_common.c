@@ -22,7 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_pairing.h"
-#include "ble_service_common.h"
 #include "ble_service_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -135,8 +134,8 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, BLE_GAP_PASSKEY_LEN);
             passkey[BLE_GAP_PASSKEY_LEN] = 0x00;
             NRF_LOG_INFO("BLE_GAP_EVT_PASSKEY_DISPLAY: passkey=%s match_req=%d",
-                         nrf_log_push(passkey),
-                         p_ble_evt->evt.gap_evt.params.passkey_display.match_request);
+                            nrf_log_push(passkey),
+                            p_ble_evt->evt.gap_evt.params.passkey_display.match_request);
             break;
     
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -151,13 +150,13 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             NRF_LOG_DEBUG("BLE_GAP_EVT_LESC_DHKEY_REQUEST");
             break;
 
-         case BLE_GAP_EVT_AUTH_STATUS:
-             NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status=0x%x bond=0x%x lv4: %d kdist_own:0x%x kdist_peer:0x%x",
-                          p_ble_evt->evt.gap_evt.params.auth_status.auth_status,
-                          p_ble_evt->evt.gap_evt.params.auth_status.bonded,
-                          p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
-                          *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
-                          *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
+        case BLE_GAP_EVT_AUTH_STATUS:
+            NRF_LOG_INFO("BLE_GAP_EVT_AUTH_STATUS: status=0x%x bond=0x%x lv4: %d kdist_own:0x%x kdist_peer:0x%x",
+                            p_ble_evt->evt.gap_evt.params.auth_status.auth_status,
+                            p_ble_evt->evt.gap_evt.params.auth_status.bonded,
+                            p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
+                            *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
+                            *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
             break;
 
         case BLE_GAP_EVT_ADV_REPORT:
@@ -220,52 +219,6 @@ static void gatt_init(void)
     err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
     APP_ERROR_CHECK(err_code);
 }
-//
-// ペアリング情報の全削除処理
-//
-static void (*erase_bonding_data_response_func)(bool) = NULL;
-
-bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
-{
-    // ペアリング情報削除後に実行される関数の参照を退避
-    erase_bonding_data_response_func = _response_func;
-
-    // 全てのペアリング情報を削除
-    ret_code_t err_code = pm_peers_delete();
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
-        return false;
-    }
-    return true;
-}
-
-static void perform_erase_bonding_data_response_func(bool success)
-{
-    if (erase_bonding_data_response_func == NULL) {
-        return;
-    }
-
-    // ペアリング情報削除後に実行される処理
-    (*erase_bonding_data_response_func)(success);
-    erase_bonding_data_response_func = NULL;
-}
-
-static bool erase_bond_data_completed(pm_evt_t const *p_evt)
-{
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
-        perform_erase_bonding_data_response_func(true);
-        return true;
-    }
-
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        NRF_LOG_ERROR("pm_peers_delete has failed");
-        perform_erase_bonding_data_response_func(false);
-        return true;
-    }
-
-    return false;
-}
 
 //
 // 初期化関連処理（Peer Manager）
@@ -288,7 +241,7 @@ static bool erase_bond_data_completed(pm_evt_t const *p_evt)
 static void pm_evt_handler(pm_evt_t const *p_evt)
 {
     // ペアリング情報削除時のイベントを最優先で処理
-    if (erase_bond_data_completed(p_evt)) {
+    if (fido_ble_unpairing_erase_bond_data_completed(p_evt)) {
         return;
     }
 
@@ -423,7 +376,7 @@ void ble_service_common_disable_peripheral(void)
     if (ble_service_peripheral_mode()) {
         // BLEペリフェラル稼働中にUSB接続された場合は、
         // ソフトデバイスを再起動
-        NVIC_SystemReset();
+        fido_board_system_reset();
     }
 }
 

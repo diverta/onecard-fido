@@ -6,9 +6,10 @@
  */
 #include <string.h>
 
-#include "ccid_openpgp.h"
+#include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_openpgp_data.h"
-#include "ccid_openpgp_key.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_key_rsa.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -23,21 +24,11 @@ fido_log_module_register(ccid_openpgp_key);
 #define LOG_DEBUG_KEY_IMP_REQ_BUFF  false
 
 //
-// Keys for OpenPGP
-//
-#define KEY_TYPE_RSA                0x01
-
-// 鍵ステータス種別
-#define KEY_NOT_PRESENT             0x00
-#define KEY_GENERATED               0x01
-#define KEY_IMPORTED                0x02
-
-//
 // offset
 //  1: Reserved for length of modulus, default: 2048
 //  3: length of exponent: 32 bit
 //
-static uint8_t rsa_attr[] = {KEY_TYPE_RSA, 0x08, 0x00, 0x00, 0x20, 0x00};
+static uint8_t rsa_attr[] = {OPGP_KEY_TYPE_RSA, 0x08, 0x00, 0x00, 0x20, 0x00};
 
 //
 // 鍵属性管理
@@ -83,8 +74,8 @@ uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
     }
     if (is_exist == false) {
         // Flash ROMに登録されていない場合はデフォルトを設定
-        buffer_size = KEY_FINGERPRINT_LENGTH;
-        memset(buf, 0, KEY_FINGERPRINT_LENGTH);
+        buffer_size = OPGP_KEY_FINGERPRINT_LENGTH;
+        memset(buf, 0, OPGP_KEY_FINGERPRINT_LENGTH);
     }
 
     // サイズを戻す
@@ -110,8 +101,8 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
     }
     if (is_exist == false) {
         // Flash ROMに登録されていない場合はデフォルトを設定
-        buffer_size = KEY_DATETIME_LENGTH;
-        memset(buf, 0, KEY_DATETIME_LENGTH);
+        buffer_size = OPGP_KEY_DATETIME_LENGTH;
+        memset(buf, 0, OPGP_KEY_DATETIME_LENGTH);
     }
 
     // サイズを戻す
@@ -158,7 +149,7 @@ uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
     }
     if (is_exist == false) {
         // Flash ROMに登録されていない場合はデフォルトを設定
-        status_ = KEY_NOT_PRESENT;
+        status_ = OPGP_KEY_NOT_PRESENT;
     }
 
     // ステータスを戻す
@@ -179,7 +170,7 @@ uint16_t ccid_openpgp_key_is_present(uint16_t key_tag)
         return sw;
     }
     // If key not present
-    if (status == KEY_NOT_PRESENT) {
+    if (status == OPGP_KEY_NOT_PRESENT) {
         return SW_REFERENCE_DATA_NOT_FOUND;
     } else {
         return SW_NO_ERROR;
@@ -247,7 +238,7 @@ static void key_pair_generate_response(response_apdu_t *rapdu, uint8_t *key_attr
     uint8_t *rdata = rapdu->data;
     rdata[0] = 0x7f;
     rdata[1] = 0x49;
-    if (key_attr[0] == KEY_TYPE_RSA) {
+    if (key_attr[0] == OPGP_KEY_TYPE_RSA) {
         uint16_t nbits = (key_attr[1] << 8) | key_attr[2];
         uint16_t n_size = nbits / 8;
         uint8_t e_size = ccid_crypto_rsa_e_size();
@@ -270,9 +261,11 @@ static void key_pair_generate_response(response_apdu_t *rapdu, uint8_t *key_attr
     }
 }
 
-uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_key_pair_generate(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p2 != 0x00) {
         return SW_WRONG_P1P2;
     }
@@ -295,7 +288,7 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
 
     // 鍵アルゴリズムを取得
     uint8_t key_alg = m_key_attr[0];
-    if (key_alg != KEY_TYPE_RSA) {
+    if (key_alg != OPGP_KEY_TYPE_RSA) {
         // RSA-2048以外はサポート外
         fido_log_error("OpenPGP do not support algorithm 0x%02x ", key_alg);
         return SW_WRONG_DATA;
@@ -348,9 +341,11 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
 //
 // 鍵インポート処理
 // 
-uint16_t ccid_openpgp_key_import(command_apdu_t *capdu, response_apdu_t *rapdu) 
+uint16_t ccid_openpgp_key_import(void *p_capdu, void *p_rapdu) 
 {
     // パラメーターのチェック
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
     if (capdu->p1 != 0x3f || capdu->p2 != 0xff) {
         return SW_WRONG_P1P2;
     }
@@ -434,5 +429,5 @@ uint16_t ccid_openpgp_key_import(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // Flash ROMに秘密鍵を保存
-    return ccid_openpgp_data_register_key(capdu, rapdu, key_tag, KEY_IMPORTED);
+    return ccid_openpgp_data_register_key(capdu, rapdu, key_tag, OPGP_KEY_IMPORTED);
 }

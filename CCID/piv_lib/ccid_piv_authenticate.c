@@ -4,9 +4,11 @@
  *
  * Created on 2020/07/23, 16:32
  */
+#include "ccid.h"
+#include "ccid_define.h"
 #include "ccid_piv.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_general_auth.h"
-#include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 
@@ -165,16 +167,17 @@ static uint16_t authenticate_internal_RSA2048(uint8_t tag, uint8_t *input_data, 
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_internal(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("internal authenticate");
 
     // 変数の初期化
     ccid_piv_authenticate_reset_context();
+    BER_TLV_INFO *data_obj_info = (BER_TLV_INFO *)data_obj_ber_tlv_info;
     uint8_t challenge_pos = data_obj_info->chl_pos;
     size_t  challenge_size = data_obj_info->chl_len;
     uint8_t key_alg = capdu->p1;
@@ -206,11 +209,11 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     }
 }
 
-uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     // ECDH with the PIV KMK
     // Documented in SP800-73-4 Part 2 Appendix A.5
@@ -218,6 +221,7 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
 
     // 変数の初期化
     ccid_piv_authenticate_reset_context();
+    BER_TLV_INFO *data_obj_info = (BER_TLV_INFO *)data_obj_ber_tlv_info;
     uint8_t pubkey_pos = data_obj_info->exp_pos;
     uint8_t pubkey_size = data_obj_info->exp_len;
 
@@ -260,18 +264,18 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("mutual authenticate request");
 
     // 変数の初期化
     ccid_piv_authenticate_reset_context();
     ccid_piv_admin_mode_set(false);
-    (void)data_obj_info;
+    (void)data_obj_ber_tlv_info;
 
     // パラメーターのチェック
     if (capdu->p2 != TAG_KEY_CAADM) {
@@ -331,11 +335,11 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t ccid_piv_authenticate_mutual_response(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
+    capdu = p_capdu;
+    rapdu = p_rapdu;
 
     fido_log_debug("mutual authenticate response");
 
@@ -355,6 +359,7 @@ uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_
     //  1: auth key id
     //  2: auth algorism
     //  3: auth challenge (16 bytes)
+    BER_TLV_INFO *data_obj_info = (BER_TLV_INFO *)data_obj_ber_tlv_info;
     uint8_t *challenge = auth_ctx + 3;
     uint8_t *witness = capdu->data + data_obj_info->wit_pos;
     if (auth_ctx[0] != AUTH_STATE_MUTUAL 

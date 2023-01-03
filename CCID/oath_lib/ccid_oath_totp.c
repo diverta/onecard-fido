@@ -4,7 +4,7 @@
  *
  * Created on 2022/06/21, 7:55
  */
-#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_oath_define.h"
 #include "fido_common.h"
 

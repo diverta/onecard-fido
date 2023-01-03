@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "fido_hid_channel.h"
+#include "fido_hid_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -59,7 +60,7 @@ void fido_hid_channel_set_cid_bytes(uint8_t *cid, uint32_t _CID)
 //
 // チャネルロック管理
 // 
-void fido_hid_channel_lock_timedout_handler(void)
+static void fido_hid_channel_lock_timedout_handler(void)
 {
     // 所定の秒数を経過した場合、
     // ロック対象CIDをクリア
@@ -76,7 +77,7 @@ void fido_hid_channel_lock_start(uint32_t cid, uint8_t lock_param)
     
     // ロックタイマーを開始
     uint32_t lock_ms = (uint32_t)lock_param * 1000;
-    fido_hid_channel_lock_timer_start(lock_ms);
+    fido_hid_channel_lock_timer_start(lock_ms, fido_hid_channel_lock_timedout_handler);
 
     // パラメーターが指定されていた場合
     // ロック対象CIDを設定
@@ -100,7 +101,8 @@ void fido_hid_channel_lock_cancel(void)
     fido_hid_channel_lock_timer_stop();
 }
 
-size_t fido_hid_payload_length_get(USB_HID_MSG_T *recv_msg)
+size_t fido_hid_payload_length_get(void *msg)
 {
+    USB_HID_MSG_T *recv_msg = (USB_HID_MSG_T *)msg;
     return ((recv_msg->pkt.init.bcnth << 8) & 0xff00) | (recv_msg->pkt.init.bcntl & 0x00ff);
 }

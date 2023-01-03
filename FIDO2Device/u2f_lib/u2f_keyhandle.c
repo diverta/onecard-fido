@@ -3,7 +3,7 @@
 
 #include "fido_command_common.h"
 #include "fido_common.h"
-#include "u2f.h"
+#include "u2f_define.h"
 #include "u2f_signature.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -17,7 +17,6 @@
 //   keyhandle_buffer
 //     暗号化された後のキーハンドル。
 //     U2Fサーバー／クライアントとの受け渡しに使用
-#define KEYHANDLE_MAX_SIZE 96
 static uint8_t keyhandle_base_buffer[KEYHANDLE_MAX_SIZE];
 static uint8_t keyhandle_buffer[KEYHANDLE_MAX_SIZE];
 static size_t  keyhandle_buffer_block_size;

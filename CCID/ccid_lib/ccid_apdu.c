@@ -5,6 +5,8 @@
  * Created on 2020/05/29, 15:21
  */
 #include "ccid.h"
+#include "ccid_apdu.h"
+#include "ccid_define.h"
 #include "ccid_process.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -384,12 +386,15 @@ void ccid_apdu_process(void)
     ccid_apdu_resume_process(capdu, rapdu);
 }
 
-void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu)
+void ccid_apdu_resume_process(void *p_capdu, void *p_rapdu)
 {
     if (ccid_apdu_response_is_pending()) {
         // レスポンス実行抑止フラグ設定時は終了
         return;
     }
+
+    command_apdu_t  *capdu = (command_apdu_t *)p_capdu;
+    response_apdu_t *rapdu = (response_apdu_t *)p_rapdu;
 
 #if LOG_DEBUG_APDU_DATA_BUFF
     // 送信APDUレスポンスのログ
@@ -402,4 +407,11 @@ void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu)
     
     // レスポンスAPDUの送信を指示
     ccid_resume_reader_to_pc_data_block();
+}
+
+void ccid_apdu_assert(void *p_capdu, void *p_rapdu)
+{
+    if (p_capdu == NULL || p_rapdu == NULL) {
+        while(true);
+    }
 }

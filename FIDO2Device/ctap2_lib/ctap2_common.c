@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "ctap2_common.h"
+#include "ctap2_define.h"
 #include "fido_command_common.h"
 
 // for u2f_crypto_sign & other
@@ -30,8 +30,21 @@ static uint8_t ctap2_flags;
 static uint32_t ctap2_sign_count = 0;
 
 // Authenticator dataを保持
-uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
-size_t  authenticator_data_size;
+static uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
+static size_t  authenticator_data_size;
+
+uint8_t *ctap2_authenticator_data(size_t *size)
+{
+    if (size != NULL) {
+        *size = authenticator_data_size;
+    }
+    return authenticator_data;
+}
+
+void ctap2_authenticator_data_size_set(size_t size)
+{
+    authenticator_data_size = size;
+}
 
 uint32_t ctap2_current_sign_count(void)
 {

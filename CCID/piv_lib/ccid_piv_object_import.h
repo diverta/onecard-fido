@@ -7,7 +7,8 @@
 #ifndef CCID_PIV_OBJECT_IMPORT_H
 #define CCID_PIV_OBJECT_IMPORT_H
 
-#include "ccid_apdu.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +17,7 @@ extern "C" {
 //
 // 関数群
 //
-uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t ccid_piv_object_import(void *p_capdu, void *p_rapdu);
 void     ccid_piv_object_import_retry(void);
 void     ccid_piv_object_import_resume(bool success);
 
