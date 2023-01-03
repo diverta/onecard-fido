@@ -12,6 +12,7 @@
 #include "ccid_define.h"
 #include "ccid_flash_object.h"
 #include "ccid_openpgp.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_object.h"
 
 // for logging informations

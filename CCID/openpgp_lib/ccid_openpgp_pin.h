@@ -7,6 +7,9 @@
 #ifndef CCID_OPENPGP_PIN_H
 #define CCID_OPENPGP_PIN_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

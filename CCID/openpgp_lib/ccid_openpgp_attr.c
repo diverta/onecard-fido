@@ -9,6 +9,7 @@
 #include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_object.h"
 #include "ccid_pin_auth.h"
 
@@ -17,15 +18,6 @@
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(ccid_openpgp_attr);
-#endif
-
-#define MAX_PIN_LENGTH              64
-#define DIGITAL_SIG_COUNTER_LENGTH  3
-
-#define PW_RETRY_COUNTER_DEFAULT    3
-
-#ifdef OPENPGP_TEST_DATA
-static char attr_name[] = "Here is the cardname";
 #endif
 
 // 一時格納領域
@@ -71,9 +63,9 @@ uint16_t openpgp_attr_get_pw_status(uint8_t *buf, size_t *size)
         return sw;
     }
 
-    buf[offset++] = MAX_PIN_LENGTH;
-    buf[offset++] = MAX_PIN_LENGTH;
-    buf[offset++] = MAX_PIN_LENGTH;
+    buf[offset++] = OPGP_MAX_PIN_LENGTH;
+    buf[offset++] = OPGP_MAX_PIN_LENGTH;
+    buf[offset++] = OPGP_MAX_PIN_LENGTH;
     buf[offset++] = retries_pw1;
     buf[offset++] = retries_rc;
     buf[offset++] = retries_pw3;
@@ -135,7 +127,7 @@ uint16_t openpgp_attr_set_digital_sig_counter(uint32_t counter)
     m_work_buf[2] = counter >>  0 & 0xff;
 
     // タイムスタンプをFlash ROMに設定
-    if (ccid_openpgp_object_data_set(TAG_DIGITAL_SIG_COUNTER, m_work_buf, DIGITAL_SIG_COUNTER_LENGTH) == false) {
+    if (ccid_openpgp_object_data_set(TAG_DIGITAL_SIG_COUNTER, m_work_buf, OPGP_DIGITAL_SIG_COUNTER_LENGTH) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -146,6 +138,7 @@ uint16_t openpgp_attr_set_digital_sig_counter(uint32_t counter)
 uint16_t openpgp_attr_get_name(uint8_t *buf, size_t *size)
 {
     // TODO: 仮の実装です。
+    char attr_name[] = "Here is the cardname";
     memcpy(buf, attr_name, strlen(attr_name));
     *size = strlen(attr_name);
 

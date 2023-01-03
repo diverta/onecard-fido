@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ccid_define.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_object.h"
 #include "ccid_pin.h"
 
@@ -20,9 +21,9 @@ fido_log_module_register(ccid_pin_auth);
 //
 // PIN種別情報
 //
-static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "123456"};
-static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "12345678"};
-static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "12345678"};
+static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = OPGP_PIN_PW1_CODE_DEFAULT};
+static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = OPGP_PIN_PW3_CODE_DEFAULT};
+static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = OPGP_PIN_RC_CODE_DEFAULT};
 
 PIN_T *ccid_pin_auth_pin_t(PIN_TYPE type)
 {

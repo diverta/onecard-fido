@@ -7,6 +7,7 @@
 #include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_crypto.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_key_rsa.h"
 #include "ccid_openpgp_object.h"

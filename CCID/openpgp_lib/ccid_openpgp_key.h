@@ -14,9 +14,6 @@
 extern "C" {
 #endif
 
-#define KEY_FINGERPRINT_LENGTH      20
-#define KEY_DATETIME_LENGTH         4
-
 //
 // 関数群
 //

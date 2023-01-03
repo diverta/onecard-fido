@@ -8,6 +8,7 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_data.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_key_rsa.h"
 #include "ccid_openpgp_object.h"
@@ -133,11 +134,11 @@ static uint16_t update_pw_status(command_apdu_t *capdu)
 static uint16_t update_fingerprint(command_apdu_t *capdu, uint16_t tag)
 {
     // パラメーターチェック
-    if (capdu->lc != KEY_FINGERPRINT_LENGTH) {
+    if (capdu->lc != OPGP_KEY_FINGERPRINT_LENGTH) {
         return SW_WRONG_LENGTH;
     }
     // フィンガープリントをFlash ROMに設定
-    if (ccid_openpgp_object_data_set(tag, capdu->data, KEY_FINGERPRINT_LENGTH) == false) {
+    if (ccid_openpgp_object_data_set(tag, capdu->data, OPGP_KEY_FINGERPRINT_LENGTH) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
     return SW_NO_ERROR;
@@ -146,11 +147,11 @@ static uint16_t update_fingerprint(command_apdu_t *capdu, uint16_t tag)
 static uint16_t update_generation_dates(command_apdu_t *capdu, uint16_t tag)
 {
     // パラメーターチェック
-    if (capdu->lc != KEY_DATETIME_LENGTH) {
+    if (capdu->lc != OPGP_KEY_DATETIME_LENGTH) {
         return SW_WRONG_LENGTH;
     }
     // タイムスタンプをFlash ROMに設定
-    if (ccid_openpgp_object_data_set(tag, capdu->data, KEY_DATETIME_LENGTH) == false) {
+    if (ccid_openpgp_object_data_set(tag, capdu->data, OPGP_KEY_DATETIME_LENGTH) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
     return SW_NO_ERROR;
