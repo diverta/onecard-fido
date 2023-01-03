@@ -5,6 +5,7 @@
  * Created on 2019/02/18, 11:05
  */
 #include "ctap2_cbor.h"
+#include "ctap2_define.h"
 #include "fido_command.h"
 #include "fido_command_common.h"
 #include "fido_common.h"

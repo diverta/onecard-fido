@@ -7,6 +7,8 @@
 #include "ctap2_cbor.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_common.h"
+#include "ctap2_define.h"
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "fido_command_common.h"

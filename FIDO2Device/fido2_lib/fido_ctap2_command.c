@@ -15,6 +15,7 @@
 #include "ctap2_client_pin.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_common.h"
+#include "ctap2_define.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
 #include "fido_command.h"

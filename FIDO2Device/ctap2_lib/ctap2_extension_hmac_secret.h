@@ -7,7 +7,7 @@
 #ifndef CTAP2_EXTENSION_HMAC_SECRET_H
 #define CTAP2_EXTENSION_HMAC_SECRET_H
 
-#include "ctap2_common.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +16,7 @@ extern "C" {
 uint8_t *ctap2_extension_hmac_secret_cbor(void);
 size_t   ctap2_extension_hmac_secret_cbor_size(void);
 uint8_t  ctap2_extension_hmac_secret_cbor_for_create(void);
-uint8_t  ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext);
+uint8_t  ctap2_extension_hmac_secret_cbor_for_get(void *ctap_extensions);
 
 #ifdef __cplusplus
 }

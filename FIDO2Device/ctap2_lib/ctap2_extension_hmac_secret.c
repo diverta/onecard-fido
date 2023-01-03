@@ -5,6 +5,7 @@
  * Created on 2019/05/20, 10:30
  */
 #include "ctap2_cbor.h"
+#include "ctap2_define.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_define.h"
@@ -125,8 +126,9 @@ static uint8_t generate_cbor_for_get(uint8_t *encrypted_output, size_t encrypted
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
+uint8_t ctap2_extension_hmac_secret_cbor_for_get(void *ctap_extensions)
 {
+    CTAP_EXTENSIONS_T *ext = (CTAP_EXTENSIONS_T *)ctap_extensions;
 #if LOG_DEBUG_SALT_BUFF
     fido_log_debug("Encrypted salt (%d bytes):", ext->hmac_secret.saltLen);
     fido_log_print_hexdump_debug(ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen);

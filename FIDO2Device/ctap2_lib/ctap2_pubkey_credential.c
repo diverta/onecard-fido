@@ -103,7 +103,7 @@ size_t ctap2_pubkey_credential_source_hash_size(void)
     return credential_source_hash_size;
 }
 
-void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_USER_ENTITY_T *user)
+void     ctap2_pubkey_credential_generate_source(void *ctap_pubkey_cred_param, void *ctap_user_entity)
 {
     // Public Key Credential Sourceを編集する
     // 
@@ -118,6 +118,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
 
     // Public Key Credential Type
+    CTAP_PUBKEY_CRED_PARAM_T *param = (CTAP_PUBKEY_CRED_PARAM_T *)ctap_pubkey_cred_param;
     pubkey_cred_source[offset++] = param->publicKeyCredentialType;
 
     // Credential private key
@@ -127,6 +128,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     offset += CTAP2_PRIVKEY_SIZE;
 
     // User Id (size & buffer)
+    CTAP_USER_ENTITY_T *user = (CTAP_USER_ENTITY_T *)ctap_user_entity;
     pubkey_cred_source[offset++] = user->id_size;
     memcpy(pubkey_cred_source + offset, user->id, user->id_size);
     offset += user->id_size;
@@ -235,10 +237,11 @@ static bool get_private_key_from_credential_id(void)
     return true;
 }
 
-uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList)
+uint8_t ctap2_pubkey_credential_restore_private_key(void *ctap_allow_list)
 {
     int x;
     CTAP_CREDENTIAL_DESC_T *desc;
+    CTAP_ALLOW_LIST_T *allowList = (CTAP_ALLOW_LIST_T *)ctap_allow_list;
 
     // credentialIdリストの先頭から逐一処理
     for (x = 0; x < allowList->size; x++) {
@@ -290,7 +293,7 @@ uint8_t *ctap2_pubkey_credential_cred_random(void)
     return cred_random;
 }
 
-CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
+void *ctap2_pubkey_credential_restored_id(void)
 {
     // 秘密鍵の取出し元であるcredential IDの格納領域
     return pkey_credential_desc;
