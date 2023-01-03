@@ -48,7 +48,7 @@ size_t fido_command_response_data_size(void)
 
 size_t fido_command_response_data_size_max(void)
 {
-    return sizeof(response_data_size);
+    return sizeof(response_data);
 }
 
 void fido_command_response_data_size_set(size_t size)
