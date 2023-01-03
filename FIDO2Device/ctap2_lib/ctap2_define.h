@@ -69,6 +69,12 @@ extern "C" {
 // キープアライブステータス
 #define CTAP2_STATUS_UPNEEDED   0x02
 
+// キープアライブ・タイマー
+#define CTAP2_KEEPALIVE_INTERVAL_MSEC       500
+
+// ユーザー所在確認タイムアウト（３０秒）
+#define USER_PRESENCE_VERIFY_TIMEOUT_MSEC   30000
+
 //
 // CTAP2コマンドで共用する構造体
 // 

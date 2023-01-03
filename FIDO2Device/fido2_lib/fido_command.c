@@ -10,6 +10,7 @@
 //
 // プラットフォーム非依存コード
 //
+#include "ctap2_define.h"
 #include "fido_command.h"
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
@@ -22,7 +23,6 @@
 #include "fido_maintenance.h"
 #include "fido_maintenance_define.h"
 #include "fido_transport_define.h"
-#include "ctap2_common.h"
 #include "u2f_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -31,9 +31,6 @@
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_command);
 #endif
-
-// ユーザー所在確認タイムアウト（３０秒）
-#define USER_PRESENCE_VERIFY_TIMEOUT_MSEC 30000
 
 // ユーザー所在確認待ち状態を示すフラグ
 static bool waiting_for_tup = false;

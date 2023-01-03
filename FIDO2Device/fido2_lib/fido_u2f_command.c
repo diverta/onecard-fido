@@ -33,9 +33,6 @@
 fido_log_module_register(fido_u2f_command);
 #endif
 
-// キープアライブ・タイマー
-#define U2F_KEEPALIVE_INTERVAL_MSEC 500
-
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 

@@ -66,6 +66,9 @@ extern "C" {
 #define ASN_INT                         0x02;
 #define ASN_SEQUENCE                    0x30;
 
+// キープアライブ・タイマー
+#define U2F_KEEPALIVE_INTERVAL_MSEC     500
+
 #ifdef __cplusplus
 }
 #endif

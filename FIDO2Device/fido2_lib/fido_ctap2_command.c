@@ -37,9 +37,6 @@
 fido_log_module_register(fido_ctap2_command);
 #endif
 
-// キープアライブ・タイマー
-#define CTAP2_KEEPALIVE_INTERVAL_MSEC 500
-
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 
