@@ -90,7 +90,6 @@ typedef enum _TRANSPORT_TYPE {
     TRANSPORT_NONE = 0,
     TRANSPORT_BLE,
     TRANSPORT_HID,
-    TRANSPORT_NFC
 } TRANSPORT_TYPE;
 
 #ifdef __cplusplus

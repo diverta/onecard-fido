@@ -73,11 +73,6 @@ static uint8_t get_u2f_command_byte(void)
         case TRANSPORT_BLE:
             cmd = fido_ble_receive_header_CMD();
             break;
-        case TRANSPORT_NFC:
-            // ヘッダーが存在しないため、
-            // U2Fコマンドは常に U2F_COMMAND_MSG になります
-            cmd = U2F_COMMAND_MSG;
-            break;
         default:
             cmd = 0x00;
             break;

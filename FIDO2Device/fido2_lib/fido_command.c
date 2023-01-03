@@ -369,10 +369,6 @@ static void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_typ
         case TRANSPORT_BLE:
             on_ble_response_send_completed();
             break;
-        case TRANSPORT_NFC:
-            // 現在のところ、CTAP2コマンドのみをサポート
-            fido_ctap2_command_cbor_response_sent();
-            break;
         default:
             break;
     }
