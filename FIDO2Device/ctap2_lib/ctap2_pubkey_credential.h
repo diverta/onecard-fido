@@ -7,7 +7,7 @@
 #ifndef CTAP2_PUBKEY_CREDENTIAL_H
 #define CTAP2_PUBKEY_CREDENTIAL_H
 
-#include "ctap2_common.h"
+#include "ctap2_define.h"
 
 #ifdef __cplusplus
 extern "C" {

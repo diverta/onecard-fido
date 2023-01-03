@@ -7,7 +7,6 @@
 #include <stddef.h>
 #include <string.h>
 
-//#include "ctap2_common.h"
 #include "ctap2_define.h"
 #include "fido_command_common.h"
 

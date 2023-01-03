@@ -10,7 +10,6 @@
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "fido_define.h"
-#include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"

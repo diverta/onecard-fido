@@ -9,7 +9,7 @@
 //
 // プラットフォーム非依存コード
 //
-#include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
+#include "ctap2_define.h"
 #include "fido_command.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_define.h"
