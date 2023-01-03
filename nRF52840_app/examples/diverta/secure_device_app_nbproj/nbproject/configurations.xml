@@ -116,6 +116,7 @@
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_crypto.h</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_data.c</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_data.h</itemPath>
+      <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_define.h</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_key.c</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_key.h</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_key_rsa.c</itemPath>
@@ -124,7 +125,7 @@
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_object.h</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_pin.c</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_pin.h</itemPath>
-      <itemPath>../../../../CCID/openpgp_lib/ccid_pin.h</itemPath>
+      <itemPath>../../../../CCID/openpgp_lib/ccid_openpgp_pin_define.h</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_pin_auth.c</itemPath>
       <itemPath>../../../../CCID/openpgp_lib/ccid_pin_auth.h</itemPath>
     </logicalFolder>
@@ -133,6 +134,7 @@
       <itemPath>../../../../CCID/piv_lib/ccid_piv.h</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_piv_authenticate.c</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_piv_authenticate.h</itemPath>
+      <itemPath>../../../../CCID/piv_lib/ccid_piv_define.h</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_piv_general_auth.c</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_piv_general_auth.h</itemPath>
       <itemPath>../../../../CCID/piv_lib/ccid_piv_object.c</itemPath>
@@ -166,8 +168,6 @@
       <itemPath>../plat_lib/fido_crypto_plat.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_sskey.c</itemPath>
       <itemPath>../plat_lib/fido_crypto_sskey.h</itemPath>
-      <itemPath>../plat_lib/fido_flash_blp_auth_param.c</itemPath>
-      <itemPath>../plat_lib/fido_flash_blp_auth_param.h</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
       <itemPath>../plat_lib/fido_flash_common.c</itemPath>
       <itemPath>../plat_lib/fido_flash_common.h</itemPath>
@@ -455,6 +455,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../../CCID/openpgp_lib/ccid_openpgp_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../CCID/openpgp_lib/ccid_openpgp_key.c"
             ex="false"
             tool="0"
@@ -495,7 +500,7 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../../CCID/openpgp_lib/ccid_pin.h"
+      <item path="../../../../CCID/openpgp_lib/ccid_openpgp_pin_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -526,6 +531,11 @@
             flavor2="0">
       </item>
       <item path="../../../../CCID/piv_lib/ccid_piv_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/piv_lib/ccid_piv_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1070,16 +1080,6 @@
       <item path="../plat_lib/fido_crypto_sskey.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_crypto_sskey.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_flash_blp_auth_param.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_flash_blp_auth_param.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_client_pin_store.c"
             ex="false"
