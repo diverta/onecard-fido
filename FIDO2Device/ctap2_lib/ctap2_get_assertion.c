@@ -5,7 +5,6 @@
  * Created on 2019/01/03, 11:05
  */
 #include "ctap2_cbor.h"
-#include "ctap2_common.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
@@ -303,6 +302,7 @@ static void generate_authenticator_data(void)
     // 先頭からバッファにセット
     //  rpIdHash
     uint8_t offset = 0;
+    uint8_t *authenticator_data = ctap2_authenticator_data(NULL);
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
@@ -327,7 +327,7 @@ static void generate_authenticator_data(void)
 #endif
 
     // データ長を設定
-    authenticator_data_size = offset;
+    ctap2_authenticator_data_size_set(offset);
 }
 
 static uint8_t generate_sign(void)
@@ -457,6 +457,8 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
+    size_t authenticator_data_size;
+    uint8_t *authenticator_data = ctap2_authenticator_data(&authenticator_data_size);
     ret = cbor_encode_byte_string(&map, authenticator_data, authenticator_data_size);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;

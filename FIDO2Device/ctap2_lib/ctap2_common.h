@@ -10,20 +10,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "ctap2_define.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//
-// CTAP2コマンドで共用する作業領域
-// 
-// Authenticator dataを保持
-extern uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
-extern size_t  authenticator_data_size;
-
 // 共通関数
+uint8_t *ctap2_authenticator_data(size_t *size);
+void     ctap2_authenticator_data_size_set(size_t size);
 uint8_t *ctap2_generated_rpid_hash(void);
 size_t   ctap2_generated_rpid_hash_size(void);
 void     ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
