@@ -14,6 +14,7 @@
 // for U2F keyhandle, CTAP2 credential id
 #include "u2f_define.h"
 #include "u2f_keyhandle.h"
+#include "ctap2_define.h"
 #include "ctap2_pubkey_credential.h"
 
 #ifdef CONFIG_USE_ATECC608A
@@ -28,6 +29,32 @@
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_command_common);
 #endif
+
+//
+// CTAP2、U2Fで共用する領域
+//
+static uint8_t response_data[CTAP2_MAX_MESSAGE_SIZE];
+static size_t  response_data_size;
+
+uint8_t *fido_command_response_data(void)
+{
+    return response_data;
+}
+
+size_t fido_command_response_data_size(void)
+{
+    return response_data_size;
+}
+
+size_t fido_command_response_data_size_max(void)
+{
+    return sizeof(response_data_size);
+}
+
+void fido_command_response_data_size_set(size_t size)
+{
+    response_data_size = size;
+}
 
 //
 // CTAP2、U2Fで共用する各種処理

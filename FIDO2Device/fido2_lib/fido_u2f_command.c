@@ -53,8 +53,6 @@ typedef struct {
 //
 static HID_INIT_RES_T init_res;
 static U2F_VERSION_RES_T version_res;
-static uint8_t response_buffer[1024];
-static size_t  response_length;
 
 // 関数プロトタイプ
 static void u2f_register_resume_process(void);
@@ -240,9 +238,11 @@ static void u2f_command_version(void)
 static void send_u2f_error_status_response(uint16_t status_word)
 {
     // エラーステータスワードをビッグエンディアンで格納
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = (status_word >> 8) & 0x00ff;
     response_buffer[1] = (status_word >> 0) & 0x00ff;
-    response_length = 2;
+    size_t response_length = 2;
+    fido_command_response_data_size_set(response_length);
     
     // エラーステータスワードを送信
     fido_u2f_command_send_response(response_buffer, response_length);
@@ -321,7 +321,8 @@ static void u2f_register_resume_process(void)
 
     uint8_t *apdu_data = get_receive_apdu()->data;
     uint32_t apdu_le = get_receive_apdu()->Le;
-    response_length = sizeof(response_buffer);
+    uint8_t *response_buffer = fido_command_response_data();
+    size_t   response_length = fido_command_response_data_size_max();
     if (u2f_register_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
@@ -329,6 +330,9 @@ static void u2f_register_resume_process(void)
         send_u2f_error_status_response(u2f_register_status_word());
         return;
     }
+
+    // レスポンス長を設定
+    fido_command_response_data_size_set(response_length);
 
     // トークンカウンターレコードを追加
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -416,7 +420,8 @@ static void u2f_authenticate_resume_process(void)
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = get_receive_apdu()->data;
     uint32_t apdu_le = get_receive_apdu()->Le;
-    response_length = sizeof(response_buffer);
+    uint8_t *response_buffer = fido_command_response_data();
+    size_t   response_length = fido_command_response_data_size_max();
     if (u2f_authenticate_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
@@ -424,6 +429,9 @@ static void u2f_authenticate_resume_process(void)
         send_u2f_error_status_response(u2f_authenticate_status_word());
         return;
     }
+
+    // レスポンス長を設定
+    fido_command_response_data_size_set(response_length);
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新
@@ -534,11 +542,11 @@ void fido_u2f_command_token_counter_record_updated(void)
     uint8_t ins = get_u2f_command_ins_byte();
     if (ins == U2F_REGISTER) {
         // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
+        fido_u2f_command_send_response(fido_command_response_data(), fido_command_response_data_size());
 
     } else if (ins == U2F_AUTHENTICATE) {
         // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
+        fido_u2f_command_send_response(fido_command_response_data(), fido_command_response_data_size());
     }
 }
 

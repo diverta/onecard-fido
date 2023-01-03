@@ -48,8 +48,6 @@ static bool is_tup_needed = false;
 // （コマンド共通）
 //
 static HID_INIT_RES_T init_res;
-static uint8_t response_buffer[CTAP2_MAX_MESSAGE_SIZE];
-static size_t  response_length;
 
 // 関数プロトタイプ
 static void command_make_credential_resume_process(void);
@@ -221,6 +219,7 @@ void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     //   １バイトめにステータスコードをセット
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = ctap2_status;
     if (m_transport_type == TRANSPORT_HID) {
         uint32_t cid = fido_hid_receive_header_CID();
@@ -338,8 +337,9 @@ static void command_make_credential_resume_process(void)
 
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
 
     // authenticatorMakeCredentialレスポンスをエンコード
     ctap2_status = ctap2_make_credential_encode_response(cbor_data_buffer, &cbor_data_length);
@@ -350,7 +350,7 @@ static void command_make_credential_resume_process(void)
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
-    response_length = cbor_data_length + 1;
+    fido_command_response_data_size_set(cbor_data_length + 1);
 
     // トークンカウンターレコードを追加
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -427,8 +427,9 @@ static void command_get_assertion_resume_process(void)
 
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
 
     // authenticatorGetAssertionレスポンスをエンコード
     ctap2_status = ctap2_get_assertion_encode_response(cbor_data_buffer, &cbor_data_length);
@@ -439,7 +440,7 @@ static void command_get_assertion_resume_process(void)
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
-    response_length = cbor_data_length + 1;
+    fido_command_response_data_size_set(cbor_data_length + 1);
 
     // トークンカウンターレコードを更新
     // (fds_record_update/writeまたはfds_gcが実行される)
@@ -455,8 +456,9 @@ static void command_authenticator_get_info(void)
     // レスポンスの先頭１バイトはステータスコードであるため、
     // ２バイトめからCBORレスポンスをセットさせるようにする
     uint8_t  ctap2_status;
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *cbor_data_buffer = response_buffer + 1;
-    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    size_t   cbor_data_length = fido_command_response_data_size_max() - 1;
     
     // authenticatorGetInfoレスポンスをエンコード
     ctap2_status = ctap2_cbor_authgetinfo_encode_request(cbor_data_buffer, &cbor_data_length);
@@ -485,7 +487,8 @@ static void command_authenticator_client_pin(void)
 
     // サブコマンドに応じた処理を実行し、
     // 処理結果のCBORレスポンスを格納
-    ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+    uint8_t *response_buffer = fido_command_response_data();
+    ctap2_client_pin_perform_subcommand(response_buffer, fido_command_response_data_size_max());
 }
 
 static void command_authenticator_reset(void)
@@ -654,7 +657,7 @@ void fido_ctap2_command_flash_gc_done(void)
             break;
         case CTAP2_CMD_CLIENT_PIN:
             fido_log_warning("authenticatorClientPIN retry: FDS GC done ");
-            ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+            ctap2_client_pin_perform_subcommand(fido_command_response_data(), fido_command_response_data_size_max());
             break;
         default:
             break;
@@ -695,11 +698,11 @@ void fido_ctap2_command_token_counter_record_updated(void)
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             // レスポンスを生成してWebAuthnクライアントに戻す
-            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, fido_command_response_data_size());
             break;
         case CTAP2_CMD_GET_ASSERTION:
             // レスポンスを生成してWebAuthnクライアントに戻す
-            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, fido_command_response_data_size());
             break;
         default:
             break;
