@@ -9,7 +9,7 @@
 #include "ccid_define.h"
 #include "ccid_openpgp_define.h"
 #include "ccid_openpgp_object.h"
-#include "ccid_pin.h"
+#include "ccid_openpgp_pin_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

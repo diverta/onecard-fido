@@ -7,7 +7,7 @@
 #ifndef CCID_PIN_AUTH_H
 #define CCID_PIN_AUTH_H
 
-#include "ccid_pin.h"
+#include "ccid_openpgp_pin_define.h"
 
 #ifdef __cplusplus
 extern "C" {

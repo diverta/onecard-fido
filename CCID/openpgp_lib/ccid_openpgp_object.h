@@ -7,7 +7,7 @@
 #ifndef CCID_OPENPGP_OBJECT_H
 #define CCID_OPENPGP_OBJECT_H
 
-#include "ccid_pin.h"
+#include "ccid_openpgp_pin_define.h"
 
 #ifdef __cplusplus
 extern "C" {

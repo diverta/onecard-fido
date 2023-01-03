@@ -7,8 +7,6 @@
 #include "ccid.h"
 #include "ccid_define.h"
 #include "ccid_openpgp.h"
-#include "ccid_openpgp_key.h"
-#include "ccid_openpgp_key_rsa.h"
 #include "ccid_openpgp_object.h"
 
 // 業務処理／HW依存処理間のインターフェース

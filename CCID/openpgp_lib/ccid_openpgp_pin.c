@@ -7,6 +7,7 @@
 #include "ccid_define.h"
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_pin.h"
+#include "ccid_openpgp_pin_define.h"
 #include "ccid_openpgp_object.h"
 #include "ccid_pin_auth.h"
 

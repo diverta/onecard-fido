@@ -7,10 +7,6 @@
 #ifndef CCID_OPENPGP_DEFINE_H
 #define CCID_OPENPGP_DEFINE_H
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
