@@ -55,6 +55,8 @@
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
+        // コマンドを初期化
+        [[self commandParameterRef] setCommand:COMMAND_NONE];
         // このウィンドウを終了
         [[self commandParameterRef] setPin:@""];
         [self terminateWindow:NSModalResponseCancel];
