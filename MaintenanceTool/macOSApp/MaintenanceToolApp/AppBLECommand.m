@@ -67,6 +67,15 @@
         }
     }
 
+    - (void)doConnectCommand {
+        // 実行コマンドを退避（接続試行）
+        [self setCommand:COMMAND_BLE_CONNECT_ONLY];
+        // コマンド配列をブランクに初期化
+        [self doClearRequestFrames];
+        // U2F BLEサービスに接続
+        [self doConnectWithU2FServiceUUID];
+    }
+
     - (void)doClearRequestFrames {
         // コマンド配列をブランクに初期化
         [self setBleRequestArray:nil];
@@ -172,8 +181,13 @@
         [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
-        // フレームを送信
-        [self helperWillSendRequestFrames];
+        if ([self command] == COMMAND_BLE_CONNECT_ONLY) {
+            // 接続試行の場合はここで制御を上位クラスに戻す
+            [[self delegate] didResponseCommand:[self command] response:nil];
+        } else {
+            // フレームを送信
+            [self helperWillSendRequestFrames];
+        }
     }
 
     - (void)helperWillSendRequestFrames {

@@ -71,6 +71,7 @@ typedef enum : NSInteger {
     COMMAND_RTCC_SETTING,
     COMMAND_RTCC_GET_TIMESTAMP,
     COMMAND_RTCC_SET_TIMESTAMP,
+    COMMAND_BLE_CONNECT_ONLY,
 } Command;
 
 // トランスポート種別

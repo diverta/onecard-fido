@@ -16,6 +16,7 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data;
+    - (void)doConnectCommand;
     - (void)commandDidProcess:(bool)result message:(NSString *)message;
     - (NSString *)nameOfScannedPeripheral;
 
