@@ -255,6 +255,7 @@
         }
         if ([characteristic isNotifying]) {
             // 監視開始を通知
+            [[ToolLogFile defaultLogger] debug:@"BLE connection has started successfully."];
             [[self delegate] helperDidSubscribeCharacteristic];
         } else {
             // 監視が停止している場合は通知
