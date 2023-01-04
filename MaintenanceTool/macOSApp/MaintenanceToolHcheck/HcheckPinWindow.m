@@ -55,6 +55,8 @@
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
+        // コマンドを初期化
+        [[self commandParameterRef] setCommand:COMMAND_NONE];
         // このウィンドウを終了
         [[self commandParameterRef] setPin:@""];
         [self terminateWindow:NSModalResponseCancel];
@@ -74,7 +76,7 @@
 
 #pragma mark - Check for entries and process
 
-    - (bool) checkEntries:(id)sender {
+    - (bool)checkEntries:(id)sender {
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldPin] minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
                        informativeText:MSG_PROMPT_INPUT_CUR_PIN onWindow:[self window]] == false) {
