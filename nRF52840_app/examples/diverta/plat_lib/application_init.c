@@ -190,7 +190,7 @@ static void application_init_resume(void)
     // アプリケーション初期化完了フラグを設定
     // (各業務処理が実行可能)
     application_init_status = APP_INI_STAT_EN_PROC;
-    NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
+    NRF_LOG_INFO("Diverta FIDO Authenticator application started: %s Version %s (%s)", HW_REV, FW_REV, FW_BUILD);
 }
 
 void application_main(void)
