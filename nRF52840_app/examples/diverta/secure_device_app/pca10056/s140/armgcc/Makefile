@@ -11,6 +11,7 @@ TARGET_BOARD     := PCA10059_03
 FW_REV := 0.3.6
 FW_BUILD := 100
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
+CFLAGS += -DFW_BUILD=\"$(FW_BUILD)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
 

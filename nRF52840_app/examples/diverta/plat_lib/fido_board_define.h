@@ -20,6 +20,10 @@ extern "C" {
 #ifndef FW_REV
 #define FW_REV              "0.0.0"
 #endif
+//   アプリケーションのビルド番号
+#ifndef FW_BUILD
+#define FW_BUILD            "0"
+#endif
 //   ハードウェアのバージョン
 #ifndef HW_REV
 #define HW_REV              ""
