@@ -2,6 +2,12 @@
 
 ## プログラム更新履歴
 
+#### 2022/03/31
+
+nRF5340アプリケーションのBLE関連機能をバージョンアップしました。<br>
+これに伴い、FIDO認証器管理ツール（macOS版／Windows版）、ファームウェアを修正しております。<br>
+詳細につきましては、ドキュメント<b>[「Release 202203」](https://github.com/diverta/onecard-fido/releases/tag/Release_202203)</b>をご参照願います。
+
 #### 2022/03/03
 
 管理ツールに、OpenPGP機能で使用するPIN番号等の設定メニューを新設しました。<br>
