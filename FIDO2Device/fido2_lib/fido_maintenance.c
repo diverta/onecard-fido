@@ -12,6 +12,7 @@
 //
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_define.h"
 #include "fido_hid_receive.h"
@@ -91,14 +92,10 @@ static size_t get_maintenance_data_buffer_size(void)
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
 
-//
-// レスポンスデータ格納領域
-//
-static uint8_t response_buffer[1024];
-
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
     // １バイトめにステータスコードをセット
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = ctap2_status;
 
     // レスポンスデータを送信パケットに設定し送信
@@ -128,8 +125,9 @@ static void command_get_flash_stat(void)
     //  response_bufferの先頭にステータスバイトを格納するため、
     //  CSV格納領域は、response_bufferの２バイト目を先頭とします。
     //
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *buffer = response_buffer + 1;
-    size_t   buffer_size = sizeof(response_buffer - 1);
+    size_t   buffer_size = fido_command_response_data_size_max() - 1;
     if (fido_flash_get_stat_csv(buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
         return;
@@ -155,8 +153,9 @@ static void command_get_app_version(void)
     //  response_bufferの先頭にステータスバイトを格納するため、
     //  CSV格納領域は、response_bufferの２バイト目を先頭とします。
     //
+    uint8_t *response_buffer = fido_command_response_data();
     uint8_t *buffer = response_buffer + 1;
-    size_t   buffer_size = sizeof(response_buffer - 1);
+    size_t   buffer_size = fido_command_response_data_size_max() - 1;
     if (fido_board_get_version_info_csv(buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
         return;
@@ -206,17 +205,18 @@ static void command_unpairing_request(void)
     size_t   request_size = get_maintenance_data_buffer_size();
 
     // レスポンス格納領域
-    uint8_t *response_data = response_buffer + 1;
-    size_t   response_size = sizeof(response_buffer - 1);
+    uint8_t *response_buffer = fido_command_response_data();
+    uint8_t *buffer = response_buffer + 1;
+    size_t   buffer_size = fido_command_response_data_size_max() - 1;
 
     // ペアリング解除要求コマンドを実行し、レスポンスを生成
-    if (fido_ble_unpairing_request(request_data, request_size, response_data, &response_size) == false) {
+    if (fido_ble_unpairing_request(request_data, request_size, buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
     // レスポンスを送信
-    send_command_response(CTAP1_ERR_SUCCESS, response_size + 1);
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
 static void command_unpairing_cancel(void)
@@ -263,6 +263,7 @@ static void command_get_timestamp(void)
     // 0: ステータス
     // 1: "yyyy/mm/dd hh:mm:ss"形式の文字列
     size_t length = 20;
+    uint8_t *response_buffer = fido_command_response_data();
     if (rtcc_get_timestamp_string((char *)response_buffer + 1, length)) {
         send_command_response(CTAP1_ERR_SUCCESS, length);
 
