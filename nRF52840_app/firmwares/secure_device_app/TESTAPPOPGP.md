@@ -1,8 +1,8 @@
-# OpenPGP機能（Beta）動作確認手順書
+# OpenPGP機能動作確認手順書
 
 ## 概要
 
-[GPGツール](https://gpgtools.org)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能（Beta）に関する動作確認を行う手順について、以下に掲載いたします。
+[GPGツール](https://gpgtools.org)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能に関する動作確認を行う手順について、以下に掲載いたします。
 
 ## 作業の準備
 
