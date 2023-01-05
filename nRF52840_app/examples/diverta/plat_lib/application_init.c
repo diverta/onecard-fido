@@ -6,7 +6,7 @@
  */
 #include "sdk_common.h"
 #include "app_timer.h"
-#include "application_init.h"
+#include "application_init_define.h"
 #include "ble_service_peripheral.h"
 
 // for nrf_drv_usbd_is_enabled
@@ -39,22 +39,7 @@ NRF_LOG_MODULE_REGISTER();
 //業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-//
-// アプリケーション初期化フラグ
-//
-typedef enum {
-    APP_INI_STAT_NONE,
-    APP_INI_STAT_EN_BLEADV,
-    APP_INI_STAT_EN_INIT,
-    APP_INI_STAT_EN_PROC,
-} APP_INI_STAT;
-
 static APP_INI_STAT application_init_status = APP_INI_STAT_NONE;
-
-//
-// BLEペリフェラル始動判定用タイマー
-//
-#define TIMER_MSEC 1000
 
 APP_TIMER_DEF(m_timer_id);
 static bool app_timer_created = false;
@@ -111,7 +96,7 @@ static void timer_start(void)
     }
 
     // タイマー開始
-    uint32_t err_code = app_timer_start(m_timer_id, APP_TIMER_TICKS(TIMER_MSEC), NULL);
+    uint32_t err_code = app_timer_start(m_timer_id, APP_TIMER_TICKS(BLE_ADVERTISE_START_TIMER_MSEC), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_timer_id) returns %d ", err_code);
         return;
@@ -205,7 +190,7 @@ static void application_init_resume(void)
     // アプリケーション初期化完了フラグを設定
     // (各業務処理が実行可能)
     application_init_status = APP_INI_STAT_EN_PROC;
-    NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
+    NRF_LOG_INFO("Diverta FIDO Authenticator application started: %s Version %s (%s)", HW_REV, FW_REV, FW_BUILD);
 }
 
 void application_main(void)

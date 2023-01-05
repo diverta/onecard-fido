@@ -7,8 +7,6 @@
 #ifndef APPLICATION_INIT_H
 #define APPLICATION_INIT_H
 
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

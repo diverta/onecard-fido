@@ -92,14 +92,10 @@ void fido_development_command_report_sent(void)
     fido_status_indicator_idle();
 }
 
-//
-// レスポンスデータ格納領域
-//
-static uint8_t response_buffer[1024];
-
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
     // １バイトめにステータスコードをセット
+    uint8_t *response_buffer = fido_command_response_data();
     response_buffer[0] = ctap2_status;
 
     // レスポンスデータを送信パケットに設定し送信
