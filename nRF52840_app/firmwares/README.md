@@ -14,7 +14,7 @@ MDBT50Q Dongleで使用するアプリケーション・ファームウェアで
 
 ### [USBブートローダー（署名機能付き）](../../nRF52840_app/firmwares/secure_bootloader/README.md)
 
-MDBT50Q Dongle（rev2以降のバージョン）に対し、[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/firmwares/secure_device_app/README.md)を書込めるようにするためのファームウェアです。<br>
+MDBT50Q Dongleに対し、[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/firmwares/secure_device_app/README.md)を書込めるようにするためのファームウェアです。<br>
 サブフォルダー（[`secure_bootloader`](../../nRF52840_app/firmwares/secure_bootloader)）に格納しています。
 
 ### [サンプルアプリケーション](../../nRF52840_app/firmwares/sample_blehrs/README.md)
