@@ -84,8 +84,8 @@
             [[self appHIDCommand] doRequestCtapHidInit];
         }
         if ([self transportType] == TRANSPORT_BLE) {
-            // BLE経由で現在時刻を設定
-            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_SET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForSetTimestamp]];
+            // BLE接続試行
+            [[self appBLECommand] doConnectCommand];
         }
     }
 
@@ -244,6 +244,11 @@
 #pragma mark - Call back from AppBLECommand
 
     - (void)didResponseCommand:(Command)command response:(NSData *)response {
+        if (command == COMMAND_BLE_CONNECT_ONLY) {
+            // 接続試行の場合は、つづけてBLE経由で現在時刻を設定
+            [[self appBLECommand] doRequestCommand:COMMAND_RTCC_SET_TIMESTAMP withCMD:BLE_CMD_MSG withData:[self commandDataForSetTimestamp]];
+            return;
+        }
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *responseBytes = (uint8_t *)[response bytes];
         if (responseBytes[0] != CTAP1_ERR_SUCCESS) {

@@ -29,8 +29,6 @@
     // 送信フレーム数を保持
     @property (nonatomic) NSUInteger            bleRequestFrameNumber;
     // BLE接続に関する情報を保持
-    @property (nonatomic) NSUInteger            bleConnectionRetryCount;
-    @property (nonatomic) bool                  bleTransactionStarted;
     @property (nonatomic) NSString             *lastCommandMessage;
     @property (nonatomic) bool                  lastCommandSuccess;
     @property (nonatomic) NSString             *scannedPeripheralName;
@@ -55,36 +53,54 @@
     }
 
     - (void)doRequestCommand:(Command)command withCMD:(uint8_t)cmd withData:(NSData *)data {
+        // 事前に送信フレームを生成
+        if ([self doPrepareRequestFramesFrom:data WithCommand:command withCMD:cmd] == false) {
+            return;
+        }
+        // 接続されている場合（U2F Statusからの受信監視が継続されている場合）
+        if ([[self toolBLEHelper] helperIsSubscribingCharacteristic]) {
+            // フレームを送信
+            [self helperWillSendRequestFrames];
+        } else {
+            // U2F BLEサービスに接続
+            [self doConnectWithU2FServiceUUID];
+        }
+    }
+
+    - (void)doConnectCommand {
+        // 実行コマンドを退避（接続試行）
+        [self setCommand:COMMAND_BLE_CONNECT_ONLY];
+        // コマンド配列をブランクに初期化
+        [self doClearRequestFrames];
+        // U2F BLEサービスに接続
+        [self doConnectWithU2FServiceUUID];
+    }
+
+    - (void)doClearRequestFrames {
+        // コマンド配列をブランクに初期化
+        [self setBleRequestArray:nil];
+    }
+
+    - (bool)doPrepareRequestFramesFrom:(NSData *)data WithCommand:(Command)command withCMD:(uint8_t)cmd {
         // 実行コマンドを退避
         [self setCommand:command];
         // 分割送信のために64バイトごとのコマンド配列を作成する
         [self setBleRequestArray:[self generateCommandArrayFrom:data cmd:cmd]];
         // コマンド配列がブランクの場合は終了
-        if ([self commandArrayIsBlank]) {
-            return;
-        }
-        // 接続されている場合（U2F Statusからの受信監視が継続されている場合）
-        if ([[self toolBLEHelper] helperIsSubscribingCharacteristic]) {
-            // 送信済フレーム数をクリア
-            [self setBleRequestFrameNumber:0];
-            // U2F Control Pointに、実行するコマンドを書き込み
-            NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
-            [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
-        } else {
-            // 再試行回数をゼロクリア
-            [self setBleConnectionRetryCount:0];
-            // メッセージ表示用変数を初期化
-            [self setLastCommandMessage:nil];
-            [self setLastCommandSuccess:false];
-            // BLEデバイス接続処理を開始する
-            [self setBleTransactionStarted:false];
-            [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
-        }
+        return ([self commandArrayIsBlank] == false);
+    }
+
+    - (void)doConnectWithU2FServiceUUID {
+        // メッセージ表示用変数を初期化
+        [self setLastCommandMessage:nil];
+        [self setLastCommandSuccess:false];
+        // BLEデバイス接続処理を開始する
+        [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
     }
 
     - (void)commandDidProcess:(bool)result message:(NSString *)message {
         // コマンド配列をブランクに初期化
-        [self setBleRequestArray:nil];
+        [self doClearRequestFrames];
         if (message) {
             // コマンド実行結果のメッセージを保持
             [self setLastCommandMessage:message];
@@ -133,7 +149,6 @@
     - (void)helperWillDisconnectWith:(NSString *)errorMessage {
         // エラーメッセージを設定し、デバイス接続を切断
         [self setLastCommandMessage:errorMessage];
-        [self setBleTransactionStarted:false];
         [self setLastCommandSuccess:false];
         [[self toolBLEHelper] helperWillDisconnect];
     }
@@ -166,12 +181,25 @@
         [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
+        if ([self command] == COMMAND_BLE_CONNECT_ONLY) {
+            // 接続試行の場合はここで制御を上位クラスに戻す
+            [[self delegate] didResponseCommand:[self command] response:nil];
+        } else {
+            // フレームを送信
+            [self helperWillSendRequestFrames];
+        }
+    }
+
+    - (void)helperWillSendRequestFrames {
+        // コマンド配列がブランクの場合は終了
+        if ([self commandArrayIsBlank]) {
+            return;
+        }
         // 送信済フレーム数をクリア
         [self setBleRequestFrameNumber:0];
         // U2F Control Pointに、実行するコマンドを書き込み
         NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
         [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
-        [self setBleTransactionStarted:true];
     }
 
     - (void)helperDidWriteForCharacteristics {
@@ -196,7 +224,6 @@
         } else {
             // 後続レスポンスがなければ、トランザクション完了と判断
             [[ToolLogFile defaultLogger] info:MSG_RESPONSE_RECEIVED];
-            [self setBleTransactionStarted:false];
             // レスポンスを上位クラスに引き渡す
             [[self delegate] didResponseCommand:[self command] response:[self bleResponseData]];
         }
@@ -209,8 +236,6 @@
         NSString *message = [self helperMessageOnFailConnection:reason];
         // 画面上のテキストエリアにもメッセージを表示する
         [self setLastCommandMessage:message];
-        // トランザクション完了済とし、接続再試行を回避
-        [self setBleTransactionStarted:false];
         // ポップアップ表示させるためのリザルトを保持
         [self setLastCommandSuccess:false];
         // デバイス接続を切断
