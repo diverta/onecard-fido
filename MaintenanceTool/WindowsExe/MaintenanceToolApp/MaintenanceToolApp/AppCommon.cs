@@ -310,7 +310,7 @@
         // バージョン情報取得関連メッセージ
         public const string MSG_VERSION_INFO_HEADER = "FIDO認証器のバージョン情報";
         public const string MSG_VERSION_INFO_DEVICE_NAME = "  デバイス名: {0}";
-        public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}（{1}）";
         public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
 
         // Windows版固有のメッセージ文言

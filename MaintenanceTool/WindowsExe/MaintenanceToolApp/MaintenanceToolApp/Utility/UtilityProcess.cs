@@ -172,11 +172,12 @@ namespace MaintenanceToolApp.Utility
             string strDeviceName = array[0];
             string strFWRev = array[1];
             string strHWRev = array[2];
+            string strFWBuild = array[3];
 
             // 画面に制御を戻す
             CommandProcess.NotifyMessageToMainUI(AppCommon.MSG_VERSION_INFO_HEADER);
             CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_DEVICE_NAME, strDeviceName));
-            CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev));
+            CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev, strFWBuild));
             CommandProcess.NotifyMessageToMainUI(string.Format(AppCommon.MSG_VERSION_INFO_HW_REV, strHWRev));
 
             // 画面に制御を戻す
@@ -190,6 +191,7 @@ namespace MaintenanceToolApp.Utility
             string strDeviceName = "";
             string strFWRev = "";
             string strHWRev = "";
+            string strFWBuild = "";
             foreach (string v in vars) {
                 if (v.StartsWith("DEVICE_NAME=")) {
                     strDeviceName = v.Split('=')[1].Replace("\"", "");
@@ -197,9 +199,11 @@ namespace MaintenanceToolApp.Utility
                     strFWRev = v.Split('=')[1].Replace("\"", "");
                 } else if (v.StartsWith("HW_REV=")) {
                     strHWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("FW_BUILD=")) {
+                    strFWBuild = v.Split('=')[1].Replace("\"", "");
                 }
             }
-            return new string[] { strDeviceName, strFWRev, strHWRev };
+            return new string[] { strDeviceName, strFWRev, strHWRev, strFWBuild };
         }
 
         private void ViewLogFile()
