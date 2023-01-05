@@ -181,7 +181,7 @@
         NSString *strDeviceName = @"";
         NSString *strFWRev = @"";
         NSString *strHWRev = @"";
-        NSString *strSecic = @"";
+        NSString *strFWBuild = @"";
         for (NSString *element in [versionInfoCSV componentsSeparatedByString:@","]) {
             NSArray *items = [element componentsSeparatedByString:@"="];
             NSString *key = [items objectAtIndex:0];
@@ -192,11 +192,11 @@
                 strFWRev = [ToolCommon extractCSVItemFrom:val];
             } else if ([key isEqualToString:@"HW_REV"]) {
                 strHWRev = [ToolCommon extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"ATECC608A"]) {
-                strSecic = [ToolCommon extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"FW_BUILD"]) {
+                strFWBuild = [ToolCommon extractCSVItemFrom:val];
             }
         }
-        return @[strDeviceName, strFWRev, strHWRev, strSecic];
+        return @[strDeviceName, strFWRev, strHWRev, strFWBuild];
     }
 
     + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {

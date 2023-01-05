@@ -153,7 +153,7 @@
 #pragma mark - バージョン情報取得関連メッセージ
 #define MSG_VERSION_INFO_HEADER             @"FIDO認証器のバージョン情報"
 #define MSG_VERSION_INFO_DEVICE_NAME        @"  デバイス名: %@"
-#define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@"
+#define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@（%@）"
 #define MSG_VERSION_INFO_HW_REV             @"  ハードウェアのバージョン: %@"
 
 #pragma mark - BLEペアリング関連のメッセージ文言

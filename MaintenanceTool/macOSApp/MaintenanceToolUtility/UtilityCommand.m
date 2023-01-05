@@ -179,10 +179,11 @@
         NSString *strDeviceName = array[0];
         NSString *strFWRev = array[1];
         NSString *strHWRev = array[2];
+        NSString *strFWBuild = array[3];
         // 画面に制御を戻す
         [[self delegate] notifyMessageToMainUI:MSG_VERSION_INFO_HEADER];
         [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
-        [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
+        [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev, strFWBuild]];
         [[self delegate] notifyMessageToMainUI:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
         [self notifyCommandTerminated:[self commandName] message:nil success:true fromWindow:[self parentWindow]];
     }
