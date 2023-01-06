@@ -330,8 +330,12 @@
         // 画面入力内容をパラメーターに格納
         ToolPIVParameter *parameter = [[ToolPIVParameter alloc] init];
         [parameter setKeySlotId:[self selectedPkeySlotId]];
-        [parameter setPkeyPemPath:[[self textPkeyFilePath1] stringValue]];
-        [parameter setCertPemPath:[[self textCertFilePath1] stringValue]];
+        [parameter setPkeyPemPath1:[[self textPkeyFilePath1] stringValue]];
+        [parameter setCertPemPath1:[[self textCertFilePath1] stringValue]];
+        [parameter setPkeyPemPath2:[[self textPkeyFilePath2] stringValue]];
+        [parameter setCertPemPath2:[[self textCertFilePath2] stringValue]];
+        [parameter setPkeyPemPath3:[[self textPkeyFilePath3] stringValue]];
+        [parameter setCertPemPath3:[[self textCertFilePath3] stringValue]];
         [parameter setAuthPin:[[self fieldPin2] stringValue]];
         // PIV認証用の鍵・証明書インストール（ラジオボタンから鍵種別を取得）
         [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_IMPORT_KEY withParameter:parameter];
