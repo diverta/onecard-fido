@@ -62,7 +62,6 @@
     @property (nonatomic, weak) ToolPIVCommand      *toolPIVCommand;
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
     // ラジオボタンで選択中の情報を保持
-    @property (nonatomic) uint8_t                    selectedPkeySlotId;
     @property (nonatomic) Command                    selectedPinCommand;
 
 @end
@@ -311,10 +310,8 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // ラジオボタンから鍵種別を取得
-        uint8_t slotId = [self selectedPkeySlotId];
         // 入力欄の内容をチェック
-        if ([self checkForInstallPkeyCert:sender toKeySlot:slotId] == false) {
+        if ([self checkForInstallPkeyCert:sender] == false) {
             return;
         }
         // 事前に確認ダイアログを表示
@@ -329,7 +326,6 @@
         }
         // 画面入力内容をパラメーターに格納
         ToolPIVParameter *parameter = [[ToolPIVParameter alloc] init];
-        [parameter setKeySlotId:[self selectedPkeySlotId]];
         [parameter setPkeyPemPath1:[[self textPkeyFilePath1] stringValue]];
         [parameter setCertPemPath1:[[self textCertFilePath1] stringValue]];
         [parameter setPkeyPemPath2:[[self textPkeyFilePath2] stringValue]];
@@ -457,7 +453,7 @@
 
 #pragma mark - 入力チェック関連
 
-    - (bool)checkForInstallPkeyCert:(id)sender toKeySlot:(uint8_t)slotId {
+    - (bool)checkForInstallPkeyCert:(id)sender {
         // 入力欄のチェック
         if ([self checkPathEntry:[self textPkeyFilePath1] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH] == false) {
             return false;
