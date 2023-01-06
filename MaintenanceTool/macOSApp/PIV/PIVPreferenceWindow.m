@@ -461,6 +461,18 @@
         if ([self checkPathEntry:[self textCertFilePath1] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH] == false) {
             return false;
         }
+        if ([self checkPathEntry:[self textPkeyFilePath2] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH_2] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textCertFilePath2] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH_2] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textPkeyFilePath3] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH_3] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textCertFilePath3] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH_3] == false) {
+            return false;
+        }
         if ([self checkPinNumber:[self fieldPin1] withName:MSG_LABEL_CURRENT_PIN] == false) {
             return false;
         }
@@ -481,7 +493,7 @@
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommonFunc checkFileExist:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkFileExist:field forPath:[field toolTip] informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
