@@ -8,6 +8,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PIVPreferenceWindow">
             <connections>
+                <outlet property="buttonCertFilePath1" destination="D1e-Po-fLX" id="7wK-Mp-ZTD"/>
+                <outlet property="buttonCertFilePath2" destination="FZR-Ce-EmR" id="pdS-hn-Rcb"/>
+                <outlet property="buttonCertFilePath3" destination="l4l-qg-oQm" id="FAu-uM-Z6W"/>
                 <outlet property="buttonClearSetting" destination="bXg-F8-xgl" id="uDc-5x-mdL"/>
                 <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
                 <outlet property="buttonFirmwareReset" destination="NxD-KV-yno" id="Rrk-zf-uPV"/>
@@ -18,6 +21,9 @@
                 <outlet property="buttonPinCommand2" destination="khp-d9-xQD" id="nun-RG-K8z"/>
                 <outlet property="buttonPinCommand3" destination="aea-jx-y5X" id="SeP-Yq-hG3"/>
                 <outlet property="buttonPivStatus" destination="PWJ-aC-YsL" id="M9s-1x-WMX"/>
+                <outlet property="buttonPkeyFilePath1" destination="vhr-Hq-Dtr" id="Mfe-lF-5OU"/>
+                <outlet property="buttonPkeyFilePath2" destination="Xco-94-iBN" id="uEl-rX-voD"/>
+                <outlet property="buttonPkeyFilePath3" destination="VmU-Qr-DoY" id="yBF-nk-3MT"/>
                 <outlet property="fieldCurPin" destination="MVc-Ph-LY3" id="mas-hB-1nF"/>
                 <outlet property="fieldNewPin" destination="SHa-Cp-Nku" id="KBh-zy-EE6"/>
                 <outlet property="fieldNewPinConf" destination="f4i-nS-JS0" id="YuD-fQ-3yK"/>
@@ -29,6 +35,12 @@
                 <outlet property="tabPinManagement" destination="gGN-0l-Qmq" id="ekU-Iy-mgz"/>
                 <outlet property="tabPkeyCertManagement" destination="qgx-2D-ch2" id="8oD-YG-pbl"/>
                 <outlet property="tabView" destination="T2H-Gb-kML" id="K5k-ny-4ZF"/>
+                <outlet property="textCertFilePath1" destination="QC4-1T-ApE" id="XTE-kS-znm"/>
+                <outlet property="textCertFilePath2" destination="eXj-um-j0V" id="9Pc-Gd-qNS"/>
+                <outlet property="textCertFilePath3" destination="Md3-Kl-pDZ" id="gQw-uG-gbC"/>
+                <outlet property="textPkeyFilePath1" destination="W0q-hY-29y" id="OCe-9W-9c4"/>
+                <outlet property="textPkeyFilePath2" destination="p9p-HD-kDo" id="45t-le-mWN"/>
+                <outlet property="textPkeyFilePath3" destination="WEQ-JJ-S61" id="M07-ND-Yhh"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J6e-tU-Pvs"/>
                 <outlet property="windowView" destination="EiT-Mj-1SZ" id="D44-5X-Tie"/>
             </connections>
@@ -131,6 +143,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonPkeyFilePathDidPress:" target="-2" id="Ibu-El-x8J"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1e-Po-fLX" userLabel="buttonCertFilePath1">
                                                                     <rect key="frame" x="382" y="9" width="65" height="32"/>
@@ -139,6 +154,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonCertFilePathDidPress:" target="-2" id="DEA-YE-9La"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                         </view>
@@ -194,6 +212,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonPkeyFilePathDidPress:" target="-2" id="sdv-ea-Ir2"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FZR-Ce-EmR" userLabel="buttonCertFilePath2">
                                                                     <rect key="frame" x="382" y="9" width="65" height="32"/>
@@ -202,6 +223,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonCertFilePathDidPress:" target="-2" id="bdN-WT-EIj"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                         </view>
@@ -257,6 +281,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonPkeyFilePathDidPress:" target="-2" id="1QW-5l-z9p"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l4l-qg-oQm" userLabel="buttonCertFilePath3">
                                                                     <rect key="frame" x="382" y="9" width="65" height="32"/>
@@ -265,6 +292,9 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="buttonCertFilePathDidPress:" target="-2" id="DBu-pK-ICP"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                         </view>
