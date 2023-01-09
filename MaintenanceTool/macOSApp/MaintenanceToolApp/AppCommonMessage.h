@@ -22,7 +22,7 @@
 #define MSG_APP_NAME                @"FIDO認証器管理ツール"
 #define MSG_APP_LAUNCHED            @"FIDO認証器管理ツールを起動しました: Version %@"
 #define MSG_APP_TERMINATED          @"FIDO認証器管理ツールを終了しました。"
-#define MSG_APP_COPYRIGHT           @"Copyright (c) 2017-2022 Diverta Inc."
+#define MSG_APP_COPYRIGHT           @"Copyright (c) 2017-2023 Diverta Inc."
 #define MSG_PROMPT_SELECT_PKEY_PATH @"秘密鍵ファイル(PEM)のパスを選択してください"
 #define MSG_PROMPT_SELECT_CRT_PATH  @"証明書ファイル(CRT)のパスを選択してください"
 #define MSG_ERASE_SKEY_CERT         @"FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。"
@@ -77,6 +77,8 @@
 #define PROCESS_NAME_OPENPGP_RESET                  @"OpenPGP機能リセット"
 #define PROCESS_NAME_RTCC_GET_TIMESTAMP             @"認証器の現在時刻参照"
 #define PROCESS_NAME_RTCC_SET_TIMESTAMP             @"認証器の現在時刻設定"
+#define PROCESS_NAME_PIV_SETTINGS                   @"PIV設定情報"
+#define PROCESS_NAME_OPENPGP_SETTINGS               @"OpenPGP設定情報"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO認証器のスキャンがタイムアウトしました。"

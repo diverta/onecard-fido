@@ -647,7 +647,7 @@
         if ([self command] == COMMAND_CCID_PIV_STATUS && [self commandResult]) {
             // PIV設定情報を、情報表示画面に表示
             [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPIVCommand]
-                withParentWindow:[self window] titleString:PROCESS_NAME_CCID_PIV_STATUS
+                withParentWindow:[self window] titleString:PROCESS_NAME_PIV_SETTINGS
                 infoString:[[self toolPIVCommand] getPIVSettingDescriptionString]];
             // 画面項目を使用可とする
             [self enableButtons:true];

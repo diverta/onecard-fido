@@ -636,7 +636,7 @@
         if ([self command] == COMMAND_OPENPGP_STATUS && [self commandResult]) {
             // OpenPGP設定情報を、情報表示画面に表示
             [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
-                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
+                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_SETTINGS
                 infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
             // 画面項目を使用可とする
             [self enableButtons:true];
