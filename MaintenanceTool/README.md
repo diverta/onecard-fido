@@ -14,8 +14,6 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 #### [Windows版](../MaintenanceTool/dotNET/MNTTOOL.md)
 <img src="../MaintenanceTool/dotNET/assets01/0002.jpg" width="350">
 
-[Windows版（v0.2）はこちら](../MaintenanceTool/WindowsExe/MNTTOOL.md)
-
 ## [FIDO認証器開発ツール](../MaintenanceTool/DEVTOOL.md)
 ベンダー向けのツールです。
 

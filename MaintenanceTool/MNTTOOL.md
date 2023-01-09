@@ -37,6 +37,3 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 #### 動作環境
 Windows 10 (64bit版)、Windows 11
-
-#### 旧バージョン
-[Windows版（v0.2）はこちら](../MaintenanceTool/WindowsExe/MNTTOOL.md)
