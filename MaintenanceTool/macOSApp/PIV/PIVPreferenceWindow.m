@@ -333,7 +333,7 @@
         [parameter setPkeyPemPath3:[[self textPkeyFilePath3] stringValue]];
         [parameter setCertPemPath3:[[self textCertFilePath3] stringValue]];
         [parameter setAuthPin:[[self fieldPin2] stringValue]];
-        // PIV認証用の鍵・証明書インストール（ラジオボタンから鍵種別を取得）
+        // PIV認証用の鍵・証明書インストール
         [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_IMPORT_KEY withParameter:parameter];
     }
 
