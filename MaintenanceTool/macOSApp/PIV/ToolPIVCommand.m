@@ -11,6 +11,7 @@
 
 #import "AppCommonMessage.h"
 #import "FirmwareResetCommand.h"
+#import "PIVInitialSetting.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -35,9 +36,13 @@
     @property (nonatomic) Command            command;
     @property (nonatomic) uint8_t            commandIns;
     // コマンドのパラメーターを保持
+    @property (nonatomic) ToolPIVParameter  *toolPIVParameter;
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
-    @property (nonatomic) ToolPIVImporter   *toolPIVImporter;
+    @property (nonatomic) PIVInitialSetting *initialSetting;
+    @property (nonatomic) ToolPIVImporter   *toolPIVImporter1;
+    @property (nonatomic) ToolPIVImporter   *toolPIVImporter2;
+    @property (nonatomic) ToolPIVImporter   *toolPIVImporter3;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString          *errorMessageOfCommand;
     // PIV管理機能認証（往路）のチャレンジを保持
@@ -80,9 +85,13 @@
         [self setNameOfCommand:nil];
         [self setCommand:COMMAND_NONE];
         [self setCommandIns:0x00];
+        [self setToolPIVParameter:nil];
         [self setPinCodeCur:nil];
         [self setPinCodeNew:nil];
-        [self setToolPIVImporter:nil];
+        [self setToolPIVImporter1:nil];
+        [self setToolPIVImporter2:nil];
+        [self setToolPIVImporter3:nil];
+        [self setInitialSetting:nil];
         [self setPivAuthChallenge:nil];
     }
 
@@ -187,8 +196,8 @@
                 [self commandWillResetFirmware];
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
-                [self setToolPIVImporter:[[ToolPIVImporter alloc] init]];
-                [[self toolPIVImporter] generateChuidAndCcc];
+                [self setInitialSetting:[[PIVInitialSetting alloc] init]];
+                [[self initialSetting] generateChuidAndCcc];
                 [self ccidHelperWillProcess];
                 break;
             case COMMAND_CCID_PIV_RESET:
@@ -213,29 +222,59 @@
     }
 
     - (void)commandwillimportKeyWith:(ToolPIVParameter *)parameter {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:[parameter keySlotId]];
-        if ([importer readPrivateKeyPemFrom:[parameter pkeyPemPath]] == false) {
-            [self notifyErrorMessage:MSG_PIV_LOAD_PKEY_FAILED];
+        // パラメーターを保持
+        [self setToolPIVParameter:parameter];
+        // 鍵・証明書ファイルを読込
+        ToolPIVImporter *importer1 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_AUTHENTICATION];
+        if ([self importKeyWith:importer1 withPkey:[parameter pkeyPemPath1] withCert:[parameter certPemPath1] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_1] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
-        if ([importer readCertificatePemFrom:[parameter certPemPath]] == false) {
-            [self notifyErrorMessage:MSG_PIV_LOAD_CERT_FAILED];
+        ToolPIVImporter *importer2 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_SIGNATURE];
+        if ([self importKeyWith:importer2 withPkey:[parameter pkeyPemPath2] withCert:[parameter certPemPath2] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_2] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
-        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
-        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
-            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
-                              [importer keyAlgorithm], [importer certAlgorithm]];
-            [self notifyErrorMessage:info];
+        ToolPIVImporter *importer3 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_KEYMGM];
+        if ([self importKeyWith:importer3 withPkey:[parameter pkeyPemPath3] withCert:[parameter certPemPath3] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_3] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
         // コマンド実行
         [self setPinCodeCur:[parameter authPin]];
-        [self setToolPIVImporter:importer];
+        [self setToolPIVImporter1:importer1];
+        [self setToolPIVImporter2:importer2];
+        [self setToolPIVImporter3:importer3];
         [self ccidHelperWillProcess];
+    }
+
+    - (bool)importKeyWith:(ToolPIVImporter *)importer withPkey:(NSString *)pkeyPemPath withCert:(NSString *)certPemPath forKeySlotName:(NSString *)keySlotName {
+        // 鍵ファイルを読込
+        if ([importer readPrivateKeyPemFrom:pkeyPemPath] == false) {
+            NSString *msg = [NSString stringWithFormat:MSG_FORMAT_PIV_LOAD_PKEY_FAILED, keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        NSString *info1 = [NSString stringWithFormat:MSG_FORMAT_PIV_PKEY_PEM_LOADED, keySlotName];
+        [[ToolLogFile defaultLogger] info:info1];
+
+        // 証明書ファイルを読込
+        if ([importer readCertificatePemFrom:certPemPath] == false) {
+            NSString *msg = [NSString stringWithFormat:MSG_FORMAT_PIV_LOAD_CERT_FAILED, keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        NSString *info2 = [NSString stringWithFormat:MSG_FORMAT_PIV_CERT_PEM_LOADED, keySlotName];
+        [[ToolLogFile defaultLogger] info:info2];
+
+        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
+            NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                              [importer keyAlgorithm], [importer certAlgorithm], keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Private common methods
@@ -393,25 +432,6 @@
         }
     }
 
-    - (void)doRequestYkPivInsImportKey:(NSData *)apdu algorithm:(uint8_t)alg keySlotId:(uint8_t)slotId {
-        // コマンドを実行
-        [self setCommandIns:YKPIV_INS_IMPORT_ASYMM_KEY];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:alg p2:slotId data:apdu le:0xff];
-    }
-
-    - (void)doResponseYkPivInsImportKey:(NSData *)response status:(uint16_t)sw {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (sw != SW_SUCCESS) {
-            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_PKEY_FAILED withImporter:[self toolPIVImporter]];
-            [self notifyProcessTerminated:false];
-            return;
-        }
-        // 処理成功のログを出力
-        [self outputLogWithFormat:MSG_PIV_PKEY_PEM_IMPORTED withImporter:[self toolPIVImporter]];
-        // 証明書インポート処理を実行
-        [self doYkPivImportCertProcess];
-    }
-
     - (void)doRequestPivInsPutData:(NSData *)apdu {
         // コマンドを実行
         [self setCommandIns:PIV_INS_PUT_DATA];
@@ -449,17 +469,6 @@
                 [self notifyProcessTerminated:false];
                 break;
         }
-    }
-
-    - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
-        // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
-        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
-        [self notifyErrorMessage:msg];
-    }
-
-    - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
-        // インストール先のスロットIDとアルゴリズムを付加してログ出力
-        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
     }
 
 #pragma mark - PIV administrative authentication
@@ -550,30 +559,134 @@
             [self notifyProcessTerminated:false];
             return;
         }
+        // 先頭スロットの秘密鍵インポート処理を実行
+        [[self toolPIVParameter] setKeySlotId:PIV_KEY_AUTHENTICATION];
+        [self doYkPivImportKeyProcess];
+    }
+
+    - (void)doYkPivImportKeyProcess {
+        switch ([[self toolPIVParameter] keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                [self doRequestYkPivInsImportKey:[self toolPIVImporter1]];
+                break;
+            case PIV_KEY_SIGNATURE:
+                [self doRequestYkPivInsImportKey:[self toolPIVImporter2]];
+                break;
+            case PIV_KEY_KEYMGM:
+                [self doRequestYkPivInsImportKey:[self toolPIVImporter3]];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)doRequestYkPivInsImportKey:(ToolPIVImporter *)importer {
+        // パラメーターを取得
+        uint8_t alg = [importer keyAlgorithm];
+        uint8_t slotId = [importer keySlotId];
+        NSData *apdu = [importer getPrivateKeyAPDUData];
+        // コマンドを実行
+        [self setCommandIns:YKPIV_INS_IMPORT_ASYMM_KEY];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:alg p2:slotId data:apdu le:0xff];
+    }
+
+    - (void)doResponseYkPivInsImportKey:(NSData *)response status:(uint16_t)sw {
         // 秘密鍵インポート処理を実行
-        NSData *apdu = [[self toolPIVImporter] getPrivateKeyAPDUData];
-        [self doRequestYkPivInsImportKey:apdu
-                               algorithm:[[self toolPIVImporter] keyAlgorithm]
-                               keySlotId:[[self toolPIVImporter] keySlotId]];
-    }
-
-    - (void)doYkPivImportCertProcess {
-        // 証明書インポート処理を実行
-        NSData *apdu = [[self toolPIVImporter] getCertificateAPDUData];
-        [self doRequestPivInsPutData:apdu];
-    }
-
-    - (void)doYkPivImportCertTerminate:(NSData *)response status:(uint16_t)sw {
+        ToolPIVImporter *importer;
+        switch ([[self toolPIVParameter] keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                importer = [self toolPIVImporter1];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_SIGNATURE];
+                break;
+            case PIV_KEY_SIGNATURE:
+                importer = [self toolPIVImporter2];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_KEYMGM];
+                break;
+            case PIV_KEY_KEYMGM:
+                importer = [self toolPIVImporter3];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_AUTHENTICATION];
+                break;
+            default:
+                break;
+        }
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_CERT_FAILED withImporter:[self toolPIVImporter]];
+            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_PKEY_FAILED slotName:[importer getKeySlotName] algorithmName:[importer getKeyAlgorithmName]];
             [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功のログを出力
-        [self outputLogWithFormat:MSG_PIV_CERT_PEM_IMPORTED withImporter:[self toolPIVImporter]];
-        // 制御を戻す
-        [self notifyProcessTerminated:true];
+        [self outputLogWithFormat:MSG_FORMAT_PIV_PKEY_PEM_IMPORTED slotName:[importer getKeySlotName] algorithmName:[importer getKeyAlgorithmName]];
+        if (importer == [self toolPIVImporter3]) {
+            // 先頭スロットの証明書インポート処理を実行
+            [self doYkPivImportCertProcess];
+        } else {
+            // 次スロットの秘密鍵インポート処理を実行
+            [self doYkPivImportKeyProcess];
+        }
+    }
+
+    - (void)doYkPivImportCertProcess {
+        // 証明書インポート処理を実行
+        switch ([[self toolPIVParameter] keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                [self doRequestPivInsPutData:[[self toolPIVImporter1] getCertificateAPDUData]];
+                break;
+            case PIV_KEY_SIGNATURE:
+                [self doRequestPivInsPutData:[[self toolPIVImporter2] getCertificateAPDUData]];
+                break;
+            case PIV_KEY_KEYMGM:
+                [self doRequestPivInsPutData:[[self toolPIVImporter3] getCertificateAPDUData]];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)doYkPivImportCertTerminate:(NSData *)response status:(uint16_t)sw {
+        ToolPIVImporter *importer;
+        switch ([[self toolPIVParameter] keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                importer = [self toolPIVImporter1];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_SIGNATURE];
+                break;
+            case PIV_KEY_SIGNATURE:
+                importer = [self toolPIVImporter2];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_KEYMGM];
+                break;
+            case PIV_KEY_KEYMGM:
+                importer = [self toolPIVImporter3];
+                [[self toolPIVParameter] setKeySlotId:PIV_KEY_AUTHENTICATION];
+                break;
+            default:
+                break;
+        }
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_CERT_FAILED slotName:[importer getKeySlotName] algorithmName:[importer getCertAlgorithmName]];
+            [self notifyProcessTerminated:false];
+            return;
+        }
+        // 処理成功のログを出力
+        [self outputLogWithFormat:MSG_FORMAT_PIV_CERT_PEM_IMPORTED slotName:[importer getKeySlotName] algorithmName:[importer getCertAlgorithmName]];
+        if (importer == [self toolPIVImporter3]) {
+            // 制御を戻す
+            [self notifyProcessTerminated:true];
+        } else {
+            // 次スロットの証明書インポート処理を実行
+            [self doYkPivImportCertProcess];
+        }
+    }
+
+    - (void)setLastErrorMessageWithFormat:(NSString *)format slotName:(NSString *)slotName algorithmName:(NSString *)algorithmName {
+        // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
+        NSString *msg = [[NSString alloc] initWithFormat:format, slotName, algorithmName];
+        [self notifyErrorMessage:msg];
+    }
+
+    - (void)outputLogWithFormat:(NSString *)format slotName:(NSString *)slotName algorithmName:(NSString *)algorithmName {
+        // インストール先のスロットIDとアルゴリズムを付加してログ出力
+        [[ToolLogFile defaultLogger] infoWithFormat:format, slotName, algorithmName];
     }
 
 #pragma mark - CHUID and CCC management functions
@@ -589,7 +702,7 @@
         // フラグをクリア
         [self setCccImportProcessing:false];
         // CHUIDインポート処理を実行
-        NSData *apdu = [[self toolPIVImporter] getChuidAPDUData];
+        NSData *apdu = [[self initialSetting] getChuidAPDUData];
         [self doRequestPivInsPutData:apdu];
     }
 
@@ -613,7 +726,7 @@
             // フラグを設定
             [self setCccImportProcessing:true];
             // CCCインポート処理を実行
-            NSData *apdu = [[self toolPIVImporter] getCccAPDUData];
+            NSData *apdu = [[self initialSetting] getCccAPDUData];
             [self doRequestPivInsPutData:apdu];
         }
     }

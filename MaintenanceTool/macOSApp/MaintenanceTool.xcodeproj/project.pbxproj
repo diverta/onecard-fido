@@ -35,6 +35,7 @@
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
 		7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */; };
+		7A335F70296BA7FC00D01742 /* PIVInitialSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */; };
 		7A33FBF828864A2000EAF3C4 /* CTAP2ManageCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A33FBF728864A2000EAF3C4 /* CTAP2ManageCommand.m */; };
 		7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1A28755F91003CFE67 /* UtilityWindow.m */; };
 		7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1B28755F91003CFE67 /* UtilityCommand.m */; };
@@ -176,6 +177,8 @@
 		7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = export_pubkey_and_backup.sh; sourceTree = "<group>"; };
 		7A314AC827CF1399009B4F77 /* ToolPGPCcidCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCcidCommand.h; sourceTree = "<group>"; };
 		7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPGPCcidCommand.m; sourceTree = "<group>"; };
+		7A335F6E296BA7D500D01742 /* PIVInitialSetting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVInitialSetting.h; sourceTree = "<group>"; };
+		7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVInitialSetting.m; sourceTree = "<group>"; };
 		7A33FBF6288649F800EAF3C4 /* CTAP2ManageCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAP2ManageCommand.h; sourceTree = "<group>"; };
 		7A33FBF728864A2000EAF3C4 /* CTAP2ManageCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAP2ManageCommand.m; sourceTree = "<group>"; };
 		7A3F4F1728755D12003CFE67 /* AppDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDefine.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */,
 				7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */,
 				7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */,
+				7A335F6E296BA7D500D01742 /* PIVInitialSetting.h */,
+				7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */,
 			);
 			path = PIV;
 			sourceTree = "<group>";
@@ -903,6 +908,7 @@
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
 				7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */,
 				7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */,
+				7A335F70296BA7FC00D01742 /* PIVInitialSetting.m in Sources */,
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
 				7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */,
@@ -1028,7 +1034,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1055,7 +1061,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";

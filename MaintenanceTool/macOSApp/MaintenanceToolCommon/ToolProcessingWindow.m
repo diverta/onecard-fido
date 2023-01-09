@@ -17,6 +17,9 @@ static ToolProcessingWindow *sharedInstance;
     // 処理終了メッセージを保持
     @property (nonatomic) NSString              *messageText;
     @property (nonatomic) NSString              *informativeText;
+    // この画面が閉じた後に継続される処理を保持
+    @property (nonatomic) id                     targetForContinue;
+    @property (nonatomic) SEL                    selectorForContinue;
 
 @end
 
@@ -87,6 +90,10 @@ static ToolProcessingWindow *sharedInstance;
             [[ToolPopupWindow defaultWindow] critical:[self messageText] informativeText:[self informativeText] withObject:nil forSelector:nil
                                          parentWindow:[self parentWindow]];
         }
+        // 後続処理を呼び出す
+        if (modalResponse == NSModalResponseContinue) {
+            [[self targetForContinue] performSelector:[self selectorForContinue] withObject:nil afterDelay:0.0];
+        }
     }
 
     - (void)windowWillClose:(NSModalResponse)response withMessage:(NSString *)message withInformative:(NSString *)informative {
@@ -96,6 +103,15 @@ static ToolProcessingWindow *sharedInstance;
         // この画面を閉じる
         if ([self parentWindow] && [[[self parentWindow] sheets] count] > 0) {
             [[self parentWindow] endSheet:[self window] returnCode:response];
+        }
+    }
+
+    - (void)windowWillCloseForTarget:(id)object forSelector:(SEL)selector {
+        // この画面を閉じる
+        if ([self parentWindow] && [[[self parentWindow] sheets] count] > 0) {
+            [self setTargetForContinue:object];
+            [self setSelectorForContinue:selector];
+            [[self parentWindow] endSheet:[self window] returnCode:NSModalResponseContinue];
         }
     }
 

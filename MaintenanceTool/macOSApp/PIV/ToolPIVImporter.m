@@ -11,7 +11,7 @@
 
 #import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolLogFile.h"
+#import "ToolPIVCommon.h"
 #import "ToolPIVImporter.h"
 
 @interface ToolPIVImporter ()
@@ -49,7 +49,6 @@
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setPrivateKeyAPDU:apdu];
         [self setKeyAlgorithm:algorithm];
-        [[ToolLogFile defaultLogger] info:MSG_PIV_PKEY_PEM_LOADED];
         return true;
     }
 
@@ -66,7 +65,6 @@
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setCertificateAPDU:apdu];
         [self setCertAlgorithm:algorithm];
-        [[ToolLogFile defaultLogger] info:MSG_PIV_CERT_PEM_LOADED];
         return true;
     }
 
@@ -78,25 +76,36 @@
         return [self certificateAPDU];
     }
 
-    - (void)generateChuidAndCcc {
-        // CHUIDインポート用のAPDUを生成
-        size_t size;
-        uint8_t *chuidBytes = tool_piv_admin_generate_CHUID_APDU(&size);
-        NSData *chuidApdu = [[NSData alloc] initWithBytes:chuidBytes length:size];
-        [self setChuidAPDU:chuidApdu];
-
-        // CCCインポート用のAPDUを生成
-        uint8_t *cccBytes = tool_piv_admin_generate_CCC_APDU(&size);
-        NSData *cccApdu = [[NSData alloc] initWithBytes:cccBytes length:size];
-        [self setCccAPDU:cccApdu];
+    - (NSString *)getKeySlotName {
+        switch([self keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                return MSG_PIV_KEY_SLOT_NAME_1;
+            case PIV_KEY_SIGNATURE:
+                return MSG_PIV_KEY_SLOT_NAME_2;
+            case PIV_KEY_KEYMGM:
+                return MSG_PIV_KEY_SLOT_NAME_3;
+            default:
+                return @"";
+        }
     }
 
-    - (NSData *)getChuidAPDUData {
-        return [self chuidAPDU];
+    - (NSString *)getKeyAlgorithmName {
+        return [self getAlgorithmName:[self keyAlgorithm]];
     }
 
-    - (NSData *)getCccAPDUData {
-        return [self cccAPDU];
+    - (NSString *)getCertAlgorithmName {
+        return [self getAlgorithmName:[self certAlgorithm]];
+    }
+
+    - (NSString *)getAlgorithmName:(uint8_t)alg {
+        switch(alg) {
+            case 0x07:
+                return @"RSA2048";
+            case 0x11:
+                return @"ECCP256";
+            default:
+                return @"";
+        }
     }
 
 @end

@@ -44,6 +44,17 @@
         return true;
     }
 
+    + (bool)checkFileExist:(NSTextField *)textField forPath:(NSString *)path informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {
+        // 入力されたファイルパスが存在しない場合はfalseを戻す
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path] == false) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_INVALID_FILE_PATH informativeText:informativeText withObject:nil forSelector:nil
+                                         parentWindow:window];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
     + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected {
         // USBポートに接続されていない場合はfalse
         if (connected == false) {
