@@ -72,6 +72,10 @@
     // 実行するPIN管理コマンドを保持
     @property (nonatomic) Command                    selectedPinCommand;
     @property (nonatomic) NSString                  *selectedPinCommandName;
+    // コマンドの処理結果を保持
+    @property (nonatomic) Command                    command;
+    @property (nonatomic) bool                       commandResult;
+    @property (nonatomic) NSString                  *commandErrorMessage;
 
 @end
 
@@ -620,29 +624,35 @@
     }
 
     - (void)toolPGPCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_OPENPGP_STATUS && result) {
-            // 進捗画面を閉じる
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+        // 処理結果を保持
+        [self setCommand:command];
+        [self setCommandResult:result];
+        [self setCommandErrorMessage:errorMessage];
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillCloseForTarget:self forSelector:@selector(toolProcessingWindowDidClose)];
+    }
+
+    - (void)toolProcessingWindowDidClose {
+        if ([self command] == COMMAND_OPENPGP_STATUS && [self commandResult]) {
             // OpenPGP設定情報を、情報表示画面に表示
             [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPGPCommand]
-                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_STATUS
+                withParentWindow:[self window] titleString:PROCESS_NAME_OPENPGP_SETTINGS
                 infoString:[[self toolPGPCommand] getPGPStatusInfoString]];
             // 画面項目を使用可とする
             [self enableButtons:true];
             return;
         }
         // ポップアップ表示させるメッセージを編集
-        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand:command],
-                             result ? MSG_SUCCESS:MSG_FAILURE];
-        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
-        if (result) {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand:[self command]],
+                             [self commandResult] ? MSG_SUCCESS:MSG_FAILURE];
+        // 処理終了メッセージをポップアップ表示
+        if ([self commandResult]) {
+            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil
+                                                withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         } else {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:[self commandErrorMessage]
+                                           withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         }
-        // 画面項目を使用可とする
-        [self clearEntry:command withResult:result];
-        [self enableButtons:true];
     }
 
     - (NSString *)processNameOfCommand:(Command)command {
@@ -674,11 +684,11 @@
         return name;
     }
 
-    - (void)clearEntry:(Command)command withResult:(bool)result {
+    - (void)clearEntry {
         // 全ての入力欄をクリア
-        switch (command) {
+        switch ([self command]) {
             case COMMAND_OPENPGP_INSTALL_KEYS:
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPGPKeyPathFields];
                     [self initTabPGPKeyEntryFields];
                 }
@@ -688,13 +698,15 @@
             case COMMAND_OPENPGP_UNBLOCK_PIN:
             case COMMAND_OPENPGP_SET_RESET_CODE:
             case COMMAND_OPENPGP_UNBLOCK:
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPinManagementPinFields];
                 }
                 break;
             default:
                 break;
         }
+        // 画面項目を使用可とする
+        [self enableButtons:true];
     }
 
 @end

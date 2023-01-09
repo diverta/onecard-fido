@@ -13,8 +13,12 @@
 
     // 鍵作成用パラメーターを保持
     @property (nonatomic) uint8_t                       keySlotId;
-    @property (nonatomic) NSString                     *pkeyPemPath;
-    @property (nonatomic) NSString                     *certPemPath;
+    @property (nonatomic) NSString                     *pkeyPemPath1;
+    @property (nonatomic) NSString                     *certPemPath1;
+    @property (nonatomic) NSString                     *pkeyPemPath2;
+    @property (nonatomic) NSString                     *certPemPath2;
+    @property (nonatomic) NSString                     *pkeyPemPath3;
+    @property (nonatomic) NSString                     *certPemPath3;
     @property (nonatomic) NSString                     *authPin;
     // PIN番号管理用パラメーターを保持
     @property (nonatomic) NSString                     *currentPin;

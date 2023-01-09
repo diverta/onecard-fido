@@ -28,13 +28,18 @@
     @property (assign) IBOutlet NSButton            *buttonClearSetting;
 
     @property (assign) IBOutlet NSTabViewItem       *tabPkeyCertManagement;
-    @property (assign) IBOutlet NSButton            *buttonPkeySlotId1;
-    @property (assign) IBOutlet NSButton            *buttonPkeySlotId2;
-    @property (assign) IBOutlet NSButton            *buttonPkeySlotId3;
-    @property (assign) IBOutlet NSTextField         *fieldPath1;
-    @property (assign) IBOutlet NSTextField         *fieldPath2;
-    @property (assign) IBOutlet NSButton            *buttonPath1;
-    @property (assign) IBOutlet NSButton            *buttonPath2;
+    @property (assign) IBOutlet NSTextField         *textPkeyFilePath1;
+    @property (assign) IBOutlet NSTextField         *textCertFilePath1;
+    @property (assign) IBOutlet NSButton            *buttonPkeyFilePath1;
+    @property (assign) IBOutlet NSButton            *buttonCertFilePath1;
+    @property (assign) IBOutlet NSTextField         *textPkeyFilePath2;
+    @property (assign) IBOutlet NSTextField         *textCertFilePath2;
+    @property (assign) IBOutlet NSButton            *buttonPkeyFilePath2;
+    @property (assign) IBOutlet NSButton            *buttonCertFilePath2;
+    @property (assign) IBOutlet NSTextField         *textPkeyFilePath3;
+    @property (assign) IBOutlet NSTextField         *textCertFilePath3;
+    @property (assign) IBOutlet NSButton            *buttonPkeyFilePath3;
+    @property (assign) IBOutlet NSButton            *buttonCertFilePath3;
     @property (assign) IBOutlet NSTextField         *fieldPin1;
     @property (assign) IBOutlet NSTextField         *fieldPin2;
     @property (assign) IBOutlet NSButton            *buttonInstallPkeyCert;
@@ -57,8 +62,11 @@
     @property (nonatomic, weak) ToolPIVCommand      *toolPIVCommand;
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
     // ラジオボタンで選択中の情報を保持
-    @property (nonatomic) uint8_t                    selectedPkeySlotId;
     @property (nonatomic) Command                    selectedPinCommand;
+    // コマンドの処理結果を保持
+    @property (nonatomic) Command                    command;
+    @property (nonatomic) bool                       commandResult;
+    @property (nonatomic) NSString                  *commandErrorMessage;
 
 @end
 
@@ -81,8 +89,6 @@
     }
 
     - (void)initTabPkeyCertManagement {
-        // ラジオボタンの初期化
-        [self initButtonPkeySlotIdsWithDefault:[self buttonPkeySlotId1]];
         // テキストボックスの初期化
         [self initTabPkeyCertPathFields];
         [self initTabPkeyCertPinFields];
@@ -90,10 +96,18 @@
 
     - (void)initTabPkeyCertPathFields {
         // ファイルパスのテキストボックスを初期化
-        [[self fieldPath1] setStringValue:@""];
-        [[self fieldPath2] setStringValue:@""];
-        [[self fieldPath1] setToolTip:@""];
-        [[self fieldPath2] setToolTip:@""];
+        [[self textPkeyFilePath1] setStringValue:@""];
+        [[self textCertFilePath1] setStringValue:@""];
+        [[self textPkeyFilePath1] setToolTip:@""];
+        [[self textCertFilePath1] setToolTip:@""];
+        [[self textPkeyFilePath2] setStringValue:@""];
+        [[self textCertFilePath2] setStringValue:@""];
+        [[self textPkeyFilePath2] setToolTip:@""];
+        [[self textCertFilePath2] setToolTip:@""];
+        [[self textPkeyFilePath3] setStringValue:@""];
+        [[self textCertFilePath3] setStringValue:@""];
+        [[self textPkeyFilePath3] setToolTip:@""];
+        [[self textCertFilePath3] setToolTip:@""];
     }
 
     - (void)initTabPkeyCertPinFields {
@@ -139,13 +153,18 @@
 
     - (void)enableButtonsInTabPkeyCertManagement:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [[self buttonPkeySlotId1] setEnabled:enabled];
-        [[self buttonPkeySlotId2] setEnabled:enabled];
-        [[self buttonPkeySlotId3] setEnabled:enabled];
-        [[self fieldPath1] setEnabled:enabled];
-        [[self fieldPath2] setEnabled:enabled];
-        [[self buttonPath1] setEnabled:enabled];
-        [[self buttonPath2] setEnabled:enabled];
+        [[self textPkeyFilePath1] setEnabled:enabled];
+        [[self textCertFilePath1] setEnabled:enabled];
+        [[self buttonPkeyFilePath1] setEnabled:enabled];
+        [[self buttonCertFilePath1] setEnabled:enabled];
+        [[self textPkeyFilePath2] setEnabled:enabled];
+        [[self textCertFilePath2] setEnabled:enabled];
+        [[self buttonPkeyFilePath2] setEnabled:enabled];
+        [[self buttonCertFilePath2] setEnabled:enabled];
+        [[self textPkeyFilePath3] setEnabled:enabled];
+        [[self textCertFilePath3] setEnabled:enabled];
+        [[self buttonPkeyFilePath3] setEnabled:enabled];
+        [[self buttonCertFilePath3] setEnabled:enabled];
         [[self fieldPin1] setEnabled:enabled];
         [[self fieldPin2] setEnabled:enabled];
         [[self buttonInstallPkeyCert] setEnabled:enabled];
@@ -282,15 +301,11 @@
 
 #pragma mark - 鍵・証明書管理タブ関連
 
-    - (IBAction)buttonPkeySlotIdSelected:(id)sender {
-        [self getSelectedPkeySlotIdValue:sender];
-    }
-
-    - (IBAction)buttonPath1DidPress:(id)sender {
+    - (IBAction)buttonPkeyFilePathDidPress:(id)sender {
         [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH];
     }
 
-    - (IBAction)buttonPath2DidPress:(id)sender {
+    - (IBAction)buttonCertFilePathDidPress:(id)sender {
         [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH];
     }
 
@@ -299,10 +314,8 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // ラジオボタンから鍵種別を取得
-        uint8_t slotId = [self selectedPkeySlotId];
         // 入力欄の内容をチェック
-        if ([self checkForInstallPkeyCert:sender toKeySlot:slotId] == false) {
+        if ([self checkForInstallPkeyCert:sender] == false) {
             return;
         }
         // 事前に確認ダイアログを表示
@@ -317,30 +330,15 @@
         }
         // 画面入力内容をパラメーターに格納
         ToolPIVParameter *parameter = [[ToolPIVParameter alloc] init];
-        [parameter setKeySlotId:[self selectedPkeySlotId]];
-        [parameter setPkeyPemPath:[[self fieldPath1] stringValue]];
-        [parameter setCertPemPath:[[self fieldPath2] stringValue]];
+        [parameter setPkeyPemPath1:[[self textPkeyFilePath1] toolTip]];
+        [parameter setCertPemPath1:[[self textCertFilePath1] toolTip]];
+        [parameter setPkeyPemPath2:[[self textPkeyFilePath2] toolTip]];
+        [parameter setCertPemPath2:[[self textCertFilePath2] toolTip]];
+        [parameter setPkeyPemPath3:[[self textPkeyFilePath3] toolTip]];
+        [parameter setCertPemPath3:[[self textCertFilePath3] toolTip]];
         [parameter setAuthPin:[[self fieldPin2] stringValue]];
-        // PIV認証用の鍵・証明書インストール（ラジオボタンから鍵種別を取得）
+        // PIV認証用の鍵・証明書インストール
         [self commandWillPerformPIVProcess:COMMAND_CCID_PIV_IMPORT_KEY withParameter:parameter];
-    }
-
-    - (void)initButtonPkeySlotIdsWithDefault:(NSButton *)defaultButton {
-        // 「インストールする鍵・証明書」のラジオボタン「PIV認証用」を選択状態にする
-        [defaultButton setState:NSControlStateValueOn];
-        [self getSelectedPkeySlotIdValue:defaultButton];
-    }
-
-    - (void)getSelectedPkeySlotIdValue:(NSButton *)button {
-        if (button == [self buttonPkeySlotId1]) {
-            [self setSelectedPkeySlotId:0x9a];
-        } else if (button == [self buttonPkeySlotId2]) {
-            [self setSelectedPkeySlotId:0x9c];
-        } else if (button == [self buttonPkeySlotId3]) {
-            [self setSelectedPkeySlotId:0x9d];
-        } else {
-            [self setSelectedPkeySlotId:0x00];
-        }
     }
 
     - (void)panelWillSelectPath:(id)sender withPrompt:(NSString *)prompt {
@@ -353,14 +351,37 @@
         if (modalResponse != NSFileHandlingPanelOKButton) {
             return;
         }
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath1] withButton:[self buttonPath1]];
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath2] withButton:[self buttonPath2]];
+        [self setFieldPath:sender filePath:filePath];
+        [[self textPkeyFilePath1] moveToEndOfDocument:sender];
+        
     }
 
-    - (void)setFieldPath:(id)sender filePath:(NSString *)filePath WithField:(NSTextField *)field withButton:(NSButton *)button {
-        if (sender == button) {
-            [field setStringValue:filePath];
-            [field setToolTip:filePath];
+    - (void)setFieldPath:(id)sender filePath:(NSString *)filePath {
+        // ファイルパスをディレクトリー、ファイル名に分割し、テキストボックスにはファイル名のみ設定
+        NSString *fileName = [filePath lastPathComponent];
+        if (sender == [self buttonPkeyFilePath1]) {
+            [[self textPkeyFilePath1] setStringValue:fileName];
+            [[self textPkeyFilePath1] setToolTip:filePath];
+        }
+        if (sender == [self buttonCertFilePath1]) {
+            [[self textCertFilePath1] setStringValue:fileName];
+            [[self textCertFilePath1] setToolTip:filePath];
+        }
+        if (sender == [self buttonPkeyFilePath2]) {
+            [[self textPkeyFilePath2] setStringValue:fileName];
+            [[self textPkeyFilePath2] setToolTip:filePath];
+        }
+        if (sender == [self buttonCertFilePath2]) {
+            [[self textCertFilePath2] setStringValue:fileName];
+            [[self textCertFilePath2] setToolTip:filePath];
+        }
+        if (sender == [self buttonPkeyFilePath3]) {
+            [[self textPkeyFilePath3] setStringValue:fileName];
+            [[self textPkeyFilePath3] setToolTip:filePath];
+        }
+        if (sender == [self buttonCertFilePath3]) {
+            [[self textCertFilePath3] setStringValue:fileName];
+            [[self textCertFilePath3] setToolTip:filePath];
         }
     }
 
@@ -436,12 +457,24 @@
 
 #pragma mark - 入力チェック関連
 
-    - (bool)checkForInstallPkeyCert:(id)sender toKeySlot:(uint8_t)slotId {
+    - (bool)checkForInstallPkeyCert:(id)sender {
         // 入力欄のチェック
-        if ([self checkPathEntry:[self fieldPath1] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH] == false) {
+        if ([self checkPathEntry:[self textPkeyFilePath1] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH] == false) {
             return false;
         }
-        if ([self checkPathEntry:[self fieldPath2] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH] == false) {
+        if ([self checkPathEntry:[self textCertFilePath1] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textPkeyFilePath2] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH_2] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textCertFilePath2] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH_2] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textPkeyFilePath3] messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH_3] == false) {
+            return false;
+        }
+        if ([self checkPathEntry:[self textCertFilePath3] messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH_3] == false) {
             return false;
         }
         if ([self checkPinNumber:[self fieldPin1] withName:MSG_LABEL_CURRENT_PIN] == false) {
@@ -464,7 +497,7 @@
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolCommonFunc checkFileExist:field informativeText:message onWindow:[self window]] == false) {
+        if ([ToolCommonFunc checkFileExist:field forPath:[field toolTip] informativeText:message onWindow:[self window]] == false) {
             return false;
         }
         return true;
@@ -602,37 +635,43 @@
     }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_CCID_PIV_STATUS && result) {
-            // 進捗画面を閉じる
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+        // 処理結果を保持
+        [self setCommand:command];
+        [self setCommandResult:result];
+        [self setCommandErrorMessage:errorMessage];
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillCloseForTarget:self forSelector:@selector(toolProcessingWindowDidClose)];
+    }
+
+    - (void)toolProcessingWindowDidClose {
+        if ([self command] == COMMAND_CCID_PIV_STATUS && [self commandResult]) {
             // PIV設定情報を、情報表示画面に表示
             [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPIVCommand]
-                withParentWindow:[self window] titleString:PROCESS_NAME_CCID_PIV_STATUS
+                withParentWindow:[self window] titleString:PROCESS_NAME_PIV_SETTINGS
                 infoString:[[self toolPIVCommand] getPIVSettingDescriptionString]];
             // 画面項目を使用可とする
             [self enableButtons:true];
             return;
         }
         // ポップアップ表示させるメッセージを編集
-        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:command],
-                             result ? MSG_SUCCESS:MSG_FAILURE];
-        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
-        if (result) {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:[self command]],
+                             [self commandResult] ? MSG_SUCCESS:MSG_FAILURE];
+        // 処理終了メッセージをポップアップ表示
+        if ([self commandResult]) {
+            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil
+                                                withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         } else {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:[self commandErrorMessage]
+                                           withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         }
-        // 画面項目を使用可とする
-        [self clearEntry:command withResult:result];
-        [self enableButtons:true];
     }
 
-    - (void)clearEntry:(Command)command withResult:(bool)result {
+    - (void)clearEntry {
         // 全ての入力欄をクリア
-        switch (command) {
+        switch ([self command]) {
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 // 全ての入力欄をクリア
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPkeyCertPathFields];
                     [self initTabPkeyCertPinFields];
                 }
@@ -641,13 +680,15 @@
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 // 全ての入力欄をクリア
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPinManagementPinFields];
                 }
                 break;
             default:
                 break;
         }
+        // 画面項目を使用可とする
+        [self enableButtons:true];
     }
 
 @end

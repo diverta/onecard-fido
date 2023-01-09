@@ -14,6 +14,7 @@
     + (ToolProcessingWindow *)defaultWindow;
     - (bool)windowWillOpenWithCommandRef:(id)ref withParentWindow:(NSWindow *)parent;
     - (void)windowWillClose:(NSModalResponse)response withMessage:(NSString *)message withInformative:(NSString *)informative;
+    - (void)windowWillCloseForTarget:(id)object forSelector:(SEL)selector;
 
 @end
 
