@@ -213,22 +213,19 @@
     }
 
     - (void)commandwillimportKeyWith:(ToolPIVParameter *)parameter {
-        ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:[parameter keySlotId]];
-        if ([importer readPrivateKeyPemFrom:[parameter pkeyPemPath]] == false) {
-            [self notifyErrorMessage:MSG_PIV_LOAD_PKEY_FAILED];
+        // 鍵・証明書ファイルを読込
+        ToolPIVImporter *importer1 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_AUTHENTICATION];
+        if ([self importKeyWith:importer1 withPkey:[parameter pkeyPemPath1] withCert:[parameter certPemPath1] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_1] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
-        if ([importer readCertificatePemFrom:[parameter certPemPath]] == false) {
-            [self notifyErrorMessage:MSG_PIV_LOAD_CERT_FAILED];
+        ToolPIVImporter *importer2 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_SIGNATURE];
+        if ([self importKeyWith:importer2 withPkey:[parameter pkeyPemPath2] withCert:[parameter certPemPath2] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_2] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
-        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
-        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
-            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
-                              [importer keyAlgorithm], [importer certAlgorithm]];
-            [self notifyErrorMessage:info];
+        ToolPIVImporter *importer3 = [[ToolPIVImporter alloc] initForKeySlot:PIV_KEY_KEYMGM];
+        if ([self importKeyWith:importer3 withPkey:[parameter pkeyPemPath3] withCert:[parameter certPemPath3] forKeySlotName:MSG_PIV_KEY_SLOT_NAME_3] == false) {
             [self notifyProcessTerminated:false];
             return;
         }
@@ -236,6 +233,35 @@
         [self setPinCodeCur:[parameter authPin]];
         [self setToolPIVImporter:importer];
         [self ccidHelperWillProcess];
+    }
+
+    - (bool)importKeyWith:(ToolPIVImporter *)importer withPkey:(NSString *)pkeyPemPath withCert:(NSString *)certPemPath forKeySlotName:(NSString *)keySlotName {
+        // 鍵ファイルを読込
+        if ([importer readPrivateKeyPemFrom:pkeyPemPath] == false) {
+            NSString *msg = [NSString stringWithFormat:MSG_FORMAT_PIV_LOAD_PKEY_FAILED, keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        NSString *info1 = [NSString stringWithFormat:MSG_FORMAT_PIV_PKEY_PEM_LOADED, keySlotName];
+        [[ToolLogFile defaultLogger] info:info1];
+
+        // 証明書ファイルを読込
+        if ([importer readCertificatePemFrom:certPemPath] == false) {
+            NSString *msg = [NSString stringWithFormat:MSG_FORMAT_PIV_LOAD_CERT_FAILED, keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        NSString *info2 = [NSString stringWithFormat:MSG_FORMAT_PIV_CERT_PEM_LOADED, keySlotName];
+        [[ToolLogFile defaultLogger] info:info2];
+
+        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
+            NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                              [importer keyAlgorithm], [importer certAlgorithm], keySlotName];
+            [self notifyErrorMessage:msg];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Private common methods

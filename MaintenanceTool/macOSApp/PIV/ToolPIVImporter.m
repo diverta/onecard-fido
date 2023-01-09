@@ -11,7 +11,6 @@
 
 #import "AppCommonMessage.h"
 #import "ToolCommon.h"
-#import "ToolLogFile.h"
 #import "ToolPIVImporter.h"
 
 @interface ToolPIVImporter ()
@@ -49,7 +48,6 @@
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setPrivateKeyAPDU:apdu];
         [self setKeyAlgorithm:algorithm];
-        [[ToolLogFile defaultLogger] info:MSG_PIV_PKEY_PEM_LOADED];
         return true;
     }
 
@@ -66,7 +64,6 @@
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setCertificateAPDU:apdu];
         [self setCertAlgorithm:algorithm];
-        [[ToolLogFile defaultLogger] info:MSG_PIV_CERT_PEM_LOADED];
         return true;
     }
 
