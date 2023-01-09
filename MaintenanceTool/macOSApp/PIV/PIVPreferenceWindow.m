@@ -656,7 +656,7 @@
         // ポップアップ表示させるメッセージを編集
         NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:[self command]],
                              [self commandResult] ? MSG_SUCCESS:MSG_FAILURE];
-        // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
+        // 処理終了メッセージをポップアップ表示
         if ([self commandResult]) {
             [[ToolPopupWindow defaultWindow] informational:message informativeText:nil
                                                 withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
