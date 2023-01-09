@@ -63,6 +63,10 @@
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
     // ラジオボタンで選択中の情報を保持
     @property (nonatomic) Command                    selectedPinCommand;
+    // コマンドの処理結果を保持
+    @property (nonatomic) Command                    command;
+    @property (nonatomic) bool                       commandResult;
+    @property (nonatomic) NSString                  *commandErrorMessage;
 
 @end
 
@@ -631,9 +635,16 @@
     }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result withErrorMessage:(NSString *)errorMessage {
-        if (command == COMMAND_CCID_PIV_STATUS && result) {
-            // 進捗画面を閉じる
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseCancel withMessage:nil withInformative:nil];
+        // 処理結果を保持
+        [self setCommand:command];
+        [self setCommandResult:result];
+        [self setCommandErrorMessage:errorMessage];
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillCloseForTarget:self forSelector:@selector(toolProcessingWindowDidClose)];
+    }
+
+    - (void)toolProcessingWindowDidClose {
+        if ([self command] == COMMAND_CCID_PIV_STATUS && [self commandResult]) {
             // PIV設定情報を、情報表示画面に表示
             [[ToolInfoWindow defaultWindow] windowWillOpenWithCommandRef:[self toolPIVCommand]
                 withParentWindow:[self window] titleString:PROCESS_NAME_CCID_PIV_STATUS
@@ -643,25 +654,24 @@
             return;
         }
         // ポップアップ表示させるメッセージを編集
-        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:command],
-                             result ? MSG_SUCCESS:MSG_FAILURE];
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self functionNameOfCommand:[self command]],
+                             [self commandResult] ? MSG_SUCCESS:MSG_FAILURE];
         // 進捗画面を閉じ、処理終了メッセージをポップアップ表示
-        if (result) {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseOK withMessage:message withInformative:nil];
+        if ([self commandResult]) {
+            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil
+                                                withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         } else {
-            [[ToolProcessingWindow defaultWindow] windowWillClose:NSModalResponseAbort withMessage:message withInformative:errorMessage];
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:[self commandErrorMessage]
+                                           withObject:self forSelector:@selector(clearEntry) parentWindow:[self window]];
         }
-        // 画面項目を使用可とする
-        [self clearEntry:command withResult:result];
-        [self enableButtons:true];
     }
 
-    - (void)clearEntry:(Command)command withResult:(bool)result {
+    - (void)clearEntry {
         // 全ての入力欄をクリア
-        switch (command) {
+        switch ([self command]) {
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 // 全ての入力欄をクリア
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPkeyCertPathFields];
                     [self initTabPkeyCertPinFields];
                 }
@@ -670,13 +680,15 @@
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 // 全ての入力欄をクリア
-                if (result) {
+                if ([self commandResult]) {
                     [self initTabPinManagementPinFields];
                 }
                 break;
             default:
                 break;
         }
+        // 画面項目を使用可とする
+        [self enableButtons:true];
     }
 
 @end
