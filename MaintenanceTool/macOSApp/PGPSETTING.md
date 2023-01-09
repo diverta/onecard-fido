@@ -21,7 +21,7 @@ OpenPGP機能は、[CCIDインターフェース](../../CCID/README.md)という
 <img src="assets07/0000.jpg" width="400">
 
 表示される画面で、管理ツールのバージョンを確認してください。<br>
-（下記例では「Version 0.2.1」となっております）
+（下記例では「Version 0.2.2」となっております）
 
 <img src="assets07/0001.jpg" width="400">
 
