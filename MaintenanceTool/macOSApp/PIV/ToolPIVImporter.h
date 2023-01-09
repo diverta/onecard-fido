@@ -18,6 +18,9 @@
 
     - (NSData *)getPrivateKeyAPDUData;
     - (NSData *)getCertificateAPDUData;
+    - (NSString *)getKeySlotName;
+    - (NSString *)getKeyAlgorithmName;
+    - (NSString *)getCertAlgorithmName;
 
     // 処理対象となるスロットID、アルゴリズムを保持
     @property (nonatomic) uint8_t           keySlotId;

@@ -11,6 +11,7 @@
 
 #import "AppCommonMessage.h"
 #import "ToolCommon.h"
+#import "ToolPIVCommon.h"
 #import "ToolPIVImporter.h"
 
 @interface ToolPIVImporter ()
@@ -73,6 +74,38 @@
 
     - (NSData *)getCertificateAPDUData {
         return [self certificateAPDU];
+    }
+
+    - (NSString *)getKeySlotName {
+        switch([self keySlotId]) {
+            case PIV_KEY_AUTHENTICATION:
+                return MSG_PIV_KEY_SLOT_NAME_1;
+            case PIV_KEY_SIGNATURE:
+                return MSG_PIV_KEY_SLOT_NAME_2;
+            case PIV_KEY_KEYMGM:
+                return MSG_PIV_KEY_SLOT_NAME_3;
+            default:
+                return @"";
+        }
+    }
+
+    - (NSString *)getKeyAlgorithmName {
+        return [self getAlgorithmName:[self keyAlgorithm]];
+    }
+
+    - (NSString *)getCertAlgorithmName {
+        return [self getAlgorithmName:[self certAlgorithm]];
+    }
+
+    - (NSString *)getAlgorithmName:(uint8_t)alg {
+        switch(alg) {
+            case 0x07:
+                return @"RSA2048";
+            case 0x11:
+                return @"ECCP256";
+            default:
+                return @"";
+        }
     }
 
 @end

@@ -611,12 +611,12 @@
         }
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_PKEY_FAILED withImporter:importer];
+            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_PKEY_FAILED slotName:[importer getKeySlotName] algorithmName:[importer getKeyAlgorithmName]];
             [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功のログを出力
-        [self outputLogWithFormat:MSG_FORMAT_PIV_PKEY_PEM_IMPORTED withImporter:importer];
+        [self outputLogWithFormat:MSG_FORMAT_PIV_PKEY_PEM_IMPORTED slotName:[importer getKeySlotName] algorithmName:[importer getKeyAlgorithmName]];
         if (importer == [self toolPIVImporter3]) {
             // 先頭スロットの証明書インポート処理を実行
             [self doYkPivImportCertProcess];
@@ -663,12 +663,12 @@
         }
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_CERT_FAILED withImporter:importer];
+            [self setLastErrorMessageWithFormat:MSG_FORMAT_ERROR_PIV_IMPORT_CERT_FAILED slotName:[importer getKeySlotName] algorithmName:[importer getCertAlgorithmName]];
             [self notifyProcessTerminated:false];
             return;
         }
         // 処理成功のログを出力
-        [self outputLogWithFormat:MSG_FORMAT_PIV_CERT_PEM_IMPORTED withImporter:importer];
+        [self outputLogWithFormat:MSG_FORMAT_PIV_CERT_PEM_IMPORTED slotName:[importer getKeySlotName] algorithmName:[importer getCertAlgorithmName]];
         if (importer == [self toolPIVImporter3]) {
             // 制御を戻す
             [self notifyProcessTerminated:true];
@@ -678,15 +678,15 @@
         }
     }
 
-    - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
+    - (void)setLastErrorMessageWithFormat:(NSString *)format slotName:(NSString *)slotName algorithmName:(NSString *)algorithmName {
         // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
-        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
+        NSString *msg = [[NSString alloc] initWithFormat:format, slotName, algorithmName];
         [self notifyErrorMessage:msg];
     }
 
-    - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
+    - (void)outputLogWithFormat:(NSString *)format slotName:(NSString *)slotName algorithmName:(NSString *)algorithmName {
         // インストール先のスロットIDとアルゴリズムを付加してログ出力
-        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
+        [[ToolLogFile defaultLogger] infoWithFormat:format, slotName, algorithmName];
     }
 
 #pragma mark - CHUID and CCC management functions
