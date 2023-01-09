@@ -7,18 +7,17 @@
 #ifndef ToolPIVImporter_h
 #define ToolPIVImporter_h
 
+#import <Foundation/Foundation.h>
+
 @interface ToolPIVImporter : NSObject
 
     - (id)initForKeySlot:(uint8_t)keySlotId;
 
     - (bool)readPrivateKeyPemFrom:(NSString *)pemFilePath;
     - (bool)readCertificatePemFrom:(NSString *)pemFilePath;
-    - (void)generateChuidAndCcc;
 
     - (NSData *)getPrivateKeyAPDUData;
     - (NSData *)getCertificateAPDUData;
-    - (NSData *)getChuidAPDUData;
-    - (NSData *)getCccAPDUData;
 
     // 処理対象となるスロットID、アルゴリズムを保持
     @property (nonatomic) uint8_t           keySlotId;

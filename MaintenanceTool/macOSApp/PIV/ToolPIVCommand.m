@@ -11,6 +11,7 @@
 
 #import "AppCommonMessage.h"
 #import "FirmwareResetCommand.h"
+#import "PIVInitialSetting.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -37,6 +38,7 @@
     // コマンドのパラメーターを保持
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
+    @property (nonatomic) PIVInitialSetting *initialSetting;
     @property (nonatomic) ToolPIVImporter   *toolPIVImporter;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString          *errorMessageOfCommand;
@@ -83,6 +85,7 @@
         [self setPinCodeCur:nil];
         [self setPinCodeNew:nil];
         [self setToolPIVImporter:nil];
+        [self setInitialSetting:nil];
         [self setPivAuthChallenge:nil];
     }
 
@@ -187,8 +190,8 @@
                 [self commandWillResetFirmware];
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
-                [self setToolPIVImporter:[[ToolPIVImporter alloc] init]];
-                [[self toolPIVImporter] generateChuidAndCcc];
+                [self setInitialSetting:[[PIVInitialSetting alloc] init]];
+                [[self initialSetting] generateChuidAndCcc];
                 [self ccidHelperWillProcess];
                 break;
             case COMMAND_CCID_PIV_RESET:
@@ -615,7 +618,7 @@
         // フラグをクリア
         [self setCccImportProcessing:false];
         // CHUIDインポート処理を実行
-        NSData *apdu = [[self toolPIVImporter] getChuidAPDUData];
+        NSData *apdu = [[self initialSetting] getChuidAPDUData];
         [self doRequestPivInsPutData:apdu];
     }
 
@@ -639,7 +642,7 @@
             // フラグを設定
             [self setCccImportProcessing:true];
             // CCCインポート処理を実行
-            NSData *apdu = [[self toolPIVImporter] getCccAPDUData];
+            NSData *apdu = [[self initialSetting] getCccAPDUData];
             [self doRequestPivInsPutData:apdu];
         }
     }
