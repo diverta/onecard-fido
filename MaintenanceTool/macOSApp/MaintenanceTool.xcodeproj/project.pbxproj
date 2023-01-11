@@ -71,6 +71,122 @@
 		7A8640282900D7AC008E9D1C /* USBDFUACMCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8640272900D7AC008E9D1C /* USBDFUACMCommand.m */; };
 		7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402B2900E35E008E9D1C /* usb_dfu_util.c */; };
 		7A8640302900E35F008E9D1C /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402D2900E35F008E9D1C /* usb_cdc_util.c */; };
+		7A8B3DAB296E56640005F7B1 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15A271E6E8B0099D51B /* fido_blob.c */; };
+		7A8B3DAC296E56640005F7B1 /* UnpairingRequestWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */; };
+		7A8B3DAD296E56640005F7B1 /* DFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABD852887D00500756123 /* DFUCommand.m */; };
+		7A8B3DAE296E56640005F7B1 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
+		7A8B3DAF296E56640005F7B1 /* USBDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680128FE497E0096A848 /* USBDFUCommand.m */; };
+		7A8B3DB0296E56640005F7B1 /* RTCCSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */; };
+		7A8B3DB1296E56640005F7B1 /* AppBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AD9827D287FF982002A6846 /* AppBLECommand.m */; };
+		7A8B3DB2296E56640005F7B1 /* ToolPGPCcidCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */; };
+		7A8B3DB3296E56640005F7B1 /* DFUWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9167FC28FE30870096A848 /* DFUWindow.m */; };
+		7A8B3DB4296E56640005F7B1 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
+		7A8B3DB5296E56640005F7B1 /* FIDOSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C1028853F7300AF8B62 /* FIDOSettingCommand.m */; };
+		7A8B3DB6296E56640005F7B1 /* AppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE533BE28765D1D00770A75 /* AppCommand.m */; };
+		7A8B3DB7296E56640005F7B1 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
+		7A8B3DB8296E56640005F7B1 /* ToolPGPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */; };
+		7A8B3DB9296E56640005F7B1 /* CTAP2ManageCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A33FBF728864A2000EAF3C4 /* CTAP2ManageCommand.m */; };
+		7A8B3DBA296E56640005F7B1 /* USBDFUACMCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8640272900D7AC008E9D1C /* USBDFUACMCommand.m */; };
+		7A8B3DBB296E56640005F7B1 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
+		7A8B3DBC296E56640005F7B1 /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */; };
+		7A8B3DBD296E56640005F7B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A851647439300F39EAE /* main.m */; };
+		7A8B3DBE296E56640005F7B1 /* U2FHcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A03A1D8287E87AE00BADBB7 /* U2FHcheckCommand.m */; };
+		7A8B3DBF296E56640005F7B1 /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402D2900E35F008E9D1C /* usb_cdc_util.c */; };
+		7A8B3DC0296E56640005F7B1 /* HcheckPinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042C5287D3113009518C3 /* HcheckPinWindow.m */; };
+		7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
+		7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
+		7A8B3DC3296E56640005F7B1 /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
+		7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1B28755F91003CFE67 /* UtilityCommand.m */; };
+		7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */; };
+		7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
+		7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
+		7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
+		7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
+		7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B160271E6E8B0099D51B /* CBOREncoder.c */; };
+		7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680428FE7A990096A848 /* USBDFUImage.m */; };
+		7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B162271E6E8B0099D51B /* fido_crypto.c */; };
+		7A8B3DCD296E56640005F7B1 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
+		7A8B3DCE296E56640005F7B1 /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
+		7A8B3DCF296E56640005F7B1 /* BLEDFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */; };
+		7A8B3DD0296E56640005F7B1 /* FirmwareResetCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A02D13128890C860090213C /* FirmwareResetCommand.m */; };
+		7A8B3DD1296E56640005F7B1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
+		7A8B3DD2296E56640005F7B1 /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
+		7A8B3DD3296E56640005F7B1 /* FIDOSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A199C14288545DB00AF8B62 /* FIDOSettingWindow.m */; };
+		7A8B3DD4296E56640005F7B1 /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */; };
+		7A8B3DD5296E56640005F7B1 /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
+		7A8B3DD6296E56640005F7B1 /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
+		7A8B3DD7296E56640005F7B1 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
+		7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613E28868E5F00322E93 /* BLEPairingCommand.m */; };
+		7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B167271E6E8B0099D51B /* AES256CBC.c */; };
+		7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
+		7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
+		7A8B3DDC296E56640005F7B1 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
+		7A8B3DDD296E56640005F7B1 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
+		7A8B3DDE296E56640005F7B1 /* ToolVersionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F2128755FB1003CFE67 /* ToolVersionWindow.m */; };
+		7A8B3DDF296E56640005F7B1 /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402B2900E35E008E9D1C /* usb_dfu_util.c */; };
+		7A8B3DE0296E56640005F7B1 /* RTCCSettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EC404293D8B450078833B /* RTCCSettingCommand.m */; };
+		7A8B3DE1296E56640005F7B1 /* BLESettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613B28867DA600322E93 /* BLESettingCommand.m */; };
+		7A8B3DE2296E56640005F7B1 /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B166271E6E8B0099D51B /* debug_log.c */; };
+		7A8B3DE3296E56640005F7B1 /* UtilityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1A28755F91003CFE67 /* UtilityWindow.m */; };
+		7A8B3DE4296E56640005F7B1 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
+		7A8B3DE5296E56640005F7B1 /* FIDOPinSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */; };
+		7A8B3DE6296E56640005F7B1 /* HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BE287D00D5009518C3 /* HcheckCommand.m */; };
+		7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A822077281A812F00FDBFA8 /* QRCodeUtil.m */; };
+		7A8B3DE8296E56640005F7B1 /* nrf52_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680628FE80B10096A848 /* nrf52_app_image.c */; };
+		7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */; };
+		7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */; };
+		7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
+		7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
+		7A8B3DED296E56640005F7B1 /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
+		7A8B3DEE296E56640005F7B1 /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
+		7A8B3DEF296E56640005F7B1 /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
+		7A8B3DF0296E56640005F7B1 /* PIVInitialSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */; };
+		7A8B3DF1296E56640005F7B1 /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
+		7A8B3DF2296E56640005F7B1 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
+		7A8B3DF3296E56640005F7B1 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
+		7A8B3DF5296E56640005F7B1 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
+		7A8B3DF6296E56640005F7B1 /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
+		7A8B3DF7296E56640005F7B1 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80509B2819066A000BF498 /* CoreImage.framework */; };
+		7A8B3DF8296E56640005F7B1 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
+		7A8B3DF9296E56640005F7B1 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
+		7A8B3DFA296E56640005F7B1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A791647439300F39EAE /* Cocoa.framework */; };
+		7A8B3DFB296E56640005F7B1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
+		7A8B3DFD296E56640005F7B1 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
+		7A8B3DFE296E56640005F7B1 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F252875633C003CFE67 /* icon.png */; };
+		7A8B3DFF296E56640005F7B1 /* UtilityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1C28755F91003CFE67 /* UtilityWindow.xib */; };
+		7A8B3E00296E56640005F7B1 /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
+		7A8B3E01296E56640005F7B1 /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
+		7A8B3E02296E56640005F7B1 /* BLESettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A23613528867A4200322E93 /* BLESettingWindow.xib */; };
+		7A8B3E03296E56640005F7B1 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
+		7A8B3E04296E56640005F7B1 /* UnpairingRequestWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A775B4C294C4C8F00EDE37F /* UnpairingRequestWindow.xib */; };
+		7A8B3E05296E56640005F7B1 /* BLEDFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */; };
+		7A8B3E06296E56640005F7B1 /* HcheckWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042B8287CF868009518C3 /* HcheckWindow.xib */; };
+		7A8B3E07296E56640005F7B1 /* add_sub_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FD277176F10096F41D /* add_sub_key.param */; };
+		7A8B3E08296E56640005F7B1 /* app_update.PCA10095_01.0.4.8.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */; };
+		7A8B3E09296E56640005F7B1 /* DFUWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9167FA28FE2B1E0096A848 /* DFUWindow.xib */; };
+		7A8B3E0A296E56640005F7B1 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
+		7A8B3E0B296E56640005F7B1 /* card_reset.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AB6312A277B01FB004917B9 /* card_reset.sh */; };
+		7A8B3E0C296E56640005F7B1 /* card_edit_passwd.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */; };
+		7A8B3E0D296E56640005F7B1 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
+		7A8B3E0E296E56640005F7B1 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
+		7A8B3E0F296E56640005F7B1 /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
+		7A8B3E10296E56640005F7B1 /* card_edit_unblock.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */; };
+		7A8B3E11296E56640005F7B1 /* card_reset.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AB63129277B01FB004917B9 /* card_reset.param */; };
+		7A8B3E12296E56640005F7B1 /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
+		7A8B3E13296E56640005F7B1 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
+		7A8B3E14296E56640005F7B1 /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
+		7A8B3E15296E56640005F7B1 /* HcheckPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042C2287D3064009518C3 /* HcheckPinWindow.xib */; };
+		7A8B3E16296E56640005F7B1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
+		7A8B3E17296E56640005F7B1 /* FIDOSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A199C12288545DB00AF8B62 /* FIDOSettingWindow.xib */; };
+		7A8B3E18296E56640005F7B1 /* ToolVersionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F2228755FB1003CFE67 /* ToolVersionWindow.xib */; };
+		7A8B3E19296E56640005F7B1 /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
+		7A8B3E1A296E56640005F7B1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A821647439300F39EAE /* InfoPlist.strings */; };
+		7A8B3E1B296E56640005F7B1 /* card_edit_passwd.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */; };
+		7A8B3E1C296E56640005F7B1 /* appkg.PCA10059_03.0.3.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A44267B296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip */; };
+		7A8B3E1D296E56640005F7B1 /* add_sub_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A8528FE277176F10096F41D /* add_sub_key.sh */; };
+		7A8B3E1E296E56640005F7B1 /* BLEDFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */; };
+		7A8B3E1F296E56640005F7B1 /* FIDOPinSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */; };
+		7A8B3E20296E56640005F7B1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
 		7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */; };
 		7A9167FB28FE2B1E0096A848 /* DFUWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9167FA28FE2B1E0096A848 /* DFUWindow.xib */; };
@@ -235,6 +351,8 @@
 		7A86402C2900E35E008E9D1C /* usb_cdc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_cdc_util.h; sourceTree = "<group>"; };
 		7A86402D2900E35F008E9D1C /* usb_cdc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
 		7A86402E2900E35F008E9D1C /* usb_dfu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_dfu_util.h; sourceTree = "<group>"; };
+		7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VendorMaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VendorMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
 		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
 		7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCCSettingWindow.h; sourceTree = "<group>"; };
 		7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCCSettingWindow.m; sourceTree = "<group>"; };
@@ -350,6 +468,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A8B3DF4296E56640005F7B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A8B3DF5296E56640005F7B1 /* libtinycbor.a in Frameworks */,
+				7A8B3DF6296E56640005F7B1 /* PCSC.framework in Frameworks */,
+				7A8B3DF7296E56640005F7B1 /* CoreImage.framework in Frameworks */,
+				7A8B3DF8296E56640005F7B1 /* IOKit.framework in Frameworks */,
+				7A8B3DF9296E56640005F7B1 /* IOBluetooth.framework in Frameworks */,
+				7A8B3DFA296E56640005F7B1 /* Cocoa.framework in Frameworks */,
+				7A8B3DFB296E56640005F7B1 /* libcrypto.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -375,8 +507,10 @@
 				7AA7464223C2C400001938A7 /* Resources */,
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				7A9167FF28FE479D0096A848 /* USBDFU */,
+				7A8B3E26296E586F0005F7B1 /* VendorMaintenanceTool */,
 				64ED9A781647439300F39EAE /* Frameworks */,
 				7ACA8D792251B55100B132E2 /* MaintenanceTool.app */,
+				7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -603,6 +737,14 @@
 			path = MaintenanceToolHcheck;
 			sourceTree = "<group>";
 		};
+		7A8B3E26296E586F0005F7B1 /* VendorMaintenanceTool */ = {
+			isa = PBXGroup;
+			children = (
+				7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */,
+			);
+			path = VendorMaintenanceTool;
+			sourceTree = "<group>";
+		};
 		7A9167FF28FE479D0096A848 /* USBDFU */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,6 +896,23 @@
 			productReference = 7ACA8D792251B55100B132E2 /* MaintenanceTool.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7A8B3DA9296E56640005F7B1 /* VendorMaintenanceTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A8B3E21296E56640005F7B1 /* Build configuration list for PBXNativeTarget "VendorMaintenanceTool" */;
+			buildPhases = (
+				7A8B3DAA296E56640005F7B1 /* Sources */,
+				7A8B3DF4296E56640005F7B1 /* Frameworks */,
+				7A8B3DFC296E56640005F7B1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VendorMaintenanceTool;
+			productName = CoreBluetoothOSXCentral;
+			productReference = 7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -776,6 +935,7 @@
 			projectRoot = "";
 			targets = (
 				64ED9A741647439300F39EAE /* MaintenanceTool */,
+				7A8B3DA9296E56640005F7B1 /* VendorMaintenanceTool */,
 			);
 		};
 /* End PBXProject section */
@@ -821,6 +981,49 @@
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				7A1BCD4C28862DA6007AEE12 /* FIDOPinSettingWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8B3DFC296E56640005F7B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A8B3DFD296E56640005F7B1 /* PGPPreferenceWindow.xib in Resources */,
+				7A8B3DFE296E56640005F7B1 /* icon.png in Resources */,
+				7A8B3DFF296E56640005F7B1 /* UtilityWindow.xib in Resources */,
+				7A8B3E00296E56640005F7B1 /* generate_main_key.param in Resources */,
+				7A8B3E01296E56640005F7B1 /* transfer_subkey_to_card.sh in Resources */,
+				7A8B3E02296E56640005F7B1 /* BLESettingWindow.xib in Resources */,
+				7A8B3E03296E56640005F7B1 /* Entitlements.plist in Resources */,
+				7A8B3E04296E56640005F7B1 /* UnpairingRequestWindow.xib in Resources */,
+				7A8B3E05296E56640005F7B1 /* BLEDFUProcessingWindow.xib in Resources */,
+				7A8B3E06296E56640005F7B1 /* HcheckWindow.xib in Resources */,
+				7A8B3E07296E56640005F7B1 /* add_sub_key.param in Resources */,
+				7A8B3E08296E56640005F7B1 /* app_update.PCA10095_01.0.4.8.bin in Resources */,
+				7A8B3E09296E56640005F7B1 /* DFUWindow.xib in Resources */,
+				7A8B3E0A296E56640005F7B1 /* export_pubkey_and_backup.sh in Resources */,
+				7A8B3E0B296E56640005F7B1 /* card_reset.sh in Resources */,
+				7A8B3E0C296E56640005F7B1 /* card_edit_passwd.sh in Resources */,
+				7A8B3E0D296E56640005F7B1 /* card_status.sh in Resources */,
+				7A8B3E0E296E56640005F7B1 /* ToolInfoWindow.xib in Resources */,
+				7A8B3E0F296E56640005F7B1 /* ToolProcessingWindow.xib in Resources */,
+				7A8B3E10296E56640005F7B1 /* card_edit_unblock.param in Resources */,
+				7A8B3E11296E56640005F7B1 /* card_reset.param in Resources */,
+				7A8B3E12296E56640005F7B1 /* transfer_subkey_to_card.param in Resources */,
+				7A8B3E13296E56640005F7B1 /* RTCCSettingWindow.xib in Resources */,
+				7A8B3E14296E56640005F7B1 /* generate_main_key.sh in Resources */,
+				7A8B3E15296E56640005F7B1 /* HcheckPinWindow.xib in Resources */,
+				7A8B3E16296E56640005F7B1 /* Images.xcassets in Resources */,
+				7A8B3E17296E56640005F7B1 /* FIDOSettingWindow.xib in Resources */,
+				7A8B3E18296E56640005F7B1 /* ToolVersionWindow.xib in Resources */,
+				7A8B3E19296E56640005F7B1 /* PIVPreferenceWindow.xib in Resources */,
+				7A8B3E1A296E56640005F7B1 /* InfoPlist.strings in Resources */,
+				7A8B3E1B296E56640005F7B1 /* card_edit_passwd.param in Resources */,
+				7A8B3E1C296E56640005F7B1 /* appkg.PCA10059_03.0.3.7.zip in Resources */,
+				7A8B3E1D296E56640005F7B1 /* add_sub_key.sh in Resources */,
+				7A8B3E1E296E56640005F7B1 /* BLEDFUStartWindow.xib in Resources */,
+				7A8B3E1F296E56640005F7B1 /* FIDOPinSettingWindow.xib in Resources */,
+				7A8B3E20296E56640005F7B1 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,6 +1107,86 @@
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
 				7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8B3DAA296E56640005F7B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A8B3DAB296E56640005F7B1 /* fido_blob.c in Sources */,
+				7A8B3DAC296E56640005F7B1 /* UnpairingRequestWindow.m in Sources */,
+				7A8B3DAD296E56640005F7B1 /* DFUCommand.m in Sources */,
+				7A8B3DAE296E56640005F7B1 /* AppHIDCommand.m in Sources */,
+				7A8B3DAF296E56640005F7B1 /* USBDFUCommand.m in Sources */,
+				7A8B3DB0296E56640005F7B1 /* RTCCSettingWindow.m in Sources */,
+				7A8B3DB1296E56640005F7B1 /* AppBLECommand.m in Sources */,
+				7A8B3DB2296E56640005F7B1 /* ToolPGPCcidCommand.m in Sources */,
+				7A8B3DB3296E56640005F7B1 /* DFUWindow.m in Sources */,
+				7A8B3DB4296E56640005F7B1 /* ToolInfoWindow.m in Sources */,
+				7A8B3DB5296E56640005F7B1 /* FIDOSettingCommand.m in Sources */,
+				7A8B3DB6296E56640005F7B1 /* AppCommand.m in Sources */,
+				7A8B3DB7296E56640005F7B1 /* ToolLogFile.m in Sources */,
+				7A8B3DB8296E56640005F7B1 /* ToolPGPCommand.m in Sources */,
+				7A8B3DB9296E56640005F7B1 /* CTAP2ManageCommand.m in Sources */,
+				7A8B3DBA296E56640005F7B1 /* USBDFUACMCommand.m in Sources */,
+				7A8B3DBB296E56640005F7B1 /* ToolCCIDHelper.m in Sources */,
+				7A8B3DBC296E56640005F7B1 /* CBORDecoder.c in Sources */,
+				7A8B3DBD296E56640005F7B1 /* main.m in Sources */,
+				7A8B3DBE296E56640005F7B1 /* U2FHcheckCommand.m in Sources */,
+				7A8B3DBF296E56640005F7B1 /* usb_cdc_util.c in Sources */,
+				7A8B3DC0296E56640005F7B1 /* HcheckPinWindow.m in Sources */,
+				7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */,
+				7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */,
+				7A8B3DC3296E56640005F7B1 /* tool_crypto_des.c in Sources */,
+				7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */,
+				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
+				7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */,
+				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
+				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,
+				7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */,
+				7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */,
+				7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */,
+				7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */,
+				7A8B3DCD296E56640005F7B1 /* BLESettingWindow.m in Sources */,
+				7A8B3DCE296E56640005F7B1 /* ToolProcessingWindow.m in Sources */,
+				7A8B3DCF296E56640005F7B1 /* BLEDFUProcessingWindow.m in Sources */,
+				7A8B3DD0296E56640005F7B1 /* FirmwareResetCommand.m in Sources */,
+				7A8B3DD1296E56640005F7B1 /* AppDelegate.m in Sources */,
+				7A8B3DD2296E56640005F7B1 /* tool_pcsc.c in Sources */,
+				7A8B3DD3296E56640005F7B1 /* FIDOSettingWindow.m in Sources */,
+				7A8B3DD4296E56640005F7B1 /* ToolHIDHelper.m in Sources */,
+				7A8B3DD5296E56640005F7B1 /* PIVPreferenceWindow.m in Sources */,
+				7A8B3DD6296E56640005F7B1 /* ToolBLEDFUCommand.m in Sources */,
+				7A8B3DD7296E56640005F7B1 /* HcheckWindow.m in Sources */,
+				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
+				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
+				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
+				7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */,
+				7A8B3DDC296E56640005F7B1 /* ToolPIVImporter.m in Sources */,
+				7A8B3DDD296E56640005F7B1 /* ToolPopupWindow.m in Sources */,
+				7A8B3DDE296E56640005F7B1 /* ToolVersionWindow.m in Sources */,
+				7A8B3DDF296E56640005F7B1 /* usb_dfu_util.c in Sources */,
+				7A8B3DE0296E56640005F7B1 /* RTCCSettingCommand.m in Sources */,
+				7A8B3DE1296E56640005F7B1 /* BLESettingCommand.m in Sources */,
+				7A8B3DE2296E56640005F7B1 /* debug_log.c in Sources */,
+				7A8B3DE3296E56640005F7B1 /* UtilityWindow.m in Sources */,
+				7A8B3DE4296E56640005F7B1 /* ToolCommon.m in Sources */,
+				7A8B3DE5296E56640005F7B1 /* FIDOPinSettingWindow.m in Sources */,
+				7A8B3DE6296E56640005F7B1 /* HcheckCommand.m in Sources */,
+				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,
+				7A8B3DE8296E56640005F7B1 /* nrf52_app_image.c in Sources */,
+				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
+				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
+				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
+				7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */,
+				7A8B3DED296E56640005F7B1 /* ToolPIVCommand.m in Sources */,
+				7A8B3DEE296E56640005F7B1 /* ToolCommonFunc.m in Sources */,
+				7A8B3DEF296E56640005F7B1 /* tool_crypto_common.c in Sources */,
+				7A8B3DF0296E56640005F7B1 /* PIVInitialSetting.m in Sources */,
+				7A8B3DF1296E56640005F7B1 /* tool_piv_admin.c in Sources */,
+				7A8B3DF2296E56640005F7B1 /* tool_crypto_private_key.c in Sources */,
+				7A8B3DF3296E56640005F7B1 /* USBDFUTransferCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1075,6 +1358,62 @@
 			};
 			name = Release;
 		};
+		7A8B3E22296E56640005F7B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 63;
+				DYLIB_INSTALL_NAME_BASE = "";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/opt/openssl@1.1/include",
+					"${HOME}/GitHub/tinycbor/src",
+				);
+				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
+				LD_DYLIB_INSTALL_NAME = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MARKETING_VERSION = 0.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7A8B3E23296E56640005F7B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 63;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_INSTALL_NAME_BASE = "";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/opt/openssl@1.1/include",
+					"${HOME}/GitHub/tinycbor/src",
+				);
+				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
+				LD_DYLIB_INSTALL_NAME = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MARKETING_VERSION = 0.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1092,6 +1431,15 @@
 			buildConfigurations = (
 				64ED9A941647439300F39EAE /* Debug */,
 				64ED9A951647439300F39EAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A8B3E21296E56640005F7B1 /* Build configuration list for PBXNativeTarget "VendorMaintenanceTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A8B3E22296E56640005F7B1 /* Debug */,
+				7A8B3E23296E56640005F7B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
