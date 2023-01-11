@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "BootloaderModeCommand.h"
+#import "FIDOAttestationCommand.h"
 #import "FirmwareResetCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
@@ -18,13 +19,14 @@
 
 @end
 
-@interface VendorFunctionCommand () <BootloaderModeCommandDelegate, FirmwareResetCommandDelegate>
+@interface VendorFunctionCommand () <FIDOAttestationCommandDelegate, BootloaderModeCommandDelegate, FirmwareResetCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) VendorFunctionWindow             *vendorFunctionWindow;
     // ヘルパークラスの参照を保持
+    @property (nonatomic) FIDOAttestationCommand           *fidoAttestationCommand;
     @property (nonatomic) BootloaderModeCommand            *bootloaderModeCommand;
     @property (nonatomic) FirmwareResetCommand             *firmwareResetCommand;
     // 処理のパラメーターを保持
@@ -41,6 +43,7 @@
             [self setVendorFunctionWindow:[[VendorFunctionWindow alloc] initWithWindowNibName:@"VendorFunctionWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[VendorFunctionCommandParameter alloc] init]];
+            [self setFidoAttestationCommand:[[FIDOAttestationCommand alloc] initWithDelegate:self]];
             [self setBootloaderModeCommand:[[BootloaderModeCommand alloc] initWithDelegate:self]];
             [self setFirmwareResetCommand:[[FirmwareResetCommand alloc] initWithDelegate:self]];
         }
@@ -79,6 +82,7 @@
             case COMMAND_INSTALL_ATTESTATION:
                 break;
             case COMMAND_REMOVE_ATTESTATION:
+                [self removeAttestationWillProcess];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self bootloaderModeWillProcess];
@@ -89,6 +93,12 @@
             default:
                 break;
         }
+    }
+
+    - (void)removeAttestationWillProcess {
+        // HIDインターフェース経由で鍵・証明書を削除-->完了後、RemoveAttestationDidCompleted が呼び出される
+        [self notifyProcessStarted];
+        [[self fidoAttestationCommand] doRequestRemoveAttestation];
     }
 
     - (void)bootloaderModeWillProcess {
@@ -104,6 +114,13 @@
     }
 
 #pragma mark - Call back from sub command
+
+    - (void)RemoveAttestationDidCompleted:(bool)success message:(NSString *)errorMessage {
+        if (success == false) {
+            [self notifyErrorMessage:errorMessage];
+        }
+        [self notifyProcessTerminated:success];
+    }
 
     - (void)BootloaderModeDidCompleted:(bool)success message:(NSString *)errorMessage {
         if (success == false) {

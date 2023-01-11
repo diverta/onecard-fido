@@ -48,6 +48,7 @@
         }
         // 実行コマンドを設定して画面を閉じる
         [[self commandParameterRef] setCommand:COMMAND_INSTALL_ATTESTATION];
+        [[self commandParameterRef] setCommandName:PROCESS_NAME_INSTALL_ATTESTATION];
         [self terminateWindow:NSModalResponseOK];
     }
 
@@ -56,9 +57,20 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // 実行コマンドを設定して画面を閉じる
+        // 処理開始前に確認
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_ERASE_SKEY_CERT informativeText:MSG_PROMPT_ERASE_SKEY_CERT
+                                             withObject:self forSelector:@selector(resumeRemoveAttestation) parentWindow:[self window]];
+    }
+
+    - (void)resumeRemoveAttestation {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // 鍵・証明書を削除
         [[self commandParameterRef] setCommand:COMMAND_REMOVE_ATTESTATION];
-        [self terminateWindow:NSModalResponseOK];
+        [[self commandParameterRef] setCommandName:PROCESS_NAME_REMOVE_ATTESTATION];
+        [self commandWillPerformVendorFunction];
     }
 
     - (IBAction)buttonBootloaderModeDidPress:(id)sender {
@@ -66,7 +78,7 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // 実行コマンドを設定して画面を閉じる
+        // ブートローダーモードに遷移
         [[self commandParameterRef] setCommand:COMMAND_HID_BOOTLOADER_MODE];
         [[self commandParameterRef] setCommandName:PROCESS_NAME_BOOT_LOADER_MODE];
         [self commandWillPerformVendorFunction];

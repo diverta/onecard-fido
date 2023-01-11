@@ -79,6 +79,8 @@
 #define PROCESS_NAME_RTCC_SET_TIMESTAMP             @"認証器の現在時刻設定"
 #define PROCESS_NAME_PIV_SETTINGS                   @"PIV設定情報"
 #define PROCESS_NAME_OPENPGP_SETTINGS               @"OpenPGP設定情報"
+#define PROCESS_NAME_INSTALL_ATTESTATION            @"鍵・証明書インストール"
+#define PROCESS_NAME_REMOVE_ATTESTATION             @"鍵・証明書の削除"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO認証器のスキャンがタイムアウトしました。"

@@ -227,6 +227,8 @@
 		7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */; };
 		7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */; };
 		7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */; };
+		7ACD9909296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9908296EA62700D08A24 /* FIDOAttestationCommand.m */; };
+		7ACD990A296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9908296EA62700D08A24 /* FIDOAttestationCommand.m */; };
 		7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */; };
 		7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
@@ -429,6 +431,8 @@
 		7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionCommand.m; sourceTree = "<group>"; };
 		7ACD9902296E9FF200D08A24 /* BootloaderModeCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BootloaderModeCommand.h; sourceTree = "<group>"; };
 		7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BootloaderModeCommand.m; sourceTree = "<group>"; };
+		7ACD9907296EA5AA00D08A24 /* FIDOAttestationCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOAttestationCommand.h; sourceTree = "<group>"; };
+		7ACD9908296EA62700D08A24 /* FIDOAttestationCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationCommand.m; sourceTree = "<group>"; };
 		7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7ACFD89C27213EAF00AAEFE2 /* BLEDFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUProcessingWindow.h; sourceTree = "<group>"; };
 		7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUProcessingWindow.m; sourceTree = "<group>"; };
@@ -524,6 +528,7 @@
 				7A9167FF28FE479D0096A848 /* USBDFU */,
 				7A8B3E26296E586F0005F7B1 /* VendorMaintenanceTool */,
 				7ACD98F5296E653700D08A24 /* VendorMaintenanceToolApp */,
+				7ACD9906296EA57600D08A24 /* VendorMaintenanceToolFIDO */,
 				64ED9A781647439300F39EAE /* Frameworks */,
 				7ACA8D792251B55100B132E2 /* MaintenanceTool.app */,
 				7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */,
@@ -906,6 +911,15 @@
 			path = VendorMaintenanceToolApp;
 			sourceTree = "<group>";
 		};
+		7ACD9906296EA57600D08A24 /* VendorMaintenanceToolFIDO */ = {
+			isa = PBXGroup;
+			children = (
+				7ACD9907296EA5AA00D08A24 /* FIDOAttestationCommand.h */,
+				7ACD9908296EA62700D08A24 /* FIDOAttestationCommand.m */,
+			);
+			path = VendorMaintenanceToolFIDO;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1142,6 +1156,7 @@
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
 				7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */,
+				7ACD9909296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1225,6 +1240,7 @@
 				7A8B3DF1296E56640005F7B1 /* tool_piv_admin.c in Sources */,
 				7A8B3DF2296E56640005F7B1 /* tool_crypto_private_key.c in Sources */,
 				7A8B3DF3296E56640005F7B1 /* USBDFUTransferCommand.m in Sources */,
+				7ACD990A296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,7 +4,6 @@
 //
 //  Created by Makoto Morita on 2023/01/11.
 //
-
 #ifndef BootloaderModeCommand_h
 #define BootloaderModeCommand_h
 
