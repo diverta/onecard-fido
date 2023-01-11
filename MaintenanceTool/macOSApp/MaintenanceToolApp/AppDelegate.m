@@ -31,6 +31,7 @@
     @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
+    @property (assign) IBOutlet NSMenuItem  *menuItemVendor;
 
     // クラスの参照を保持
     @property (nonatomic) BLESettingCommand     *bleSettingCommand;
@@ -88,6 +89,7 @@
         [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
+        [[self menuItemVendor] setEnabled:enabled];
     }
 
     - (IBAction)buttonBLESettingDidPress:(id)sender {
@@ -139,6 +141,13 @@
     - (IBAction)buttonUtilityDidPress:(id)sender {
         // ユーティリティー画面を開く
         [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemVendorDidSelect:(id)sender {
+        // TODO: ベンダー向け機能画面を開く
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:self forSelector:@selector(displayCommandResultDone)
+                                     parentWindow:[self window]];
     }
 
 #pragma mark - Common method called by callback
