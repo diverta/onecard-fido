@@ -6,7 +6,6 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
-#import "AppHIDCommand.h"
 #import "FirmwareResetCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
@@ -18,14 +17,13 @@
 
 @end
 
-@interface VendorFunctionCommand () <AppHIDCommandDelegate, FirmwareResetCommandDelegate>
+@interface VendorFunctionCommand () <FirmwareResetCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) VendorFunctionWindow             *vendorFunctionWindow;
     // ヘルパークラスの参照を保持
-    @property (nonatomic) AppHIDCommand                    *appHIDCommand;
     @property (nonatomic) FirmwareResetCommand             *firmwareResetCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) VendorFunctionCommandParameter   *commandParameter;
@@ -41,7 +39,6 @@
             [self setVendorFunctionWindow:[[VendorFunctionWindow alloc] initWithWindowNibName:@"VendorFunctionWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[VendorFunctionCommandParameter alloc] init]];
-            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
             [self setFirmwareResetCommand:[[FirmwareResetCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -49,7 +46,7 @@
 
     - (bool)isUSBHIDConnected {
         // USBポートに接続されていない場合はfalse
-        return [[self appHIDCommand] checkUSBHIDConnection];
+        return [[self firmwareResetCommand] isUSBHIDConnected];
     }
 
     - (void)vendorFunctionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -96,6 +93,8 @@
         [[self firmwareResetCommand] doRequestFirmwareReset];
     }
 
+#pragma mark - Call back from sub command
+
     - (void)FirmwareResetDidCompleted:(bool)success message:(NSString *)errorMessage {
         if (success == false) {
             [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
@@ -132,17 +131,6 @@
         // 画面に制御を戻す
         [[self commandParameter] setCommandSuccess:success];
         [[self vendorFunctionWindow] vendorFunctionCommandDidProcess];
-    }
-
-#pragma mark - Call back from AppHIDCommand
-
-    - (void)didDetectConnect {
-    }
-
-    - (void)didDetectRemoval {
-    }
-
-    - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
     }
 
 @end
