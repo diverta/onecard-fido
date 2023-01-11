@@ -1,16 +1,16 @@
 //
-//  FirmwareResetCommand.m
+//  BootloaderModeCommand.m
 //  MaintenanceTool
 //
-//  Created by Makoto Morita on 2022/07/21.
+//  Created by Makoto Morita on 2023/01/11.
 //
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
-#import "FirmwareResetCommand.h"
+#import "BootloaderModeCommand.h"
 #import "ToolCommonFunc.h"
 
-@interface FirmwareResetCommand () <AppHIDCommandDelegate>
+@interface BootloaderModeCommand () <AppHIDCommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) id                  delegate;
@@ -20,12 +20,12 @@
     @property (nonatomic) Command                   command;
     // 使用トランスポートを保持
     @property (nonatomic) TransportType             transportType;
-    // HID再接続検知を行うかどうかを保持
-    @property(nonatomic) bool                       needNotifyDetectConnect;
+    // HID接続断検知を行うかどうかを保持
+    @property(nonatomic) bool                       needNotifyDetectDisconnect;
 
 @end
 
-@implementation FirmwareResetCommand
+@implementation BootloaderModeCommand
 
     - (id)init {
         return [self initWithDelegate:nil];
@@ -49,60 +49,68 @@
 
 #pragma mark - Command/subcommand process
 
-    - (void)doRequestFirmwareReset {
+    - (void)doRequestBootloaderMode {
         // トランスポートをUSB HIDに設定
         [self setTransportType:TRANSPORT_HID];
         // CTAPHID_INITから実行
-        [self setCommand:COMMAND_HID_FIRMWARE_RESET];
+        [self setCommand:COMMAND_HID_BOOTLOADER_MODE];
         [[self appHIDCommand] doRequestCtapHidInit];
     }
 
     - (void)doResponseHIDCtap2Init {
         // CTAPHID_INIT応答後の処理を実行
-        if ([self command] == COMMAND_HID_FIRMWARE_RESET) {
-            [self doRequestHidFirmwareReset];
+        if ([self command] == COMMAND_HID_BOOTLOADER_MODE) {
+            [self doRequestHidBootloaderMode];
         }
     }
 
-    - (void)doRequestHidFirmwareReset {
+    - (void)doRequestHidBootloaderMode {
         // HID接続検知フラグをクリア
-        [self setNeedNotifyDetectConnect:false];
-        // コマンド 0xC7 を実行（メッセージはブランクとする）
+        [self setNeedNotifyDetectDisconnect:false];
+        // メッセージを編集し、コマンド 0xC6 を実行
         uint8_t cmd = MNT_COMMAND_BASE | 0x80;
-        [[self appHIDCommand] doRequestCtap2Command:[self command] withCMD:cmd withData:[ToolCommonFunc commandDataForSystemReset]];
+        [[self appHIDCommand] doRequestCtap2Command:COMMAND_HID_BOOTLOADER_MODE withCMD:cmd withData:[ToolCommonFunc commandDataForChangeToBootloaderMode]];
     }
 
-    - (void)doResponseHidFirmwareReset:(NSData *)response {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認し、エラーの場合は上位クラスに制御を戻す
+    - (void)doResponseHidBootloaderMode:(NSData *)response CMD:(uint8_t)cmd {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
         uint8_t *requestBytes = (uint8_t *)[response bytes];
         if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            [self commandDidProcess:false message:MSG_FIRMWARE_RESET_UNSUPP];
+            // エラーの場合は画面に制御を戻す
+            [self commandDidProcess:false message:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
+            return;
+        }
+        // ブートローダーモード遷移コマンド成功時
+        if (cmd != HID_CMD_UNKNOWN_ERROR) {
+            // 接続断まで待機 --> didDetectRemoval が呼び出される
+            [self setNeedNotifyDetectDisconnect:true];
+
         } else {
-            // 再接続まで待機 --> didDetectConnect が呼び出される
-            [self setNeedNotifyDetectConnect:true];
+            // ブートローダーモード遷移コマンド失敗時は、即時で制御を戻す
+            [self commandDidProcess:false message:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
         }
     }
 
     - (void)commandDidProcess:(bool)result message:(NSString *)message {
         // 上位クラスに制御を戻す
-        [[self delegate] FirmwareResetDidCompleted:result message:message];
+        [[self delegate] BootloaderModeDidCompleted:result message:message];
     }
 
 #pragma mark - Call back from AppHIDCommand
 
     - (void)didDetectConnect {
-        // HID接続を検知したら、上位クラスに制御を戻す
-        if ([self needNotifyDetectConnect]) {
-            [self setNeedNotifyDetectConnect:false];
+    }
+
+    - (void)didDetectRemoval {
+        // HID接続断を検知したら、上位クラスに制御を戻す
+        if ([self needNotifyDetectDisconnect]) {
+            [self setNeedNotifyDetectDisconnect:false];
             [self commandDidProcess:true message:nil];
         }
     }
 
-    - (void)didDetectRemoval {
-    }
-
     - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
-        if ([self command] == COMMAND_HID_FIRMWARE_RESET) {
+        if ([self command] == COMMAND_HID_BOOTLOADER_MODE) {
             if (success == false) {
                 // 即時で上位クラスに制御を戻す
                 [self commandDidProcess:false message:errorMessage];
@@ -112,8 +120,8 @@
             if (command == COMMAND_HID_CTAP2_INIT) {
                 [self doResponseHIDCtap2Init];
             }
-            if (command == COMMAND_HID_FIRMWARE_RESET) {
-                [self doResponseHidFirmwareReset:response];
+            if (command == COMMAND_HID_BOOTLOADER_MODE) {
+                [self doResponseHidBootloaderMode:response CMD:cmd];
             }
         }
     }

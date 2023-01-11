@@ -68,7 +68,8 @@
         }
         // 実行コマンドを設定して画面を閉じる
         [[self commandParameterRef] setCommand:COMMAND_HID_BOOTLOADER_MODE];
-        [self terminateWindow:NSModalResponseOK];
+        [[self commandParameterRef] setCommandName:PROCESS_NAME_BOOT_LOADER_MODE];
+        [self commandWillPerformVendorFunction];
     }
 
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {

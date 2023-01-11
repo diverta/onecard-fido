@@ -225,6 +225,8 @@
 		7ACD98FE296E671600D08A24 /* VendorFunctionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */; };
 		7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */; };
 		7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */; };
+		7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */; };
+		7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */; };
 		7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */; };
 		7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
@@ -425,6 +427,8 @@
 		7ACD98F8296E671500D08A24 /* VendorFunctionCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionCommand.h; sourceTree = "<group>"; };
 		7ACD98F9296E671500D08A24 /* VendorFunctionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionWindow.h; sourceTree = "<group>"; };
 		7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionCommand.m; sourceTree = "<group>"; };
+		7ACD9902296E9FF200D08A24 /* BootloaderModeCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BootloaderModeCommand.h; sourceTree = "<group>"; };
+		7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BootloaderModeCommand.m; sourceTree = "<group>"; };
 		7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7ACFD89C27213EAF00AAEFE2 /* BLEDFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUProcessingWindow.h; sourceTree = "<group>"; };
 		7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUProcessingWindow.m; sourceTree = "<group>"; };
@@ -782,6 +786,8 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
+				7ACD9902296E9FF200D08A24 /* BootloaderModeCommand.h */,
+				7ACD9903296E9FFF00D08A24 /* BootloaderModeCommand.m */,
 				7A02D13028890C6B0090213C /* FirmwareResetCommand.h */,
 				7A02D13128890C860090213C /* FirmwareResetCommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
@@ -1109,6 +1115,7 @@
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
+				7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */,
 				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
@@ -1191,6 +1198,7 @@
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
 				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
+				7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */,
 				7A8B3DDC296E56640005F7B1 /* ToolPIVImporter.m in Sources */,
 				7A8B3DDD296E56640005F7B1 /* ToolPopupWindow.m in Sources */,

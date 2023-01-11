@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "BootloaderModeCommand.h"
 #import "FirmwareResetCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
@@ -17,13 +18,14 @@
 
 @end
 
-@interface VendorFunctionCommand () <FirmwareResetCommandDelegate>
+@interface VendorFunctionCommand () <BootloaderModeCommandDelegate, FirmwareResetCommandDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
     // 画面の参照を保持
     @property (nonatomic) VendorFunctionWindow             *vendorFunctionWindow;
     // ヘルパークラスの参照を保持
+    @property (nonatomic) BootloaderModeCommand            *bootloaderModeCommand;
     @property (nonatomic) FirmwareResetCommand             *firmwareResetCommand;
     // 処理のパラメーターを保持
     @property (nonatomic) VendorFunctionCommandParameter   *commandParameter;
@@ -39,6 +41,7 @@
             [self setVendorFunctionWindow:[[VendorFunctionWindow alloc] initWithWindowNibName:@"VendorFunctionWindow"]];
             // ヘルパークラスのインスタンスを生成
             [self setCommandParameter:[[VendorFunctionCommandParameter alloc] init]];
+            [self setBootloaderModeCommand:[[BootloaderModeCommand alloc] initWithDelegate:self]];
             [self setFirmwareResetCommand:[[FirmwareResetCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -78,6 +81,7 @@
             case COMMAND_REMOVE_ATTESTATION:
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
+                [self bootloaderModeWillProcess];
                 break;
             case COMMAND_HID_FIRMWARE_RESET:
                 [self firmwareResetWillProcess];
@@ -85,6 +89,12 @@
             default:
                 break;
         }
+    }
+
+    - (void)bootloaderModeWillProcess {
+        // HIDインターフェース経由でブートローダーモードに遷移-->完了後、BootloaderModeDidCompleted が呼び出される
+        [self notifyProcessStarted];
+        [[self bootloaderModeCommand] doRequestBootloaderMode];
     }
 
     - (void)firmwareResetWillProcess {
@@ -95,9 +105,16 @@
 
 #pragma mark - Call back from sub command
 
+    - (void)BootloaderModeDidCompleted:(bool)success message:(NSString *)errorMessage {
+        if (success == false) {
+            [self notifyErrorMessage:errorMessage];
+        }
+        [self notifyProcessTerminated:success];
+    }
+
     - (void)FirmwareResetDidCompleted:(bool)success message:(NSString *)errorMessage {
         if (success == false) {
-            [self notifyErrorMessage:MSG_FIRMWARE_RESET_UNSUPP];
+            [self notifyErrorMessage:errorMessage];
         }
         [self notifyProcessTerminated:success];
     }
