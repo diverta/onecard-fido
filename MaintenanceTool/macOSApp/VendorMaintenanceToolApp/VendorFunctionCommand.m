@@ -6,47 +6,54 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "AppHIDCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "VendorFunctionCommand.h"
 #import "VendorFunctionWindow.h"
 #import "ToolVersionWindow.h"
 
-@interface VendorFunctionCommand ()
+@implementation VendorFunctionCommandParameter
+
+@end
+
+@interface VendorFunctionCommand () <AppHIDCommandDelegate>
 
     // 親画面の参照を保持
-    @property (nonatomic) NSWindow                     *parentWindow;
+    @property (nonatomic) NSWindow                         *parentWindow;
     // 画面の参照を保持
-    @property (nonatomic) VendorFunctionWindow         *vendorFunctionWindow;
-    @property (nonatomic) ToolVersionWindow            *toolVersionWindow;
+    @property (nonatomic) VendorFunctionWindow             *vendorFunctionWindow;
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) AppHIDCommand                    *appHIDCommand;
+    // 処理のパラメーターを保持
+    @property (nonatomic) VendorFunctionCommandParameter   *commandParameter;
 
 @end
 
 @implementation VendorFunctionCommand
 
-    - (id)init {
-        return [self initWithDelegate:nil];
-    }
-
     - (id)initWithDelegate:(id)delegate {
-        self = [super init];
+        self = [super initWithDelegate:delegate];
         if (self) {
             // 画面のインスタンスを生成
             [self setVendorFunctionWindow:[[VendorFunctionWindow alloc] initWithWindowNibName:@"VendorFunctionWindow"]];
-            [self setToolVersionWindow:[[ToolVersionWindow alloc] initWithWindowNibName:@"ToolVersionWindow"]];
-            // バージョン情報をセット
-            NSString *version = [NSString stringWithFormat:MSG_FORMAT_APP_VERSION, [ToolCommonFunc getAppVersionString]];
-            [[self toolVersionWindow] setVersionInfoWithToolName:MSG_APP_NAME toolVersion:version toolCopyright:MSG_APP_COPYRIGHT];
+            // ヘルパークラスのインスタンスを生成
+            [self setCommandParameter:[[VendorFunctionCommandParameter alloc] init]];
+            [self setAppHIDCommand:[[AppHIDCommand alloc] initWithDelegate:self]];
         }
         return self;
+    }
+
+    - (bool)isUSBHIDConnected {
+        // USBポートに接続されていない場合はfalse
+        return [[self appHIDCommand] checkUSBHIDConnection];
     }
 
     - (void)vendorFunctionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット
-        [[self vendorFunctionWindow] setParentWindowRef:parentWindow];
-        [[self vendorFunctionWindow] setCommandRef:self];
+        [[self vendorFunctionWindow] setParentWindowRef:parentWindow withCommandRef:self withParameterRef:[self commandParameter]];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self vendorFunctionWindow] window];
         VendorFunctionCommand * __weak weakSelf = self;
@@ -62,45 +69,57 @@
         // 画面を閉じる
         [[self vendorFunctionWindow] close];
         // 実行コマンドにより処理分岐
-        switch ([[self vendorFunctionWindow] commandToPerform]) {
-            case COMMAND_VIEW_APP_VERSION:
-                // バージョン情報画面を表示
-                [self toolVersionWindowWillOpen:self parentWindow:[self parentWindow]];
+        switch ([[self commandParameter] command]) {
+            case COMMAND_INSTALL_ATTESTATION:
+                // TODO: FIDO鍵・証明書インストール
                 break;
-            case COMMAND_VIEW_LOG_FILE:
-                // ログファイル格納フォルダーを表示
-                [self viewLogFileFolder];
+            case COMMAND_REMOVE_ATTESTATION:
+                // TODO: FIDO鍵・証明書削除
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // TODO: ブートローダーモード遷移
+                break;
+            case COMMAND_HID_FIRMWARE_RESET:
+                // TODO: ファームウェアリセット
                 break;
             default:
-                // メイン画面に制御を戻す
                 break;
         }
     }
 
-    - (void)viewLogFileFolder {
-        // ログファイル格納フォルダーをFinderで表示
-        NSURL *url = [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
-        NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
-        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
+#pragma mark - Call back from AppHIDCommand
+
+    - (void)didDetectConnect {
     }
 
-#pragma mark - Version window
-
-    - (void)toolVersionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // 画面に親画面参照をセット
-        [[self toolVersionWindow] setParentWindowRef:parentWindow];
-        // ダイアログをモーダルで表示
-        NSWindow *dialog = [[self toolVersionWindow] window];
-        VendorFunctionCommand * __weak weakSelf = self;
-        [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
-            // ダイアログが閉じられた時の処理
-            [weakSelf toolVersionWindowDidClose:self modalResponse:response];
-        }];
+    - (void)didDetectRemoval {
     }
 
-    - (void)toolVersionWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
-        // 画面を閉じる
-        [[self toolVersionWindow] close];
+    - (void)didResponseCommand:(Command)command CMD:(uint8_t)cmd response:(NSData *)response success:(bool)success errorMessage:(NSString *)errorMessage {
+        switch ([[self commandParameter] command]) {
+            case COMMAND_INSTALL_ATTESTATION:
+            case COMMAND_REMOVE_ATTESTATION:
+            case COMMAND_HID_BOOTLOADER_MODE:
+            case COMMAND_HID_FIRMWARE_RESET:
+                break;
+            default:
+                return;
+        }
+        if (success == false) {
+            // 即時でアプリケーションに制御を戻す
+            [self notifyCommandTerminated:[self commandName] message:errorMessage success:success fromWindow:[self parentWindow]];
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_INSTALL_ATTESTATION:
+            case COMMAND_REMOVE_ATTESTATION:
+            case COMMAND_HID_BOOTLOADER_MODE:
+            case COMMAND_HID_FIRMWARE_RESET:
+                break;
+            default:
+                break;
+        }
     }
 
 @end

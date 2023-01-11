@@ -7,9 +7,18 @@
 #ifndef VendorFunctionCommand_h
 #define VendorFunctionCommand_h
 
-@interface VendorFunctionCommand : NSObject
+#import "AppCommand.h"
+
+@interface VendorFunctionCommandParameter : NSObject
+
+    @property (nonatomic) Command       command;
+
+@end
+
+@interface VendorFunctionCommand : AppCommand
 
     - (id)initWithDelegate:(id)delegate;
+    - (bool)isUSBHIDConnected;
     - (void)vendorFunctionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
 @end
