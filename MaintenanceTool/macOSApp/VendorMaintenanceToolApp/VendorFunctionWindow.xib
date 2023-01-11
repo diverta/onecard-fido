@@ -8,9 +8,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="VendorFunctionWindow">
             <connections>
-                <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="dkG-BB-wdx"/>
-                <outlet property="buttonToolVersionInfo" destination="yW2-iH-hwH" id="0h7-J7-W6h"/>
-                <outlet property="buttonViewLogFile" destination="Ces-dO-XfH" id="nMa-4M-GPH"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -19,49 +16,93 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="358" height="193"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
+            <rect key="contentRect" x="196" y="240" width="360" height="345"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="358" height="193"/>
+                <rect key="frame" x="0.0" y="0.0" width="360" height="345"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
-                        <rect key="frame" x="29" y="167" width="300" height="17"/>
+                        <rect key="frame" x="29" y="319" width="302" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ユーティリティー" id="Wzj-Q9-FAI">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="ベンダー向け機能" id="Wzj-Q9-FAI">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yW2-iH-hwH" userLabel="buttonToolVersionInfo">
-                        <rect key="frame" x="25" y="116" width="308" height="32"/>
+                    <box fixedFrame="YES" title="FIDO設定" translatesAutoresizingMaskIntoConstraints="NO" id="iSE-Li-72Y">
+                        <rect key="frame" x="17" y="191" width="324" height="127"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="開発ツールのバージョンを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JJl-j3-EYg">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonToolVersionInfoDidPress:" target="-2" id="sS5-Mg-paW"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonViewLogFile">
-                        <rect key="frame" x="25" y="66" width="308" height="32"/>
+                        <view key="contentView" id="CWe-XW-qEp">
+                            <rect key="frame" x="3" y="3" width="318" height="107"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QsJ-AI-aI7" userLabel="buttonInstallAttestation">
+                                    <rect key="frame" x="14" y="59" width="290" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="FIDO鍵・証明書設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="o5d-n1-HXI">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonInstallAttestationDidPress:" target="-2" id="aj4-qt-kBF"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AdT-Mj-t9V" userLabel="buttonRemoveAttestation">
+                                    <rect key="frame" x="14" y="14" width="290" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="FIDO鍵・証明書消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Oog-pw-U4b">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonRemoveAttestationDidPress:" target="-2" id="VN0-TH-TVh"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <box fixedFrame="YES" title="ファームウェア更新" translatesAutoresizingMaskIntoConstraints="NO" id="gOv-N6-oB8">
+                        <rect key="frame" x="17" y="55" width="324" height="127"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="開発ツールのログを参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonViewLogFileDidPress:" target="-2" id="4Lo-J3-a18"/>
-                        </connections>
-                    </button>
+                        <view key="contentView" id="RSx-tD-qWH">
+                            <rect key="frame" x="3" y="3" width="318" height="107"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BQt-8b-tMr" userLabel="buttonBootloaderMode">
+                                    <rect key="frame" x="14" y="59" width="290" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="ブートローダーモード遷移" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ce0-KT-Bfd">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonBootloaderModeDidPress:" target="-2" id="xWt-pU-jff"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iP0-eR-aXj" userLabel="buttonFirmwareReset">
+                                    <rect key="frame" x="14" y="14" width="290" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="push" title="ファームウェアのリセット" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="01Z-sb-4Bt">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="buttonFirmwareResetDidPress:" target="-2" id="sV9-FA-WbL"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
-                        <rect key="frame" x="138" y="13" width="82" height="32"/>
+                        <rect key="frame" x="120" y="13" width="120" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
+                        <buttonCell key="cell" type="push" title="閉じる" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -82,7 +123,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
             </connections>
-            <point key="canvasLocation" x="122" y="123.5"/>
+            <point key="canvasLocation" x="191" y="196.5"/>
         </window>
     </objects>
 </document>
