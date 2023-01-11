@@ -39,12 +39,6 @@ PCのUSBポート装着時はUSB HID／CCIDデバイスとして稼働し、ボ�
 
 ## What's new
 
-#### 2023/01/nn
-
-MDBT50Q Dongle（rev2.2）で新規搭載された機能を使用できるよう、nRF52840アプリケーションを修正いたしました。<br>
-これに伴い、FIDO認証器管理ツール（macOS版／Windows版）も更新いたしました<br>
-詳細につきましては、ドキュメント<b>[「Release 202301」](https://github.com/diverta/onecard-fido/releases/tag/Release_202301)</b>をご参照願います。
-
 #### 2022/11/15
 
 FIDO認証器管理ツール（macOS版／Windows版）を更新いたしました<br>
