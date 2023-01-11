@@ -12,6 +12,7 @@
 @interface VendorFunctionWindow : NSWindowController
 
     - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef;
+    - (void)vendorFunctionCommandDidProcess;
 
 @end
 

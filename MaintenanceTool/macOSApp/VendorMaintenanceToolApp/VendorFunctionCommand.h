@@ -12,6 +12,9 @@
 @interface VendorFunctionCommandParameter : NSObject
 
     @property (nonatomic) Command       command;
+    @property (nonatomic) NSString     *commandName;
+    @property (nonatomic) NSString     *commandErrorMessage;
+    @property (nonatomic) bool          commandSuccess;
 
 @end
 
@@ -20,6 +23,7 @@
     - (id)initWithDelegate:(id)delegate;
     - (bool)isUSBHIDConnected;
     - (void)vendorFunctionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)commandWillPerformVendorFunction;
 
 @end
 

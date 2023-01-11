@@ -4,8 +4,11 @@
 //
 //  Created by Makoto Morita on 2023/01/11.
 //
+#import "AppCommonMessage.h"
 #import "AppDefine.h"
 #import "ToolCommonFunc.h"
+#import "ToolPopupWindow.h"
+#import "ToolProcessingWindow.h"
 #import "UtilityCommand.h"
 #import "VendorFunctionCommand.h"
 #import "VendorFunctionWindow.h"
@@ -73,9 +76,10 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // 実行コマンドを設定して画面を閉じる
+        // 認証器のファームウェアを再起動
         [[self commandParameterRef] setCommand:COMMAND_HID_FIRMWARE_RESET];
-        [self terminateWindow:NSModalResponseOK];
+        [[self commandParameterRef] setCommandName:PROCESS_NAME_FIRMWARE_RESET];
+        [self commandWillPerformVendorFunction];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -92,6 +96,31 @@
         // USBポートに接続されていない場合は処理中止
         VendorFunctionCommand *command = (VendorFunctionCommand *)[self vendorFunctionCommandRef];
         return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[command isUSBHIDConnected]];
+    }
+
+    - (void)commandWillPerformVendorFunction {
+        // 進捗画面を表示
+        [[ToolProcessingWindow defaultWindow] windowWillOpenWithCommandRef:self withParentWindow:[self window]];
+        // ベンダー向け機能を実行
+        VendorFunctionCommand *command = (VendorFunctionCommand *)[self vendorFunctionCommandRef];
+        [command commandWillPerformVendorFunction];
+    }
+
+    - (void)vendorFunctionCommandDidProcess {
+        // 進捗画面を閉じる
+        [[ToolProcessingWindow defaultWindow] windowWillCloseForTarget:self forSelector:@selector(toolProcessingWindowDidClose)];
+    }
+
+    - (void)toolProcessingWindowDidClose {
+        // ポップアップ表示させるメッセージを編集
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [[self commandParameterRef] commandName],
+                             [[self commandParameterRef] commandSuccess] ? MSG_SUCCESS:MSG_FAILURE];
+        // 処理終了メッセージをポップアップ表示
+        if ([[self commandParameterRef] commandSuccess]) {
+            [[ToolPopupWindow defaultWindow] informational:message informativeText:nil withObject:nil forSelector:nil parentWindow:[self window]];
+        } else {
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:[[self commandParameterRef] commandErrorMessage] withObject:nil forSelector:nil parentWindow:[self window]];
+        }
     }
 
 @end
