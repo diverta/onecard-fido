@@ -1,5 +1,7 @@
 # nRF52840アプリケーション作成手順書
 
+最終更新日：2023/1/11
+
 Nordic社サンプルアプリケーションを土台に、nRF52840アプリケーションを作成する手順を記載しています。
 
 ## nRF52840アプリケーションについて
@@ -19,7 +21,7 @@ Nordic社サンプルアプリケーションを土台に、nRF52840アプリケ
 ビルドを実行する際に必要となる、nRF UtilをPCにインストールしておきます。<br>
 具体的な手順は、[nRF Utilインストール手順](../../../nRF52840_app/NRFUTILINST.md)をご参照ください。
 
-本手順書を作成した時点でのnRF Utilは、`version 6.1`となっておりました。
+本手順書を作成した時に使用したnRF Utilは、`version 6.1`です。
 
 ```
 bash-3.2$ nrfutil version
@@ -72,8 +74,9 @@ MDBT50Q Dongle用の独自定義、独自実装は下記ファイルになりま
 |:-:|:-|:-|
 |1|`pca10059_01.h`|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ヘッダーファイル|
 |2|`pca10059_02.h`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ヘッダーファイル|
-|3|`app_usbd_core.c`|USBサービス実装を実装（オリジナルから一部修正）|
-|4|`app_usbd_hid_generic.c`|USB HIDサービス実装を実装（オリジナルから一部修正）|
+|3|`pca10059_03.h`|[MDBT50Q Dongle（rev2.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/README.md)専用ヘッダーファイル|
+|4|`app_usbd_core.c`|USBサービス実装を実装（オリジナルから一部修正）|
+|5|`app_usbd_hid_generic.c`|USB HIDサービス実装を実装（オリジナルから一部修正）|
 
 今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/components`](../../../nRF52840_app/components)配下に配置いたしました。
 
@@ -90,22 +93,38 @@ MDBT50Q Dongle用の独自定義、独自実装は下記ファイルになりま
 
 【追加した行】
 ```
-# target board
-#  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
+# target board (without ATECC608A, unless noted)
+#  PCA10059_01  MDBT50Q Dongle(rev2)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059_01
+#  PCA10059_03  MDBT50Q Dongle(rev2.2)
+TARGET_BOARD     := PCA10059_03
 
 # application version info
-FW_REV := 0.2.13
+FW_REV := 0.3.7
+FW_BUILD := 101
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
+CFLAGS += -DFW_BUILD=\"$(FW_BUILD)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
+
+# Customized configs
+CFLAGS += -DUSE_APP_CONFIG
 
 # enable log output on PCA10056
 ifeq ("$(TARGET_BOARD)","PCA10056")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
-else
+    CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_01")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+ifeq ("$(TARGET_BOARD)","PCA10059_03")
+    # change TXD pin assignment
+    CFLAGS += -DNRF_LOG_BACKEND_UART_TX_PIN=25
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
 endif
 
 # for RSA & DES
@@ -142,9 +161,12 @@ CCID_DIR := $(PROJ_DIR)/../../../../CCID
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+WRPHDR_DIR := $(FIDO_DIR)/wrapper_header
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
+PIVLIB_DIR := $(CCID_DIR)/piv_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
+WRPLIB_DIR := $(PROJ_DIR)/../wrapper_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares/secure_device_app
 
@@ -187,7 +209,16 @@ else
 endif
 ```
 
-#### Oberonの削除
+#### defineの追加
+
+以下２点を追加しています。
+
+```
+CFLAGS += -DSWI_DISABLE0
+ASMFLAGS += -DSWI_DISABLE0
+```
+
+#### 不要コードの削除
 
 【削除した行】<br>
 ビルド対象コードから、SEGGER RTT、Oberon関連のソースコードを削除しました。
@@ -243,7 +274,7 @@ secure_pkg:
 ## ソースファイルからビルド
 
 上記で取得したソースファイルから、NetBeansプロジェクトを新規作成し、動作確認用のファームウェア更新イメージ（`appkg.<基板名>.<バージョン文字列>.zip`ファイル）を生成します。<br>
-下記例では、ファームウェア更新イメージファイル名は`appkg.PCA10059_01.0.2.13.zip`となります。
+下記例では、ファームウェア更新イメージファイル名は`appkg.PCA10059_03.0.3.7.zip`となります。
 
 #### プロジェクトの新規作成〜ビルド実行
 
@@ -300,13 +331,13 @@ NetBeansを起動し、ファイル--->新規プロジェクトを実行しま�
 
 #### ビルド結果の確認
 
-ビルドが完了したら、ファームウェア更新イメージファイル`appkg.PCA10059_01.0.2.13.zip`が正しく生成されているかどうか確認します。<br>
-下記は、ターミナルで`appkg.PCA10059_01.0.2.13.zip`(109KB)が生成されたことを確認したところです。
+ビルドが完了したら、ファームウェア更新イメージファイル`appkg.PCA10059_03.0.3.7.zip`が正しく生成されているかどうか確認します。<br>
+下記は、ターミナルで`appkg.PCA10059_03.0.3.7.zip`(280KB)が生成されたことを確認したところです。
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/
 bash-3.2$ ls -al *.zip
--rw-r--r--  1 makmorit  staff  108905  1 18 09:38 appkg.PCA10059_01.0.2.13.zip
+-rw-r--r--  1 makmorit  staff  279529  1  9 18:21 appkg.PCA10059_03.0.3.7.zip
 bash-3.2$
 ```
 
@@ -346,7 +377,7 @@ bash-3.2$ cd ${FIRMWARES_DIR}
 bash-3.2$ PACKAGE=`ls appkg.PCA10059_*.zip`
 bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
 bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg appkg.PCA10059_01.0.2.13.zip -p /dev/tty.usbmodemD496DB4407941]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_03.0.3.7.zip -p /dev/tty.usbmodemD496DB4407941]
 bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.
@@ -393,8 +424,10 @@ nRF52840アプリケーションの業務機能が動作するように、サン
 #include "fido_platform.h"
 #include "application_init.h"
 #include "ble_service_common.h"
+#include "ble_service_peripheral.h"
 #include "fido_board.h"
-#include "fido_flash.h"
+#include "fido_ble_pairing.h"
+#include "fido_flash_plat.h"
 #include "usbd_service.h"
 ```
 
@@ -404,17 +437,19 @@ nRF52840アプリケーションの業務機能が動作するように、サン
 log_init();
 usbd_service_init();
 usbd_service_pwr_detect_func(ble_service_common_disable_peripheral);
-fido_button_timers_init();
+fido_board_button_timers_init();
 power_management_init();
 // FDS関連の初期化
 fido_flash_storage_init();
 // BLE関連の初期化
 ble_service_common_init();
-if (fido_ble_pairing_mode_get() == false) {
-    // ペアリングモードでない場合は
-    // USBデバイスを開始
-    usbd_service_start();
-}
+// BLEペリフェラル初期化の前に、
+// ペアリングモードをPeer Manager等から取得
+fido_ble_pairing_get_mode();    
+// BLEペリフェラルの初期化
+ble_service_peripheral_init();
+// USBデバイスを開始
+usbd_service_start();
 // アプリケーション稼働に必要な初期化処理を開始
 application_init_start();
 // Enter main loop.
@@ -433,133 +468,176 @@ for (;;) {
 ```
 # Customized sources
 SRC_FILES += \
- $(SDK_ROOT)/components/ble/nrf_ble_scan/nrf_ble_scan.c \
- $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_aes.c \
- $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_init.c \
- $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
- $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
- $(SDK_ROOT)/components/libraries/usbd/class/hid/app_usbd_hid.c \
- $(SDK_ROOT)/external/mbedtls/library/aes.c \
- $(SDK_ROOT)/external/mbedtls/library/aesni.c \
- $(SDK_ROOT)/external/mbedtls/library/bignum.c \
- $(SDK_ROOT)/external/mbedtls/library/cipher.c \
- $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
- $(SDK_ROOT)/external/mbedtls/library/des.c \
- $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
- $(SDK_ROOT)/external/mbedtls/library/platform.c \
- $(SDK_ROOT)/external/mbedtls/library/platform_util.c \
- $(SDK_ROOT)/external/mbedtls/library/rsa_internal.c \
- $(SDK_ROOT)/external/mbedtls/library/rsa.c \
- $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
- $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
- $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
- $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
- $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twim.c \
- $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
- $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
- $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
- $(BLELIB_DIR)/ble_peripheral_auth.c \
- $(BLELIB_DIR)/ble_service_central.c \
- $(BLELIB_DIR)/ble_service_central_stat.c \
- $(BLELIB_DIR)/ble_service_common.c \
- $(BLELIB_DIR)/ble_service_peripheral.c \
- $(BLELIB_DIR)/fido_ble_event.c \
- $(BLELIB_DIR)/fido_ble_pairing.c \
- $(BLELIB_DIR)/fido_ble_send_retry.c \
- $(BLELIB_DIR)/fido_ble_service.c \
- $(CIDLIB_DIR)/ccid_apdu.c \
- $(CIDLIB_DIR)/ccid_main.c \
- $(CIDLIB_DIR)/ccid_piv.c \
- $(CIDLIB_DIR)/ccid_piv_general_auth.c \
- $(CIDLIB_DIR)/ccid_piv_authenticate.c \
- $(CIDLIB_DIR)/ccid_piv_object.c \
- $(CIDLIB_DIR)/ccid_piv_object_import.c \
- $(CIDLIB_DIR)/ccid_piv_pin.c \
- $(CIDLIB_DIR)/ccid_piv_pin_auth.c \
- $(CIDLIB_DIR)/ccid_piv_pin_update.c \
- $(CIDLIB_DIR)/ccid_ykpiv.c \
- $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
- $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
- $(CT2LIB_DIR)/ctap2_cbor_encode.c \
- $(CT2LIB_DIR)/ctap2_cbor_parse.c \
- $(CT2LIB_DIR)/ctap2_client_pin.c \
- $(CT2LIB_DIR)/ctap2_client_pin_token.c \
- $(CT2LIB_DIR)/ctap2_common.c \
- $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
- $(CT2LIB_DIR)/ctap2_get_assertion.c \
- $(CT2LIB_DIR)/ctap2_make_credential.c \
- $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
- $(FD2LIB_DIR)/fido_ble_receive.c \
- $(FD2LIB_DIR)/fido_ble_send.c \
- $(FD2LIB_DIR)/fido_command.c \
- $(FD2LIB_DIR)/fido_command_common.c \
- $(FD2LIB_DIR)/fido_common.c \
- $(FD2LIB_DIR)/fido_ctap2_command.c \
- $(FD2LIB_DIR)/fido_hid_channel.c \
- $(FD2LIB_DIR)/fido_hid_receive.c \
- $(FD2LIB_DIR)/fido_hid_send.c \
- $(FD2LIB_DIR)/fido_maintenance.c \
- $(FD2LIB_DIR)/fido_maintenance_cryption.c \
- $(FD2LIB_DIR)/fido_maintenance_skcert.c \
- $(FD2LIB_DIR)/fido_receive_apdu.c \
- $(FD2LIB_DIR)/fido_u2f_command.c \
- $(PLTLIB_DIR)/application_init.c \
- $(PLTLIB_DIR)/ccid_crypto.c \
- $(PLTLIB_DIR)/ccid_flash_piv_object.c \
- $(PLTLIB_DIR)/fido_board.c \
- $(PLTLIB_DIR)/fido_crypto.c \
- $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
- $(PLTLIB_DIR)/fido_crypto_keypair.c \
- $(PLTLIB_DIR)/fido_crypto_sskey.c \
- $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
- $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
- $(PLTLIB_DIR)/fido_flash_common.c \
- $(PLTLIB_DIR)/fido_flash_event.c \
- $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
- $(PLTLIB_DIR)/fido_flash_password.c \
- $(PLTLIB_DIR)/fido_flash_skey_cert.c \
- $(PLTLIB_DIR)/fido_flash_token_counter.c \
- $(PLTLIB_DIR)/fido_status_indicator.c \
- $(PLTLIB_DIR)/fido_timer.c \
- $(PLTLIB_DIR)/fido_twi.c \
- $(PLTLIB_DIR)/usbd_service.c \
- $(PLTLIB_DIR)/usbd_service_bos.c \
- $(PLTLIB_DIR)/usbd_service_ccid.c \
- $(PLTLIB_DIR)/usbd_service_hid.c \
- $(U2FLIB_DIR)/u2f_authenticate.c \
- $(U2FLIB_DIR)/u2f_keyhandle.c \
- $(U2FLIB_DIR)/u2f_register.c \
- $(U2FLIB_DIR)/u2f_signature.c \
+  $(SDK_ROOT)/components/ble/nrf_ble_scan/nrf_ble_scan.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_aes.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_init.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
+  $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+  $(SDK_ROOT)/components/libraries/usbd/class/hid/app_usbd_hid.c \
+  $(SDK_ROOT)/external/mbedtls/library/aes.c \
+  $(SDK_ROOT)/external/mbedtls/library/aesni.c \
+  $(SDK_ROOT)/external/mbedtls/library/bignum.c \
+  $(SDK_ROOT)/external/mbedtls/library/cipher.c \
+  $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
+  $(SDK_ROOT)/external/mbedtls/library/des.c \
+  $(SDK_ROOT)/external/mbedtls/library/platform.c \
+  $(SDK_ROOT)/external/mbedtls/library/platform_util.c \
+  $(SDK_ROOT)/external/mbedtls/library/rsa_internal.c \
+  $(SDK_ROOT)/external/mbedtls/library/rsa.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twim.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
+  $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
+  $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
+  $(BLELIB_DIR)/ble_service_common.c \
+  $(BLELIB_DIR)/ble_service_peripheral.c \
+  $(BLELIB_DIR)/fido_ble_event.c \
+  $(BLELIB_DIR)/fido_ble_pairing.c \
+  $(BLELIB_DIR)/fido_ble_send_retry.c \
+  $(BLELIB_DIR)/fido_ble_service.c \
+  $(CIDLIB_DIR)/ccid_apdu.c \
+  $(CIDLIB_DIR)/ccid_main.c \
+  $(CIDLIB_DIR)/ccid_process.c \
+  $(PIVLIB_DIR)/ccid_piv.c \
+  $(PIVLIB_DIR)/ccid_piv_general_auth.c \
+  $(PIVLIB_DIR)/ccid_piv_authenticate.c \
+  $(PIVLIB_DIR)/ccid_piv_object.c \
+  $(PIVLIB_DIR)/ccid_piv_object_import.c \
+  $(PIVLIB_DIR)/ccid_piv_pin.c \
+  $(PIVLIB_DIR)/ccid_piv_pin_auth.c \
+  $(PIVLIB_DIR)/ccid_piv_pin_update.c \
+  $(PIVLIB_DIR)/ccid_ykpiv.c \
+  $(PIVLIB_DIR)/ccid_ykpiv_import_key.c \
+  $(CT2LIB_DIR)/ctap2_cbor.c \
+  $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
+  $(CT2LIB_DIR)/ctap2_cbor_encode.c \
+  $(CT2LIB_DIR)/ctap2_cbor_parse.c \
+  $(CT2LIB_DIR)/ctap2_client_pin.c \
+  $(CT2LIB_DIR)/ctap2_client_pin_token.c \
+  $(CT2LIB_DIR)/ctap2_common.c \
+  $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
+  $(CT2LIB_DIR)/ctap2_get_assertion.c \
+  $(CT2LIB_DIR)/ctap2_make_credential.c \
+  $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(FD2LIB_DIR)/fido_ble_receive.c \
+  $(FD2LIB_DIR)/fido_ble_send.c \
+  $(FD2LIB_DIR)/fido_command.c \
+  $(FD2LIB_DIR)/fido_command_common.c \
+  $(FD2LIB_DIR)/fido_common.c \
+  $(FD2LIB_DIR)/fido_ctap2_command.c \
+  $(FD2LIB_DIR)/fido_development.c \
+  $(FD2LIB_DIR)/fido_hid_channel.c \
+  $(FD2LIB_DIR)/fido_hid_receive.c \
+  $(FD2LIB_DIR)/fido_hid_send.c \
+  $(FD2LIB_DIR)/fido_maintenance.c \
+  $(FD2LIB_DIR)/fido_receive_apdu.c \
+  $(FD2LIB_DIR)/fido_u2f_command.c \
+  $(PLTLIB_DIR)/application_init.c \
+  $(PLTLIB_DIR)/fido_board.c \
+  $(PLTLIB_DIR)/fido_crypto.c \
+  $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
+  $(PLTLIB_DIR)/fido_crypto_hmac_sha1.c \
+  $(PLTLIB_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
+  $(PLTLIB_DIR)/fido_flash_common.c \
+  $(PLTLIB_DIR)/fido_flash_event.c \
+  $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
+  $(PLTLIB_DIR)/fido_flash_password.c \
+  $(PLTLIB_DIR)/fido_flash_skey_cert.c \
+  $(PLTLIB_DIR)/fido_flash_token_counter.c \
+  $(PLTLIB_DIR)/fido_timer_plat.c \
+  $(PLTLIB_DIR)/fido_twi.c \
+  $(PLTLIB_DIR)/rv3028c7_i2c.c \
+  $(PLTLIB_DIR)/sha1.c \
+  $(PLTLIB_DIR)/usbd_service.c \
+  $(PLTLIB_DIR)/usbd_service_bos.c \
+  $(PLTLIB_DIR)/usbd_service_ccid.c \
+  $(PLTLIB_DIR)/usbd_service_hid.c \
+  $(U2FLIB_DIR)/u2f_authenticate.c \
+  $(U2FLIB_DIR)/u2f_keyhandle.c \
+  $(U2FLIB_DIR)/u2f_register.c \
+  $(U2FLIB_DIR)/u2f_signature.c \
+  $(WRPLIB_DIR)/ccid_crypto.c \
+  $(WRPLIB_DIR)/ccid_flash_oath_object.c \
+  $(WRPLIB_DIR)/ccid_flash_object.c \
+  $(WRPLIB_DIR)/ccid_flash_openpgp_object.c \
+  $(WRPLIB_DIR)/ccid_flash_piv_object.c \
+  $(WRPLIB_DIR)/fido_ble_unpairing.c \
+  $(WRPLIB_DIR)/fido_status_indicator.c \
+  $(WRPLIB_DIR)/fido_timer.c \
+  $(WRPLIB_DIR)/rtcc.c \
 
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
 # Source files to targets (Boards with ATECC608A)
 SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
 ATELIB_DIR := $(SCIC_DIR)/atecc_lib
 SRC_FILES += \
- $(ATELIB_DIR)/atecc.c \
- $(ATELIB_DIR)/atecc_aes.c \
- $(ATELIB_DIR)/atecc_command.c \
- $(ATELIB_DIR)/atecc_device.c \
- $(ATELIB_DIR)/atecc_iface.c \
- $(ATELIB_DIR)/atecc_nonce.c \
- $(ATELIB_DIR)/atecc_priv.c \
- $(ATELIB_DIR)/atecc_read.c \
- $(ATELIB_DIR)/atecc_setup.c \
- $(ATELIB_DIR)/atecc_sign.c \
- $(ATELIB_DIR)/atecc_util.c \
- $(ATELIB_DIR)/atecc_write.c \
- $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+  $(ATELIB_DIR)/atecc.c \
+  $(ATELIB_DIR)/atecc_aes.c \
+  $(ATELIB_DIR)/atecc_command.c \
+  $(ATELIB_DIR)/atecc_device.c \
+  $(ATELIB_DIR)/atecc_iface.c \
+  $(ATELIB_DIR)/atecc_nonce.c \
+  $(ATELIB_DIR)/atecc_priv.c \
+  $(ATELIB_DIR)/atecc_read.c \
+  $(ATELIB_DIR)/atecc_setup.c \
+  $(ATELIB_DIR)/atecc_sign.c \
+  $(ATELIB_DIR)/atecc_util.c \
+  $(ATELIB_DIR)/atecc_write.c \
+  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
 
 INC_FOLDERS += \
- $(SDK_ROOT)/components/ble/nrf_ble_scan \
- $(SDK_ROOT)/components/libraries/bootloader \
- $(TINYCBOR_ROOT)/src \
- $(ATELIB_DIR) \
- $(BLELIB_DIR) \
- $(CIDLIB_DIR) \
- $(CT2LIB_DIR) \
- $(FD2LIB_DIR) \
- $(PLTLIB_DIR) \
- $(U2FLIB_DIR) \
+  $(ATELIB_DIR) \
+
+else
+CFLAGS += -DNO_SECURE_IC
+endif
+
+INC_FOLDERS += \
+  $(SDK_ROOT)/components/ble/nrf_ble_scan \
+  $(SDK_ROOT)/components/libraries/bootloader \
+  $(TINYCBOR_ROOT)/src \
+  $(BLELIB_DIR) \
+  $(CIDLIB_DIR) \
+  $(CT2LIB_DIR) \
+  $(FD2LIB_DIR) \
+  $(PIVLIB_DIR) \
+  $(PLTLIB_DIR) \
+  $(U2FLIB_DIR) \
+  $(WRPHDR_DIR) \
+
+# Source files of OpenPGP card emulation
+OPGLIB_DIR := $(CCID_DIR)/openpgp_lib
+SRC_FILES += \
+  $(OPGLIB_DIR)/ccid_openpgp_attr.c \
+  $(OPGLIB_DIR)/ccid_openpgp_crypto.c \
+  $(OPGLIB_DIR)/ccid_openpgp_data.c \
+  $(OPGLIB_DIR)/ccid_openpgp_key_rsa.c \
+  $(OPGLIB_DIR)/ccid_openpgp_key.c \
+  $(OPGLIB_DIR)/ccid_openpgp_object.c \
+  $(OPGLIB_DIR)/ccid_openpgp_pin.c \
+  $(OPGLIB_DIR)/ccid_openpgp.c \
+  $(OPGLIB_DIR)/ccid_pin_auth.c \
+
+INC_FOLDERS += \
+  $(OPGLIB_DIR) \
+
+# Source files for OATH
+OATLIB_DIR := $(CCID_DIR)/oath_lib
+SRC_FILES += \
+  $(OATLIB_DIR)/ccid_oath.c \
+  $(OATLIB_DIR)/ccid_oath_account.c \
+  $(OATLIB_DIR)/ccid_oath_calculate.c \
+  $(OATLIB_DIR)/ccid_oath_list.c \
+  $(OATLIB_DIR)/ccid_oath_object.c \
+  $(OATLIB_DIR)/ccid_oath_totp.c \
+
+INC_FOLDERS += \
+  $(OATLIB_DIR) \
 ```
 
 #### 再ビルドの実行

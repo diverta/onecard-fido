@@ -1,5 +1,7 @@
 # nRF52840アプリケーション
 
+最終更新日：2023/1/11
+
 ## 概要
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)（nRF52840）上で稼働するアプリケーションです。<br>

@@ -1,10 +1,12 @@
 # nRF52840アプリケーション更新手順書（開発時運用）
 
+最終更新日：2023/1/10
+
 ## 概要
 
 [MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、最新バージョンの[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)を<b>手動で上書き更新する</b>手順につきまして、以下に掲載いたします。
 
-最新バージョンは、[version 0.3.1](https://github.com/diverta/onecard-fido/blob/doc-20210311/nRF52840_app/firmwares/secure_device_app)になります。
+最終更新日現在の最新バージョンは、[version 0.3.7](https://github.com/diverta/onecard-fido/blob/752fb54218eb84e9dcb30af3e36c0347349eaa6a/nRF52840_app/firmwares/secure_device_app/appkg.PCA10059_03.0.3.7.zip)になります。
 
 ## MDBT50Q Dongleの準備
 
@@ -41,15 +43,14 @@ bash-3.2$
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|`appkg.PCA10059_01.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
-|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+|1|`appkg.PCA10059_03.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/README.md)専用ファームウェア更新イメージファイル|
 
 具体的には、以下のコマンドを投入します。<br>
-下記例ではMDBT50Q Dongle（rev2.1.2）のファームウェア更新イメージファイル（Version 0.3.1）を使用しています。
+下記例ではMDBT50Q Dongle（rev2.2）のファームウェア更新イメージファイル（Version 0.3.7）を使用しています。
 
 ```
-BOARD_STR=PCA10059_02
-VERSION_STR=0.3.1
+BOARD_STR=PCA10059_03
+VERSION_STR=0.3.7
 PACKAGE=appkg.${BOARD_STR}.${VERSION_STR}.zip
 FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 cd ${FIRMWARES_DIR}
@@ -61,14 +62,14 @@ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 下記は実行例になります。
 
 ```
-bash-3.2$ BOARD_STR=PCA10059_02
-bash-3.2$ VERSION_STR=0.3.1
+bash-3.2$ BOARD_STR=PCA10059_03
+bash-3.2$ VERSION_STR=0.3.7
 bash-3.2$ PACKAGE=appkg.${BOARD_STR}.${VERSION_STR}.zip
 bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 bash-3.2$ cd ${FIRMWARES_DIR}
 bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
 bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg appkg.PCA10059_02.0.3.1.zip -p /dev/tty.usbmodemC6863701200B1]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_02.0.3.7.zip -p /dev/tty.usbmodemC6863701200B1]
 bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.

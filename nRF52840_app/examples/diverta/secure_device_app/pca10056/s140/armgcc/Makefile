@@ -8,8 +8,8 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059_03
 
 # application version info
-FW_REV := 0.3.6
-FW_BUILD := 100
+FW_REV := 0.3.7
+FW_BUILD := 101
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 CFLAGS += -DFW_BUILD=\"$(FW_BUILD)\"
 # hardware version info
