@@ -219,6 +219,12 @@
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
 		7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
+		7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
+		7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
+		7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */; };
+		7ACD98FE296E671600D08A24 /* VendorFunctionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */; };
+		7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */; };
+		7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */; };
 		7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */; };
 		7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
@@ -414,6 +420,11 @@
 		7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
+		7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionWindow.m; sourceTree = "<group>"; };
+		7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VendorFunctionWindow.xib; sourceTree = "<group>"; };
+		7ACD98F8296E671500D08A24 /* VendorFunctionCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionCommand.h; sourceTree = "<group>"; };
+		7ACD98F9296E671500D08A24 /* VendorFunctionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionWindow.h; sourceTree = "<group>"; };
+		7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionCommand.m; sourceTree = "<group>"; };
 		7ACFD89B27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUProcessingWindow.xib; sourceTree = "<group>"; };
 		7ACFD89C27213EAF00AAEFE2 /* BLEDFUProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUProcessingWindow.h; sourceTree = "<group>"; };
 		7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUProcessingWindow.m; sourceTree = "<group>"; };
@@ -508,6 +519,7 @@
 				7A4C217C287520DA005CC8D0 /* ToolCommon */,
 				7A9167FF28FE479D0096A848 /* USBDFU */,
 				7A8B3E26296E586F0005F7B1 /* VendorMaintenanceTool */,
+				7ACD98F5296E653700D08A24 /* VendorMaintenanceToolApp */,
 				64ED9A781647439300F39EAE /* Frameworks */,
 				7ACA8D792251B55100B132E2 /* MaintenanceTool.app */,
 				7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */,
@@ -876,6 +888,18 @@
 			path = MaintenanceToolDFU;
 			sourceTree = "<group>";
 		};
+		7ACD98F5296E653700D08A24 /* VendorMaintenanceToolApp */ = {
+			isa = PBXGroup;
+			children = (
+				7ACD98F8296E671500D08A24 /* VendorFunctionCommand.h */,
+				7ACD98FA296E671500D08A24 /* VendorFunctionCommand.m */,
+				7ACD98F9296E671500D08A24 /* VendorFunctionWindow.h */,
+				7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */,
+				7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */,
+			);
+			path = VendorMaintenanceToolApp;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -950,6 +974,7 @@
 				7A3F4F1F28755F91003CFE67 /* UtilityWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
+				7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
 				7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7A775B4F294C4C8F00EDE37F /* UnpairingRequestWindow.xib in Resources */,
@@ -993,6 +1018,7 @@
 				7A8B3DFF296E56640005F7B1 /* UtilityWindow.xib in Resources */,
 				7A8B3E00296E56640005F7B1 /* generate_main_key.param in Resources */,
 				7A8B3E01296E56640005F7B1 /* transfer_subkey_to_card.sh in Resources */,
+				7ACD98FE296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
 				7A8B3E02296E56640005F7B1 /* BLESettingWindow.xib in Resources */,
 				7A8B3E03296E56640005F7B1 /* Entitlements.plist in Resources */,
 				7A8B3E04296E56640005F7B1 /* UnpairingRequestWindow.xib in Resources */,
@@ -1063,6 +1089,7 @@
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
+				7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
 				7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */,
 				7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */,
@@ -1097,6 +1124,7 @@
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */,
 				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
+				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
@@ -1143,6 +1171,7 @@
 				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
 				7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */,
 				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
+				7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,
 				7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */,
 				7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */,
@@ -1177,6 +1206,7 @@
 				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,
 				7A8B3DE8296E56640005F7B1 /* nrf52_app_image.c in Sources */,
 				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
+				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
 				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
 				7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */,

@@ -17,6 +17,7 @@
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
+#import "VendorFunctionCommand.h"
 
 @interface AppDelegate () <AppCommandDelegate>
 
@@ -41,6 +42,7 @@
     @property (nonatomic) UtilityCommand        *utilityCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
+    @property (nonatomic) VendorFunctionCommand *vendorFunctionCommand;
 
 @end
 
@@ -58,6 +60,7 @@
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
+        [self setVendorFunctionCommand:[[VendorFunctionCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -147,10 +150,8 @@
     }
 
     - (IBAction)menuItemVendorDidSelect:(id)sender {
-        // TODO: ベンダー向け機能画面を開く
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                       withObject:self forSelector:@selector(displayCommandResultDone)
-                                     parentWindow:[self window]];
+        // ベンダー向け機能画面を開く
+        [[self vendorFunctionCommand] vendorFunctionWindowWillOpen:self parentWindow:[self window]];
     }
 
 #pragma mark - Common method called by callback
