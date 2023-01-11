@@ -45,6 +45,7 @@
 		7A3F4F262875633C003CFE67 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F252875633C003CFE67 /* icon.png */; };
 		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
 		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
+		7A44267C296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A44267B296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip */; };
 		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
@@ -82,9 +83,6 @@
 		7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
 		7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
-		7AAADCF62923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AAADCF32923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip */; };
-		7AAADCF72923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AAADCF42923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip */; };
-		7AAADCF82923225D0066BEFD /* appkg.PCA10059_02.0.3.6.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AAADCF52923225D0066BEFD /* appkg.PCA10059_02.0.3.6.zip */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
 		7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
@@ -195,6 +193,7 @@
 		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
 		7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
 		7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_private_key.c; sourceTree = "<group>"; };
+		7A44267B296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.7.zip; sourceTree = "<group>"; };
 		7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUStartWindow.h; sourceTree = "<group>"; };
 		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
@@ -260,9 +259,6 @@
 		7A986E682942DEFE000FC524 /* BLEUnpairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEUnpairingCommand.h; sourceTree = "<group>"; };
 		7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEUnpairingCommand.m; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
-		7AAADCF32923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.6.zip; sourceTree = "<group>"; };
-		7AAADCF42923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.6.zip; sourceTree = "<group>"; };
-		7AAADCF52923225D0066BEFD /* appkg.PCA10059_02.0.3.6.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.6.zip; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
 		7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mcumgr_cbor_decode.c; sourceTree = "<group>"; };
@@ -649,10 +645,8 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A44267B296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip */,
 				7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */,
-				7AAADCF42923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip */,
-				7AAADCF52923225D0066BEFD /* appkg.PCA10059_02.0.3.6.zip */,
-				7AAADCF32923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
 				7A8528FE277176F10096F41D /* add_sub_key.sh */,
@@ -804,7 +798,6 @@
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
 				7A154FEE2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin in Resources */,
 				7A9167FB28FE2B1E0096A848 /* DFUWindow.xib in Resources */,
-				7AAADCF62923225D0066BEFD /* appkg.PCA10059_03.0.3.6.zip in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
 				7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */,
 				7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */,
@@ -820,11 +813,10 @@
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7A199C15288545DB00AF8B62 /* FIDOSettingWindow.xib in Resources */,
 				7A3F4F2428755FB1003CFE67 /* ToolVersionWindow.xib in Resources */,
-				7AAADCF72923225D0066BEFD /* appkg.PCA10059_01.0.3.6.zip in Resources */,
-				7AAADCF82923225D0066BEFD /* appkg.PCA10059_02.0.3.6.zip in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */,
+				7A44267C296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip in Resources */,
 				7A852900277176F10096F41D /* add_sub_key.sh in Resources */,
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				7A1BCD4C28862DA6007AEE12 /* FIDOPinSettingWindow.xib in Resources */,
@@ -1034,7 +1026,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1061,7 +1053,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
