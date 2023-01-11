@@ -61,6 +61,9 @@
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // ベンダー向け機能を有効化
+        [[self menuItemVendor] setHidden:([ToolCommonFunc isVendorMaintenanceTool] == false)];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {

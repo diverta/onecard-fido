@@ -20,6 +20,11 @@
         return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     }
 
+    + (bool)isVendorMaintenanceTool {
+        NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+        return [bundleIdentifier isEqualToString:@"jp.co.diverta.VendorMaintenanceTool"];
+    }
+
 #pragma mark - Utilities for check entry
 
     + (bool)checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window {

@@ -27,8 +27,11 @@
                             <menuItem isSeparatorItem="YES" id="236">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="ベンダー向け機能" id="zay-JM-FMA">
+                            <menuItem title="ベンダー向け機能" hidden="YES" id="zay-JM-FMA">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="menuItemVendorDidSelect:" target="494" id="NjY-ZO-57Y"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Preferences…" keyEquivalent="," id="129"/>
                             <menuItem isSeparatorItem="YES" id="143">
