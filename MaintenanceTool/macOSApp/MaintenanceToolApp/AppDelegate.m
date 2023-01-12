@@ -17,6 +17,7 @@
 #import "ToolPopupWindow.h"
 #import "ToolLogFile.h"
 #import "UtilityCommand.h"
+#import "VendorFunctionCommand.h"
 
 @interface AppDelegate () <AppCommandDelegate>
 
@@ -31,6 +32,7 @@
     @property (assign) IBOutlet NSButton    *buttonUtility;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
+    @property (assign) IBOutlet NSMenuItem  *menuItemVendor;
 
     // クラスの参照を保持
     @property (nonatomic) BLESettingCommand     *bleSettingCommand;
@@ -40,6 +42,7 @@
     @property (nonatomic) UtilityCommand        *utilityCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
+    @property (nonatomic) VendorFunctionCommand *vendorFunctionCommand;
 
 @end
 
@@ -57,9 +60,13 @@
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
+        [self setVendorFunctionCommand:[[VendorFunctionCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
+        
+        // ベンダー向け機能を有効化
+        [[self menuItemVendor] setHidden:([ToolCommonFunc isVendorMaintenanceTool] == false)];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -88,6 +95,7 @@
         [[self buttonHealthCheck] setEnabled:enabled];
         [[self buttonUtility] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
+        [[self menuItemVendor] setEnabled:enabled];
     }
 
     - (IBAction)buttonBLESettingDidPress:(id)sender {
@@ -139,6 +147,11 @@
     - (IBAction)buttonUtilityDidPress:(id)sender {
         // ユーティリティー画面を開く
         [[self utilityCommand] utilityWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemVendorDidSelect:(id)sender {
+        // ベンダー向け機能画面を開く
+        [[self vendorFunctionCommand] vendorFunctionWindowWillOpen:self parentWindow:[self window]];
     }
 
 #pragma mark - Common method called by callback
