@@ -214,6 +214,10 @@
 		7AB6312B277B01FB004917B9 /* card_reset.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AB63129277B01FB004917B9 /* card_reset.param */; };
 		7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AB6312A277B01FB004917B9 /* card_reset.sh */; };
 		7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */; };
+		7AC89EF1296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */; };
+		7AC89EF2296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */; };
+		7AC89EF3296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */; };
+		7AC89EF4296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */; };
 		7ACABD862887D00500756123 /* DFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABD852887D00500756123 /* DFUCommand.m */; };
 		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
@@ -412,6 +416,9 @@
 		7AB63129277B01FB004917B9 /* card_reset.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_reset.param; sourceTree = "<group>"; };
 		7AB6312A277B01FB004917B9 /* card_reset.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_reset.sh; sourceTree = "<group>"; };
 		7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUStartWindow.xib; sourceTree = "<group>"; };
+		7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOAttestationWindow.xib; sourceTree = "<group>"; };
+		7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationWindow.m; sourceTree = "<group>"; };
+		7AC89EF5296FCC6B0024B384 /* FIDOAttestationWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOAttestationWindow.h; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ACABD842887CFF100756123 /* DFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUCommand.h; sourceTree = "<group>"; };
 		7ACABD852887D00500756123 /* DFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUCommand.m; sourceTree = "<group>"; };
@@ -916,6 +923,9 @@
 			children = (
 				7ACD9907296EA5AA00D08A24 /* FIDOAttestationCommand.h */,
 				7ACD9908296EA62700D08A24 /* FIDOAttestationCommand.m */,
+				7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */,
+				7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */,
+				7AC89EF5296FCC6B0024B384 /* FIDOAttestationWindow.h */,
 			);
 			path = VendorMaintenanceToolFIDO;
 			sourceTree = "<group>";
@@ -1019,6 +1029,7 @@
 				7A199C15288545DB00AF8B62 /* FIDOSettingWindow.xib in Resources */,
 				7A3F4F2428755FB1003CFE67 /* ToolVersionWindow.xib in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
+				7AC89EF1296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */,
 				7A44267C296E4D750040761C /* appkg.PCA10059_03.0.3.7.zip in Resources */,
@@ -1063,6 +1074,7 @@
 				7A8B3E17296E56640005F7B1 /* FIDOSettingWindow.xib in Resources */,
 				7A8B3E18296E56640005F7B1 /* ToolVersionWindow.xib in Resources */,
 				7A8B3E19296E56640005F7B1 /* PIVPreferenceWindow.xib in Resources */,
+				7AC89EF2296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
 				7A8B3E1A296E56640005F7B1 /* InfoPlist.strings in Resources */,
 				7A8B3E1B296E56640005F7B1 /* card_edit_passwd.param in Resources */,
 				7A8B3E1C296E56640005F7B1 /* appkg.PCA10059_03.0.3.7.zip in Resources */,
@@ -1104,6 +1116,7 @@
 				7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */,
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
+				7AC89EF3296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
@@ -1188,6 +1201,7 @@
 				7A8B3DC0296E56640005F7B1 /* HcheckPinWindow.m in Sources */,
 				7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */,
 				7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */,
+				7AC89EF4296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
 				7A8B3DC3296E56640005F7B1 /* tool_crypto_des.c in Sources */,
 				7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */,
 				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
