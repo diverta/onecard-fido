@@ -80,6 +80,7 @@
         // 実行コマンドにより処理分岐
         switch ([[self commandParameter] command]) {
             case COMMAND_INSTALL_ATTESTATION:
+                [self installAttestationWillProcess];
                 break;
             case COMMAND_REMOVE_ATTESTATION:
                 [self removeAttestationWillProcess];
@@ -95,8 +96,14 @@
         }
     }
 
+    - (void)installAttestationWillProcess {
+        // HIDインターフェース経由で鍵・証明書をインストール-->完了後、FIDOAttestationCommandDidCompleted が呼び出される
+        [self notifyProcessStarted];
+        [[self fidoAttestationCommand] doRequestInstallAttestation:[self commandParameter]];
+    }
+
     - (void)removeAttestationWillProcess {
-        // HIDインターフェース経由で鍵・証明書を削除-->完了後、RemoveAttestationDidCompleted が呼び出される
+        // HIDインターフェース経由で鍵・証明書を削除-->完了後、FIDOAttestationCommandDidCompleted が呼び出される
         [self notifyProcessStarted];
         [[self fidoAttestationCommand] doRequestRemoveAttestation];
     }
@@ -115,7 +122,7 @@
 
 #pragma mark - Call back from sub command
 
-    - (void)RemoveAttestationDidCompleted:(bool)success message:(NSString *)errorMessage {
+    - (void)FIDOAttestationCommandDidCompleted:(bool)success message:(NSString *)errorMessage {
         if (success == false) {
             [self notifyErrorMessage:errorMessage];
         }

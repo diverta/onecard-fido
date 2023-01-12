@@ -15,13 +15,14 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (bool)isUSBHIDConnected;
+    - (void)doRequestInstallAttestation:(id)commandParameterRef;
     - (void)doRequestRemoveAttestation;
 
 @end
 
 @protocol FIDOAttestationCommandDelegate <NSObject>
 
-    - (void)RemoveAttestationDidCompleted:(bool)success message:(NSString *)message;
+    - (void)FIDOAttestationCommandDidCompleted:(bool)success message:(NSString *)message;
 
 @end
 
