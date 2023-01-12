@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "AppDefine.h"
+#import "FIDOAttestationWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
 #import "ToolProcessingWindow.h"
@@ -17,6 +18,8 @@
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                         *parentWindow;
+    // 子画面の参照を保持
+    @property (nonatomic) FIDOAttestationWindow            *fidoAttestationWindow;
     // コマンドクラスの参照を保持
     @property (nonatomic, weak) id                          vendorFunctionCommandRef;
     // 処理パラメーターを保持
@@ -33,6 +36,8 @@
     - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef {
         // 親画面の参照を保持
         [self setParentWindow:(NSWindow *)ref];
+        // 子画面のインスタンスを生成
+        [self setFidoAttestationWindow:[[FIDOAttestationWindow alloc] initWithWindowNibName:@"FIDOAttestationWindow"]];
         // コマンドクラスの参照を保持
         [self setVendorFunctionCommandRef:commandRef];
         // ヘルスチェック処理のパラメーターを保持
@@ -46,10 +51,26 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // 実行コマンドを設定して画面を閉じる
+        // FIDO鍵・証明書設定画面をポップアップ表示
+        [[self fidoAttestationWindow] setParentWindowRef:[self window] withCommandRef:[self vendorFunctionCommandRef] withParameterRef:[self commandParameterRef]];
+        NSWindow *dialog = [[self fidoAttestationWindow] window];
+        VendorFunctionWindow * __weak weakSelf = self;
+        [[self window] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf fidoAttestationWindowDidClose:self modalResponse:response];
+        }];
+    }
+
+    - (void)fidoAttestationWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self fidoAttestationWindow] close];
+        if (modalResponse != NSModalResponseOK) {
+            return;
+        }
+        // OKボタンクリックの場合は、FIDO鍵・証明書をインストール
         [[self commandParameterRef] setCommand:COMMAND_INSTALL_ATTESTATION];
         [[self commandParameterRef] setCommandName:PROCESS_NAME_INSTALL_ATTESTATION];
-        [self terminateWindow:NSModalResponseOK];
+        [self commandWillPerformVendorFunction];
     }
 
     - (IBAction)buttonRemoveAttestationDidPress:(id)sender {
