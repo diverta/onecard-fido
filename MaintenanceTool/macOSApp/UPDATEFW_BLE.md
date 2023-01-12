@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のファームウェアを更新する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のファームウェアを更新する手順を掲載します。
 
 #### ご注意
 
@@ -17,7 +17,7 @@ BT40 Dongleをご使用の場合は、背面にあるボタン電池ケースに
 
 ## 操作方法
 
-[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/MNTTOOL.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
+[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/README.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
 
 <img src="assets06/0001.jpg" width="400">
 

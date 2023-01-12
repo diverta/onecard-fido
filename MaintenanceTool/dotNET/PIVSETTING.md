@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、PIV機能に最低限必要な基本設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、PIV機能に最低限必要な基本設定を行う手順を掲載します。
 
 ## ソフトウェアのバージョン確認
 

@@ -33,7 +33,7 @@ BT40 Dongleで使用するファームウェアです。
 
 ### ファームウェア更新手順
 
-BT40 Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/MNTTOOL.md)により更新する手順について説明しています。
+BT40 Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/README.md)により更新する手順について説明しています。
 
 - <b>[Windows版](../../MaintenanceTool/WindowsExe/UPDATEFW_BLE.md)</b>
 

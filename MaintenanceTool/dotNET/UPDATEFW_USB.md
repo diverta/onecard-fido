@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のファームウェアを更新する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のファームウェアを更新する手順を掲載します。
 
 ## 操作方法
 

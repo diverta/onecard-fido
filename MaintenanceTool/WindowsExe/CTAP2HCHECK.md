@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/README.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -20,7 +20,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を、PC環境（Windows 10）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/README.md)を、PC環境（Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>

@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)から、FIDO認証情報を消去する手順について掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)から、FIDO認証情報を消去する手順について掲載します。
 
 ## 認証器の準備
 
@@ -14,7 +14,7 @@
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b>

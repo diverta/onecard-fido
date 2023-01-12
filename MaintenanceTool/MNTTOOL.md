@@ -22,7 +22,7 @@ macOS版と、Windows版を用意しました。
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 
-## [macOS版](../MaintenanceTool/macOSApp/MNTTOOL.md)
+## [macOS版](../MaintenanceTool/macOSApp/README.md)
 
 #### 画面イメージ
 <img src="assets/0001.jpg" width="400">
@@ -30,7 +30,7 @@ macOS版と、Windows版を用意しました。
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
-## [Windows版](../MaintenanceTool/dotNET/MNTTOOL.md)
+## [Windows版](../MaintenanceTool/dotNET/README.md)
 
 #### 画面イメージ
 <img src="../MaintenanceTool/dotNET/assets01/0002.jpg" width="400">

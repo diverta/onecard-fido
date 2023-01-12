@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/README.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
 
 ## 認証器の準備
 
@@ -14,7 +14,7 @@
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)を、PC環境（Windows）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/README.md)を、PC環境（Windows）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（Windows版）](../../MaintenanceTool/dotNET/INSTALLPRG.md) </b>
