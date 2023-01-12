@@ -8,6 +8,7 @@
 #import "FIDOAttestationWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolFilePanel.h"
+#import "ToolPopupWindow.h"
 #import "VendorFunctionCommand.h"
 
 @interface FIDOAttestationWindow () <ToolFilePanelDelegate>
@@ -77,6 +78,16 @@
             return;
         }
         if ([self checkPathEntry:[self textCertPemPath] messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
+            return;
+        }
+        // 処理開始前に確認
+        [[ToolPopupWindow defaultWindow] informationalPrompt:MSG_INSTALL_SKEY_CERT informativeText:MSG_PROMPT_INSTL_SKEY_CERT
+                                                  withObject:self forSelector:@selector(installCommandPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)installCommandPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 選択された鍵・証明書ファイルのパスを保持
