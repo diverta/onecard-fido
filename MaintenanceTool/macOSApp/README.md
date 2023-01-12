@@ -10,7 +10,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 ## 機能
 
-エンドユーザー向けと、ベンダー向けの両タイプを用意しております。
+エンドユーザー向けと、[ベンダー向け](../../MaintenanceTool/macOSApp/DEVTOOL.md)の両タイプを用意しております。
 
 #### エンドユーザー向けの機能
 
