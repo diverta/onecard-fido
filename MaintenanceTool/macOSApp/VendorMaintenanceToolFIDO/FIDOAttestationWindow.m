@@ -39,7 +39,9 @@
 
     - (void)initFieldValue {
         [[self textPkeyPemPath] setStringValue:@""];
+        [[self textPkeyPemPath] setToolTip:@""];
         [[self textCertPemPath] setStringValue:@""];
+        [[self textCertPemPath] setToolTip:@""];
     }
 
     - (void)setParentWindowRef:(id)ref withCommandRef:(id)commandRef withParameterRef:(id)parameterRef {
@@ -80,6 +82,8 @@
         // 選択された鍵・証明書ファイルのパスを保持
         [[self commandParameterRef] setPkeyPemPath:[[self textPkeyPemPath] toolTip]];
         [[self commandParameterRef] setCertPemPath:[[self textCertPemPath] toolTip]];
+        // 画面項目を初期化
+        [self initFieldValue];
         // この画面を閉じる
         [self terminateWindow:NSModalResponseOK];
     }
