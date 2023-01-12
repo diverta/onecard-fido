@@ -12,9 +12,9 @@ Nordic社のSoC「nRF5340」で動作し、[MDBT53 Dongle](FIDO2Device/MDBT53_Do
 FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
 
-- <b>[PCツール](MaintenanceTool)</b><br>
+- <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
 PC環境から、[FIDO認証器](FIDO2Device)の動作に必要な各種設定／動作テスト等を行う、デスクトップ・ツールです。<br>
-エンドユーザー向けの「[FIDO認証器管理ツール](MaintenanceTool/MNTTOOL.md)」と、ベンダー向けの「[FIDO認証器開発ツール](MaintenanceTool/DEVTOOL.md)」を用意しております。<br>
+エンドユーザー向けと、ベンダー向けの両タイプを用意しております。<br>
 両者とも、[Windows版](MaintenanceTool/dotNET/README.md)、[macOS版](MaintenanceTool/macOSApp/README.md)を用意しております。
 
 - <b>[オープンソースコードライセンスについて](OSSL.md)</b><br>
