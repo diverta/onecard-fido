@@ -362,4 +362,13 @@
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードによるPIN番号リセット"
 #define MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY  @"管理用PIN番号の検証"
 
+#pragma mark - ベンダー向け機能関連
+#define MSG_INVALID_SKEY_LENGTH_IN_PEM              @"鍵ファイルに格納された秘密鍵の長さが不正です。"
+#define MSG_INVALID_SKEY_HEADER_IN_PEM              @"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"
+#define MSG_CANNOT_READ_SKEY_PEM_FILE               @"鍵ファイルを読み込むことができません。"
+#define MSG_INVALID_SKEY_CONTENT_IN_PEM             @"鍵ファイルの内容が不正です。"
+#define MSG_CANNOT_READ_CERT_CRT_FILE               @"証明書ファイルを読み込むことができません。"
+#define MSG_INVALID_CERT_LENGTH_IN_CRT              @"証明書ファイルに格納されたデータの長さが不正です。"
+#define MSG_INVALID_SKEY_OR_CERT                    @"秘密鍵または公開鍵の内容が不正です。"
+
 #endif /* AppCommonMessage_h */
