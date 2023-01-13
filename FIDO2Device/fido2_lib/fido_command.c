@@ -17,7 +17,6 @@
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_define.h"
-#include "fido_development.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
@@ -211,10 +210,6 @@ static void on_hid_request_receive_completed(void)
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_hid();
             break;
-        case MNT_COMMAND_INSTALL_ATTESTATION:
-        case MNT_COMMAND_RESET_ATTESTATION:
-            fido_development_command_hid();
-            break;
         case (0x80 | MNT_COMMAND_BASE):
             fido_maintenance_command_hid();
             break;
@@ -344,10 +339,6 @@ void on_hid_response_send_completed(void)
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_response_sent();
-            break;
-        case MNT_COMMAND_INSTALL_ATTESTATION:
-        case MNT_COMMAND_RESET_ATTESTATION:
-            fido_development_command_report_sent();
             break;
         case (0x80 | MNT_COMMAND_BASE):
             fido_maintenance_command_report_sent();
