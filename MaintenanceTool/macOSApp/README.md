@@ -35,7 +35,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 * FIDO鍵・証明書インストール／削除
 * ブートローダーモード遷移機能
-* ファームウェアリセット機能
+* ファームウェア再起動機能
 
 #### 画面イメージ
 <img src="../assets/0001.jpg" width="400">

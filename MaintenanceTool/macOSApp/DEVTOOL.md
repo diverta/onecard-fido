@@ -13,7 +13,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
 * FIDO鍵・証明書インストール／削除
 * ブートローダーモード遷移機能
-* ファームウェアリセット機能
+* ファームウェア再起動機能
 
 #### 画面イメージ
 <img src="assets08/0001.jpg" width="400">
@@ -29,8 +29,8 @@ FIDO認証器に、鍵・証明書をインストールする手順について�
 - <b>[ブートローダーモード遷移手順](../../MaintenanceTool/macOSApp/BOOTLOADERMODE.md)</b><br>
 FIDO認証器のファームウェアを手動インストールする際、ブートローダーモードに遷移させる手順について掲載しています。
 
-- <b>[認証器のリセット手順](../../MaintenanceTool/macOSApp/ATTESTATION.md)</b><br>
-FIDO認証器のファームウェアを再始動する手順について掲載しています。
+- <b>[認証器のファームウェア再起動手順](../../MaintenanceTool/macOSApp/RESETFIRMWARE.md)</b><br>
+FIDO認証器のファームウェアを再起動する手順について掲載しています。
 
 - <b>[管理ツールのログファイル](../../MaintenanceTool/macOSApp/DEVTOOLLOG.md)</b><br>
 ベンダー向けのFIDO認証器管理ツールから出力されるログファイルについて説明しています。
