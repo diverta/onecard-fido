@@ -78,6 +78,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_define.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_receive_apdu.c</itemPath>
@@ -849,6 +851,16 @@
             flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h"
             ex="false"
             tool="3"
             flavor2="0">

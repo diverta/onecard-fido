@@ -392,6 +392,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
+  $(FD2LIB_DIR)/fido_maintenance_attestation.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \
