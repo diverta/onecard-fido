@@ -31,7 +31,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="LKL-9P-GXy"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="FIDO鍵・証明書設定" id="163-rf-hqd">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="FIDO鍵・証明書インストール" id="163-rf-hqd">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
