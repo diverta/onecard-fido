@@ -388,7 +388,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command_common.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
-  $(FD2LIB_DIR)/fido_development.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \

@@ -296,6 +296,16 @@ static void command_set_timestamp(void)
     command_get_timestamp();
 }
 
+static void command_install_attestation(void)
+{
+    // TODO: 仮の実装です。
+}
+
+static void command_reset_attestation(void)
+{
+    // TODO: 仮の実装です。
+}
+
 static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -334,6 +344,12 @@ static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
         case MNT_COMMAND_SET_TIMESTAMP:
             command_set_timestamp();
             return;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+            command_install_attestation();
+            break;
+        case MNT_COMMAND_RESET_ATTESTATION:
+            command_reset_attestation();
+            break;
         default:
             break;
     }
@@ -373,6 +389,12 @@ void fido_maintenance_command_report_sent(void)
         case MNT_COMMAND_GET_TIMESTAMP:
         case MNT_COMMAND_SET_TIMESTAMP:
             return;
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+            fido_log_info("Install FIDO attestation end");
+            break;
+        case MNT_COMMAND_RESET_ATTESTATION:
+            fido_log_info("Reset FIDO attestation end");
+            break;
         default:
             break;
     }
