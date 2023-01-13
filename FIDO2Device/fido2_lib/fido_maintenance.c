@@ -32,7 +32,7 @@ fido_log_module_register(fido_maintenance);
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 
-static uint8_t get_maintenance_command_byte(void)
+uint8_t fido_maintenance_command_byte(void)
 {
     //
     // 管理用コマンドバイトを、データ部の先頭から抽出
@@ -55,7 +55,7 @@ static uint8_t get_maintenance_command_byte(void)
     return cmd;
 }
 
-static uint8_t *get_maintenance_data_buffer(void)
+uint8_t *fido_maintenance_data_buffer(void)
 {
     uint8_t *buffer;
     switch (m_transport_type) {
@@ -72,7 +72,7 @@ static uint8_t *get_maintenance_data_buffer(void)
     return buffer;
 }
 
-static size_t get_maintenance_data_buffer_size(void)
+size_t fido_maintenance_data_buffer_size(void)
 {
     size_t size;
     switch (m_transport_type) {
@@ -110,7 +110,7 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
     } 
 }
 
-static void send_command_error_response(uint8_t ctap2_status) 
+void fido_maintenance_send_command_status(uint8_t ctap2_status) 
 {
     // レスポンスデータを送信パケットに設定し送信
     //   エラーなので送信バイト数＝１
@@ -129,7 +129,7 @@ static void command_get_flash_stat(void)
     uint8_t *buffer = response_buffer + 1;
     size_t   buffer_size = fido_command_response_data_size_max() - 1;
     if (fido_flash_get_stat_csv(buffer, &buffer_size) == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST + 10);
         return;
     }
     //
@@ -157,7 +157,7 @@ static void command_get_app_version(void)
     uint8_t *buffer = response_buffer + 1;
     size_t   buffer_size = fido_command_response_data_size_max() - 1;
     if (fido_board_get_version_info_csv(buffer, &buffer_size) == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST + 10);
         return;
     }
     //
@@ -201,8 +201,8 @@ static void command_pairing_request(void)
 static void command_unpairing_request(void)
 {
     // リクエスト格納領域
-    uint8_t *request_data = get_maintenance_data_buffer();
-    size_t   request_size = get_maintenance_data_buffer_size();
+    uint8_t *request_data = fido_maintenance_data_buffer();
+    size_t   request_size = fido_maintenance_data_buffer_size();
 
     // レスポンス格納領域
     uint8_t *response_buffer = fido_command_response_data();
@@ -211,7 +211,7 @@ static void command_unpairing_request(void)
 
     // ペアリング解除要求コマンドを実行し、レスポンスを生成
     if (fido_ble_unpairing_request(request_data, request_size, buffer, &buffer_size) == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
@@ -236,7 +236,7 @@ static void command_erase_bonding_data(void)
     // 全てのペアリング情報を削除
     //
     if (fido_ble_unpairing_erase_bond_data(command_erase_bonding_data_response) == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 12);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST + 12);
     }
 }
 
@@ -246,7 +246,7 @@ static void command_erase_bonding_data_response(bool success)
     if (success) {
         send_command_response(CTAP1_ERR_SUCCESS, 1);
     } else {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 13);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST + 13);
     }
 }
 
@@ -268,18 +268,18 @@ static void command_get_timestamp(void)
         send_command_response(CTAP1_ERR_SUCCESS, length);
 
     } else {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
     }
 }
 
 static void command_set_timestamp(void)
 {
-    uint8_t *data = get_maintenance_data_buffer();
-    uint16_t length = get_maintenance_data_buffer_size();
+    uint8_t *data = fido_maintenance_data_buffer();
+    uint16_t length = fido_maintenance_data_buffer_size();
 
     // 元データチェック
     if (data == NULL || length != 4) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST);
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
         return;
     }
 
@@ -312,7 +312,7 @@ static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     m_transport_type = transport_type;
 
     // リクエストデータ受信後に実行すべき処理を判定
-    uint8_t mnt_cmd = get_maintenance_command_byte();
+    uint8_t mnt_cmd = fido_maintenance_command_byte();
     switch (mnt_cmd) {
         case MNT_COMMAND_PAIRING_REQUEST:
             command_pairing_request();
@@ -368,7 +368,7 @@ void fido_maintenance_command_hid(void)
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t mnt_cmd = get_maintenance_command_byte();
+    uint8_t mnt_cmd = fido_maintenance_command_byte();
     switch (mnt_cmd) {
         case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_log_info("Erase bonding data end");
@@ -403,7 +403,7 @@ void fido_maintenance_command_report_sent(void)
 void fido_maintenance_command_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
-    uint8_t mnt_cmd = get_maintenance_command_byte();
+    uint8_t mnt_cmd = fido_maintenance_command_byte();
     switch (mnt_cmd) {
         default:
             break;
@@ -415,7 +415,7 @@ void fido_maintenance_command_flash_gc_done(void)
     // for nRF52840:
     // FDSリソース不足解消のためGCが実行された場合は、
     // GC実行直前の処理を再実行
-    uint8_t mnt_cmd = get_maintenance_command_byte();
+    uint8_t mnt_cmd = fido_maintenance_command_byte();
     switch (mnt_cmd) {
         default:
             break;
