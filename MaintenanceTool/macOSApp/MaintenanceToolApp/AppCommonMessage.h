@@ -370,5 +370,7 @@
 #define MSG_CANNOT_READ_CERT_CRT_FILE               @"証明書ファイルを読み込むことができません。"
 #define MSG_INVALID_CERT_LENGTH_IN_CRT              @"証明書ファイルに格納されたデータの長さが不正です。"
 #define MSG_INVALID_SKEY_OR_CERT                    @"秘密鍵または公開鍵の内容が不正です。"
+#define MSG_CHANGE_TO_BOOTLOADER_MODE               @"FIDO認証器をブートローダーモードに遷移させます。"
+#define MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE        @"ブートローダーモードに遷移したら、nRFコマンドラインツール等を使用し、ファームウェア更新イメージをFIDO認証器に転送できます。\n遷移処理を実行しますか？"
 
 #endif /* AppCommonMessage_h */
