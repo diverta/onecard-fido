@@ -18,6 +18,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
+#include "fido_maintenance_attestation.h"
 #include "fido_maintenance_define.h"
 #include "fido_transport_define.h"
 #include "u2f_define.h"
@@ -296,16 +297,6 @@ static void command_set_timestamp(void)
     command_get_timestamp();
 }
 
-static void command_install_attestation(void)
-{
-    // TODO: 仮の実装です。
-}
-
-static void command_reset_attestation(void)
-{
-    // TODO: 仮の実装です。
-}
-
 static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -345,10 +336,10 @@ static void fido_maintenance_command(TRANSPORT_TYPE transport_type)
             command_set_timestamp();
             return;
         case MNT_COMMAND_INSTALL_ATTESTATION:
-            command_install_attestation();
+            fido_maintenance_attestation_install();
             break;
         case MNT_COMMAND_RESET_ATTESTATION:
-            command_reset_attestation();
+            fido_maintenance_attestation_reset();
             break;
         default:
             break;
