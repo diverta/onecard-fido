@@ -26,8 +26,8 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 - <b>[鍵・証明書の導入手順](../../MaintenanceTool/macOSApp/ATTESTATION.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順について掲載しています。
 
-- <b>[ブートローダーモード遷移手順](../../MaintenanceTool/macOSApp/ATTESTATION.md)</b><br>
-FIDO認証器ファームウェアを手動インストールする際、ブートローダーモードに遷移させる手順について掲載しています。
+- <b>[ブートローダーモード遷移手順](../../MaintenanceTool/macOSApp/BOOTLOADERMODE.md)</b><br>
+FIDO認証器のファームウェアを手動インストールする際、ブートローダーモードに遷移させる手順について掲載しています。
 
 - <b>[認証器のリセット手順](../../MaintenanceTool/macOSApp/ATTESTATION.md)</b><br>
 FIDO認証器のファームウェアを再始動する手順について掲載しています。
