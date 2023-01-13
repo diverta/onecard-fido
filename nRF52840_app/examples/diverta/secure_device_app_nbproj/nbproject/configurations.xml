@@ -68,8 +68,6 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_define.h</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_development.c</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_development.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_flash_define.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_channel.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_channel.h</itemPath>
@@ -80,6 +78,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_define.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_receive_apdu.c</itemPath>
@@ -805,16 +805,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_development.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_development.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_flash_define.h"
             ex="false"
             tool="3"
@@ -861,6 +851,16 @@
             flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h"
             ex="false"
             tool="3"
             flavor2="0">

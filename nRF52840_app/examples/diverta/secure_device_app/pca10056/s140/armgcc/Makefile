@@ -9,7 +9,7 @@ TARGET_BOARD     := PCA10059_03
 
 # application version info
 FW_REV := 0.3.7
-FW_BUILD := 101
+FW_BUILD := 102
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 CFLAGS += -DFW_BUILD=\"$(FW_BUILD)\"
 # hardware version info
@@ -388,11 +388,11 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command_common.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
-  $(FD2LIB_DIR)/fido_development.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
+  $(FD2LIB_DIR)/fido_maintenance_attestation.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \

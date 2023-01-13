@@ -85,13 +85,15 @@
 
     - (void)doRequestHidInstallAttestation {
         // メッセージを編集し、コマンド 0xC8 を実行
-        NSMutableData *data = [[NSMutableData alloc] init];
+        unsigned char arr[] = {MNT_COMMAND_INSTALL_ATTESTATION};
+        NSMutableData *data = [[NSMutableData alloc] initWithBytes:arr length:sizeof(arr)];
         NSArray<NSString *> *pemFiles = @[[[self commandParameter] pkeyPemPath], [[self commandParameter] certPemPath]];
         if ([self generateRequestDataForInstall:data fromPemFiles:pemFiles] == false) {
             [self commandDidProcess:false message:[self errorMessage]];
             return;
         }
-        [[self appHIDCommand] doRequestCtap2Command:COMMAND_INSTALL_ATTESTATION withCMD:HID_CMD_INSTALL_ATTESTATION withData:data];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCtap2Command:COMMAND_INSTALL_ATTESTATION withCMD:cmd withData:data];
     }
 
     - (void)doResponseHidInstallAttestation:(NSData *)response {
@@ -108,8 +110,10 @@
 
     - (void)doRequestHidRemoveAttestation {
         // メッセージを編集し、コマンド 0xC9 を実行
-        NSData *data = [[NSData alloc] init];
-        [[self appHIDCommand] doRequestCtap2Command:COMMAND_REMOVE_ATTESTATION withCMD:HID_CMD_RESET_ATTESTATION withData:data];
+        unsigned char arr[] = {MNT_COMMAND_RESET_ATTESTATION};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        uint8_t cmd = MNT_COMMAND_BASE | 0x80;
+        [[self appHIDCommand] doRequestCtap2Command:COMMAND_REMOVE_ATTESTATION withCMD:cmd withData:commandData];
     }
 
     - (void)doResponseHidRemoveAttestation:(NSData *)response {
