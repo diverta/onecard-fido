@@ -87,7 +87,7 @@
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iP0-eR-aXj" userLabel="buttonFirmwareReset">
                                     <rect key="frame" x="14" y="14" width="290" height="32"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="push" title="ファームウェアのリセット" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="01Z-sb-4Bt">
+                                    <buttonCell key="cell" type="push" title="認証器のファームウェア再起動" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="01Z-sb-4Bt">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>

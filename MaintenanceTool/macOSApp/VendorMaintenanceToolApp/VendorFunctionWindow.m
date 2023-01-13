@@ -120,6 +120,16 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
+        // 認証器のファームウェアを再起動するかどうかのプロンプトを表示
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_FIRMWARE_RESET informativeText:MSG_PROMPT_FIRMWARE_RESET
+                                                 withObject:self forSelector:@selector(resumeFirmwareReset) parentWindow:[self window]];
+    }
+
+    - (void)resumeFirmwareReset {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
         // 認証器のファームウェアを再起動
         [[self commandParameterRef] setCommand:COMMAND_HID_FIRMWARE_RESET];
         [[self commandParameterRef] setCommandName:PROCESS_NAME_FIRMWARE_RESET];
