@@ -9,25 +9,25 @@ Yubico PIV Tool (command line) を、Windows 10環境に導入する手順を掲
 Webブラウザーから、サイト「[https://www.yubico.com/products/services-software/download/smart-card-drivers-tools/](https://www.yubico.com/products/services-software/download/smart-card-drivers-tools/)」を開きます。<br>
 下記の様な画面に遷移します。
 
-<img src="assets01/0001.jpg" width="500">
+<img src="../assets01/0001.jpg" width="500">
 
 下にスクロールすると「Yubico PIV Tool (command line)」のリンクが参照できます。<br>
 今回は、Windows 10環境（64bit）にインストールするので「Windows for 64-bit systems download」のリンクをクリックします。
 
-<img src="assets01/0002.jpg" width="500">
+<img src="../assets01/0002.jpg" width="500">
 
 ダウンロードが完了したら、ダウンロードフォルダーを開きます。
 
-<img src="assets01/0003.jpg" width="500">
+<img src="../assets01/0003.jpg" width="500">
 
 ダウンロード・フォルダーにある「`yubico-piv-tool-2.0.0-win64.zip`」というファイルを展開します。
 
-<img src="assets01/0004.jpg" width="400">
+<img src="../assets01/0004.jpg" width="400">
 
 展開されたフォルダー「`yubico-piv-tool-2.0.0-win64`」は、分かりやすいところに適宜移動します。<br>
 下図は、デスクトップに移動した例になります。
 
-<img src="assets01/0005.jpg" width="300">
+<img src="../assets01/0005.jpg" width="300">
 
 ### 動作確認
 

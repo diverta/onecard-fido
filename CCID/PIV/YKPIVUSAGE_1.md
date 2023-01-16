@@ -9,12 +9,12 @@ Yubico PIV Tool (command line) を使用した各種手順を掲載します。<
 ## 事前準備
 
 Yubico PIV Tool (command line) を、PC環境上で使用できるようにするための手順は下記手順書をご参照願います。
-- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../CCID/PIVTOOLMACINST.md)</b>
-- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../CCID/PIVTOOLWININST.md)</b>
+- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../../CCID/PIVTOOLMACINST.md)</b>
+- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../../CCID/PIVTOOLWININST.md)</b>
 
 ## 各種手順
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着します。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着します。
 
 ターミナル（コマンドプロンプト）から、Yubico PIV Tool (command line) の実行可能ファイル「`${HOME}/opt/yubico-piv-tool-2.0.0-mac/bin/yubico-piv-tool`」を使用し、以下のコマンドを実行します。
 

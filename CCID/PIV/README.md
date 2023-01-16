@@ -27,7 +27,12 @@ MDBT50Q Dongleに対し、[FIDO認証器管理ツール（macOS版）](../../Mai
 - <b>[PIN番号を使用したmacOSログイン確認手順](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)</b><br>
 MDBT50Q DongleのPIV機能を使用して、macOSにPIN番号でログインする手順を掲載します。
 
-## 手順書（ご参考）
+## 開発情報
+
+- <b>[PIN番号を使用したmacOSログイン時の動作](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN_DEV.md)</b><br>
+MDBT50Q DongleのPIV機能を使用して、macOSにPIN番号でログイン時、PC〜nRF52840間で行われるやり取りについて掲載しています。
+
+#### 開発時に使用した手順書
 
 - <b>[Yubico PIV Tool (command line) macOS版 導入手順](PIVTOOLMACINST.md)</b><br>
 PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、macOS環境に導入する手順について掲載しています。
@@ -40,8 +45,3 @@ Yubico PIV Tool (command line) を使用して、鍵・証明書などをMDBT50Q
 
 - <b>[Yubico PIV Toolによる各種手順](YKPIVUSAGE_1.md)</b><br>
 Yubico PIV Tool (command line) を使用した（前項以外の）各種手順について掲載しています。
-
-## 開発情報（ご参考）
-
-- <b>[PIN番号を使用したmacOSログイン時の動作](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN_DEV.md)</b><br>
-MDBT50Q DongleのPIV機能を使用して、macOSにPIN番号でログイン時、PC〜nRF52840間で行われるやり取りについて掲載しています。

@@ -5,36 +5,36 @@ Yubico PIV Tool (command line) を、macOS環境に導入する手順を掲載�
 ## 作業手順
 
 ### CCIDドライバーのインストール
-まず事前に、[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールしてください。
+まず事前に、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールしてください。
 
-詳細な手順につきましては、手順書「<b>[CCIDドライバーインストール手順](../CCID/INSTALLPRG.md)</b>」をご参照願います。
+詳細な手順につきましては、手順書「<b>[CCIDドライバーインストール手順](../../CCID/INSTALLPRG.md)</b>」をご参照願います。
 
-CCIDドライバーのインストールが完了したら、[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着すると、MDBT50Q DongleがmacOSにより、スマートカード・デバイスとして認識されるようになります。
+CCIDドライバーのインストールが完了したら、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着すると、MDBT50Q DongleがmacOSにより、スマートカード・デバイスとして認識されるようになります。
 
 ### 実行可能ファイルの取得
 
 Webブラウザーから、サイト「[https://www.yubico.com/products/services-software/download/smart-card-drivers-tools/](https://www.yubico.com/products/services-software/download/smart-card-drivers-tools/)」を開きます。<br>
 下記の様な画面に遷移します。
 
-<img src="assets01/0006.jpg" width="500">
+<img src="../assets01/0006.jpg" width="500">
 
 下にスクロールすると「Yubico PIV Tool (command line)」のリンクが参照できます。<br>
 今回は、macOS環境にインストールするので「macOS download」のリンクをクリックします。
 
-<img src="assets01/0007.jpg" width="500">
+<img src="../assets01/0007.jpg" width="500">
 
 ダウンロードが完了したら、ダウンロードフォルダーを開きます。
 
-<img src="assets01/0008.jpg" width="400">
+<img src="../assets01/0008.jpg" width="400">
 
 ダウンロード・フォルダーにある「`yubico-piv-tool-2.0.0-mac.zip`」というファイルを展開します。
 
-<img src="assets01/0009.jpg" width="400">
+<img src="../assets01/0009.jpg" width="400">
 
 展開されたフォルダー「`yubico-piv-tool-2.0.0-mac`」は、分かりやすいところに適宜移動します。<br>
 下図は、ホームディレクトリー配下の「`${HOME}/opt/yubico-piv-tool-2.0.0-mac`」に移動した例になります。
 
-<img src="assets01/0010.jpg" width="400">
+<img src="../assets01/0010.jpg" width="400">
 
 実行可能ファイルは、前述のフォルダー配下の「/bin/yubico-piv-tool」というファイルになります。<br>
 こちらのファイルは実行権限がないため、ターミナルで以下のコマンドを実行し、実行権限を付与します。

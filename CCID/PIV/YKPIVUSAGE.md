@@ -1,16 +1,16 @@
 # Yubico PIV Toolによる初期データ導入手順
 
-Yubico PIV Tool (command line) を使用して、鍵・証明書などを[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する手順を掲載します。
+Yubico PIV Tool (command line) を使用して、鍵・証明書などを[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する手順を掲載します。
 
 ## 事前準備
 
 Yubico PIV Tool (command line) を、PC環境上で使用できるようにするための手順は下記手順書をご参照願います。
-- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../CCID/PIVTOOLMACINST.md)</b>
-- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../CCID/PIVTOOLWININST.md)</b>
+- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../../CCID/PIVTOOLMACINST.md)</b>
+- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../../CCID/PIVTOOLWININST.md)</b>
 
 ## 基本設定
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着します。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をPCのUSBポートに装着します。
 
 ターミナル（コマンドプロンプト）から、Yubico PIV Tool (command line) の実行可能ファイル「`${HOME}/opt/yubico-piv-tool-2.0.0-mac/bin/yubico-piv-tool`」を使用し、以下のコマンドを実行します。
 
@@ -150,7 +150,7 @@ bash-3.2$
 
 ## 秘密鍵・証明書の導入
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のPIV機能を利用するためには、秘密鍵・証明書の導入が必要です。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のPIV機能を利用するためには、秘密鍵・証明書の導入が必要です。
 
 以下に手順を掲載いたします。<br>
 この例では、使用する証明書は「自己署名証明書」とします。
