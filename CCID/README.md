@@ -12,10 +12,10 @@ PIV Card、OpenPGP Cardなどといったスマートカードのエミュレー
 
 ## 機能
 
-#### [PIVカードエミュレーション](../CCID/PIVCARDEMUL.md)
+#### [PIVカードエミュレーション](../CCID/PIV/README.md)
 
 PIVカードの仕様に準拠した機能です。<br>
-MDBT50Q DongleをPCに装着すると、[macOSにPIN番号を使ってログイン](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)できるようになります。<br>
+MDBT50Q DongleをPCに装着すると、macOSにPIN番号を使ってログインできるようになります。<br>
 （最終更新日現在、Windows Helloには未対応です）
 
 #### [OpenPGPカードエミュレーション](../CCID/OpenPGP/README.md)
@@ -25,6 +25,9 @@ PGP公開鍵でファイルを暗号化すると、PGP秘密鍵がインスト�
 （最終更新日現在、macOS環境に対応。Windows環境は管理ツール再構築中につき、未対応です。）
 
 ## 各種手順書
+
+- <b>[PIN番号を使用したmacOSログイン確認手順](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)</b><br>
+MDBT50Q DongleのPIV機能を使用し、PIN番号によりmacOSにログインするための確認手順について掲載します。
 
 - <b>[CCIDドライバーインストール手順](../CCID/INSTALLPRG.md)</b><br>
 CCIDドライバーをmacOS環境にインストールし、MDBT50Q DongleのCCIDインターフェースを利用できるようにするための手順について掲載しています。<br>
