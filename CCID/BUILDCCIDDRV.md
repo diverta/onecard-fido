@@ -85,7 +85,7 @@ bash-3.2$
 
 #### ソースコードを取得
 
-下記サイトから[ソースコード（`ccid-1.5.1.tar.bz2`）](https://ccid.apdu.fr/files/ccid-1.5.1.tar.bz2)をダウンロードします。
+下記サイトからソースコード（`ccid-1.5.1.tar.bz2`）をダウンロードします。
 - <b>[CCID free software driver](https://ccid.apdu.fr)</b>
 
 サイト[`https://ccid.apdu.fr`](https://ccid.apdu.fr)を表示し、青い「Download」ボタンをクリックします。
