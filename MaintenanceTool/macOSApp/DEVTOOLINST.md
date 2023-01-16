@@ -1,16 +1,16 @@
-# macOS版開発ツール インストール手順
+# インストール手順
 
-最終更新日：2022/6/28
+最終更新日：2023/1/16
 
 ## 概要
-FIDO認証器開発ツールをmacOS環境にインストールする手順を掲載しています。
+macOS版 FIDO認証器管理ツール（ベンダー向け）をmacOS環境にインストールする手順について掲載しています。
 
 ## インストール媒体の取得
 
-[macOS版 FIDO認証器開発ツール](DevelopmentTool.pkg)を、GitHubからダウンロード／解凍します。<br>
-該当ページの「Download」ボタンをクリックすると、[DevelopmentTool.pkg](DevelopmentTool.pkg)がダウンロードできます。
+[macOS版 FIDO認証器管理ツール（ベンダー向け）](../../MaintenanceTool/macOSApp/VendorMaintenanceTool.pkg)を、GitHubからダウンロード／解凍します。<br>
+該当ページの「Download」ボタンをクリックすると、[VendorMaintenanceTool.pkg](../../MaintenanceTool/macOSApp/VendorMaintenanceTool.pkg)がダウンロードできます。
 
-<img src="assets08/0004.jpg" width="640">
+<img src="assets08/0004.jpg" width="660">
 
 ## インストールの実行
 
@@ -25,13 +25,13 @@ FIDO認証器開発ツールをmacOS環境にインストールする手順を�
 
 インストーラーが起動しますので、指示に従いインストールを進めます。
 
-<img src="assets08/0007.jpg" width="300">
+<img src="assets08/0007.jpg" width="360">
 
-インストールが完了すると、アプリケーションフォルダーに、FIDO認証器開発ツールのアイコンができます。<br>
+インストールが完了すると、アプリケーションフォルダーに、FIDO認証器管理ツールのアイコンができます。<br>
 アイコンをダブルクリックして実行します。
 
 <img src="assets08/0008.jpg" width="400">
 
-FIDO認証器開発ツールの画面が起動すれば、インストールは完了です。
+FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="assets08/0001.jpg" width="300">
+<img src="assets08/0001.jpg" width="360">
