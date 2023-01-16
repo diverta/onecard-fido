@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>libccid.dylib</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.debian.alioth.pcsclite.smartcardccid</string>
+	<string>fr.apdu.ccid.smartcardccid</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.32</string>
+	<string>1.5.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -106,11 +106,11 @@
 		<string>0x09C3</string>
 		<string>0x09C3</string>
 		<string>0x058F</string>
-		<string>0x058F</string>
 		<string>0x0DC3</string>
 		<string>0x0DC3</string>
 		<string>0x1B0E</string>
 		<string>0x0783</string>
+		<string>0x046A</string>
 		<string>0x046A</string>
 		<string>0x046A</string>
 		<string>0x046A</string>
@@ -166,6 +166,10 @@
 		<string>0x0DB5</string>
 		<string>0x0DB5</string>
 		<string>0x0DB5</string>
+		<string>0x0DB5</string>
+		<string>0x072F</string>
+		<string>0x072F</string>
+		<string>0x072F</string>
 		<string>0x072F</string>
 		<string>0x072F</string>
 		<string>0x072F</string>
@@ -185,6 +189,7 @@
 		<string>0x2021</string>
 		<string>0x2021</string>
 		<string>0x2021</string>
+		<string>0x0A89</string>
 		<string>0x0A89</string>
 		<string>0x0A89</string>
 		<string>0x0A89</string>
@@ -200,11 +205,14 @@
 		<string>0x24DC</string>
 		<string>0x24DC</string>
 		<string>0x2CE3</string>
+		<string>0x2CE3</string>
+		<string>0x2CE3</string>
 		<string>0x058F</string>
 		<string>0x0483</string>
 		<string>0x2406</string>
 		<string>0x2406</string>
 		<string>0x2406</string>
+		<string>0x33B6</string>
 		<string>0x1FD3</string>
 		<string>0x0DC3</string>
 		<string>0x0DC3</string>
@@ -237,7 +245,11 @@
 		<string>0x25DD</string>
 		<string>0x25DD</string>
 		<string>0x25DD</string>
+		<string>0x25DD</string>
+		<string>0x25DD</string>
+		<string>0x25DD</string>
 		<string>0x2ABE</string>
+		<string>0x1B0E</string>
 		<string>0x1B0E</string>
 		<string>0x0A5C</string>
 		<string>0x0A5C</string>
@@ -252,6 +264,7 @@
 		<string>0x0783</string>
 		<string>0x0783</string>
 		<string>0x0783</string>
+		<string>0x20A0</string>
 		<string>0x0CA6</string>
 		<string>0x8829</string>
 		<string>0x2DFF</string>
@@ -268,23 +281,52 @@
 		<string>0x046A</string>
 		<string>0x046A</string>
 		<string>0x046A</string>
-		<string>0x046A</string>
 		<string>0x04F2</string>
 		<string>0x03F0</string>
 		<string>0x03F0</string>
 		<string>0x04F2</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
+		<string>0x31AA</string>
 		<string>0x0982</string>
 		<string>0x0982</string>
+		<string>0x23D8</string>
 		<string>0x257B</string>
+		<string>0x1AC2</string>
+		<string>0x1AC2</string>
+		<string>0x0483</string>
 		<string>0x1C34</string>
 		<string>0x1C34</string>
 		<string>0x1C34</string>
 		<string>0x1C34</string>
 		<string>0x1DB2</string>
 		<string>0x1DB2</string>
+		<string>0x1DB2</string>
 		<string>0x257B</string>
 		<string>0x09D8</string>
 		<string>0x09D8</string>
+		<string>0x1FFA</string>
+		<string>0x2CE4</string>
+		<string>0x2CE4</string>
 		<string>0x2CE4</string>
 		<string>0x1209</string>
 		<string>0x096E</string>
@@ -298,7 +340,15 @@
 		<string>0x096E</string>
 		<string>0x096E</string>
 		<string>0x096E</string>
+		<string>0x096E</string>
+		<string>0x096E</string>
+		<string>0x096E</string>
+		<string>0x2925</string>
 		<string>0x234B</string>
+		<string>0x096E</string>
+		<string>0x096E</string>
+		<string>0x096E</string>
+		<string>0x096E</string>
 		<string>0x096E</string>
 		<string>0x096E</string>
 		<string>0x096E</string>
@@ -324,7 +374,9 @@
 		<string>0x08E6</string>
 		<string>0x0BDA</string>
 		<string>0x048D</string>
+		<string>0x058C</string>
 		<string>0x076B</string>
+		<string>0x05E3</string>
 		<string>0x05E3</string>
 		<string>0x05E3</string>
 		<string>0x20A0</string>
@@ -332,6 +384,7 @@
 		<string>0x1059</string>
 		<string>0x0F1A</string>
 		<string>0x19C8</string>
+		<string>0x32A3</string>
 		<string>0x1677</string>
 		<string>0x03F0</string>
 		<string>0x03F0</string>
@@ -377,12 +430,19 @@
 		<string>0x04E6</string>
 		<string>0x04E6</string>
 		<string>0x04E6</string>
+		<string>0x04E6</string>
+		<string>0x04E6</string>
+		<string>0x04E6</string>
 		<string>0x1FFA</string>
 		<string>0x2406</string>
 		<string>0x03EB</string>
 		<string>0x03EB</string>
 		<string>0x2FD2</string>
+		<string>0x2FB0</string>
+		<string>0x2022</string>
 		<string>0x1FC9</string>
+		<string>0x1403</string>
+		<string>0x1403</string>
 		<string>0x1403</string>
 		<string>0x2406</string>
 		<string>0x2406</string>
@@ -393,6 +453,7 @@
 		<string>0x2406</string>
 		<string>0x2406</string>
 		<string>0x076B</string>
+		<string>0x04D8</string>
 		<string>0x2A18</string>
 		<string>0x2A18</string>
 		<string>0x2A18</string>
@@ -410,6 +471,11 @@
 		<string>0x2D25</string>
 		<string>0x2C97</string>
 		<string>0x2C97</string>
+		<string>0x2C97</string>
+		<string>0x2C97</string>
+		<string>0x2C97</string>
+		<string>0x2C97</string>
+		<string>0x17EF</string>
 		<string>0x17EF</string>
 		<string>0x17EF</string>
 		<string>0x03F0</string>
@@ -420,6 +486,7 @@
 		<string>0x0424</string>
 		<string>0x0424</string>
 		<string>0x0416</string>
+		<string>0x0416</string>
 		<string>0x079B</string>
 		<string>0x079B</string>
 		<string>0x0BDA</string>
@@ -428,6 +495,7 @@
 		<string>0x1E0D</string>
 		<string>0x1E0D</string>
 		<string>0x1E0D</string>
+		<string>0x20A0</string>
 		<string>0x20A0</string>
 		<string>0x20A0</string>
 		<string>0x20A0</string>
@@ -463,10 +531,14 @@
 		<string>0x0C4B</string>
 		<string>0x0C4B</string>
 		<string>0x0C4B</string>
+		<string>0x0C4B</string>
 		<string>0x14CD</string>
 		<string>0x13FE</string>
 		<string>0x0529</string>
 		<string>0x0529</string>
+		<string>0x08E6</string>
+		<string>0x08E6</string>
+		<string>0x08E6</string>
 		<string>0x08E6</string>
 		<string>0x24A2</string>
 		<string>0x2EE1</string>
@@ -484,8 +556,13 @@
 		<string>0x04E6</string>
 		<string>0x0B81</string>
 		<string>0x0403</string>
+		<string>0x356F</string>
 		<string>0x0DF6</string>
 		<string>0x04E8</string>
+		<string>0x1209</string>
+		<string>0x054C</string>
+		<string>0x054C</string>
+		<string>0x054C</string>
 		<string>0x316E</string>
 		<string>0x316E</string>
 		<string>0x316E</string>
@@ -512,13 +589,20 @@
 		<string>0x08DF</string>
 		<string>0x08DF</string>
 		<string>0x08DF</string>
+		<string>0x08DF</string>
+		<string>0x05AF</string>
+		<string>0x1370</string>
+		<string>0x1206</string>
 		<string>0x1206</string>
 		<string>0x0E6A</string>
+		<string>0x1D50</string>
 		<string>0x1862</string>
+		<string>0x08E6</string>
 		<string>0x1976</string>
 		<string>0xA625</string>
 		<string>0x0B0C</string>
 		<string>0x0B0C</string>
+		<string>0x23EB</string>
 		<string>0x19A6</string>
 		<string>0x2A17</string>
 		<string>0x2DFF</string>
@@ -555,6 +639,7 @@
 		<string>0xF055</string>
 		<string>0x072F</string>
 		<string>0x09C3</string>
+		<string>0x058F</string>
 		<string>0x0DC3</string>
 		<string>0x03EB</string>
 		<string>0x0A5C</string>
@@ -582,7 +667,6 @@
 		<string>0x0013</string>
 		<string>0x0014</string>
 		<string>0x9520</string>
-		<string>0x9540</string>
 		<string>0x1004</string>
 		<string>0x1102</string>
 		<string>0x1078</string>
@@ -591,6 +675,7 @@
 		<string>0x0010</string>
 		<string>0x002D</string>
 		<string>0x003E</string>
+		<string>0x01A2</string>
 		<string>0x0007</string>
 		<string>0x2100</string>
 		<string>0x2101</string>
@@ -642,11 +727,14 @@
 		<string>0x0164</string>
 		<string>0x0170</string>
 		<string>0x0180</string>
+		<string>0x0184</string>
 		<string>0x1204</string>
 		<string>0x221A</string>
+		<string>0x2224</string>
 		<string>0x223B</string>
 		<string>0x223E</string>
 		<string>0x223F</string>
+		<string>0x2259</string>
 		<string>0x8201</string>
 		<string>0x8202</string>
 		<string>0x8300</string>
@@ -654,6 +742,7 @@
 		<string>0xB000</string>
 		<string>0xB100</string>
 		<string>0xB106</string>
+		<string>0xB112</string>
 		<string>0xAFC0</string>
 		<string>0xAFC1</string>
 		<string>0xAFC2</string>
@@ -663,6 +752,7 @@
 		<string>0x0101</string>
 		<string>0x0025</string>
 		<string>0x0030</string>
+		<string>0x0069</string>
 		<string>0x0080</string>
 		<string>0x0081</string>
 		<string>0x0082</string>
@@ -676,11 +766,14 @@
 		<string>0x0501</string>
 		<string>0x100F</string>
 		<string>0x9563</string>
+		<string>0x9567</string>
+		<string>0x9573</string>
 		<string>0x9522</string>
 		<string>0xACD1</string>
 		<string>0x5003</string>
 		<string>0x5004</string>
 		<string>0x5006</string>
+		<string>0x0001</string>
 		<string>0xCC1D</string>
 		<string>0x0900</string>
 		<string>0x1007</string>
@@ -707,14 +800,18 @@
 		<string>0x2321</string>
 		<string>0x2341</string>
 		<string>0x2351</string>
+		<string>0x2354</string>
 		<string>0x2361</string>
 		<string>0x2362</string>
 		<string>0x2371</string>
-		<string>0x3111</string>
 		<string>0x3211</string>
 		<string>0xB001</string>
+		<string>0x3111</string>
+		<string>0x3403</string>
+		<string>0x3503</string>
 		<string>0x1003</string>
 		<string>0x1079</string>
+		<string>0x5A02</string>
 		<string>0x5802</string>
 		<string>0x5804</string>
 		<string>0x5832</string>
@@ -728,6 +825,7 @@
 		<string>0x0009</string>
 		<string>0x0010</string>
 		<string>0x0036</string>
+		<string>0x42D4</string>
 		<string>0x00A0</string>
 		<string>0xCCB2</string>
 		<string>0xB601</string>
@@ -744,42 +842,79 @@
 		<string>0x005B</string>
 		<string>0x0070</string>
 		<string>0x0072</string>
-		<string>0x01A2</string>
 		<string>0x0967</string>
 		<string>0x114A</string>
 		<string>0x124A</string>
 		<string>0x1469</string>
+		<string>0x0224</string>
+		<string>0x0324</string>
+		<string>0x1000</string>
+		<string>0x1100</string>
+		<string>0x2000</string>
+		<string>0x2001</string>
+		<string>0x2100</string>
+		<string>0x3000</string>
+		<string>0x3001</string>
+		<string>0x3002</string>
+		<string>0x3003</string>
+		<string>0x3100</string>
+		<string>0x4000</string>
+		<string>0x4001</string>
+		<string>0x5000</string>
+		<string>0x6000</string>
+		<string>0x6001</string>
+		<string>0x7001</string>
+		<string>0x7003</string>
+		<string>0x7004</string>
+		<string>0x7005</string>
+		<string>0x7006</string>
 		<string>0x0008</string>
 		<string>0x0040</string>
+		<string>0x0603</string>
 		<string>0xC305</string>
+		<string>0x0300</string>
+		<string>0x0302</string>
+		<string>0xA389</string>
 		<string>0xAFD0</string>
 		<string>0xAFD1</string>
 		<string>0xAFD2</string>
 		<string>0xAFD3</string>
 		<string>0x0801</string>
+		<string>0x080C</string>
 		<string>0x088B</string>
 		<string>0xD205</string>
 		<string>0x0427</string>
 		<string>0x0428</string>
+		<string>0x0002</string>
+		<string>0x5001</string>
+		<string>0x5020</string>
 		<string>0x7479</string>
 		<string>0x2702</string>
-		<string>0x0619</string>
-		<string>0x061A</string>
-		<string>0x061C</string>
 		<string>0x0608</string>
 		<string>0x060D</string>
+		<string>0x0621</string>
 		<string>0x0622</string>
 		<string>0x0623</string>
 		<string>0x0624</string>
+		<string>0x062E</string>
+		<string>0x0685</string>
 		<string>0x0807</string>
 		<string>0x080F</string>
+		<string>0x0619</string>
+		<string>0x061A</string>
+		<string>0x061C</string>
 		<string>0x0505</string>
+		<string>0x700A</string>
 		<string>0x0000</string>
 		<string>0x080A</string>
 		<string>0x0853</string>
 		<string>0x0855</string>
 		<string>0x0856</string>
 		<string>0x0859</string>
+		<string>0x0867</string>
+		<string>0x0868</string>
+		<string>0x0869</string>
+		<string>0x086C</string>
 		<string>0x1022</string>
 		<string>0x1023</string>
 		<string>0x1024</string>
@@ -800,14 +935,17 @@
 		<string>0x3479</string>
 		<string>0x0169</string>
 		<string>0x1366</string>
+		<string>0x9590</string>
 		<string>0x3A21</string>
 		<string>0x0757</string>
 		<string>0x0758</string>
+		<string>0x0771</string>
 		<string>0x4107</string>
 		<string>0x000C</string>
 		<string>0x000D</string>
 		<string>0x0002</string>
 		<string>0x0012</string>
+		<string>0x3201</string>
 		<string>0x0025</string>
 		<string>0x104A</string>
 		<string>0x2924</string>
@@ -832,8 +970,11 @@
 		<string>0x00C7</string>
 		<string>0x00D4</string>
 		<string>0x0220</string>
+		<string>0x5612</string>
+		<string>0x5613</string>
 		<string>0x5713</string>
 		<string>0x5724</string>
+		<string>0x5725</string>
 		<string>0x5790</string>
 		<string>0x5791</string>
 		<string>0x5811</string>
@@ -858,8 +999,12 @@
 		<string>0x9308</string>
 		<string>0x9324</string>
 		<string>0x0100</string>
+		<string>0x003A</string>
+		<string>0x016C</string>
 		<string>0x0102</string>
 		<string>0x7506</string>
+		<string>0x750C</string>
+		<string>0x750D</string>
 		<string>0x6300</string>
 		<string>0x6301</string>
 		<string>0x6302</string>
@@ -869,6 +1014,7 @@
 		<string>0x6303</string>
 		<string>0x6305</string>
 		<string>0x3B01</string>
+		<string>0xEB61</string>
 		<string>0x5000</string>
 		<string>0x5001</string>
 		<string>0x5002</string>
@@ -886,8 +1032,13 @@
 		<string>0x0001</string>
 		<string>0x0001</string>
 		<string>0x0004</string>
+		<string>0x0005</string>
+		<string>0x1009</string>
+		<string>0x4009</string>
+		<string>0x5009</string>
 		<string>0x6007</string>
 		<string>0x6055</string>
+		<string>0x6111</string>
 		<string>0x164A</string>
 		<string>0x174A</string>
 		<string>0x184A</string>
@@ -896,6 +1047,7 @@
 		<string>0x1104</string>
 		<string>0x1202</string>
 		<string>0xC136</string>
+		<string>0xC137</string>
 		<string>0x0026</string>
 		<string>0x0052</string>
 		<string>0x0161</string>
@@ -908,6 +1060,7 @@
 		<string>0x4109</string>
 		<string>0x4211</string>
 		<string>0x4230</string>
+		<string>0x42B2</string>
 		<string>0x511A</string>
 		<string>0x0107</string>
 		<string>0x010B</string>
@@ -937,6 +1090,7 @@
 		<string>0x7050</string>
 		<string>0x0504</string>
 		<string>0x0520</string>
+		<string>0x0551</string>
 		<string>0x0580</string>
 		<string>0x9102</string>
 		<string>0x8166</string>
@@ -944,6 +1098,9 @@
 		<string>0x0602</string>
 		<string>0x0620</string>
 		<string>0x34CC</string>
+		<string>0x34CE</string>
+		<string>0x34CF</string>
+		<string>0x34D2</string>
 		<string>0x0102</string>
 		<string>0x0001</string>
 		<string>0x0003</string>
@@ -960,8 +1117,13 @@
 		<string>0x5293</string>
 		<string>0x8007</string>
 		<string>0xC587</string>
+		<string>0x22FC</string>
 		<string>0x800A</string>
 		<string>0x0007</string>
+		<string>0xBEEE</string>
+		<string>0x0D8F</string>
+		<string>0x0DC8</string>
+		<string>0x0DC9</string>
 		<string>0x0001</string>
 		<string>0x0002</string>
 		<string>0x0003</string>
@@ -988,13 +1150,20 @@
 		<string>0x3115</string>
 		<string>0x3117</string>
 		<string>0x3201</string>
+		<string>0x3203</string>
+		<string>0x605A</string>
+		<string>0x0901</string>
 		<string>0x2105</string>
+		<string>0x2107</string>
 		<string>0x5083</string>
+		<string>0x6141</string>
 		<string>0x0000</string>
+		<string>0x34C7</string>
 		<string>0x0001</string>
 		<string>0x0810</string>
 		<string>0x0050</string>
 		<string>0x0052</string>
+		<string>0x0003</string>
 		<string>0x0009</string>
 		<string>0x0001</string>
 		<string>0x1540</string>
@@ -1031,6 +1200,7 @@
 		<string>0x0001</string>
 		<string>0x2200</string>
 		<string>0x0008</string>
+		<string>0x9540</string>
 		<string>0x100F</string>
 		<string>0x6016</string>
 		<string>0x5800</string>
@@ -1058,7 +1228,6 @@
 		<string>ActivIdentity USB Reader V3</string>
 		<string>ActivIdentity Activkey_Sim</string>
 		<string>Alcor Micro AU9520</string>
-		<string>Alcor Micro AU9560</string>
 		<string>Athena ASE IIIe</string>
 		<string>Athena ASEDrive IIIe KB</string>
 		<string>BLUTRONICS BLUDRIVE II CCID</string>
@@ -1067,6 +1236,7 @@
 		<string>Cherry GmbH SmartBoard XX44</string>
 		<string>Cherry GmbH SmartTerminal XX44</string>
 		<string>Cherry GmbH SmartTerminal ST-2xxx</string>
+		<string>Cherry GmbH CHERRY SECURE BOARD 1.0</string>
 		<string>COVADIS ALYA</string>
 		<string>Dell keyboard SK-3106</string>
 		<string>Dell Dell Smart Card Reader Keyboard</string>
@@ -1118,11 +1288,14 @@
 		<string>Access IS NFC Smart Module</string>
 		<string>Access IS ATR210</string>
 		<string>Access IS ATR220</string>
+		<string>Access IS ATR220</string>
 		<string>ACS ACR101 ICC Reader</string>
 		<string>ACS ACR1251 Dual Reader</string>
+		<string>ACS ACR1281U</string>
 		<string>ACS ACR1252 Dual Reader</string>
 		<string>ACS ACR1252 Reader</string>
 		<string>ACS ACR1255U-J1</string>
+		<string>ACS ACR1252IMP Reader</string>
 		<string>ACS APG8201 PINhandy 1</string>
 		<string>ACS APG8201 USB Reader</string>
 		<string>ACS ACR33 ICC Reader</string>
@@ -1130,6 +1303,7 @@
 		<string>ACS ACR3901U ICC Reader</string>
 		<string>ACS ACR39U ICC Reader</string>
 		<string>ACS CryptoMate (T2)</string>
+		<string>ACS CryptoMate EVO</string>
 		<string>AF Care One</string>
 		<string>AF Care One</string>
 		<string>AF Care Two</string>
@@ -1139,6 +1313,7 @@
 		<string>AK910 IDONE</string>
 		<string>Aktiv Rutoken lite</string>
 		<string>Aktiv Rutoken ECP</string>
+		<string>Aktiv Rutoken SCR 3001 Reader</string>
 		<string>Aktiv PINPad Ex</string>
 		<string>Aktiv PINPad In</string>
 		<string>Aktiv Rutoken PINPad 2</string>
@@ -1152,11 +1327,14 @@
 		<string>Aladdin R.D. JaCarta U2F (JC602)</string>
 		<string>Aladdin R.D. JaCarta Flash</string>
 		<string>Alcor Link AK9563</string>
+		<string>Alcor Link AK9567</string>
+		<string>Alcor Link AK9572</string>
 		<string>Alcor Micro AU9522</string>
 		<string>ANCUD CCID USB Reader &amp; RNG</string>
 		<string>appidkey GmbH ID50 -USB</string>
 		<string>appidkey GmbH ID100L-USB-SC-Reader</string>
 		<string>appidkey GmbH ID60-USB</string>
+		<string>ArkSigner Connect2Sign</string>
 		<string>ASK-RFID CPL108</string>
 		<string>Athena IDProtect Key v2</string>
 		<string>Athena ASEDrive IIIe KB Bio PIV</string>
@@ -1183,14 +1361,18 @@
 		<string>Bit4id CKey4</string>
 		<string>Bit4id tokenME FIPS v3</string>
 		<string>Bit4id Digital DNA Key</string>
+		<string>Bit4id Digital-DNA Key</string>
 		<string>Bit4id Digital-DNA Key BT</string>
 		<string>Bit4id Digital-DNA Key</string>
 		<string>Bit4id TokenME EVO v2</string>
-		<string>Bit4id miniLector</string>
 		<string>Bit4id miniLector AIR EVO</string>
 		<string>Bit4id miniLector Blue</string>
+		<string>bit4id miniLector-EVO</string>
+		<string>BIT4ID miniLector AIR NFC v3</string>
+		<string>BIT4ID mLector AIR DI V3</string>
 		<string>Bluink Ltd. Bluink CCID</string>
 		<string>BLUTRONICS BLUDRIVE II CCID</string>
+		<string>BLUTRONICS TAURUS NFC</string>
 		<string>Broadcom Corp 5880</string>
 		<string>Broadcom Corp 5880</string>
 		<string>Broadcom Corp 5880</string>
@@ -1204,6 +1386,7 @@
 		<string>C3PO KBR36</string>
 		<string>C3PO LTC32</string>
 		<string>C3PO LTC36</string>
+		<string>Canokeys Canokey</string>
 		<string>CASTLES EZCCID Smart Card Reader</string>
 		<string>CCB eSafeLD</string>
 		<string>Certgate GmbH AirID 2 USB</string>
@@ -1220,42 +1403,79 @@
 		<string>Cherry GmbH SmartBoard XX1X</string>
 		<string>Cherry GmbH SmartTerminal XX1X</string>
 		<string>Cherry GmbH SmartTerminal ST-1275</string>
-		<string>Cherry GmbH CHERRY SECURE BOARD 1.0</string>
 		<string>Chicony USB Smart Card Keyboard</string>
 		<string>Chicony HP USB Smartcard CCID Keyboard KR</string>
 		<string>Chicony HP USB Smartcard CCID Keyboard JP</string>
 		<string>Chicony HP Skylab USB Smartcard Keyboard</string>
+		<string>Circle Idaxis SecurePIV</string>
+		<string>Circle CIR315</string>
+		<string>Circle CIR115 ICC</string>
+		<string>Circle CIR125 ICC</string>
+		<string>Circle CIR215 PICC</string>
+		<string>Circle CIR215 CL</string>
+		<string>Circle CIR215 CL</string>
+		<string>Circle CIR315 Dual &amp; 1S</string>
+		<string>Circle CIR315</string>
+		<string>Circle CIR315 CL</string>
+		<string>Circle CIR315 DI</string>
+		<string>Circle CIR315</string>
+		<string>Circle CIR415 CL &amp; 1S</string>
+		<string>Circle CIR415 CL</string>
+		<string>Circle CIR515 ICC</string>
+		<string>Circle CIR615 CL &amp; 1S</string>
+		<string>Circle CIR615 CL</string>
+		<string>Circle CCR7115 ICC</string>
+		<string>Circle CCR7315</string>
+		<string>Circle CIR315</string>
+		<string>Circle CCR7125 ICC</string>
+		<string>Circle CIR125-DOT ICC</string>
 		<string>COVADIS VEGA-ALPHA</string>
 		<string>COVADIS Auriga</string>
+		<string>CREATOR CRT-603(CZ1) CCR</string>
 		<string>DC.Ltd DC4 5CCID READER</string>
+		<string>DESKO GmbH IDenty chrom</string>
+		<string>DESKO GmbH PENTA Scanner</string>
+		<string>Dexon Tecnologias Digitais LTDA DXToken</string>
 		<string>Doctolib SR</string>
 		<string>Doctolib SR</string>
 		<string>Doctolib SR</string>
 		<string>Doctolib SR</string>
 		<string>DUALi DE-620 Combi</string>
+		<string>DUALi DE-ABCM6 RFRW</string>
 		<string>DUALi DRAGON NFC READER</string>
 		<string>eID_R6 001 X8</string>
 		<string>Elatec TWN4 SmartCard NFC</string>
 		<string>Elatec TWN4/B1.06/CPF3.05/S1SC1.32/P (Beta 3)</string>
+		<string>ELYCTIS CL reader</string>
+		<string>ESMART Reader ER433x ICC</string>
+		<string>ESMART Reader ER773x Dual &amp; 1S</string>
 		<string>ESMART Token GOST</string>
 		<string>F-Secure Foundry USB Armory Mk II</string>
-		<string>FEITIAN iR301</string>
-		<string>FEITIAN bR301</string>
-		<string>FEITIAN iR301</string>
 		<string>Feitian 502-CL</string>
 		<string>Feitian R502</string>
+		<string>Feitian BLE CCID Dongle</string>
 		<string>Feitian VR504 VHBR Contactless &amp; Contact Card Reader</string>
 		<string>Feitian bR500</string>
 		<string>Feitian bR301</string>
+		<string>Feitian R701</string>
+		<string>Feitian R805</string>
 		<string>Feitian ePass2003</string>
 		<string>Feitian eJAVA Token</string>
+		<string>FEITIAN iR301</string>
+		<string>FEITIAN bR301</string>
+		<string>FEITIAN iR301</string>
 		<string>Feitian Technologies FT SCR310</string>
+		<string>Flight system consulting Incredist</string>
 		<string>Free Software Initiative of Japan Gnuk</string>
 		<string>FT ePass2003Auto</string>
 		<string>FT U2F CCID KB</string>
 		<string>FT CCID KB</string>
 		<string>FT U2F CCID</string>
 		<string>FT CCID</string>
+		<string>FT Biopass FIDO2</string>
+		<string>FT Biopass KB FIDO CCID</string>
+		<string>FT Biopass KB CCID</string>
+		<string>FT Biopass CCID</string>
 		<string>Fujitsu Keyboard KB100 SCR</string>
 		<string>Fujitsu Keyboard KB100 SCR eSIG</string>
 		<string>Fujitsu Smartcard Reader D323</string>
@@ -1276,14 +1496,17 @@
 		<string>Gemplus GemCore POS Pro Smart Card Reader</string>
 		<string>Generic USB2.0-CRW</string>
 		<string>Generic MultiCard Device</string>
+		<string>Generic EMV Smartcard Reader</string>
 		<string>Generic USB Smart Card Reader</string>
 		<string>Genesys Logic CCID Card Reader</string>
 		<string>Genesys Logic Combo Card Reader</string>
+		<string>Genesys Logic CCID Card Reader</string>
 		<string>German Privacy Foundation Crypto Stick v1.2</string>
 		<string>Giesecke &amp; Devrient GmbH Star Sign Card Token 350 (ICCD)</string>
 		<string>Giesecke &amp; Devrient GmbH Star Sign Card Token 550 (ICCD)</string>
 		<string>GIS Ltd SmartMouse USB</string>
 		<string>GoldKey Security PIV Token</string>
+		<string>GoTrust Idem Key</string>
 		<string>HDZB uKeyCI800-K18</string>
 		<string>Hewlett Packard HP USB Smartcard CCID Keyboard</string>
 		<string>Hewlett Packard MFP Smart Card Reader</string>
@@ -1308,8 +1531,11 @@
 		<string>Hitachi, Ltd. Hitachi Biometric Reader</string>
 		<string>Hitachi, Ltd. Hitachi Portable Biometric Reader</string>
 		<string>id3 Semiconductors CL1356A_HID</string>
+		<string>Identiv uTrust 3720 Contactless Reader</string>
+		<string>Identiv uTrust 3721 Contactless Reader</string>
 		<string>Identiv CLOUD 2980 F Smart Card Reader</string>
 		<string>Identiv Identiv uTrust 4701 F Dual Interface Reader</string>
+		<string>Identiv Identiv uTrust 4711 F CL + SAM Reader</string>
 		<string>Identiv uTrust 3700 F CL Reader</string>
 		<string>Identiv uTrust 3701 F CL Reader</string>
 		<string>Identiv uTrust 2900 R Smart Card Reader</string>
@@ -1334,8 +1560,12 @@
 		<string>IIT E.Key Crystal-1</string>
 		<string>IIT E.Key Almaz-1C</string>
 		<string>InfoCert WirelessKey</string>
+		<string>Infocrypt Token++ lite</string>
+		<string>Infocrypt HWDSSL DEVICE</string>
 		<string>InfoThink IT-102MU Reader</string>
 		<string>InfoThink IT-500U Reader</string>
+		<string>INMAX DWR18 HC</string>
+		<string>INMAX DWR18 HPC</string>
 		<string>Inside Secure VaultIC 420 Smart Object</string>
 		<string>Inside Secure VaultIC 440 Smart Object</string>
 		<string>Inside Secure VaultIC 460 Smart Object</string>
@@ -1345,6 +1575,7 @@
 		<string>INSIDE Secure VaultIC 405 Smart Object</string>
 		<string>INSIDE Secure VaultIC 441 Smart Object</string>
 		<string>IonIDe Smartcard Reader</string>
+		<string>jSolutions s.r.o. Multi SIM card reader 4/8</string>
 		<string>KACST HSID Reader</string>
 		<string>KACST HSID Reader Single Storage</string>
 		<string>KACST HSID Reader Dual Storage</string>
@@ -1362,8 +1593,13 @@
 		<string>KRONEGGER Micro Core Platform</string>
 		<string>Ledger Nano S</string>
 		<string>Ledger Nano X</string>
+		<string>Ledger Nano SP</string>
+		<string>Ledger Nano S</string>
+		<string>Ledger Nano X</string>
+		<string>Ledger Nano S Plus</string>
 		<string>Lenovo Lenovo USB Smartcard Keyboard</string>
 		<string>Lenovo Lenovo USB Smartcard Keyboard</string>
+		<string>Lenovo Lenovo Smartcard Wired Keyboard II</string>
 		<string>Liteon HP SC Keyboard - Apollo (Liteon)</string>
 		<string>Liteon HP SC Keyboard - Apollo KR (Liteon)</string>
 		<string>Liteon HP SC Keyboard - Apollo JP (Liteon)</string>
@@ -1372,6 +1608,7 @@
 		<string>Microchip SEC1110</string>
 		<string>Microchip SEC1210</string>
 		<string>MK Technology KeyPass S1</string>
+		<string>MK Technology KeyPass D1</string>
 		<string>Morpho MSO350/MSO351 Fingerprint Sensor &amp; SmartCard Reader</string>
 		<string>Morpho MSO1350 Fingerprint Sensor &amp; SmartCard Reader</string>
 		<string>MSI StarReader SMART</string>
@@ -1384,6 +1621,7 @@
 		<string>Nitrokey Nitrokey Storage</string>
 		<string>Nitrokey Nitrokey Start</string>
 		<string>Nitrokey Nitrokey HSM</string>
+		<string>Nitrokey Nitrokey 3</string>
 		<string>NTT Communications Corp. SCR3310-NTTCom USB SmartCard Reader</string>
 		<string>NXP Pegoda 2 N</string>
 		<string>NXP PR533</string>
@@ -1413,6 +1651,7 @@
 		<string>Regula RFID Reader</string>
 		<string>REINER SCT cyberJack go</string>
 		<string>REINER SCT tanJack Bluetooth</string>
+		<string>REINER SCT tanJack USB</string>
 		<string>REINER SCT cyberJack one</string>
 		<string>REINER SCT cyberJack RFID basis</string>
 		<string>Rocketek RT-SCR1</string>
@@ -1420,6 +1659,9 @@
 		<string>SafeNet eToken 7300</string>
 		<string>SafeNet eToken 5100</string>
 		<string>SafeNet eToken 5300</string>
+		<string>SafeNet eToken 5300 C</string>
+		<string>SafeNet eToken 5110+ FIPS</string>
+		<string>SafeNet eToken Fusion</string>
 		<string>SafeTech SafeTouch</string>
 		<string>SAFETRUST SABRE SCR</string>
 		<string>SchlumbergerSema SchlumbergerSema Cyberflex Access</string>
@@ -1436,8 +1678,13 @@
 		<string>SCM Microsystems Inc. SCL01x Contactless Reader</string>
 		<string>Secure Device Solutions DOMINO-Key TWIN</string>
 		<string>SecuTech SecuTech Token</string>
+		<string>Sensyl SSC-NFC Reader</string>
 		<string>Sitecom Sitecom USB simcard reader MD-010</string>
 		<string>Softforum Co., Ltd XecureHSM</string>
+		<string>SoloKeys Solo 2</string>
+		<string>SONY FeliCa RC-S660/U</string>
+		<string>SONY FeliCa RC-S300/S</string>
+		<string>SONY FeliCa RC-S300/P</string>
 		<string>SPECINFOSYSTEMS DIAMOND token</string>
 		<string>SPECINFOSYSTEMS DIAMOND PRO token</string>
 		<string>SPECINFOSYSTEMS DIAMOND PLUS token</string>
@@ -1464,13 +1711,20 @@
 		<string>Spyrus Inc WorkSafe Pro</string>
 		<string>Spyrus Inc WorkSafe Pro</string>
 		<string>Spyrus Inc PocketVault P-3X</string>
+		<string>Spyrus Inc PocketVault P-3X</string>
+		<string>Sunrex HP USB Business Slim Smartcard CCID Keyboard</string>
+		<string>Swissbit Secure USB PU-50n SE/PE</string>
 		<string>SYNNIX STD200</string>
+		<string>SYNNIX CL-2100R</string>
 		<string>Sysking MII136C</string>
+		<string>sysmocom - s.f.m.c. GmbH sysmoOCTSIM</string>
 		<string>Teridian Semiconductors TSC12xxFV.09</string>
+		<string>Thales Shield M4 Reader</string>
 		<string>THURSBY SOFTWARE TSS-PK1</string>
 		<string>Tianyu Smart Card Reader</string>
 		<string>Todos Argos Mini II</string>
 		<string>Todos CX00</string>
+		<string>TOPPAN FORMS CO.,LTD TC63CUT021</string>
 		<string>ubisys 13.56MHz RFID (CCID)</string>
 		<string>udea MILKO V1.</string>
 		<string>Unicept GmbH AirID USB</string>
@@ -1507,6 +1761,7 @@
 		<string>Diverta Inc. Secure Dongle</string>
 		<string>ACS ACR122U PICC Interface</string>
 		<string>ActivCard ActivCard USB Reader V2</string>
+		<string>Alcor Micro AU9540</string>
 		<string>Athena IDProtect Flash</string>
 		<string>ATMEL VaultIC460</string>
 		<string>Broadcom Corp 5880</string>
