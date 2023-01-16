@@ -9,8 +9,8 @@ Yubico PIV Tool (command line) を使用した各種手順を掲載します。<
 ## 事前準備
 
 Yubico PIV Tool (command line) を、PC環境上で使用できるようにするための手順は下記手順書をご参照願います。
-- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../../CCID/PIVTOOLMACINST.md)</b>
-- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../../CCID/PIVTOOLWININST.md)</b>
+- <b>[Yubico PIV Tool (command line) macOS版 導入手順](PIVTOOLMACINST.md)</b>
+- <b>[Yubico PIV Tool (command line) Windows版 導入手順](PIVTOOLWININST.md)</b>
 
 ## 各種手順
 
