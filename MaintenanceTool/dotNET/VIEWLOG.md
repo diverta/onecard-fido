@@ -1,7 +1,7 @@
 # 管理ツールのログファイル
 
 ## 概要
-[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/MNTTOOL.md)から出力されるログファイルについて説明します。
+[FIDO認証器管理ツール](../../MaintenanceTool/dotNET/README.md)から出力されるログファイルについて説明します。
 
 ## ログファイルの場所
 

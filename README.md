@@ -1,5 +1,7 @@
 # セキュリティデバイス実装対応
 
+最終更新日：2023/1/16
+
 Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェクトです。
 
 ## プログラム
@@ -12,10 +14,10 @@ Nordic社のSoC「nRF5340」で動作し、[MDBT53 Dongle](FIDO2Device/MDBT53_Do
 FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
 
-- <b>[PCツール](MaintenanceTool)</b><br>
+- <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
 PC環境から、[FIDO認証器](FIDO2Device)の動作に必要な各種設定／動作テスト等を行う、デスクトップ・ツールです。<br>
-エンドユーザー向けの「[FIDO認証器管理ツール](MaintenanceTool/MNTTOOL.md)」と、ベンダー向けの「[FIDO認証器開発ツール](MaintenanceTool/DEVTOOL.md)」を用意しております。<br>
-両者とも、[Windows版](MaintenanceTool/dotNET/README.md)、[macOS版](MaintenanceTool/macOSApp/README.md)を用意しております。
+最終更新日現在、[macOS版](MaintenanceTool/macOSApp/README.md)を用意しております。<br>
+（Windows版は、ただいま再構築作業中です。しばらくお待ち願います）
 
 - <b>[オープンソースコードライセンスについて](OSSL.md)</b><br>
 上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
@@ -33,11 +35,14 @@ Nordic社のSoC「nRF52840」を使用したFIDO2認証器です。<br>
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
 PCのUSBポート装着時はUSB HID／CCIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
-## 機能イメージについて
-
-詳細につきましては、ドキュメント<b>[「セキュリティデバイス実装対応について」](https://github.com/diverta/onecard-fido/wiki/セキュリティデバイス実装対応について)</b>をご参照願います。
-
 ## What's new
+
+#### 2023/01/16
+
+MDBT50Q Dongle（rev2.2）で新規搭載された機能を使用できるよう、nRF52840アプリケーションを修正いたしました。<br>
+これに伴い、FIDO認証器管理ツール（macOS版）も更新いたしました<br>
+詳細につきましては、ドキュメント<b>[「Release 202301」](https://github.com/diverta/onecard-fido/releases/tag/Release_202301)</b>をご参照願います。<br>
+（Windows版管理ツールは再構築が必要となったため、しばらくの間ご利用いただけません。何卒ご容赦願います）
 
 #### 2022/11/15
 

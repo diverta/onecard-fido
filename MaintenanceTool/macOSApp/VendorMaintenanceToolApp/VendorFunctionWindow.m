@@ -99,6 +99,16 @@
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
+        // ブートローダーモードに遷移するかどうかのプロンプトを表示
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_CHANGE_TO_BOOTLOADER_MODE informativeText:MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE
+                                             withObject:self forSelector:@selector(resumeBootloaderMode) parentWindow:[self window]];
+    }
+
+    - (void)resumeBootloaderMode {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
         // ブートローダーモードに遷移
         [[self commandParameterRef] setCommand:COMMAND_HID_BOOTLOADER_MODE];
         [[self commandParameterRef] setCommandName:PROCESS_NAME_BOOT_LOADER_MODE];
@@ -108,6 +118,16 @@
     - (IBAction)buttonFirmwareResetDidPress:(id)sender {
         // USBポートに接続されていない場合は処理中止
         if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
+        // 認証器のファームウェアを再起動するかどうかのプロンプトを表示
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_FIRMWARE_RESET informativeText:MSG_PROMPT_FIRMWARE_RESET
+                                                 withObject:self forSelector:@selector(resumeFirmwareReset) parentWindow:[self window]];
+    }
+
+    - (void)resumeFirmwareReset {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
         // 認証器のファームウェアを再起動

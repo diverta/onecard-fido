@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、FIDO認証器の現在時刻を設定する手順について掲載しています。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用して、FIDO認証器の現在時刻を設定する手順について掲載しています。
 
 ## 認証器の準備
 
@@ -14,11 +14,16 @@
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0001.jpg" width="300">
 
-[注1] MDBT50Q Dongle（rev2.2）以降の認証器をご使用願います。rev2.2より前の認証器では、時刻設定ができません。
+MDBT50Q Dongleの背面にあるボタン電池ケースに、電池が入っていることを必ず確認します。[注2]
+
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0010.jpg" width="300">
+
+[注1] MDBT50Q Dongle（rev2.2）以降の認証器をご使用願います。rev2.2より前の認証器では、時刻設定ができません。<br>
+[注2] MDBT50Q Dongleに装着した電池から、電源が供給され続けることにより、設定した時刻が保持される機構となっているため、ひとたび時刻設定したMDBT50Q Dongleからは、電池を外さないようお願いします。
 
 #### 管理ツールを導入
 
-最新バージョンの[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
+最新バージョンの[管理ツール（macOS版）](../../MaintenanceTool/macOSApp/README.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>

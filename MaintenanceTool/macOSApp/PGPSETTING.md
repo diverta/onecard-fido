@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、OpenPGP機能に最低限必要な基本設定を行う手順を掲載します。
 
 ## ソフトウェアのバージョン確認／インストール
 
@@ -33,7 +33,7 @@ MDBT50Q DongleをPCのUSBポートに装着した後、管理ツールのユー�
 <img src="assets05/0031.jpg" width="400">
 
 管理ツール下部のメッセージ欄に表示される、ファームウェアのバージョンを確認してください。<br>
-（下記例では「0.3.6」となっております）
+（下記例では「0.3.7」となっております）
 
 <img src="assets07/0002.jpg" width="400">
 

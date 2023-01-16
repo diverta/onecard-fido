@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -20,7 +20,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 管理ツールを導入
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を、PC環境（macOS）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b>

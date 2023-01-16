@@ -4,7 +4,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/MNTTOOL.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、PIV機能の各種設定を行う手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用して、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、PIV機能の各種設定を行う手順を掲載します。
 
 - PIN番号管理
   - PIN番号の変更

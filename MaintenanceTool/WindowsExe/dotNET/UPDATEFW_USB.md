@@ -15,7 +15,7 @@
 
 <img src="../../../MaintenanceTool/macOSApp/assets02/0010.jpg" width="400">
 
-[管理ツール（Windows版）](../../../MaintenanceTool/WindowsExe/MNTTOOL.md)を起動し、画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「ファームウェア更新」ボタンをクリックします。
+[管理ツール（Windows版）](../../../MaintenanceTool/WindowsExe/README.md)を起動し、画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「ファームウェア更新」ボタンをクリックします。
 
 <img src="assets01/0001.jpg" width="400">
 

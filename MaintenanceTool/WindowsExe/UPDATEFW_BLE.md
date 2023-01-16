@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のファームウェアを更新する手順を掲載します。
+[FIDO認証器管理ツール](../../MaintenanceTool/WindowsExe/README.md)を使用し、[BT40 Dongle](../../FIDO2Device/BT40Dongle/README.md)のファームウェアを更新する手順を掲載します。
 
 #### ご注意
 
@@ -17,7 +17,7 @@ BT40 Dongleをご使用の場合は、背面にあるボタン電池ケースに
 
 ## 操作方法
 
-[管理ツール（Windows版）](../../MaintenanceTool/WindowsExe/MNTTOOL.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
+[管理ツール（Windows版）](../../MaintenanceTool/WindowsExe/README.md)を起動し、画面の「ファームウェア更新」ボタンをクリックします。
 
 <img src="assets02/0004.jpg" width="400">
 

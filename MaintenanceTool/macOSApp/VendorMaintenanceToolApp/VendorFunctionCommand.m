@@ -56,6 +56,10 @@
     }
 
     - (void)vendorFunctionWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 重複処理抑止
+        if ([[parentWindow sheets] count] > 0) {
+            return;
+        }
         // 親画面の参照を保持
         [self setParentWindow:parentWindow];
         // 画面に親画面参照をセット

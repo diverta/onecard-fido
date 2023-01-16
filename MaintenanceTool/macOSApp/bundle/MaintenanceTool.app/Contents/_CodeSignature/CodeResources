@@ -10,11 +10,11 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		G5uOhZGhXTrOknyQO5B/1PXaa2Y=
+		OjhuSKwx6L0C2xurVmpw0Q8vChA=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
-		8CfajWOW4lmZRn/651tPUwie6pY=
+		iTd1Jc0elM2CWCqY7NP1hjg9wKw=
 		</data>
 		<key>Resources/BLEDFUStartWindow.nib</key>
 		<data>
@@ -22,7 +22,7 @@
 		</data>
 		<key>Resources/BLESettingWindow.nib</key>
 		<data>
-		gSWd9cJ3ls+CNXH3QdH8j1+6VQE=
+		A8YYhOOv2GLTCHjniB4A5c6irEg=
 		</data>
 		<key>Resources/DFUWindow.nib</key>
 		<data>
@@ -31,6 +31,10 @@
 		<key>Resources/Entitlements.plist</key>
 		<data>
 		yFypNR3sHIGjuUsxo3PSqtX1S5Y=
+		</data>
+		<key>Resources/FIDOAttestationWindow.nib</key>
+		<data>
+		ue5PhQrAWh6yvCOphmT5yuAYFBw=
 		</data>
 		<key>Resources/FIDOPinSettingWindow.nib</key>
 		<data>
@@ -50,11 +54,15 @@
 		</data>
 		<key>Resources/PGPPreferenceWindow.nib</key>
 		<data>
-		FwgNc/vOP0nCa2+l0Ql3I8sYVJg=
+		4ks6281PPSEEBc1ydeQg5g1WO/A=
 		</data>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<data>
-		QXepzPzBUAZZaZmTtMXSD29xSJk=
+		CF8jj93zrQzaRR/eDj4rthMN+0o=
+		</data>
+		<key>Resources/RTCCSettingWindow.nib</key>
+		<data>
+		fcFI866JY+Ae0uHN8fwP26n0x+s=
 		</data>
 		<key>Resources/ToolInfoWindow.nib</key>
 		<data>
@@ -68,9 +76,17 @@
 		<data>
 		dgD8QrqMejUTH5Rjuy/O0mw+CQs=
 		</data>
+		<key>Resources/UnpairingRequestWindow.nib</key>
+		<data>
+		goMjI03sfOZiG5r7n/rkPiVhXDc=
+		</data>
 		<key>Resources/UtilityWindow.nib</key>
 		<data>
-		cl6y4pCkd+pJ8IoTtiBTUizNIXk=
+		IMml5nHzRVpcHzQx7wallmMDAAE=
+		</data>
+		<key>Resources/VendorFunctionWindow.nib</key>
+		<data>
+		EkzDTZ9wKDN7QVXwkkuE7jpkvyA=
 		</data>
 		<key>Resources/add_sub_key.param</key>
 		<data>
@@ -80,21 +96,13 @@
 		<data>
 		RsqlGTJBKY0KYFwYxvxE6lXDzBc=
 		</data>
-		<key>Resources/app_update.PCA10095.0.4.7.bin</key>
+		<key>Resources/app_update.PCA10095_01.0.4.8.bin</key>
 		<data>
-		sO9btJVOMXrNP4fbWGkJdfpDUmw=
+		KhinctblL1regzTyc/O4NBG+54M=
 		</data>
-		<key>Resources/appkg.PCA10059_01.0.3.6.zip</key>
+		<key>Resources/appkg.PCA10059_03.0.3.7.zip</key>
 		<data>
-		h3ZBBOXS0DcvDDM5aMoX9o2xS4M=
-		</data>
-		<key>Resources/appkg.PCA10059_02.0.3.6.zip</key>
-		<data>
-		JsBGm644xEk95ONIx3QG0IY45xw=
-		</data>
-		<key>Resources/appkg.PCA10059_03.0.3.6.zip</key>
-		<data>
-		5OlDiwwwmDbnrSGeHmWV+PvbQsc=
+		End1E6d9t6RoYOg6X/xFaNz9OVY=
 		</data>
 		<key>Resources/card_edit_passwd.param</key>
 		<data>
@@ -133,7 +141,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gwiptouUopn/lqCvpDTUak2yyPA=
+			LwUcO+KUX3Vvges7FFYlx2VAYyQ=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -176,14 +184,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			68fEVzsH0I/QSAHMh5Vz5sqtKdZXCiJk8zCOmmSIQEk=
+			1jB+A1MoOMD0Ir17h8s7FAWrKt4I/pVo6FydkPXTwm0=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Q+7p0VV0ZK0k+RNj+o2PPrueQzZDDufvaWMVyuXATDY=
+			jI5/H+5gJwDyZaJmbGuoL2TWbfU6gPM5b8c3eP6Rmuk=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUStartWindow.nib</key>
@@ -197,7 +205,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			FyUbSzrd6SHuMq8hsCmU6Hd+3yw6HwQS5k7tOGRuA5w=
+			5R+Q77qJ2ZSvF+iG2khvwlcl9OUoQaJWbJrMpj9RrFE=
 			</data>
 		</dict>
 		<key>Resources/DFUWindow.nib</key>
@@ -212,6 +220,13 @@
 			<key>hash2</key>
 			<data>
 			FZcEg0mSwCWu8v6Naf0pDGzx9OkpZafJvaOqhPjVJvI=
+			</data>
+		</dict>
+		<key>Resources/FIDOAttestationWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			EjmN99xDCn6qi0ncxXQnwOxMXF2EuuAgiUnwbLnQ2Ao=
 			</data>
 		</dict>
 		<key>Resources/FIDOPinSettingWindow.nib</key>
@@ -246,14 +261,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			mqyZcqQZxQL6MKyuC74naU6SnSt3v2rgFQAPowJs3y4=
+			8X6MpVUdJUJX4+4rPIQ+rim/AepvWC77gMmSRnKGSzs=
 			</data>
 		</dict>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			cx212HZLbpyoKV2x9T7U+WrQr+4fI2wIhPKD3hBJX98=
+			WQJjuzd6JZmGTSV6Ks5qrS7B/O5DIyGfXuvSvXroccM=
+			</data>
+		</dict>
+		<key>Resources/RTCCSettingWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			G75lvCCr0rfgFOVSKY8rUq4j5TInHHobiowbN+jBVQ8=
 			</data>
 		</dict>
 		<key>Resources/ToolInfoWindow.nib</key>
@@ -277,11 +299,25 @@
 			DDnJsMtye8BYd0W/gEris3E4+mEK8jj/T4EN2PqCCjc=
 			</data>
 		</dict>
+		<key>Resources/UnpairingRequestWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			W4Fac9WGrLAHTIRhyeQTJBn2QuU2jrSBgRmX9o8MiMQ=
+			</data>
+		</dict>
 		<key>Resources/UtilityWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			h/88LBjxNTHMclUNavar3KFCd9eukfDyQXk2qOHgnMM=
+			MNk70TARZOASyEyQkob08a1xAV0QgMXg7ExsNTR40XM=
+			</data>
+		</dict>
+		<key>Resources/VendorFunctionWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			gS4CbH0lgftS7QZLJKQEM+deWEWICOMKN0tBJKcY3Xw=
 			</data>
 		</dict>
 		<key>Resources/add_sub_key.param</key>
@@ -298,32 +334,18 @@
 			MvXLJt12u/aCuerb+Uj7kd/e3OGo7nz/aM3MMLvjYM0=
 			</data>
 		</dict>
-		<key>Resources/app_update.PCA10095.0.4.7.bin</key>
+		<key>Resources/app_update.PCA10095_01.0.4.8.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			y2aunvK8Rw0+NgzmwXgQ6cS0vMfgzfGcnEk17luCGes=
+			NqMb8xQZj/UiRAbzeQUIKmBDASxWyvv8wwvrh2onuZ4=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_01.0.3.6.zip</key>
+		<key>Resources/appkg.PCA10059_03.0.3.7.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			LjoU5aJdajga8Ips9sX2vCbBREPj3Qp/tAOxWkdG4ck=
-			</data>
-		</dict>
-		<key>Resources/appkg.PCA10059_02.0.3.6.zip</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			q/TmUEGWNXFBog7+CoTC94fbzbA/pwlazbhzLDTnZC8=
-			</data>
-		</dict>
-		<key>Resources/appkg.PCA10059_03.0.3.6.zip</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			t8/cMnIEZrwu2yltCT8Xa+ibM7ckiFQ8NiY4WcsZyRI=
+			kY2jynq6vWcKwcjd7/3s3jBjr4kLbAgCedMM9dBTgS8=
 			</data>
 		</dict>
 		<key>Resources/card_edit_passwd.param</key>
@@ -381,7 +403,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GGcbHs79gn7dIzkhEYZUm+X1RpPJVeZawj0ku3sgjEg=
+			pevksgDaghYhR0GbGvILMY3ZseUOKArfB0laQFobUyw=
 			</data>
 			<key>optional</key>
 			<true/>

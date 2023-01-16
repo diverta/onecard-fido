@@ -29,7 +29,7 @@ MDBT50Q Dongleで使用するファームウェアです。
 
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 
-MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/MNTTOOL.md)により更新する手順について説明しています。
+MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール](../../MaintenanceTool/README.md)により更新する手順について説明しています。
 
 ## 動作確認手順
 

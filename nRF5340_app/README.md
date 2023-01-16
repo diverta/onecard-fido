@@ -36,7 +36,7 @@ OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです�
 以前開発していた、[nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
 FIDO機能で使用する秘密鍵／証明書（Attestation）の導入や、PINコード設定、BLEペアリング実行、ヘルスチェック等の機能があります。
 
-最終更新日現在、いずれも[管理ツール](../MaintenanceTool/MNTTOOL.md)や[開発ツール](../MaintenanceTool/DEVTOOL.md)により実行可能となっております。
+最終更新日現在、いずれも[管理ツール](../MaintenanceTool/README.md)や[開発ツール](../MaintenanceTool/DEVTOOL.md)により実行可能となっております。
 
 ### ファームウェア更新機能
 nRF5340アプリケーションでは、BLE経由のファームウェア更新機能（DFU）を用意しています。<br>
