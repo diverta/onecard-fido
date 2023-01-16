@@ -1,8 +1,7 @@
 # CCIDドライバーインストール手順
 
 ## 概要
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールする手順を掲載しています。
-
+CCIDドライバーをmacOS環境にインストールし、[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェースを利用できるようにするための手順について掲載しています。
 
 #### ご参考
 Windows10 環境では、CCIDドライバーが最初からシステムに組み込まれているため、CCIDドライバーのインストールは不要です。
