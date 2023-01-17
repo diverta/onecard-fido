@@ -25,6 +25,7 @@ namespace MaintenanceToolApp.BLESettings
 
         private BluetoothLEAdvertisementWatcher watcher = null!;
         private ulong BluetoothAddress = 0;
+        private byte[] ServiceDataField = Array.Empty<byte>();
         private string Passkey = string.Empty;
 
         public BLEPairingService()
@@ -104,20 +105,35 @@ namespace MaintenanceToolApp.BLESettings
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
                     AppLogUtil.OutputLogDebug("FIDO BLE device found.");
-                    // TODO: 仮の実装です。
-                    //       アドバタイズデータを抽出
-                    foreach (BluetoothLEAdvertisementDataSection datasection in eventArgs.Advertisement.DataSections) {
-                        byte dataType = datasection.DataType;
-                        byte[] data = new byte[datasection.Data.Length];
-                        using (DataReader reader = DataReader.FromBuffer(datasection.Data)) {
-                            reader.ReadBytes(data);
-                            string dump1 = AppLogUtil.DumpMessage(data, data.Length);
-                            AppLogUtil.OutputLogDebug(string.Format("BluetoothLEAdvertisementDataSection Type=0x{0:x2}, {1} bytes: {2}", dataType, data.Length, dump1));
-                        }
-                    }
+                    // アドバタイズデータからサービスデータフィールドを抽出
+                    ServiceDataField = RetrieveServiceDataField(eventArgs.Advertisement);
                     break;
                 }
             }
+        }
+
+        private static byte[] RetrieveServiceDataField(BluetoothLEAdvertisement advertisement)
+        {
+            // アドバタイズデータを走査
+            byte[] serviceDataField = Array.Empty<byte>();
+            foreach (BluetoothLEAdvertisementDataSection datasection in advertisement.DataSections) {
+                // サービスデータフィールドの場合は格納領域に設定
+                byte dataType = datasection.DataType;
+                if (dataType == 0x16) {
+                    serviceDataField = new byte[datasection.Data.Length];
+                    using (DataReader reader = DataReader.FromBuffer(datasection.Data)) {
+                        reader.ReadBytes(serviceDataField);
+                        break;
+                    }
+                }
+            }
+            if (serviceDataField.Length == 0) {
+                AppLogUtil.OutputLogDebug("Service data field not found");
+            } else {
+                string dump = AppLogUtil.DumpMessage(serviceDataField, serviceDataField.Length);
+                AppLogUtil.OutputLogDebug(string.Format("Service data field found ({0} bytes) {1}", serviceDataField.Length, dump));
+            }
+            return serviceDataField;
         }
 
         private void FuncOnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage, HandlerOnFIDOPeripheralFound handler)
