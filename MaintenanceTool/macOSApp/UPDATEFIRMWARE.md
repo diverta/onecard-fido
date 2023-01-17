@@ -6,7 +6,6 @@
 
 ## 操作方法
 
-
 まず最初に、MDBT50Q Dongleを、PCのUSBポートに装着します。<br>
 この時に、MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 

@@ -38,4 +38,4 @@ FIDO認証器管理ツールをmacOS環境にインストールする手順に�
 
 FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="../assets/0001.jpg" width="400">
+<img src="assets01/0001.jpg" width="400">
