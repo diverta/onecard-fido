@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaintenanceToolApp", "MaintenanceToolApp\MaintenanceToolApp.csproj", "{C793C87E-FD77-4823-9C56-594BF5151A90}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E06F6B56-2623-4CC2-B958-8B7702084745} = {E06F6B56-2623-4CC2-B958-8B7702084745}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupWizard", "SetupWizard\SetupWizard.vdproj", "{9B45B5A7-D594-45F6-8BD6-A8395A86F0FD}"
 EndProject
