@@ -38,7 +38,7 @@ macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 * ファームウェア再起動機能
 
 #### 画面イメージ
-<img src="../assets/0001.jpg" width="400">
+<img src="assets01/0001.jpg" width="400">
 
 #### 手順書
 

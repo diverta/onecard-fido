@@ -36,7 +36,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 ## [macOS版](../MaintenanceTool/macOSApp/README.md)
 
 #### 画面イメージ
-<img src="assets/0001.jpg" width="400">
+<img src="../MaintenanceTool/macOSApp/assets01/0001.jpg" width="400">
 
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
