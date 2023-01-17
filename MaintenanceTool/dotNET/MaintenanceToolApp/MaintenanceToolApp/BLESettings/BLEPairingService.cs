@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ToolAppCommon;
 using Windows.Devices.Bluetooth;
@@ -89,6 +90,13 @@ namespace MaintenanceToolApp.BLESettings
             if (BluetoothAddress == 0) {
                 // FIDO認証器が見つからなかった場合は失敗を通知
                 FuncOnFIDOPeripheralFound(false, 0, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT, handler);
+                return;
+            }
+
+            // FIDO認証器が見つかった場合でも、所定のサービスデータフィールドが存在しない場合は失敗を通知
+            byte[] expect = { 0xfd, 0xff, 0x80 };
+            if (ServiceDataField.Length != 3 || ServiceDataField.SequenceEqual(expect) == false) {
+                FuncOnFIDOPeripheralFound(false, 0, AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE, handler);
                 return;
             }
 
