@@ -5,6 +5,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
+using Windows.Storage.Streams;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -103,6 +104,17 @@ namespace MaintenanceToolApp.BLESettings
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
                     AppLogUtil.OutputLogDebug("FIDO BLE device found.");
+                    // TODO: 仮の実装です。
+                    //       アドバタイズデータを抽出
+                    foreach (BluetoothLEAdvertisementDataSection datasection in eventArgs.Advertisement.DataSections) {
+                        byte dataType = datasection.DataType;
+                        byte[] data = new byte[datasection.Data.Length];
+                        using (DataReader reader = DataReader.FromBuffer(datasection.Data)) {
+                            reader.ReadBytes(data);
+                            string dump1 = AppLogUtil.DumpMessage(data, data.Length);
+                            AppLogUtil.OutputLogDebug(string.Format("BluetoothLEAdvertisementDataSection Type=0x{0:x2}, {1} bytes: {2}", dataType, data.Length, dump1));
+                        }
+                    }
                     break;
                 }
             }
