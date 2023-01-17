@@ -27,8 +27,17 @@ MDBT50Q Dongleに対し、[FIDO認証器管理ツール（macOS版）](../../Mai
 
 ## 手順書（Windows環境）
 
-Windows版管理ツールが再構築中のため、しばらくの間、ご利用いただけません。<br>
-何卒ご容赦願います。
+- <b>[PGP鍵を使用したファイル暗号／復号化手順](../../CCID/OpenPGP/OPGPCRYPTIONWIN.md)</b><br>
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)にインストールしたPGP鍵を使用し、Windows上でファイルを暗号化／復号化をする手順について掲載しています。
+
+- <b>[Gpg4winインストール手順](../../CCID/OpenPGP/GPGINSTWIN.md)</b><br>
+GPGツール群「[Gpg4win](https://www.gnupg.org)」を、Windows環境にインストールする手順について掲載しています。<br>
+Gpg4winは、Windows環境へのPGP鍵インストール時に必要となりますので、事前にインストール願います。
+
+- <b>[OpenPGP機能の設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)</b><br>
+MDBT50Q Dongleに対し、[FIDO認証器管理ツール（Windows版）](../../MaintenanceTool/dotNET/README.md)を使用して、OpenPGP機能に必要な各種設定を行う手順を掲載します。
+
+Windows 10環境では、CCIDドライバーのインストールは不要になります。
 
 ## ご参考
 
