@@ -33,7 +33,7 @@ Windowsにインストールした管理ツールにより、秘密鍵／公開�
 生成した秘密鍵は、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に格納し、PCには配置しないようにします。<br>
 一方、公開鍵は、公開鍵ファイル（`public_key.pgp`）として管理ツールから出力されます。
 
-具体的な手順につきましては、別ドキュメント<b>「[PGP鍵インストール手順書](../../MaintenanceTool/dotNET/PGPKEYINST.md)」</b>をご参照願います。
+具体的な手順につきましては、別ドキュメント<b>「[OpenPGP機能の設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)」</b>をご参照願います。
 
 #### 公開鍵を送付
 
@@ -136,7 +136,7 @@ GUIアプリ「Kleopatra」を使うと、先ほどの公開鍵がインポー�
 復号化側となるファイル受領者も、前述の手順により、GPGツールを使用して公開鍵のインポートを行う必要があります。[注1]<br>
 ファイル提供者（暗号化側）と同じ公開鍵ファイル（`public_key.pgp`）を使用することになります。
 
-[注1]「[PGP鍵インストール手順書](../../MaintenanceTool/dotNET/PGPKEYINST.md)」による鍵インストール処理を実行すると、鍵インストール完了時、PGP秘密鍵に対応するPGP公開鍵ファイル（`public_key.pgp`）が生成されます。ただしこれだけでは、MDBT50Q DongleにインストールされたPGP秘密鍵がWindowsに認識されないため、GPGツールによりPGP公開鍵ファイルをWindows上にインポートし、MDBT50Q Dongle上のPGP秘密鍵と紐づける（＝WindowsにPGP秘密鍵の格納場所を認識させる）必要があります。
+[注1]「[OpenPGP機能の設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)」による鍵インストール処理を実行すると、鍵インストール完了時、PGP秘密鍵に対応するPGP公開鍵ファイル（`public_key.pgp`）が生成されます。ただしこれだけでは、MDBT50Q DongleにインストールされたPGP秘密鍵がWindowsに認識されないため、GPGツールによりPGP公開鍵ファイルをWindows上にインポートし、MDBT50Q Dongle上のPGP秘密鍵と紐づける（＝WindowsにPGP秘密鍵の格納場所を認識させる）必要があります。
 
 #### 秘密鍵を紐付け
 
