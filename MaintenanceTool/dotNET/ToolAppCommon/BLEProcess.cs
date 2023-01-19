@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using System;
 using System.Linq;
 
 namespace ToolAppCommon
@@ -62,7 +63,7 @@ namespace ToolAppCommon
 
             // メッセージがない場合は終了
             if (message == null || message.Length == 0) {
-                OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                OnReceivedResponse(CMD, Array.Empty<byte>(), false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 return;
             }
 
@@ -75,7 +76,7 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
-                OnReceivedResponse(CMD, new byte[0], false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                OnReceivedResponse(CMD, Array.Empty<byte>(), false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                 return;
             }
 
@@ -161,7 +162,7 @@ namespace ToolAppCommon
         }
 
         // 受信データを保持
-        private byte[] ReceivedMessage = new byte[0];
+        private byte[] ReceivedMessage = Array.Empty<byte>();
         private int ReceivedMessageLen = 0;
         private int ReceivedSize = 0;
 
@@ -243,7 +244,7 @@ namespace ToolAppCommon
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
                 if (ReceivedMessageLen == 0) {
-                    OnReceivedResponse(CMD, new byte[0], true, "");
+                    OnReceivedResponse(CMD, Array.Empty<byte>(), true, "");
 
                 } else {
                     byte[] response = ReceivedMessage.Skip(BLEProcessConst.INIT_HEADER_LEN).ToArray();
@@ -256,7 +257,7 @@ namespace ToolAppCommon
         {
             // 送信失敗時はBLEデバイスを切断
             DisconnectBLE();
-            OnReceivedResponse(CMDToSend, new byte[0], false, errorMessage);
+            OnReceivedResponse(CMDToSend, Array.Empty<byte>(), false, errorMessage);
         }
 
         private void DisconnectBLE()
