@@ -52,7 +52,7 @@ namespace ToolAppCommon
             }
 
             // 指定のコマンド／データを送信
-            Instance.SendBLEMessage(CMD, DATA);
+            Instance.SendBLEMessage(bluetoothAddress, CMD, DATA);
         }
 
 
@@ -78,7 +78,7 @@ namespace ToolAppCommon
         // 当初送信コマンドを保持
         private byte CMDToSend { get; set; }
 
-        private async void SendBLEMessage(byte CMD, byte[] message)
+        private async void SendBLEMessage(ulong bluetoothAddress, byte CMD, byte[] message)
         {
             // 送信コマンドを保持
             CMDToSend = CMD;
@@ -91,7 +91,7 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
-                if (await BleService.StartCommunicate()) {
+                if (await BleService.StartCommunicate(bluetoothAddress)) {
                     AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
                 }
             }

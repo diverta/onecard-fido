@@ -316,6 +316,7 @@
         // Windows版固有のメッセージ文言
         // BLE関連のメッセージ文言
         public const string MSG_BLE_U2F_SERVICE_FINDING = "FIDO BLEサービス({0})を検索します。";
+        public const string MSG_BLE_U2F_DEVICE_NOT_FOUND = "FIDO BLEサービスが動作するデバイスが見つかりません。";
         public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
         public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";
         public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO認証器の接続に失敗しました。";
