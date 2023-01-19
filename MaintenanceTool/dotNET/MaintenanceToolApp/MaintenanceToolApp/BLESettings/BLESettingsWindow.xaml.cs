@@ -52,11 +52,8 @@ namespace MaintenanceToolApp.BLESettings
                 return;
             }
 
-            // ペアリングモードでない場合は終了
-            if (Parameter.ErrorMessage.Equals(AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE)) {
-                DialogUtil.ShowWarningMessage(this, AppCommon.PROCESS_NAME_PAIRING, Parameter.ErrorMessage);
-                return;
-            }
+            // 成功時はログ出力
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_PARING_SCAN_SUCCESS);
 
             // パスコード入力画面を表示
             PairingStartWindow w = new PairingStartWindow(Parameter);
@@ -78,12 +75,15 @@ namespace MaintenanceToolApp.BLESettings
             if (success == false) {
                 // 失敗時はログ出力
                 AppLogUtil.OutputLogError(errorMessage);
+
+            } else if (parameter.FIDOServiceDataFieldFound == false) {
+                // サービスデータフィールドがない場合は、エラー扱いとし、
+                // Bluetoothアドレスをゼロクリア
+                Parameter.BluetoothAddress = 0;
+                Parameter.ErrorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
             }
 
-            if (parameter.FIDOServiceDataFieldFound == false) {
-                // サービスデータフィールドがない場合は、エラーメッセージを設定
-                Parameter.ErrorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
-            }
 
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 // 進捗画面を閉じる
