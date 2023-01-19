@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonProcess;
 using System;
 using System.Linq;
 
@@ -51,15 +52,21 @@ namespace ToolAppCommon
             // BLEデバイスのイベントを登録
             BleService.OnDataReceived += new BLEService.HandlerOnDataReceived(OnDataReceived);
             BleService.OnTransactionFailed += new BLEService.HandlerOnTransactionFailed(OnTransactionFailed);
+
+            // 変数初期化
+            CMDToSend = 0x00;
+            MessageToSend = Array.Empty<byte>();
         }
 
         // 当初送信コマンドを保持
         private byte CMDToSend { get; set; }
+        private byte[] MessageToSend { get; set; }
 
-        private async void SendBLEMessage(byte CMD, byte[] message)
+        private void SendBLEMessage(byte CMD, byte[] message)
         {
             // 送信コマンドを保持
             CMDToSend = CMD;
+            MessageToSend = message;
 
             // メッセージがない場合は終了
             if (message == null || message.Length == 0) {
@@ -67,19 +74,48 @@ namespace ToolAppCommon
                 return;
             }
 
-            if (BleService.IsConnected() == false) {
-                // 未接続の場合はFIDO認証器とのBLE通信を開始
-                if (await BleService.StartCommunicate()) {
-                    AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
-                }
-            }
-
-            if (BleService.IsConnected() == false) {
-                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
-                OnReceivedResponse(CMD, Array.Empty<byte>(), false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+            // 接続済みの場合は、BLEデバイスにコマンド／メッセージ送信
+            if (BleService.IsConnected()) {
+                ResumeSendBLEMessage(CMD, message);
                 return;
             }
 
+            // 未接続の場合は、接続先のFIDO認証器をスキャン
+            ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+            new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
+        }
+
+        private async void OnFIDOPeripheralFound(bool found, string errorMessage, ScanBLEPeripheralParameter parameter)
+        {
+            if (parameter.BLEPeripheralFound == false) {
+                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
+                OnReceivedResponse(CMDToSend, Array.Empty<byte>(), false, errorMessage);
+                return;
+            }
+
+            if (parameter.FIDOServiceDataFieldFound) {
+                // ペアリングモードでは業務リクエストを実行できない旨のエラーを設定
+                OnReceivedResponse(CMDToSend, Array.Empty<byte>(), false, AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR);
+                return;
+            }
+
+            // サービスに接続
+            if (await BleService.StartCommunicate()) {
+                AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+            }
+
+            if (BleService.IsConnected()) {
+                // 接続成功の場合は、BLEデバイスにコマンド／メッセージ送信
+                ResumeSendBLEMessage(CMDToSend, MessageToSend);
+
+            } else {
+                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
+                OnReceivedResponse(CMDToSend, Array.Empty<byte>(), false, AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+            }
+        }
+
+        private void ResumeSendBLEMessage(byte CMD, byte[] message)
+        {
             // BLEデバイスにメッセージをフレーム分割して送信
             SendBLEMessageFrames(CMD, message);
 
