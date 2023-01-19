@@ -1,6 +1,4 @@
 ﻿using MaintenanceToolApp;
-using MaintenanceToolApp.BLESettings;
-using System;
 using System.Linq;
 
 namespace ToolAppCommon
@@ -22,10 +20,6 @@ namespace ToolAppCommon
         public delegate void HandlerOnReceivedResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         private event HandlerOnReceivedResponse OnReceivedResponse = null!;
 
-        // TODO: 調査用仮実装
-        private static byte CMD = 0x00;
-        private static byte[] DATA = null!;
-
         //
         // 外部公開用
         //
@@ -34,27 +28,10 @@ namespace ToolAppCommon
             Instance.OnReceivedResponse += handler;
         }
 
-        public static void DoRequestCommand(byte cmd, byte[] data)
+        public static void DoRequestCommand(byte CMD, byte[] data)
         {
-            // TODO: 調査用仮実装
-            // 接続先のFIDO認証器を検索
-            CMD = cmd;
-            DATA = data;
-            BLEPairingProcess.DoFindFIDOPeripheral(OnFIDOPeripheralFound);
+            Instance.SendBLEMessage(CMD, data);
         }
-
-        private static void OnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage)
-        {
-            if (found == false) {
-                // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
-                Instance.OnReceivedResponse(CMD, Array.Empty<byte>(), false, errorMessage);
-                return;
-            }
-
-            // 指定のコマンド／データを送信
-            Instance.SendBLEMessage(bluetoothAddress, CMD, DATA);
-        }
-
 
         public static void DisconnctBLE()
         {
@@ -78,7 +55,7 @@ namespace ToolAppCommon
         // 当初送信コマンドを保持
         private byte CMDToSend { get; set; }
 
-        private async void SendBLEMessage(ulong bluetoothAddress, byte CMD, byte[] message)
+        private async void SendBLEMessage(byte CMD, byte[] message)
         {
             // 送信コマンドを保持
             CMDToSend = CMD;
@@ -91,7 +68,7 @@ namespace ToolAppCommon
 
             if (BleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
-                if (await BleService.StartCommunicate(bluetoothAddress)) {
+                if (await BleService.StartCommunicate()) {
                     AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
                 }
             }

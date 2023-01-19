@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using ToolAppCommon;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Radios;
-using Windows.Storage.Streams;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -26,7 +24,6 @@ namespace MaintenanceToolApp.BLESettings
 
         private BluetoothLEAdvertisementWatcher watcher = null!;
         private ulong BluetoothAddress = 0;
-        private byte[] ServiceDataField = Array.Empty<byte>();
         private string Passkey = string.Empty;
 
         public BLEPairingService()
@@ -93,13 +90,6 @@ namespace MaintenanceToolApp.BLESettings
                 return;
             }
 
-            // FIDO認証器が見つかった場合でも、所定のサービスデータフィールドが存在しない場合は失敗を通知
-            byte[] expect = { 0xfd, 0xff, 0x80 };
-            if (ServiceDataField.Length != 3 || ServiceDataField.SequenceEqual(expect) == false) {
-                FuncOnFIDOPeripheralFound(false, BluetoothAddress, AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE, handler);
-                return;
-            }
-
             // FIDO認証器が見つかった場合は成功を通知
             FuncOnFIDOPeripheralFound(true, BluetoothAddress, AppCommon.MSG_NONE, handler);
         }
@@ -113,35 +103,9 @@ namespace MaintenanceToolApp.BLESettings
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
                     AppLogUtil.OutputLogDebug("FIDO BLE device found.");
-                    // アドバタイズデータからサービスデータフィールドを抽出
-                    ServiceDataField = RetrieveServiceDataField(eventArgs.Advertisement);
                     break;
                 }
             }
-        }
-
-        private static byte[] RetrieveServiceDataField(BluetoothLEAdvertisement advertisement)
-        {
-            // アドバタイズデータを走査
-            byte[] serviceDataField = Array.Empty<byte>();
-            foreach (BluetoothLEAdvertisementDataSection datasection in advertisement.DataSections) {
-                // サービスデータフィールドの場合は格納領域に設定
-                byte dataType = datasection.DataType;
-                if (dataType == 0x16) {
-                    serviceDataField = new byte[datasection.Data.Length];
-                    using (DataReader reader = DataReader.FromBuffer(datasection.Data)) {
-                        reader.ReadBytes(serviceDataField);
-                        break;
-                    }
-                }
-            }
-            if (serviceDataField.Length == 0) {
-                AppLogUtil.OutputLogDebug("Service data field not found");
-            } else {
-                string dump = AppLogUtil.DumpMessage(serviceDataField, serviceDataField.Length);
-                AppLogUtil.OutputLogDebug(string.Format("Service data field found ({0} bytes) {1}", serviceDataField.Length, dump));
-            }
-            return serviceDataField;
         }
 
         private void FuncOnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage, HandlerOnFIDOPeripheralFound handler)

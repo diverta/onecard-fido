@@ -55,16 +55,10 @@ namespace ToolAppCommon
         public delegate void HandlerOnTransactionFailed(string errorMessage);
         public event HandlerOnTransactionFailed OnTransactionFailed = null!;
 
-        public async Task<bool> StartCommunicate(ulong bluetoothAddress)
+        public async Task<bool> StartCommunicate()
         {
-            // Bluetoothアドレスが不正の場合は処理を実行しない
-            if (bluetoothAddress == 0) {
-                FreeResources();
-                return false;
-            }
-
             // サービスをディスカバー
-            if (await DiscoverBLEService(bluetoothAddress) == false) {
+            if (await DiscoverBLEService() == false) {
                 FreeResources();
                 return false;
             }
@@ -97,25 +91,25 @@ namespace ToolAppCommon
             return false;
         }
 
-        private async Task<bool> DiscoverBLEService(ulong bluetoothAddress)
+        private async Task<bool> DiscoverBLEService()
         {
             try {
                 AppLogUtil.OutputLogInfo(string.Format(AppCommon.MSG_BLE_U2F_SERVICE_FINDING, U2F_BLE_SERVICE_UUID));
+                string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
+                DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
-                BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(bluetoothAddress);
-                if (BluetoothLEDevice == null) {
-                    AppLogUtil.OutputLogError(AppCommon.MSG_BLE_U2F_DEVICE_NOT_FOUND);
-                    return false;
-                }
-
-                var gattServices = await BluetoothLEDevice.GetGattServicesAsync();
-                foreach (var gattService in gattServices.Services) {
-                    if (gattService.Uuid.Equals(U2F_BLE_SERVICE_UUID)) {
-                        BLEservice = gattService;
-                        AppLogUtil.OutputLogDebug(string.Format("  FIDO BLE service found [{0}]", gattService.Device.Name));
+                foreach (DeviceInformation info in collection) {
+                    BluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(info.Id);
+                    var gattServices = await BluetoothLEDevice.GetGattServicesAsync();
+                    foreach (var gattService in gattServices.Services) {
+                        if (gattService.Uuid.Equals(U2F_BLE_SERVICE_UUID)) {
+                            BLEservice = gattService;
+                            AppLogUtil.OutputLogDebug(string.Format("  FIDO BLE service found [{0}]", info.Name));
+                        }
                     }
                 }
-                if (BLEservice == null) {
+
+                if (BluetoothLEDevice == null || BLEservice == null) {
                     AppLogUtil.OutputLogError(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
                     return false;
                 }
