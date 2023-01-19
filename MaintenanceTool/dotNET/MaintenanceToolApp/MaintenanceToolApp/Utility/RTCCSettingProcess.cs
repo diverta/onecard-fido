@@ -221,6 +221,11 @@ namespace MaintenanceToolApp.Utility
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
 
+            // BLE接続を破棄
+            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                BLEProcess.DisconnctBLE();
+            }
+
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 NotifyProcessTerminated(false, errorMessage);
