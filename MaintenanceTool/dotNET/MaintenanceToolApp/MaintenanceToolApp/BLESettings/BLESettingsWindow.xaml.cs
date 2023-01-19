@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.CommonWindow;
+﻿using MaintenanceToolApp.CommonProcess;
+using MaintenanceToolApp.CommonWindow;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +39,8 @@ namespace MaintenanceToolApp.BLESettings
         {
             Task task = Task.Run(() => {
                 // ペアリング対象のFIDO認証器を検索
-                BLEPairingProcess.DoFindFIDOPeripheral(OnFIDOPeripheralFound);
+                ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+                new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
             });
 
             // 進捗画面を表示
@@ -46,6 +48,12 @@ namespace MaintenanceToolApp.BLESettings
 
             // FIDO認証器が見つからなかった場合は終了
             if (Parameter.BluetoothAddress == 0) {
+                DialogUtil.ShowWarningMessage(this, AppCommon.PROCESS_NAME_PAIRING, Parameter.ErrorMessage);
+                return;
+            }
+
+            // ペアリングモードでない場合は終了
+            if (Parameter.ErrorMessage.Equals(AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE)) {
                 DialogUtil.ShowWarningMessage(this, AppCommon.PROCESS_NAME_PAIRING, Parameter.ErrorMessage);
                 return;
             }
@@ -61,15 +69,20 @@ namespace MaintenanceToolApp.BLESettings
             TerminateWindow(true);
         }
 
-        private void OnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage)
+        private void OnFIDOPeripheralFound(bool success, string errorMessage, ScanBLEPeripheralParameter parameter)
         {
             // Bluetoothアドレス、エラーメッセージを設定
-            Parameter.BluetoothAddress = bluetoothAddress;
+            Parameter.BluetoothAddress = parameter.BluetoothAddress;
             Parameter.ErrorMessage = errorMessage;
 
-            if (found == false) {
+            if (success == false) {
                 // 失敗時はログ出力
                 AppLogUtil.OutputLogError(errorMessage);
+            }
+
+            if (parameter.FIDOServiceDataFieldFound == false) {
+                // サービスデータフィールドがない場合は、エラーメッセージを設定
+                Parameter.ErrorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
             }
 
             Application.Current.Dispatcher.Invoke(new Action(() => {
