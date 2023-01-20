@@ -35,6 +35,12 @@ namespace ToolAppCommon
             Instance.SendBLEMessage(CMD, data);
         }
 
+        public static void DoConnectCommand()
+        {
+            // BLE接続試行
+            Instance.DoConnectWithFIDOPeripheral(true);
+        }
+
         public static void DisconnctBLE()
         {
             // 接続破棄
@@ -81,7 +87,14 @@ namespace ToolAppCommon
             }
 
             // 未接続の場合は、接続先のFIDO認証器をスキャン
+            DoConnectWithFIDOPeripheral(false);
+        }
+
+        private void DoConnectWithFIDOPeripheral(bool connectOnly)
+        {
+            // 接続先のFIDO認証器をスキャン
             ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+            parameter.ConnectOnly = connectOnly;
             new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
         }
 
@@ -105,8 +118,15 @@ namespace ToolAppCommon
             }
 
             if (BleService.IsConnected()) {
-                // 接続成功の場合は、BLEデバイスにコマンド／メッセージ送信
-                ResumeSendBLEMessage(CMDToSend, MessageToSend);
+                // 接続成功の場合
+                if (parameter.ConnectOnly) {
+                    // 接続成功の旨を通知
+                    OnReceivedResponse(0x00, Array.Empty<byte>(), true, AppCommon.MSG_NONE);
+
+                } else {
+                    // BLEデバイスにコマンド／メッセージ送信
+                    ResumeSendBLEMessage(CMDToSend, MessageToSend);
+                }
 
             } else {
                 // 接続失敗の旨を通知（エラーログは上位クラスで出力させるようにする）
@@ -280,11 +300,11 @@ namespace ToolAppCommon
                 // 受信データを転送
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
                 if (ReceivedMessageLen == 0) {
-                    OnReceivedResponse(CMD, Array.Empty<byte>(), true, "");
+                    OnReceivedResponse(CMD, Array.Empty<byte>(), true, AppCommon.MSG_NONE);
 
                 } else {
                     byte[] response = ReceivedMessage.Skip(BLEProcessConst.INIT_HEADER_LEN).ToArray();
-                    OnReceivedResponse(CMD, response, true, "");
+                    OnReceivedResponse(CMD, response, true, AppCommon.MSG_NONE);
                 }
             }
         }

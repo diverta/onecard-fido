@@ -228,6 +228,12 @@ namespace MaintenanceToolApp
             BLEProcess.DoRequestCommand(CMD, data);
         }
 
+        public static void DoConnectBleCommand()
+        {
+            // BLE接続を試行
+            BLEProcess.DoConnectCommand();
+        }
+
         private void OnReceivedBleResponse(byte CMD, byte[] responseData, bool success, string errorMessage)
         {
             // 上位クラスに制御を戻す
