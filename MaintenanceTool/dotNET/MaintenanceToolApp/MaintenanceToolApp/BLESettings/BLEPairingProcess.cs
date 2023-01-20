@@ -1,10 +1,12 @@
-﻿namespace MaintenanceToolApp.BLESettings
+﻿using System;
+using ToolAppCommon;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Enumeration;
+
+namespace MaintenanceToolApp.BLESettings
 {
     internal class BLEPairingProcess
     {
-        // BLEペアリングサービスの参照を保持（インスタンス生成は１度だけ行われる）
-        private static readonly BLEPairingService PairingService = new BLEPairingService();
-
         // 処理実行のためのプロパティー
         private readonly BLESettingsParameter Parameter;
 
@@ -21,25 +23,79 @@
         //
         // 外部公開用
         //
-        public static void DoFindFIDOPeripheral(BLEPairingService.HandlerOnFIDOPeripheralFound handler)
-        {
-            // ペアリング対象のFIDO認証器を検索
-            PairingService.FindFIDOPeripheral(handler);
-        }
-
         public void DoRequestPairing(HandlerOnNotifyCommandTerminated handler)
         {
             // 戻り先の関数を保持
-            NotifyCommandTerminated = handler;
+            NotifyCommandTerminated += handler;
 
             // FIDO認証器とペアリングを実行
-            PairingService.PairWithFIDOPeripheral(Parameter.BluetoothAddress, Parameter.Passcode, OnFIDOPeripheralPaired);
+            PairWithFIDOPeripheral();
         }
 
-        private void OnFIDOPeripheralPaired(bool success, string errorMessage)
+        //
+        // ペアリング実行
+        //
+        public async void PairWithFIDOPeripheral()
         {
+            // 変数を初期化
+            bool success = false;
+            string errorMessage = "";
+
+            try {
+                // デバイス情報を取得
+                BluetoothLEDevice? device = await BluetoothLEDevice.FromBluetoothAddressAsync(Parameter.BluetoothAddress);
+                DeviceInformation deviceInfoForPair = device.DeviceInformation;
+
+                // ペアリング実行
+                deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
+                DevicePairingResult result;
+                if (Parameter.Passcode == null || Parameter.Passcode.Length == 0) {
+                    // パスキーが指定されていない場合
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ConfirmOnly, DevicePairingProtectionLevel.Encryption);
+
+                } else {
+                    // パスキーが指定されている場合は、パスキーを使用
+                    result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                        DevicePairingKinds.ProvidePin, DevicePairingProtectionLevel.EncryptionAndAuthentication);
+                }
+                deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
+
+                // ペアリングが正常終了したら処理完了
+                if (result.Status == DevicePairingResultStatus.Paired ||
+                    result.Status == DevicePairingResultStatus.AlreadyPaired) {
+                    success = true;
+                    AppLogUtil.OutputLogDebug("Pairing with FIDO device success");
+
+                } else if (result.Status == DevicePairingResultStatus.Failed) {
+                    errorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
+                    AppLogUtil.OutputLogError("Pairing with FIDO device fail");
+
+                } else {
+                    errorMessage = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
+                    AppLogUtil.OutputLogError(string.Format("Pairing with FIDO device fail: reason={0}", result.Status));
+                }
+
+                // BLEデバイスを解放
+                device.Dispose();
+                device = null;
+
+            } catch (Exception e) {
+                errorMessage = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
+                AppLogUtil.OutputLogError(string.Format("Pairing with FIDO device fail: {0}", e.Message));
+            }
+
             // 上位クラスに制御を戻す
             NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
+        }
+
+        private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
+        {
+            if (args.PairingKind == DevicePairingKinds.ProvidePin && Parameter.Passcode != null) {
+                args.Accept(Parameter.Passcode);
+            } else {
+                args.Accept();
+            }
         }
     }
 }

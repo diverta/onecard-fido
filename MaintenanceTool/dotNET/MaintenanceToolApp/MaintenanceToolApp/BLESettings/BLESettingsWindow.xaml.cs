@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.CommonWindow;
+﻿using MaintenanceToolApp.CommonProcess;
+using MaintenanceToolApp.CommonWindow;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +39,8 @@ namespace MaintenanceToolApp.BLESettings
         {
             Task task = Task.Run(() => {
                 // ペアリング対象のFIDO認証器を検索
-                BLEPairingProcess.DoFindFIDOPeripheral(OnFIDOPeripheralFound);
+                ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+                new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
             });
 
             // 進捗画面を表示
@@ -49,6 +51,9 @@ namespace MaintenanceToolApp.BLESettings
                 DialogUtil.ShowWarningMessage(this, AppCommon.PROCESS_NAME_PAIRING, Parameter.ErrorMessage);
                 return;
             }
+
+            // 成功時はログ出力
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_PARING_SCAN_SUCCESS);
 
             // パスコード入力画面を表示
             PairingStartWindow w = new PairingStartWindow(Parameter);
@@ -61,16 +66,24 @@ namespace MaintenanceToolApp.BLESettings
             TerminateWindow(true);
         }
 
-        private void OnFIDOPeripheralFound(bool found, ulong bluetoothAddress, string errorMessage)
+        private void OnFIDOPeripheralFound(bool success, string errorMessage, ScanBLEPeripheralParameter parameter)
         {
             // Bluetoothアドレス、エラーメッセージを設定
-            Parameter.BluetoothAddress = bluetoothAddress;
+            Parameter.BluetoothAddress = parameter.BluetoothAddress;
             Parameter.ErrorMessage = errorMessage;
 
-            if (found == false) {
+            if (success == false) {
                 // 失敗時はログ出力
                 AppLogUtil.OutputLogError(errorMessage);
+
+            } else if (parameter.FIDOServiceDataFieldFound == false) {
+                // サービスデータフィールドがない場合は、エラー扱いとし、
+                // Bluetoothアドレスをゼロクリア
+                Parameter.BluetoothAddress = 0;
+                Parameter.ErrorMessage = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
+                AppLogUtil.OutputLogError(Parameter.ErrorMessage);
             }
+
 
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 // 進捗画面を閉じる
