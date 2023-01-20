@@ -94,6 +94,11 @@ namespace MaintenanceToolApp.Utility
 
         private void NotifyProcessTerminated(bool success, string errorMessage)
         {
+            // BLE接続を破棄
+            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                BLEProcess.DisconnctBLE();
+            }
+
             // エラーメッセージを画面＆ログ出力
             if (success == false && errorMessage.Length > 0) {
                 // ログ出力する文言からは、改行文字を除去
@@ -129,10 +134,12 @@ namespace MaintenanceToolApp.Utility
                 // CTAPHID_INITから実行
                 DoRequestCtapHidInit();
             }
+
             // BLE経由で現在時刻を設定
             if (Parameter.Transport == Transport.TRANSPORT_BLE) {
+                // BLE接続試行
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForSetTimestamp());
+                CommandProcess.DoConnectBleCommand();
             }
         }
 
@@ -154,6 +161,13 @@ namespace MaintenanceToolApp.Utility
             // HID経由で現在時刻を設定
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
             CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, CommandDataForSetTimestamp());
+        }
+
+        private void DoRequestBleSetTimestamp()
+        {
+            // BLE経由で現在時刻を設定
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForSetTimestamp());
         }
 
         private byte[] CommandDataForSetTimestamp()
@@ -221,14 +235,15 @@ namespace MaintenanceToolApp.Utility
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
 
-            // BLE接続を破棄
-            if (Parameter.Transport == Transport.TRANSPORT_BLE) {
-                BLEProcess.DisconnctBLE();
-            }
-
             // 即時でアプリケーションに制御を戻す
             if (success == false) {
                 NotifyProcessTerminated(false, errorMessage);
+                return;
+            }
+
+            // BLE接続試行からの戻りの場合
+            if (Parameter.Transport == Transport.TRANSPORT_BLE && CMD == 0x00) {
+                DoRequestBleSetTimestamp();
                 return;
             }
 

@@ -15,6 +15,7 @@ namespace MaintenanceToolApp.CommonProcess
         public byte[] ServiceDataField { get; set; }
         public bool FIDOServiceDataFieldFound { get; set; }
         public bool BLEPeripheralFound { get; set; }
+        public bool ConnectOnly { get; set; }
 
         public ScanBLEPeripheralParameter(string serviceUUIDString)
         {
@@ -23,6 +24,7 @@ namespace MaintenanceToolApp.CommonProcess
             ServiceDataField = Array.Empty<byte>();
             FIDOServiceDataFieldFound = false;
             BLEPeripheralFound = false;
+            ConnectOnly = false;
         }
     }
 
