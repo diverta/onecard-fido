@@ -49,18 +49,38 @@ namespace MaintenanceToolApp.BLESettings
         {
             // コマンドバイトだけを送信する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForUnpairingRequest());
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForUnpairingRequest(null!));
         }
 
         private void DoResponseUnpairingCommand(byte[] responseData)
         {
-            // TODO: 仮の実装です。
-            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+            if (responseData.Length == 3) {
+                // レスポンスにpeer_idが設定されている場合は次のコマンドを実行
+                DoRequestUnpairingCommandWithPeerId(responseData);
+
+            } else {
+                // レスポンスがブランクの場合は、ペアリング解除による切断 or タイムアウト／キャンセル応答まで待機
+                // TODO: 仮の実装です。
+                NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+            }
         }
 
-        private byte[] CommandDataForUnpairingRequest()
+        private void DoRequestUnpairingCommandWithPeerId(byte[] responseData)
         {
-            return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST };
+            // コマンドバイトにpeer_idを付加して送信する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForUnpairingRequest(responseData));
+        }
+
+        private static byte[] CommandDataForUnpairingRequest(byte[] data)
+        {
+            if (data == null) {
+                return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST };
+
+            } else {
+                // ペアリング解除要求コマンド用のデータを生成（レスポンスの２・３バイト目＝peer_idを設定）
+                return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST, data[1], data[2] };
+            }
         }
 
         //
