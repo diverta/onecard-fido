@@ -52,8 +52,9 @@ namespace MaintenanceToolApp.BLESettings
                 break;
 
             case Command.COMMAND_UNPAIRING_REQUEST:
-                // メイン画面を親ウィンドウとし、ペアリング解除要求画面を開く
-                new UnpairingRequestWindow().ShowDialogWithOwner(ParentWindow);
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_UNPAIRING_REQUEST;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestUnpairingRequest();
                 break;
 
             case Command.COMMAND_ERASE_BONDS:
@@ -72,6 +73,11 @@ namespace MaintenanceToolApp.BLESettings
         private void DoRequestPairing()
         {
             new BLEPairingProcess(Parameter).DoRequestPairing(DoResponseFromSubProcess);
+        }
+
+        private void DoRequestUnpairingRequest()
+        {
+            new UnpairingRequestCommand(Parameter).DoUnpairingRequestProcess(DoResponseFromSubProcess);
         }
 
         private void DoRequestEraseBonds()

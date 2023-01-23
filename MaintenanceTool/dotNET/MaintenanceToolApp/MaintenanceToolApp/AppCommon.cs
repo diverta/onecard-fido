@@ -19,6 +19,7 @@
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
+        public const string PROCESS_NAME_UNPAIRING_REQUEST = "ペアリング解除要求";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
