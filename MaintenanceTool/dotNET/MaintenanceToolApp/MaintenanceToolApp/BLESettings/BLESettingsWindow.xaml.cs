@@ -93,6 +93,9 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoUnpairing()
         {
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_UNPAIRING_REQUEST;
+            TerminateWindow(true);
         }
 
         private void DoEraseBonding()
