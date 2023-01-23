@@ -32,6 +32,9 @@ namespace MaintenanceToolApp
         public delegate void HandlerOnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         public event HandlerOnCommandResponse OnCommandResponse = null!;
 
+        public delegate void HandlerNotifyBLEConnectionStatus(bool connected);
+        public event HandlerNotifyBLEConnectionStatus NotifyBLEConnectionStatus = null!;
+
         //
         // 外部公開用
         //
@@ -53,6 +56,16 @@ namespace MaintenanceToolApp
         public static void UnregisterHandlerOnCommandResponse(HandlerOnCommandResponse handler)
         {
             Instance.OnCommandResponse -= handler;
+        }
+
+        public static void RegisterHandlerNotifyBLEConnectionStatus(HandlerNotifyBLEConnectionStatus handler)
+        {
+            Instance.NotifyBLEConnectionStatus += handler;
+        }
+
+        public static void UnregisterHandlerNotifyBLEConnectionStatus(HandlerNotifyBLEConnectionStatus handler)
+        {
+            Instance.NotifyBLEConnectionStatus -= handler;
         }
 
         //
@@ -246,8 +259,7 @@ namespace MaintenanceToolApp
         private void NotifyConnectionStatus(bool connected)
         {
             // BLE接続／切断検知を上位クラスに転送
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogInfo(String.Format("NotifyConnectionStatus for BLE: {0}", connected));
+            NotifyBLEConnectionStatus(connected);
         }
     }
 }

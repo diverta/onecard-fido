@@ -1,4 +1,6 @@
-﻿using ToolAppCommon;
+﻿using System;
+using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.BLESettings
@@ -15,6 +17,9 @@ namespace MaintenanceToolApp.BLESettings
         // トランスポートからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
+        // BLE接続／切断検知時のコールバック参照
+        private readonly CommandProcess.HandlerNotifyBLEConnectionStatus NotifyBLEConnectionStatusRef;
+
         public UnpairingRequestCommand(BLESettingsParameter parameter)
         {
             // パラメーターの参照を保持
@@ -22,6 +27,7 @@ namespace MaintenanceToolApp.BLESettings
 
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
+            NotifyBLEConnectionStatusRef = new CommandProcess.HandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatus);
         }
 
         public void DoUnpairingRequestProcess(HandlerOnNotifyCommandTerminated handlerRef)
@@ -41,8 +47,10 @@ namespace MaintenanceToolApp.BLESettings
             // BLE接続を破棄
             BLEProcess.DisconnctBLE();
 
-            // 画面に制御を戻す            
-            NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
+            // 画面に制御を戻す
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
+            }));
         }
 
         private void DoRequestUnpairingCommand()
@@ -60,8 +68,7 @@ namespace MaintenanceToolApp.BLESettings
 
             } else {
                 // レスポンスがブランクの場合は、ペアリング解除による切断 or タイムアウト／キャンセル応答まで待機
-                // TODO: 仮の実装です。
-                NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+                StartWaitingForUnpair();
             }
         }
 
@@ -106,6 +113,27 @@ namespace MaintenanceToolApp.BLESettings
 
             // 処理正常終了
             DoResponseUnpairingCommand(responseData);
+        }
+
+        //
+        // BLE接続／切断検知時の処理
+        //
+        private void StartWaitingForUnpair()
+        {
+            // BLE接続／切断検知時のコールバックを設定
+            CommandProcess.RegisterHandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatusRef);
+        }
+
+        private void NotifyBLEConnectionStatus(bool connected)
+        {
+            // イベントを解除
+            CommandProcess.UnregisterHandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatusRef);
+
+            if (connected == false) {
+                // ペアリング解除による切断検知時
+                // TODO: 仮の実装です。
+                NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+            }
         }
     }
 }
