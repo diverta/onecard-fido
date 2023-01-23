@@ -114,6 +114,9 @@ namespace ToolAppCommon
                     return false;
                 }
 
+                // 接続・切断検知ができるようにする
+                BluetoothLEDevice.ConnectionStatusChanged += BluetoothLEDevice_ConnectionStatusChanged;
+
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_BLE_U2F_SERVICE_FOUND);
                 return true;
 
@@ -234,6 +237,7 @@ namespace ToolAppCommon
                     BLEservice.Dispose();
                 }
                 if (BluetoothLEDevice != null) {
+                    BluetoothLEDevice.ConnectionStatusChanged -= BluetoothLEDevice_ConnectionStatusChanged;
                     BluetoothLEDevice.Dispose();
                 }
 
@@ -268,6 +272,17 @@ namespace ToolAppCommon
             BLEservice = null!;
             U2FControlPointChar = null!;
             U2FStatusChar = null!;
+        }
+
+        //
+        // BLE接続検知関連イベント
+        //
+        public delegate void HandlerOnConnectionStatusChanged(bool connected);
+        public event HandlerOnConnectionStatusChanged OnConnectionStatusChanged = null!;
+
+        private void BluetoothLEDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        {
+            OnConnectionStatusChanged(sender.ConnectionStatus == BluetoothConnectionStatus.Connected);
         }
     }
 }
