@@ -71,7 +71,7 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoRequestEraseBonds()
         {
-            new UnpairingProcess(Parameter).DoRequestEraseBonds(DoResponseFromSubProcess);
+            new EraseBondsProcess(Parameter).DoRequestEraseBonds(DoResponseFromSubProcess);
         }
 
         //

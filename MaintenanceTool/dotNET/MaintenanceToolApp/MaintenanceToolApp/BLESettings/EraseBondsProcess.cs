@@ -4,7 +4,7 @@ using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.BLESettings
 {
-    internal class UnpairingProcess
+    internal class EraseBondsProcess
     {
         // 処理実行のためのプロパティー
         private readonly BLESettingsParameter Parameter;
@@ -16,7 +16,7 @@ namespace MaintenanceToolApp.BLESettings
         // HID／BLEからデータ受信時のコールバック参照
         private readonly CommandProcess.HandlerOnCommandResponse OnCommandResponseRef;
 
-        public UnpairingProcess(BLESettingsParameter param)
+        public EraseBondsProcess(BLESettingsParameter param)
         {
             // パラメーターの参照を保持
             Parameter = param;
