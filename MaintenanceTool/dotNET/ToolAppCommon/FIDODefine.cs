@@ -12,6 +12,7 @@
         public const byte MNT_COMMAND_SYSTEM_RESET = 0x47;
         public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
         public const byte MNT_COMMAND_SET_TIMESTAMP = 0x4b;
+        public const byte MNT_COMMAND_UNPAIRING_REQUEST = 0x4d;
 
         // FIDO機能関連エラーステータス
         public const int CTAP1_ERR_SUCCESS = 0x00;

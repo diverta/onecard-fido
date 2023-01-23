@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp.CommonWindow;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MaintenanceToolApp.BLESettings
@@ -9,8 +10,15 @@ namespace MaintenanceToolApp.BLESettings
     /// </summary>
     public partial class UnpairingRequestWindow : Window
     {
-        public UnpairingRequestWindow()
+        // 時刻設定処理の参照を保持
+        private BLESettingsParameter Parameter = null!;
+
+        public UnpairingRequestWindow(BLESettingsParameter parameter)
         {
+            // パラメーターの参照を保持
+            Parameter = parameter;
+
+            // 画面項目の初期化
             InitializeComponent();
         }
 
