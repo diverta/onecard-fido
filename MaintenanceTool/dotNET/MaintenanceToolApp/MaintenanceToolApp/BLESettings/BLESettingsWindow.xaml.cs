@@ -93,6 +93,10 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoUnpairing()
         {
+        }
+
+        private void DoEraseBonding()
+        {
             // USB HID接続がない場合はエラーメッセージを表示
             if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                 return;
@@ -133,6 +137,11 @@ namespace MaintenanceToolApp.BLESettings
         private void buttonUnpairing_Click(object sender, RoutedEventArgs e)
         {
             DoUnpairing();
+        }
+
+        private void buttonEraseBonding_Click(object sender, RoutedEventArgs e)
+        {
+            DoEraseBonding();
         }
     }
 }
