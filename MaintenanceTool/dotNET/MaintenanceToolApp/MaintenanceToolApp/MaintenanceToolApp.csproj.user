@@ -15,6 +15,9 @@
     <Compile Update="BLESettings\PairingStartWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="BLESettings\UnpairingRequestWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="DFU\DFUProcessingWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -48,6 +51,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="BLESettings\PairingStartWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="BLESettings\UnpairingRequestWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="CommonWindow\CommonProcessingWindow.xaml">
