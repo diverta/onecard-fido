@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.FIDODefine;
@@ -7,6 +8,9 @@ namespace MaintenanceToolApp.BLESettings
 {
     internal class UnpairingRequestCommand
     {
+        // Bluetooth環境設定からデバイスが削除されるのを待機する時間（秒）
+        private const int UNPAIRING_REQUEST_WAITING_SEC = 30;
+
         // 処理実行のためのプロパティー
         private BLESettingsParameter Parameter = null!;
 
@@ -20,6 +24,9 @@ namespace MaintenanceToolApp.BLESettings
         // BLE接続／切断検知時のコールバック参照
         private readonly CommandProcess.HandlerNotifyBLEConnectionStatus NotifyBLEConnectionStatusRef;
 
+        // タイムアウト監視フラグ
+        private bool WaitingForUnpairTimeout { get; set; }
+
         public UnpairingRequestCommand(BLESettingsParameter parameter)
         {
             // パラメーターの参照を保持
@@ -28,6 +35,9 @@ namespace MaintenanceToolApp.BLESettings
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
             NotifyBLEConnectionStatusRef = new CommandProcess.HandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatus);
+
+            // フラグの初期化
+            WaitingForUnpairTimeout = false;
         }
 
         public void DoUnpairingRequestProcess(HandlerOnNotifyCommandTerminated handlerRef)
@@ -69,6 +79,10 @@ namespace MaintenanceToolApp.BLESettings
             } else {
                 // レスポンスがブランクの場合は、ペアリング解除による切断 or タイムアウト／キャンセル応答まで待機
                 StartWaitingForUnpair();
+
+                // タイムアウト監視に移行
+                WaitingForUnpairTimeout = true;
+                StartWaitingForUnpairTimeoutMonitor();
             }
         }
 
@@ -88,6 +102,31 @@ namespace MaintenanceToolApp.BLESettings
                 // ペアリング解除要求コマンド用のデータを生成（レスポンスの２・３バイト目＝peer_idを設定）
                 return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST, data[1], data[2] };
             }
+        }
+
+        private void StartWaitingForUnpairTimeoutMonitor()
+        {
+            // タイムアウト監視（最大30秒）
+            for (int i = 0; i < UNPAIRING_REQUEST_WAITING_SEC; i++) {
+                // 残り秒数をペアリング解除要求画面に通知
+                int sec = UNPAIRING_REQUEST_WAITING_SEC - i;
+                for (int j = 0; j < 5; j++) {
+                    if (WaitingForUnpairTimeout == false) {
+                        return;
+                    }
+                    Thread.Sleep(200);
+                }
+            }
+
+            // タイムアウトと判定
+            // TODO: 仮の実装です。
+            NotifyProcessTerminated(false, AppCommon.MSG_BLE_UNPAIRING_WAIT_CANCELED);
+        }
+
+        private void CancelWaitingForUnpairTimeoutMonitor()
+        {
+            // タイムアウト監視を停止
+            WaitingForUnpairTimeout = false;
         }
 
         //
@@ -131,6 +170,9 @@ namespace MaintenanceToolApp.BLESettings
 
             if (connected == false) {
                 // ペアリング解除による切断検知時
+                // タイムアウト監視を停止
+                CancelWaitingForUnpairTimeoutMonitor();
+
                 // TODO: 仮の実装です。
                 NotifyProcessTerminated(true, AppCommon.MSG_NONE);
             }

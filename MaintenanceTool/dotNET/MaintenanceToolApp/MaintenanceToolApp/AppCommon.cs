@@ -56,6 +56,9 @@
         public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
 
+        // ペアリング解除要求関連
+        public const string MSG_BLE_UNPAIRING_WAIT_CANCELED = "ペアリング解除要求が中断されました。";
+
         // FIDO設定機能
         public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";
         public const string MSG_PROMPT_INPUT_NEW_PIN_CONFIRM = "新しいPINコード（確認用）を４〜16桁で入力してください";
