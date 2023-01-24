@@ -135,6 +135,34 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
+        private void DoRequestUnpairingCancelCommand()
+        {
+            // ペアリング解除要求キャンセルコマンド用のデータを生成
+            CommandDataForUnpairingCancel();
+
+            // ペアリング解除要求キャンセルコマンドを実行
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, RequestParameter.CommandData);
+        }
+
+        private void DoResponseUnpairingCancelCommand()
+        {
+            // タイムアウト監視を停止
+            CancelWaitingForUnpairTimeoutMonitor();
+
+            // コマンドメッセージを設定
+            NotifyProcessTerminated(false, AppCommon.MSG_BLE_UNPAIRING_WAIT_CANCELED);
+        }
+
+        private void CommandDataForUnpairingCancel()
+        {
+            // 実行コマンドバイトを保持
+            RequestParameter.MaintenanceCMD = MNT_COMMAND_UNPAIRING_CANCEL;
+
+            // ペアリング解除要求キャンセルコマンド用のデータを生成
+            RequestParameter.CommandData = new byte[] { RequestParameter.MaintenanceCMD };
+        }
+
         //
         // ペアリング解除要求からペアリング解除による切断検知までの
         // タイムアウト監視
@@ -157,14 +185,19 @@ namespace MaintenanceToolApp.BLESettings
             }
 
             // タイムアウトと判定
-            // TODO: 仮の実装です。
-            NotifyProcessTerminated(false, AppCommon.MSG_BLE_UNPAIRING_WAIT_CANCELED);
+            WaitingForUnpairTimeoutMonitorDidTimeout();
         }
 
         private void CancelWaitingForUnpairTimeoutMonitor()
         {
             // タイムアウト監視を停止
             RequestParameter.WaitingForUnpairTimeout = false;
+        }
+
+        private void WaitingForUnpairTimeoutMonitorDidTimeout()
+        {
+            // ペアリング解除要求キャンセルコマンドを実行
+            DoRequestUnpairingCancelCommand();
         }
 
         //
@@ -192,6 +225,9 @@ namespace MaintenanceToolApp.BLESettings
             // 処理正常終了
             if (RequestParameter.MaintenanceCMD == MNT_COMMAND_UNPAIRING_REQUEST) {
                 DoResponseUnpairingCommand(responseData);
+
+            } else if (RequestParameter.MaintenanceCMD == MNT_COMMAND_UNPAIRING_CANCEL) {
+                DoResponseUnpairingCancelCommand();
             }
         }
 

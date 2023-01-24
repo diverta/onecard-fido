@@ -48,6 +48,8 @@
         public const string MSG_SUCCESS = "成功";
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+        public const string MSG_OCCUR_UNKNOWN_ERROR_SW = "不明なエラーが発生しました（SW=0x{0:x4}）";
+        public const string MSG_OCCUR_UNKNOWN_ERROR_ST = "不明なエラーが発生しました（Status=0x{0:x2}）";
 
         // BLE設定機能
         public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE = "パスコードを６桁で入力してください";

@@ -95,6 +95,16 @@ namespace MaintenanceToolApp.BLESettings
                 AppLogUtil.OutputLogError(errorMessage);
             }
 
+            // ペアリング解除要求のタイムアウト／キャンセル時
+            if (errorMessage.Equals(AppCommon.MSG_BLE_UNPAIRING_WAIT_CANCELED)) {
+                // メイン画面に制御を戻す
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, errorMessage, success, ParentWindow);
+
+                // ポップアップを表示
+                DialogUtil.ShowWarningMessage(ParentWindow, Parameter.CommandTitle, errorMessage);
+                return;
+            }
+
             // メイン画面に制御を戻す
             CommandProcess.NotifyCommandTerminated(commandTitle, errorMessage, success, ParentWindow);
         }
