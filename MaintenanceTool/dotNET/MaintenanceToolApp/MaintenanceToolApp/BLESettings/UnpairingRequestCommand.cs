@@ -6,6 +6,25 @@ using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.BLESettings
 {
+    internal class UnpairingRequestParameter
+    {
+        // リクエストデータ
+        public byte[] CommandData { get; set; }
+
+        // タイムアウト監視フラグ
+        public bool WaitingForUnpairTimeout { get; set; }
+
+        // 実行する管理コマンドバイトを保持
+        public byte MaintenanceCMD { get; set; }
+
+        public UnpairingRequestParameter()
+        {
+            CommandData = Array.Empty<byte>();
+            WaitingForUnpairTimeout = false;
+            MaintenanceCMD = 0x00;
+        }
+    }
+
     internal class UnpairingRequestCommand
     {
         // Bluetooth環境設定からデバイスが削除されるのを待機する時間（秒）
@@ -24,8 +43,8 @@ namespace MaintenanceToolApp.BLESettings
         // BLE接続／切断検知時のコールバック参照
         private readonly CommandProcess.HandlerNotifyBLEConnectionStatus NotifyBLEConnectionStatusRef;
 
-        // タイムアウト監視フラグ
-        private bool WaitingForUnpairTimeout { get; set; }
+        // リクエストパラメーターを保持
+        private UnpairingRequestParameter RequestParameter { get; set; }
 
         public UnpairingRequestCommand(BLESettingsParameter parameter)
         {
@@ -36,8 +55,8 @@ namespace MaintenanceToolApp.BLESettings
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
             NotifyBLEConnectionStatusRef = new CommandProcess.HandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatus);
 
-            // フラグの初期化
-            WaitingForUnpairTimeout = false;
+            // リクエストパラメーターの初期化
+            RequestParameter = new UnpairingRequestParameter();
         }
 
         public void DoUnpairingRequestProcess(HandlerOnNotifyCommandTerminated handlerRef)
@@ -65,9 +84,12 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoRequestUnpairingCommand()
         {
-            // コマンドバイトだけを送信する
+            // ペアリング解除要求コマンド用のデータを生成
+            CommandDataForUnpairingRequest(null!);
+
+            // ペアリング解除要求コマンドを実行
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForUnpairingRequest(null!));
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, RequestParameter.CommandData);
         }
 
         private void DoResponseUnpairingCommand(byte[] responseData)
@@ -81,37 +103,50 @@ namespace MaintenanceToolApp.BLESettings
                 StartWaitingForUnpair();
 
                 // タイムアウト監視に移行
-                WaitingForUnpairTimeout = true;
                 StartWaitingForUnpairTimeoutMonitor();
             }
         }
 
         private void DoRequestUnpairingCommandWithPeerId(byte[] responseData)
         {
-            // コマンドバイトにpeer_idを付加して送信する
+            // ペアリング解除要求コマンド用のデータを生成
+            CommandDataForUnpairingRequest(responseData);
+
+            // ペアリング解除要求コマンドを実行
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, CommandDataForUnpairingRequest(responseData));
+            CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, RequestParameter.CommandData);
         }
 
-        private static byte[] CommandDataForUnpairingRequest(byte[] data)
+        private void CommandDataForUnpairingRequest(byte[] data)
         {
+            // 実行コマンドバイトを保持
+            RequestParameter.MaintenanceCMD = MNT_COMMAND_UNPAIRING_REQUEST;
+
             if (data == null) {
-                return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST };
+                // ペアリング解除要求コマンド用のデータを生成
+                RequestParameter.CommandData = new byte[] { RequestParameter.MaintenanceCMD };
 
             } else {
                 // ペアリング解除要求コマンド用のデータを生成（レスポンスの２・３バイト目＝peer_idを設定）
-                return new byte[] { MNT_COMMAND_UNPAIRING_REQUEST, data[1], data[2] };
+                RequestParameter.CommandData = new byte[] { RequestParameter.MaintenanceCMD, data[1], data[2] };
             }
         }
 
+        //
+        // ペアリング解除要求からペアリング解除による切断検知までの
+        // タイムアウト監視
+        //
         private void StartWaitingForUnpairTimeoutMonitor()
         {
+            // タイムアウト監視を開始
+            RequestParameter.WaitingForUnpairTimeout = true;
+
             // タイムアウト監視（最大30秒）
             for (int i = 0; i < UNPAIRING_REQUEST_WAITING_SEC; i++) {
                 // 残り秒数をペアリング解除要求画面に通知
                 int sec = UNPAIRING_REQUEST_WAITING_SEC - i;
                 for (int j = 0; j < 5; j++) {
-                    if (WaitingForUnpairTimeout == false) {
+                    if (RequestParameter.WaitingForUnpairTimeout == false) {
                         return;
                     }
                     Thread.Sleep(200);
@@ -126,7 +161,7 @@ namespace MaintenanceToolApp.BLESettings
         private void CancelWaitingForUnpairTimeoutMonitor()
         {
             // タイムアウト監視を停止
-            WaitingForUnpairTimeout = false;
+            RequestParameter.WaitingForUnpairTimeout = false;
         }
 
         //
@@ -151,7 +186,9 @@ namespace MaintenanceToolApp.BLESettings
             }
 
             // 処理正常終了
-            DoResponseUnpairingCommand(responseData);
+            if (RequestParameter.MaintenanceCMD == MNT_COMMAND_UNPAIRING_REQUEST) {
+                DoResponseUnpairingCommand(responseData);
+            }
         }
 
         //
