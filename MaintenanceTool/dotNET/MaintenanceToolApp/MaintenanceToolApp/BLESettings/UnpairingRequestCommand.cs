@@ -28,6 +28,12 @@ namespace MaintenanceToolApp.BLESettings
 
     internal class UnpairingRequestCommand
     {
+        // ペアリング解除要求画面の親ウィンドウの参照を保持
+        private readonly Window ParentWindow = App.Current.MainWindow;
+
+        // ペアリング解除要求画面の参照を保持
+        private UnpairingRequestWindow UnpairingRequestWindowRef = null!;
+
         // Bluetooth環境設定からデバイスが削除されるのを待機する時間（秒）
         private const int UNPAIRING_REQUEST_WAITING_SEC = 30;
 
@@ -67,6 +73,15 @@ namespace MaintenanceToolApp.BLESettings
 
             // ペアリング解除要求コマンドを実行
             DoRequestUnpairingCommand();
+
+            // ペアリング解除要求画面を表示
+            UnpairingRequestWindowRef = new UnpairingRequestWindow(Parameter);
+            bool success = UnpairingRequestWindowRef.ShowDialogWithOwner(ParentWindow);
+
+            // 親画面に制御を戻す
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                NotifyCommandTerminated(Parameter.CommandTitle, Parameter.ErrorMessage, success);
+            }));
         }
 
         // 
@@ -77,9 +92,12 @@ namespace MaintenanceToolApp.BLESettings
             // BLE接続を破棄
             BLEProcess.DisconnctBLE();
 
-            // 画面に制御を戻す
+            // エラーメッセージを設定
+            Parameter.ErrorMessage = errorMessage;
+
+            // ペアリング解除要求画面を閉じる
             Application.Current.Dispatcher.Invoke(new Action(() => {
-                NotifyCommandTerminated(Parameter.CommandTitle, errorMessage, success);
+                UnpairingRequestWindowRef.CommandDidCancelUnpairingRequestProcess(success);
             }));
         }
 

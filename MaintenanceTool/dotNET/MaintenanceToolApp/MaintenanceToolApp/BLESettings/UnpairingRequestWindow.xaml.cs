@@ -34,6 +34,12 @@ namespace MaintenanceToolApp.BLESettings
             }
         }
 
+        public void CommandDidCancelUnpairingRequestProcess(bool success)
+        {
+            // コマンドクラス側での処理ステータスを戻す
+            TerminateWindow(success);
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
