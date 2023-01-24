@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.BLESettings
             DoRequestUnpairingCommand();
 
             // ペアリング解除要求画面を表示
-            UnpairingRequestWindowRef = new UnpairingRequestWindow();
+            UnpairingRequestWindowRef = new UnpairingRequestWindow(UnpairingRequestWindowNotifyCancelClicked);
             bool success = UnpairingRequestWindowRef.ShowDialogWithOwner(ParentWindow);
 
             // 親画面に制御を戻す
@@ -286,6 +286,18 @@ namespace MaintenanceToolApp.BLESettings
                 // ペアリング解除要求画面を閉じ、上位クラスに制御を戻す
                 NotifyProcessTerminated(true, AppCommon.MSG_NONE);
             }
+        }
+
+        //
+        // ペアリング解除要求画面のCancelボタンクリック時の処理
+        // 
+        private void UnpairingRequestWindowNotifyCancelClicked()
+        {
+            // タイムアウト監視を停止
+            CancelWaitingForUnpairTimeoutMonitor();
+
+            // ペアリング解除要求キャンセルコマンドを実行
+            DoRequestUnpairingCancelCommand();
         }
     }
 }

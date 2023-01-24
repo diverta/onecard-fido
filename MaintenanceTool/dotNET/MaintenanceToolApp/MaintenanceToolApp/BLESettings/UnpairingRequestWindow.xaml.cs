@@ -9,10 +9,21 @@ namespace MaintenanceToolApp.BLESettings
     /// </summary>
     public partial class UnpairingRequestWindow : Window
     {
-        public UnpairingRequestWindow()
+        // 上位クラスに対するイベント通知
+        public delegate void HandlerNotifyCancelClicked();
+        private event HandlerNotifyCancelClicked NotifyCancelClicked = null!;
+
+        // 戻り先の関数を保持
+        private HandlerNotifyCancelClicked HandlerRef = null!;
+
+        public UnpairingRequestWindow(HandlerNotifyCancelClicked handler)
         {
             // 画面項目の初期化
             InitializeComponent();
+
+            // 戻り先の関数を保持
+            HandlerRef = handler;
+            NotifyCancelClicked += HandlerRef;
         }
 
         public bool ShowDialogWithOwner(Window ownerWindow)
@@ -82,7 +93,14 @@ namespace MaintenanceToolApp.BLESettings
         // 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            TerminateWindow(false);
+            // Cancelボタンを押下不可
+            buttonCancel.IsEnabled = false;
+
+            // 上位クラスにイベントを通知
+            NotifyCancelClicked();
+
+            // 呼出元クラスの関数コールバックを解除
+            NotifyCancelClicked -= HandlerRef;
         }
 
         //
