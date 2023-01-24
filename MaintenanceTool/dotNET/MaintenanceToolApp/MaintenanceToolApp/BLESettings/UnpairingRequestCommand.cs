@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.BLESettings
             DoRequestUnpairingCommand();
 
             // ペアリング解除要求画面を表示
-            UnpairingRequestWindowRef = new UnpairingRequestWindow(Parameter);
+            UnpairingRequestWindowRef = new UnpairingRequestWindow();
             bool success = UnpairingRequestWindowRef.ShowDialogWithOwner(ParentWindow);
 
             // 親画面に制御を戻す
