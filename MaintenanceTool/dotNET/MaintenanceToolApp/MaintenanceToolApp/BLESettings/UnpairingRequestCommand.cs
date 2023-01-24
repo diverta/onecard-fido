@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.FIDODefine;
@@ -103,7 +104,9 @@ namespace MaintenanceToolApp.BLESettings
                 StartWaitingForUnpair();
 
                 // タイムアウト監視に移行
-                StartWaitingForUnpairTimeoutMonitor();
+                Task task = Task.Run(() => {
+                    StartWaitingForUnpairTimeoutMonitor();
+                });
             }
         }
 
@@ -181,7 +184,8 @@ namespace MaintenanceToolApp.BLESettings
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
                 // エラーの場合は処理異常終了
-                NotifyProcessTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                string msg = string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_ST, responseData[0]);
+                NotifyProcessTerminated(false, msg);
                 return;
             }
 
@@ -210,7 +214,7 @@ namespace MaintenanceToolApp.BLESettings
                 // タイムアウト監視を停止
                 CancelWaitingForUnpairTimeoutMonitor();
 
-                // TODO: 仮の実装です。
+                // ペアリング解除要求画面を閉じ、上位クラスに制御を戻す
                 NotifyProcessTerminated(true, AppCommon.MSG_NONE);
             }
         }
