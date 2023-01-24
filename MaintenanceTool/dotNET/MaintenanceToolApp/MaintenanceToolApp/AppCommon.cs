@@ -59,6 +59,7 @@
         public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
 
         // ペアリング解除要求関連
+        public const string MSG_BLE_UNPAIRING_PREPARATION = "ペアリング解除要求の準備中です。";
         public const string MSG_BLE_UNPAIRING_WAIT_CANCELED = "ペアリング解除要求が中断されました。";
 
         // FIDO設定機能

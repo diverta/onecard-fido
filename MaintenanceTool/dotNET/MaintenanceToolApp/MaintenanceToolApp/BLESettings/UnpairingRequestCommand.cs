@@ -35,7 +35,7 @@ namespace MaintenanceToolApp.BLESettings
         private UnpairingRequestWindow UnpairingRequestWindowRef = null!;
 
         // Bluetooth環境設定からデバイスが削除されるのを待機する時間（秒）
-        private const int UNPAIRING_REQUEST_WAITING_SEC = 30;
+        public const int UNPAIRING_REQUEST_WAITING_SEC = 30;
 
         // 処理実行のためのプロパティー
         private BLESettingsParameter Parameter = null!;

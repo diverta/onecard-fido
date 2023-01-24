@@ -24,6 +24,9 @@ namespace MaintenanceToolApp.BLESettings
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
+            // 画面項目の初期化
+            InitFieldValue();
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -32,6 +35,15 @@ namespace MaintenanceToolApp.BLESettings
             } else {
                 return (bool)b;
             }
+        }
+
+        private void InitFieldValue()
+        {
+            labelTitle.Content = AppCommon.MSG_BLE_UNPAIRING_PREPARATION;
+            labelProgress.Content = "";
+            levelIndicator.Value = 0;
+            levelIndicator.Maximum = UnpairingRequestCommand.UNPAIRING_REQUEST_WAITING_SEC;
+            buttonCancel.IsEnabled = false;
         }
 
         public void CommandDidCancelUnpairingRequestProcess(bool success)
