@@ -236,6 +236,10 @@ namespace MaintenanceToolApp.BLESettings
         //
         private void StartWaitingForUnpair()
         {
+            // デバイス名を取得
+            // TODO: 仮の実装です。
+            AppLogUtil.OutputLogDebug(BLEProcess.ConnectedDeviceName());
+
             // BLE接続／切断検知時のコールバックを設定
             CommandProcess.RegisterHandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatusRef);
         }

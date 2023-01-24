@@ -56,6 +56,11 @@ namespace ToolAppCommon
             Instance.DisconnectBLE();
         }
 
+        public static string ConnectedDeviceName()
+        {
+            return Instance.BleService.ConnectedDeviceName();
+        }
+
         //
         // 内部処理
         //

@@ -274,6 +274,15 @@ namespace ToolAppCommon
             U2FStatusChar = null!;
         }
 
+        public string ConnectedDeviceName()
+        {
+            if (BLEservice == null) {
+                return string.Empty;
+            } else {
+                return BLEservice.Device.Name;
+            }
+        }
+
         //
         // BLE接続検知関連イベント
         //
