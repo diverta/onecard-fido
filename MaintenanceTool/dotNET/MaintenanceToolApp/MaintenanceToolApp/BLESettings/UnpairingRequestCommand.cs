@@ -125,6 +125,11 @@ namespace MaintenanceToolApp.BLESettings
                 Task task = Task.Run(() => {
                     StartWaitingForUnpairTimeoutMonitor();
                 });
+
+                // ペアリング解除要求画面にデバイス名を通知
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    UnpairingRequestWindowRef.CommandDidStartWaitingForUnpair(BLEProcess.ConnectedDeviceName());
+                }));
             }
         }
 
@@ -193,14 +198,24 @@ namespace MaintenanceToolApp.BLESettings
             // タイムアウト監視（最大30秒）
             for (int i = 0; i < UNPAIRING_REQUEST_WAITING_SEC; i++) {
                 // 残り秒数をペアリング解除要求画面に通知
-                int sec = UNPAIRING_REQUEST_WAITING_SEC - i;
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    UnpairingRequestWindowRef.CommandDidNotifyProgress(UNPAIRING_REQUEST_WAITING_SEC - i);
+                }));
+
                 for (int j = 0; j < 5; j++) {
+                    // タイムアウト監視停止指示の有無を、0.2秒ごとにチェック
                     if (RequestParameter.WaitingForUnpairTimeout == false) {
                         return;
                     }
                     Thread.Sleep(200);
                 }
             }
+
+            // タイムアウト発生をペアリング解除要求画面に通知
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                UnpairingRequestWindowRef.CommandDidNotifyProgress(0);
+                UnpairingRequestWindowRef.CommandDidTerminateWaitingForUnpair();
+            }));
 
             // タイムアウトと判定
             WaitingForUnpairTimeoutMonitorDidTimeout();
@@ -254,10 +269,6 @@ namespace MaintenanceToolApp.BLESettings
         //
         private void StartWaitingForUnpair()
         {
-            // デバイス名を取得
-            // TODO: 仮の実装です。
-            AppLogUtil.OutputLogDebug(BLEProcess.ConnectedDeviceName());
-
             // BLE接続／切断検知時のコールバックを設定
             CommandProcess.RegisterHandlerNotifyBLEConnectionStatus(NotifyBLEConnectionStatusRef);
         }

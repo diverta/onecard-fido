@@ -46,6 +46,31 @@ namespace MaintenanceToolApp.BLESettings
             buttonCancel.IsEnabled = false;
         }
 
+        public void CommandDidStartWaitingForUnpair(string deviceName)
+        {
+            // メッセージを表示
+            labelTitle.Content = string.Format(AppCommon.MSG_BLE_UNPAIRING_WAIT_DISCONNECT, deviceName);
+
+            // Cancelボタンを使用可とする
+            buttonCancel.IsEnabled = true;
+        }
+
+        public void CommandDidNotifyProgress(int remaining)
+        {
+            // 残り秒数をペアリング解除要求画面に表示
+            labelProgress.Content = string.Format(AppCommon.MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT, remaining);
+            levelIndicator.Value = remaining;
+        }
+
+        public void CommandDidTerminateWaitingForUnpair()
+        {
+            // Cancelボタンを使用不可とする
+            buttonCancel.IsEnabled = false;
+
+            // ラベルを更新
+            labelTitle.Content = AppCommon.MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT;
+        }
+
         public void CommandDidCancelUnpairingRequestProcess(bool success)
         {
             // コマンドクラス側での処理ステータスを戻す

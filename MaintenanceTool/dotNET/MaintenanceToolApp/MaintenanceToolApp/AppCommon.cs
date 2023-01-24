@@ -60,7 +60,10 @@
 
         // ペアリング解除要求関連
         public const string MSG_BLE_UNPAIRING_PREPARATION = "ペアリング解除要求の準備中です。";
+        public const string MSG_BLE_UNPAIRING_WAIT_DISCONNECT = "Bluetooth環境設定から\nデバイス「{0}」が\n削除されるのを待機しています。";
+        public const string MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT = "あと {0} 秒";
         public const string MSG_BLE_UNPAIRING_WAIT_CANCELED = "ペアリング解除要求が中断されました。";
+        public const string MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT = "Bluetooth環境設定からの\nデバイス削除が検知されませんでした。\nペアリング解除要求を中止します。";
 
         // FIDO設定機能
         public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";
