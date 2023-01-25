@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace ToolAppCommon
@@ -39,9 +40,14 @@ namespace ToolAppCommon
             }
         }
 
-        public static void SetOutputLogApplName(string applName)
+        public static void SetOutputLogApplName()
         {
             // ログ出力を行うアプリケーション名を設定
+            string applName = "ToolApp";
+            AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
+            if (assemblyName.Name != null) {
+                applName = assemblyName.Name;
+            }
             SetApplicationName(applName);
         }
 
