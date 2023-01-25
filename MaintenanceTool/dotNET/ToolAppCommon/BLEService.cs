@@ -6,18 +6,13 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
-using static MaintenanceToolApp.FIDODefine;
 
 namespace ToolAppCommon
 {
     internal class BLEService
     {
-        // UUID
-        private readonly Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid(U2F_CONTROL_POINT_CHAR_UUID_STR);
-        private readonly Guid U2F_STATUS_CHAR_UUID = new Guid(U2F_STATUS_CHAR_UUID_STR);
-
         // 応答タイムアウト監視用タイマー
-        private CommonTimer ResponseTimer = null!;
+        private readonly CommonTimer ResponseTimer = null!;
 
         public BLEService()
         {
@@ -73,7 +68,7 @@ namespace ToolAppCommon
                     await Task.Run(() => System.Threading.Thread.Sleep(100));
                 }
 
-                if (await StartBLENotification(BLEservice)) {
+                if (await StartBLENotification(BLEservice, parameter)) {
                     AppLogUtil.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, BLEservice.Device.Name));
                     return true;
                 }
@@ -125,13 +120,13 @@ namespace ToolAppCommon
             }
         }
 
-        private async Task<bool> StartBLENotification(GattDeviceService service)
+        private async Task<bool> StartBLENotification(GattDeviceService service, ScanBLEPeripheralParameter parameter)
         {
             // ステータスを初期化（戻りの有無を上位関数で判別できるようにするため）
             CommunicationStatus = GattCommunicationStatus.Success;
 
             try {
-                U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
+                U2FStatusChar = service.GetCharacteristics(parameter.CharactForWriteUUID)[0];
 
                 CommunicationStatus = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
@@ -140,7 +135,7 @@ namespace ToolAppCommon
                     return false;
                 }
 
-                U2FControlPointChar = service.GetCharacteristics(U2F_CONTROL_POINT_CHAR_UUID)[0];
+                U2FControlPointChar = service.GetCharacteristics(parameter.CharactForReadUUID)[0];
                 U2FStatusChar.ValueChanged += OnCharacteristicValueChanged;
 
                 // 監視開始したサービスを退避

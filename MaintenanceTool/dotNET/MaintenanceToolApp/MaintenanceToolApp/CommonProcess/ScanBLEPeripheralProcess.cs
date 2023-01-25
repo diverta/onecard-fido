@@ -5,26 +5,36 @@ using ToolAppCommon;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Radios;
 using Windows.Storage.Streams;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
     internal class ScanBLEPeripheralParameter
     {
         public Guid ServiceUUID { get; set; }
+        public Guid CharactForWriteUUID { get; set; }
+        public Guid CharactForReadUUID { get; set; }
         public ulong BluetoothAddress { get; set; }
         public byte[] ServiceDataField { get; set; }
         public bool FIDOServiceDataFieldFound { get; set; }
         public bool BLEPeripheralFound { get; set; }
         public bool ConnectOnly { get; set; }
 
-        public ScanBLEPeripheralParameter(string serviceUUIDString)
+        public ScanBLEPeripheralParameter(string serviceUUIDString, string charactForWriteUUIDString, string charactForReadUUIDString)
         {
             ServiceUUID = new Guid(serviceUUIDString);
+            CharactForWriteUUID = new Guid(charactForWriteUUIDString);
+            CharactForReadUUID = new Guid(charactForReadUUIDString);
             BluetoothAddress = 0;
             ServiceDataField = Array.Empty<byte>();
             FIDOServiceDataFieldFound = false;
             BLEPeripheralFound = false;
             ConnectOnly = false;
+        }
+
+        public static ScanBLEPeripheralParameter PrepareParameterForFIDO()
+        {
+            return new ScanBLEPeripheralParameter(U2F_BLE_SERVICE_UUID_STR, U2F_STATUS_CHAR_UUID_STR, U2F_CONTROL_POINT_CHAR_UUID_STR);
         }
     }
 
