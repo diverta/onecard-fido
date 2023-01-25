@@ -128,7 +128,7 @@ namespace ToolAppCommon
             }
 
             // サービスに接続
-            if (await BleService.StartCommunicate()) {
+            if (await BleService.StartCommunicate(parameter)) {
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
