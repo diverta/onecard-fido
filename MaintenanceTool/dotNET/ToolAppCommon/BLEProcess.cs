@@ -2,6 +2,7 @@
 using MaintenanceToolApp.CommonProcess;
 using System;
 using System.Linq;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace ToolAppCommon
 {
@@ -108,7 +109,7 @@ namespace ToolAppCommon
         private void DoConnectWithFIDOPeripheral(bool connectOnly)
         {
             // 接続先のFIDO認証器をスキャン
-            ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+            ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(U2F_BLE_SERVICE_UUID_STR);
             parameter.ConnectOnly = connectOnly;
             new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
         }

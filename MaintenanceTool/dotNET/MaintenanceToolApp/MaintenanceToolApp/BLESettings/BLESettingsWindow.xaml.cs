@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.BLESettings
 {
@@ -39,7 +40,7 @@ namespace MaintenanceToolApp.BLESettings
         {
             Task task = Task.Run(() => {
                 // ペアリング対象のFIDO認証器を検索
-                ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+                ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(U2F_BLE_SERVICE_UUID_STR);
                 new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
             });
 
