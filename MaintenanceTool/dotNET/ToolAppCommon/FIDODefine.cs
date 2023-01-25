@@ -34,5 +34,14 @@
         public const byte CTAP2_SUBCMD_CLIENT_PIN_SET = 0x03;
         public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
         public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
+
+        // U2Fに関する定義
+        public const int U2F_INS_REGISTER = 0x01;
+        public const int U2F_INS_AUTHENTICATE = 0x02;
+        public const int U2F_INS_VERSION = 0x03;
+        public const int U2F_AUTH_ENFORCE = 0x03;
+        public const int U2F_AUTH_CHECK_ONLY = 0x07;
+        public const int U2F_APPID_SIZE = 32;
+        public const int U2F_NONCE_SIZE = 32;
     }
 }

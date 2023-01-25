@@ -5,7 +5,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
 
 namespace ToolAppCommon
@@ -20,7 +19,6 @@ namespace ToolAppCommon
     internal class BLEService
     {
         // UUID
-        private readonly Guid U2F_BLE_SERVICE_UUID = new Guid(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
         private readonly Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid(BLEServiceConst.U2F_CONTROL_POINT_CHAR_UUID_STR);
         private readonly Guid U2F_STATUS_CHAR_UUID = new Guid(BLEServiceConst.U2F_STATUS_CHAR_UUID_STR);
 
