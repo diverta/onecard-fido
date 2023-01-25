@@ -6,12 +6,6 @@ using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.HealthCheck
 {
-    internal static class U2FProcessConst
-    {
-        // U2Fコマンドバイトに関する定義
-        public const byte U2F_CMD_MSG = 0x83;
-    }
-
     internal class U2FHealthCheckProcess
     {
         // 処理実行のためのプロパティー
@@ -137,11 +131,11 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Transport) {
             case Transport.TRANSPORT_HID:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestCtapHidCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             default:
                 break;
@@ -238,11 +232,11 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Transport) {
             case Transport.TRANSPORT_HID:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestCtapHidCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             default:
                 break;

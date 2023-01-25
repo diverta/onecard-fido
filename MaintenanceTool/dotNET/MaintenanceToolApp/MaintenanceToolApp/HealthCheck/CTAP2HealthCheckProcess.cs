@@ -155,7 +155,7 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, getAgreementCbor);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, getAgreementCbor);
                 break;
             default:
                 break;
@@ -210,7 +210,7 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, getPinTokenCbor);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, getPinTokenCbor);
                 break;
             default:
                 break;
@@ -279,7 +279,7 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, makeCredentialCbor);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, makeCredentialCbor);
                 break;
             default:
                 break;
@@ -373,7 +373,7 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, getAssertionCbor);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, getAssertionCbor);
                 break;
             default:
                 break;
@@ -503,7 +503,7 @@ namespace MaintenanceToolApp.HealthCheck
                 return;
             }
             // GetAgreementからの戻りの場合
-            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_CBOR || CMD == U2FProcessConst.U2F_CMD_MSG) {
+            if (CMD == HIDProcessConst.HID_CMD_CTAPHID_CBOR || CMD == (0x80 | FIDO_CMD_MSG)) {
                 DoResponseCtapHidCbor(responseData);
                 return;
             }
