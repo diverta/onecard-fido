@@ -14,7 +14,7 @@ namespace MaintenanceToolApp.BLESettings
         private event HandlerNotifyCancelClicked NotifyCancelClicked = null!;
 
         // 戻り先の関数を保持
-        private HandlerNotifyCancelClicked HandlerRef = null!;
+        private readonly HandlerNotifyCancelClicked HandlerRef = null!;
 
         public UnpairingRequestWindow(HandlerNotifyCancelClicked handler)
         {
@@ -75,7 +75,7 @@ namespace MaintenanceToolApp.BLESettings
             labelTitle.Content = AppCommon.MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT;
         }
 
-        public void CommandDidCancelUnpairingRequestProcess(bool success)
+        public void CommandDidTerminateUnpairingProcess(bool success)
         {
             // コマンドクラス側での処理ステータスを戻す
             TerminateWindow(success);

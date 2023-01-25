@@ -38,7 +38,7 @@ namespace MaintenanceToolApp.BLESettings
         public const int UNPAIRING_REQUEST_WAITING_SEC = 30;
 
         // 処理実行のためのプロパティー
-        private BLESettingsParameter Parameter = null!;
+        private readonly BLESettingsParameter Parameter = null!;
 
         // 上位クラスに対するイベント通知
         public delegate void HandlerOnNotifyCommandTerminated(string commandTitle, string errorMessage, bool success);
@@ -97,7 +97,7 @@ namespace MaintenanceToolApp.BLESettings
 
             // ペアリング解除要求画面を閉じる
             Application.Current.Dispatcher.Invoke(new Action(() => {
-                UnpairingRequestWindowRef.CommandDidCancelUnpairingRequestProcess(success);
+                UnpairingRequestWindowRef.CommandDidTerminateUnpairingProcess(success);
             }));
         }
 
