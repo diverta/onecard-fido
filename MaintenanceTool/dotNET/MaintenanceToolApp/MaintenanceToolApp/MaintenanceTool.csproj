@@ -1,0 +1,145 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <Version>0.3.0</Version>
+    <Copyright>Copyright © 2017-2023 Diverta Inc.</Copyright>
+    <Company>Diverta Inc.</Company>
+    <Product>MaintenanceTool</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <FileVersion>$(Version).103</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="PeterO\**" />
+    <EmbeddedResource Remove="PeterO\**" />
+    <None Remove="PeterO\**" />
+    <Page Remove="PeterO\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\add_sub_key.bat" />
+    <None Remove="Resources\add_sub_key.param" />
+    <None Remove="Resources\appkg.PCA10059_01.0.3.6.zip" />
+    <None Remove="Resources\appkg.PCA10059_02.0.3.6.zip" />
+    <None Remove="Resources\appkg.PCA10059_03.0.3.6.zip" />
+    <None Remove="Resources\appkg.PCA10059_03.0.3.7.zip" />
+    <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
+    <None Remove="Resources\card_reset.bat" />
+    <None Remove="Resources\card_reset.param" />
+    <None Remove="Resources\card_status.bat" />
+    <None Remove="Resources\export_pubkey_and_backup.bat" />
+    <None Remove="Resources\generate_main_key.bat" />
+    <None Remove="Resources\generate_main_key.param" />
+    <None Remove="Resources\transfer_subkey_to_card.bat" />
+    <None Remove="Resources\transfer_subkey_to_card.param" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
+    <Compile Include="..\..\ToolAppCommon\AppLogUtil.cs" Link="ToolAppCommon\AppLogUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\AppUtil.cs" Link="ToolAppCommon\AppUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\BLEProcess.cs" Link="ToolAppCommon\BLEProcess.cs" />
+    <Compile Include="..\..\ToolAppCommon\BLEService.cs" Link="ToolAppCommon\BLEService.cs" />
+    <Compile Include="..\..\ToolAppCommon\CCIDDevice.cs" Link="ToolAppCommon\CCIDDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\CCIDProcess.cs" Link="ToolAppCommon\CCIDProcess.cs" />
+    <Compile Include="..\..\ToolAppCommon\DialogUtil.cs" Link="ToolAppCommon\DialogUtil.cs" />
+    <Compile Include="..\..\ToolAppCommon\FIDODefine.cs" Link="ToolAppCommon\FIDODefine.cs" />
+    <Compile Include="..\..\ToolAppCommon\HIDDevice.cs" Link="ToolAppCommon\HIDDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\HIDProcess.cs" Link="ToolAppCommon\HIDProcess.cs" />
+    <Compile Include="..\..\ToolAppCommon\USBDevice.cs" Link="ToolAppCommon\USBDevice.cs" />
+    <Compile Include="..\..\ToolAppCommon\WindowUtil.cs" Link="ToolAppCommon\WindowUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\add_sub_key.bat" />
+    <EmbeddedResource Include="Resources\add_sub_key.param" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_03.0.3.7.zip" />
+    <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
+    <EmbeddedResource Include="Resources\card_reset.bat" />
+    <EmbeddedResource Include="Resources\card_reset.param" />
+    <EmbeddedResource Include="Resources\card_status.bat" />
+    <EmbeddedResource Include="Resources\export_pubkey_and_backup.bat" />
+    <EmbeddedResource Include="Resources\generate_main_key.bat" />
+    <EmbeddedResource Include="Resources\generate_main_key.param" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.bat" />
+    <EmbeddedResource Include="Resources\transfer_subkey_to_card.param" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icon_128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ToolAppCommon\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="OpenCvSharp4" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.6.0.20220608" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WpfCborLibrary">
+      <HintPath>..\WpfCborLibrary\bin\Release\net6.0-windows10.0.18362.0\WpfCborLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CommonWindow\CommonProcessingWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CommonWindow\CommonVersionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="HealthCheck\HealthCheckPinWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="HealthCheck\HealthCheckWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Utility\UtilityWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CommonWindow\CommonProcessingWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CommonWindow\CommonVersionWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="HealthCheck\HealthCheckPinWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="HealthCheck\HealthCheckWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Utility\UtilityWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

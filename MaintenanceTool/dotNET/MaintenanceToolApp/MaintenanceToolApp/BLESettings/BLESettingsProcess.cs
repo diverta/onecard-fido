@@ -51,6 +51,12 @@ namespace MaintenanceToolApp.BLESettings
                 DoRequestPairing();
                 break;
 
+            case Command.COMMAND_UNPAIRING_REQUEST:
+                Parameter.CommandTitle = AppCommon.PROCESS_NAME_UNPAIRING_REQUEST;
+                CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
+                DoRequestUnpairingRequest();
+                break;
+
             case Command.COMMAND_ERASE_BONDS:
                 Parameter.CommandTitle = AppCommon.PROCESS_NAME_ERASE_BONDS;
                 CommandProcess.NotifyCommandStarted(Parameter.CommandTitle);
@@ -69,9 +75,14 @@ namespace MaintenanceToolApp.BLESettings
             new BLEPairingProcess(Parameter).DoRequestPairing(DoResponseFromSubProcess);
         }
 
+        private void DoRequestUnpairingRequest()
+        {
+            new UnpairingRequestCommand(Parameter).DoUnpairingRequestProcess(DoResponseFromSubProcess);
+        }
+
         private void DoRequestEraseBonds()
         {
-            new UnpairingProcess(Parameter).DoRequestEraseBonds(DoResponseFromSubProcess);
+            new EraseBondsProcess(Parameter).DoRequestEraseBonds(DoResponseFromSubProcess);
         }
 
         //
@@ -82,6 +93,16 @@ namespace MaintenanceToolApp.BLESettings
             // 失敗時はログ出力
             if (success == false && errorMessage.Length > 0) {
                 AppLogUtil.OutputLogError(errorMessage);
+            }
+
+            // ペアリング解除要求のタイムアウト／キャンセル時
+            if (errorMessage.Equals(AppCommon.MSG_BLE_UNPAIRING_WAIT_CANCELED)) {
+                // メイン画面に制御を戻す
+                CommandProcess.NotifyCommandTerminated(AppCommon.PROCESS_NAME_NONE, errorMessage, success, ParentWindow);
+
+                // ポップアップを表示
+                DialogUtil.ShowWarningMessage(ParentWindow, Parameter.CommandTitle, errorMessage);
+                return;
             }
 
             // メイン画面に制御を戻す

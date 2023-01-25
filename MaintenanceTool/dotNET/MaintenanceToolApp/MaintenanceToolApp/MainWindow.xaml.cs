@@ -29,7 +29,7 @@ namespace MaintenanceToolApp
             Title = AppCommon.MSG_TOOL_TITLE;
 
             // アプリケーション開始ログを出力
-            AppLogUtil.SetOutputLogApplName("MaintenanceToolApp");
+            AppLogUtil.SetOutputLogApplName();
             AppLogUtil.OutputLogInfo(string.Format("{0}を起動しました: {1}", AppCommon.MSG_TOOL_TITLE, AppUtil.GetAppVersionString()));
 
             // USBデバイスの脱着検知を開始

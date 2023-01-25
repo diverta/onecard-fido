@@ -16,6 +16,9 @@ namespace MaintenanceToolApp
 
             // BLEからデータ受信時のコールバックを登録
             BLEProcess.RegisterHandlerOnReceivedResponse(OnReceivedBleResponse);
+
+            // BLEデバイス接続／切断検知時のコールバックを登録
+            BLEProcess.RegisterHandlerNotifyConnectionStatus(NotifyConnectionStatus);
         }
 
         // 親画面に対するイベント通知
@@ -28,6 +31,9 @@ namespace MaintenanceToolApp
         // コマンド機能クラスに対するイベント通知
         public delegate void HandlerOnCommandResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         public event HandlerOnCommandResponse OnCommandResponse = null!;
+
+        public delegate void HandlerNotifyBLEConnectionStatus(bool connected);
+        public event HandlerNotifyBLEConnectionStatus NotifyBLEConnectionStatus = null!;
 
         //
         // 外部公開用
@@ -50,6 +56,16 @@ namespace MaintenanceToolApp
         public static void UnregisterHandlerOnCommandResponse(HandlerOnCommandResponse handler)
         {
             Instance.OnCommandResponse -= handler;
+        }
+
+        public static void RegisterHandlerNotifyBLEConnectionStatus(HandlerNotifyBLEConnectionStatus handler)
+        {
+            Instance.NotifyBLEConnectionStatus += handler;
+        }
+
+        public static void UnregisterHandlerNotifyBLEConnectionStatus(HandlerNotifyBLEConnectionStatus handler)
+        {
+            Instance.NotifyBLEConnectionStatus -= handler;
         }
 
         //
@@ -238,6 +254,12 @@ namespace MaintenanceToolApp
         {
             // 上位クラスに制御を戻す
             OnCommandResponseToMainThread(CMD, responseData, success, errorMessage);
+        }
+
+        private void NotifyConnectionStatus(bool connected)
+        {
+            // BLE接続／切断検知を上位クラスに転送
+            NotifyBLEConnectionStatus(connected);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace MaintenanceToolApp.BLESettings
         {
             Task task = Task.Run(() => {
                 // ペアリング対象のFIDO認証器を検索
-                ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+                ScanBLEPeripheralParameter parameter = ScanBLEPeripheralParameter.PrepareParameterForFIDO();
                 new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
             });
 
@@ -93,6 +93,13 @@ namespace MaintenanceToolApp.BLESettings
 
         private void DoUnpairing()
         {
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_UNPAIRING_REQUEST;
+            TerminateWindow(true);
+        }
+
+        private void DoEraseBonding()
+        {
             // USB HID接続がない場合はエラーメッセージを表示
             if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                 return;
@@ -133,6 +140,11 @@ namespace MaintenanceToolApp.BLESettings
         private void buttonUnpairing_Click(object sender, RoutedEventArgs e)
         {
             DoUnpairing();
+        }
+
+        private void buttonEraseBonding_Click(object sender, RoutedEventArgs e)
+        {
+            DoEraseBonding();
         }
     }
 }

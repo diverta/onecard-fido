@@ -19,6 +19,7 @@
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
+        public const string PROCESS_NAME_UNPAIRING_REQUEST = "ペアリング解除要求";
         public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
@@ -47,6 +48,8 @@
         public const string MSG_SUCCESS = "成功";
         public const string MSG_FAILURE = "失敗";
         public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
+        public const string MSG_OCCUR_UNKNOWN_ERROR_SW = "不明なエラーが発生しました（SW=0x{0:x4}）";
+        public const string MSG_OCCUR_UNKNOWN_ERROR_ST = "不明なエラーが発生しました（Status=0x{0:x2}）";
 
         // BLE設定機能
         public const string MSG_PROMPT_INPUT_PAIRING_PASSCODE = "パスコードを６桁で入力してください";
@@ -54,6 +57,13 @@
         public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_ERASE_BONDS_COMMAND_ERROR = "ペアリング情報削除コマンドの実行に失敗しました。";
+
+        // ペアリング解除要求関連
+        public const string MSG_BLE_UNPAIRING_PREPARATION = "ペアリング解除要求の準備中です。";
+        public const string MSG_BLE_UNPAIRING_WAIT_DISCONNECT = "Bluetooth環境設定から\nデバイス「{0}」が\n削除されるのを待機しています。";
+        public const string MSG_BLE_UNPAIRING_WAIT_SEC_FORMAT = "あと {0} 秒";
+        public const string MSG_BLE_UNPAIRING_WAIT_CANCELED = "ペアリング解除要求が中断されました。";
+        public const string MSG_BLE_UNPAIRING_WAIT_DISC_TIMEOUT = "Bluetooth環境設定からの\nデバイス削除が検知されませんでした。\nペアリング解除要求を中止します。";
 
         // FIDO設定機能
         public const string MSG_PROMPT_INPUT_NEW_PIN = "新しいPINコードを４〜16桁で入力してください";

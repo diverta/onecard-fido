@@ -2,24 +2,10 @@
 using System.Linq;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.HealthCheck
 {
-    internal static class U2FProcessConst
-    {
-        // U2F処理に関する定義
-        public const int U2F_INS_REGISTER = 0x01;
-        public const int U2F_INS_AUTHENTICATE = 0x02;
-        public const int U2F_INS_VERSION = 0x03;
-        public const int U2F_AUTH_ENFORCE = 0x03;
-        public const int U2F_AUTH_CHECK_ONLY = 0x07;
-        public const int U2F_APPID_SIZE = 32;
-        public const int U2F_NONCE_SIZE = 32;
-
-        // U2Fコマンドバイトに関する定義
-        public const byte U2F_CMD_MSG = 0x83;
-    }
-
     internal class U2FHealthCheckProcess
     {
         // 処理実行のためのプロパティー
@@ -119,8 +105,8 @@ namespace MaintenanceToolApp.HealthCheck
 
         // 生成されたランダムなチャレンジ、AppIDを保持
         // (ヘルスチェック処理で使用)
-        private readonly byte[] NonceBytes = new byte[U2FProcessConst.U2F_NONCE_SIZE];
-        private readonly byte[] AppidBytes = new byte[U2FProcessConst.U2F_APPID_SIZE];
+        private readonly byte[] NonceBytes = new byte[U2F_NONCE_SIZE];
+        private readonly byte[] AppidBytes = new byte[U2F_APPID_SIZE];
         private readonly Random RandomInst = new Random();
 
         // U2Fキーハンドルデータを保持
@@ -145,11 +131,11 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Transport) {
             case Transport.TRANSPORT_HID:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestCtapHidCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             default:
                 break;
@@ -162,21 +148,21 @@ namespace MaintenanceToolApp.HealthCheck
 
             // リクエストデータを配列にセット
             u2fRequestData[0] = 0x00;
-            u2fRequestData[1] = U2FProcessConst.U2F_INS_REGISTER;
+            u2fRequestData[1] = U2F_INS_REGISTER;
             u2fRequestData[2] = 0x00;
             u2fRequestData[3] = 0x00;
             u2fRequestData[4] = 0x00;
             u2fRequestData[5] = 0x00;
-            u2fRequestData[6] = U2FProcessConst.U2F_NONCE_SIZE + U2FProcessConst.U2F_APPID_SIZE;
+            u2fRequestData[6] = U2F_NONCE_SIZE + U2F_APPID_SIZE;
 
             // challengeを設定
             pos = 7;
-            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_NONCE_SIZE);
-            pos += U2FProcessConst.U2F_NONCE_SIZE;
+            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2F_NONCE_SIZE);
+            pos += U2F_NONCE_SIZE;
 
             // appIdを設定
-            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_APPID_SIZE);
-            pos += U2FProcessConst.U2F_APPID_SIZE;
+            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2F_APPID_SIZE);
+            pos += U2F_APPID_SIZE;
 
             // Leを設定
             u2fRequestData[pos++] = 0x00;
@@ -246,11 +232,11 @@ namespace MaintenanceToolApp.HealthCheck
             switch (Parameter.Transport) {
             case Transport.TRANSPORT_HID:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestCtapHidCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestCtapHidCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             case Transport.TRANSPORT_BLE:
                 CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-                CommandProcess.DoRequestBleCommand(U2FProcessConst.U2F_CMD_MSG, requestBytes);
+                CommandProcess.DoRequestBleCommand(0x80 | FIDO_CMD_MSG, requestBytes);
                 break;
             default:
                 break;
@@ -263,21 +249,21 @@ namespace MaintenanceToolApp.HealthCheck
 
             // リクエストデータを配列にセット
             u2fRequestData[0] = 0x00;
-            u2fRequestData[1] = U2FProcessConst.U2F_INS_AUTHENTICATE;
+            u2fRequestData[1] = U2F_INS_AUTHENTICATE;
             u2fRequestData[2] = authOption;
             u2fRequestData[3] = 0x00;
             u2fRequestData[4] = 0x00;
             u2fRequestData[5] = 0x00;
-            u2fRequestData[6] = (byte)(U2FProcessConst.U2F_NONCE_SIZE + U2FProcessConst.U2F_APPID_SIZE + U2FKeyhandleSize + 1);
+            u2fRequestData[6] = (byte)(U2F_NONCE_SIZE + U2F_APPID_SIZE + U2FKeyhandleSize + 1);
 
             // challengeを設定
             pos = 7;
-            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_NONCE_SIZE);
-            pos += U2FProcessConst.U2F_NONCE_SIZE;
+            Array.Copy(NonceBytes, 0, u2fRequestData, pos, U2F_NONCE_SIZE);
+            pos += U2F_NONCE_SIZE;
 
             // appIdを設定
-            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2FProcessConst.U2F_APPID_SIZE);
-            pos += U2FProcessConst.U2F_APPID_SIZE;
+            Array.Copy(AppidBytes, 0, u2fRequestData, pos, U2F_APPID_SIZE);
+            pos += U2F_APPID_SIZE;
 
             // キーハンドル長を設定
             u2fRequestData[pos++] = (byte)U2FKeyhandleSize;
@@ -297,9 +283,9 @@ namespace MaintenanceToolApp.HealthCheck
         {
             // 処理区分からオプションを設定
             if (Parameter.Command == Command.COMMAND_TEST_AUTH_CHECK) {
-                return U2FProcessConst.U2F_AUTH_CHECK_ONLY;
+                return U2F_AUTH_CHECK_ONLY;
             } else {
-                return U2FProcessConst.U2F_AUTH_ENFORCE;
+                return U2F_AUTH_ENFORCE;
             }
         }
 

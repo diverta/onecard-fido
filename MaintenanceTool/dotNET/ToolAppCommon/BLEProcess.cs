@@ -22,12 +22,21 @@ namespace ToolAppCommon
         public delegate void HandlerOnReceivedResponse(byte CMD, byte[] responseData, bool success, string errorMessage);
         private event HandlerOnReceivedResponse OnReceivedResponse = null!;
 
+        // BLEデバイス接続／切断検知時のイベント
+        public delegate void HandlerNotifyConnectionStatus(bool connected);
+        private event HandlerNotifyConnectionStatus NotifyConnectionStatus = null!;
+
         //
         // 外部公開用
         //
         public static void RegisterHandlerOnReceivedResponse(HandlerOnReceivedResponse handler)
         {
             Instance.OnReceivedResponse += handler;
+        }
+
+        public static void RegisterHandlerNotifyConnectionStatus(HandlerNotifyConnectionStatus handler)
+        {
+            Instance.NotifyConnectionStatus += handler;
         }
 
         public static void DoRequestCommand(byte CMD, byte[] data)
@@ -47,6 +56,11 @@ namespace ToolAppCommon
             Instance.DisconnectBLE();
         }
 
+        public static string ConnectedDeviceName()
+        {
+            return Instance.BleService.ConnectedDeviceName();
+        }
+
         //
         // 内部処理
         //
@@ -58,6 +72,7 @@ namespace ToolAppCommon
             // BLEデバイスのイベントを登録
             BleService.OnDataReceived += new BLEService.HandlerOnDataReceived(OnDataReceived);
             BleService.OnTransactionFailed += new BLEService.HandlerOnTransactionFailed(OnTransactionFailed);
+            BleService.OnConnectionStatusChanged += new BLEService.HandlerOnConnectionStatusChanged(OnConnectionStatusChanged);
 
             // 変数初期化
             CMDToSend = 0x00;
@@ -93,7 +108,7 @@ namespace ToolAppCommon
         private void DoConnectWithFIDOPeripheral(bool connectOnly)
         {
             // 接続先のFIDO認証器をスキャン
-            ScanBLEPeripheralParameter parameter = new ScanBLEPeripheralParameter(BLEServiceConst.U2F_BLE_SERVICE_UUID_STR);
+            ScanBLEPeripheralParameter parameter = ScanBLEPeripheralParameter.PrepareParameterForFIDO();
             parameter.ConnectOnly = connectOnly;
             new ScanBLEPeripheralProcess().DoProcess(parameter, OnFIDOPeripheralFound);
         }
@@ -113,7 +128,7 @@ namespace ToolAppCommon
             }
 
             // サービスに接続
-            if (await BleService.StartCommunicate()) {
+            if (await BleService.StartCommunicate(parameter)) {
                 AppLogUtil.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
@@ -322,6 +337,12 @@ namespace ToolAppCommon
                 // 接続ずみの場合はBLEデバイスを切断
                 BleService.Disconnect();
             }
+        }
+
+        private void OnConnectionStatusChanged(bool connected)
+        {
+            // BLE接続／切断検知を上位クラスに転送
+            NotifyConnectionStatus(connected);
         }
     }
 }
