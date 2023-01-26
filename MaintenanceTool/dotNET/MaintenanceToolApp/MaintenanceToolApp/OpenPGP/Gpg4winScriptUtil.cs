@@ -75,14 +75,14 @@ namespace MaintenanceToolApp.OpenPGP
             scriptResourceName = string.Empty;
 
             // 検索対象のリソース名
-            string resourceName = string.Format("MaintenanceToolApp.Resources.{0}", scriptName);
+            string resourceName = string.Format("{0}.Resources.{1}", AppUtil.GetAppBundleNameString(), scriptName);
 
             // このアプリケーションに同梱されているリソース名を取得
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             string[] resnames = myAssembly.GetManifestResourceNames();
             foreach (string resName in resnames) {
                 // リソース名が
-                // "MaintenanceToolApp.Resources.<scriptName>"
+                // "<bundleName>.Resources.<scriptName>"
                 // という名称の場合
                 if (resName.Equals(resourceName)) {
                     scriptResourceName = resourceName;

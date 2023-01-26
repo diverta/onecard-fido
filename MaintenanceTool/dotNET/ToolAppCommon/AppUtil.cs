@@ -7,15 +7,17 @@ namespace ToolAppCommon
 {
     public class AppUtil
     {
-        private static AppUtil Instance = new AppUtil();
+        private static readonly AppUtil Instance = new AppUtil();
         private readonly string AppVersion;
         private readonly string AppCopyright;
+        private readonly string AppBundleName;
 
         private AppUtil()
         {
             // ツールのバージョン、著作権情報を取得
             AppVersion = string.Format("Version {0}", GetAppVersion());
             AppCopyright = GetAppCopyright();
+            AppBundleName = GetAppBundleName();
         }
 
         private static string GetAppVersion()
@@ -25,7 +27,7 @@ namespace ToolAppCommon
             System.Diagnostics.FileVersionInfo ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(asm.Location);
             string? versionString = ver.ProductVersion;
             if (versionString == null) {
-                return "";
+                return string.Empty;
             } else {
                 return versionString;
             }
@@ -37,10 +39,21 @@ namespace ToolAppCommon
             Assembly asm = Assembly.GetExecutingAssembly();
             Attribute? attribute = Attribute.GetCustomAttribute(asm, typeof(AssemblyCopyrightAttribute));
             if (attribute == null) {
-                return "";
+                return string.Empty;
             }
             AssemblyCopyrightAttribute copyright = (AssemblyCopyrightAttribute)attribute;
             return copyright.Copyright;
+        }
+
+        private static string GetAppBundleName()
+        {
+            // アプリケーションバンドル文字列を戻す
+            AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
+            if (assemblyName.Name == null) {
+                return string.Empty;
+            } else {
+                return assemblyName.Name;
+            }
         }
 
         //
@@ -54,6 +67,11 @@ namespace ToolAppCommon
         public static string GetAppCopyrightString()
         {
             return Instance.AppCopyright;
+        }
+
+        public static string GetAppBundleNameString()
+        {
+            return Instance.AppBundleName;
         }
 
         // 

@@ -36,7 +36,6 @@ namespace MaintenanceToolApp.DFU
         public string UpdateVersion;
 
         // リソース名称検索用キーワード
-        public const string ResourceName = "MaintenanceToolApp.Resources.";
         public const string ResourceNamePrefix = "app_update.";
         public const string ResourceNameSuffix = ".bin";
         public const string ResourceNamePrefixFor52 = "appkg.";
@@ -44,8 +43,13 @@ namespace MaintenanceToolApp.DFU
 
         public DFUImageData()
         {
-            DFUImageResourceName = String.Empty;
-            UpdateVersion = String.Empty;
+            DFUImageResourceName = string.Empty;
+            UpdateVersion = string.Empty;
+        }
+
+        public static string ResourceName()
+        {
+            return string.Format("{0}.Resources.", AppUtil.GetAppBundleNameString());
         }
     }
 
@@ -181,10 +185,10 @@ namespace MaintenanceToolApp.DFU
         private static bool StartsWithResourceNameForNRF53(string boardname, string resName)
         {
             // リソース名が
-            // "MaintenanceToolApp.Resources.app_update.<boardname>."
+            // "<bundleName>.Resources.app_update.<boardname>."
             // という名称で始まっている場合は、
             // ファームウェア更新イメージファイルと判定
-            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefix, boardname);
+            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName(), DFUImageData.ResourceNamePrefix, boardname);
             return resName.StartsWith(prefix);
         }
 
@@ -273,7 +277,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // リソース名称文字列から、バージョン文字列だけを抽出
-            string replaced = resName.Replace(DFUImageData.ResourceName, "").Replace(DFUImageData.ResourceNamePrefix, "").Replace(DFUImageData.ResourceNameSuffix, "");
+            string replaced = resName.Replace(DFUImageData.ResourceName(), "").Replace(DFUImageData.ResourceNamePrefix, "").Replace(DFUImageData.ResourceNameSuffix, "");
             string[] elem = replaced.Split('.');
             if (elem.Length != 4) {
                 return UpdateVersion;
@@ -285,7 +289,7 @@ namespace MaintenanceToolApp.DFU
             UpdateVersion = string.Format("{0}.{1}.{2}", elem[1], elem[2], elem[3]);
 
             // ログ出力
-            string fname = resName.Replace(DFUImageData.ResourceName, "");
+            string fname = resName.Replace(DFUImageData.ResourceName(), "");
             AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF53: Firmware version {0}, board name {1}",
                 UpdateVersion, boardname));
             AppLogUtil.OutputLogDebug(string.Format("DFU image for nRF53: {0}({1} bytes)",
@@ -316,10 +320,10 @@ namespace MaintenanceToolApp.DFU
         private static bool StartsWithResourceNameForNRF52(string boardname, string resName)
         {
             // リソース名が
-            // "MaintenanceToolApp.Resources.appkg.<boardname>."
+            // "<bundleName>.Resources.appkg.<boardname>."
             // という名称で始まっている場合は、
             // ファームウェア更新イメージファイルと判定
-            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName, DFUImageData.ResourceNamePrefixFor52, boardname);
+            string prefix = string.Format("{0}{1}{2}.", DFUImageData.ResourceName(), DFUImageData.ResourceNamePrefixFor52, boardname);
             return resName.StartsWith(prefix);
         }
 
@@ -401,7 +405,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // リソース名称文字列から、バージョン文字列だけを抽出
-            string replaced = resName.Replace(DFUImageData.ResourceName, "").Replace(DFUImageData.ResourceNamePrefixFor52, "").Replace(DFUImageData.ResourceNameSuffixFor52, "");
+            string replaced = resName.Replace(DFUImageData.ResourceName(), "").Replace(DFUImageData.ResourceNamePrefixFor52, "").Replace(DFUImageData.ResourceNameSuffixFor52, "");
             string[] elem = replaced.Split('.');
             if (elem.Length != 4) {
                 return UpdateVersion;
