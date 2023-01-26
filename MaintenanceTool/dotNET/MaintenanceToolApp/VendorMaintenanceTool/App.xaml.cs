@@ -1,5 +1,4 @@
 ﻿using MaintenanceToolApp;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 
@@ -11,7 +10,7 @@ namespace VendorMaintenanceTool
     public partial class App : Application
     {
         // Mutex作成
-        private readonly Mutex MutexRef = new Mutex(false, Assembly.GetExecutingAssembly().GetName().Name);
+        private readonly Mutex MutexRef = new Mutex(false, "MaintenanceToolApp");
 
         protected override void OnStartup(StartupEventArgs e)
         {
