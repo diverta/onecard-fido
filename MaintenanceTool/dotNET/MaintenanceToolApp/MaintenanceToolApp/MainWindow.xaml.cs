@@ -6,6 +6,7 @@ using MaintenanceToolApp.OpenPGP;
 using MaintenanceToolApp.PIV;
 using MaintenanceToolApp.Utility;
 using System;
+using System.Reflection;
 using System.Windows;
 using ToolAppCommon;
 
@@ -29,7 +30,8 @@ namespace MaintenanceToolApp
             Title = AppCommon.MSG_TOOL_TITLE;
 
             // アプリケーション開始ログを出力
-            AppLogUtil.SetOutputLogApplName();
+            // ログ出力を行うアプリケーション名を設定
+            AppLogUtil.SetOutputLogApplName(GetApplicationName());
             AppLogUtil.OutputLogInfo(string.Format("{0}を起動しました: {1}", AppCommon.MSG_TOOL_TITLE, AppUtil.GetAppVersionString()));
 
             // USBデバイスの脱着検知を開始
@@ -42,6 +44,17 @@ namespace MaintenanceToolApp
             // 機能クラスからのコールバックを登録
             CommandProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
             CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
+        }
+
+        private static string GetApplicationName()
+        {
+            // アプリケーション名を設定
+            string applName = "ToolApp";
+            AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
+            if (assemblyName.Name != null) {
+                applName = assemblyName.Name;
+            }
+            return applName;
         }
 
         void OnConnectHIDDevice(bool connected)
