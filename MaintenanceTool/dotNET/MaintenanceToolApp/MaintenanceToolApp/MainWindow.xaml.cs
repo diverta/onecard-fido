@@ -27,12 +27,16 @@ namespace MaintenanceToolApp
             base.OnSourceInitialized(e);
 
             // メイン画面のタイトルを設定
-            Title = AppCommon.MSG_TOOL_TITLE;
+            if (IsVendorMaintenanceTool()) {
+                Title = AppCommon.MSG_VENDOR_TOOL_TITLE;
+            } else {
+                Title = AppCommon.MSG_TOOL_TITLE;
+            }
 
             // アプリケーション開始ログを出力
             // ログ出力を行うアプリケーション名を設定
             AppLogUtil.SetOutputLogApplName(GetApplicationName());
-            AppLogUtil.OutputLogInfo(string.Format("{0}を起動しました: {1}", AppCommon.MSG_TOOL_TITLE, AppUtil.GetAppVersionString()));
+            AppLogUtil.OutputLogInfo(string.Format("{0}を起動しました: {1}", GetApplicationTitle(), AppUtil.GetAppVersionString()));
 
             // USBデバイスの脱着検知を開始
             USBDevice.StartUSBDeviceNotification(this);
@@ -46,7 +50,12 @@ namespace MaintenanceToolApp
             CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
         }
 
-        private static string GetApplicationName()
+        public static bool IsVendorMaintenanceTool()
+        {
+            return GetApplicationName().Equals("VendorMaintenanceTool");
+        }
+
+        public static string GetApplicationName()
         {
             // 製品名の文字列を戻す
             AssemblyProductAttribute attribute = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>()!;
@@ -55,6 +64,12 @@ namespace MaintenanceToolApp
             } else {
                 return attribute.Product;
             }
+        }
+
+        public static string GetApplicationTitle()
+        {
+            // アプリケーション名の文字列を戻す
+            return Application.Current.MainWindow.Title;
         }
 
         void OnConnectHIDDevice(bool connected)
