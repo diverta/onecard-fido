@@ -119,7 +119,7 @@ namespace MaintenanceToolApp
 
             } else {
                 AppLogUtil.OutputLogError(formatted);
-                DialogUtil.ShowWarningMessage(parentWindow, AppCommon.MSG_TOOL_TITLE, formatted);
+                DialogUtil.ShowWarningMessage(parentWindow, formatted, errorMessage);
             }
 
             // ボタンを活性化
