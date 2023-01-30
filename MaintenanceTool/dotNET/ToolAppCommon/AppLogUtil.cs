@@ -40,14 +40,8 @@ namespace ToolAppCommon
             }
         }
 
-        public static void SetOutputLogApplName()
+        public static void SetOutputLogApplName(string applName)
         {
-            // ログ出力を行うアプリケーション名を設定
-            string applName = "ToolApp";
-            AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
-            if (assemblyName.Name != null) {
-                applName = assemblyName.Name;
-            }
             SetApplicationName(applName);
         }
 
