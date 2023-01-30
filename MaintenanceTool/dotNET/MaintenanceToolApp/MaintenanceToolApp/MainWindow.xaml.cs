@@ -27,7 +27,7 @@ namespace MaintenanceToolApp
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             // ベンダー向けバンドルの場合、システムメニューに「ベンダー向け機能」を追加
-            if (AppLogUtil.GetApplicationName().Equals("VendorMaintenanceTool")) {
+            if (IsVendorMaintenanceTool()) {
                 SystemMenuCustomizer.ShowCustomizedSystemMenuItem(this);
             }
         }
@@ -60,7 +60,7 @@ namespace MaintenanceToolApp
             CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
 
             // ベンダー向けバンドルの場合、システムメニュー「ベンダー向け機能」選択時の処理を追加
-            if (AppLogUtil.GetApplicationName().Equals("VendorMaintenanceTool")) {
+            if (IsVendorMaintenanceTool()) {
                 SystemMenuCustomizer.AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
                 SystemMenuCustomizer.AddHookForCustomizedSystemMenu(PresentationSource.FromVisual(this) as HwndSource);
             }
