@@ -90,9 +90,9 @@ namespace MaintenanceToolApp.BLESettings
         //
         private void DoResponseFromSubProcess(string commandTitle, string errorMessage, bool success)
         {
-            // 失敗時はログ出力
+            // 失敗時はログ出力（改行文字は事前削除）
             if (success == false && errorMessage.Length > 0) {
-                AppLogUtil.OutputLogError(errorMessage);
+                AppLogUtil.OutputLogError(errorMessage.Replace("\n", ""));
             }
 
             // ペアリング解除要求のタイムアウト／キャンセル時
