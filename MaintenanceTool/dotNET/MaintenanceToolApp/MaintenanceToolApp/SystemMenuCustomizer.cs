@@ -40,14 +40,22 @@ namespace MaintenanceToolApp
 
         // 親画面に対するイベント通知
         public delegate void HandlerOnSystemMenuVendorFunctionSelected();
-        public event HandlerOnSystemMenuVendorFunctionSelected OnSystemMenuVendorFunctionSelected = null!;
+        private event HandlerOnSystemMenuVendorFunctionSelected OnSystemMenuVendorFunctionSelected = null!;
+
+        // メニュー項目の表示名称を保持
+        private string MenuItemNameVendorFunction = string.Empty;
 
         //
         // 外部公開用
         //
-        public static void AddCustomizedSystemMenu(Window window, HandlerOnSystemMenuVendorFunctionSelected handler)
+        public static void AddCustomizedSystemMenu(Window window)
         {
             Instance.AddCustomizedSystemMenuInner(window);
+        }
+
+        public static void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
+        {
+            Instance.MenuItemNameVendorFunction = menuItemName;
             Instance.OnSystemMenuVendorFunctionSelected += handler;
         }
 
@@ -67,23 +75,30 @@ namespace MaintenanceToolApp
             IntPtr hwnd = new WindowInteropHelper(window).Handle;
             IntPtr menu = GetSystemMenu(hwnd, false);
 
+            // システムメニューの６番目に、区切り線を挿入
+            //   fMask = MIIM_FTYPE
+            //   fType = MFT_SEPARATOR
             MENUITEMINFO item1 = new MENUITEMINFO();
             item1.cbSize = (uint)Marshal.SizeOf(item1);
             item1.fMask = 0x00000100;
             item1.fType = 0x00000800;
             InsertMenuItem(menu, 5, true, ref item1);
 
+            // システムメニューの７番目に、独自メニュー項目を挿入
+            //   fMask      = fMask = MIIM_STRING | MIIM_ID;
+            //   wID        = メニュー項目のID
+            //   dwTypeData = メニュー項目の表示名称
             MENUITEMINFO item2 = new MENUITEMINFO();
             item2.cbSize = (uint)Marshal.SizeOf(item2);
             item2.fMask = 0x00000040 | 0x00000002;
             item2.wID = 0x0001;
-            item2.dwTypeData = "ベンダー向け機能";
+            item2.dwTypeData = MenuItemNameVendorFunction;
             InsertMenuItem(menu, 6, true, ref item2);
         }
 
         private void AddHookForCustomizedSystemMenuInner(HwndSource? hwndSource)
         {
-            // システムメニューから「ベンダー向け機能」が選択時のHookを追加
+            // システムメニューからメニューアイテム選択時のHookを追加
             if (hwndSource != null) {
                 hwndSource.AddHook(new HwndSourceHook(HandlerHwndSourceHook));
             }
