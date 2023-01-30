@@ -2,9 +2,33 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using static MaintenanceToolApp.SystemMenuCustomizerConst;
 
 namespace MaintenanceToolApp
 {
+    internal class SystemMenuCustomizerConst
+    {
+        // Indicates the members to be retrieved or set
+        public const uint MIIM_FTYPE = 0x00000100;
+        public const uint MIIM_STRING = 0x00000040;
+        public const uint MIIM_ID = 0x00000002;
+
+        // The menu item type
+        public const uint MFT_SEPARATOR = 0x00000800;
+
+        // システムメニューの項目番号（０から始まる数値）
+        //   ６番目＝区切り線
+        //   ７番目＝独自メニュー項目
+        public const uint ITEM_SEPARATOR = 5;
+        public const uint ITEM_CUSTOM_MENU = 6;
+
+        // キーボードアクセラレータメッセージ
+        public const uint WM_SYSCOMMAND = 0x0112;
+
+        // メニュー項目のID
+        public const uint MENU_ID_0001 = 0x0001;
+    }
+
     internal class SystemMenuCustomizer
     {
         [StructLayout(LayoutKind.Sequential)]
@@ -75,25 +99,22 @@ namespace MaintenanceToolApp
             IntPtr hwnd = new WindowInteropHelper(window).Handle;
             IntPtr menu = GetSystemMenu(hwnd, false);
 
-            // システムメニューの６番目に、区切り線を挿入
-            //   fMask = MIIM_FTYPE
-            //   fType = MFT_SEPARATOR
+            // システムメニューに区切り線を挿入
             MENUITEMINFO item1 = new MENUITEMINFO();
             item1.cbSize = (uint)Marshal.SizeOf(item1);
-            item1.fMask = 0x00000100;
-            item1.fType = 0x00000800;
-            InsertMenuItem(menu, 5, true, ref item1);
+            item1.fMask = MIIM_FTYPE;
+            item1.fType = MFT_SEPARATOR;
+            InsertMenuItem(menu, ITEM_SEPARATOR, true, ref item1);
 
-            // システムメニューの７番目に、独自メニュー項目を挿入
-            //   fMask      = fMask = MIIM_STRING | MIIM_ID;
+            // システムメニューに独自メニュー項目を挿入
             //   wID        = メニュー項目のID
             //   dwTypeData = メニュー項目の表示名称
             MENUITEMINFO item2 = new MENUITEMINFO();
             item2.cbSize = (uint)Marshal.SizeOf(item2);
-            item2.fMask = 0x00000040 | 0x00000002;
-            item2.wID = 0x0001;
+            item2.fMask = MIIM_STRING | MIIM_ID;
+            item2.wID = MENU_ID_0001;
             item2.dwTypeData = MenuItemNameVendorFunction;
-            InsertMenuItem(menu, 6, true, ref item2);
+            InsertMenuItem(menu, ITEM_CUSTOM_MENU, true, ref item2);
         }
 
         private void AddHookForCustomizedSystemMenuInner(HwndSource? hwndSource)
@@ -106,10 +127,10 @@ namespace MaintenanceToolApp
 
         private IntPtr HandlerHwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            // Hook WM_SYSCOMMAND
-            if (msg == 0x112) {
-                // システムメニューから「ベンダー向け機能」が選択されたときの処理
-                if (wParam.ToInt32() == 0x0001) {
+            // ユーザーがシステムメニューからコマンド選択時
+            if (msg == WM_SYSCOMMAND) {
+                // 「ベンダー向け機能」選択時
+                if (wParam.ToInt32() == MENU_ID_0001) {
                     OnSystemMenuVendorFunctionSelected();
                 }
             }
