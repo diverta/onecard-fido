@@ -27,7 +27,7 @@ namespace MaintenanceToolApp
         {
             // ベンダー向けバンドルの場合、システムメニューに「ベンダー向け機能」を追加
             if (AppLogUtil.GetApplicationName().Equals("VendorMaintenanceTool")) {
-                SystemMenuCustomizer.AddCustomizedSystemMenu(this);
+                SystemMenuCustomizer.ShowCustomizedSystemMenuItem(this);
             }
         }
 

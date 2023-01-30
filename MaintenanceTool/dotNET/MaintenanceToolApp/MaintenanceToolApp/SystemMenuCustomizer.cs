@@ -72,9 +72,9 @@ namespace MaintenanceToolApp
         //
         // 外部公開用
         //
-        public static void AddCustomizedSystemMenu(Window window)
+        public static void ShowCustomizedSystemMenuItem(Window window)
         {
-            Instance.AddCustomizedSystemMenuInner(window);
+            Instance.ShowCustomizedSystemMenuItemInner(window);
         }
 
         public static void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
@@ -91,7 +91,7 @@ namespace MaintenanceToolApp
         //
         // 内部処理
         //
-        private void AddCustomizedSystemMenuInner(Window window)
+        private void ShowCustomizedSystemMenuItemInner(Window window)
         {
             //
             // システムメニューに「ベンダー向け機能」を追加
