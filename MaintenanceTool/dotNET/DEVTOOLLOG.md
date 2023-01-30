@@ -7,24 +7,24 @@
 
 FIDO認証器管理ツールの実行中に出力されるログは、Windowsのユーザーディレクトリー配下のログファイル（下記の場所）に保存されます。
 
-`%LOCALAPPDATA%\Diverta\FIDO\VendorMaintenanceToolApp.log`
+`%LOCALAPPDATA%\Diverta\FIDO\VendorMaintenanceTool.log`
 
-具体的には、例えば `C:\Users\user\AppData\Local\Diverta\FIDO\VendorMaintenanceToolApp.log` といったパスになります。
+具体的には、例えば `C:\Users\user\AppData\Local\Diverta\FIDO\VendorMaintenanceTool.log` といったパスになります。
 
 ### ログファイルの場所を開く
 
 ログファイルの格納場所を、Windowsのエクスプローラで開くことができます。<br>
 管理ツールを起動し「ユーティリティー」ボタンをクリックします。
 
-<img src="assets02/0016.jpg" width="400">
+<img src="assets08/0013.jpg" width="400">
 
 「ユーティリティー」画面が表示されますので「管理ツールのログを参照」ボタンをクリックします。
 
-<img src="assets02/0017.jpg" width="400">
+<img src="assets08/0014.jpg" width="400">
 
-ログファイル「VendorMaintenanceToolApp.log」を格納するディレクトリーが、Windowsのエクスプローラで表示されます。
+ログファイル「VendorMaintenanceTool.log」を格納するディレクトリーが、Windowsのエクスプローラで表示されます。
 
-<img src="assets02/0018.jpg" width="460">
+<img src="assets08/0015.jpg" width="450">
 
 ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより内容を参照することが可能です。
 
@@ -33,7 +33,7 @@ FIDO認証器管理ツールの実行中に出力されるログは、Windowsの
 Windowsアプリの一般的な形式で出力されます。<br>
 ログの出力イメージは以下のようになります。
 ```
-2022/11/08 16:40:24 [info] FIDO認証器管理ツールを起動しました: Version 0.3.0
+2022/11/08 16:40:24 [info] FIDO認証器管理ツール（ベンダー向け）を起動しました: Version 0.3.0
 2022/11/08 16:40:24 [info] USBデバイス検知を開始しました。
 2022/11/08 16:40:25 [info] USB HIDデバイスに接続されました。\\?\hid#vid_f055&pid_0001&mi_00#7&1436d563&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
 2022/11/08 16:40:31 [info] HID PINGテストを開始します。
