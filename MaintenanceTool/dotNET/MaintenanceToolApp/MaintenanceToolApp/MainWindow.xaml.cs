@@ -7,6 +7,7 @@ using MaintenanceToolApp.PIV;
 using MaintenanceToolApp.Utility;
 using System;
 using System.Windows;
+using System.Windows.Interop;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp
@@ -19,6 +20,13 @@ namespace MaintenanceToolApp
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += new RoutedEventHandler(OnMainWindowLoaded);
+        }
+
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            // システムメニューに「ベンダー向け機能」を追加
+            SystemMenuCustomizer.AddCustomizedSystemMenu(this);
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -42,6 +50,10 @@ namespace MaintenanceToolApp
             // 機能クラスからのコールバックを登録
             CommandProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
             CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
+
+            // システムメニューから「ベンダー向け機能」が選択時の処理を追加
+            SystemMenuCustomizer.AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+            SystemMenuCustomizer.AddHookForCustomizedSystemMenu(PresentationSource.FromVisual(this) as HwndSource);
         }
 
         void OnConnectHIDDevice(bool connected)
@@ -143,6 +155,12 @@ namespace MaintenanceToolApp
                 // ユーティリティー機能を実行
                 new UtilityProcess(param).DoProcess();
             }
+        }
+
+        private void DoVendorFunction()
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         private void TerminateWindow()
