@@ -67,6 +67,7 @@ namespace MaintenanceToolApp.BLESettings
                     AppLogUtil.OutputLogDebug("Pairing with FIDO device success");
 
                 } else if (result.Status == DevicePairingResultStatus.AlreadyPaired) {
+                    errorMessage = string.Format(AppCommon.MSG_BLE_PARING_ERR_ALREADY_PAIRED, deviceInfoForPair.Name);
                     AppLogUtil.OutputLogError("Already paired with FIDO device");
 
                 } else if (result.Status == DevicePairingResultStatus.Failed) {
