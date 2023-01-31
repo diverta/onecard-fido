@@ -1,5 +1,4 @@
-﻿using MaintenanceToolApp;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -100,7 +99,7 @@ namespace VendorMaintenanceTool
             AddHookForCustomizedSystemMenu(hwndSource);
 
             // メニュー項目名称／業務処理を設定後、メニューを表示
-            AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+            AddCustomizedSystemMenuItem(VendorAppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
             ShowCustomizedSystemMenuItem(window);
         }
 

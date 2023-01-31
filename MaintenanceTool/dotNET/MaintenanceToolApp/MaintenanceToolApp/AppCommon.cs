@@ -324,9 +324,6 @@
         public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}（{1}）";
         public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
 
-        // ベンダー向け機能関連
-        public const string MSG_MENU_ITEM_NAME_VENDOR_FUNCTION = "ベンダー向け機能";
-
         // Windows版固有のメッセージ文言
         // BLE関連のメッセージ文言
         public const string MSG_BLE_U2F_SERVICE_FINDING = "FIDO BLEサービス({0})を検索します。";
