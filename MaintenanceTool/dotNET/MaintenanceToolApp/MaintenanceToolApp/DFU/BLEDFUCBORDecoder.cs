@@ -172,7 +172,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // 値を抽出
-            b = value.AsByte();
+            b = value.ToObject<byte>();
             return true;
         }
 
@@ -232,7 +232,7 @@ namespace MaintenanceToolApp.DFU
             }
 
             // 値を抽出
-            ui = value.AsUInt32();
+            ui = value.AsNumber().ToUInt32Checked();
             return true;
         }
     }
