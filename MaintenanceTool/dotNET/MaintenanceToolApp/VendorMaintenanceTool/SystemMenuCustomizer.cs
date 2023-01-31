@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using VendorMaintenanceTool.VendorFunction;
 using static VendorMaintenanceTool.SystemMenuCustomizerConst;
 
 namespace VendorMaintenanceTool
@@ -70,24 +71,38 @@ namespace VendorMaintenanceTool
         // メニュー項目の表示名称を保持
         private string MenuItemNameVendorFunction = string.Empty;
 
+        // 二重処理の抑止
+        private bool initialized = false;
+
         //
         // 外部公開用
         //
         public static void AddCustomizedSystemMenu()
         {
-            // メニュー選択時のイベント捕捉を設定
-            Window window = Application.Current.MainWindow;
-            HwndSource? hwndSource = PresentationSource.FromVisual(window) as HwndSource;
-            Instance.AddHookForCustomizedSystemMenu(hwndSource);
-
-            // メニュー項目名称／業務処理を設定後、メニューを表示
-            Instance.AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
-            Instance.ShowCustomizedSystemMenuItem(window);
+            Instance.AddCustomizedSystemMenuInner();
         }
 
         //
         // 内部処理
         //
+        private void AddCustomizedSystemMenuInner() {
+            // 二重処理の抑止
+            if (initialized) {
+                return;
+            } else {
+                initialized = true;
+            }
+
+            // メニュー選択時のイベント捕捉を設定
+            Window window = Application.Current.MainWindow;
+            HwndSource? hwndSource = PresentationSource.FromVisual(window) as HwndSource;
+            AddHookForCustomizedSystemMenu(hwndSource);
+
+            // メニュー項目名称／業務処理を設定後、メニューを表示
+            AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+            ShowCustomizedSystemMenuItem(window);
+        }
+
         private void ShowCustomizedSystemMenuItem(Window window)
         {
             //
