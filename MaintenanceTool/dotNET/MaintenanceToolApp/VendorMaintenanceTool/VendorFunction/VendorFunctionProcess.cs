@@ -1,5 +1,5 @@
 ﻿using MaintenanceToolApp;
-using System.Threading;
+using MaintenanceToolApp.CommonProcess;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -42,9 +42,28 @@ namespace VendorMaintenanceTool.VendorFunction
             // 処理開始を通知
             NotifyProcessStarted();
 
-            // TODO: 仮の実装です。
-            Thread.Sleep(2000);
-            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+            // コマンドに応じ、以下の処理に分岐
+            switch (Parameter.Command) {
+            case Command.COMMAND_HID_FIRMWARE_RESET:
+                DoRequestFirmwareReset();
+                break;
+            default:
+                break;
+            }
+        }
+
+        //
+        // 認証器のファームウェア再起動
+        //
+        private void DoRequestFirmwareReset()
+        {
+            new FirmwareResetProcess().DoProcess(DoResponseFirmwareReset);
+        }
+
+        private void DoResponseFirmwareReset(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         // 

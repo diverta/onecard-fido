@@ -4,7 +4,7 @@ using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
-    internal class FirmwareResetProcess
+    public class FirmwareResetProcess
     {
         // 上位クラスに対するコールバックを保持
         public delegate void HandlerOnNotifyCommandTerminated(bool success, string errorMessage);
