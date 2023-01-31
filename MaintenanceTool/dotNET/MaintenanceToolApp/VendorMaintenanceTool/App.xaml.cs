@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using System;
 using System.Threading;
 using System.Windows;
 
@@ -20,6 +21,14 @@ namespace VendorMaintenanceTool
                 MutexRef.Close();
                 Shutdown();
             }
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            // システムメニューに「ベンダー向け機能」を追加
+            SystemMenuCustomizer.AddCustomizedSystemMenu();
         }
 
         protected override void OnExit(ExitEventArgs e)

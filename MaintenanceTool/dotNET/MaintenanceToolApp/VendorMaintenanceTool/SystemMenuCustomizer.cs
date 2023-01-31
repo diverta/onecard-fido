@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolApp;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -72,26 +73,22 @@ namespace VendorMaintenanceTool
         //
         // 外部公開用
         //
-        public static void ShowCustomizedSystemMenuItem(Window window)
+        public static void AddCustomizedSystemMenu()
         {
-            Instance.ShowCustomizedSystemMenuItemInner(window);
-        }
+            // メニュー選択時のイベント捕捉を設定
+            Window window = Application.Current.MainWindow;
+            HwndSource? hwndSource = PresentationSource.FromVisual(window) as HwndSource;
+            Instance.AddHookForCustomizedSystemMenu(hwndSource);
 
-        public static void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
-        {
-            Instance.MenuItemNameVendorFunction = menuItemName;
-            Instance.OnSystemMenuVendorFunctionSelected += handler;
-        }
-
-        public static void AddHookForCustomizedSystemMenu(HwndSource? hwndSource)
-        {
-            Instance.AddHookForCustomizedSystemMenuInner(hwndSource);
+            // メニュー項目名称／業務処理を設定後、メニューを表示
+            Instance.AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+            Instance.ShowCustomizedSystemMenuItem(window);
         }
 
         //
         // 内部処理
         //
-        private void ShowCustomizedSystemMenuItemInner(Window window)
+        private void ShowCustomizedSystemMenuItem(Window window)
         {
             //
             // システムメニューに「ベンダー向け機能」を追加
@@ -117,7 +114,14 @@ namespace VendorMaintenanceTool
             InsertMenuItem(menu, ITEM_CUSTOM_MENU, true, ref item2);
         }
 
-        private void AddHookForCustomizedSystemMenuInner(HwndSource? hwndSource)
+        private void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
+        {
+            // メニュー項目名称／業務処理を設定
+            MenuItemNameVendorFunction = menuItemName;
+            OnSystemMenuVendorFunctionSelected += handler;
+        }
+
+        private void AddHookForCustomizedSystemMenu(HwndSource? hwndSource)
         {
             // システムメニューからメニューアイテム選択時のHookを追加
             if (hwndSource != null) {
@@ -135,6 +139,16 @@ namespace VendorMaintenanceTool
                 }
             }
             return IntPtr.Zero;
+        }
+
+        //
+        // 業務処理
+        //
+        private static void DoVendorFunction()
+        {
+            // TODO: 仮の実装です。
+            Window window = Application.Current.MainWindow;
+            DialogUtil.ShowWarningMessage(window, window.Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
     }
 }
