@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using static MaintenanceToolApp.SystemMenuCustomizerConst;
+using static VendorMaintenanceTool.SystemMenuCustomizerConst;
 
-namespace MaintenanceToolApp
+namespace VendorMaintenanceTool
 {
     internal class SystemMenuCustomizerConst
     {
