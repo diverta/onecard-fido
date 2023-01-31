@@ -1,6 +1,0 @@
-[submodule "MaintenanceTool/dotNET/CBOR"]
-	path = MaintenanceTool/dotNET/CBOR
-	url = https://github.com/peteroupc/CBOR.git
-[submodule "MaintenanceTool/dotNET/Numbers"]
-	path = MaintenanceTool/dotNET/Numbers
-	url = https://github.com/peteroupc/Numbers.git
