@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolApp;
 using System.Windows;
+using ToolAppCommon;
 
 namespace VendorMaintenanceTool.VendorFunction
 {
@@ -33,6 +34,74 @@ namespace VendorMaintenanceTool.VendorFunction
         }
 
         //
+        // 業務処理
+        //
+        private void DoInstallAttestation()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void DoRemoveAttestation()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
+            string message = string.Format("{0}\n\n{1}",
+                VendorAppCommon.MSG_ERASE_SKEY_CERT, VendorAppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
+            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION, message) == false) {
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void DoBootloaderMode()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
+            string message = string.Format("{0}\n\n{1}",
+                VendorAppCommon.MSG_CHANGE_TO_BOOTLOADER_MODE, VendorAppCommon.MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE);
+            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE, message) == false) {
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void DoFirmwareReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
+            string message = string.Format("{0}\n\n{1}",
+                VendorAppCommon.MSG_FIRMWARE_RESET, VendorAppCommon.MSG_PROMPT_FIRMWARE_RESET);
+            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET, message) == false) {
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        //
         // イベント処理部
         // 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
@@ -42,26 +111,22 @@ namespace VendorMaintenanceTool.VendorFunction
 
         private void buttonInstallAttestation_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            DoInstallAttestation();
         }
 
         private void buttonRemoveAttestation_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            DoRemoveAttestation();
         }
 
         private void buttonBootloaderMode_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            DoBootloaderMode();
         }
 
         private void buttonFirmwareReset_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            DoFirmwareReset();
         }
     }
 }
