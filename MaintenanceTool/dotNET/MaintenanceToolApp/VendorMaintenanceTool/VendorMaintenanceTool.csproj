@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Compile Include="..\MaintenanceToolApp\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
-    <Compile Include="..\MaintenanceToolApp\SystemMenuCustomizer.cs" Link="SystemMenuCustomizer.cs" />
   </ItemGroup>
 
   <ItemGroup>
