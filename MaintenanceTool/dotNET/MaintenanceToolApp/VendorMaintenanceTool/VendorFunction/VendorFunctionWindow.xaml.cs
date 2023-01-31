@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp;
+using System.Windows;
 
 namespace VendorMaintenanceTool.VendorFunction
 {
@@ -37,6 +38,30 @@ namespace VendorMaintenanceTool.VendorFunction
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
+        }
+
+        private void buttonInstallAttestation_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void buttonRemoveAttestation_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void buttonBootloaderMode_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void buttonFirmwareReset_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
     }
 }
