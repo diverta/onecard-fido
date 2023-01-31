@@ -55,10 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OATH\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="PeterO.Cbor" Version="4.5.2" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
