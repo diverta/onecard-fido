@@ -41,9 +41,6 @@
     <Reference Include="MaintenanceTool">
       <HintPath>..\MaintenanceToolApp\bin\Release\net6.0-windows10.0.22000.0\MaintenanceTool.dll</HintPath>
     </Reference>
-    <Reference Include="WpfCborLibrary">
-      <HintPath>..\WpfCborLibrary\bin\Release\net6.0-windows10.0.18362.0\WpfCborLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
