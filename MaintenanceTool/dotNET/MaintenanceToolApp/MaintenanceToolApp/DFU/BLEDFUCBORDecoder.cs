@@ -1,7 +1,6 @@
 ﻿using PeterO.Cbor;
 using System;
 using ToolAppCommon;
-using WpfCborLibrary;
 
 namespace MaintenanceToolApp.DFU
 {
@@ -112,7 +111,7 @@ namespace MaintenanceToolApp.DFU
 
             // 配列内を探索
             int idx = 0;
-            foreach (CBORObject imageMap in WpfCborUtil.ConvertCBORObjectToIList(imageArray)) {
+            foreach (CBORObject imageMap in imageArray.Values) {
                 // 型をチェック
                 if (imageMap.Type != CBORType.Map) {
                     AppLogUtil.OutputLogError(string.Format("ParseImageArray: idx[{0}] is not CBORType.Map", idx));
