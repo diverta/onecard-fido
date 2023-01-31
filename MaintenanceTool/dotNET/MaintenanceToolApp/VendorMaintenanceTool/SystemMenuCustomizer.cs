@@ -85,7 +85,8 @@ namespace VendorMaintenanceTool
         //
         // 内部処理
         //
-        private void AddCustomizedSystemMenuInner() {
+        private void AddCustomizedSystemMenuInner()
+        {
             // 二重処理の抑止
             if (initialized) {
                 return;
@@ -161,9 +162,9 @@ namespace VendorMaintenanceTool
         //
         private static void DoVendorFunction()
         {
-            // TODO: 仮の実装です。
+            // ベンダー向け機能画面を表示
             Window window = Application.Current.MainWindow;
-            DialogUtil.ShowWarningMessage(window, window.Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            new VendorFunctionWindow().ShowDialogWithOwner(window);
         }
     }
 }
