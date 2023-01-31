@@ -12,35 +12,8 @@
     <Company>Diverta Inc.</Company>
     <Product>MaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).105</FileVersion>
+    <FileVersion>$(Version).106</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="PeterO\**" />
-    <EmbeddedResource Remove="PeterO\**" />
-    <None Remove="PeterO\**" />
-    <Page Remove="PeterO\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\add_sub_key.bat" />
-    <None Remove="Resources\add_sub_key.param" />
-    <None Remove="Resources\appkg.PCA10059_01.0.3.6.zip" />
-    <None Remove="Resources\appkg.PCA10059_02.0.3.6.zip" />
-    <None Remove="Resources\appkg.PCA10059_03.0.3.6.zip" />
-    <None Remove="Resources\appkg.PCA10059_03.0.3.7.zip" />
-    <None Remove="Resources\app_update.PCA10095.0.4.8.bin" />
-    <None Remove="Resources\app_update.PCA10095_01.0.4.8.bin" />
-    <None Remove="Resources\app_update.PCA10095_02.0.4.8.bin" />
-    <None Remove="Resources\card_reset.bat" />
-    <None Remove="Resources\card_reset.param" />
-    <None Remove="Resources\card_status.bat" />
-    <None Remove="Resources\export_pubkey_and_backup.bat" />
-    <None Remove="Resources\generate_main_key.bat" />
-    <None Remove="Resources\generate_main_key.param" />
-    <None Remove="Resources\transfer_subkey_to_card.bat" />
-    <None Remove="Resources\transfer_subkey_to_card.param" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
@@ -83,19 +56,13 @@
 
   <ItemGroup>
     <Folder Include="OATH\" />
-    <Folder Include="ToolAppCommon\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="PeterO.Cbor" Version="4.5.2" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="WpfCborLibrary">
-      <HintPath>..\WpfCborLibrary\bin\Release\net6.0-windows10.0.18362.0\WpfCborLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

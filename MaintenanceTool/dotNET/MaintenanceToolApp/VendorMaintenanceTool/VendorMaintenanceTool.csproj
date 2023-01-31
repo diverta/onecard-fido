@@ -12,11 +12,12 @@
     <Company>Diverta Inc.</Company>
     <Product>VendorMaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).105</FileVersion>
+    <FileVersion>$(Version).106</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\MaintenanceToolApp\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
+    <Compile Include="..\MaintenanceToolApp\SystemMenuCustomizer.cs" Link="SystemMenuCustomizer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="PeterO.Cbor" Version="4.5.2" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>

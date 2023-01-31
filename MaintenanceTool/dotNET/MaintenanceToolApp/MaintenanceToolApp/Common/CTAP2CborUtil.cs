@@ -227,7 +227,7 @@ namespace MaintenanceToolApp.Common
             KeyAgreement AgreementKey = new KeyAgreement();
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
             foreach (CBORObject key in cbor.Keys) {
-                byte keyVal = key.AsByte();
+                byte keyVal = key.ToObject<byte>();
                 if (keyVal == 0x01) {
                     ParseCOSEkey(cbor[key], AgreementKey);
                 }
@@ -238,13 +238,13 @@ namespace MaintenanceToolApp.Common
         private static void ParseCOSEkey(CBORObject cbor, KeyAgreement AgreementKey)
         {
             foreach (CBORObject key in cbor.Keys) {
-                short keyVal = key.AsInt16();
+                short keyVal = key.AsNumber().ToInt16Checked();
                 if (keyVal == 1) {
-                    AgreementKey.Kty = cbor[key].AsInt16();
+                    AgreementKey.Kty = cbor[key].AsNumber().ToInt16Checked();
                 } else if (keyVal == 3) {
-                    AgreementKey.Alg = cbor[key].AsInt16();
+                    AgreementKey.Alg = cbor[key].AsNumber().ToInt16Checked();
                 } else if (keyVal == -1) {
-                    AgreementKey.Crv = cbor[key].AsInt16();
+                    AgreementKey.Crv = cbor[key].AsNumber().ToInt16Checked();
                 } else if (keyVal == -2) {
                     AgreementKey.X = cbor[key].GetByteString();
                 } else if (keyVal == -3) {
@@ -259,7 +259,7 @@ namespace MaintenanceToolApp.Common
             byte[] pinTokenEnc = new byte[0];
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
             foreach (CBORObject key in cbor.Keys) {
-                byte keyVal = key.AsByte();
+                byte keyVal = key.ToObject<byte>();
                 if (keyVal == 0x02) {
                     pinTokenEnc = cbor[key].GetByteString();
                 }
@@ -272,7 +272,7 @@ namespace MaintenanceToolApp.Common
             MakeOrGetCommandResponse response = new MakeOrGetCommandResponse();
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
             foreach (CBORObject key in cbor.Keys) {
-                var keyVal = key.AsByte();
+                var keyVal = key.ToObject<byte>();
                 if (keyVal == 0x02) {
                     // authData
                     ParseAuthData(cbor[key].GetByteString(), response, makeCredential);

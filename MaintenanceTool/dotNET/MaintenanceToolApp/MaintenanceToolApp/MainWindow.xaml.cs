@@ -8,6 +8,7 @@ using MaintenanceToolApp.Utility;
 using System;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Interop;
 using ToolAppCommon;
 
 namespace MaintenanceToolApp
@@ -20,6 +21,15 @@ namespace MaintenanceToolApp
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += new RoutedEventHandler(OnMainWindowLoaded);
+        }
+
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            // ベンダー向けバンドルの場合、システムメニューに「ベンダー向け機能」を追加
+            if (IsVendorMaintenanceTool()) {
+                SystemMenuCustomizer.ShowCustomizedSystemMenuItem(this);
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -48,6 +58,12 @@ namespace MaintenanceToolApp
             // 機能クラスからのコールバックを登録
             CommandProcess.RegisterHandlerOnEnableButtonsOfMainUI(EnableButtons);
             CommandProcess.RegisterHandlerOnNotifyMessageToMainUI(AppendMessageText);
+
+            // ベンダー向けバンドルの場合、システムメニュー「ベンダー向け機能」選択時の処理を追加
+            if (IsVendorMaintenanceTool()) {
+                SystemMenuCustomizer.AddCustomizedSystemMenuItem(AppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+                SystemMenuCustomizer.AddHookForCustomizedSystemMenu(PresentationSource.FromVisual(this) as HwndSource);
+            }
         }
 
         public static bool IsVendorMaintenanceTool()
@@ -171,6 +187,12 @@ namespace MaintenanceToolApp
                 // ユーティリティー機能を実行
                 new UtilityProcess(param).DoProcess();
             }
+        }
+
+        private void DoVendorFunction()
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         private void TerminateWindow()
