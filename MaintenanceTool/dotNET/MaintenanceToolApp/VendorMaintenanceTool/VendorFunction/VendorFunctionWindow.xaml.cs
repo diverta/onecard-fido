@@ -1,6 +1,10 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonWindow;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace VendorMaintenanceTool.VendorFunction
 {
@@ -43,8 +47,8 @@ namespace VendorMaintenanceTool.VendorFunction
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 鍵・証明書インストール
+            DoVendorFunctionProcess(Command.COMMAND_INSTALL_SKEY_CERT, VendorAppCommon.PROCESS_NAME_INSTALL_ATTESTATION);
         }
 
         private void DoRemoveAttestation()
@@ -61,8 +65,8 @@ namespace VendorMaintenanceTool.VendorFunction
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 鍵・証明書の削除
+            DoVendorFunctionProcess(Command.COMMAND_ERASE_SKEY_CERT, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION);
         }
 
         private void DoBootloaderMode()
@@ -79,8 +83,8 @@ namespace VendorMaintenanceTool.VendorFunction
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // ブートローダーモード遷移
+            DoVendorFunctionProcess(Command.COMMAND_HID_BOOTLOADER_MODE, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE);
         }
 
         private void DoFirmwareReset()
@@ -97,8 +101,41 @@ namespace VendorMaintenanceTool.VendorFunction
                 return;
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 認証器のファームウェア再起動
+            DoVendorFunctionProcess(Command.COMMAND_HID_FIRMWARE_RESET, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET);
+        }
+
+        //
+        // コマンド実行指示～完了後の処理
+        //
+        private void DoVendorFunctionProcess(Command command, string commandTitle)
+        {
+            VendorFunctionParameter param = new VendorFunctionParameter();
+            param.Command = command;
+            param.CommandTitle = commandTitle;
+
+            Task task = Task.Run(() => {
+                // コマンドを実行
+                new VendorFunctionProcess().DoProcess(param, OnVendorFunctionProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            // メッセージをポップアップ表示
+            if (param.CommandSuccess) {
+                DialogUtil.ShowInfoMessage(this, Title, param.ResultMessage);
+            } else {
+                DialogUtil.ShowWarningMessage(this, param.ResultMessage, param.ResultInformativeMessage);
+            }
+        }
+
+        private void OnVendorFunctionProcessTerminated()
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //

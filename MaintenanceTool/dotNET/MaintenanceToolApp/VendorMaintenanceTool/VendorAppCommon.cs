@@ -6,6 +6,7 @@
         public const string MSG_MENU_ITEM_NAME_VENDOR_FUNCTION = "ベンダー向け機能";
 
         // コマンド種別に対応する処理名称
+        public const string PROCESS_NAME_INSTALL_ATTESTATION = "鍵・証明書インストール";
         public const string PROCESS_NAME_REMOVE_ATTESTATION = "鍵・証明書の削除";
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のファームウェア再起動";
