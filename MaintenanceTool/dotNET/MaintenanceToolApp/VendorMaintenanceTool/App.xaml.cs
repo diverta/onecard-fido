@@ -27,8 +27,11 @@ namespace VendorMaintenanceTool
         {
             base.OnActivated(e);
 
-            // システムメニューに「ベンダー向け機能」を追加
-            SystemMenuCustomizer.AddCustomizedSystemMenu();
+            // Mutexの所有権を要求
+            if (MutexRef.WaitOne(0, false)) {
+                // システムメニューに「ベンダー向け機能」を追加
+                SystemMenuCustomizer.AddCustomizedSystemMenu();
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
