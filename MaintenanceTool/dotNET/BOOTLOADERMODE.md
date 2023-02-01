@@ -25,24 +25,24 @@
 
 管理ツール（ベンダー向け）を起動し、USBポートにFIDO2認証器を装着します。
 
-<img src="assets/0028.jpg" width="400">
+<img src="assets08/0016.jpg" width="400">
 
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツールのメニューから「ベンダー向け機能」を選択します。
 
-<img src="assets/0029.jpg" width="400">
+<img src="assets08/0017.jpg" width="400">
 
 ベンダー向け機能画面が表示されますので「ブートローダーモード遷移」ボタンをクリックします。
 
-<img src="assets/0031.jpg" width="400">
+<img src="assets08/0018.jpg" width="400">
 
 下図のような確認ダイアログが表示されます。<br>
-「Yes」ボタンをクリックし、ブートローダーモード遷移処理を実行させます。
+「はい」ボタンをクリックし、ブートローダーモード遷移処理を実行させます。
 
-<img src="assets/0032.jpg" width="400">
+<img src="assets08/0019.jpg" width="400">
 
 ほどなく遷移処理が完了し、ポップアップが表示されます。
 
-<img src="assets/0033.jpg" width="400">
+<img src="assets08/0020.jpg" width="400">
 
 「OK」をクリックし、ポップアップを閉じます。
 
