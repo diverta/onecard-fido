@@ -1,6 +1,6 @@
 ﻿using MaintenanceToolApp;
-using System.Threading;
 using ToolAppCommon;
+using static MaintenanceToolApp.FIDODefine;
 
 namespace VendorMaintenanceTool.CommonProcess
 {
@@ -53,9 +53,29 @@ namespace VendorMaintenanceTool.CommonProcess
 
         private void DoResponseCtapHidInit()
         {
-            // TODO: 仮の実装です。
-            Thread.Sleep(2000);
-            OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
+            // CTAPHID_INIT応答後の処理を実行
+            DoRequestBootloaderModeCommand();
+        }
+
+        private void DoRequestBootloaderModeCommand()
+        {
+            // ブートローダーモード遷移コマンドを実行する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_BOOTLOADER_MODE });
+        }
+
+        private void DoResponseBootloaderModeCommand(byte[] responseData)
+        {
+            // レスポンスメッセージの１バイト目（ステータスコード）を確認
+            if (responseData[0] != 0x00) {
+                string msg = string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_ST, responseData[0]);
+                OnNotifyCommandTerminated(false, msg);
+
+            } else {
+                // 接続断まで待機
+                WaitingToBoot = true;
+                HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
+            }
         }
 
         //
@@ -77,6 +97,15 @@ namespace VendorMaintenanceTool.CommonProcess
                 DoResponseCtapHidInit();
                 return;
             }
+
+            if (CMD == HIDProcessConst.HID_CMD_UNKNOWN_ERROR) {
+                // ブートローダーモード遷移コマンド失敗時は、即時で制御を戻す
+                OnNotifyCommandTerminated(success, AppCommon.MSG_DFU_TARGET_NOT_BOOTLOADER_MODE);
+
+            } else {
+                // 実行コマンドからの戻り
+                DoResponseBootloaderModeCommand(responseData);
+            }
         }
 
         //
@@ -90,6 +119,15 @@ namespace VendorMaintenanceTool.CommonProcess
             // 待機フラグ設定中でない場合は無視
             if (WaitingToBoot == false) {
                 return;
+            }
+
+            if (connected == false) {
+                // 切断時は、待機フラグをリセット
+                WaitingToBoot = false;
+
+                // ブートローダーモード遷移完了
+                AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_NORMAL_MODE);
+                OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
             }
         }
     }
