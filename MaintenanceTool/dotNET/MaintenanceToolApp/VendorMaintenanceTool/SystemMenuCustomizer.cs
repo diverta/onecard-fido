@@ -2,9 +2,10 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using static MaintenanceToolApp.SystemMenuCustomizerConst;
+using VendorMaintenanceTool.VendorFunction;
+using static VendorMaintenanceTool.SystemMenuCustomizerConst;
 
-namespace MaintenanceToolApp
+namespace VendorMaintenanceTool
 {
     internal class SystemMenuCustomizerConst
     {
@@ -69,29 +70,40 @@ namespace MaintenanceToolApp
         // メニュー項目の表示名称を保持
         private string MenuItemNameVendorFunction = string.Empty;
 
+        // 二重処理の抑止
+        private bool initialized = false;
+
         //
         // 外部公開用
         //
-        public static void ShowCustomizedSystemMenuItem(Window window)
+        public static void AddCustomizedSystemMenu()
         {
-            Instance.ShowCustomizedSystemMenuItemInner(window);
-        }
-
-        public static void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
-        {
-            Instance.MenuItemNameVendorFunction = menuItemName;
-            Instance.OnSystemMenuVendorFunctionSelected += handler;
-        }
-
-        public static void AddHookForCustomizedSystemMenu(HwndSource? hwndSource)
-        {
-            Instance.AddHookForCustomizedSystemMenuInner(hwndSource);
+            Instance.AddCustomizedSystemMenuInner();
         }
 
         //
         // 内部処理
         //
-        private void ShowCustomizedSystemMenuItemInner(Window window)
+        private void AddCustomizedSystemMenuInner()
+        {
+            // 二重処理の抑止
+            if (initialized) {
+                return;
+            } else {
+                initialized = true;
+            }
+
+            // メニュー選択時のイベント捕捉を設定
+            Window window = Application.Current.MainWindow;
+            HwndSource? hwndSource = PresentationSource.FromVisual(window) as HwndSource;
+            AddHookForCustomizedSystemMenu(hwndSource);
+
+            // メニュー項目名称／業務処理を設定後、メニューを表示
+            AddCustomizedSystemMenuItem(VendorAppCommon.MSG_MENU_ITEM_NAME_VENDOR_FUNCTION, DoVendorFunction);
+            ShowCustomizedSystemMenuItem(window);
+        }
+
+        private void ShowCustomizedSystemMenuItem(Window window)
         {
             //
             // システムメニューに「ベンダー向け機能」を追加
@@ -117,7 +129,14 @@ namespace MaintenanceToolApp
             InsertMenuItem(menu, ITEM_CUSTOM_MENU, true, ref item2);
         }
 
-        private void AddHookForCustomizedSystemMenuInner(HwndSource? hwndSource)
+        private void AddCustomizedSystemMenuItem(string menuItemName, HandlerOnSystemMenuVendorFunctionSelected handler)
+        {
+            // メニュー項目名称／業務処理を設定
+            MenuItemNameVendorFunction = menuItemName;
+            OnSystemMenuVendorFunctionSelected += handler;
+        }
+
+        private void AddHookForCustomizedSystemMenu(HwndSource? hwndSource)
         {
             // システムメニューからメニューアイテム選択時のHookを追加
             if (hwndSource != null) {
@@ -135,6 +154,16 @@ namespace MaintenanceToolApp
                 }
             }
             return IntPtr.Zero;
+        }
+
+        //
+        // 業務処理
+        //
+        private static void DoVendorFunction()
+        {
+            // ベンダー向け機能画面を表示
+            Window window = Application.Current.MainWindow;
+            new VendorFunctionWindow().ShowDialogWithOwner(window);
         }
     }
 }

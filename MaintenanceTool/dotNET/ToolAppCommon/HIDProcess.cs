@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ToolAppCommon
 {
-    internal static class HIDProcessConst
+    public static class HIDProcessConst
     {
         // HIDフレームに関する定義
         public const int HID_FRAME_LEN = 64;

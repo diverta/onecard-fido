@@ -12,7 +12,7 @@
     <Company>Diverta Inc.</Company>
     <Product>MaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).106</FileVersion>
+    <FileVersion>$(Version).107</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -52,10 +52,6 @@
 
   <ItemGroup>
     <Resource Include="Resources\icon_128.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="OATH\" />
   </ItemGroup>
 
   <ItemGroup>

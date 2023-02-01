@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using System;
 using System.Threading;
 using System.Windows;
 
@@ -19,6 +20,17 @@ namespace VendorMaintenanceTool
                 MessageBox.Show(AppCommon.MSG_ERROR_DOUBLE_START, AppCommon.MSG_TOOL_TITLE);
                 MutexRef.Close();
                 Shutdown();
+            }
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            // Mutexの所有権を要求
+            if (MutexRef.WaitOne(0, false)) {
+                // システムメニューに「ベンダー向け機能」を追加
+                SystemMenuCustomizer.AddCustomizedSystemMenu();
             }
         }
 

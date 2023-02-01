@@ -1,9 +1,10 @@
-﻿using ToolAppCommon;
+﻿using MaintenanceToolApp;
+using ToolAppCommon;
 using static MaintenanceToolApp.FIDODefine;
 
-namespace MaintenanceToolApp.CommonProcess
+namespace VendorMaintenanceTool.CommonProcess
 {
-    public class FirmwareResetProcess
+    internal class BootloaderModeProcess
     {
         // 上位クラスに対するコールバックを保持
         public delegate void HandlerOnNotifyCommandTerminated(bool success, string errorMessage);
@@ -21,7 +22,7 @@ namespace MaintenanceToolApp.CommonProcess
         //
         // 外部公開用
         //
-        public FirmwareResetProcess()
+        public BootloaderModeProcess()
         {
             // コールバック参照を初期化
             OnCommandResponseRef = new CommandProcess.HandlerOnCommandResponse(OnCommandResponse);
@@ -53,26 +54,25 @@ namespace MaintenanceToolApp.CommonProcess
         private void DoResponseCtapHidInit()
         {
             // CTAPHID_INIT応答後の処理を実行
-            DoRequestFirmwareResetCommand();
+            DoRequestBootloaderModeCommand();
         }
 
-        private void DoRequestFirmwareResetCommand()
+        private void DoRequestBootloaderModeCommand()
         {
-            // ファームウェアリセットコマンドを実行する
+            // ブートローダーモード遷移コマンドを実行する
             CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
-            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_SYSTEM_RESET });
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, new byte[] { MNT_COMMAND_BOOTLOADER_MODE });
         }
 
-        private void DoResponseFirmwareResetCommand(byte[] responseData)
+        private void DoResponseBootloaderModeCommand(byte[] responseData)
         {
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
-                // エラーの場合は画面に制御を戻す
                 string msg = string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_ST, responseData[0]);
                 OnNotifyCommandTerminated(false, msg);
 
             } else {
-                // 再接続まで待機
+                // 接続断まで待機
                 WaitingToBoot = true;
                 HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
             }
@@ -98,8 +98,14 @@ namespace MaintenanceToolApp.CommonProcess
                 return;
             }
 
-            // 実行コマンドからの戻り
-            DoResponseFirmwareResetCommand(responseData);
+            if (CMD == HIDProcessConst.HID_CMD_UNKNOWN_ERROR) {
+                // ブートローダーモード遷移コマンド失敗時は、即時で制御を戻す
+                OnNotifyCommandTerminated(success, AppCommon.MSG_DFU_TARGET_NOT_BOOTLOADER_MODE);
+
+            } else {
+                // 実行コマンドからの戻り
+                DoResponseBootloaderModeCommand(responseData);
+            }
         }
 
         //
@@ -116,14 +122,10 @@ namespace MaintenanceToolApp.CommonProcess
             }
 
             if (connected == false) {
-                // 切断時は、再び接続まで待機
-                HIDProcess.RegisterHandlerOnConnectHIDDevice(OnConnectHIDDeviceRef);
-
-            } else { 
-                // 再接続時は、待機フラグをリセット
+                // 切断時は、待機フラグをリセット
                 WaitingToBoot = false;
 
-                // ファームウェア再始動完了
+                // ブートローダーモード遷移完了
                 AppLogUtil.OutputLogDebug(AppCommon.MSG_DFU_TARGET_NORMAL_MODE);
                 OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
             }

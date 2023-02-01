@@ -12,12 +12,11 @@
     <Company>Diverta Inc.</Company>
     <Product>VendorMaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).106</FileVersion>
+    <FileVersion>$(Version).107</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\MaintenanceToolApp\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
-    <Compile Include="..\MaintenanceToolApp\SystemMenuCustomizer.cs" Link="SystemMenuCustomizer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,9 +40,6 @@
   <ItemGroup>
     <Reference Include="MaintenanceTool">
       <HintPath>..\MaintenanceToolApp\bin\Release\net6.0-windows10.0.22000.0\MaintenanceTool.dll</HintPath>
-    </Reference>
-    <Reference Include="WpfCborLibrary">
-      <HintPath>..\WpfCborLibrary\bin\Release\net6.0-windows10.0.18362.0\WpfCborLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 
