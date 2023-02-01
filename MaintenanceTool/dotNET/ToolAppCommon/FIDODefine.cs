@@ -1,6 +1,6 @@
 ﻿namespace MaintenanceToolApp
 {
-    internal class FIDODefine
+    public class FIDODefine
     {
         // FIDO機能関連コマンドバイト
         public const byte FIDO_CMD_MSG = 0x03;
