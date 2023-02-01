@@ -1,6 +1,7 @@
 ﻿using MaintenanceToolApp;
 using MaintenanceToolApp.CommonProcess;
 using ToolAppCommon;
+using VendorMaintenanceTool.CommonProcess;
 using static MaintenanceToolApp.AppDefine;
 
 namespace VendorMaintenanceTool.VendorFunction
@@ -44,12 +45,29 @@ namespace VendorMaintenanceTool.VendorFunction
 
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_HID_BOOTLOADER_MODE:
+                DoRequestBootloaderMode();
+                break;
             case Command.COMMAND_HID_FIRMWARE_RESET:
                 DoRequestFirmwareReset();
                 break;
             default:
                 break;
             }
+        }
+
+        //
+        // ブートローダーモード遷移
+        //
+        private void DoRequestBootloaderMode()
+        {
+            new BootloaderModeProcess().DoProcess(DoResponseBootloaderMode);
+        }
+
+        private void DoResponseBootloaderMode(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         //
