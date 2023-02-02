@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using VendorMaintenanceTool.FIDOSettings;
-using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.AppDefine.Command;
+using static VendorMaintenanceTool.VendorAppCommon;
 
 namespace VendorMaintenanceTool.VendorFunction
 {
@@ -56,7 +57,7 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 鍵・証明書インストール
-            DoVendorFunctionProcess(param, Command.COMMAND_INSTALL_SKEY_CERT, VendorAppCommon.PROCESS_NAME_INSTALL_ATTESTATION);
+            DoVendorFunctionProcess(param, COMMAND_INSTALL_SKEY_CERT, PROCESS_NAME_INSTALL_ATTESTATION);
         }
 
         private void DoRemoveAttestation()
@@ -67,14 +68,13 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 確認メッセージを表示し、Yesの場合だけ処理を続行する
-            string message = string.Format("{0}\n\n{1}",
-                VendorAppCommon.MSG_ERASE_SKEY_CERT, VendorAppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
-            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION, message) == false) {
+            string message = string.Format("{0}\n\n{1}", MSG_ERASE_SKEY_CERT, MSG_PROMPT_ERASE_SKEY_CERT);
+            if (DialogUtil.DisplayPromptPopup(this, PROCESS_NAME_REMOVE_ATTESTATION, message) == false) {
                 return;
             }
 
             // 鍵・証明書の削除
-            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_ERASE_SKEY_CERT, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), COMMAND_ERASE_SKEY_CERT, PROCESS_NAME_REMOVE_ATTESTATION);
         }
 
         private void DoBootloaderMode()
@@ -85,14 +85,13 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 確認メッセージを表示し、Yesの場合だけ処理を続行する
-            string message = string.Format("{0}\n\n{1}",
-                VendorAppCommon.MSG_CHANGE_TO_BOOTLOADER_MODE, VendorAppCommon.MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE);
-            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE, message) == false) {
+            string message = string.Format("{0}\n\n{1}", MSG_CHANGE_TO_BOOTLOADER_MODE, MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE);
+            if (DialogUtil.DisplayPromptPopup(this, PROCESS_NAME_BOOT_LOADER_MODE, message) == false) {
                 return;
             }
 
             // ブートローダーモード遷移
-            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_HID_BOOTLOADER_MODE, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), COMMAND_HID_BOOTLOADER_MODE, PROCESS_NAME_BOOT_LOADER_MODE);
         }
 
         private void DoFirmwareReset()
@@ -103,20 +102,19 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 確認メッセージを表示し、Yesの場合だけ処理を続行する
-            string message = string.Format("{0}\n\n{1}",
-                VendorAppCommon.MSG_FIRMWARE_RESET, VendorAppCommon.MSG_PROMPT_FIRMWARE_RESET);
-            if (DialogUtil.DisplayPromptPopup(this, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET, message) == false) {
+            string message = string.Format("{0}\n\n{1}", MSG_FIRMWARE_RESET, MSG_PROMPT_FIRMWARE_RESET);
+            if (DialogUtil.DisplayPromptPopup(this, PROCESS_NAME_FIRMWARE_RESET, message) == false) {
                 return;
             }
 
             // 認証器のファームウェア再起動
-            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_HID_FIRMWARE_RESET, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), COMMAND_HID_FIRMWARE_RESET, PROCESS_NAME_FIRMWARE_RESET);
         }
 
         //
         // コマンド実行指示～完了後の処理
         //
-        private void DoVendorFunctionProcess(VendorFunctionParameter param, Command command, string commandTitle)
+        private void DoVendorFunctionProcess(VendorFunctionParameter param, AppDefine.Command command, string commandTitle)
         {
             // 実行コマンド／コマンド名称を設定
             param.Command = command;

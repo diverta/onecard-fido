@@ -1,8 +1,8 @@
 ﻿using MaintenanceToolApp;
 using System;
-using System.Threading;
 using ToolAppCommon;
 using VendorMaintenanceTool.VendorFunction;
+using static MaintenanceToolApp.AppDefine.Command;
 using static MaintenanceToolApp.FIDODefine;
 using static VendorMaintenanceTool.VendorAppCommon;
 
@@ -53,10 +53,10 @@ namespace VendorMaintenanceTool.FIDOSettings
 
         private void DoResponseCtapHidInit()
         {
-            if (Parameter.Command == AppDefine.Command.COMMAND_INSTALL_SKEY_CERT) {
+            if (Parameter.Command == COMMAND_INSTALL_SKEY_CERT) {
                 DoRequestHidInstallAttestation();
             }
-            if (Parameter.Command == AppDefine.Command.COMMAND_ERASE_SKEY_CERT) {
+            if (Parameter.Command == COMMAND_ERASE_SKEY_CERT) {
                 DoRequestHidRemoveAttestation();
             }
         }
@@ -145,8 +145,8 @@ namespace VendorMaintenanceTool.FIDOSettings
             // イベントを解除
             CommandProcess.UnregisterHandlerOnCommandResponse(OnCommandResponseRef);
 
-            if (Parameter.Command != AppDefine.Command.COMMAND_INSTALL_SKEY_CERT &&
-                Parameter.Command != AppDefine.Command.COMMAND_ERASE_SKEY_CERT) {
+            if (Parameter.Command != COMMAND_INSTALL_SKEY_CERT &&
+                Parameter.Command != COMMAND_ERASE_SKEY_CERT) {
                 return;
             }
 
@@ -169,10 +169,10 @@ namespace VendorMaintenanceTool.FIDOSettings
             }
 
             // 後続の処理を実行
-            if (Parameter.Command == AppDefine.Command.COMMAND_INSTALL_SKEY_CERT) {
+            if (Parameter.Command == COMMAND_INSTALL_SKEY_CERT) {
                 DoResponseHidInstallAttestation();
             }
-            if (Parameter.Command == AppDefine.Command.COMMAND_ERASE_SKEY_CERT) {
+            if (Parameter.Command == COMMAND_ERASE_SKEY_CERT) {
                 DoResponseHidRemoveAttestation();
             }
         }
