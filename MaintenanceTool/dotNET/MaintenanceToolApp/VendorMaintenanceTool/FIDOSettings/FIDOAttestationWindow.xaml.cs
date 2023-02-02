@@ -48,14 +48,12 @@ namespace VendorMaintenanceTool.FIDOSettings
 
         private void buttonSelectKeyPath_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            FileDialogUtil.SelectFilePath(this, VendorAppCommon.MSG_PROMPT_SELECT_PKEY_PATH, textKeyPath, VendorAppCommon.MSG_FILTER_SELECT_FIDO_PKEY_PEM_PATH);
         }
 
         private void buttonSelectCertPath_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            FileDialogUtil.SelectFilePath(this, VendorAppCommon.MSG_PROMPT_SELECT_CRT_PATH, textCertPath, VendorAppCommon.MSG_FILTER_SELECT_FIDO_CERT_CRT_PATH);
         }
     }
 }

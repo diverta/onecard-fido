@@ -11,6 +11,13 @@
         public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
         public const string PROCESS_NAME_FIRMWARE_RESET = "認証器のファームウェア再起動";
 
+        // 表示メッセージ
+        public const string MSG_PROMPT_SELECT_PKEY_PATH = "秘密鍵ファイル(PEM)のパスを選択してください";
+        public const string MSG_PROMPT_SELECT_CRT_PATH = "証明書ファイル(CRT)のパスを選択してください";
+        public const string MSG_FILTER_SELECT_FIDO_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
+        public const string MSG_FILTER_SELECT_FIDO_CERT_CRT_PATH = "証明書ファイル (*.crt)|*.crt";
+
+
         // 確認メッセージ
         public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
