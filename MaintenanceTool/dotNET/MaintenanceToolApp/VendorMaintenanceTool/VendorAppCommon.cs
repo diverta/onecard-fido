@@ -26,5 +26,9 @@
         public const string MSG_PROMPT_CHANGE_TO_BOOTLOADER_MODE = "ブートローダーモードに遷移したら、nRFコマンドラインツール等を使用し、ファームウェア更新イメージをFIDO認証器に転送できます。\n遷移処理を実行しますか？";
         public const string MSG_FIRMWARE_RESET = "FIDO認証器のファームウェアを再起動します。";
         public const string MSG_PROMPT_FIRMWARE_RESET = "処理を実行しますか？";
+
+        // エラーメッセージ
+        public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
+        public const string MSG_INVALID_SKEY_CONTENT_IN_PEM = "鍵ファイルの内容が不正です。";
     }
 }

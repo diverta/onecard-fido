@@ -61,6 +61,17 @@ namespace VendorMaintenanceTool.FIDOSettings
 
         private void DoRequestHidInstallAttestation()
         {
+            // 鍵ファイルを読込
+            byte[] keyPemBytes;
+            string errorMessage;
+            if (FIDOAttestationUtil.ReadKeyPemFile(Parameter.KeyPath, out keyPemBytes, out errorMessage) == false) {
+                OnNotifyCommandTerminated(false, errorMessage);
+                return;
+            }
+
+            // 秘密鍵を抽出
+            byte[] keyBytes = FIDOAttestationUtil.ExtractPrivateKeyFromPemBytes(keyPemBytes);
+
             // TODO: 仮の実装です。
             Thread.Sleep(2000);
             OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
