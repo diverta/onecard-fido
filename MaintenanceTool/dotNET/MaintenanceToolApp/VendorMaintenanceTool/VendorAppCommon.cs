@@ -30,5 +30,7 @@
         // エラーメッセージ
         public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
         public const string MSG_INVALID_SKEY_CONTENT_IN_PEM = "鍵ファイルの内容が不正です。";
+        public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
+        public const string MSG_INVALID_SKEY_OR_CERT = "秘密鍵または公開鍵の内容が不正です。";
     }
 }

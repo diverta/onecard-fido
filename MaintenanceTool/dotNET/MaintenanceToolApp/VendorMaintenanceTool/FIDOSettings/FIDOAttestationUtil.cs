@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ToolAppCommon;
 using static VendorMaintenanceTool.VendorAppCommon;
@@ -93,6 +94,72 @@ namespace VendorMaintenanceTool.FIDOSettings
 
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("Convert.FromBase64String failed: {0}", e.Message));
+            }
+
+            return ret;
+        }
+
+        //
+        // 証明書関連
+        //
+        public static bool ReadCertFile(string certFilePath, out byte[] certBytes)
+        {
+            bool ret = false;
+            certBytes = Array.Empty<byte>();
+
+            try {
+                certBytes = File.ReadAllBytes(certFilePath);
+                ret = (certBytes.Length > 0);
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("File.ReadAllBytes failed: {0}", e.Message));
+            }
+
+            return ret;
+        }
+
+        public static bool ValidateSkeyCert(byte[] PemBytes, byte[] CertBytes)
+        {
+            // 証明書から公開鍵を抽出
+            byte[] pubkeyFromCert;
+            if (ExtractPubkeyFromDer(CertBytes, out pubkeyFromCert) == false) {
+                return false;
+            }
+
+            // 秘密鍵から公開鍵を生成
+            byte[] pubkeyFromPrivkey;
+            if (ExtractPubkeyFromDer(PemBytes, out pubkeyFromPrivkey) == false) {
+                return false;
+            }
+
+            // for debug
+            // AppLogUtil.OutputLogDebug("Public key from private key: ");
+            // AppLogUtil.OutputLogText(AppLogUtil.DumpMessage(pubkeyFromPrivkey, pubkeyFromPrivkey.Length));
+            // AppLogUtil.OutputLogDebug("Public key from certification: ");
+            // AppLogUtil.OutputLogText(AppLogUtil.DumpMessage(pubkeyFromCert, pubkeyFromCert.Length));
+
+            // 両者の公開鍵を比較し、同じでない場合はエラー
+            return Enumerable.SequenceEqual(pubkeyFromCert, pubkeyFromPrivkey);
+        }
+
+        private static bool ExtractPubkeyFromDer(byte[] derBytes, out byte[] pubkeyBytes)
+        {
+            bool ret = false;
+            pubkeyBytes = new byte[64];
+
+            // 開始バイトが不正な場合は終了
+            if (derBytes[0] != 0x30) {
+                return ret;
+            }
+
+            for (int i = 3; i < derBytes.Length; i++) {
+                if (derBytes[i - 3] == 0x03 && derBytes[i - 2] == 0x42 &&
+                    derBytes[i - 1] == 0x00 && derBytes[i] == 0x04) {
+                    // 03 42 00 04 というシーケンスが発見されたら、
+                    // その後ろから64バイト分のデータをコピー
+                    Array.Copy(derBytes, i + 1, pubkeyBytes, 0, 64);
+                    ret = true;
+                }
             }
 
             return ret;

@@ -3,6 +3,7 @@ using System.Threading;
 using ToolAppCommon;
 using VendorMaintenanceTool.VendorFunction;
 using static MaintenanceToolApp.FIDODefine;
+using static VendorMaintenanceTool.VendorAppCommon;
 
 namespace VendorMaintenanceTool.FIDOSettings
 {
@@ -71,6 +72,19 @@ namespace VendorMaintenanceTool.FIDOSettings
 
             // 秘密鍵を抽出
             byte[] keyBytes = FIDOAttestationUtil.ExtractPrivateKeyFromPemBytes(keyPemBytes);
+
+            // 証明書ファイルを読込
+            byte[] certBytes;
+            if (FIDOAttestationUtil.ReadCertFile(Parameter.CertPath, out certBytes) == false) {
+                OnNotifyCommandTerminated(false, MSG_CANNOT_READ_CERT_CRT_FILE);
+                return;
+            }
+
+            // 鍵ファイルを使用し、証明書の公開鍵を検証
+            if (FIDOAttestationUtil.ValidateSkeyCert(keyPemBytes, certBytes) == false) {
+                OnNotifyCommandTerminated(false, MSG_INVALID_SKEY_OR_CERT);
+                return;
+            }
 
             // TODO: 仮の実装です。
             Thread.Sleep(2000);
