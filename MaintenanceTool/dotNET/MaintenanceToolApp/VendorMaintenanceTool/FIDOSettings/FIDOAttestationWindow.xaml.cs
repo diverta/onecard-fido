@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp;
+using System.Windows;
 
 namespace VendorMaintenanceTool.FIDOSettings
 {
@@ -37,6 +38,24 @@ namespace VendorMaintenanceTool.FIDOSettings
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
+        }
+
+        private void ButtonInstall_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void buttonSelectKeyPath_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+        }
+
+        private void buttonSelectCertPath_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
     }
 }
