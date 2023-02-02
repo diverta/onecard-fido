@@ -362,8 +362,6 @@ namespace MaintenanceToolApp.HealthCheck
                 break;
             }
 
-            // エラーログ出力
-            AppLogUtil.OutputLogError(errorMessage);
             return false;
         }
 
