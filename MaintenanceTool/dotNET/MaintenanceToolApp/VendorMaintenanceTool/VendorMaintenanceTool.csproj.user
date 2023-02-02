@@ -2,12 +2,18 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="FIDOSettings\FIDOAttestationWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="VendorFunction\VendorFunctionWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="..\MaintenanceToolApp\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="FIDOSettings\FIDOAttestationWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="VendorFunction\VendorFunctionWindow.xaml">

@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
+using VendorMaintenanceTool.FIDOSettings;
 using static MaintenanceToolApp.AppDefine;
 
 namespace VendorMaintenanceTool.VendorFunction
@@ -44,6 +45,12 @@ namespace VendorMaintenanceTool.VendorFunction
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                return;
+            }
+
+            // 鍵・証明書インストール画面をポップアップ表示
+            FIDOAttestationWindow w = new FIDOAttestationWindow();
+            if (w.ShowDialogWithOwner(this) == false) {
                 return;
             }
 
