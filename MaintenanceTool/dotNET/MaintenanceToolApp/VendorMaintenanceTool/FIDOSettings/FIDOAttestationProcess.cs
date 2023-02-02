@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using System;
 using System.Threading;
 using ToolAppCommon;
 using VendorMaintenanceTool.VendorFunction;
@@ -86,13 +87,42 @@ namespace VendorMaintenanceTool.FIDOSettings
                 return;
             }
 
-            // TODO: 仮の実装です。
-            Thread.Sleep(2000);
-            OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
+            // 鍵・証明書インストール用のリクエストデータを生成
+            byte[] commandData = CommandDataForInstallAttestation(keyBytes, certBytes);
+
+            // 鍵・証明書インストールコマンドを実行する
+            CommandProcess.RegisterHandlerOnCommandResponse(OnCommandResponseRef);
+            CommandProcess.DoRequestCtapHidCommand(0x80 | MNT_COMMAND_BASE, commandData);
+        }
+
+        private byte[] CommandDataForInstallAttestation(byte[] keyBytes, byte[] certBytes)
+        {
+            //
+            // 鍵・証明書インストール用のリクエストデータを生成
+            //
+            // 変数初期化
+            int commandSize = 1 + keyBytes.Length + certBytes.Length;
+            byte[] commandData = new byte[commandSize];
+            int pos;
+
+            // コマンド（１バイト）
+            commandData[0] = MNT_COMMAND_INSTALL_ATTESTATION;
+            pos = 1;
+
+            // 秘密鍵（32バイト）
+            Array.Copy(keyBytes, 0, commandData, pos, keyBytes.Length);
+            pos += keyBytes.Length;
+
+            // 証明書（ファイルサイズと同じ）
+            Array.Copy(certBytes, 0, commandData, pos, certBytes.Length);
+
+            // マージされたバイトデータを戻す
+            return commandData;
         }
 
         private void DoResponseHidInstallAttestation()
         {
+            OnNotifyCommandTerminated(true, AppCommon.MSG_NONE);
         }
 
         private void DoRequestHidRemoveAttestation()

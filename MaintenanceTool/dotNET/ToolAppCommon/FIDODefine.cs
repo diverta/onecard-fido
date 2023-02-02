@@ -10,6 +10,7 @@
         public const byte MNT_COMMAND_BOOTLOADER_MODE = 0x45;
         public const byte MNT_COMMAND_ERASE_BONDING_DATA = 0x46;
         public const byte MNT_COMMAND_SYSTEM_RESET = 0x47;
+        public const byte MNT_COMMAND_INSTALL_ATTESTATION = 0x48;
         public const byte MNT_COMMAND_RESET_ATTESTATION = 0x49;
         public const byte MNT_COMMAND_GET_TIMESTAMP = 0x4a;
         public const byte MNT_COMMAND_SET_TIMESTAMP = 0x4b;
