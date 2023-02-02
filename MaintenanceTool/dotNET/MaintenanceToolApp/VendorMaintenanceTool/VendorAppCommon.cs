@@ -17,8 +17,9 @@
         public const string MSG_FILTER_SELECT_FIDO_PKEY_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
         public const string MSG_FILTER_SELECT_FIDO_CERT_CRT_PATH = "証明書ファイル (*.crt)|*.crt";
 
-
         // 確認メッセージ
+        public const string MSG_INSTALL_SKEY_CERT = "FIDO認証器に鍵・証明書をインストールします。";
+        public const string MSG_PROMPT_INSTALL_SKEY_CERT = "インストールを実行しますか？";
         public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・ユーザー登録情報をすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
         public const string MSG_CHANGE_TO_BOOTLOADER_MODE = "FIDO認証器をブートローダーモードに遷移させます。";
