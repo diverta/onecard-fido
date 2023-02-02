@@ -14,12 +14,18 @@ namespace VendorMaintenanceTool.VendorFunction
         public string ResultMessage { get; set; }
         public string ResultInformativeMessage { get; set; }
 
+        // 画面で選択された鍵・証明書ファイルパスを保持
+        public string KeyPath { get; set; }
+        public string CertPath { get; set; }
+
         public VendorFunctionParameter()
         {
             Command = Command.COMMAND_NONE;
             CommandTitle = string.Empty;
             ResultMessage = string.Empty;
             ResultInformativeMessage = string.Empty;
+            KeyPath = string.Empty;
+            CertPath = string.Empty;
         }
     }
 

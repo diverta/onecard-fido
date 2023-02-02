@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using ToolAppCommon;
+using VendorMaintenanceTool.VendorFunction;
 using static VendorMaintenanceTool.VendorAppCommon;
 
 namespace VendorMaintenanceTool.FIDOSettings
@@ -12,8 +13,13 @@ namespace VendorMaintenanceTool.FIDOSettings
     /// </summary>
     public partial class FIDOAttestationWindow : Window
     {
-        public FIDOAttestationWindow()
+        // 処理実行のためのプロパティー
+        private readonly VendorFunctionParameter Parameter;
+
+        internal FIDOAttestationWindow(VendorFunctionParameter param)
         {
+            // パラメーターの参照を保持
+            Parameter = param;
             InitializeComponent();
         }
 
@@ -47,6 +53,11 @@ namespace VendorMaintenanceTool.FIDOSettings
             if (CheckForInstallKeyCert() == false) {
                 return;
             }
+
+            // 入力されたパスを設定し、画面を閉じる
+            Parameter.KeyPath = textKeyPath.Text;
+            Parameter.CertPath = textCertPath.Text;
+            TerminateWindow(true);
         }
 
         private bool CheckForInstallKeyCert()

@@ -49,13 +49,14 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 鍵・証明書インストール画面をポップアップ表示
-            FIDOAttestationWindow w = new FIDOAttestationWindow();
+            VendorFunctionParameter param = new VendorFunctionParameter();
+            FIDOAttestationWindow w = new FIDOAttestationWindow(param);
             if (w.ShowDialogWithOwner(this) == false) {
                 return;
             }
 
             // 鍵・証明書インストール
-            DoVendorFunctionProcess(Command.COMMAND_INSTALL_SKEY_CERT, VendorAppCommon.PROCESS_NAME_INSTALL_ATTESTATION);
+            DoVendorFunctionProcess(param, Command.COMMAND_INSTALL_SKEY_CERT, VendorAppCommon.PROCESS_NAME_INSTALL_ATTESTATION);
         }
 
         private void DoRemoveAttestation()
@@ -73,7 +74,7 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 鍵・証明書の削除
-            DoVendorFunctionProcess(Command.COMMAND_ERASE_SKEY_CERT, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_ERASE_SKEY_CERT, VendorAppCommon.PROCESS_NAME_REMOVE_ATTESTATION);
         }
 
         private void DoBootloaderMode()
@@ -91,7 +92,7 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // ブートローダーモード遷移
-            DoVendorFunctionProcess(Command.COMMAND_HID_BOOTLOADER_MODE, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_HID_BOOTLOADER_MODE, VendorAppCommon.PROCESS_NAME_BOOT_LOADER_MODE);
         }
 
         private void DoFirmwareReset()
@@ -109,15 +110,15 @@ namespace VendorMaintenanceTool.VendorFunction
             }
 
             // 認証器のファームウェア再起動
-            DoVendorFunctionProcess(Command.COMMAND_HID_FIRMWARE_RESET, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET);
+            DoVendorFunctionProcess(new VendorFunctionParameter(), Command.COMMAND_HID_FIRMWARE_RESET, VendorAppCommon.PROCESS_NAME_FIRMWARE_RESET);
         }
 
         //
         // コマンド実行指示～完了後の処理
         //
-        private void DoVendorFunctionProcess(Command command, string commandTitle)
+        private void DoVendorFunctionProcess(VendorFunctionParameter param, Command command, string commandTitle)
         {
-            VendorFunctionParameter param = new VendorFunctionParameter();
+            // 実行コマンド／コマンド名称を設定
             param.Command = command;
             param.CommandTitle = commandTitle;
 
