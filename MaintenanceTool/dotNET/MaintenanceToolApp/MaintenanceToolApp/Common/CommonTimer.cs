@@ -17,6 +17,9 @@ namespace MaintenanceToolApp.Common
         //（個別のタイマースレッドを識別するための名称）
         private readonly string TimerName;
 
+        // 応答タイムアウト監視制御
+        private bool TimerStarted = false;
+
         public CommonTimer(string n, int ms)
         {
             TimerName = n;
@@ -25,12 +28,20 @@ namespace MaintenanceToolApp.Common
 
         public void Start()
         {
+            if (TimerStarted) {
+                return;
+            }
+            TimerStarted = true;
             Timer.Elapsed += CommandTimerElapsed;
             Timer.Start();
         }
 
         public void Stop()
         {
+            if (TimerStarted == false) {
+                return;
+            }
+            TimerStarted = false;
             Timer.Stop();
             Timer.Elapsed -= CommandTimerElapsed;
         }
