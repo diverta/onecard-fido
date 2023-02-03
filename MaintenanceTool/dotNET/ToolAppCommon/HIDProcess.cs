@@ -29,7 +29,7 @@ namespace ToolAppCommon
         public event HandlerOnConnectHIDDevice OnConnectHIDDevice = null!;
 
         // HID接続完了時のイベント
-        public delegate void HandlerOnReceivedResponse(byte[] cid, byte CMD, byte[] data);
+        public delegate void HandlerOnReceivedResponse(byte[] cid, byte CMD, byte[] data, bool success, string errorMessage);
         public event HandlerOnReceivedResponse OnReceivedResponse = null!;
 
         //
@@ -347,7 +347,7 @@ namespace ToolAppCommon
                     string temp = AppLogUtil.DumpMessage(frameData, frameData.Length);
                     AppLogUtil.OutputLogDebug(string.Format(
                         "HID Recv irreagal frame: CMD=0x{0:x2} length={1}\r\n{2}", seq, frameData.Length, temp));
-                    OnReceivedResponse(receivedCID, (byte)seq, ReceivedMessage);
+                    OnReceivedResponse(receivedCID, (byte)seq, ReceivedMessage, false, AppCommon.MSG_HID_RECV_IRREAGAL_FRAME);
                     return;
                 }
 
@@ -374,7 +374,7 @@ namespace ToolAppCommon
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータを転送
                 AppLogUtil.OutputLogText(ReceivedLogBuffer);
-                OnReceivedResponse(receivedCID, ReceivedCMD, ReceivedMessage);
+                OnReceivedResponse(receivedCID, ReceivedCMD, ReceivedMessage, true, AppCommon.MSG_NONE);
             }
         }
 
