@@ -29,29 +29,15 @@ namespace MaintenanceTool.OATH
             }
         }
 
+        // このクラスのインスタンス
+        private static readonly QRCodeUtil Instance = new QRCodeUtil();
+
         //
         // 公開用関数
         //
-        public bool ScanQRCodeFromScreenShot(Dictionary<string, string> parsedQRCodeInfo)
+        public static bool ScanQRCodeFromScreenShot(Dictionary<string, string> parsedQRCodeInfo)
         {
-            // デスクトップのスクリーンショットを取得し、イメージを抽出
-            Bitmap bitmapScreenShot;
-            if (TakeScreenShotFromRectangle(GetFullScreenRectangle(), out bitmapScreenShot) == false) {
-                return false;
-            }
-
-            // イメージからQRコードをキャプチャーし、メッセージを抽出
-            string QRCodeString;
-            if (ExtractQRMessage(bitmapScreenShot, out QRCodeString) == false) {
-                return false;
-            }
-
-            // 抽出されたメッセージを解析
-            if (ParseQRMessage(QRCodeString, parsedQRCodeInfo) == false) {
-                return false;
-            }
-
-            return true;
+            return Instance.ScanQRCodeFromScreenShotInner(parsedQRCodeInfo);
         }
 
         public static bool TakeScreenShotFromRectangle(Rectangle rectangle, out Bitmap bitmapScreenShot)
@@ -95,6 +81,28 @@ namespace MaintenanceTool.OATH
         //
         // 内部処理
         //
+        private bool ScanQRCodeFromScreenShotInner(Dictionary<string, string> parsedQRCodeInfo)
+        {
+            // デスクトップのスクリーンショットを取得し、イメージを抽出
+            Bitmap bitmapScreenShot;
+            if (TakeScreenShotFromRectangle(GetFullScreenRectangle(), out bitmapScreenShot) == false) {
+                return false;
+            }
+
+            // イメージからQRコードをキャプチャーし、メッセージを抽出
+            string QRCodeString;
+            if (ExtractQRMessage(bitmapScreenShot, out QRCodeString) == false) {
+                return false;
+            }
+
+            // 抽出されたメッセージを解析
+            if (ParseQRMessage(QRCodeString, parsedQRCodeInfo) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
         private bool ExtractQRMessage(Bitmap bitmapScreenShot, out string qrCodeString)
         {
             // 例外抑止
