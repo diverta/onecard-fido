@@ -17,6 +17,7 @@
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
         public const string MSG_HID_REMOVED = "USB HIDデバイスが取り外されました。";
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
+        public const string MSG_HID_RECV_IRREAGAL_FRAME = "USB HIDデバイスから受信したフレームが不正です。";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";

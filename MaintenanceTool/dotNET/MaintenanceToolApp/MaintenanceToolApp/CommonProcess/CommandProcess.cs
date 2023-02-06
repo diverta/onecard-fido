@@ -150,8 +150,14 @@ namespace MaintenanceToolApp
             HIDProcess.DoRequestCommand(InitialCidBytes, CMD, data);
         }
 
-        private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data)
+        private void OnReceivedResponse(byte[] cid, byte CMD, byte[] data, bool success, string errorMessage)
         {
+            // 処理失敗時
+            if (success == false) {
+                OnCommandResponseToMainThread(CMD, data, false, errorMessage);
+                return;
+            }
+
             // CMDが0の場合はエラー扱い
             if (CMD == 0) {
                 OnCommandResponseToMainThread(CMD, data, false, AppCommon.MSG_CMDTST_INVALID_CTAPHID_CMD);

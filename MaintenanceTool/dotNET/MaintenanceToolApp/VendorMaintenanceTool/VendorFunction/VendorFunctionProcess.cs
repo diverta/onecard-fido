@@ -2,6 +2,7 @@
 using MaintenanceToolApp.CommonProcess;
 using ToolAppCommon;
 using VendorMaintenanceTool.CommonProcess;
+using VendorMaintenanceTool.FIDOSettings;
 using static MaintenanceToolApp.AppDefine;
 
 namespace VendorMaintenanceTool.VendorFunction
@@ -14,12 +15,18 @@ namespace VendorMaintenanceTool.VendorFunction
         public string ResultMessage { get; set; }
         public string ResultInformativeMessage { get; set; }
 
+        // 画面で選択された鍵・証明書ファイルパスを保持
+        public string KeyPath { get; set; }
+        public string CertPath { get; set; }
+
         public VendorFunctionParameter()
         {
             Command = Command.COMMAND_NONE;
             CommandTitle = string.Empty;
             ResultMessage = string.Empty;
             ResultInformativeMessage = string.Empty;
+            KeyPath = string.Empty;
+            CertPath = string.Empty;
         }
     }
 
@@ -45,6 +52,12 @@ namespace VendorMaintenanceTool.VendorFunction
 
             // コマンドに応じ、以下の処理に分岐
             switch (Parameter.Command) {
+            case Command.COMMAND_INSTALL_SKEY_CERT:
+                DoRequestInstallAttestation();
+                break;
+            case Command.COMMAND_ERASE_SKEY_CERT:
+                DoRequestRemoveAttestation();
+                break;
             case Command.COMMAND_HID_BOOTLOADER_MODE:
                 DoRequestBootloaderMode();
                 break;
@@ -54,6 +67,34 @@ namespace VendorMaintenanceTool.VendorFunction
             default:
                 break;
             }
+        }
+
+        //
+        // 鍵・証明書インストール
+        //
+        private void DoRequestInstallAttestation()
+        {
+            new FIDOAttestationProcess(Parameter).DoProcess(DoResponseInstallAttestation);
+        }
+
+        private void DoResponseInstallAttestation(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
+        }
+
+        //
+        // 鍵・証明書の削除
+        //
+        private void DoRequestRemoveAttestation()
+        {
+            new FIDOAttestationProcess(Parameter).DoProcess(DoResponseRemoveAttestation);
+        }
+
+        private void DoResponseRemoveAttestation(bool success, string errorMessage)
+        {
+            // 画面に制御を戻す
+            NotifyProcessTerminated(success, errorMessage);
         }
 
         //
