@@ -1,12 +1,10 @@
 # FIDO認証器管理ツール
 
-最終更新日：2023/1/12
+最終更新日：2023/2/6
 
 ## 概要
-PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うためのツールです。
-
-最終更新日現在、macOS版が利用できます。<br>
-（Windows版は、ただいま再構築中です）
+PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うためのツールです。<br>
+[macOS版](../MaintenanceTool/macOSApp/README.md)と、[Windows版](../MaintenanceTool/dotNET/README.md)を用意しました。
 
 ## エンドユーザー向けの機能
 
@@ -41,10 +39,10 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
 
-## Windows版（ただいま再構築中）
+## [Windows版](../MaintenanceTool/dotNET/README.md)
 
 #### 画面イメージ
-<img src="../MaintenanceTool/dotNET/assets01/0002.jpg" width="400">
+<img src="../MaintenanceTool/dotNET/assets01/0001.jpg" width="400">
 
 #### 動作環境
 Windows 10 (64bit版)、Windows 11
