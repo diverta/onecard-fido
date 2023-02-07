@@ -10,11 +10,11 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		OjhuSKwx6L0C2xurVmpw0Q8vChA=
+		VDRxu4Otiapb80NRBTOOxCEqcIY=
 		</data>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<data>
-		iTd1Jc0elM2CWCqY7NP1hjg9wKw=
+		8CfajWOW4lmZRn/651tPUwie6pY=
 		</data>
 		<key>Resources/BLEDFUStartWindow.nib</key>
 		<data>
@@ -58,7 +58,7 @@
 		</data>
 		<key>Resources/PIVPreferenceWindow.nib</key>
 		<data>
-		CF8jj93zrQzaRR/eDj4rthMN+0o=
+		JekajDxL7suc4gLYz/b5uZmqvgU=
 		</data>
 		<key>Resources/RTCCSettingWindow.nib</key>
 		<data>
@@ -100,9 +100,9 @@
 		<data>
 		KhinctblL1regzTyc/O4NBG+54M=
 		</data>
-		<key>Resources/appkg.PCA10059_03.0.3.7.zip</key>
+		<key>Resources/appkg.PCA10059_03.0.3.8.zip</key>
 		<data>
-		End1E6d9t6RoYOg6X/xFaNz9OVY=
+		qREXWssFGPuo6xe92Af53aoQwGI=
 		</data>
 		<key>Resources/card_edit_passwd.param</key>
 		<data>
@@ -184,14 +184,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1jB+A1MoOMD0Ir17h8s7FAWrKt4I/pVo6FydkPXTwm0=
+			8hVImJm093uTYKF3bViBtOFWtzzUnvFTClbYfKgWghY=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUProcessingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jI5/H+5gJwDyZaJmbGuoL2TWbfU6gPM5b8c3eP6Rmuk=
+			Q+7p0VV0ZK0k+RNj+o2PPrueQzZDDufvaWMVyuXATDY=
 			</data>
 		</dict>
 		<key>Resources/BLEDFUStartWindow.nib</key>
@@ -268,7 +268,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			WQJjuzd6JZmGTSV6Ks5qrS7B/O5DIyGfXuvSvXroccM=
+			CKdzCYFqEUltYaSlXK/ElvdZl8H9T3nOeMdIeLX86co=
 			</data>
 		</dict>
 		<key>Resources/RTCCSettingWindow.nib</key>
@@ -341,11 +341,11 @@
 			NqMb8xQZj/UiRAbzeQUIKmBDASxWyvv8wwvrh2onuZ4=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_03.0.3.7.zip</key>
+		<key>Resources/appkg.PCA10059_03.0.3.8.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			kY2jynq6vWcKwcjd7/3s3jBjr4kLbAgCedMM9dBTgS8=
+			mAkiwA2t8v61QMhVZWB7hSIs2xI/MtVOKZP58275oYs=
 			</data>
 		</dict>
 		<key>Resources/card_edit_passwd.param</key>

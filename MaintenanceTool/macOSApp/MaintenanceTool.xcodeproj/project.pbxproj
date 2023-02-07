@@ -31,8 +31,6 @@
 		7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
 		7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613B28867DA600322E93 /* BLESettingCommand.m */; };
 		7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613E28868E5F00322E93 /* BLEPairingCommand.m */; };
-		7A23EB0D2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A23EB0C2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip */; };
-		7A23EB0E2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A23EB0C2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip */; };
 		7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8D27702A4E0010EE4A /* generate_main_key.sh */; };
 		7A292D9027702D450010EE4A /* generate_main_key.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A292D8F27702D450010EE4A /* generate_main_key.param */; };
 		7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */; };
@@ -49,6 +47,8 @@
 		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
 		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
+		7A4E6C81299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */; };
+		7A4E6C82299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
@@ -299,7 +299,6 @@
 		7A23613B28867DA600322E93 /* BLESettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLESettingCommand.m; sourceTree = "<group>"; };
 		7A23613D28868E4A00322E93 /* BLEPairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEPairingCommand.h; sourceTree = "<group>"; };
 		7A23613E28868E5F00322E93 /* BLEPairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEPairingCommand.m; sourceTree = "<group>"; };
-		7A23EB0C2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.7.zip; sourceTree = "<group>"; };
 		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
@@ -328,6 +327,7 @@
 		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
 		7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEDFUCommand.m; sourceTree = "<group>"; };
+		7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.8.zip; sourceTree = "<group>"; };
 		7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PIVPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVPreferenceWindow.h; sourceTree = "<group>"; };
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
@@ -817,7 +817,7 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A23EB0C2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip */,
+				7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */,
 				7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
@@ -1008,6 +1008,7 @@
 				7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */,
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7A775B4F294C4C8F00EDE37F /* UnpairingRequestWindow.xib in Resources */,
+				7A4E6C81299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
@@ -1027,7 +1028,6 @@
 				7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				7A199C15288545DB00AF8B62 /* FIDOSettingWindow.xib in Resources */,
-				7A23EB0D2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip in Resources */,
 				7A3F4F2428755FB1003CFE67 /* ToolVersionWindow.xib in Resources */,
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				7AC89EF1296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
@@ -1053,6 +1053,7 @@
 				7A8B3E02296E56640005F7B1 /* BLESettingWindow.xib in Resources */,
 				7A8B3E03296E56640005F7B1 /* Entitlements.plist in Resources */,
 				7A8B3E04296E56640005F7B1 /* UnpairingRequestWindow.xib in Resources */,
+				7A4E6C82299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */,
 				7A8B3E05296E56640005F7B1 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A8B3E06296E56640005F7B1 /* HcheckWindow.xib in Resources */,
 				7A8B3E07296E56640005F7B1 /* add_sub_key.param in Resources */,
@@ -1072,7 +1073,6 @@
 				7A8B3E15296E56640005F7B1 /* HcheckPinWindow.xib in Resources */,
 				7A8B3E16296E56640005F7B1 /* Images.xcassets in Resources */,
 				7A8B3E17296E56640005F7B1 /* FIDOSettingWindow.xib in Resources */,
-				7A23EB0E2970EEF7005B5C4E /* appkg.PCA10059_03.0.3.7.zip in Resources */,
 				7A8B3E18296E56640005F7B1 /* ToolVersionWindow.xib in Resources */,
 				7A8B3E19296E56640005F7B1 /* PIVPreferenceWindow.xib in Resources */,
 				7AC89EF2296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
@@ -1390,7 +1390,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1418,7 +1418,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1446,7 +1446,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1474,7 +1474,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
