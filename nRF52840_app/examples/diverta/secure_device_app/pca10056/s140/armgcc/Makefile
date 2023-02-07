@@ -9,7 +9,7 @@ TARGET_BOARD     := PCA10059_03
 
 # application version info
 FW_REV := 0.3.7
-FW_BUILD := 102
+FW_BUILD := 103
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 CFLAGS += -DFW_BUILD=\"$(FW_BUILD)\"
 # hardware version info
