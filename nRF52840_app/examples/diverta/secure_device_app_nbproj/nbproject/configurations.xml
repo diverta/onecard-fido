@@ -224,6 +224,7 @@
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_ble_unpairing.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_crypto.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_flash.h</itemPath>
+      <itemPath>../../../../FIDO2Device/wrapper_header/fido_status.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_status_indicator.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/fido_timer.h</itemPath>
       <itemPath>../../../../FIDO2Device/wrapper_header/platform_common.h</itemPath>
@@ -236,6 +237,7 @@
       <itemPath>../wrapper_lib/ccid_flash_openpgp_object.c</itemPath>
       <itemPath>../wrapper_lib/ccid_flash_piv_object.c</itemPath>
       <itemPath>../wrapper_lib/fido_ble_unpairing.c</itemPath>
+      <itemPath>../wrapper_lib/fido_status.c</itemPath>
       <itemPath>../wrapper_lib/fido_status_indicator.c</itemPath>
       <itemPath>../wrapper_lib/fido_timer.c</itemPath>
       <itemPath>../wrapper_lib/rtcc.c</itemPath>
@@ -985,6 +987,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../../FIDO2Device/wrapper_header/fido_status.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../FIDO2Device/wrapper_header/fido_status_indicator.h"
             ex="false"
             tool="3"
@@ -1183,6 +1190,8 @@
             ex="false"
             tool="0"
             flavor2="0">
+      </item>
+      <item path="../wrapper_lib/fido_status.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../wrapper_lib/fido_status_indicator.c"
             ex="false"
