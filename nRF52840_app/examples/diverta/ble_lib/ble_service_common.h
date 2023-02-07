@@ -15,6 +15,8 @@ extern "C" {
 
 bool ble_service_peripheral_mode(void);
 void ble_service_peripheral_mode_set(bool b);
+bool ble_service_peripheral_is_busy(void);
+void ble_service_peripheral_set_busy(bool b);
 bool ble_service_peripheral_mainsw_event_handler(void);
 
 void ble_service_common_init(void);

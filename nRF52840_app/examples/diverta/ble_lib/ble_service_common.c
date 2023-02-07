@@ -52,13 +52,29 @@ void ble_service_peripheral_mode_set(bool b)
     ble_peripheral_mode = b;
 }
 
+// BLEペリフェラルモード時、ビジー状態かどうかを保持
+static bool peripheral_is_busy = false;
+
+bool ble_service_peripheral_is_busy(void)
+{
+    return peripheral_is_busy;
+}
+
+void ble_service_peripheral_set_busy(bool b)
+{
+    NRF_LOG_DEBUG("Set peripheral status to %s", b ? "busy" : "idle");
+    peripheral_is_busy = b;
+}
+
 bool ble_service_peripheral_mainsw_event_handler(void)
 {
     //
     // BLEペリフェラルモードにおける
     // ボタン短押し時の処理
     //
-    if (ble_service_peripheral_mode() == false) {
+    if (ble_service_peripheral_mode() == false || peripheral_is_busy) {
+        // ビジー状態時（ペアリング要求／ペアリング解除要求時）は
+        // ボタン押下を無視
         return false;
     }
 
@@ -147,7 +163,9 @@ static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_c
             break;
 
         case BLE_GAP_EVT_LESC_DHKEY_REQUEST:
-            NRF_LOG_DEBUG("BLE_GAP_EVT_LESC_DHKEY_REQUEST");
+            // ペアリング要求時はビジー状態に遷移し、基板上のボタンを押せないようにする
+            fido_status_set_to_busy();
+            NRF_LOG_DEBUG("BLE_GAP_EVT_LESC_DHKEY_REQUEST");    
             break;
 
         case BLE_GAP_EVT_AUTH_STATUS:
@@ -395,6 +413,8 @@ static void stop_advertising_request_on_conn_sec_failed(pm_evt_t const *p_evt)
         if (conn_sec_failed_code == PM_CONN_SEC_ERROR_PIN_OR_KEY_MISSING) {
             // ペアリング情報の消失を検知（このデバイスにペアリング情報が存在しない）
             NRF_LOG_ERROR("Pairing information is not exist in this device.");
+            // ビジー状態を解除し、基板上のボタンを押下できるようにする
+            ble_service_peripheral_set_busy(false);
         }
     }
 }
