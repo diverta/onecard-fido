@@ -428,6 +428,7 @@ SRC_FILES += \
   $(WRPLIB_DIR)/ccid_flash_piv_object.c \
   $(WRPLIB_DIR)/fido_ble_unpairing.c \
   $(WRPLIB_DIR)/fido_status_indicator.c \
+  $(WRPLIB_DIR)/fido_status.c \
   $(WRPLIB_DIR)/fido_timer.c \
   $(WRPLIB_DIR)/rtcc.c \
 
