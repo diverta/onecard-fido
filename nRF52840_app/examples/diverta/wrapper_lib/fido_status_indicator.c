@@ -38,11 +38,13 @@ static void idling_led_timed_out(void)
 {
     // LEDを点滅させる
     // （点滅は約２秒間隔）
-    if (++led_status == 8) {
-        led_status = 0;
+    if (led_status == 0) {
         led_state = true;
     } else {
         led_state = false;
+    }
+    if (++led_status == 8) {
+        led_status = 0;
     }
     fido_board_led_pin_set(m_led_for_idling, led_state);
 }
