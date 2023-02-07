@@ -216,6 +216,9 @@ static void command_unpairing_request(void)
         return;
     }
 
+    // ビジー状態に遷移
+    fido_status_set_to_busy();
+    
     // レスポンスを送信
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
@@ -225,6 +228,9 @@ static void command_unpairing_cancel(void)
     // ペアリング解除要求キャンセルコマンドを実行
     fido_ble_unpairing_cancel_request();
 
+    // アイドル状態に遷移
+    fido_status_set_to_idle();
+    
     // レスポンスを送信
     send_command_response(CTAP1_ERR_SUCCESS, 1);
 }
