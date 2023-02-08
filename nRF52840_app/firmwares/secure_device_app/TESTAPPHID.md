@@ -67,8 +67,8 @@ FIDO2機能の動作確認は、管理ツールの「ヘルスチェック実行
 <img src="../../../MaintenanceTool/dotNET/assets02/0003.jpg" width="300">
 
 手順につきましては下記ドキュメントをご参照ください。<br>
-　・[鍵・証明書の導入手順（Windows版）](../../../MaintenanceTool/dotNET/ATTESTATION.md)<br>
-　・[鍵・証明書の導入手順（macOS版）](../../../MaintenanceTool/macOSApp/ATTESTATION.md)
+　・[PINコードの設定手順（Windows版）](../../../MaintenanceTool/dotNET/SETPIN.md)<br>
+　・[PINコードの設定手順（macOS版）](../../../MaintenanceTool/macOSApp/SETPIN.md)
 
 #### CTAP2ヘルスチェック実行
 
