@@ -23,17 +23,19 @@ MDBT50Q Dongleを、PCのUSBポートに装着すると、下図のように、�
 
 #### 管理ツールのインストール
 
-あらかじめ、最新バージョンの管理ツールをPCにインストールしておきます。<br>
-具体的な手順は、別ドキュメント「[管理ツールインストール手順](../../../MaintenanceTool/macOSApp/INSTALLPRG.md)」をご参照ください。
+あらかじめ、最新バージョンのベンダー向け管理ツールをPCにインストールしておきます。<br>
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[インストール手順（Windows版）](../../../MaintenanceTool/dotNET/DEVTOOLINST.md)<br>
+　・[インストール手順（macOS版）](../../../MaintenanceTool/macOSApp/DEVTOOLINST.md)
 
 MDBT50Q DongleがPCのUSBポートに装着されている状態だと、管理ツール起動時、下図のようなメッセージ「USB HIDデバイスに接続されました。」が表示されます。
 
-<img src="assets02/0001.jpg" width="300">
+<img src="../../../MaintenanceTool/dotNET/assets08/0016.jpg" width="300">
 
 #### 鍵・証明書の準備
 
 本プロジェクトでは、FIDO2機能動作確認のために、テスト用の秘密鍵／証明書ファイルを用意しております。<br>
-GitHubリポジトリーの「[`/Research/provisionalCA/certForFido2.zip`](../../../Research/provisionalCA/certForFido2.zip)」に配置しましたので、ダウンロード／解凍してご利用ください。
+GitHubリポジトリーの「[`certForFido2.zip`](../../../Research/provisionalCA/certForFido2.zip)」に配置しましたので、ダウンロード／解凍してご利用ください。
 
 解凍されたファイルの内容は下記の通りです。
 
@@ -46,91 +48,34 @@ GitHubリポジトリーの「[`/Research/provisionalCA/certForFido2.zip`](../..
 
 ## 動作確認の実施
 
-FIDO2機能の動作確認は、管理ツールのヘルスチェック機能（`Test --> USB`メニュー）で実行できます。
+FIDO2機能の動作確認は、管理ツールの「ヘルスチェック実行（USB）」メニューで実行できます。
 
 #### 鍵・証明書のインストール
 
-管理ツール画面の「FIDO鍵・証明書設定」ボタンをクリックし、FIDO鍵・証明書設定画面を表示させます。
+管理ツール画面の「FIDO鍵・証明書設定」機能により、FIDO秘密鍵ファイル（PEM形式）、証明書ファイル（DER形式）を認証器にインストールします。
 
-<img src="assets02/0002.jpg" width="300">
+<img src="../../../MaintenanceTool/dotNET/assets08/0025.jpg" width="300">
 
-秘密鍵ファイル（PEM形式）、証明書ファイル（DER形式）を、それぞれ「参照」ボタンをクリックして選択します。<br>
-ファイル選択後、管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
-
-<img src="assets02/0003.jpg" width="300">
-
-下図のような確認ダイアログが表示されます。<br>
-「Yes」ボタンをクリックし、鍵・証明書ファイルのインストール処理を実行させます。
-
-<img src="assets02/0004.jpg" width="300">
-
-ほどなくインストール処理が完了し、ポップアップが表示されます。
-
-<img src="assets02/0005.jpg" width="300">
-
-「OK」をクリックし、ポップアップを閉じます。
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[鍵・証明書の導入手順（Windows版）](../../../MaintenanceTool/dotNET/ATTESTATION.md)<br>
+　・[鍵・証明書の導入手順（macOS版）](../../../MaintenanceTool/macOSApp/ATTESTATION.md)
 
 #### PIN番号の設定
 
-WebAuthn機能（Windows版）で使用するPIN番号を設定します。<br>
-管理ツール画面上の「PINコード設定」ボタンをクリックします。
+管理ツール画面の「PINコード設定」機能により、FIDO機能で使用する６桁数字のPIN番号を、認証器に設定します。
 
-<img src="assets02/0006.jpg" width="300">
+<img src="../../../MaintenanceTool/dotNET/assets02/0003.jpg" width="300">
 
-下図のようなPINコード設定画面が表示されます。<br>
-６桁のPIN番号を数字で入力します。<br>
-（確認用の欄にも、同じ数字を入力してください）
-
-「新規設定」ボタンをクリックし、PINコード設定処理を実行させます。
-
-<img src="assets02/0007.jpg" width="300">
-
-ほどなくPIN設定処理が完了し、ポップアップが表示されます。
-
-<img src="assets02/0008.jpg" width="300">
-
-「OK」をクリックし、ポップアップを閉じます。
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[鍵・証明書の導入手順（Windows版）](../../../MaintenanceTool/dotNET/ATTESTATION.md)<br>
+　・[鍵・証明書の導入手順（macOS版）](../../../MaintenanceTool/macOSApp/ATTESTATION.md)
 
 #### CTAP2ヘルスチェック実行
 
-WebAuthn機能（Windows版）で使用される「CTAP2」のヘルスチェックを実行します。<br>
-管理ツール画面のメニュー「Test --> USB --> CTAP2ヘルスチェック実行」を選択します。
+FIDO2のWebAuthn機能で使用される「CTAP2」のヘルスチェックを実行します。
 
-<img src="assets02/0009.jpg" width="300">
+<img src="../../../MaintenanceTool/dotNET/assets02/0014.jpg" width="300">
 
-下図のようなPINコード入力画面が表示されます。<br>
-先ほど設定した、６桁のPIN番号を数字で入力します。
-
-「OK」ボタンをクリックし、CTAP2ヘルスチェック処理を実行させます。
-
-<img src="assets02/0010.jpg" width="300">
-
-下図のようなメッセージが表示されたら、MDBT50Q Dongleの基板上のボタンを１回押します。<br>
-（約３０秒以内に押してください）
-
-<img src="assets02/0011.jpg" width="300">
-
-ほどなくCTAP2ヘルスチェック処理が完了し、ポップアップが表示されます。
-
-<img src="assets02/0012.jpg" width="300">
-
-「OK」をクリックし、ポップアップを閉じます。
-
-#### U2Fヘルスチェック実行
-
-WebAuthn機能（macOS版）で使用される「U2F」のヘルスチェックを実行します。<br>
-管理ツール画面のメニュー「Test --> USB --> U2Fヘルスチェック実行」を選択します。
-
-<img src="assets02/0013.jpg" width="300">
-
-U2Fヘルスチェック処理が開始されます。<br>
-下図のようなメッセージが表示されたら、MDBT50Q Dongleの基板上のボタンを１回押します。<br>
-（約３０秒以内に押してください）
-
-<img src="assets02/0014.jpg" width="300">
-
-ほどなくU2Fヘルスチェック処理が完了し、ポップアップが表示されます。
-
-<img src="assets02/0015.jpg" width="300">
-
-「OK」をクリックし、ポップアップを閉じます。
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[CTAP2ヘルスチェック実行手順（Windows版）](../../../MaintenanceTool/dotNET/CTAP2HCHECK.md)<br>
+　・[CTAP2ヘルスチェック実行手順（macOS版）](../../../MaintenanceTool/macOSApp/CTAP2HCHECK.md)
