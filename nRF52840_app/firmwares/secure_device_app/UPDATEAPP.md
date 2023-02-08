@@ -1,20 +1,19 @@
 # nRF52840アプリケーション更新手順書（開発時運用）
 
-最終更新日：2023/1/10
+最終更新日：2023/2/8
 
 ## 概要
 
-[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、最新バージョンの[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)を<b>手動で上書き更新する</b>手順につきまして、以下に掲載いたします。
-
-最終更新日現在の最新バージョンは、[version 0.3.7](https://github.com/diverta/onecard-fido/blob/752fb54218eb84e9dcb30af3e36c0347349eaa6a/nRF52840_app/firmwares/secure_device_app/appkg.PCA10059_03.0.3.7.zip)になります。
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、最新バージョンの[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)を<b>手動で上書き更新する</b>手順について掲載しています。
 
 ## MDBT50Q Dongleの準備
 
-[version 0.3.0](https://github.com/diverta/onecard-fido/blob/doc-20210203/nRF52840_app/firmwares/secure_device_app)以降の[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。<br>
-（導入されているnRF52840アプリケーションが、Version 0.3.0より前の場合は、別ドキュメント「[MDBT50Q Dongleファームウェア（version 0.3.0）導入手順書](../../../nRF52840_app/firmwares/secure_device_app/WRITEAPP_0_3_0.md)」をご参照願います）
+<b>version 0.3.0</b>以降の[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。
 
 次に、MDBT50Q Dongleをブートローダーモードに遷移させ、nRF52840アプリケーションを書き込むことが可能な状態にします。<br>
-手順につきましては別ドキュメント「[ブートローダーモード遷移手順書](../../../nRF52840_app/firmwares/secure_device_app/BLMODE.md)」をご参照ください。
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[ブートローダーモード遷移手順書（Windows版）](../../../MaintenanceTool/dotNET/BOOTLOADERMODE.md)<br>
+　・[ブートローダーモード遷移手順書（macOS版）](../../../MaintenanceTool/macOSApp/BOOTLOADERMODE.md)
 
 ブートローダーモードに遷移すると、MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯します。
 
@@ -29,7 +28,7 @@ nRF Utilを使用し、MDBT50Q Dongleに、[nRF52840アプリケーション](..
 ビルドを実行する際に必要となる、nRF UtilをPCにインストールしておきます。<br>
 具体的な手順は、[nRF Utilインストール手順](../../../nRF52840_app/NRFUTILINST.md)をご参照ください。
 
-本手順書を作成した時点でのnRF Utilは、`version 6.1`となっておりました。
+本手順書を作成したときのnRF Utilは`version 6.1`です。
 
 ```
 bash-3.2$ nrfutil version
