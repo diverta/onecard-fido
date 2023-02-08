@@ -6,7 +6,7 @@ Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェク�
 
 ## プログラム
 
-- <b>[nRF5340アプリケーション](nRF5340_app)</b><br>
+- <b>[nRF5340アプリケーション](nRF5340_app)（現在開発中）</b><br>
 FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF5340」で動作し、[MDBT53 Dongle](FIDO2Device/MDBT53_Dongle)（現在開発中）に書き込んで使用します。
 
