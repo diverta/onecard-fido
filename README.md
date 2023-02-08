@@ -1,6 +1,6 @@
 # セキュリティデバイス実装対応
 
-最終更新日：2023/1/16
+最終更新日：2023/2/8
 
 Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェクトです。
 
@@ -36,6 +36,13 @@ PCのUSBポート装着時はUSB HID／CCIDデバイスとして稼働し、ボ�
 
 ## What's new
 
+#### 2023/02/08
+
+FIDO認証器管理ツール（Windows版）の再構築が完了したので、エンドユーザー向けバンドル、ベンダー向けバンドルの両方を更新しました。<br>
+また、MDBT50Q Dongle（rev2.2）で、ペアリング解除要求時に確認された不具合を解消するため、nRF52840アプリケーションを修正いたしました。<br>
+（これに伴い、FIDO認証器管理ツール（macOS版）も更新しています）<br>
+詳細につきましては、ドキュメント<b>[「Release 202302」](https://github.com/diverta/onecard-fido/releases/tag/Release_202302)</b>をご参照願います。
+
 #### 2023/01/16
 
 MDBT50Q Dongle（rev2.2）で新規搭載された機能を使用できるよう、nRF52840アプリケーションを修正いたしました。<br>
@@ -47,11 +54,5 @@ MDBT50Q Dongle（rev2.2）で新規搭載された機能を使用できるよう
 
 FIDO認証器管理ツール（macOS版／Windows版）を更新いたしました<br>
 詳細につきましては、ドキュメント<b>[「Release 202205」](https://github.com/diverta/onecard-fido/releases/tag/Release_202205)</b>をご参照願います。
-
-#### 2022/07/25
-
-FIDO認証器管理ツール（macOS版／Windows版）から、ベンダー向け機能をFIDO認証器開発ツール（macOS版／Windows版）に切り出しました。<br>
-これに伴い、nRF5340ファームウェアを修正しております。<br>
-詳細につきましては、ドキュメント<b>[「Release 202204」](https://github.com/diverta/onecard-fido/releases/tag/Release_202204)</b>をご参照願います。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
