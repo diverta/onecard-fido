@@ -37,6 +37,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -172,15 +180,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FIDO Authenticator Maintenance Tool for vendors"
-        "ProductCode" = "8:{5AA2F788-5BD0-46B9-90E2-FD6E51AB0058}"
-        "PackageCode" = "8:{33235F93-0DB3-4B0D-B695-2FE4BEAC9825}"
+        "ProductCode" = "8:{A5109ED3-35F9-4FEE-B909-B424B62A1AE7}"
+        "PackageCode" = "8:{A66FC752-47A0-4646-BC37-83D40FE5D678}"
         "UpgradeCode" = "8:{F0C2718E-1128-4754-AF8E-197ADE824948}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.3.0"
+        "ProductVersion" = "8:0.3.1"
         "Manufacturer" = "8:Diverta Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

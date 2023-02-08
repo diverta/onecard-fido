@@ -2,6 +2,12 @@
 
 ## プログラム更新履歴
 
+#### 2022/07/25
+
+FIDO認証器管理ツール（macOS版／Windows版）から、ベンダー向け機能をFIDO認証器開発ツール（macOS版／Windows版）に切り出しました。<br>
+これに伴い、nRF5340ファームウェアを修正しております。<br>
+詳細につきましては、ドキュメント<b>[「Release 202204」](https://github.com/diverta/onecard-fido/releases/tag/Release_202204)</b>をご参照願います。
+
 #### 2022/03/31
 
 nRF5340アプリケーションのBLE関連機能をバージョンアップしました。<br>

@@ -1,8 +1,10 @@
 # USBブートローダー書込み手順書
 
+最終更新日：2023/2/8
+
 ## 概要
 
-[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[USBブートローダー（署名機能付き）](../../../nRF52840_app/firmwares/secure_bootloader)を新規導入する手順を、以下に掲載いたします。
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[USBブートローダー（署名機能付き）](../../../nRF52840_app/firmwares/secure_bootloader)を新規導入する手順について掲載いたします。
 
 ## 注意事項
 
@@ -35,7 +37,7 @@
 |SWD IO Level |VDD  | -->  |VTG|
 |SWD Reset |RST  | <--  |RESET|
 
-|ピンの名前 |MDBT50Q Dongle（rev2.1.2）| | nRF52840 DK|
+|ピンの名前 |MDBT50Q Dongle（rev2.1.2～）| | nRF52840 DK|
 |:--|:-:|:-:|:-:|
 |0V |GND  | <-->  |GND|
 |SWD IO Level |VDD  | -->  |VTG|
@@ -43,8 +45,9 @@
 |SWD Clock |PCLK  | <--  |SWDCLK|
 
 [注1] nRF52840 DK上の「P20」というコネクター（オスピン）に接続します。<br>
-[注2] MDBT50Q Dongle（rev2, PCA10059_01）の回路図はこちら（[FIDO2AUTH_002.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/FIDO2AUTH_002.pdf)）になります。<br>
-[注3] MDBT50Q Dongle（rev2.1.2, PCA10059_02）の回路図はこちら（[FIDO2AUTH_00212.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/FIDO2AUTH_00212.pdf)）になります。
+[注2] MDBT50Q Dongle（rev2, PCA10059_01）の回路図==>[FIDO2AUTH_002.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/FIDO2AUTH_002.pdf)<br>
+[注3] MDBT50Q Dongle（rev2.1.2, PCA10059_02）の回路図==>[FIDO2AUTH_00212.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/FIDO2AUTH_00212.pdf)<br>
+[注4] MDBT50Q Dongle（rev2.2, PCA10059_03）の回路図==>[FIDO2AUTH_0022.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/FIDO2AUTH_0022.pdf)
 
 下図は実際に両者を接続した時のイメージになります。
 
@@ -56,8 +59,9 @@
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|[`nrf52840_xxaa_PCA10059_01.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_01.hex)|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ブートローダー|
-|2|[`nrf52840_xxaa_PCA10059_02.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_02.hex)|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ブートローダー|
+|1|[`nrf52840_xxaa_PCA10059_01.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_01.hex)|MDBT50Q Dongle（rev2）専用ブートローダー|
+|2|[`nrf52840_xxaa_PCA10059_02.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_02.hex)|MDBT50Q Dongle（rev2.1.2）専用ブートローダー|
+|3|[`nrf52840_xxaa_PCA10059_03.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_03.hex)|MDBT50Q Dongle（rev2.2）専用ブートローダー|
 
 ### 書込み用ツールの準備
 
@@ -110,7 +114,7 @@ nRF Connectを起動します。<br>
 <img src="../assets03/0003.jpg" width="450">
 
 「File Memory Layout」欄に、ソフトデバイス、ブートローダーファームウェアをドラッグ＆ドロップします。<br>
-かならず、ソフトデバイス（`s140_nrf52_7.2.0_softdevice.hex`） --> ブートローダーファームウェア（`nrf52840_xxaa_PCA10059_01.hex`または`nrf52840_xxaa_PCA10059_02.hex`）の順でドラッグ＆ドロップしてください。
+かならず、ソフトデバイス（`s140_nrf52_7.2.0_softdevice.hex`） --> ブートローダーファームウェア（`nrf52840_xxaa_PCA10059_0n.hex`）の順でドラッグ＆ドロップしてください。
 
 [注1] ソフトデバイス`s140_nrf52_7.2.0_softdevice.hex`は、nRF5 SDKに同梱（`${HOME}/opt/nRF5_SDK_17.0.2/components/softdevice/s140/hex`というディレクトリーに格納）されています。
 
