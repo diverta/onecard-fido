@@ -55,8 +55,8 @@ PC側<br>
 <img src="../../../MaintenanceTool/dotNET/assets06/0002.jpg" width="300">
 
 ペアリング情報削除手順につきましては、下記ドキュメントの該当章をご参照ください。<br>
-　・[BLEペアリング情報の削除手順（Windows版）](../../../MaintenanceTool\dotNET\BLEPAIRING.md)<br>
-　・[BLEペアリング情報の削除手順（macOS版）](../../../MaintenanceTool\macOSApp\BLEPAIRING.md)
+　・[BLEペアリング情報の削除手順（Windows版）](../../../MaintenanceTool/dotNET/BLEPAIRING.md)<br>
+　・[BLEペアリング情報の削除手順（macOS版）](../../../MaintenanceTool/macOSApp/BLEPAIRING.md)
 
 #### ペアリングモードに遷移
 
@@ -71,8 +71,8 @@ MDBT50Q Dongleが下図のように、オレンジ色LEDが連続点灯した状
 <img src="../../../MaintenanceTool/dotNET/assets06/0005.jpg" width="300">
 
 ペアリング手順につきましては、下記ドキュメントの該当章をご参照ください。<br>
-　・[ペアリングの実行手順（Windows版）](../../../MaintenanceTool\dotNET\BLEPAIRING.md)<br>
-　・[ペアリングの実行手順（macOS版）](../../../MaintenanceTool\macOSApp\BLEPAIRING.md)
+　・[ペアリングの実行手順（Windows版）](../../../MaintenanceTool/dotNET/BLEPAIRING.md)<br>
+　・[ペアリングの実行手順（macOS版）](../../../MaintenanceTool/macOSApp/BLEPAIRING.md)
 
 ペアリングが完了すると、下図のように、基板上の青色LEDが点滅している状態になります。<br>
 BLEペリフェラル機能がアイドル状態である事を示しています。
@@ -83,43 +83,43 @@ BLEペリフェラル機能がアイドル状態である事を示していま�
 （電池消耗を防ぐための仕様です）<br>
 この場合は、基板上のスイッチを１回プッシュすると、アイドル状態にもどり、再び青色LEDが点滅します。
 
-<img src="../../../FIDO2Device\MDBT50Q_Dongle\pcb_rev2_2\assets\0005.jpg" width="400">
+<img src="../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0005.jpg" width="400">
 
 ## 動作確認の実施
 
-FIDO2機能の動作確認は、管理ツールのヘルスチェック機能（`Test --> BLE`メニュー）で実行できます。
+FIDO2機能の動作確認は、管理ツールの「ヘルスチェック実行（BLE）」メニューで実行できます。
 
 #### PINGテスト実行
 
 まずはBLEトランスポートの動作確認を行います。<br>
-管理ツール画面のメニュー「Test --> BLE --> PINGテスト実行」を選択します。
+「ヘルスチェック実行（BLE）」メニューの「PINGテスト実行」をクリックします。
 
-<img src="assets04/0007.jpg" width="304">
+<img src="assets04/0004.jpg" width="300">
 
 PINGテスト処理が実行されます。<br>
 ほどなく処理が完了し、ポップアップが表示されます。
 
-<img src="assets04/0008.jpg" width="300">
+<img src="assets04/0005.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
 #### CTAP2ヘルスチェック実行
 
 WebAuthn機能（Windows版）で使用される「CTAP2」のヘルスチェックを実行します。<br>
-管理ツール画面のメニュー「Test --> BLE --> CTAP2ヘルスチェック実行」を選択します。
+「ヘルスチェック実行（BLE）」メニューの「CTAP2ヘルスチェック実行」をクリックします。
 
-<img src="assets04/0009.jpg" width="304">
+<img src="assets04/0006.jpg" width="300">
 
 下図のようなPINコード入力画面が表示されます。<br>
 前述「管理ツールによる事前設定」で設定した、６桁のPIN番号を数字で入力します。
 
 「OK」ボタンをクリックし、CTAP2ヘルスチェック処理を実行させます。
 
-<img src="assets04/0010.jpg" width="300">
+<img src="assets04/0007.jpg" width="300">
 
 下図のようなメッセージが表示されます。
 
-<img src="assets04/0011.jpg" width="300">
+<img src="assets04/0008.jpg" width="300">
 
 MDBT50Q Dongleの基板上の緑色LEDが点滅しますので、ボタンを１回押します。<br>
 （約１０秒以内に押してください）
@@ -128,20 +128,20 @@ MDBT50Q Dongleの基板上の緑色LEDが点滅しますので、ボタンを１
 
 ほどなくCTAP2ヘルスチェック処理が完了し、ポップアップが表示されます。
 
-<img src="assets04/0012.jpg" width="300">
+<img src="assets04/0009.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
 
 #### U2Fヘルスチェック実行
 
 WebAuthn機能（macOS版）で使用される「U2F」のヘルスチェックを実行します。<br>
-管理ツール画面のメニュー「Test --> USB --> U2Fヘルスチェック実行」を選択します。
+「ヘルスチェック実行（BLE）」メニューの「U2Fヘルスチェック実行」をクリックします。
 
-<img src="assets04/0013.jpg" width="304">
+<img src="assets04/0010.jpg" width="300">
 
 U2Fヘルスチェック処理が開始され、下図のようなメッセージが表示されます。
 
-<img src="assets04/0014.jpg" width="300">
+<img src="assets04/0011.jpg" width="300">
 
 MDBT50Q Dongleの基板上の緑色LEDが点滅しますので、ボタンを１回押します。<br>
 （約１０秒以内に押してください）
@@ -150,6 +150,6 @@ MDBT50Q Dongleの基板上の緑色LEDが点滅しますので、ボタンを１
 
 ほどなくU2Fヘルスチェック処理が完了し、ポップアップが表示されます。
 
-<img src="assets04/0015.jpg" width="300">
+<img src="assets04/0012.jpg" width="300">
 
 「OK」をクリックし、ポップアップを閉じます。
