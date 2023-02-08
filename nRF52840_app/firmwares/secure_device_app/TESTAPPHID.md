@@ -1,5 +1,7 @@
 # FIDO2機能動作確認手順書（HID）
 
+最終更新日：2023/2/8
+
 ## 概要
 
 [管理ツール](../../../MaintenanceTool/README.md)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のFIDO2機能に関する動作確認を行う手順について、以下に掲載いたします。
