@@ -284,6 +284,114 @@ design for Amphenol 87520-0010BLF</description>
 <text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
 <text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
 </package>
+<package name="USB4155-03-C">
+<description>&lt;b&gt;USB Type-C Plug&lt;/b&gt;&lt;p&gt;
+USB3.2 Gen2 Type C Plug, Horizontal, SMT</description>
+<text x="-2.6" y="4.2" size="0.8" layer="25">&gt;NAME</text>
+<text x="-2.6" y="3.1" size="0.8" layer="27">&gt;VALUE</text>
+<wire x1="3.45" y1="1.9" x2="3.45" y2="2.7" width="0.1" layer="46"/>
+<wire x1="3.95" y1="1.9" x2="3.95" y2="2.7" width="0.1" layer="46"/>
+<wire x1="3.45" y1="2.7" x2="3.95" y2="2.7" width="0.1" layer="46" curve="-180"/>
+<wire x1="3.45" y1="1.9" x2="3.95" y2="1.9" width="0.1" layer="46" curve="180"/>
+<wire x1="-3.95" y1="1.9" x2="-3.95" y2="2.7" width="0.1" layer="46"/>
+<wire x1="-3.45" y1="1.9" x2="-3.45" y2="2.7" width="0.1" layer="46"/>
+<wire x1="-3.95" y1="2.7" x2="-3.45" y2="2.7" width="0.1" layer="46" curve="-180"/>
+<wire x1="-3.95" y1="1.9" x2="-3.45" y2="1.9" width="0.1" layer="46" curve="180"/>
+<smd name="A1" x="2.875" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="2.75" y1="1.725" x2="3" y2="2.475" layer="31"/>
+<rectangle x1="2.675" y1="1.65" x2="3.075" y2="2.55" layer="29"/>
+<pad name="FG2" x="-3.7" y="2.3" drill="0.5" diameter="0.9" shape="long" rot="R90"/>
+<pad name="FG1" x="3.7" y="2.3" drill="0.5" diameter="0.9" shape="long" rot="R90"/>
+<smd name="A2" x="2.375" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="2.25" y1="1.725" x2="2.5" y2="2.475" layer="31"/>
+<rectangle x1="2.175" y1="1.65" x2="2.575" y2="2.55" layer="29"/>
+<smd name="A3" x="1.875" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="1.75" y1="1.725" x2="2" y2="2.475" layer="31"/>
+<rectangle x1="1.675" y1="1.65" x2="2.075" y2="2.55" layer="29"/>
+<smd name="A4" x="1.375" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="1.25" y1="1.725" x2="1.5" y2="2.475" layer="31"/>
+<rectangle x1="1.175" y1="1.65" x2="1.575" y2="2.55" layer="29"/>
+<smd name="A5" x="0.875" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="0.75" y1="1.725" x2="1" y2="2.475" layer="31"/>
+<rectangle x1="0.675" y1="1.65" x2="1.075" y2="2.55" layer="29"/>
+<smd name="A6" x="0.375" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="0.25" y1="1.725" x2="0.5" y2="2.475" layer="31"/>
+<rectangle x1="0.175" y1="1.65" x2="0.575" y2="2.55" layer="29"/>
+<smd name="A7" x="-0.125" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-0.25" y1="1.725" x2="0" y2="2.475" layer="31"/>
+<rectangle x1="-0.325" y1="1.65" x2="0.075" y2="2.55" layer="29"/>
+<smd name="A8" x="-0.625" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-0.75" y1="1.725" x2="-0.5" y2="2.475" layer="31"/>
+<rectangle x1="-0.825" y1="1.65" x2="-0.425" y2="2.55" layer="29"/>
+<smd name="A9" x="-1.125" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-1.25" y1="1.725" x2="-1" y2="2.475" layer="31"/>
+<rectangle x1="-1.325" y1="1.65" x2="-0.925" y2="2.55" layer="29"/>
+<smd name="A10" x="-1.625" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-1.75" y1="1.725" x2="-1.5" y2="2.475" layer="31"/>
+<rectangle x1="-1.825" y1="1.65" x2="-1.425" y2="2.55" layer="29"/>
+<smd name="A11" x="-2.125" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-2.25" y1="1.725" x2="-2" y2="2.475" layer="31"/>
+<rectangle x1="-2.325" y1="1.65" x2="-1.925" y2="2.55" layer="29"/>
+<smd name="A12" x="-2.625" y="2.1" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-2.75" y1="1.725" x2="-2.5" y2="2.475" layer="31"/>
+<rectangle x1="-2.825" y1="1.65" x2="-2.425" y2="2.55" layer="29"/>
+<smd name="B12" x="2.625" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="2.5" y1="0.225" x2="2.75" y2="0.975" layer="31"/>
+<rectangle x1="2.425" y1="0.15" x2="2.825" y2="1.05" layer="29"/>
+<smd name="B11" x="2.125" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="2" y1="0.225" x2="2.25" y2="0.975" layer="31"/>
+<rectangle x1="1.925" y1="0.15" x2="2.325" y2="1.05" layer="29"/>
+<smd name="B10" x="1.625" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="1.5" y1="0.225" x2="1.75" y2="0.975" layer="31"/>
+<rectangle x1="1.425" y1="0.15" x2="1.825" y2="1.05" layer="29"/>
+<smd name="B9" x="1.125" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="1" y1="0.225" x2="1.25" y2="0.975" layer="31"/>
+<rectangle x1="0.925" y1="0.15" x2="1.325" y2="1.05" layer="29"/>
+<smd name="B8" x="0.625" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="0.5" y1="0.225" x2="0.75" y2="0.975" layer="31"/>
+<rectangle x1="0.425" y1="0.15" x2="0.825" y2="1.05" layer="29"/>
+<smd name="B7" x="0.125" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="0" y1="0.225" x2="0.25" y2="0.975" layer="31"/>
+<rectangle x1="-0.075" y1="0.15" x2="0.325" y2="1.05" layer="29"/>
+<smd name="B6" x="-0.375" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-0.5" y1="0.225" x2="-0.25" y2="0.975" layer="31"/>
+<rectangle x1="-0.575" y1="0.15" x2="-0.175" y2="1.05" layer="29"/>
+<smd name="B5" x="-0.875" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-1" y1="0.225" x2="-0.75" y2="0.975" layer="31"/>
+<rectangle x1="-1.075" y1="0.15" x2="-0.675" y2="1.05" layer="29"/>
+<smd name="B4" x="-1.375" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-1.5" y1="0.225" x2="-1.25" y2="0.975" layer="31"/>
+<rectangle x1="-1.575" y1="0.15" x2="-1.175" y2="1.05" layer="29"/>
+<smd name="B3" x="-1.875" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-2" y1="0.225" x2="-1.75" y2="0.975" layer="31"/>
+<rectangle x1="-2.075" y1="0.15" x2="-1.675" y2="1.05" layer="29"/>
+<smd name="B2" x="-2.375" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-2.5" y1="0.225" x2="-2.25" y2="0.975" layer="31"/>
+<rectangle x1="-2.575" y1="0.15" x2="-2.175" y2="1.05" layer="29"/>
+<smd name="B1" x="-2.875" y="0.6" dx="0.28" dy="0.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-3" y1="0.225" x2="-2.75" y2="0.975" layer="31"/>
+<rectangle x1="-3.075" y1="0.15" x2="-2.675" y2="1.05" layer="29"/>
+<wire x1="-4.4" y1="1.2" x2="-4.4" y2="-0.2" width="0.127" layer="51"/>
+<wire x1="-4.4" y1="-0.2" x2="-4.4" y2="-4.7" width="0.127" layer="51"/>
+<wire x1="-4.1" y1="-4.7" x2="-4.1" y2="-12.7" width="0.127" layer="51"/>
+<wire x1="-4.4" y1="-4.7" x2="-4.1" y2="-4.7" width="0.127" layer="51"/>
+<wire x1="4.4" y1="1.2" x2="4.4" y2="-0.2" width="0.127" layer="51"/>
+<wire x1="4.4" y1="-0.2" x2="4.4" y2="-4.7" width="0.127" layer="51"/>
+<wire x1="4.1" y1="-4.7" x2="4.1" y2="-12.7" width="0.127" layer="51"/>
+<wire x1="4.1" y1="-4.7" x2="4.4" y2="-4.7" width="0.127" layer="51"/>
+<wire x1="-4.1" y1="-12.7" x2="4.1" y2="-12.7" width="0.127" layer="51"/>
+<wire x1="-4.1" y1="-4.7" x2="4.1" y2="-4.7" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-3.7" y1="1.8" x2="-3.7" y2="2.8" width="0.127" layer="51" style="shortdash"/>
+<wire x1="-3.7" y1="2.8" x2="3.7" y2="2.8" width="0.127" layer="51"/>
+<wire x1="3.7" y1="2.8" x2="3.7" y2="1.8" width="0.127" layer="51"/>
+<wire x1="-4.4" y1="1.2" x2="-4.2" y2="1.2" width="0.127" layer="51"/>
+<wire x1="-4.2" y1="1.2" x2="-4.2" y2="1.8" width="0.127" layer="51"/>
+<wire x1="-4.2" y1="1.8" x2="-3.7" y2="1.8" width="0.127" layer="51"/>
+<wire x1="4.4" y1="1.2" x2="4.2" y2="1.2" width="0.127" layer="51"/>
+<wire x1="4.2" y1="1.2" x2="4.2" y2="1.8" width="0.127" layer="51"/>
+<wire x1="4.2" y1="1.8" x2="3.7" y2="1.8" width="0.127" layer="51"/>
+<wire x1="-4.4" y1="-0.2" x2="4.4" y2="-0.2" width="0.127" layer="51" style="shortdash"/>
+</package>
 </packages>
 <symbols>
 <symbol name="USB_CON_FEM_A">
@@ -338,6 +446,61 @@ design for Amphenol 87520-0010BLF</description>
 <pin name="5" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
 <wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
 <wire x1="3.81" y1="-10.16" x2="5.08" y2="-10.16" width="0.6096" layer="94"/>
+</symbol>
+<symbol name="USB4155-03-C">
+<description>&lt;b&gt;USB Type-C(TM) plug interface</description>
+<wire x1="0" y1="35.56" x2="17.78" y2="35.56" width="0.254" layer="94"/>
+<wire x1="17.78" y1="35.56" x2="17.78" y2="-35.56" width="0.254" layer="94"/>
+<wire x1="3.76" y1="-0.94" x2="1.61" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="1.61" y1="-0.94" x2="0.86" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="-0.44" y1="0.66" x2="0.56" y2="0.66" width="0.254" layer="94"/>
+<wire x1="-1.19" y1="-2.39" x2="0.01" y2="-2.39" width="0.254" layer="94"/>
+<wire x1="0.01" y1="-2.39" x2="0.86" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="0.56" y1="0.66" x2="1.61" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="0.86" y1="-0.94" x2="-2.84" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="-2.84" y1="-0.94" x2="-2.84" y2="-1.74" width="0.254" layer="94"/>
+<wire x1="-2.84" y1="-1.74" x2="-3.04" y2="-1.74" width="0.254" layer="94"/>
+<wire x1="-3.04" y1="-1.74" x2="-3.84" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="-3.84" y1="-0.94" x2="-3.04" y2="-0.14" width="0.254" layer="94"/>
+<wire x1="-3.04" y1="-1.54" x2="-3.04" y2="-0.14" width="0.254" layer="94"/>
+<wire x1="-3.04" y1="-0.14" x2="-2.84" y2="-0.14" width="0.254" layer="94"/>
+<wire x1="-2.84" y1="-0.14" x2="-2.84" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="-3.44" y1="-0.94" x2="-3.44" y2="-1.14" width="0.254" layer="94"/>
+<wire x1="-3.44" y1="-1.14" x2="-3.24" y2="-1.34" width="0.254" layer="94"/>
+<wire x1="-3.24" y1="-1.34" x2="-3.24" y2="-0.54" width="0.254" layer="94"/>
+<wire x1="-3.24" y1="-0.54" x2="-3.64" y2="-0.94" width="0.254" layer="94"/>
+<wire x1="0" y1="-35.56" x2="17.78" y2="-35.56" width="0.254" layer="94"/>
+<circle x="3.76" y="-0.94" radius="0.5" width="1" layer="94"/>
+<circle x="-0.84" y="0.66" radius="0.2" width="1" layer="94"/>
+<text x="0" y="36.576" size="1.778" layer="95">&gt;NAME</text>
+<text x="0" y="-38.1" size="1.778" layer="96">&gt;VALUE</text>
+<rectangle x1="-2.04" y1="-2.99" x2="-0.84" y2="-1.79" layer="94"/>
+<pin name="D_P1" x="20.32" y="17.78" length="short" rot="R180"/>
+<pin name="D_N1" x="20.32" y="15.24" length="short" rot="R180"/>
+<pin name="VBUS1" x="20.32" y="22.86" length="short" direction="pas" rot="R180"/>
+<pin name="FG1" x="20.32" y="33.02" length="short" direction="pas" rot="R180"/>
+<pin name="VBUS2" x="20.32" y="10.16" length="short" direction="pas" rot="R180"/>
+<pin name="SBU2" x="20.32" y="-20.32" length="short" direction="pas" rot="R180"/>
+<pin name="CC1" x="20.32" y="20.32" length="short" direction="pas" rot="R180"/>
+<pin name="SBU1" x="20.32" y="12.7" length="short" direction="pas" rot="R180"/>
+<pin name="FG2" x="20.32" y="-33.02" length="short" rot="R180"/>
+<pin name="GND1" x="20.32" y="30.48" length="short" direction="pas" rot="R180"/>
+<pin name="CC2" x="20.32" y="-12.7" length="short" direction="pas" rot="R180"/>
+<pin name="D_P2" x="20.32" y="-15.24" length="short" rot="R180"/>
+<pin name="D_N2" x="20.32" y="-17.78" length="short" rot="R180"/>
+<pin name="GND2" x="20.32" y="2.54" length="short" direction="pas" rot="R180"/>
+<pin name="GND3" x="20.32" y="-2.54" length="short" direction="pas" rot="R180"/>
+<pin name="VBUS3" x="20.32" y="-10.16" length="short" direction="pas" rot="R180"/>
+<pin name="VBUS4" x="20.32" y="-22.86" length="short" direction="pas" rot="R180"/>
+<pin name="GND4" x="20.32" y="-30.48" length="short" direction="pas" rot="R180"/>
+<pin name="TX_P1" x="20.32" y="27.94" length="short" rot="R180"/>
+<pin name="TX_N1" x="20.32" y="25.4" length="short" rot="R180"/>
+<pin name="TX_P2" x="20.32" y="-5.08" length="short" rot="R180"/>
+<pin name="TX_N2" x="20.32" y="-7.62" length="short" rot="R180"/>
+<pin name="RX_P1" x="20.32" y="-27.94" length="short" rot="R180"/>
+<pin name="RX_N1" x="20.32" y="-25.4" length="short" rot="R180"/>
+<pin name="RX_N2" x="20.32" y="7.62" length="short" rot="R180"/>
+<pin name="RX_P2" x="20.32" y="5.08" length="short" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -394,6 +557,47 @@ design for Amphenol 87520-0010BLF</description>
 </device>
 </devices>
 </deviceset>
+<deviceset name="USB4155-03-C" prefix="CN">
+<description>&lt;b&gt;USB3.2 Gen2 Type C Plug, Horizontal, SMT&lt;/b&gt;&lt;p&gt;</description>
+<gates>
+<gate name="G$1" symbol="USB4155-03-C" x="-7.62" y="0"/>
+</gates>
+<devices>
+<device name="" package="USB4155-03-C">
+<connects>
+<connect gate="G$1" pin="CC1" pad="A5"/>
+<connect gate="G$1" pin="CC2" pad="B5"/>
+<connect gate="G$1" pin="D_N1" pad="A7"/>
+<connect gate="G$1" pin="D_N2" pad="B7"/>
+<connect gate="G$1" pin="D_P1" pad="A6"/>
+<connect gate="G$1" pin="D_P2" pad="B6"/>
+<connect gate="G$1" pin="FG1" pad="FG1"/>
+<connect gate="G$1" pin="FG2" pad="FG2"/>
+<connect gate="G$1" pin="GND1" pad="A1"/>
+<connect gate="G$1" pin="GND2" pad="A12"/>
+<connect gate="G$1" pin="GND3" pad="B1"/>
+<connect gate="G$1" pin="GND4" pad="B12"/>
+<connect gate="G$1" pin="RX_N1" pad="B10"/>
+<connect gate="G$1" pin="RX_N2" pad="A10"/>
+<connect gate="G$1" pin="RX_P1" pad="B11"/>
+<connect gate="G$1" pin="RX_P2" pad="A11"/>
+<connect gate="G$1" pin="SBU1" pad="A8"/>
+<connect gate="G$1" pin="SBU2" pad="B8"/>
+<connect gate="G$1" pin="TX_N1" pad="A3"/>
+<connect gate="G$1" pin="TX_N2" pad="B3"/>
+<connect gate="G$1" pin="TX_P1" pad="A2"/>
+<connect gate="G$1" pin="TX_P2" pad="B2"/>
+<connect gate="G$1" pin="VBUS1" pad="A4"/>
+<connect gate="G$1" pin="VBUS2" pad="A9"/>
+<connect gate="G$1" pin="VBUS3" pad="B4"/>
+<connect gate="G$1" pin="VBUS4" pad="B9"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="Supply">
@@ -437,6 +641,7 @@ design for Amphenol 87520-0010BLF</description>
 <part name="GND1" library="Supply" deviceset="0V" device=""/>
 <part name="CN3" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 <part name="GND3" library="Supply" deviceset="0V" device=""/>
+<part name="CN1" library="Connectors" deviceset="USB4155-03-C" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -451,6 +656,7 @@ design for Amphenol 87520-0010BLF</description>
 <instance part="GND1" gate="1" x="137.16" y="91.44"/>
 <instance part="CN3" gate="G$1" x="139.7" y="66.04"/>
 <instance part="GND3" gate="1" x="134.62" y="48.26"/>
+<instance part="CN1" gate="G$1" x="60.96" y="93.98"/>
 </instances>
 <busses>
 </busses>
