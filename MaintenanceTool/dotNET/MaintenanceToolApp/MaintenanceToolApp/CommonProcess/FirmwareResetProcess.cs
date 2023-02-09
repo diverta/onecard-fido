@@ -1,10 +1,9 @@
-﻿using System;
-using ToolAppCommon;
+﻿using ToolAppCommon;
 using static MaintenanceToolApp.FIDODefine;
 
 namespace MaintenanceToolApp.CommonProcess
 {
-    internal class FirmwareResetProcess
+    public class FirmwareResetProcess
     {
         // 上位クラスに対するコールバックを保持
         public delegate void HandlerOnNotifyCommandTerminated(bool success, string errorMessage);
@@ -69,7 +68,8 @@ namespace MaintenanceToolApp.CommonProcess
             // レスポンスメッセージの１バイト目（ステータスコード）を確認
             if (responseData[0] != 0x00) {
                 // エラーの場合は画面に制御を戻す
-                OnNotifyCommandTerminated(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                string msg = string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_ST, responseData[0]);
+                OnNotifyCommandTerminated(false, msg);
 
             } else {
                 // 再接続まで待機

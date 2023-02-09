@@ -4,6 +4,7 @@
     {
         // 起動時のメッセージ文言
         public const string MSG_TOOL_TITLE = "FIDO認証器管理ツール";
+        public const string MSG_VENDOR_TOOL_TITLE = "FIDO認証器管理ツール（ベンダー向け）";
         public const string MSG_INVALID_USER_ROLL = "このツールは、管理者として実行してください。\n\nプログラムアイコンを右クリックして、\nメニューから「管理者として実行」を選択します。";
         public const string MSG_ERROR_DOUBLE_START = "既に起動されています。";
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
@@ -16,6 +17,7 @@
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
         public const string MSG_HID_REMOVED = "USB HIDデバイスが取り外されました。";
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
+        public const string MSG_HID_RECV_IRREAGAL_FRAME = "USB HIDデバイスから受信したフレームが不正です。";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
@@ -354,6 +356,7 @@
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
         public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
         public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のボタンを３秒間以上長押して、ペアリングモードに遷移させてください。";
+        public const string MSG_BLE_PARING_ERR_ALREADY_PAIRED = "既にFIDO認証器とペアリングされていたようです。\nWindowsのBluetooth環境設定画面から、デバイス「{0}」を削除した後、ペアリングを再実行してください。";
         public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
         public const string MSG_BLE_PARING_SCAN_SUCCESS = "ペアリング対象のFIDO認証器がスキャンされました。";
     }

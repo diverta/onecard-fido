@@ -1,8 +1,10 @@
 # nRF52840アプリケーション初回導入手順書
 
+最終更新日：2023/2/8
+
 ## 概要
 
-[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)を<b>新規に書き込む</b>手順を、以下に掲載いたします。
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)を<b>新規に書き込む</b>手順について掲載いたします。
 
 ## 注意事項
 
@@ -29,7 +31,7 @@ nRF Utilを使用し、MDBT50Q Dongleに、[nRF52840アプリケーション](..
 ビルドを実行する際に必要となる、nRF UtilをPCにインストールしておきます。<br>
 具体的な手順は、[nRF Utilインストール手順](../../../nRF52840_app/NRFUTILINST.md)をご参照ください。
 
-本手順書を作成した時点でのnRF Utilは、`version 6.1`となっておりました。
+本手順書を作成したときのnRF Utilは`version 6.1`です。
 
 ```
 bash-3.2$ nrfutil version
@@ -43,16 +45,17 @@ bash-3.2$
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|`appkg.PCA10059_01.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
-|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+|1|`appkg.PCA10059_03.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/README.md)専用ファームウェア更新イメージファイル|
 
 具体的には、以下のコマンドを投入します。<br>
-下記例ではMDBT50Q Dongle（rev2.1.2）のファームウェア更新イメージファイルを使用しています。
+下記例ではMDBT50Q Dongle（rev2.2）のファームウェア更新イメージファイル（Version 0.3.7）を使用しています。
 
 ```
+BOARD_STR=PCA10059_03
+VERSION_STR=0.3.7
+PACKAGE=appkg.${BOARD_STR}.${VERSION_STR}.zip
 FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 cd ${FIRMWARES_DIR}
-PACKAGE=`ls appkg.PCA10059_02.*.zip`
 PORTNAME=`ls /dev/tty.usbmodem*`
 echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
 nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
@@ -61,12 +64,14 @@ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 下記は実行例になります。
 
 ```
+bash-3.2$ BOARD_STR=PCA10059_03
+bash-3.2$ VERSION_STR=0.3.7
+bash-3.2$ PACKAGE=appkg.${BOARD_STR}.${VERSION_STR}.zip
 bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 bash-3.2$ cd ${FIRMWARES_DIR}
-bash-3.2$ PACKAGE=`ls appkg.PCA10059_02.*.zip`
 bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
 bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg appkg.PCA10059_02.0.3.0.zip -p /dev/tty.usbmodemD6209557A6AE1]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_02.0.3.7.zip -p /dev/tty.usbmodemC6863701200B1]
 bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.
@@ -86,7 +91,9 @@ bash-3.2$
 他方、MDBT50Q DongleはすでにUSBブートローダーが書き込まれているため、管理ツールを使用し、後日、nRF52840アプリケーションの更新ができるようになります。
 
 ここでは管理ツールを使用し、ブートローダーモードに遷移できるかどうか確認を行います。<br>
-手順につきましては別ドキュメント「[ブートローダーモード遷移手順書](../../../nRF52840_app/firmwares/secure_device_app/BLMODE.md)」をご参照ください。
+手順につきましては下記ドキュメントをご参照ください。<br>
+　・[ブートローダーモード遷移手順書（Windows版）](../../../MaintenanceTool/dotNET/BOOTLOADERMODE.md)<br>
+　・[ブートローダーモード遷移手順書（macOS版）](../../../MaintenanceTool/macOSApp/BOOTLOADERMODE.md)
 
 ブートローダーモードに遷移すると、MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯します。
 

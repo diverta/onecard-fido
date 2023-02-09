@@ -1,55 +1,51 @@
-﻿using OpenCvSharp;
-using OpenCvSharp.Extensions;
+﻿using Microsoft.Extensions.Logging;
+using QRCodeDecoderLibrary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using ToolAppCommon;
 
-namespace MaintenanceToolApp.OATH
+namespace MaintenanceTool.OATH
 {
     internal class QRCodeUtil
     {
-        // スクリーンショット画像を保持
-        private Bitmap? BitmapScreenShot { get; set; }
+        //
+        // QRCodeDecoder (QRCodeDecoderLibrary)
+        // See: https://github.com/StefH/QRCode
+        //
+        private readonly QRDecoder QrDecoder = null!;
 
-        // スキャンしたQRコードを保持
-        private string? QRCodeString { get; set; }
+        public QRCodeUtil() {
+            try {
+                ILogger<QRDecoder> logger = new LoggerFactory().CreateLogger<QRDecoder>();
+                QrDecoder = new QRDecoder(logger);
 
-        // QRコードの解析結果を保持
-        private Dictionary<string, string> ParsedQRCodeInfo { get; set; } = new Dictionary<string, string>();
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("QRCodeUtil initialize fail: {0}", e.Message));
+            }
+        }
+
+        // このクラスのインスタンス
+        private static readonly QRCodeUtil Instance = new QRCodeUtil();
 
         //
         // 公開用関数
         //
-        public bool ScanQRCodeFromScreenShot()
+        public static bool ScanQRCodeFromScreenShot(Dictionary<string, string> parsedQRCodeInfo)
         {
-            // デスクトップのスクリーンショットを取得し、イメージを抽出
-            if (TakeScreenShotFromRectangle(QRCodeUtil.GetFullScreenRectangle()) == false) {
-                return false;
-            }
-
-            // イメージからQRコードをキャプチャーし、メッセージを抽出
-            if (ExtractQRMessage() == false) {
-                return false;
-            }
-
-            // 抽出されたメッセージを解析
-            if (ParseQRMessage() == false) {
-                return false;
-            }
-
-            return true;
+            return Instance.ScanQRCodeFromScreenShotInner(parsedQRCodeInfo);
         }
 
-        public bool TakeScreenShotFromRectangle(Rectangle rectangle)
+        public static bool TakeScreenShotFromRectangle(Rectangle rectangle, out Bitmap bitmapScreenShot)
         {
             try {
                 // 指定矩形領域のスクリーンショットを取得
-                BitmapScreenShot = new Bitmap(rectangle.Width, rectangle.Height);
-                Graphics graphics = Graphics.FromImage(BitmapScreenShot);
+                bitmapScreenShot = new Bitmap(rectangle.Width, rectangle.Height);
+                Graphics graphics = Graphics.FromImage(bitmapScreenShot);
 
                 // スクリーンショットから、イメージを抽出
                 graphics.CopyFromScreen(rectangle.X, rectangle.Y, 0, 0, rectangle.Size);
@@ -57,26 +53,7 @@ namespace MaintenanceToolApp.OATH
 
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("TakeScreenShotFromRectangle fail: {0}", e.Message));
-                return false;
-            }
-        }
-
-        public bool SaveBitmapScreenShotToFile()
-        {
-            // 例外抑止
-            if (BitmapScreenShot == null) {
-                AppLogUtil.OutputLogError("SaveBitmapFileOfScreenShot fail: Screenshot bitmap not exist");
-                return false;
-            }
-
-            try {
-                // アプリケーションのログディレクトリー配下に、スクリーンショットの画像ファイルを出力
-                string tempFileName = string.Format("{0}\\{1}{2}.jpg", AppLogUtil.OutputLogFileDirectoryPath(), DateTime.Now.ToString("hhmmss"), DateTime.Now.Millisecond.ToString());
-                BitmapScreenShot.Save(tempFileName, ImageFormat.Jpeg);
-                return true;
-
-            } catch (Exception e) {
-                AppLogUtil.OutputLogError(string.Format("SaveBitmapFileOfScreenShot fail: {0}", e.Message));
+                bitmapScreenShot = null!;
                 return false;
             }
         }
@@ -84,7 +61,7 @@ namespace MaintenanceToolApp.OATH
         public static Rectangle GetFullScreenRectangle()
         {
             // メイン画面のウィンドウ
-            System.Windows.Window MainWindow = Application.Current.MainWindow;
+            Window MainWindow = Application.Current.MainWindow;
 
             // DIPを物理的なピクセルに変換するための係数を取得
             PresentationSource MainWindowPresentationSource = PresentationSource.FromVisual(MainWindow);
@@ -104,45 +81,72 @@ namespace MaintenanceToolApp.OATH
         //
         // 内部処理
         //
-        private bool ExtractQRMessage()
+        private bool ScanQRCodeFromScreenShotInner(Dictionary<string, string> parsedQRCodeInfo)
+        {
+            // デスクトップのスクリーンショットを取得し、イメージを抽出
+            Bitmap bitmapScreenShot;
+            if (TakeScreenShotFromRectangle(GetFullScreenRectangle(), out bitmapScreenShot) == false) {
+                return false;
+            }
+
+            // イメージからQRコードをキャプチャーし、メッセージを抽出
+            string QRCodeString;
+            if (ExtractQRMessage(bitmapScreenShot, out QRCodeString) == false) {
+                return false;
+            }
+
+            // 抽出されたメッセージを解析
+            if (ParseQRMessage(QRCodeString, parsedQRCodeInfo) == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ExtractQRMessage(Bitmap bitmapScreenShot, out string qrCodeString)
         {
             // 例外抑止
-            if (BitmapScreenShot == null) {
+            qrCodeString = string.Empty;
+            if (QrDecoder == null) {
+                AppLogUtil.OutputLogError("ExtractQRMessage fail: QR decoder not initialized");
+                return false;
+            }
+            if (bitmapScreenShot == null) {
                 AppLogUtil.OutputLogError("ExtractQRMessage fail: Screenshot bitmap not exist");
                 return false;
             }
 
+            // QRコードを解析し、テキストを取得
             try {
-                // QRコードを解析し、テキストを取得
-                Mat qrImage = BitmapConverter.ToMat(BitmapScreenShot);
-                QRCodeDetector detector = new QRCodeDetector();
-                QRCodeString = detector.DetectAndDecode(qrImage, out Point2f[] points);
-
-                // テキストが取得できない場合は false
-                if (QRCodeString.Equals(string.Empty)) {
-                    AppLogUtil.OutputLogDebug("QR code not detected");
-                    return false;
+                byte[][] dataArrayList = QrDecoder.ImageDecoder(bitmapScreenShot);
+                if (dataArrayList != null && dataArrayList.Length > 0) {
+                    qrCodeString += Encoding.UTF8.GetString(dataArrayList[0]);
+                    AppLogUtil.OutputLogDebug("QR code detected from screen");
                 }
-
-                AppLogUtil.OutputLogDebug("QR code detected from screen");
-                return true;
 
             } catch (Exception e) {
                 AppLogUtil.OutputLogError(string.Format("ExtractQRMessage fail: {0}", e.Message));
+            }
+
+            // テキストが取得できない場合は false
+            if (qrCodeString.Equals(string.Empty)) {
+                AppLogUtil.OutputLogDebug("QR code not detected");
                 return false;
             }
+
+            return true;
         }
 
-        private bool ParseQRMessage()
+        private static bool ParseQRMessage(string qrCodeString, Dictionary<string, string> parsedQRCodeInfo)
         {
             // 例外抑止
-            if (QRCodeString == null || QRCodeString.Equals(string.Empty)) {
+            if (qrCodeString == null || qrCodeString.Equals(string.Empty)) {
                 AppLogUtil.OutputLogError("ParseQRMessage fail: QR message text not exist");
                 return false;
             }
 
             // 配列を初期化
-            ParsedQRCodeInfo.Clear();
+            parsedQRCodeInfo.Clear();
 
             // offsetを検索対象文字列の先頭に設定
             int offset = 0;
@@ -150,14 +154,14 @@ namespace MaintenanceToolApp.OATH
             // 検索用区切り文字列を設定
             string[] strings = { "://", "/", "?", "&" };
             int i = 0;
-            while (i < strings.Length && offset < QRCodeString.Length) {
+            while (i < strings.Length && offset < qrCodeString.Length) {
                 // 検索用区切り文字が出現するまでの範囲を取得
                 string separator = strings[i];
-                int endIndex = GetEndIndex(QRCodeString, offset, separator);
+                int endIndex = GetEndIndex(qrCodeString, offset, separator);
 
                 // 部分文字列を抽出し、連想配列に設定
-                string substring = QRCodeString.Substring(offset, endIndex - offset);
-                ExtractParameter(substring, i, ParsedQRCodeInfo);
+                string substring = qrCodeString.Substring(offset, endIndex - offset);
+                ExtractParameter(substring, i, parsedQRCodeInfo);
 
                 // offsetを検索対象文字列の位置に更新
                 offset = endIndex + separator.Length;
@@ -170,7 +174,7 @@ namespace MaintenanceToolApp.OATH
             return true;
         }
 
-        private int GetEndIndex(string message, int startIndex, string terminator)
+        private static int GetEndIndex(string message, int startIndex, string terminator)
         {
             int endIndex = message.IndexOf(terminator, startIndex);
             if (endIndex == -1) {
@@ -179,7 +183,7 @@ namespace MaintenanceToolApp.OATH
             return endIndex;
         }
 
-        private void ExtractParameter(string paramString, int paramNumber, Dictionary<string, string> dictionary)
+        private static void ExtractParameter(string paramString, int paramNumber, Dictionary<string, string> dictionary)
         {
             switch (paramNumber) {
             case 0:
@@ -201,7 +205,7 @@ namespace MaintenanceToolApp.OATH
             }
         }
 
-        private void ExtractAccountParameter(string paramString, Dictionary<string, string> dictionary)
+        private static void ExtractAccountParameter(string paramString, Dictionary<string, string> dictionary)
         {
             string[] parameter = paramString.Split(":");
             string value;
@@ -213,7 +217,7 @@ namespace MaintenanceToolApp.OATH
             dictionary.Add("account", value);
         }
 
-        private void ExtractOathParameter(string paramString, Dictionary<string, string> dictionary)
+        private static void ExtractOathParameter(string paramString, Dictionary<string, string> dictionary)
         {
             // キーと値のペアでない場合は何もしない
             string[] parameter = GetSeparatedParameter(paramString, "=");
@@ -225,7 +229,7 @@ namespace MaintenanceToolApp.OATH
             dictionary.Add(parameter[0], parameter[1]);
         }
 
-        private string[] GetSeparatedParameter(string parameterString, string separator)
+        private static string[] GetSeparatedParameter(string parameterString, string separator)
         {
             // 戻り値の配列
             string[] parameters;
@@ -244,6 +248,29 @@ namespace MaintenanceToolApp.OATH
             }
 
             return parameters;
+        }
+        
+        //
+        // ユーティリティー
+        //
+        public static bool SaveBitmapScreenShotToFile(Bitmap bitmapScreenShot)
+        {
+            // 例外抑止
+            if (bitmapScreenShot == null) {
+                AppLogUtil.OutputLogError("SaveBitmapFileOfScreenShot fail: Screenshot bitmap not exist");
+                return false;
+            }
+
+            try {
+                // アプリケーションのログディレクトリー配下に、スクリーンショットの画像ファイルを出力
+                string tempFileName = string.Format("{0}\\{1}{2}.jpg", AppLogUtil.OutputLogFileDirectoryPath(), DateTime.Now.ToString("hhmmss"), DateTime.Now.Millisecond.ToString());
+                bitmapScreenShot.Save(tempFileName, ImageFormat.Jpeg);
+                return true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("SaveBitmapFileOfScreenShot fail: {0}", e.Message));
+                return false;
+            }
         }
     }
 }

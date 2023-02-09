@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <Version>0.3.1</Version>
+    <Copyright>Copyright © 2017-2023 Diverta Inc.</Copyright>
+    <Company>Diverta Inc.</Company>
+    <Product>VendorMaintenanceTool</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <FileVersion>$(Version).111</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\MaintenanceToolApp\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\MaintenanceToolApp\Resources\icon_128.png" Link="Resources\icon_128.png" />
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="PeterO.Cbor" Version="4.5.2" />
+    <PackageReference Include="QRCodeDecoder" Version="0.1.0" />
+    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="..\MaintenanceToolApp\MainWindow.xaml" Link="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MaintenanceTool">
+      <HintPath>..\MaintenanceToolApp\bin\Release\net6.0-windows10.0.22000.0\MaintenanceTool.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+</Project>

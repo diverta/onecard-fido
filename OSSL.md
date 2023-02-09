@@ -1,5 +1,7 @@
 # オープンソースコードライセンスについて
 
+最終更新日：2023/2/8
+
 <b>[nRF52840アプリケーション](nRF52840_app)</b>、<b>[FIDO認証器管理ツール](MaintenanceTool)</b>内で使用されているオープンソースコード（フリーのライブラリー）についての概要を掲載します。
 
 ## オープンソースコード使用一覧
@@ -15,7 +17,7 @@
 [注1]完全オープンソースである、GPL v2.0バージョンも提供されていますが、このプロジェクトでは使用していません。nRF5 SDKのセットアップ媒体に同梱されていたものを、無修正で使用しています。<br>
 [注2]あらかじめバイナリー形式ライブラリー（`libtinycbor.a`）を作成し、それをこのプロジェクトに組み込んで使用しています（詳細は[こちらの手順書](Research/FIDO_2_0/TINYCBOR.md)ご参照）。<br>
 
-#### [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp)
+#### [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/README.md)
 
 |#|ライブラリー名|ライセンス|備考|
 |:---:|:---|:---|:---|
@@ -25,10 +27,14 @@
 [注1]あらかじめバイナリー形式ライブラリー（`libcrypto.a`）を作成し、それをこのプロジェクトに組み込んで使用しています（詳細は[こちらの手順書](Research/Development/OPENSSLC.md)ご参照）。<br>
 [注2]あらかじめバイナリー形式ライブラリー（`libtinycbor.a`）を作成し、それをこのプロジェクトに組み込んで使用しています（詳細は[こちらの手順書](Research/FIDO_2_0/TINYCBOR.md)ご参照）。<br>
 
-#### [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe)
+#### [Windows版 FIDO認証器管理ツール](MaintenanceTool/dotNET/README.md)
+
+Microsoft社以外のフリーライブラリーについて掲載いたしました。
 
 |#|ライブラリー名|ライセンス|備考|
 |:---:|:---|:---|:---|
-|3-1|[peteroupc/CBOR](https://github.com/peteroupc/CBOR)|[CC0 1.0 Universal Public Domain Dedication](https://github.com/peteroupc/CBOR/blob/master/LICENSE.md)|[注1]|
+|3-1|[PeterO.Cbor](https://github.com/peteroupc/CBOR)|[Creative Commons Zero (CC0)](https://creativecommons.org/publicdomain/zero/1.0/)|[注1]|
+|3-2|[QRCodeDecoder](https://github.com/StefH/QRCode)|[The Code Project Open License (CPOL) 1.02](https://www.codeproject.com/info/cpol10.aspx)|[注2]|
 
-[注1]2020/07/13現在、リポジトリーのソースコードをコピーしてVisual Studioプロジェクトに取り込み、無修正で使用しています。
+[注1]Visual Studioのプロジェクトに、NuGetパッケージとして導入しています。バンドルには`CBOR.dll`として格納されています。<br>
+[注2]Visual Studioのプロジェクトに、NuGetパッケージとして導入しています。バンドルには`QRCodeDecoderLibrary.dll`としてで格納されています。

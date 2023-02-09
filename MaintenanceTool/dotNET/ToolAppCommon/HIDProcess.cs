@@ -1,11 +1,12 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.Common;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ToolAppCommon
 {
-    internal static class HIDProcessConst
+    public static class HIDProcessConst
     {
         // HIDフレームに関する定義
         public const int HID_FRAME_LEN = 64;
@@ -24,12 +25,22 @@ namespace ToolAppCommon
         // このクラスのインスタンス
         private static readonly HIDProcess Instance = new HIDProcess();
 
+        // 応答タイムアウト監視用タイマー
+        private readonly CommonTimer ResponseTimer = null!;
+
+        public HIDProcess()
+        {
+            // 応答タイムアウト発生時のイベントを登録
+            ResponseTimer = new CommonTimer("HIDProcess", 10000);
+            ResponseTimer.CommandTimeoutEvent += OnResponseTimerElapsed;
+        }
+
         // HID接続完了時のイベント
         public delegate void HandlerOnConnectHIDDevice(bool connected);
         public event HandlerOnConnectHIDDevice OnConnectHIDDevice = null!;
 
         // HID接続完了時のイベント
-        public delegate void HandlerOnReceivedResponse(byte[] cid, byte CMD, byte[] data);
+        public delegate void HandlerOnReceivedResponse(byte[] cid, byte CMD, byte[] data, bool success, string errorMessage);
         public event HandlerOnReceivedResponse OnReceivedResponse = null!;
 
         //
@@ -233,6 +244,9 @@ namespace ToolAppCommon
                 // フレームデータを転送
                 device.Write(SendFrameData);
             }
+
+            // 転送が完了したら、応答タイムアウト監視開始
+            ResponseTimer.Start();
         }
 
         private void SendHIDHeaderMessage(byte[] cid, byte CMD, byte[] message)
@@ -275,6 +289,9 @@ namespace ToolAppCommon
 
         private void ReceiveHIDMessage(byte[] message)
         {
+            // 応答タイムアウト監視終了
+            ResponseTimer.Stop();
+
             // フレームデータを保持
             byte[] frameData = new byte[HIDProcessConst.HID_FRAME_LEN];
 
@@ -347,7 +364,7 @@ namespace ToolAppCommon
                     string temp = AppLogUtil.DumpMessage(frameData, frameData.Length);
                     AppLogUtil.OutputLogDebug(string.Format(
                         "HID Recv irreagal frame: CMD=0x{0:x2} length={1}\r\n{2}", seq, frameData.Length, temp));
-                    OnReceivedResponse(receivedCID, (byte)seq, ReceivedMessage);
+                    OnReceivedResponse(receivedCID, (byte)seq, ReceivedMessage, false, AppCommon.MSG_HID_RECV_IRREAGAL_FRAME);
                     return;
                 }
 
@@ -374,7 +391,7 @@ namespace ToolAppCommon
                 // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータを転送
                 AppLogUtil.OutputLogText(ReceivedLogBuffer);
-                OnReceivedResponse(receivedCID, ReceivedCMD, ReceivedMessage);
+                OnReceivedResponse(receivedCID, ReceivedCMD, ReceivedMessage, true, AppCommon.MSG_NONE);
             }
         }
 
@@ -388,6 +405,15 @@ namespace ToolAppCommon
                 ReceivedLogBuffer += "\r\n";
             }
             ReceivedLogBuffer += formatted;
+        }
+
+        //
+        // 応答タイムアウト時の処理
+        //
+        private void OnResponseTimerElapsed(object sender, EventArgs e)
+        {
+            // 応答タイムアウトを通知
+            OnReceivedResponse(new byte[4], 0, Array.Empty<byte>(), false, AppCommon.MSG_REQUEST_SEND_TIMED_OUT);
         }
     }
 }

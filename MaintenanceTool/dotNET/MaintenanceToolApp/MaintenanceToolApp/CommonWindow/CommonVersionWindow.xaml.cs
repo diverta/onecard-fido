@@ -17,7 +17,7 @@ namespace MaintenanceToolApp.CommonWindow
         {
             // ツールタイトル／バージョン／著作権表示
             Title = AppCommon.MSG_LABEL_NAME_TOOL_VERSION_INFO;
-            labelToolName.Content = AppCommon.MSG_TOOL_TITLE;
+            labelToolName.Content = MainWindow.GetApplicationTitle();
             labelVersion.Content = AppUtil.GetAppVersionString();
             labelCopyrite.Content = AppUtil.GetAppCopyrightString();
 
