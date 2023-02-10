@@ -1,0 +1,10 @@
+,,,,,,,,
+,,,EVAL_USB4155 1PCS BOM  (Bill of Materials),,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,Your Instructions / Notes
+1,CN1,1,Global Connector Technology,USB4155-03-C,USB Type-C plug,,SMD,
+2,CN2,1,Amphenol ICC,87520-0010BLF,USB Type-A receptacle,,DIP,"If you could not purchase this part, no need to install."
+3,"R1, R2",2,Vishay,CRCW04025K10FKEDC,"Resistor, 5.1k ohm 1% 1/16W",0402,SMD,
+4,R3,1,Vishay,CRCW04020000Z0EDC,"Resistor, 0 ohm 1/16W",0402,SMD,
