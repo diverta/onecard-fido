@@ -1095,7 +1095,7 @@ R2、R3のどちらかを
 <junction x="83.82" y="127"/>
 </segment>
 </net>
-<net name="N$1" class="0">
+<net name="CC_1" class="0">
 <segment>
 <pinref part="CN1" gate="G$1" pin="CC1"/>
 <wire x1="76.2" y1="114.3" x2="109.22" y2="114.3" width="0.1524" layer="91"/>
@@ -1105,9 +1105,10 @@ R2、R3のどちらかを
 <wire x1="116.84" y1="114.3" x2="109.22" y2="114.3" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="114.3" x2="109.22" y2="71.12" width="0.1524" layer="91"/>
 <junction x="109.22" y="114.3"/>
+<label x="114.3" y="111.76" size="1.778" layer="95" rot="R270"/>
 </segment>
 </net>
-<net name="N$2" class="0">
+<net name="CC_2" class="0">
 <segment>
 <pinref part="CN1" gate="G$1" pin="CC2"/>
 <pinref part="R2" gate="G$1" pin="2"/>
@@ -1116,6 +1117,7 @@ R2、R3のどちらかを
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="116.84" y1="81.28" x2="116.84" y2="91.44" width="0.1524" layer="91"/>
 <junction x="116.84" y="81.28"/>
+<label x="114.3" y="78.74" size="1.778" layer="95" rot="R270"/>
 </segment>
 </net>
 </nets>
