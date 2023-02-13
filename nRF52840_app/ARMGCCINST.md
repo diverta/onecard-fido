@@ -1,30 +1,35 @@
 # ARM GCCインストール手順
 
-ARM GCCツールチェインをmacOS環境にインストールする手順を記載します。
+最終更新日：2023/02/13
 
-最終更新日：2020/06/24
+ARM GCCツールチェインをmacOS環境にインストールする手順について記載します。
+
+## 使用したシステム
+
+PC: iMac (Retina 5K, 27-inch, 2019)<br>
+OS: macOS 12.6.3
 
 ## インストール用媒体の取得
 
 こちらのサイトにアクセスします。<br>
-https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads<br>
+https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads<br>
 下図のような画面に遷移します。
 
 <img src="assets01/0007.jpg" width="550">
 
-少し下にスクロールし「GNU Arm Embedded Toolchain: 9-2020-q2-update」のリンクを開きます。<br>
+少し下にスクロールし「Downloads: 12.2.Rel1」のリンクを開きます。<br>
 インストール用媒体（ファイル）のリストが表示されます。
 
 <img src="assets01/0008.jpg" width="550">
 
 下にスクロールすると、macOS用のインストール媒体がリストされています。<br>
-クリックすると、ダウンロードが開始されます。
+リンク「`arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi.tar.xz`」をクリックすると、ダウンロードが開始されます。[注1]
 
 <img src="assets01/0009.jpg" width="550">
 
-ダウンロードされたファイル「`gcc-arm-none-eabi-9-2020-q2-update-mac.tar.bz2`」を使用し、次章以降で配置作業を進めます。
+ダウンロードされたファイル「`arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi.tar.xz`」を使用し、次章以降で配置作業を進めます。
 
-
+[注1] 今回使用したシステムに合わせたインストール媒体を使用しています。
 
 ## ARM GCCツールチェインの配置
 
@@ -34,22 +39,26 @@ ARM GCCツールチェインを、任意のフォルダーに配置します。<
 ターミナルを開き、以下のコマンドを実行します。
 
 ```
+mkdir -p ${HOME}/opt
 cd ${HOME}/opt
-tar xjvf ${HOME}/Downloads/gcc-arm-none-eabi-9-2020-q2-update-mac.tar.bz2
+tar xjvf ${HOME}/Downloads/arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi.tar.xz
 ```
 
 以下は実行例になります。
 
 ```
+bash-3.2$ mkdir -p ${HOME}/opt
 bash-3.2$ cd ${HOME}/opt
-bash-3.2$ tar xjvf /Users/makmorit/Documents/FIDO/Softwares/gcc-arm-none-eabi-9-2020-q2-update-mac.tar.bz2
-x gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/
-x gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/bin/
-x gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/bin/objdump
+bash-3.2$ tar xjvf ${HOME}/Downloads/arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi.tar.xz
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/bin/
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/libexec/
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/arm-none-eabi/
 ：
-x gcc-arm-none-eabi-9-2020-q2-update/share/gcc-arm-none-eabi/samples/src/fpin/Makefile
-x gcc-arm-none-eabi-9-2020-q2-update/share/gcc-arm-none-eabi/samples/src/fpin/fpin.c
-x gcc-arm-none-eabi-9-2020-q2-update/share/gcc-arm-none-eabi/samples/src/makefile.conf
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/bin/arm-none-eabi-size
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/bin/arm-none-eabi-readelf
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/bin/arm-none-eabi-elfedit
+x arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi/bin/arm-none-eabi-gfortran
 bash-3.2$
 ```
 
