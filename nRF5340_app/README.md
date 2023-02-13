@@ -1,11 +1,11 @@
 # nRF5340アプリケーション
 
-最終更新日：2022/6/29
+最終更新日：2023/2/13
 
 ## 概要
 
-[BT40 Dongle](../FIDO2Device/BT40Dongle/README.md)、[BT40 Slim Board](../FIDO2Device/BT40SlimBoard)（現在開発中）上で稼働するアプリケーションです。<br>
-[nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)を使用し、開発しています。
+[MDBT53 Dongle](../FIDO2Device/MDBT53_Dongle/README.md)（現在開発中）上で稼働するアプリケーションです。<br>
+[nRF Connect SDK v2.2.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/)を使用し、開発しています。
 
 ## 搭載機能
 
@@ -33,14 +33,18 @@ OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです�
 詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
 
 ### 管理機能
-以前開発していた、[nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
+[nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
 FIDO機能で使用する秘密鍵／証明書（Attestation）の導入や、PINコード設定、BLEペアリング実行、ヘルスチェック等の機能があります。
 
-最終更新日現在、いずれも[管理ツール](../MaintenanceTool/README.md)や[開発ツール](../MaintenanceTool/DEVTOOL.md)により実行可能となっております。
+最終更新日現在、管理ツール（ベンダー向け）により実行可能となっております。<br>
+- [Windows版](../MaintenanceTool/dotNET/DEVTOOL.md)<br>
+- [macOS版](../MaintenanceTool/macOSApp/DEVTOOL.md)
 
 ### ファームウェア更新機能
 nRF5340アプリケーションでは、BLE経由のファームウェア更新機能（DFU）を用意しています。<br>
-こちらも、管理ツール（[macOS版](../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)／[Windows版](../MaintenanceTool/WindowsExe/UPDATEFW_BLE.md)）により実行可能となっております。
+最終更新日現在、管理ツール（エンドユーザー向け／ベンダー向け）により実行可能となっております。
+- Windows版（再構築中）<br>
+- [macOS版](../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)
 
 なお、USB経由のDFUもサポート出来るようですが、対応に伴い[Zephyrプラットフォームのカスタマイズ](../nRF5340_app/CUSTOMIZE.md)が必要となってしまうため、本プロジェクトでは採用は見送っております。
 
