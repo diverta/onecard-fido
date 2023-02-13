@@ -1,6 +1,13 @@
 # nRF Connect SDKインストール手順書
 
+最終更新日：2023/02/13
+
 「[nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)」をmacOSにインストールする手順について掲載します。
+
+## 使用したシステム
+
+PC: iMac (Retina 5K, 27-inch, 2019)<br>
+OS: macOS 12.6.3
 
 ## 前提条件
 
@@ -14,27 +21,27 @@
 
 ## Python3環境の準備
 
-<b>macOSに同梱のPython 3.7を使用</b>し、Python3の仮想環境を作成します。<br>
+<b>macOSに同梱のPython 3.9を使用</b>し、Python3の仮想環境を作成します。<br>
 必要なPythonライブラリー（モジュール）は、全て仮想環境下にインストールします。
 
 #### 仮想環境の作成
 
-本例では、`${HOME}/opt/ncs_1.9.1`というフォルダーに、Python3の仮想環境を作成するものとします。<br>
+本例では、`${HOME}/opt/ncs_2.2.0`というフォルダーに、Python3の仮想環境を作成するものとします。<br>
 以下のコマンドを実行します。
 
 ```
 cd ${HOME}/opt
-/usr/bin/python3 -m venv ncs_1.9.1
+/usr/bin/python3 -m venv ncs_2.2.0
 ```
 
 以下は実行例になります。
 
 ```
 bash-3.2$ /usr/bin/python3 --version
-Python 3.7.3
+Python 3.9.6
 bash-3.2$ cd ${HOME}/opt
 bash-3.2$
-bash-3.2$ /usr/bin/python3 -m venv ncs_1.9.1
+bash-3.2$ /usr/bin/python3 -m venv ncs_2.2.0
 bash-3.2$
 ```
 
@@ -43,19 +50,19 @@ bash-3.2$
 仮想環境に入るためには、仮想環境フォルダーでコマンド`source bin/activate`を実行します。
 
 ```
-bash-3.2$ cd ncs_1.9.1
+bash-3.2$ cd ${HOME}/opt/ncs_2.2.0
 bash-3.2$ source bin/activate
-(ncs_1.9.1) bash-3.2$
+(ncs_2.2.0) bash-3.2$
 ```
 
-`(ncs_1.9.1) bash-3.2$ `というコマンドプロンプト表示により、仮想環境に入ったことが確認できます。
+`(ncs_2.2.0) bash-3.2$ `というコマンドプロンプト表示により、仮想環境に入ったことが確認できます。
 
 #### 仮想環境から抜ける
 
 仮想環境から通常のシェルに戻るためには、コマンド`deactivate`を実行します。
 
 ```
-(ncs_1.9.1) bash-3.2$ deactivate
+(ncs_2.2.0) bash-3.2$ deactivate
 bash-3.2$
 ```
 
@@ -79,13 +86,13 @@ pip3 install west
 
 #### リポジトリーのチェックアウト
 
-GitHubリポジトリーから「nRF Connect SDK v1.9.1」の全ファイルイメージをチェックアウトします。<br>
+GitHubリポジトリーから「nRF Connect SDK v2.2.0」の全ファイルイメージをチェックアウトします。<br>
 ターミナルから以下のコマンドを実行します。（実行例は<b>[こちら](assets01/west.log)</b>）
 
 （注：`west zephyr-export`の実行前に、`cmake`コマンドへの実行パスを通しています）
 
 ```
-west init -m https://github.com/nrfconnect/sdk-nrf --mr v1.9.1
+west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.2.0
 west update
 PATH=${PATH}:/Applications/CMake.app/Contents/bin
 west zephyr-export
