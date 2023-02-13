@@ -5,16 +5,16 @@
 日本国内の技適取得済みであるnRF5340搭載モジュール「MDBT53」を使用して製作する、USBドングル基板です。<br>
 （下図は[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle)。ただし、MDBT53 Dongleもほぼ同イメージになる想定）
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="500">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/assets/0001.jpg" width="500">
 
 ### 特色
 - 外形寸法＝5cm x 2cm
 - FIDO2機能（WebAuthn）をサポート
 - FIDO2機能はUSB HID／BLEの両トランスポートをサポート
-- 署名検証機能付きBLEブートローダーを採用し、不正ファームウェアの書込みを抑止
-- PIVカード／OpenPGPカードのエミュレーション機能を搭載
 - USB給電／ボタン電池の２電源方式
-- リアルタイムクロックモジュールを搭載
+- リアルタイムクロック・カレンダーを搭載し、電池装着時は時刻同期が可能
+- 署名検証機能付きUSBブートローダーを採用し、不正ファームウェアの書込みを抑止
+- CCIDインターフェースを装備し、PIV/OpenPGP/OATHカードエミュレーションが可能
 
 ### [nRF5340アプリケーション](../../nRF5340_app/README.md)
 
