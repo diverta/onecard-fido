@@ -1,13 +1,14 @@
+(ncs_2.2.0) bash-3.2$ cd ${HOME}/opt/ncs_2.2.0
 (ncs_2.2.0) bash-3.2$ west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.2.0
 === Initializing in /Users/makmorit/opt/ncs_2.2.0
 --- Cloning manifest repository from https://github.com/nrfconnect/sdk-nrf, rev. v2.2.0
 Cloning into '/Users/makmorit/opt/ncs_2.2.0/.west/manifest-tmp'...
 remote: Enumerating objects: 152714, done.
 remote: Counting objects: 100% (126/126), done.
-remote: Compressing objects: 100% (101/101), done.
-remote: Total 152714 (delta 53), reused 49 (delta 24), pack-reused 152588
-Receiving objects: 100% (152714/152714), 106.63 MiB | 5.75 MiB/s, done.
-Resolving deltas: 100% (114223/114223), done.
+remote: Compressing objects: 100% (96/96), done.
+remote: Total 152714 (delta 54), reused 55 (delta 29), pack-reused 152588
+Receiving objects: 100% (152714/152714), 106.52 MiB | 5.84 MiB/s, done.
+Resolving deltas: 100% (114256/114256), done.
 Note: switching to '188a16036ab968bc0f9226ba178ca461548a8c66'.
 
 You are in 'detached HEAD' state. You can look around, make experimental
@@ -25,9 +26,10 @@ Or undo this operation with:
 
 Turn off this advice by setting config variable advice.detachedHead to false
 
+Updating files: 100% (6920/6920), done.
 --- setting manifest.path to nrf
 === Initialized. Now run "west update" inside /Users/makmorit/opt/ncs_2.2.0.
-(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ 
 (ncs_2.2.0) bash-3.2$ west update
 === updating zephyr (zephyr):
 --- zephyr: initializing
@@ -35,8 +37,8 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/zephyr/.git/
 --- zephyr: fetching, need revision v3.2.99-ncs1
 remote: Enumerating objects: 791225, done.
 remote: Total 791225 (delta 0), reused 0 (delta 0), pack-reused 791225
-Receiving objects: 100% (791225/791225), 535.88 MiB | 5.45 MiB/s, done.
-Resolving deltas: 100% (602035/602035), done.
+Receiving objects: 100% (791225/791225), 535.81 MiB | 5.44 MiB/s, done.
+Resolving deltas: 100% (602051/602051), done.
 From https://github.com/nrfconnect/sdk-zephyr
  * tag                     v3.2.99-ncs1              -> FETCH_HEAD
  * [new tag]               v1.13.99-ncs1             -> v1.13.99-ncs1
@@ -127,8 +129,8 @@ remote: Enumerating objects: 112590, done.
 remote: Counting objects: 100% (170/170), done.
 remote: Compressing objects: 100% (76/76), done.
 remote: Total 112590 (delta 106), reused 127 (delta 94), pack-reused 112420
-Receiving objects: 100% (112590/112590), 22.77 MiB | 4.83 MiB/s, done.
-Resolving deltas: 100% (92420/92420), done.
+Receiving objects: 100% (112590/112590), 22.77 MiB | 4.71 MiB/s, done.
+Resolving deltas: 100% (92421/92421), done.
 From https://github.com/nrfconnect/sdk-hostap
  * [new branch]          main         -> refs/west/main
  * [new branch]          nrf700x-dev  -> refs/west/nrf700x-dev
@@ -140,11 +142,11 @@ HEAD is now at 49fddb8f5 Fix handling connection timeout equal to 0
 Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/bootloader/mcuboot/.git/
 --- mcuboot: fetching, need revision v1.9.99-ncs3
 remote: Enumerating objects: 18363, done.
-remote: Counting objects: 100% (4391/4391), done.
-remote: Compressing objects: 100% (789/789), done.
-remote: Total 18363 (delta 3728), reused 3915 (delta 3557), pack-reused 13972
-Receiving objects: 100% (18363/18363), 5.09 MiB | 2.69 MiB/s, done.
-Resolving deltas: 100% (12608/12608), done.
+remote: Counting objects: 100% (4681/4681), done.
+remote: Compressing objects: 100% (820/820), done.
+remote: Total 18363 (delta 4011), reused 4175 (delta 3816), pack-reused 13682
+Receiving objects: 100% (18363/18363), 5.06 MiB | 3.53 MiB/s, done.
+Resolving deltas: 100% (12632/12632), done.
 From https://github.com/nrfconnect/sdk-mcuboot
  * tag                 v1.9.99-ncs3           -> FETCH_HEAD
  * [new tag]           v1.2.99-ncs1           -> v1.2.99-ncs1
@@ -228,7 +230,7 @@ remote: Enumerating objects: 116816, done.
 remote: Counting objects: 100% (145/145), done.
 remote: Compressing objects: 100% (91/91), done.
 remote: Total 116816 (delta 64), reused 101 (delta 54), pack-reused 116671
-Receiving objects: 100% (116816/116816), 54.09 MiB | 5.06 MiB/s, done.
+Receiving objects: 100% (116816/116816), 54.09 MiB | 5.30 MiB/s, done.
 Resolving deltas: 100% (90478/90478), done.
 From https://github.com/nrfconnect/sdk-mbedtls
  * tag                   v3.1.0-ncs2     -> FETCH_HEAD
@@ -251,8 +253,8 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/nrfxlib/.git/
 --- nrfxlib: fetching, need revision v2.2.0
 remote: Enumerating objects: 21436, done.
 remote: Total 21436 (delta 0), reused 0 (delta 0), pack-reused 21436
-Receiving objects: 100% (21436/21436), 253.43 MiB | 5.01 MiB/s, done.
-Resolving deltas: 100% (13322/13322), done.
+Receiving objects: 100% (21436/21436), 252.43 MiB | 5.01 MiB/s, done.
+Resolving deltas: 100% (13329/13329), done.
 From https://github.com/nrfconnect/sdk-nrfxlib
  * tag                 v2.2.0       -> FETCH_HEAD
  * [new tag]           v0.1.0       -> v0.1.0
@@ -330,7 +332,7 @@ remote: Enumerating objects: 60043, done.
 remote: Counting objects: 100% (2650/2650), done.
 remote: Compressing objects: 100% (1080/1080), done.
 remote: Total 60043 (delta 1594), reused 2420 (delta 1526), pack-reused 57393
-Receiving objects: 100% (60043/60043), 44.27 MiB | 5.46 MiB/s, done.
+Receiving objects: 100% (60043/60043), 44.27 MiB | 5.22 MiB/s, done.
 Resolving deltas: 100% (39889/39889), done.
 From https://github.com/nrfconnect/sdk-trusted-firmware-m
  * tag                 v1.6.0-ncs2            -> FETCH_HEAD
@@ -374,7 +376,7 @@ remote: Enumerating objects: 18363, done.
 remote: Counting objects: 100% (4391/4391), done.
 remote: Compressing objects: 100% (789/789), done.
 remote: Total 18363 (delta 3728), reused 3915 (delta 3557), pack-reused 13972
-Receiving objects: 100% (18363/18363), 5.09 MiB | 3.98 MiB/s, done.
+Receiving objects: 100% (18363/18363), 5.09 MiB | 4.52 MiB/s, done.
 Resolving deltas: 100% (12608/12608), done.
 From https://github.com/nrfconnect/sdk-mcuboot
  * tag                 v1.7.2-ncs3            -> FETCH_HEAD
@@ -459,8 +461,8 @@ remote: Enumerating objects: 218521, done.
 remote: Counting objects: 100% (290/290), done.
 remote: Compressing objects: 100% (164/164), done.
 remote: Total 218521 (delta 138), reused 215 (delta 125), pack-reused 218231
-Receiving objects: 100% (218521/218521), 159.81 MiB | 5.07 MiB/s, done.
-Resolving deltas: 100% (164869/164869), done.
+Receiving objects: 100% (218521/218521), 159.81 MiB | 4.86 MiB/s, done.
+Resolving deltas: 100% (164871/164871), done.
 From https://github.com/nrfconnect/sdk-connectedhomeip
  * tag                   v2.2.0              -> FETCH_HEAD
  * [new tag]             v1.5.0              -> v1.5.0
@@ -527,7 +529,7 @@ remote: Enumerating objects: 3965, done.
 remote: Counting objects: 100% (3965/3965), done.
 remote: Compressing objects: 100% (1371/1371), done.
 remote: Total 3965 (delta 2580), reused 3955 (delta 2571), pack-reused 0
-Receiving objects: 100% (3965/3965), 2.30 MiB | 2.77 MiB/s, done.
+Receiving objects: 100% (3965/3965), 2.30 MiB | 3.19 MiB/s, done.
 Resolving deltas: 100% (2580/2580), done.
 From https://github.com/nrfconnect/sdk-cjson
  * [new branch]      main       -> refs/west/main
@@ -542,7 +544,7 @@ remote: Enumerating objects: 17161, done.
 remote: Counting objects: 100% (17161/17161), done.
 remote: Compressing objects: 100% (5200/5200), done.
 remote: Total 17161 (delta 10650), reused 17159 (delta 10648), pack-reused 0
-Receiving objects: 100% (17161/17161), 8.84 MiB | 3.57 MiB/s, done.
+Receiving objects: 100% (17161/17161), 8.84 MiB | 3.84 MiB/s, done.
 Resolving deltas: 100% (10650/10650), done.
 From https://github.com/nrfconnect/azure-sdk-for-c
  * [new branch]        main       -> refs/west/main
@@ -555,9 +557,9 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/test/cmock/.gi
 remote: Enumerating objects: 5896, done.
 remote: Counting objects: 100% (285/285), done.
 remote: Compressing objects: 100% (130/130), done.
-remote: Total 5896 (delta 150), reused 235 (delta 127), pack-reused 5611
-Receiving objects: 100% (5896/5896), 3.63 MiB | 2.33 MiB/s, done.
-Resolving deltas: 100% (3979/3979), done.
+remote: Total 5896 (delta 151), reused 234 (delta 127), pack-reused 5611
+Receiving objects: 100% (5896/5896), 3.63 MiB | 2.69 MiB/s, done.
+Resolving deltas: 100% (3980/3980), done.
 From https://github.com/ThrowTheSwitch/cmock
  * [new branch]      branch_2_5_1                  -> refs/west/branch_2_5_1
  * [new branch]      cmock_2_6_rc                  -> refs/west/cmock_2_6_rc
@@ -590,7 +592,7 @@ remote: Enumerating objects: 6048, done.
 remote: Counting objects: 100% (1395/1395), done.
 remote: Compressing objects: 100% (657/657), done.
 remote: Total 6048 (delta 688), reused 1222 (delta 586), pack-reused 4653
-Receiving objects: 100% (6048/6048), 2.33 MiB | 2.16 MiB/s, done.
+Receiving objects: 100% (6048/6048), 2.33 MiB | 3.79 MiB/s, done.
 Resolving deltas: 100% (3027/3027), done.
 From https://github.com/memfault/memfault-firmware-sdk
  * tag               0.35.0     -> FETCH_HEAD
@@ -724,7 +726,7 @@ remote: Enumerating objects: 2146, done.
 remote: Counting objects: 100% (2146/2146), done.
 remote: Compressing objects: 100% (738/738), done.
 remote: Total 2146 (delta 1351), reused 2141 (delta 1348), pack-reused 0
-Receiving objects: 100% (2146/2146), 23.82 MiB | 3.86 MiB/s, done.
+Receiving objects: 100% (2146/2146), 23.82 MiB | 4.89 MiB/s, done.
 Resolving deltas: 100% (1351/1351), done.
 From https://github.com/nrfconnect/sdk-mcu-drivers
  * [new branch]      master     -> refs/west/master
@@ -738,7 +740,7 @@ remote: Enumerating objects: 97975, done.
 remote: Counting objects: 100% (18987/18987), done.
 remote: Compressing objects: 100% (3930/3930), done.
 remote: Total 97975 (delta 15224), reused 18670 (delta 14974), pack-reused 78988
-Receiving objects: 100% (97975/97975), 84.05 MiB | 5.43 MiB/s, done.
+Receiving objects: 100% (97975/97975), 84.05 MiB | 5.08 MiB/s, done.
 Resolving deltas: 100% (78608/78608), done.
 From https://github.com/nrfconnect/sdk-openthread
  * [new branch]          for-testing                        -> refs/west/for-testing
@@ -764,7 +766,7 @@ remote: Enumerating objects: 1902, done.
 remote: Counting objects: 100% (1902/1902), done.
 remote: Compressing objects: 100% (554/554), done.
 remote: Total 1902 (delta 1372), reused 1868 (delta 1343), pack-reused 0
-Receiving objects: 100% (1902/1902), 1.05 MiB | 2.01 MiB/s, done.
+Receiving objects: 100% (1902/1902), 1.05 MiB | 2.40 MiB/s, done.
 Resolving deltas: 100% (1372/1372), done.
 From https://github.com/zephyrproject-rtos/canopennode
  * [new branch]      master            -> refs/west/master
@@ -780,7 +782,7 @@ remote: Enumerating objects: 30747, done.
 remote: Counting objects: 100% (716/716), done.
 remote: Compressing objects: 100% (510/510), done.
 remote: Total 30747 (delta 209), reused 617 (delta 166), pack-reused 30031
-Receiving objects: 100% (30747/30747), 6.67 MiB | 3.20 MiB/s, done.
+Receiving objects: 100% (30747/30747), 6.67 MiB | 2.77 MiB/s, done.
 Resolving deltas: 100% (18381/18381), done.
 From https://github.com/zephyrproject-rtos/chre
  * [new branch]        zephyr     -> refs/west/zephyr
@@ -794,7 +796,7 @@ remote: Enumerating objects: 1372, done.
 remote: Counting objects: 100% (181/181), done.
 remote: Compressing objects: 100% (104/104), done.
 remote: Total 1372 (delta 100), reused 111 (delta 77), pack-reused 1191
-Receiving objects: 100% (1372/1372), 3.30 MiB | 1.73 MiB/s, done.
+Receiving objects: 100% (1372/1372), 3.30 MiB | 4.40 MiB/s, done.
 Resolving deltas: 100% (861/861), done.
 From https://github.com/zephyrproject-rtos/cmsis
  * [new branch]      master     -> refs/west/master
@@ -808,8 +810,8 @@ remote: Enumerating objects: 1213, done.
 remote: Counting objects: 100% (164/164), done.
 remote: Compressing objects: 100% (116/116), done.
 remote: Total 1213 (delta 94), reused 111 (delta 48), pack-reused 1049
-Receiving objects: 100% (1213/1213), 743.13 KiB | 2.18 MiB/s, done.
-Resolving deltas: 100% (879/879), done.
+Receiving objects: 100% (1213/1213), 727.32 KiB | 2.90 MiB/s, done.
+Resolving deltas: 100% (878/878), done.
 From https://github.com/zephyrproject-rtos/edtt
  * [new branch]      le-audio      -> refs/west/le-audio
  * [new branch]      main          -> refs/west/main
@@ -824,7 +826,7 @@ remote: Enumerating objects: 183, done.
 remote: Counting objects: 100% (47/47), done.
 remote: Compressing objects: 100% (29/29), done.
 remote: Total 183 (delta 19), reused 23 (delta 16), pack-reused 136
-Receiving objects: 100% (183/183), 1.54 MiB | 2.06 MiB/s, done.
+Receiving objects: 100% (183/183), 1.54 MiB | 2.55 MiB/s, done.
 Resolving deltas: 100% (98/98), done.
 From https://github.com/zephyrproject-rtos/fatfs
  * [new branch]      master       -> refs/west/master
@@ -839,7 +841,7 @@ remote: Enumerating objects: 5666, done.
 remote: Counting objects: 100% (588/588), done.
 remote: Compressing objects: 100% (229/229), done.
 remote: Total 5666 (delta 377), reused 416 (delta 358), pack-reused 5078
-Receiving objects: 100% (5666/5666), 16.57 MiB | 4.16 MiB/s, done.
+Receiving objects: 100% (5666/5666), 16.57 MiB | 5.77 MiB/s, done.
 Resolving deltas: 100% (4167/4167), done.
 From https://github.com/zephyrproject-rtos/hal_nordic
  * [new branch]      master       -> refs/west/master
@@ -854,7 +856,7 @@ remote: Enumerating objects: 7910, done.
 remote: Counting objects: 100% (561/561), done.
 remote: Compressing objects: 100% (186/186), done.
 remote: Total 7910 (delta 241), reused 553 (delta 239), pack-reused 7349
-Receiving objects: 100% (7910/7910), 23.94 MiB | 4.84 MiB/s, done.
+Receiving objects: 100% (7910/7910), 23.94 MiB | 5.75 MiB/s, done.
 Resolving deltas: 100% (6300/6300), done.
 From https://github.com/zephyrproject-rtos/hal_st
  * [new branch]      master       -> refs/west/master
@@ -869,7 +871,7 @@ remote: Enumerating objects: 32, done.
 remote: Counting objects: 100% (32/32), done.
 remote: Compressing objects: 100% (25/25), done.
 remote: Total 32 (delta 5), reused 32 (delta 5), pack-reused 0
-Unpacking objects: 100% (32/32), 49.06 KiB | 717.00 KiB/s, done.
+Unpacking objects: 100% (32/32), 49.06 KiB | 1.17 MiB/s, done.
 From https://github.com/zephyrproject-rtos/hal_wurthelektronik
  * [new branch]      zephyr     -> refs/west/zephyr
 HEAD is now at 24ca987 Initialized WE HAL module repository.
@@ -882,7 +884,7 @@ remote: Enumerating objects: 802, done.
 remote: Counting objects: 100% (129/129), done.
 remote: Compressing objects: 100% (56/56), done.
 remote: Total 802 (delta 84), reused 78 (delta 73), pack-reused 673
-Receiving objects: 100% (802/802), 198.65 KiB | 1.74 MiB/s, done.
+Receiving objects: 100% (802/802), 198.65 KiB | 2.03 MiB/s, done.
 Resolving deltas: 100% (503/503), done.
 From https://github.com/zephyrproject-rtos/libmetal
  * [new branch]      master       -> refs/west/master
@@ -897,7 +899,7 @@ remote: Enumerating objects: 375, done.
 remote: Counting objects: 100% (7/7), done.
 remote: Compressing objects: 100% (4/4), done.
 remote: Total 375 (delta 3), reused 3 (delta 3), pack-reused 368
-Receiving objects: 100% (375/375), 349.58 KiB | 1.33 MiB/s, done.
+Receiving objects: 100% (375/375), 349.58 KiB | 654.00 KiB/s, done.
 Resolving deltas: 100% (251/251), done.
 From https://github.com/zephyrproject-rtos/liblc3
  * [new branch]      main       -> refs/west/main
@@ -911,7 +913,7 @@ remote: Enumerating objects: 2780, done.
 remote: Counting objects: 100% (576/576), done.
 remote: Compressing objects: 100% (209/209), done.
 remote: Total 2780 (delta 379), reused 530 (delta 353), pack-reused 2204
-Receiving objects: 100% (2780/2780), 1.36 MiB | 2.42 MiB/s, done.
+Receiving objects: 100% (2780/2780), 1.36 MiB | 1.05 MiB/s, done.
 Resolving deltas: 100% (1938/1938), done.
 From https://github.com/zephyrproject-rtos/littlefs
  * [new branch]      zephyr          -> refs/west/zephyr
@@ -931,7 +933,7 @@ remote: Enumerating objects: 27143, done.
 remote: Counting objects: 100% (3885/3885), done.
 remote: Compressing objects: 100% (1312/1312), done.
 remote: Total 27143 (delta 2332), reused 3705 (delta 2296), pack-reused 23258
-Receiving objects: 100% (27143/27143), 23.51 MiB | 4.20 MiB/s, done.
+Receiving objects: 100% (27143/27143), 23.51 MiB | 5.14 MiB/s, done.
 Resolving deltas: 100% (17745/17745), done.
 From https://github.com/zephyrproject-rtos/loramac-node
  * [new branch]        v4.6.0-zephyr -> refs/west/v4.6.0-zephyr
@@ -976,7 +978,7 @@ remote: Enumerating objects: 59727, done.
 remote: Counting objects: 100% (63/63), done.
 remote: Compressing objects: 100% (31/31), done.
 remote: Total 59727 (delta 32), reused 60 (delta 32), pack-reused 59664
-Receiving objects: 100% (59727/59727), 71.58 MiB | 5.45 MiB/s, done.
+Receiving objects: 100% (59727/59727), 71.58 MiB | 4.91 MiB/s, done.
 Resolving deltas: 100% (46829/46829), done.
 From https://github.com/zephyrproject-rtos/lvgl
  * [new branch]        master     -> refs/west/master
@@ -989,7 +991,7 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/lib/lz
 --- lz4: fetching, need revision 8e303c264fc21c2116dc612658003a22e933124d
 remote: Enumerating objects: 11726, done.
 remote: Total 11726 (delta 0), reused 0 (delta 0), pack-reused 11726
-Receiving objects: 100% (11726/11726), 4.98 MiB | 2.32 MiB/s, done.
+Receiving objects: 100% (11726/11726), 4.98 MiB | 4.84 MiB/s, done.
 Resolving deltas: 100% (8345/8345), done.
 From https://github.com/zephyrproject-rtos/lz4
  * [new branch]      zephyr     -> refs/west/zephyr
@@ -1032,9 +1034,9 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/crypto
 --- mbedtls: fetching, need revision 7fed49c9b9f983ad6416986661ef637459723bcb
 remote: Enumerating objects: 129864, done.
 remote: Counting objects: 100% (12584/12584), done.
-remote: Compressing objects: 100% (3427/3427), done.
-remote: Total 129864 (delta 9333), reused 12031 (delta 9132), pack-reused 117280
-Receiving objects: 100% (129864/129864), 58.54 MiB | 5.38 MiB/s, done.
+remote: Compressing objects: 100% (3424/3424), done.
+remote: Total 129864 (delta 9333), reused 12037 (delta 9135), pack-reused 117280
+Receiving objects: 100% (129864/129864), 58.51 MiB | 5.67 MiB/s, done.
 Resolving deltas: 100% (100625/100625), done.
 From https://github.com/zephyrproject-rtos/mbedtls
  * [new branch]          master          -> refs/west/master
@@ -1053,7 +1055,7 @@ remote: Enumerating objects: 201, done.
 remote: Counting objects: 100% (19/19), done.
 remote: Compressing objects: 100% (13/13), done.
 remote: Total 201 (delta 6), reused 11 (delta 6), pack-reused 182
-Receiving objects: 100% (201/201), 431.91 KiB | 1.24 MiB/s, done.
+Receiving objects: 100% (201/201), 431.91 KiB | 2.70 MiB/s, done.
 Resolving deltas: 100% (61/61), done.
 From https://github.com/zephyrproject-rtos/mipi-sys-t
  * [new branch]      zephyr     -> refs/west/zephyr
@@ -1065,7 +1067,7 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/lib/na
 --- nanopb: fetching, need revision dc4deed54fd4c7e1935e3b6387eedf21bb45dc38
 remote: Enumerating objects: 8307, done.
 remote: Total 8307 (delta 0), reused 0 (delta 0), pack-reused 8307
-Receiving objects: 100% (8307/8307), 4.01 MiB | 2.29 MiB/s, done.
+Receiving objects: 100% (8307/8307), 4.01 MiB | 2.69 MiB/s, done.
 Resolving deltas: 100% (5363/5363), done.
 From https://github.com/zephyrproject-rtos/nanopb
  * [new branch]      cifuzz_test4           -> refs/west/cifuzz_test4
@@ -1156,7 +1158,7 @@ remote: Enumerating objects: 1500, done.
 remote: Counting objects: 100% (52/52), done.
 remote: Compressing objects: 100% (39/39), done.
 remote: Total 1500 (delta 22), reused 27 (delta 13), pack-reused 1448
-Receiving objects: 100% (1500/1500), 2.66 MiB | 2.27 MiB/s, done.
+Receiving objects: 100% (1500/1500), 2.66 MiB | 3.73 MiB/s, done.
 Resolving deltas: 100% (520/520), done.
 From https://github.com/zephyrproject-rtos/net-tools
  * [new branch]      master     -> refs/west/master
@@ -1170,7 +1172,7 @@ remote: Enumerating objects: 667, done.
 remote: Counting objects: 100% (241/241), done.
 remote: Compressing objects: 100% (72/72), done.
 remote: Total 667 (delta 181), reused 197 (delta 168), pack-reused 426
-Receiving objects: 100% (667/667), 322.99 KiB | 990.00 KiB/s, done.
+Receiving objects: 100% (667/667), 322.98 KiB | 2.32 MiB/s, done.
 Resolving deltas: 100% (352/352), done.
 From https://github.com/zephyrproject-rtos/nrf_hw_models
  * [new branch]      master     -> refs/west/master
@@ -1184,7 +1186,7 @@ remote: Enumerating objects: 452, done.
 remote: Counting objects: 100% (195/195), done.
 remote: Compressing objects: 100% (101/101), done.
 remote: Total 452 (delta 89), reused 145 (delta 80), pack-reused 257
-Receiving objects: 100% (452/452), 1.55 MiB | 2.31 MiB/s, done.
+Receiving objects: 100% (452/452), 1.55 MiB | 3.77 MiB/s, done.
 Resolving deltas: 100% (186/186), done.
 From https://github.com/zephyrproject-rtos/open-amp
  * [new branch]      master       -> refs/west/master
@@ -1199,7 +1201,7 @@ remote: Enumerating objects: 224218, done.
 remote: Counting objects: 100% (1195/1195), done.
 remote: Compressing objects: 100% (421/421), done.
 remote: Total 224218 (delta 856), reused 950 (delta 770), pack-reused 223023
-Receiving objects: 100% (224218/224218), 134.20 MiB | 5.79 MiB/s, done.
+Receiving objects: 100% (224218/224218), 134.20 MiB | 4.78 MiB/s, done.
 Resolving deltas: 100% (178987/178987), done.
 From https://github.com/zephyrproject-rtos/picolibc
  * [new branch]          Z-emcb-cygwin_daemon                           -> refs/west/Z-emcb-cygwin_daemon
@@ -2263,7 +2265,7 @@ remote: Enumerating objects: 208, done.
 remote: Counting objects: 100% (44/44), done.
 remote: Compressing objects: 100% (26/26), done.
 remote: Total 208 (delta 27), reused 18 (delta 18), pack-reused 164
-Receiving objects: 100% (208/208), 159.23 KiB | 1.23 MiB/s, done.
+Receiving objects: 100% (208/208), 159.23 KiB | 900.00 KiB/s, done.
 Resolving deltas: 100% (94/94), done.
 From https://github.com/zephyrproject-rtos/segger
  * [new branch]      master       -> refs/west/master
@@ -2278,7 +2280,7 @@ remote: Enumerating objects: 1811, done.
 remote: Counting objects: 100% (4/4), done.
 remote: Compressing objects: 100% (4/4), done.
 remote: Total 1811 (delta 0), reused 2 (delta 0), pack-reused 1807
-Receiving objects: 100% (1811/1811), 1.15 MiB | 1.13 MiB/s, done.
+Receiving objects: 100% (1811/1811), 1.15 MiB | 2.25 MiB/s, done.
 Resolving deltas: 100% (1143/1143), done.
 From https://github.com/zephyrproject-rtos/tinycbor
  * [new branch]      dev          -> refs/west/dev
@@ -2307,7 +2309,7 @@ remote: Enumerating objects: 46, done.
 remote: Counting objects: 100% (46/46), done.
 remote: Compressing objects: 100% (30/30), done.
 remote: Total 46 (delta 11), reused 46 (delta 11), pack-reused 0
-Unpacking objects: 100% (46/46), 66.61 KiB | 1.13 MiB/s, done.
+Unpacking objects: 100% (46/46), 66.61 KiB | 1.23 MiB/s, done.
 From https://github.com/zephyrproject-rtos/tinycrypt
  * [new branch]      master     -> refs/west/master
 HEAD is now at 3e9a49d cmake: Fix conditional in root CMakeLists.txt
@@ -2320,7 +2322,7 @@ remote: Enumerating objects: 3740, done.
 remote: Counting objects: 100% (1506/1506), done.
 remote: Compressing objects: 100% (119/119), done.
 remote: Total 3740 (delta 1441), reused 1388 (delta 1387), pack-reused 2234
-Receiving objects: 100% (3740/3740), 2.46 MiB | 2.76 MiB/s, done.
+Receiving objects: 100% (3740/3740), 2.46 MiB | 1.62 MiB/s, done.
 Resolving deltas: 100% (2682/2682), done.
 From https://github.com/zephyrproject-rtos/TraceRecorderSource
  * [new branch]      main       -> refs/west/main
@@ -2336,7 +2338,7 @@ remote: Enumerating objects: 3821, done.
 remote: Counting objects: 100% (3821/3821), done.
 remote: Compressing objects: 100% (1335/1335), done.
 remote: Total 3821 (delta 2632), reused 3643 (delta 2460), pack-reused 0
-Receiving objects: 100% (3821/3821), 2.46 MiB | 3.47 MiB/s, done.
+Receiving objects: 100% (3821/3821), 2.46 MiB | 3.15 MiB/s, done.
 Resolving deltas: 100% (2632/2632), done.
 From https://github.com/zephyrproject-rtos/tf-m-tests
  * [new branch]      master        -> refs/west/master
@@ -2348,11 +2350,11 @@ HEAD is now at bcb53bc Merge pull request #4 from joerchan/tfm-library-mode-inva
 Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/tee/tf-m/psa-arch-tests/.git/
 --- psa-arch-tests: fetching, need revision f4fc2442b8e29e2a03d9899e46e5a3ea3df8c2c9
 remote: Enumerating objects: 12474, done.
-remote: Counting objects: 100% (510/510), done.
-remote: Compressing objects: 100% (226/226), done.
-remote: Total 12474 (delta 325), reused 365 (delta 284), pack-reused 11964
-Receiving objects: 100% (12474/12474), 17.81 MiB | 4.01 MiB/s, done.
-Resolving deltas: 100% (9342/9342), done.
+remote: Counting objects: 100% (596/596), done.
+remote: Compressing objects: 100% (224/224), done.
+remote: Total 12474 (delta 404), reused 454 (delta 372), pack-reused 11878
+Receiving objects: 100% (12474/12474), 17.87 MiB | 6.00 MiB/s, done.
+Resolving deltas: 100% (9374/9374), done.
 From https://github.com/zephyrproject-rtos/psa-arch-tests
  * [new branch]      master                   -> refs/west/master
  * [new tag]         Before_Crypto_1.0        -> Before_Crypto_1.0
@@ -2377,7 +2379,7 @@ remote: Enumerating objects: 3222, done.
 remote: Counting objects: 100% (3222/3222), done.
 remote: Compressing objects: 100% (798/798), done.
 remote: Total 3222 (delta 2343), reused 3222 (delta 2343), pack-reused 0
-Receiving objects: 100% (3222/3222), 1.45 MiB | 2.48 MiB/s, done.
+Receiving objects: 100% (3222/3222), 1.45 MiB | 3.06 MiB/s, done.
 Resolving deltas: 100% (2343/2343), done.
 From https://github.com/zephyrproject-rtos/uoscore-uedhoc
  * [new branch]      zephyr     -> refs/west/zephyr
@@ -2390,8 +2392,8 @@ Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/lib/zc
 remote: Enumerating objects: 3675, done.
 remote: Counting objects: 100% (1/1), done.
 remote: Total 3675 (delta 0), reused 0 (delta 0), pack-reused 3674
-Receiving objects: 100% (3675/3675), 963.62 KiB | 2.10 MiB/s, done.
-Resolving deltas: 100% (2163/2163), done.
+Receiving objects: 100% (3675/3675), 960.62 KiB | 3.17 MiB/s, done.
+Resolving deltas: 100% (2152/2152), done.
 From https://github.com/zephyrproject-rtos/zcbor
  * tag               0.6.0             -> FETCH_HEAD
  * [new tag]         0.1.0             -> 0.1.0
@@ -2412,10 +2414,10 @@ HEAD is now at 0556eda Update version from 0.5.99 to 0.6.0
 Initialized empty Git repository in /Users/makmorit/opt/ncs_2.2.0/modules/lib/zscilib/.git/
 --- zscilib: fetching, need revision ca070ddabdaf67175a2da901d0bd62e8899371c5
 remote: Enumerating objects: 5248, done.
-remote: Counting objects: 100% (964/964), done.
+remote: Counting objects: 100% (960/960), done.
 remote: Compressing objects: 100% (468/468), done.
-remote: Total 5248 (delta 661), reused 627 (delta 452), pack-reused 4284
-Receiving objects: 100% (5248/5248), 3.57 MiB | 2.77 MiB/s, done.
+remote: Total 5248 (delta 657), reused 623 (delta 448), pack-reused 4288
+Receiving objects: 100% (5248/5248), 3.56 MiB | 3.85 MiB/s, done.
 Resolving deltas: 100% (3846/3846), done.
 From https://github.com/zephyrproject-rtos/zscilib
  * [new branch]      gh-pages                 -> refs/west/gh-pages
@@ -2424,7 +2426,7 @@ From https://github.com/zephyrproject-rtos/zscilib
  * [new tag]         v0.2.0-rc1               -> v0.2.0-rc1
 HEAD is now at ca070dd Merge pull request #39 from microbuilder/fix_tests_cmake
 HEAD is now at ca070dd Merge pull request #39 from microbuilder/fix_tests_cmake
-(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ 
 (ncs_2.2.0) bash-3.2$ west zephyr-export
 Zephyr (/Users/makmorit/opt/ncs_2.2.0/zephyr/share/zephyr-package/cmake)
 has been added to the user package registry in:
@@ -2435,14 +2437,3 @@ has been added to the user package registry in:
 ~/.cmake/packages/ZephyrUnittest
 
 (ncs_2.2.0) bash-3.2$ 
-(ncs_2.2.0) bash-3.2$ deactivate
-bash-3.2$ exit
-exit
-makmorit@iMac-makmorit-jp ~ % exit
-
-Saving session...
-...copying shared history...
-...saving history...truncating history files...
-...completed.
-
-[プロセスが完了しました]

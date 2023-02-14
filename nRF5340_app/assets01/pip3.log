@@ -7,248 +7,301 @@ bash-3.2$ source bin/activate
 Ignoring windows-curses: markers 'sys_platform == "win32"' don't match your environment
 Ignoring python-magic-bin: markers 'sys_platform == "win32"' don't match your environment
 Collecting pyelftools>=0.27
-  Using cached pyelftools-0.29-py2.py3-none-any.whl (174 kB)
+  Downloading pyelftools-0.29-py2.py3-none-any.whl (174 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 174.3/174.3 KB 1.8 MB/s eta 0:00:00
 Requirement already satisfied: PyYAML>=5.1 in ./lib/python3.8/site-packages (from -r zephyr/scripts/requirements-base.txt (line 11)) (6.0)
 Requirement already satisfied: pykwalify in ./lib/python3.8/site-packages (from -r zephyr/scripts/requirements-base.txt (line 14)) (1.8.0)
 Collecting canopen
-  Using cached canopen-2.1.0-py3-none-any.whl (60 kB)
+  Downloading canopen-2.1.0-py3-none-any.whl (60 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.7/60.7 KB 2.1 MB/s eta 0:00:00
 Requirement already satisfied: packaging in ./lib/python3.8/site-packages (from -r zephyr/scripts/requirements-base.txt (line 18)) (23.0)
 Collecting progress
-  Using cached progress-1.6.tar.gz (7.8 kB)
+  Downloading progress-1.6.tar.gz (7.8 kB)
   Preparing metadata (setup.py) ... done
 Collecting psutil
-  Using cached psutil-5.9.4-cp36-abi3-macosx_10_9_x86_64.whl (243 kB)
+  Downloading psutil-5.9.4-cp36-abi3-macosx_10_9_x86_64.whl (243 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 243.5/243.5 KB 2.8 MB/s eta 0:00:00
 Collecting pylink-square
-  Using cached pylink_square-1.0.0-py2.py3-none-any.whl (82 kB)
+  Downloading pylink_square-1.0.0-py2.py3-none-any.whl (82 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.3/82.3 KB 2.5 MB/s eta 0:00:00
 Collecting anytree
-  Using cached anytree-2.8.0-py2.py3-none-any.whl (41 kB)
+  Downloading anytree-2.8.0-py2.py3-none-any.whl (41 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.7/41.7 KB 2.2 MB/s eta 0:00:00
 Collecting intelhex
-  Using cached intelhex-2.3.0-py2.py3-none-any.whl (50 kB)
+  Downloading intelhex-2.3.0-py2.py3-none-any.whl (50 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.9/50.9 KB 2.3 MB/s eta 0:00:00
 Requirement already satisfied: west>=0.10.1 in ./lib/python3.8/site-packages (from -r zephyr/scripts/requirements-base.txt (line 30)) (0.14.0)
 Requirement already satisfied: colorama in ./lib/python3.8/site-packages (from -r zephyr/scripts/requirements-build-test.txt (line 7)) (0.4.6)
 Collecting ply>=3.10
-  Using cached ply-3.11-py2.py3-none-any.whl (49 kB)
+  Downloading ply-3.11-py2.py3-none-any.whl (49 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.6/49.6 KB 1.8 MB/s eta 0:00:00
 Collecting gcovr>=4.2
-  Using cached gcovr-5.2-py2.py3-none-any.whl (81 kB)
+  Downloading gcovr-5.2-py2.py3-none-any.whl (81 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 81.6/81.6 KB 3.0 MB/s eta 0:00:00
 Collecting coverage
   Downloading coverage-7.1.0-cp38-cp38-macosx_10_9_x86_64.whl (198 kB)
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 198.7/198.7 KB 1.3 MB/s eta 0:00:00
 Collecting pytest
-  Using cached pytest-7.2.1-py3-none-any.whl (317 kB)
+  Downloading pytest-7.2.1-py3-none-any.whl (317 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 317.1/317.1 KB 3.0 MB/s eta 0:00:00
 Collecting mypy
   Downloading mypy-1.0.0-cp38-cp38-macosx_10_9_x86_64.whl (11.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 4.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 6.4 MB/s eta 0:00:00
 Collecting mock>=4.0.1
-  Using cached mock-5.0.1-py3-none-any.whl (30 kB)
+  Downloading mock-5.0.1-py3-none-any.whl (30 kB)
 Collecting breathe>=4.34
-  Using cached breathe-4.34.0-py3-none-any.whl (92 kB)
+  Downloading breathe-4.34.0-py3-none-any.whl (92 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.8/92.8 KB 4.1 MB/s eta 0:00:00
 Collecting sphinx!=5.2.0.post0,~=5.0
-  Using cached sphinx-5.3.0-py3-none-any.whl (3.2 MB)
+  Downloading sphinx-5.3.0-py3-none-any.whl (3.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 7.0 MB/s eta 0:00:00
 Collecting sphinx_rtd_theme~=1.0
-  Using cached sphinx_rtd_theme-1.2.0-py2.py3-none-any.whl (2.8 MB)
+  Downloading sphinx_rtd_theme-1.2.0-py2.py3-none-any.whl (2.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 6.6 MB/s eta 0:00:00
 Collecting sphinx-tabs
-  Using cached sphinx_tabs-3.4.1-py3-none-any.whl (10.0 kB)
+  Downloading sphinx_tabs-3.4.1-py3-none-any.whl (10.0 kB)
 Collecting sphinxcontrib-svg2pdfconverter
-  Using cached sphinxcontrib_svg2pdfconverter-1.2.2-py3-none-any.whl (8.1 kB)
+  Downloading sphinxcontrib_svg2pdfconverter-1.2.2-py3-none-any.whl (8.1 kB)
 Collecting pygments>=2.9
-  Using cached Pygments-2.14.0-py3-none-any.whl (1.1 MB)
+  Downloading Pygments-2.14.0-py3-none-any.whl (1.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 4.2 MB/s eta 0:00:00
 Collecting sphinx-notfound-page
-  Using cached sphinx_notfound_page-0.8.3-py2.py3-none-any.whl (8.5 kB)
+  Downloading sphinx_notfound_page-0.8.3-py2.py3-none-any.whl (8.5 kB)
 Collecting sphinx-copybutton
-  Using cached sphinx_copybutton-0.5.1-py3-none-any.whl (13 kB)
+  Downloading sphinx_copybutton-0.5.1-py3-none-any.whl (13 kB)
 Collecting pyserial
-  Using cached pyserial-3.5-py2.py3-none-any.whl (90 kB)
+  Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 KB 3.1 MB/s eta 0:00:00
 Collecting pyocd>=0.29.0
-  Using cached pyocd-0.34.3-py3-none-any.whl (13.4 MB)
+  Downloading pyocd-0.34.3-py3-none-any.whl (13.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.4/13.4 MB 7.8 MB/s eta 0:00:00
 Collecting tabulate
-  Using cached tabulate-0.9.0-py3-none-any.whl (35 kB)
+  Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
 Collecting cbor>=1.0.0
-  Using cached cbor-1.0.0.tar.gz (20 kB)
+  Downloading cbor-1.0.0.tar.gz (20 kB)
   Preparing metadata (setup.py) ... done
 Collecting gitlint
-  Using cached gitlint-0.18.0-py2.py3-none-any.whl (22 kB)
+  Downloading gitlint-0.18.0-py2.py3-none-any.whl (22 kB)
 Collecting junit2html
-  Using cached junit2html-30.1.3-py3-none-any.whl (15 kB)
+  Downloading junit2html-30.1.3-py3-none-any.whl (15 kB)
 Collecting clang-format>=1.13x
-  Using cached clang_format-15.0.7-py2.py3-none-macosx_10_9_universal2.whl (2.5 MB)
+  Downloading clang_format-15.0.7-py2.py3-none-macosx_10_9_universal2.whl (2.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 6.0 MB/s eta 0:00:00
 Collecting lpc_checksum
   Downloading lpc_checksum-2.2.0-py3-none-any.whl (4.4 kB)
 Collecting Pillow
   Downloading Pillow-9.4.0-2-cp38-cp38-macosx_10_10_x86_64.whl (3.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 5.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 5.7 MB/s eta 0:00:00
 Collecting imgtool>=1.9
-  Using cached imgtool-1.9.0-py3-none-any.whl (27 kB)
+  Downloading imgtool-1.9.0-py3-none-any.whl (27 kB)
 Collecting grpcio-tools
   Downloading grpcio_tools-1.51.1-cp38-cp38-macosx_10_10_x86_64.whl (2.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 4.7 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 6.4 MB/s eta 0:00:00
 Collecting PyGithub
-  Using cached PyGithub-1.57-py3-none-any.whl (297 kB)
+  Downloading PyGithub-1.57-py3-none-any.whl (297 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 297.6/297.6 KB 2.3 MB/s eta 0:00:00
 Collecting graphviz
-  Using cached graphviz-0.20.1-py3-none-any.whl (47 kB)
+  Downloading graphviz-0.20.1-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.0/47.0 KB 2.6 MB/s eta 0:00:00
 Collecting python-magic
-  Using cached python_magic-0.4.27-py2.py3-none-any.whl (13 kB)
+  Downloading python_magic-0.4.27-py2.py3-none-any.whl (13 kB)
 Collecting junitparser>=2
-  Using cached junitparser-2.8.0-py2.py3-none-any.whl (11 kB)
+  Downloading junitparser-2.8.0-py2.py3-none-any.whl (11 kB)
 Collecting pylint
   Downloading pylint-2.16.2-py3-none-any.whl (530 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 530.7/530.7 KB 1.9 MB/s eta 0:00:00
-Requirement already satisfied: docopt>=0.6.2 in ./lib/python3.8/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.6.2)
-Requirement already satisfied: ruamel.yaml>=0.16.0 in ./lib/python3.8/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.17.21)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 530.7/530.7 KB 4.4 MB/s eta 0:00:00
 Requirement already satisfied: python-dateutil>=2.8.0 in ./lib/python3.8/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (2.8.2)
+Requirement already satisfied: ruamel.yaml>=0.16.0 in ./lib/python3.8/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.17.21)
+Requirement already satisfied: docopt>=0.6.2 in ./lib/python3.8/site-packages (from pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.6.2)
 Collecting python-can>=3.0.0
-  Using cached python_can-4.1.0-py3-none-any.whl (241 kB)
-Requirement already satisfied: six in ./lib/python3.8/site-packages (from pylink-square->-r zephyr/scripts/requirements-base.txt (line 21)) (1.16.0)
+  Downloading python_can-4.1.0-py3-none-any.whl (241 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 241.9/241.9 KB 3.9 MB/s eta 0:00:00
 Collecting future
-  Using cached future-0.18.3.tar.gz (840 kB)
+  Downloading future-0.18.3.tar.gz (840 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 840.9/840.9 KB 5.3 MB/s eta 0:00:00
   Preparing metadata (setup.py) ... done
+Requirement already satisfied: six in ./lib/python3.8/site-packages (from pylink-square->-r zephyr/scripts/requirements-base.txt (line 21)) (1.16.0)
 Requirement already satisfied: setuptools in ./lib/python3.8/site-packages (from west>=0.10.1->-r zephyr/scripts/requirements-base.txt (line 30)) (56.0.0)
 Collecting lxml
   Downloading lxml-4.9.2-cp38-cp38-macosx_10_15_x86_64.whl (4.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 3.5 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 5.3 MB/s eta 0:00:00
 Collecting jinja2
-  Using cached Jinja2-3.1.2-py3-none-any.whl (133 kB)
-Collecting exceptiongroup>=1.0.0rc8
-  Using cached exceptiongroup-1.1.0-py3-none-any.whl (14 kB)
-Collecting pluggy<2.0,>=0.12
-  Using cached pluggy-1.0.0-py2.py3-none-any.whl (13 kB)
-Collecting attrs>=19.2.0
-  Using cached attrs-22.2.0-py3-none-any.whl (60 kB)
+  Downloading Jinja2-3.1.2-py3-none-any.whl (133 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.1/133.1 KB 4.2 MB/s eta 0:00:00
 Collecting tomli>=1.0.0
-  Using cached tomli-2.0.1-py3-none-any.whl (12 kB)
+  Downloading tomli-2.0.1-py3-none-any.whl (12 kB)
+Collecting exceptiongroup>=1.0.0rc8
+  Downloading exceptiongroup-1.1.0-py3-none-any.whl (14 kB)
+Collecting attrs>=19.2.0
+  Downloading attrs-22.2.0-py3-none-any.whl (60 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.0/60.0 KB 1.1 MB/s eta 0:00:00
+Collecting pluggy<2.0,>=0.12
+  Downloading pluggy-1.0.0-py2.py3-none-any.whl (13 kB)
 Collecting iniconfig
-  Using cached iniconfig-2.0.0-py3-none-any.whl (5.9 kB)
-Collecting mypy-extensions>=0.4.3
-  Using cached mypy_extensions-1.0.0-py3-none-any.whl (4.7 kB)
+  Downloading iniconfig-2.0.0-py3-none-any.whl (5.9 kB)
 Collecting typing-extensions>=3.10
-  Using cached typing_extensions-4.4.0-py3-none-any.whl (26 kB)
+  Downloading typing_extensions-4.4.0-py3-none-any.whl (26 kB)
+Collecting mypy-extensions>=0.4.3
+  Downloading mypy_extensions-1.0.0-py3-none-any.whl (4.7 kB)
 Collecting docutils>=0.12
-  Using cached docutils-0.19-py3-none-any.whl (570 kB)
-Collecting sphinxcontrib-htmlhelp>=2.0.0
-  Using cached sphinxcontrib_htmlhelp-2.0.1-py3-none-any.whl (99 kB)
-Collecting sphinxcontrib-jsmath
-  Using cached sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl (5.1 kB)
+  Downloading docutils-0.19-py3-none-any.whl (570 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 570.5/570.5 KB 5.6 MB/s eta 0:00:00
 Collecting sphinxcontrib-applehelp
-  Using cached sphinxcontrib_applehelp-1.0.4-py3-none-any.whl (120 kB)
+  Downloading sphinxcontrib_applehelp-1.0.4-py3-none-any.whl (120 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 120.6/120.6 KB 2.6 MB/s eta 0:00:00
 Collecting requests>=2.5.0
-  Using cached requests-2.28.2-py3-none-any.whl (62 kB)
-Collecting importlib-metadata>=4.8
-  Using cached importlib_metadata-6.0.0-py3-none-any.whl (21 kB)
-Collecting snowballstemmer>=2.0
-  Using cached snowballstemmer-2.2.0-py2.py3-none-any.whl (93 kB)
-Collecting sphinxcontrib-serializinghtml>=1.1.5
-  Using cached sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl (94 kB)
-Collecting babel>=2.9
-  Using cached Babel-2.11.0-py3-none-any.whl (9.5 MB)
-Collecting sphinxcontrib-qthelp
-  Using cached sphinxcontrib_qthelp-1.0.3-py2.py3-none-any.whl (90 kB)
-Collecting alabaster<0.8,>=0.7
-  Using cached alabaster-0.7.13-py3-none-any.whl (13 kB)
+  Downloading requests-2.28.2-py3-none-any.whl (62 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 KB 3.9 MB/s eta 0:00:00
 Collecting sphinxcontrib-devhelp
-  Using cached sphinxcontrib_devhelp-1.0.2-py2.py3-none-any.whl (84 kB)
+  Downloading sphinxcontrib_devhelp-1.0.2-py2.py3-none-any.whl (84 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.7/84.7 KB 3.7 MB/s eta 0:00:00
 Collecting imagesize>=1.3
-  Using cached imagesize-1.4.1-py2.py3-none-any.whl (8.8 kB)
-Collecting sphinxcontrib-jquery!=3.0.0,>=2.0.0
-  Using cached sphinxcontrib_jquery-2.0.0-py3-none-any.whl (3.2 kB)
+  Downloading imagesize-1.4.1-py2.py3-none-any.whl (8.8 kB)
+Collecting snowballstemmer>=2.0
+  Downloading snowballstemmer-2.2.0-py2.py3-none-any.whl (93 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 93.0/93.0 KB 2.5 MB/s eta 0:00:00
+Collecting importlib-metadata>=4.8
+  Downloading importlib_metadata-6.0.0-py3-none-any.whl (21 kB)
+Collecting sphinxcontrib-serializinghtml>=1.1.5
+  Downloading sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl (94 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.0/94.0 KB 3.3 MB/s eta 0:00:00
+Collecting alabaster<0.8,>=0.7
+  Downloading alabaster-0.7.13-py3-none-any.whl (13 kB)
+Collecting sphinxcontrib-htmlhelp>=2.0.0
+  Downloading sphinxcontrib_htmlhelp-2.0.1-py3-none-any.whl (99 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.8/99.8 KB 3.9 MB/s eta 0:00:00
+Collecting babel>=2.9
+  Downloading Babel-2.11.0-py3-none-any.whl (9.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.5/9.5 MB 6.6 MB/s eta 0:00:00
+Collecting sphinxcontrib-jsmath
+  Downloading sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl (5.1 kB)
+Collecting sphinxcontrib-qthelp
+  Downloading sphinxcontrib_qthelp-1.0.3-py2.py3-none-any.whl (90 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 KB 4.0 MB/s eta 0:00:00
 Collecting docutils>=0.12
-  Using cached docutils-0.18.1-py2.py3-none-any.whl (570 kB)
-Collecting pyusb<2.0,>=1.2.1
-  Using cached pyusb-1.2.1-py3-none-any.whl (58 kB)
-Collecting capstone<5.0,>=4.0
-  Using cached capstone-4.0.2.tar.gz (2.0 MB)
-  Preparing metadata (setup.py) ... done
-Collecting intervaltree<4.0,>=3.0.2
-  Using cached intervaltree-3.1.0.tar.gz (32 kB)
-  Preparing metadata (setup.py) ... done
-Collecting libusb-package<2.0,>=1.0
-  Downloading libusb_package-1.0.26.1-cp38-cp38-macosx_10_9_x86_64.whl (63 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 KB 1.8 MB/s eta 0:00:00
-Collecting cmsis-pack-manager<1.0,>=0.4.0
-  Using cached cmsis_pack_manager-0.5.2-py3-none-macosx_10_9_x86_64.whl (3.1 MB)
-Collecting pylink-square
-  Using cached pylink_square-0.14.3-py2.py3-none-any.whl (82 kB)
-Collecting prettytable<4.0,>=2.0
-  Using cached prettytable-3.6.0-py3-none-any.whl (27 kB)
+  Downloading docutils-0.18.1-py2.py3-none-any.whl (570 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 570.0/570.0 KB 6.7 MB/s eta 0:00:00
+Collecting sphinxcontrib-jquery!=3.0.0,>=2.0.0
+  Downloading sphinxcontrib_jquery-2.0.0-py3-none-any.whl (3.2 kB)
 Collecting hidapi<1.0,>=0.10.1
   Downloading hidapi-0.13.1-cp38-cp38-macosx_10_9_x86_64.whl (58 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.9/58.9 KB 2.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.9/58.9 KB 2.6 MB/s eta 0:00:00
+Collecting prettytable<4.0,>=2.0
+  Downloading prettytable-3.6.0-py3-none-any.whl (27 kB)
+Collecting intervaltree<4.0,>=3.0.2
+  Downloading intervaltree-3.1.0.tar.gz (32 kB)
+  Preparing metadata (setup.py) ... done
+Collecting pyusb<2.0,>=1.2.1
+  Downloading pyusb-1.2.1-py3-none-any.whl (58 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.4/58.4 KB 1.5 MB/s eta 0:00:00
+Collecting capstone<5.0,>=4.0
+  Downloading capstone-4.0.2.tar.gz (2.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 5.3 MB/s eta 0:00:00
+  Preparing metadata (setup.py) ... done
+Collecting cmsis-pack-manager<1.0,>=0.4.0
+  Downloading cmsis_pack_manager-0.5.2-py3-none-macosx_10_9_x86_64.whl (3.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 7.0 MB/s eta 0:00:00
+Collecting pylink-square
+  Downloading pylink_square-0.14.3-py2.py3-none-any.whl (82 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.3/82.3 KB 778.8 kB/s eta 0:00:00
 Collecting natsort<9.0,>=8.0.0
-  Using cached natsort-8.2.0-py3-none-any.whl (37 kB)
+  Downloading natsort-8.2.0-py3-none-any.whl (37 kB)
+Collecting libusb-package<2.0,>=1.0
+  Downloading libusb_package-1.0.26.1-cp38-cp38-macosx_10_9_x86_64.whl (63 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 KB 2.6 MB/s eta 0:00:00
 Collecting gitlint-core[trusted-deps]==0.18.0
-  Using cached gitlint_core-0.18.0-py2.py3-none-any.whl (70 kB)
+  Downloading gitlint_core-0.18.0-py2.py3-none-any.whl (70 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.7/70.7 KB 3.1 MB/s eta 0:00:00
 Collecting sh>=1.13.0
   Downloading sh-2.0.2-py3-none-any.whl (38 kB)
-Collecting arrow>=1
-  Using cached arrow-1.2.3-py3-none-any.whl (66 kB)
 Collecting Click>=8
-  Using cached click-8.1.3-py3-none-any.whl (96 kB)
+  Downloading click-8.1.3-py3-none-any.whl (96 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.6/96.6 KB 2.7 MB/s eta 0:00:00
 Collecting arrow>=1
-  Using cached arrow-1.2.1-py3-none-any.whl (63 kB)
+  Downloading arrow-1.2.3-py3-none-any.whl (66 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.4/66.4 KB 1.8 MB/s eta 0:00:00
 Collecting sh>=1.13.0
-  Using cached sh-1.14.2-py2.py3-none-any.whl (40 kB)
+  Downloading sh-1.14.2-py2.py3-none-any.whl (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.8/40.8 KB 2.5 MB/s eta 0:00:00
 Collecting Click>=8
-  Using cached click-8.0.3-py3-none-any.whl (97 kB)
+  Downloading click-8.0.3-py3-none-any.whl (97 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.5/97.5 KB 4.7 MB/s eta 0:00:00
+Collecting arrow>=1
+  Downloading arrow-1.2.1-py3-none-any.whl (63 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.4/63.4 KB 3.9 MB/s eta 0:00:00
 Collecting cryptography>=2.4.2
-  Using cached cryptography-39.0.1-cp36-abi3-macosx_10_12_x86_64.whl (2.9 MB)
+  Downloading cryptography-39.0.1-cp36-abi3-macosx_10_12_x86_64.whl (2.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 5.1 MB/s eta 0:00:00
 Collecting cbor2
   Downloading cbor2-5.4.6-cp38-cp38-macosx_10_9_x86_64.whl (59 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.6/59.6 KB 1.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.6/59.6 KB 2.8 MB/s eta 0:00:00
+Collecting protobuf<5.0dev,>=4.21.6
+  Downloading protobuf-4.21.12-cp37-abi3-macosx_10_9_universal2.whl (486 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 486.2/486.2 KB 3.1 MB/s eta 0:00:00
 Collecting grpcio>=1.51.1
   Downloading grpcio-1.51.1-cp38-cp38-macosx_10_10_x86_64.whl (4.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 7.5 MB/s eta 0:00:00
-Collecting protobuf<5.0dev,>=4.21.6
-  Using cached protobuf-4.21.12-cp37-abi3-macosx_10_9_universal2.whl (486 kB)
-Collecting deprecated
-  Using cached Deprecated-1.2.13-py2.py3-none-any.whl (9.6 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 4.0 MB/s eta 0:00:00
 Collecting pyjwt>=2.4.0
-  Using cached PyJWT-2.6.0-py3-none-any.whl (20 kB)
+  Downloading PyJWT-2.6.0-py3-none-any.whl (20 kB)
 Collecting pynacl>=1.4.0
-  Using cached PyNaCl-1.5.0-cp36-abi3-macosx_10_10_universal2.whl (349 kB)
-Collecting isort<6,>=4.2.5
-  Using cached isort-5.12.0-py3-none-any.whl (91 kB)
-Collecting dill>=0.2
-  Using cached dill-0.3.6-py3-none-any.whl (110 kB)
+  Downloading PyNaCl-1.5.0-cp36-abi3-macosx_10_10_universal2.whl (349 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 349.9/349.9 KB 4.4 MB/s eta 0:00:00
+Collecting deprecated
+  Downloading Deprecated-1.2.13-py2.py3-none-any.whl (9.6 kB)
 Collecting tomlkit>=0.10.1
-  Using cached tomlkit-0.11.6-py3-none-any.whl (35 kB)
-Collecting astroid<=2.16.0-dev0,>=2.14.2
-  Using cached astroid-2.14.2-py3-none-any.whl (273 kB)
+  Downloading tomlkit-0.11.6-py3-none-any.whl (35 kB)
+Collecting dill>=0.2
+  Downloading dill-0.3.6-py3-none-any.whl (110 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 110.5/110.5 KB 2.8 MB/s eta 0:00:00
+Collecting isort<6,>=4.2.5
+  Downloading isort-5.12.0-py3-none-any.whl (91 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 91.2/91.2 KB 1.7 MB/s eta 0:00:00
 Collecting platformdirs>=2.2.0
-  Using cached platformdirs-3.0.0-py3-none-any.whl (14 kB)
+  Downloading platformdirs-3.0.0-py3-none-any.whl (14 kB)
 Collecting mccabe<0.8,>=0.6
-  Using cached mccabe-0.7.0-py2.py3-none-any.whl (7.3 kB)
-Collecting wrapt<2,>=1.11
-  Downloading wrapt-1.14.1-cp38-cp38-macosx_10_9_x86_64.whl (35 kB)
+  Downloading mccabe-0.7.0-py2.py3-none-any.whl (7.3 kB)
+Collecting astroid<=2.16.0-dev0,>=2.14.2
+  Downloading astroid-2.14.2-py3-none-any.whl (273 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 273.8/273.8 KB 5.1 MB/s eta 0:00:00
 Collecting lazy-object-proxy>=1.4.0
   Downloading lazy_object_proxy-1.9.0-cp38-cp38-macosx_10_9_x86_64.whl (22 kB)
+Collecting wrapt<2,>=1.11
+  Downloading wrapt-1.14.1-cp38-cp38-macosx_10_9_x86_64.whl (35 kB)
 Collecting pytz>=2015.7
-  Using cached pytz-2022.7.1-py2.py3-none-any.whl (499 kB)
+  Downloading pytz-2022.7.1-py2.py3-none-any.whl (499 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 499.4/499.4 KB 4.2 MB/s eta 0:00:00
 Collecting cffi
   Downloading cffi-1.15.1-cp38-cp38-macosx_10_9_x86_64.whl (178 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 178.9/178.9 KB 3.8 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 178.9/178.9 KB 3.4 MB/s eta 0:00:00
 Collecting appdirs<2.0,>=1.4
-  Using cached appdirs-1.4.4-py2.py3-none-any.whl (9.6 kB)
+  Downloading appdirs-1.4.4-py2.py3-none-any.whl (9.6 kB)
 Collecting zipp>=0.5
-  Using cached zipp-3.13.0-py3-none-any.whl (6.7 kB)
+  Downloading zipp-3.13.0-py3-none-any.whl (6.7 kB)
 Collecting sortedcontainers<3.0,>=2.0
-  Using cached sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+  Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
 Collecting MarkupSafe>=2.0
   Downloading MarkupSafe-2.1.2-cp38-cp38-macosx_10_9_x86_64.whl (13 kB)
 Collecting wcwidth
-  Using cached wcwidth-0.2.6-py2.py3-none-any.whl (29 kB)
+  Downloading wcwidth-0.2.6-py2.py3-none-any.whl (29 kB)
 Collecting msgpack~=1.0.0
   Downloading msgpack-1.0.4-cp38-cp38-macosx_10_9_x86_64.whl (73 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.6/73.6 KB 2.3 MB/s eta 0:00:00
-Collecting idna<4,>=2.5
-  Using cached idna-3.4-py3-none-any.whl (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.6/73.6 KB 1.6 MB/s eta 0:00:00
 Collecting urllib3<1.27,>=1.21.1
-  Using cached urllib3-1.26.14-py2.py3-none-any.whl (140 kB)
-Collecting certifi>=2017.4.17
-  Using cached certifi-2022.12.7-py3-none-any.whl (155 kB)
+  Downloading urllib3-1.26.14-py2.py3-none-any.whl (140 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.6/140.6 KB 3.6 MB/s eta 0:00:00
 Collecting charset-normalizer<4,>=2
   Downloading charset_normalizer-3.0.1-cp38-cp38-macosx_10_9_x86_64.whl (122 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 122.9/122.9 KB 2.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 122.9/122.9 KB 8.0 MB/s eta 0:00:00
+Collecting idna<4,>=2.5
+  Downloading idna-3.4-py3-none-any.whl (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.5/61.5 KB 6.6 MB/s eta 0:00:00
+Collecting certifi>=2017.4.17
+  Downloading certifi-2022.12.7-py3-none-any.whl (155 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.3/155.3 KB 989.3 kB/s eta 0:00:00
 Requirement already satisfied: ruamel.yaml.clib>=0.2.6 in ./lib/python3.8/site-packages (from ruamel.yaml>=0.16.0->pykwalify->-r zephyr/scripts/requirements-base.txt (line 14)) (0.2.7)
 Collecting pycparser
-  Using cached pycparser-2.21-py2.py3-none-any.whl (118 kB)
+  Downloading pycparser-2.21-py2.py3-none-any.whl (118 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 118.7/118.7 KB 3.9 MB/s eta 0:00:00
 Using legacy 'setup.py install' for progress, since package 'wheel' is not installed.
 Using legacy 'setup.py install' for cbor, since package 'wheel' is not installed.
 Using legacy 'setup.py install' for capstone, since package 'wheel' is not installed.
@@ -263,104 +316,116 @@ Installing collected packages: wcwidth, sortedcontainers, snowballstemmer, sh, p
 Successfully installed Click-8.0.3 MarkupSafe-2.1.2 Pillow-9.4.0 PyGithub-1.57 alabaster-0.7.13 anytree-2.8.0 appdirs-1.4.4 arrow-1.2.1 astroid-2.14.2 attrs-22.2.0 babel-2.11.0 breathe-4.34.0 canopen-2.1.0 capstone-4.0.2 cbor-1.0.0 cbor2-5.4.6 certifi-2022.12.7 cffi-1.15.1 charset-normalizer-3.0.1 clang-format-15.0.7 cmsis-pack-manager-0.5.2 coverage-7.1.0 cryptography-39.0.1 deprecated-1.2.13 dill-0.3.6 docutils-0.18.1 exceptiongroup-1.1.0 future-0.18.3 gcovr-5.2 gitlint-0.18.0 gitlint-core-0.18.0 graphviz-0.20.1 grpcio-1.51.1 grpcio-tools-1.51.1 hidapi-0.13.1 idna-3.4 imagesize-1.4.1 imgtool-1.9.0 importlib-metadata-6.0.0 iniconfig-2.0.0 intelhex-2.3.0 intervaltree-3.1.0 isort-5.12.0 jinja2-3.1.2 junit2html-30.1.3 junitparser-2.8.0 lazy-object-proxy-1.9.0 libusb-package-1.0.26.1 lpc_checksum-2.2.0 lxml-4.9.2 mccabe-0.7.0 mock-5.0.1 msgpack-1.0.4 mypy-1.0.0 mypy-extensions-1.0.0 natsort-8.2.0 platformdirs-3.0.0 pluggy-1.0.0 ply-3.11 prettytable-3.6.0 progress-1.6 protobuf-4.21.12 psutil-5.9.4 pycparser-2.21 pyelftools-0.29 pygments-2.14.0 pyjwt-2.6.0 pylink-square-0.14.3 pylint-2.16.2 pynacl-1.5.0 pyocd-0.34.3 pyserial-3.5 pytest-7.2.1 python-can-4.1.0 python-magic-0.4.27 pytz-2022.7.1 pyusb-1.2.1 requests-2.28.2 sh-1.14.2 snowballstemmer-2.2.0 sortedcontainers-2.4.0 sphinx-5.3.0 sphinx-copybutton-0.5.1 sphinx-notfound-page-0.8.3 sphinx-tabs-3.4.1 sphinx_rtd_theme-1.2.0 sphinxcontrib-applehelp-1.0.4 sphinxcontrib-devhelp-1.0.2 sphinxcontrib-htmlhelp-2.0.1 sphinxcontrib-jquery-2.0.0 sphinxcontrib-jsmath-1.0.1 sphinxcontrib-qthelp-1.0.3 sphinxcontrib-serializinghtml-1.1.5 sphinxcontrib-svg2pdfconverter-1.2.2 tabulate-0.9.0 tomli-2.0.1 tomlkit-0.11.6 typing-extensions-4.4.0 urllib3-1.26.14 wcwidth-0.2.6 wrapt-1.14.1 zipp-3.13.0
 WARNING: You are using pip version 22.0.4; however, version 23.0 is available.
 You should consider upgrading via the '/Users/makmorit/opt/ncs_2.2.0/bin/python -m pip install --upgrade pip' command.
-(ncs_2.2.0) bash-3.2$
-(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ 
+(ncs_2.2.0) bash-3.2$ 
 (ncs_2.2.0) bash-3.2$ pip install -r nrf/scripts/requirements.txt
 Requirement already satisfied: west>=0.14.0 in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-base.txt (line 1)) (0.14.0)
 Requirement already satisfied: cbor2>=5.4.2.post1 in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-build.txt (line 1)) (5.4.6)
 Collecting ecdsa
-  Using cached ecdsa-0.18.0-py2.py3-none-any.whl (142 kB)
+  Downloading ecdsa-0.18.0-py2.py3-none-any.whl (142 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.9/142.9 KB 2.0 MB/s eta 0:00:00
 Requirement already satisfied: imagesize>=1.2.0 in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-build.txt (line 3)) (1.4.1)
 Requirement already satisfied: intelhex in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-build.txt (line 4)) (2.3.0)
 Requirement already satisfied: protobuf in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-build.txt (line 5)) (4.21.12)
 Requirement already satisfied: pylint in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-build.txt (line 6)) (2.16.2)
 Collecting zcbor==0.5.1
-  Using cached zcbor-0.5.1-py3-none-any.whl (67 kB)
+  Downloading zcbor-0.5.1-py3-none-any.whl (67 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 67.4/67.4 KB 2.3 MB/s eta 0:00:00
 Collecting recommonmark==0.6.0
-  Using cached recommonmark-0.6.0-py2.py3-none-any.whl (10 kB)
+  Downloading recommonmark-0.6.0-py2.py3-none-any.whl (10 kB)
 Collecting CommonMark>=0.9.1
-  Using cached commonmark-0.9.1-py2.py3-none-any.whl (51 kB)
+  Downloading commonmark-0.9.1-py2.py3-none-any.whl (51 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.1/51.1 KB 2.4 MB/s eta 0:00:00
 Collecting sphinxcontrib-mscgen>=0.6
-  Using cached sphinxcontrib-mscgen-0.6.tar.gz (6.5 kB)
+  Downloading sphinxcontrib-mscgen-0.6.tar.gz (6.5 kB)
   Preparing metadata (setup.py) ... done
 Collecting sphinx-ncs-theme<1.1,>=1.0.3
-  Using cached sphinx_ncs_theme-1.0.13-py3-none-any.whl (92 kB)
+  Downloading sphinx_ncs_theme-1.0.13-py3-none-any.whl (92 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.4/92.4 KB 2.4 MB/s eta 0:00:00
 Collecting m2r2>=0.3.2
-  Using cached m2r2-0.3.3.post2-py3-none-any.whl (11 kB)
+  Downloading m2r2-0.3.3.post2-py3-none-any.whl (11 kB)
 Collecting sphinxcontrib-plantuml
-  Using cached sphinxcontrib-plantuml-0.24.1.tar.gz (12 kB)
+  Downloading sphinxcontrib-plantuml-0.24.1.tar.gz (12 kB)
   Preparing metadata (setup.py) ... done
 Collecting pygit2<=1.10
   Downloading pygit2-1.10.0-cp38-cp38-macosx_10_9_x86_64.whl (5.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 3.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 1.2 MB/s eta 0:00:00
 Requirement already satisfied: pyyaml in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-doc.txt (line 8)) (6.0)
 Collecting azure-storage-blob
-  Using cached azure_storage_blob-12.14.1-py3-none-any.whl (383 kB)
+  Downloading azure_storage_blob-12.14.1-py3-none-any.whl (383 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 383.2/383.2 KB 1.4 MB/s eta 0:00:00
 Collecting sphinx_markdown_tables
-  Using cached sphinx_markdown_tables-0.0.17-py3-none-any.whl (28 kB)
+  Downloading sphinx_markdown_tables-0.0.17-py3-none-any.whl (28 kB)
 Requirement already satisfied: breathe>=4.34 in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-doc.txt (line 11)) (4.34.0)
 Collecting sphinx-togglebutton
-  Using cached sphinx_togglebutton-0.3.2-py3-none-any.whl (8.2 kB)
+  Downloading sphinx_togglebutton-0.3.2-py3-none-any.whl (8.2 kB)
 Requirement already satisfied: sphinx-notfound-page in ./lib/python3.8/site-packages (from -r nrf/scripts/requirements-doc.txt (line 13)) (0.8.3)
 Collecting regex>=2022.3.15
   Downloading regex-2022.10.31-cp38-cp38-macosx_10_9_x86_64.whl (294 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.0/294.0 KB 3.9 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.0/294.0 KB 1.6 MB/s eta 0:00:00
 Requirement already satisfied: sphinx>=1.3.1 in ./lib/python3.8/site-packages (from recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (5.3.0)
 Requirement already satisfied: docutils>=0.11 in ./lib/python3.8/site-packages (from recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (0.18.1)
-Requirement already satisfied: pykwalify in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (1.8.0)
-Requirement already satisfied: setuptools in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (56.0.0)
 Requirement already satisfied: colorama in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.4.6)
 Requirement already satisfied: packaging in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (23.0)
+Requirement already satisfied: setuptools in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (56.0.0)
+Requirement already satisfied: pykwalify in ./lib/python3.8/site-packages (from west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (1.8.0)
 Requirement already satisfied: six>=1.9.0 in ./lib/python3.8/site-packages (from ecdsa->-r nrf/scripts/requirements-build.txt (line 2)) (1.16.0)
-Requirement already satisfied: astroid<=2.16.0-dev0,>=2.14.2 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (2.14.2)
-Requirement already satisfied: tomli>=1.1.0 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (2.0.1)
-Requirement already satisfied: mccabe<0.8,>=0.6 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.7.0)
-Requirement already satisfied: dill>=0.2 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.3.6)
-Requirement already satisfied: isort<6,>=4.2.5 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (5.12.0)
-Requirement already satisfied: tomlkit>=0.10.1 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.11.6)
 Requirement already satisfied: platformdirs>=2.2.0 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (3.0.0)
+Requirement already satisfied: isort<6,>=4.2.5 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (5.12.0)
+Requirement already satisfied: mccabe<0.8,>=0.6 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.7.0)
+Requirement already satisfied: astroid<=2.16.0-dev0,>=2.14.2 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (2.14.2)
 Requirement already satisfied: typing-extensions>=3.10.0 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (4.4.0)
+Requirement already satisfied: tomli>=1.1.0 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (2.0.1)
+Requirement already satisfied: dill>=0.2 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.3.6)
+Requirement already satisfied: tomlkit>=0.10.1 in ./lib/python3.8/site-packages (from pylint->-r nrf/scripts/requirements-build.txt (line 6)) (0.11.6)
 Requirement already satisfied: sphinx-rtd-theme~=1.0 in ./lib/python3.8/site-packages (from sphinx-ncs-theme<1.1,>=1.0.3->-r nrf/scripts/requirements-doc.txt (line 4)) (1.2.0)
-Collecting mistune==0.8.4
-  Using cached mistune-0.8.4-py2.py3-none-any.whl (16 kB)
 Collecting docutils>=0.11
   Using cached docutils-0.19-py3-none-any.whl (570 kB)
+Collecting mistune==0.8.4
+  Downloading mistune-0.8.4-py2.py3-none-any.whl (16 kB)
 Requirement already satisfied: cffi>=1.9.1 in ./lib/python3.8/site-packages (from pygit2<=1.10->-r nrf/scripts/requirements-doc.txt (line 7)) (1.15.1)
-Collecting msrest>=0.7.1
-  Using cached msrest-0.7.1-py3-none-any.whl (85 kB)
-Collecting azure-core<2.0.0,>=1.24.2
-  Using cached azure_core-1.26.3-py3-none-any.whl (174 kB)
 Requirement already satisfied: cryptography>=2.1.4 in ./lib/python3.8/site-packages (from azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (39.0.1)
+Collecting azure-core<2.0.0,>=1.24.2
+  Downloading azure_core-1.26.3-py3-none-any.whl (174 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 174.5/174.5 KB 1.7 MB/s eta 0:00:00
+Collecting msrest>=0.7.1
+  Downloading msrest-0.7.1-py3-none-any.whl (85 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.4/85.4 KB 1.5 MB/s eta 0:00:00
 Collecting markdown>=3.4
-  Using cached Markdown-3.4.1-py3-none-any.whl (93 kB)
+  Downloading Markdown-3.4.1-py3-none-any.whl (93 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 93.3/93.3 KB 1.4 MB/s eta 0:00:00
 Collecting wheel
-  Using cached wheel-0.38.4-py3-none-any.whl (36 kB)
+  Downloading wheel-0.38.4-py3-none-any.whl (36 kB)
 Requirement already satisfied: wrapt<2,>=1.11 in ./lib/python3.8/site-packages (from astroid<=2.16.0-dev0,>=2.14.2->pylint->-r nrf/scripts/requirements-build.txt (line 6)) (1.14.1)
 Requirement already satisfied: lazy-object-proxy>=1.4.0 in ./lib/python3.8/site-packages (from astroid<=2.16.0-dev0,>=2.14.2->pylint->-r nrf/scripts/requirements-build.txt (line 6)) (1.9.0)
 Requirement already satisfied: requests>=2.18.4 in ./lib/python3.8/site-packages (from azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (2.28.2)
 Requirement already satisfied: pycparser in ./lib/python3.8/site-packages (from cffi>=1.9.1->pygit2<=1.10->-r nrf/scripts/requirements-doc.txt (line 7)) (2.21)
 Requirement already satisfied: importlib-metadata>=4.4 in ./lib/python3.8/site-packages (from markdown>=3.4->sphinx_markdown_tables->-r nrf/scripts/requirements-doc.txt (line 10)) (6.0.0)
 Requirement already satisfied: certifi>=2017.4.17 in ./lib/python3.8/site-packages (from msrest>=0.7.1->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (2022.12.7)
-Collecting isodate>=0.6.0
-  Using cached isodate-0.6.1-py2.py3-none-any.whl (41 kB)
 Collecting requests-oauthlib>=0.5.0
-  Using cached requests_oauthlib-1.3.1-py2.py3-none-any.whl (23 kB)
-Requirement already satisfied: sphinxcontrib-qthelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.3)
-Requirement already satisfied: Pygments>=2.12 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.14.0)
-Requirement already satisfied: sphinxcontrib-devhelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.2)
+  Downloading requests_oauthlib-1.3.1-py2.py3-none-any.whl (23 kB)
+Collecting isodate>=0.6.0
+  Downloading isodate-0.6.1-py2.py3-none-any.whl (41 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.7/41.7 KB 1.9 MB/s eta 0:00:00
 Requirement already satisfied: sphinxcontrib-serializinghtml>=1.1.5 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.1.5)
+Requirement already satisfied: Pygments>=2.12 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.14.0)
 Requirement already satisfied: snowballstemmer>=2.0 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.2.0)
-Requirement already satisfied: Jinja2>=3.0 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (3.1.2)
 Requirement already satisfied: alabaster<0.8,>=0.7 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (0.7.13)
+Requirement already satisfied: Jinja2>=3.0 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (3.1.2)
+Requirement already satisfied: sphinxcontrib-applehelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.4)
+Requirement already satisfied: sphinxcontrib-qthelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.3)
 Requirement already satisfied: sphinxcontrib-jsmath in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.1)
 Requirement already satisfied: babel>=2.9 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.11.0)
-Requirement already satisfied: sphinxcontrib-applehelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.4)
 Requirement already satisfied: sphinxcontrib-htmlhelp>=2.0.0 in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.0.1)
+Requirement already satisfied: sphinxcontrib-devhelp in ./lib/python3.8/site-packages (from sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (1.0.2)
 Requirement already satisfied: sphinxcontrib-jquery!=3.0.0,>=2.0.0 in ./lib/python3.8/site-packages (from sphinx-rtd-theme~=1.0->sphinx-ncs-theme<1.1,>=1.0.3->-r nrf/scripts/requirements-doc.txt (line 4)) (2.0.0)
 Collecting sphinx-rtd-theme~=1.0
-  Using cached sphinx_rtd_theme-1.1.1-py2.py3-none-any.whl (2.8 MB)
-  Using cached sphinx_rtd_theme-1.1.0-py2.py3-none-any.whl (2.8 MB)
-  Using cached sphinx_rtd_theme-1.0.0-py2.py3-none-any.whl (2.8 MB)
+  Downloading sphinx_rtd_theme-1.1.1-py2.py3-none-any.whl (2.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 1.3 MB/s eta 0:00:00
+  Downloading sphinx_rtd_theme-1.1.0-py2.py3-none-any.whl (2.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 1.1 MB/s eta 0:00:00
+  Downloading sphinx_rtd_theme-1.0.0-py2.py3-none-any.whl (2.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 1.1 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of packaging to determine which version is compatible with other requirements. This could take a while.
 Collecting packaging
   Using cached packaging-23.0-py3-none-any.whl (42 kB)
@@ -368,50 +433,50 @@ INFO: pip is looking at multiple versions of sphinx to determine which version i
 Collecting sphinx>=1.3.1
   Using cached sphinx-5.3.0-py3-none-any.whl (3.2 MB)
   Downloading sphinx-5.2.3-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 5.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.1 MB/s eta 0:00:00
   Downloading sphinx-5.2.2-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 6.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.2 MB/s eta 0:00:00
   Downloading sphinx-5.2.1-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 6.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.2 MB/s eta 0:00:00
   Downloading sphinx-5.2.0.post0-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 6.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 982.6 kB/s eta 0:00:00
   Downloading sphinx-5.2.0-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 5.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-5.1.1-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 4.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.2 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of sphinx to determine which version is compatible with other requirements. This could take a while.
   Downloading Sphinx-5.1.0-py3-none-any.whl (3.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 5.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-5.0.2-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 6.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.1 MB/s eta 0:00:00
   Downloading Sphinx-5.0.1-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 5.9 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.1 MB/s eta 0:00:00
   Downloading Sphinx-4.5.0-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 7.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.4.0-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 7.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.3.2-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 7.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.3.1-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 7.6 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.1 MB/s eta 0:00:00
   Downloading Sphinx-4.3.0-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 5.8 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.3 MB/s eta 0:00:00
   Downloading Sphinx-4.2.0-py3-none-any.whl (3.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 3.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 1.1 MB/s eta 0:00:00
   Downloading Sphinx-4.1.2-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 5.6 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.1.1-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 6.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.3 MB/s eta 0:00:00
   Downloading Sphinx-4.1.0-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 4.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.0.3-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 6.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.0.2-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 6.7 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.0.1-py3-none-any.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 5.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
   Downloading Sphinx-4.0.0-py3-none-any.whl (2.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 6.5 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 1.2 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of six to determine which version is compatible with other requirements. This could take a while.
 Collecting six>=1.9.0
   Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
@@ -420,9 +485,9 @@ INFO: This is taking longer than usual. You might need to provide the dependency
 INFO: pip is looking at multiple versions of regex to determine which version is compatible with other requirements. This could take a while.
 Collecting regex>=2022.3.15
   Downloading regex-2022.9.13-cp38-cp38-macosx_10_9_x86_64.whl (294 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.0/294.0 KB 4.4 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.0/294.0 KB 819.6 kB/s eta 0:00:00
   Downloading regex-2022.9.11-cp38-cp38-macosx_10_9_x86_64.whl (290 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 290.2/290.2 KB 1.5 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 290.2/290.2 KB 1.4 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of platformdirs to determine which version is compatible with other requirements. This could take a while.
 Collecting platformdirs>=2.2.0
   Using cached platformdirs-3.0.0-py3-none-any.whl (14 kB)
@@ -435,12 +500,12 @@ Collecting mccabe<0.8,>=0.6
 INFO: pip is looking at multiple versions of markdown to determine which version is compatible with other requirements. This could take a while.
 Collecting markdown>=3.4
   Downloading Markdown-3.4-py3-none-any.whl (93 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 93.3/93.3 KB 2.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 93.3/93.3 KB 978.8 kB/s eta 0:00:00
 INFO: pip is looking at multiple versions of isort to determine which version is compatible with other requirements. This could take a while.
 Collecting isort<6,>=4.2.5
   Using cached isort-5.12.0-py3-none-any.whl (91 kB)
   Downloading isort-5.11.5-py3-none-any.whl (104 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.1/104.1 KB 2.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 104.1/104.1 KB 1.6 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of docutils to determine which version is compatible with other requirements. This could take a while.
 INFO: pip is looking at multiple versions of dill to determine which version is compatible with other requirements. This could take a while.
 Collecting dill>=0.2
@@ -448,27 +513,27 @@ Collecting dill>=0.2
 INFO: pip is looking at multiple versions of six to determine which version is compatible with other requirements. This could take a while.
 INFO: pip is looking at multiple versions of packaging to determine which version is compatible with other requirements. This could take a while.
   Downloading dill-0.3.5.1-py2.py3-none-any.whl (95 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 95.8/95.8 KB 2.8 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 95.8/95.8 KB 971.2 kB/s eta 0:00:00
 INFO: pip is looking at multiple versions of cryptography to determine which version is compatible with other requirements. This could take a while.
 Collecting cryptography>=2.1.4
   Using cached cryptography-39.0.1-cp36-abi3-macosx_10_12_x86_64.whl (2.9 MB)
 INFO: pip is looking at multiple versions of regex to determine which version is compatible with other requirements. This could take a while.
   Downloading cryptography-39.0.0-cp36-abi3-macosx_10_12_x86_64.whl (2.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 5.8 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 1.2 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of cffi to determine which version is compatible with other requirements. This could take a while.
 Collecting cffi>=1.9.1
   Using cached cffi-1.15.1-cp38-cp38-macosx_10_9_x86_64.whl (178 kB)
 INFO: pip is looking at multiple versions of platformdirs to determine which version is compatible with other requirements. This could take a while.
   Downloading cffi-1.15.0-cp38-cp38-macosx_10_9_x86_64.whl (178 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 178.7/178.7 KB 2.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 178.7/178.7 KB 1.2 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of azure-core to determine which version is compatible with other requirements. This could take a while.
 Collecting azure-core<2.0.0,>=1.24.2
   Downloading azure_core-1.26.2-py3-none-any.whl (173 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.8/173.8 KB 3.5 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.8/173.8 KB 1.3 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of msrest to determine which version is compatible with other requirements. This could take a while.
 INFO: pip is looking at multiple versions of mccabe to determine which version is compatible with other requirements. This could take a while.
   Downloading azure_core-1.26.1-py3-none-any.whl (172 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 172.6/172.6 KB 1.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 172.6/172.6 KB 1.4 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of astroid to determine which version is compatible with other requirements. This could take a while.
 Collecting astroid<=2.16.0-dev0,>=2.14.2
   Using cached astroid-2.14.2-py3-none-any.whl (273 kB)
@@ -513,7 +578,7 @@ INFO: This is taking longer than usual. You might need to provide the dependency
   Downloading sphinx_togglebutton-0.0.1-py3-none-any.whl (10 kB)
 Collecting flit
   Downloading flit-3.8.0-py3-none-any.whl (49 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.5/49.5 KB 2.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.5/49.5 KB 1.4 MB/s eta 0:00:00
 INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
 INFO: pip is looking at multiple versions of breathe to determine which version is compatible with other requirements. This could take a while.
 Collecting breathe>=4.34
@@ -527,22 +592,22 @@ Collecting sphinx_markdown_tables
 INFO: pip is looking at multiple versions of azure-storage-blob to determine which version is compatible with other requirements. This could take a while.
 Collecting azure-storage-blob
   Downloading azure_storage_blob-12.14.0-py3-none-any.whl (383 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 383.2/383.2 KB 4.0 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 383.2/383.2 KB 1.7 MB/s eta 0:00:00
   Downloading azure_storage_blob-12.13.1-py3-none-any.whl (377 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 377.4/377.4 KB 4.7 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 377.4/377.4 KB 1.5 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of pyyaml to determine which version is compatible with other requirements. This could take a while.
 Collecting pyyaml
   Using cached PyYAML-6.0-cp38-cp38-macosx_10_9_x86_64.whl (192 kB)
   Downloading PyYAML-5.4.1-cp38-cp38-macosx_10_9_x86_64.whl (253 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 253.3/253.3 KB 4.9 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 253.3/253.3 KB 839.7 kB/s eta 0:00:00
 INFO: pip is looking at multiple versions of breathe to determine which version is compatible with other requirements. This could take a while.
 INFO: pip is looking at multiple versions of pygit2 to determine which version is compatible with other requirements. This could take a while.
 Collecting pygit2<=1.10
   Downloading pygit2-1.9.2-cp38-cp38-macosx_10_9_x86_64.whl (5.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 4.2 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 1.2 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of sphinx-markdown-tables to determine which version is compatible with other requirements. This could take a while.
   Downloading pygit2-1.9.1-cp38-cp38-macosx_10_9_x86_64.whl (5.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 4.8 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 1.1 MB/s eta 0:00:00
 INFO: pip is looking at multiple versions of sphinxcontrib-plantuml to determine which version is compatible with other requirements. This could take a while.
 Collecting sphinxcontrib-plantuml
   Downloading sphinxcontrib-plantuml-0.24.tar.gz (12 kB)
@@ -554,17 +619,18 @@ INFO: pip is looking at multiple versions of mistune to determine which version 
 INFO: pip is looking at multiple versions of m2r2 to determine which version is compatible with other requirements. This could take a while.
 Collecting m2r2>=0.3.2
   Downloading m2r2-0.3.2-py3-none-any.whl (11 kB)
-Requirement already satisfied: python-dateutil>=2.8.0 in ./lib/python3.8/site-packages (from pykwalify->west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (2.8.2)
 Requirement already satisfied: ruamel.yaml>=0.16.0 in ./lib/python3.8/site-packages (from pykwalify->west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.17.21)
+Requirement already satisfied: python-dateutil>=2.8.0 in ./lib/python3.8/site-packages (from pykwalify->west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (2.8.2)
 Requirement already satisfied: docopt>=0.6.2 in ./lib/python3.8/site-packages (from pykwalify->west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.6.2)
 Requirement already satisfied: pytz>=2015.7 in ./lib/python3.8/site-packages (from babel>=2.9->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2022.7.1)
 Requirement already satisfied: zipp>=0.5 in ./lib/python3.8/site-packages (from importlib-metadata>=4.4->markdown>=3.4->sphinx_markdown_tables->-r nrf/scripts/requirements-doc.txt (line 10)) (3.13.0)
 Requirement already satisfied: MarkupSafe>=2.0 in ./lib/python3.8/site-packages (from Jinja2>=3.0->sphinx>=1.3.1->recommonmark==0.6.0->-r nrf/scripts/requirements-doc.txt (line 1)) (2.1.2)
-Requirement already satisfied: idna<4,>=2.5 in ./lib/python3.8/site-packages (from requests>=2.18.4->azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (3.4)
-Requirement already satisfied: charset-normalizer<4,>=2 in ./lib/python3.8/site-packages (from requests>=2.18.4->azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (3.0.1)
 Requirement already satisfied: urllib3<1.27,>=1.21.1 in ./lib/python3.8/site-packages (from requests>=2.18.4->azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (1.26.14)
+Requirement already satisfied: charset-normalizer<4,>=2 in ./lib/python3.8/site-packages (from requests>=2.18.4->azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (3.0.1)
+Requirement already satisfied: idna<4,>=2.5 in ./lib/python3.8/site-packages (from requests>=2.18.4->azure-core<2.0.0,>=1.24.2->azure-storage-blob->-r nrf/scripts/requirements-doc.txt (line 9)) (3.4)
 Collecting oauthlib>=3.0.0
-  Using cached oauthlib-3.2.2-py3-none-any.whl (151 kB)
+  Downloading oauthlib-3.2.2-py3-none-any.whl (151 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 151.7/151.7 KB 917.8 kB/s eta 0:00:00
 Requirement already satisfied: ruamel.yaml.clib>=0.2.6 in ./lib/python3.8/site-packages (from ruamel.yaml>=0.16.0->pykwalify->west>=0.14.0->-r nrf/scripts/requirements-base.txt (line 1)) (0.2.7)
 Using legacy 'setup.py install' for sphinxcontrib-mscgen, since package 'wheel' is not installed.
 Using legacy 'setup.py install' for sphinxcontrib-plantuml, since package 'wheel' is not installed.
@@ -574,8 +640,8 @@ Installing collected packages: mistune, CommonMark, wheel, regex, oauthlib, m2r2
 Successfully installed CommonMark-0.9.1 azure-core-1.26.3 azure-storage-blob-12.14.1 ecdsa-0.18.0 isodate-0.6.1 m2r2-0.3.2 markdown-3.4.1 mistune-0.8.4 msrest-0.7.1 oauthlib-3.2.2 pygit2-1.10.0 recommonmark-0.6.0 regex-2022.10.31 requests-oauthlib-1.3.1 sphinx-ncs-theme-1.0.13 sphinx-togglebutton-0.3.2 sphinx_markdown_tables-0.0.17 sphinxcontrib-mscgen-0.6 sphinxcontrib-plantuml-0.24.1 wheel-0.38.4 zcbor-0.5.1
 WARNING: You are using pip version 22.0.4; however, version 23.0 is available.
 You should consider upgrading via the '/Users/makmorit/opt/ncs_2.2.0/bin/python -m pip install --upgrade pip' command.
-(ncs_2.2.0) bash-3.2$
-(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ 
+(ncs_2.2.0) bash-3.2$ 
 (ncs_2.2.0) bash-3.2$ pip install -r bootloader/mcuboot/scripts/requirements.txt
 Requirement already satisfied: cryptography>=2.6 in ./lib/python3.8/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 1)) (39.0.1)
 Requirement already satisfied: intelhex in ./lib/python3.8/site-packages (from -r bootloader/mcuboot/scripts/requirements.txt (line 2)) (2.3.0)
@@ -585,5 +651,5 @@ Requirement already satisfied: cffi>=1.12 in ./lib/python3.8/site-packages (from
 Requirement already satisfied: pycparser in ./lib/python3.8/site-packages (from cffi>=1.12->cryptography>=2.6->-r bootloader/mcuboot/scripts/requirements.txt (line 1)) (2.21)
 WARNING: You are using pip version 22.0.4; however, version 23.0 is available.
 You should consider upgrading via the '/Users/makmorit/opt/ncs_2.2.0/bin/python -m pip install --upgrade pip' command.
-(ncs_2.2.0) bash-3.2$
-(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ 
+(ncs_2.2.0) bash-3.2$ 
