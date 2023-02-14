@@ -1,8 +1,8 @@
-# Visual Ctudio Codeインストール手順
+# Visual Studio Codeインストール手順
 
 最終更新日：2023/02/14
 
-コードエディター「Visual Ctudio Code」のインストール手順について記載します。
+コードエディター「Visual Studio Code」のインストール手順について記載します。
 
 ## 使用したシステム
 
