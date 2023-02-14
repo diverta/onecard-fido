@@ -1,6 +1,17 @@
 # nRF Connect SDK動作確認手順書
 
+最終更新日：2023/02/14
+
 macOSにインストールされた「[nRF Connect SDK v2.2.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/)」の動作確認手順について掲載します。
+
+## 使用したシステム
+
+PC: iMac (Retina 5K, 27-inch, 2019)<br>
+OS: macOS 12.6.3
+
+スマートフォン: HUAWEI nova lite 2<br>
+OS: Android 8.0.0<br>
+（サンプルアプリの動作確認時に使用）
 
 ## 手順の概要
 
@@ -42,7 +53,7 @@ bash-3.2$
 ### ビルド用スクリプトを配置
 
 ビルド用スクリプト`westbuild.sh`を作成し、プロジェクトフォルダー配下に配置したのち、実行権限を付与します。<br>
-（実行時のスクリプト`westbuild.sh`は<b>[こちら](peripheral_uart/westbuild.sh)</b>）
+（実行時のスクリプト`westbuild.sh`は<b>[こちら](assets01/westbuild.sh)</b>）
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF5340_app/peripheral_uart
@@ -66,7 +77,7 @@ bash-3.2$
 ### ビルド実行
 
 ビルド用スクリプト`westbuild.sh`を実行し、プロジェクトをビルド（コンパイル、リンク）します。<br>
-（実行時のログ`westbuild.log`は<b>[こちら](peripheral_uart/westbuild.log)</b>）
+（実行時のログ`westbuild.log`は<b>[こちら](assets01/westbuild.log)</b>）
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF5340_app/peripheral_uart
@@ -79,7 +90,7 @@ bash-3.2$
 ### 書込み
 
 ビルド用スクリプト`westbuild.sh -f`を実行し、ビルドしたファームウェアを、nRF5340に書込みます。<br>
-（実行時のログ`westbuild.log`は<b>[こちら](peripheral_uart/westbuild_f.log)</b>）
+（実行時のログ`westbuild.log`は<b>[こちら](assets01/westbuild_f.log)</b>）
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF5340_app/peripheral_uart
