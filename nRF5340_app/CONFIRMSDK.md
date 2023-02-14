@@ -1,6 +1,17 @@
 # nRF Connect SDK動作確認手順書
 
-macOSにインストールされた「[nRF Connect SDK v1.9.1](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/)」の動作確認手順について掲載します。
+最終更新日：2023/02/14
+
+macOSにインストールされた「[nRF Connect SDK v2.2.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/)」の動作確認手順について掲載します。
+
+## 使用したシステム
+
+PC: iMac (Retina 5K, 27-inch, 2019)<br>
+OS: macOS 12.6.3
+
+スマートフォン: HUAWEI nova lite 2<br>
+OS: Android 8.0.0<br>
+（サンプルアプリの動作確認時に使用）
 
 ## 手順の概要
 
@@ -8,7 +19,7 @@ macOSにインストールされた「[nRF Connect SDK v1.9.1](https://developer
 本手順書で必要となる各種ソフトウェアを、macOSにインストールします。
 
 - <b>サンプルアプリのビルド／書込み</b><br>
-Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
+Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
 
 - <b>サンプルアプリの動作確認</b><br>
 Androidアプリ「nRF Connect」を使用し、nRF5340に書き込んだ「Peripheral UART」が正常に動作することを確認します。
@@ -20,7 +31,7 @@ Androidアプリ「nRF Connect」を使用し、nRF5340に書き込んだ「Peri
 
 ## サンプルアプリのビルド／書込み
 
-Nordic社から公開されているサンプルアプリ「[Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.9.1/nrf/samples/bluetooth/peripheral_uart/README.html#bluetooth-peripheral-uart)」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
+Nordic社から公開されているサンプルアプリ「Peripheral UART」を、nRF Connect SDKでビルドし、nRF5340に書込みます。
 
 ### サンプルアプリのコピー
 
@@ -28,7 +39,7 @@ nRF Connect SDKのサンプルアプリを、適宜フォルダーにコピー�
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF5340_app/
-bash-3.2$ cp -pr ${HOME}/opt/ncs_1.9.1/nrf/samples/bluetooth/peripheral_uart .
+bash-3.2$ cp -pr ${HOME}/opt/ncs_2.2.0/nrf/samples/bluetooth/peripheral_uart .
 bash-3.2$ ls -al
 total 344
 drwxr-xr-x  22 makmorit  staff    704  3 16 10:05 .
@@ -94,7 +105,9 @@ bash-3.2$
 nRF5340開発ボード（`PCA10095`）に接続し、`screen`コマンドでデバッグプリントを監視すると、ファームウェア書込み完了後に以下のようなログが出力されます。
 
 ```
-*** Booting Zephyr OS build v2.7.99-ncs1-1  ***
+bash-3.2$ screen /dev/tty.usbmodem0010500847913 115200
+
+*** Booting Zephyr OS build v3.2.99-ncs1 ***
 Starting Nordic UART service example
 ```
 
