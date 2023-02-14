@@ -88,12 +88,9 @@ pip3 install west
 GitHubリポジトリーから「nRF Connect SDK v2.2.0」の全ファイルイメージをチェックアウトします。<br>
 ターミナルから以下のコマンドを実行します。（実行例は<b>[こちら](assets01/west.log)</b>）
 
-（注：`west zephyr-export`の実行前に、`cmake`コマンドへの実行パスを通しています）
-
 ```
 west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.2.0
 west update
-PATH=${PATH}:/Applications/CMake.app/Contents/bin
 west zephyr-export
 ```
 
@@ -116,19 +113,19 @@ pip3 install -r bootloader/mcuboot/scripts/requirements.txt
 以下は実行例になります。
 
 ```
-(ncs_1.9.1) bash-3.2$ cd zephyr
-(ncs_1.9.1) bash-3.2$ west completion bash > ../west-completion.bash
-(ncs_1.9.1) bash-3.2$ cd ..
-(ncs_1.9.1) bash-3.2$ ls -al
+(ncs_2.2.0) bash-3.2$ cd zephyr
+(ncs_2.2.0) bash-3.2$ west completion bash > ../west-completion.bash
+(ncs_2.2.0) bash-3.2$ cd ..
+(ncs_2.2.0) bash-3.2$ ls -al
 total 120
-drwxr-xr-x  17 makmorit  staff    544  3 16 09:58 .
-drwxr-xr-x  15 makmorit  staff    480  3 16 09:47 ..
-drwxr-xr-x   3 makmorit  staff     96  3 16 09:49 .west
-：
--rw-r--r--   1 makmorit  staff  17789  3 16 09:58 west-completion.bash
-drwxr-xr-x  47 makmorit  staff   1504  3 16 09:50 zephyr
-(ncs_1.9.1) bash-3.2$
-(ncs_1.9.1) bash-3.2$ deactivate
+drwxr-xr-x  17 makmorit  staff    544  2 14 09:35 .
+drwxr-xr-x   4 makmorit  staff    128  2 14 09:11 ..
+drwxr-xr-x   3 makmorit  staff     96  2 14 09:13 .west
+:
+-rw-r--r--   1 makmorit  staff  19786  2 14 09:35 west-completion.bash
+drwxr-xr-x  45 makmorit  staff   1440  2 14 09:15 zephyr
+(ncs_2.2.0) bash-3.2$
+(ncs_2.2.0) bash-3.2$ deactivate
 bash-3.2$
 ```
 
