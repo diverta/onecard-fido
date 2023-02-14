@@ -105,28 +105,4 @@ pip3 install -r nrf/scripts/requirements.txt
 pip3 install -r bootloader/mcuboot/scripts/requirements.txt
 ```
 
-#### westコマンドのカスタマイズ
-
-`west`コマンドに対し、ビルド用サブコマンド追加等のカスタマイズを行います。<br>
-`Zephyr`フォルダー配下で、コマンド`west completion bash`を実行します。
-
-以下は実行例になります。
-
-```
-(ncs_2.2.0) bash-3.2$ cd zephyr
-(ncs_2.2.0) bash-3.2$ west completion bash > ../west-completion.bash
-(ncs_2.2.0) bash-3.2$ cd ..
-(ncs_2.2.0) bash-3.2$ ls -al
-total 120
-drwxr-xr-x  17 makmorit  staff    544  2 14 09:35 .
-drwxr-xr-x   4 makmorit  staff    128  2 14 09:11 ..
-drwxr-xr-x   3 makmorit  staff     96  2 14 09:13 .west
-:
--rw-r--r--   1 makmorit  staff  19786  2 14 09:35 west-completion.bash
-drwxr-xr-x  45 makmorit  staff   1440  2 14 09:15 zephyr
-(ncs_2.2.0) bash-3.2$
-(ncs_2.2.0) bash-3.2$ deactivate
-bash-3.2$
-```
-
 以上で、nRF Connect SDKのインストールは完了です。
