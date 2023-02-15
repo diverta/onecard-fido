@@ -71,6 +71,8 @@ target_sources(app PRIVATE
     ../../TFT/tiny_tft_lib/tiny_tft_const.c
 )
 target_include_directories(app PRIVATE 
+    $ENV{NCS_HOME}/modules/lib/tinycbor/include
+    $ENV{ZEPHYR_BASE}/subsys/settings/include
     include
     ../../FIDO2Device/ctap2_lib
     ../../FIDO2Device/fido2_lib
