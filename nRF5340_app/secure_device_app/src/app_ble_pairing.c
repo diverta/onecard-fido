@@ -59,8 +59,11 @@ static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
     .pairing_confirm = pairing_confirm,
-    .pairing_failed = pairing_failed,
     .cancel = pairing_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_non_pair = {
+    .pairing_failed = pairing_failed,
     .bond_deleted = bond_deleted,
 };
 
@@ -94,6 +97,9 @@ static const struct bt_conn_auth_cb cb_for_pair = {
     .passkey_display = auth_passkey_display,
     .passkey_entry = NULL,
     .cancel = auth_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_pair = {
     .pairing_complete = auth_pairing_complete,
     .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
@@ -111,12 +117,22 @@ bool register_callbacks(void)
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
             return false;
         }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
+            return false;
+        }
 
     } else {
         // 非ペアリングモード時のコールバックを設定
         rc = bt_conn_auth_cb_register(&cb_for_non_pair);
         if (rc != 0) {
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
+            return false;
+        }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_non_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
             return false;
         }
     }
