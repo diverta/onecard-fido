@@ -5,10 +5,10 @@
  * Created on 2021/04/06, 14:50
  */
 #include <zephyr/kernel.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
-#include <bluetooth/gatt.h>
-#include <settings/settings.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/gatt.h>
+#include <zephyr/settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_pairing.h"
@@ -17,7 +17,7 @@
 #include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
 
 // Work for BT address string
@@ -27,7 +27,7 @@ static char addr_str_buf_2[BT_ADDR_LE_STR_LEN];
 //
 // パスキー関連
 //
-#include <drivers/hwinfo.h>
+#include <zephyr/drivers/hwinfo.h>
 
 // Work for hardware ID & passkey
 static uint8_t  m_hwid[8];

@@ -6,10 +6,10 @@
  */
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <device.h>
-#include <drivers/entropy.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/entropy.h>
 #include <errno.h>
-#include <init.h>
+#include <zephyr/init.h>
 
 // for Mbed TLS
 #include <mbedtls/aes.h>
@@ -22,7 +22,7 @@
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_crypto);
 
 #define LOG_DEBUG_AES_PLAINTEXT_DATA    false

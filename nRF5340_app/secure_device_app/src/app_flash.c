@@ -8,7 +8,7 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_flash);
 
 //

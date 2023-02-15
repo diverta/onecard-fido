@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <settings/settings.h>
+#include <zephyr/settings/settings.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_settings);
 
 #define LOG_SETTINGS_DEBUG          false

@@ -8,8 +8,8 @@
 #include <string.h>
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <device.h>
-#include <drivers/i2c.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/i2c.h>
 
 // for struct tm
 #include <time.h>
@@ -17,7 +17,7 @@
 #include "app_rtcc_define.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_rtcc);
 
 static const struct device *i2c_dev;

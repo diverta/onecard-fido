@@ -17,7 +17,7 @@ extern "C" {
 //
 // ログ出力関連
 //
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 
 #define fido_log_module_register(n)         LOG_MODULE_REGISTER(n)
 #define fido_log_info(...)                  LOG_INF(__VA_ARGS__)

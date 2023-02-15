@@ -6,13 +6,13 @@
  */
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
 
 #include "app_ble_pairing.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
 // Work for BT address string

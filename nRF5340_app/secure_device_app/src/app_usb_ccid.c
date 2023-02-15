@@ -6,9 +6,9 @@
  */
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <init.h>
-#include <sys/byteorder.h>
-#include <usb/usb_device.h>
+#include <zephyr/init.h>
+#include <zephyr/sys/byteorder.h>
+#include <zephyr/usb/usb_device.h>
 
 #include "app_usb.h"
 #include "app_usb_bos.h"
@@ -16,7 +16,7 @@
 #include "app_event.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_usb_ccid);
 
 #define LOG_HEXDUMP_DEBUG_RX        false

@@ -6,14 +6,14 @@
  */
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <usb/usb_device.h>
+#include <zephyr/usb/usb_device.h>
 
 #include "app_event.h"
 #include "app_usb_bos.h"
 #include "app_usb_hid.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_usb);
 
 //

@@ -7,7 +7,7 @@
 #ifndef APP_BOARD_DEFINE_H
 #define APP_BOARD_DEFINE_H
 
-#include <drivers/gpio.h>
+#include <zephyr/drivers/gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
