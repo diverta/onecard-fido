@@ -8,15 +8,15 @@
 #include <string.h>
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
-#include <device.h>
-#include <sys/time_units.h>
+#include <zephyr/device.h>
+#include <zephyr/sys/time_units.h>
 
 #include "app_board.h"
 #include "app_board_define.h"
 #include "app_event.h"
 
 // ログ出力制御
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_board);
 
 #define LOG_BUTTON_INITIALIZED  false
@@ -228,7 +228,7 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 // --> ボタン押下でシステムが再始動
 //
 #include <hal/nrf_gpio.h>
-#include <pm/pm.h>
+#include <zephyr/pm/pm.h>
 
 void app_board_prepare_for_deep_sleep(void)
 {
