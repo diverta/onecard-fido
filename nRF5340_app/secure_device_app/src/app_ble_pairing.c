@@ -10,6 +10,7 @@
 #include <zephyr/bluetooth/conn.h>
 
 #include "app_ble_pairing.h"
+#include "app_log.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>

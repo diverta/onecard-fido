@@ -8,6 +8,7 @@
 #include "fido_platform.h"
 
 // プラットフォーム依存コード
+#include "app_log.h"
 #include "app_rtcc.h"
 
 #ifdef FIDO_ZEPHYR

@@ -15,6 +15,7 @@
 #include "app_event.h"
 #include "app_ble_fido.h"
 #include "app_ble_smp.h"
+#include "app_log.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
