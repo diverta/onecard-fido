@@ -230,6 +230,9 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 #include <hal/nrf_gpio.h>
 #include <zephyr/pm/pm.h>
 
+static const uint8_t cpu = 0;
+static const struct pm_state_info si = {PM_STATE_SOFT_OFF, 0, 0};
+
 void app_board_prepare_for_deep_sleep(void)
 {
     // ポート番号（Port 0=0x00, Port 1=0x20）をピン番号に付加
@@ -243,7 +246,7 @@ void app_board_prepare_for_deep_sleep(void)
     nrf_gpio_cfg_sense_set(sw0_pin_number, NRF_GPIO_PIN_SENSE_LOW);
 
     printk("Entering system off; press BUTTON to restart... \n\n\r");
-    pm_power_state_force(0, (struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
+    pm_state_force(cpu, &si);
     k_sleep(K_MSEC(100));
 }
 
