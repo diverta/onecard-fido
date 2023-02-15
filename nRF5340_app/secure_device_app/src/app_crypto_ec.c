@@ -5,7 +5,7 @@
  * Created on 2021/05/17, 12:06
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 // for Mbed TLS
 #include <mbedtls/ctr_drbg.h>

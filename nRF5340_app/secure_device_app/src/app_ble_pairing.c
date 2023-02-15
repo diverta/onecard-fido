@@ -5,7 +5,7 @@
  * Created on 2021/04/27, 10:18
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 

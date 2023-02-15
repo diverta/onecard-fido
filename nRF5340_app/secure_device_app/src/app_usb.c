@@ -5,7 +5,7 @@
  * Created on 2021/05/04, 11:16
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <usb/usb_device.h>
 
 #include "app_event.h"

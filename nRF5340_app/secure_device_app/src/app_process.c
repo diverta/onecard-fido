@@ -5,7 +5,7 @@
  * Created on 2021/04/28, 10:22
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"

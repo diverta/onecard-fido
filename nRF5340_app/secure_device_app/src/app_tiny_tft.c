@@ -5,7 +5,7 @@
  * Created on 2022/06/08, 13:58
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <device.h>
 #include <drivers/spi.h>
 

@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 //
 // ログ出力関連

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <device.h>
 #include <drivers/i2c.h>
 

@@ -5,7 +5,7 @@
  * Created on 2022/07/05, 16:49
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <sys/byteorder.h>
 #include <usb/usb_device.h>
 #include <usb/bos.h>

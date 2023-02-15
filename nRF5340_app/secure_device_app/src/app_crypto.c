@@ -5,7 +5,7 @@
  * Created on 2021/05/12, 9:59
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <device.h>
 #include <drivers/entropy.h>
 #include <errno.h>

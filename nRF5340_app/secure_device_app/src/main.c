@@ -12,7 +12,7 @@
 #include <errno.h>
 #include <sys/printk.h>
 #include <sys/byteorder.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>

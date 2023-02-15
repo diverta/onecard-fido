@@ -5,7 +5,7 @@
  * Created on 2021/04/06, 15:13
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_event.h"
 #include "app_process.h"

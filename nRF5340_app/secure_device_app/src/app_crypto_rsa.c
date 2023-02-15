@@ -5,7 +5,7 @@
  * Created on 2021/05/18, 15:01
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <sys/byteorder.h>
 
 // for Mbed TLS
