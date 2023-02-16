@@ -5,13 +5,13 @@
  * Created on 2021/04/07, 15:04
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_timer_define.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_timer);
 
 #define LOG_TIMER_START_STOP    false

@@ -5,10 +5,10 @@
  * Created on 2022/07/05, 16:49
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <sys/byteorder.h>
-#include <usb/usb_device.h>
-#include <usb/bos.h>
+#include <zephyr/kernel.h>
+#include <zephyr/sys/byteorder.h>
+#include <zephyr/usb/usb_device.h>
+#include <zephyr/usb/bos.h>
 #include "app_usb_ccid_define.h"
 
 //

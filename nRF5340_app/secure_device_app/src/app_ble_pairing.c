@@ -5,14 +5,15 @@
  * Created on 2021/04/27, 10:18
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
+#include <zephyr/kernel.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
 
 #include "app_ble_pairing.h"
+#include "app_log.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
 // Work for BT address string
@@ -23,6 +24,7 @@ static bool m_pairing_mode = false;
 
 static void pairing_confirm(struct bt_conn *conn)
 {
+#if defined(CONFIG_BT_SMP)
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     int rc = bt_conn_auth_cancel(conn);
@@ -31,6 +33,7 @@ static void pairing_confirm(struct bt_conn *conn)
     } else {
         LOG_DBG("Pairing refused");
     }
+#endif
 }
 
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
@@ -58,8 +61,11 @@ static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
     .pairing_confirm = pairing_confirm,
-    .pairing_failed = pairing_failed,
     .cancel = pairing_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_non_pair = {
+    .pairing_failed = pairing_failed,
     .bond_deleted = bond_deleted,
 };
 
@@ -93,6 +99,9 @@ static const struct bt_conn_auth_cb cb_for_pair = {
     .passkey_display = auth_passkey_display,
     .passkey_entry = NULL,
     .cancel = auth_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_pair = {
     .pairing_complete = auth_pairing_complete,
     .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
@@ -100,6 +109,7 @@ static const struct bt_conn_auth_cb cb_for_pair = {
 
 bool register_callbacks(void)
 {
+#if defined(CONFIG_BT_SMP)
     // コールバック設定を解除
     int rc = bt_conn_auth_cb_register(NULL);
 
@@ -110,6 +120,11 @@ bool register_callbacks(void)
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
             return false;
         }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
+            return false;
+        }
 
     } else {
         // 非ペアリングモード時のコールバックを設定
@@ -118,7 +133,13 @@ bool register_callbacks(void)
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
             return false;
         }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_non_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
+            return false;
+        }
     }
+#endif
 
     return true;
 }

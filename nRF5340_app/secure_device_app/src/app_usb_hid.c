@@ -5,17 +5,17 @@
  * Created on 2021/05/04, 11:16
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <errno.h>
-#include <init.h>
-#include <usb/usb_device.h>
-#include <usb/class/usb_hid.h>
+#include <zephyr/init.h>
+#include <zephyr/usb/usb_device.h>
+#include <zephyr/usb/class/usb_hid.h>
 
 #include "app_event.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_usb_hid);
 
 #define LOG_DEBUG_REPORT        false
@@ -112,9 +112,10 @@ static int composite_pre_init(const struct device *dev)
 {
     hdev = device_get_binding("HID_0");
     if (hdev == NULL) {
-        LOG_ERR("Cannot get USB HID Device");
+        LOG_ERR("Cannot get USB HID device");
         return -ENODEV;
     }
+    LOG_INF("Get USB HID device success");
 
     usb_hid_register_device(hdev, hid_report_desc, sizeof(hid_report_desc), &ops);
     return usb_hid_init(hdev);

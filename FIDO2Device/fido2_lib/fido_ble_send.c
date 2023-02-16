@@ -193,7 +193,7 @@ void fido_ble_send_on_tx_complete(void)
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // FIDOレスポンス送信完了時の処理を実行
         if (!no_callback_flag) {
-            fido_command_on_response_send_completed(TRANSPORT_BLE);
+            fido_command_on_ble_response_send_completed();
         }
 
     } else {

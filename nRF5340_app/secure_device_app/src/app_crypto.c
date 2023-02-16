@@ -5,11 +5,11 @@
  * Created on 2021/05/12, 9:59
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <device.h>
-#include <drivers/entropy.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/entropy.h>
 #include <errno.h>
-#include <init.h>
+#include <zephyr/init.h>
 
 // for Mbed TLS
 #include <mbedtls/aes.h>
@@ -22,7 +22,7 @@
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_crypto);
 
 #define LOG_DEBUG_AES_PLAINTEXT_DATA    false
@@ -288,10 +288,9 @@ static int app_crypto_init(const struct device *dev)
 {
     // Get device binding named 'CRYPTOCELL'
     (void)dev;
-    const char *name = DT_LABEL(DT_CHOSEN(zephyr_entropy));
-    const struct device *p_device = device_get_binding(name);
+    const struct device *p_device = DEVICE_DT_GET(DT_CHOSEN(zephyr_entropy));
     if (p_device == NULL) {
-        LOG_ERR("device_get_binding(%s) returns NULL", name);
+        LOG_ERR("device_get_binding(%s) returns NULL", p_device->name);
         return -ENODEV;
     }
 
@@ -307,4 +306,4 @@ static int app_crypto_init(const struct device *dev)
     return 0;
 }
 
-SYS_INIT(app_crypto_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
+//SYS_INIT(app_crypto_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);

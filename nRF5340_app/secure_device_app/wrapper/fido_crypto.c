@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_common.h"
+#include "fido_define.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

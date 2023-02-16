@@ -5,14 +5,14 @@
  * Created on 2021/04/06, 15:13
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_event.h"
 #include "app_process.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_event);
 
 #define LOG_NOTIFIED_EVENT      false
@@ -146,5 +146,5 @@ static void app_data_thread(void)
 //
 // スレッド本体
 //
-K_THREAD_DEFINE(app_main_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_main_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);
-K_THREAD_DEFINE(app_data_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_data_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);
+//K_THREAD_DEFINE(app_main_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_main_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);
+//K_THREAD_DEFINE(app_data_thread_id, CONFIG_APP_SETTINGS_THREAD_STACK_SIZE, app_data_thread, NULL, NULL, NULL, CONFIG_APP_SETTINGS_THREAD_PRIORITY, 0, 0);

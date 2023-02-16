@@ -10,6 +10,7 @@
 // プラットフォーム非依存コード
 //
 #include "ccid_piv_authenticate.h"
+#include "ccid_piv_define.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_object_import.h"
 #include "ccid_ykpiv.h"

@@ -5,7 +5,7 @@
  * Created on 2021/04/02, 15:04
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_bluetooth.h"
 #include "app_board.h"
@@ -15,7 +15,7 @@
 #include "app_usb.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_main);
 
 #define LOG_DEBUG_HID_DATA_FRAME    false

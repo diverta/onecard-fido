@@ -4,20 +4,21 @@
  *
  * Created on 2021/04/06, 14:50
  */
-#include <zephyr.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
-#include <bluetooth/gatt.h>
-#include <settings/settings.h>
+#include <zephyr/kernel.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/gatt.h>
+#include <zephyr/settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_pairing.h"
 #include "app_event.h"
 #include "app_ble_fido.h"
 #include "app_ble_smp.h"
+#include "app_log.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
 
 // Work for BT address string
@@ -27,7 +28,7 @@ static char addr_str_buf_2[BT_ADDR_LE_STR_LEN];
 //
 // パスキー関連
 //
-#include <drivers/hwinfo.h>
+#include <zephyr/drivers/hwinfo.h>
 
 // Work for hardware ID & passkey
 static uint8_t  m_hwid[8];
@@ -54,7 +55,9 @@ static void set_passkey_for_pairing(void)
     }
     
     LOG_INF("Passkey for BLE pairing: %06u", m_passkey);
+#if defined(CONFIG_BT_FIXED_PASSKEY)
     bt_passkey_set((unsigned int)m_passkey);
+#endif
 }
 
 //
@@ -166,6 +169,7 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
+#if defined(CONFIG_BT_SMP)
 static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
 {
     (void)conn;
@@ -195,13 +199,16 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
         LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr_str_buf_1), level, err);
     }
 }
+#endif
 
 // 接続時コールバックの設定
 BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected = connected,
     .disconnected = disconnected,
+#if defined(CONFIG_BT_SMP)
     .identity_resolved = identity_resolved,
     .security_changed = security_changed,
+#endif
 };
 
 static void bt_ready(int err)
