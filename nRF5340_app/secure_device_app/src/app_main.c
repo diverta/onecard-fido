@@ -78,7 +78,8 @@ void app_main_data_channel_initialized(void)
     // BLEまたはUSB HID I/Fが使用可能になった場合、
     // 業務処理をオープンさせる前に、
     // CTAP2で使用する機密データを初期化
-    ctap2_client_pin_init();
+    printk("ctap2_client_pin_init will skip... \n\r");
+    //ctap2_client_pin_init();
     
     // RTCCを初期化
     rtcc_init();
