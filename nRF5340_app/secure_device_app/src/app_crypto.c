@@ -288,10 +288,9 @@ static int app_crypto_init(const struct device *dev)
 {
     // Get device binding named 'CRYPTOCELL'
     (void)dev;
-    const char *name = DT_LABEL(DT_CHOSEN(zephyr_entropy));
-    const struct device *p_device = device_get_binding(name);
+    const struct device *p_device = DEVICE_DT_GET(DT_CHOSEN(zephyr_entropy));
     if (p_device == NULL) {
-        LOG_ERR("device_get_binding(%s) returns NULL", name);
+        LOG_ERR("device_get_binding(%s) returns NULL", p_device->name);
         return -ENODEV;
     }
 
