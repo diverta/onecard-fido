@@ -27,12 +27,11 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_command_common.c
     ../../FIDO2Device/fido2_lib/fido_common.c
     ../../FIDO2Device/fido2_lib/fido_ctap2_command.c
-    ../../FIDO2Device/fido2_lib/fido_development.c
     ../../FIDO2Device/fido2_lib/fido_hid_channel.c
     ../../FIDO2Device/fido2_lib/fido_hid_receive.c
     ../../FIDO2Device/fido2_lib/fido_hid_send.c
     ../../FIDO2Device/fido2_lib/fido_maintenance.c
-    ../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c
+    ../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c
     ../../FIDO2Device/fido2_lib/fido_receive_apdu.c
     ../../FIDO2Device/fido2_lib/fido_u2f_command.c
     ../../FIDO2Device/u2f_lib/u2f_authenticate.c
