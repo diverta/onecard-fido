@@ -49,7 +49,8 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 //
 // ボタン関連
 //
-static const struct device *button_0,   *button_1;
+static const struct gpio_dt_spec button_0 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw0), gpios, {0});
+static const struct gpio_dt_spec button_1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw1), gpios, {0});
 static struct gpio_callback button_cb_0, button_cb_1;
 static bool button_press_enabled = false;
 
@@ -102,7 +103,7 @@ static void button_pressed_0(const struct device *dev, struct gpio_callback *cb,
     static uint32_t time_pressed = 0;
 
     // ボタン検知処理
-    if (button_pressed(dev, SW0_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+    if (button_pressed(dev, button_0.pin, &status_pressed, &time_pressed) == false) {
         return;
     }
 
@@ -117,7 +118,7 @@ static void button_pressed_1(const struct device *dev, struct gpio_callback *cb,
     static uint32_t time_pressed = 0;
 
     // ボタン検知処理
-    if (button_pressed(dev, SW1_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+    if (button_pressed(dev, button_1.pin, &status_pressed, &time_pressed) == false) {
         return;
     }
 
@@ -125,35 +126,29 @@ static void button_pressed_1(const struct device *dev, struct gpio_callback *cb,
     app_event_notify(status_pressed ? APEVT_BUTTON_1_PUSHED : APEVT_BUTTON_1_RELEASED);
 }
 
-static const struct device *initialize_button(const char *name, gpio_pin_t pin, gpio_flags_t flags, struct gpio_callback *callback, gpio_callback_handler_t handler)
+static bool initialize_button(const struct gpio_dt_spec *button, struct gpio_callback *callback, gpio_callback_handler_t handler)
 {
-    const struct device *button = device_get_binding(name);
-    if (button == NULL) {
-        LOG_ERR("Error: didn't find %s device", name);
-        return NULL;
+    int ret = gpio_pin_configure_dt(button, GPIO_INPUT);
+    if (ret != 0) {
+        LOG_ERR("Error %d: failed to configure %s pin %d", ret, button->port->name, button->pin);
+        return false;
     }
 
-    int ret = gpio_pin_configure(button, pin, flags);
+    ret = gpio_pin_interrupt_configure_dt(button, GPIO_INT_EDGE_BOTH);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure %s pin %d", ret, name, pin);
-        return NULL;
-    }
-
-    ret = gpio_pin_interrupt_configure(button, pin, GPIO_INT_EDGE_BOTH);
-    if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d", ret, name, pin);
-        return NULL;
+        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d", ret, button->port->name, button->pin);
+        return false;
     }
 
     // ボタン押下時のコールバックを設定
-    gpio_init_callback(callback, handler, BIT(pin));
-    gpio_add_callback(button, callback);
+    gpio_init_callback(callback, handler, BIT(button->pin));
+    gpio_add_callback(button->port, callback);
 
     // ボタンの参照を戻す
 #if LOG_BUTTON_INITIALIZED
-    LOG_DBG("Set up button at %s pin %d", name, pin);
+    LOG_DBG("Set up button at %s pin %d", button->port->name, button->pin);
 #endif
-    return button;
+    return true;
 }
 
 //
@@ -188,8 +183,8 @@ static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpi
 void app_board_initialize(void)
 {
     // ボタンの初期化
-    button_0 = initialize_button(SW0_GPIO_LABEL, SW0_GPIO_PIN, SW0_GPIO_FLAGS, &button_cb_0, button_pressed_0);
-    button_1 = initialize_button(SW1_GPIO_LABEL, SW1_GPIO_PIN, SW1_GPIO_FLAGS, &button_cb_1, button_pressed_1);
+    initialize_button(&button_0, &button_cb_0, button_pressed_0);
+    initialize_button(&button_1, &button_cb_1, button_pressed_1);
     
     // LED0の初期化
     m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
@@ -236,8 +231,11 @@ static const struct pm_state_info si = {PM_STATE_SOFT_OFF, 0, 0};
 void app_board_prepare_for_deep_sleep(void)
 {
     // ポート番号（Port 0=0x00, Port 1=0x20）をピン番号に付加
-    uint32_t sw0_pin_number = SW0_GPIO_PIN;
-    if (strcmp(SW0_GPIO_LABEL, "GPIO_1") == 0) {
+#if LOG_BUTTON_INITIALIZED
+    LOG_DBG("Set up button for deep sleep at %s pin %d", button_0.port->name, button_0.pin);
+#endif
+    uint32_t sw0_pin_number = button_0.pin;
+    if (strcmp(button_0.port->name, "GPIO_1") == 0) {
         sw0_pin_number |= (0x1 << 5);
     }
 
