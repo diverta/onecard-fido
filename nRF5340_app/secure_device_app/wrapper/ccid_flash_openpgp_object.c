@@ -9,7 +9,9 @@
 //
 // プラットフォーム非依存コード
 //
+#include "ccid_define.h"
 #include "ccid_openpgp.h"
+#include "ccid_openpgp_define.h"
 #include "ccid_openpgp_object.h"
 #include "fido_flash_define.h"
 
