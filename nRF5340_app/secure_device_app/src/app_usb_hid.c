@@ -112,9 +112,10 @@ static int composite_pre_init(const struct device *dev)
 {
     hdev = device_get_binding("HID_0");
     if (hdev == NULL) {
-        LOG_ERR("Cannot get USB HID Device");
+        LOG_ERR("Cannot get USB HID device");
         return -ENODEV;
     }
+    LOG_INF("Get USB HID device success");
 
     usb_hid_register_device(hdev, hid_report_desc, sizeof(hid_report_desc), &ops);
     return usb_hid_init(hdev);

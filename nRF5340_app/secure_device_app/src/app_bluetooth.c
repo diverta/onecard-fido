@@ -55,7 +55,9 @@ static void set_passkey_for_pairing(void)
     }
     
     LOG_INF("Passkey for BLE pairing: %06u", m_passkey);
+#if defined(CONFIG_BT_FIXED_PASSKEY)
     bt_passkey_set((unsigned int)m_passkey);
+#endif
 }
 
 //
@@ -167,6 +169,7 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
+#if defined(CONFIG_BT_SMP)
 static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
 {
     (void)conn;
@@ -196,13 +199,16 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
         LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr_str_buf_1), level, err);
     }
 }
+#endif
 
 // 接続時コールバックの設定
 BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected = connected,
     .disconnected = disconnected,
+#if defined(CONFIG_BT_SMP)
     .identity_resolved = identity_resolved,
     .security_changed = security_changed,
+#endif
 };
 
 static void bt_ready(int err)
