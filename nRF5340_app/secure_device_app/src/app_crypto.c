@@ -306,4 +306,4 @@ static int app_crypto_init(const struct device *dev)
     return 0;
 }
 
-SYS_INIT(app_crypto_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
+//SYS_INIT(app_crypto_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
