@@ -34,7 +34,7 @@ void        app_main_app_settings_saved(void);
 void        app_main_app_settings_deleted(void);
 void        app_main_button_pressed_short(void);
 void        app_main_button_1_pressed(void);
-void        app_main_app_crypto_do_process(void (*resume_func)(void));
+void        app_main_app_crypto_do_process(uint8_t event, void (*resume_func)(void));
 void        app_main_app_crypto_done(void);
 
 #ifdef __cplusplus

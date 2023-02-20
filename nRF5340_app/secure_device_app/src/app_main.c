@@ -10,6 +10,7 @@
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_crypto.h"
+#include "app_crypto_define.h"
 #include "app_event.h"
 #include "app_main.h"
 #include "app_rtcc.h"
@@ -63,7 +64,7 @@ void app_main_init(void)
     // 処理完了後、Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_main_app_crypto_do_process(app_bluetooth_start);
+    app_main_app_crypto_do_process(CRYPTO_EVT_INIT, app_bluetooth_start);
 }
 
 //
@@ -208,13 +209,13 @@ void app_main_button_1_pressed(void)
 //
 static void (*_resume_func)(void);
 
-void app_main_app_crypto_do_process(void (*resume_func)(void))
+void app_main_app_crypto_do_process(uint8_t event, void (*resume_func)(void))
 {
     // コールバック関数の参照を保持
     _resume_func = resume_func;
 
     // 暗号化関連処理を専用スレッドで実行
-    app_crypto_do_process();
+    app_crypto_do_process(event);
 }
 
 void app_main_app_crypto_done(void)

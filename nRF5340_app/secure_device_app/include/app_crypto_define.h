@@ -20,6 +20,12 @@ extern "C" {
 #define EC_RAW_PRIVKEY_SIZE 32
 #define EC_RAW_PUBKEY_SIZE  64
 
+// イベント種別
+typedef enum {
+    CRYPTO_EVT_NONE = 0,
+    CRYPTO_EVT_INIT,
+} CRYPTO_EVENT_T;
+
 #ifdef __cplusplus
 }
 #endif

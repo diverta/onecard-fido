@@ -16,6 +16,7 @@
 #include <mbedtls/platform.h>
 
 // for app_event_notify
+#include "app_crypto_define.h"
 #include "app_event.h"
 
 // ログ出力制御
@@ -72,20 +73,21 @@ static int app_crypto_init(const struct device *dev)
 //
 // 専用スレッドの処理分岐制御
 //
-void app_crypto_do_process(void)
+void app_crypto_do_process(uint8_t event)
 {
-    // TODO: 仮の実装です。
-    // 専用スレッドから`app_crypto_init`を実行
+    // 専用スレッドを実行
     // --> メインスレッドに制御を戻す
-    app_crypto_event_notify(0x00);
+    app_crypto_event_notify(event);
 }
 
 static void app_crypto_process_for_event(uint8_t event)
 {
-    // TODO: 仮の実装です。
+    // イベントに応じて処理分岐
     switch (event) {
-        default:
+        case CRYPTO_EVT_INIT:
             app_crypto_init(NULL);
+            break;
+        default:
             break;
     }
 
