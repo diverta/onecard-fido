@@ -36,6 +36,7 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 #include "ctap2_client_pin.h"
 #include "ccid.h"
+#include "fido_platform.h"
 #include "rtcc.h"
 
 // for resume after Flash ROM object updated/deleted
@@ -71,6 +72,7 @@ void app_main_init(void)
 // データ処理イベント関連
 //
 static bool m_initialized = false;
+static void crypto_random_pre_generated(void);
 
 void app_main_data_channel_initialized(void)
 {
@@ -79,12 +81,19 @@ void app_main_data_channel_initialized(void)
         return;
     }
 
+    // `ctap2_client_pin_init`内で実行される
+    // `fido_command_generate_random_vector`の実行事前に、
+    // ランダムベクターの生成を指示
+    fido_crypto_random_pre_generate(crypto_random_pre_generated);
+}    
+
+static void crypto_random_pre_generated(void)
+{
     // BLEまたはUSB HID I/Fが使用可能になった場合、
     // 業務処理をオープンさせる前に、
     // CTAP2で使用する機密データを初期化
-    printk("ctap2_client_pin_init will skip... \n\r");
-    //ctap2_client_pin_init();
-    
+    ctap2_client_pin_init();
+
     // RTCCを初期化
     rtcc_init();
 
