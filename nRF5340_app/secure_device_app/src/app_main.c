@@ -9,7 +9,9 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_crypto.h"
 #include "app_event.h"
+#include "app_main.h"
 #include "app_rtcc.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -57,10 +59,11 @@ void app_main_init(void)
     // 通知できるようにする
     app_event_main_enable(true);
 
-    // Bluetoothサービス開始を指示
+    // 暗号化関連の初期化
+    // 処理完了後、Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_bluetooth_start();
+    app_main_app_crypto_do_process(app_bluetooth_start);
 }
 
 //
@@ -198,4 +201,27 @@ void app_main_button_1_pressed(void)
 {
     // 現在未割り当て
     LOG_INF("Button 2 pressed");
+}
+
+//
+// 暗号化関連処理
+//
+static void (*_resume_func)(void);
+
+void app_main_app_crypto_do_process(void (*resume_func)(void))
+{
+    // コールバック関数の参照を保持
+    _resume_func = resume_func;
+
+    // 暗号化関連処理を専用スレッドで実行
+    app_crypto_do_process();
+}
+
+void app_main_app_crypto_done(void)
+{
+    // コールバック関数を実行
+    if (_resume_func != NULL) {
+        (*_resume_func)();
+        _resume_func = NULL;
+    }
 }

@@ -15,10 +15,16 @@
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/platform.h>
 
+// for app_event_notify
+#include "app_event.h"
+
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_crypto);
+
+// 関数プロトタイプ
+static bool app_crypto_event_notify(uint8_t event);
 
 //
 // CTR-DRBG共有情報
@@ -63,4 +69,68 @@ static int app_crypto_init(const struct device *dev)
     return 0;
 }
 
-//SYS_INIT(app_crypto_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEVICE);
+//
+// 専用スレッドの処理分岐制御
+//
+void app_crypto_do_process(void)
+{
+    // TODO: 仮の実装です。
+    // 専用スレッドから`app_crypto_init`を実行
+    // --> メインスレッドに制御を戻す
+    app_crypto_event_notify(0x00);
+}
+
+static void app_crypto_process_for_event(uint8_t event)
+{
+    // TODO: 仮の実装です。
+    switch (event) {
+        default:
+            app_crypto_init(NULL);
+            break;
+    }
+
+    // メインスレッドに制御を戻す
+    app_event_notify(APEVT_APP_CRYPTO_DONE);
+}
+
+//
+// 暗号化関連処理の専用スレッド
+//
+K_FIFO_DEFINE(app_crypto_fifo);
+
+typedef struct {
+    void           *fifo_reserved;
+    uint8_t         event;
+} APP_CRYPTO_FIFO_T;
+
+static bool app_crypto_event_notify(uint8_t event)
+{
+    // 領域を確保
+    size_t size = sizeof(APP_CRYPTO_FIFO_T);
+    APP_CRYPTO_FIFO_T *p_fifo = (APP_CRYPTO_FIFO_T *)k_malloc(size);
+    if (p_fifo == NULL) {
+        LOG_ERR("APP_CRYPTO_FIFO_T allocation failed");
+        return false;
+    }
+
+    // イベントデータを待ち行列にセット
+    p_fifo->event = event;
+    k_fifo_put(&app_crypto_fifo, p_fifo);
+    return true;
+}
+
+static void app_crypto_thread(void)
+{
+    while (true) {
+        // イベント検知まで待機
+        APP_CRYPTO_FIFO_T *p_fifo = k_fifo_get(&app_crypto_fifo, K_FOREVER);
+
+        // イベントに対応する処理を実行
+        app_crypto_process_for_event(p_fifo->event);
+
+        // FIFOデータを解放
+        k_free(p_fifo);
+    }
+}
+
+K_THREAD_DEFINE(app_crypto_thread_id, 4096, app_crypto_thread, NULL, NULL, NULL, 7, 0, 0);

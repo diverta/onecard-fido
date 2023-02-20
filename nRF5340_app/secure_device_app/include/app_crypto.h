@@ -15,6 +15,7 @@ extern "C" {
 // 関数群
 //
 void       *app_crypto_ctr_drbg_context(void);
+void        app_crypto_do_process(void);
 
 #ifdef __cplusplus
 }
