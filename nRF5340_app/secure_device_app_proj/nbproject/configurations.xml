@@ -7,6 +7,7 @@
       <itemPath>../../CCID/ccid_lib/ccid.h</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_apdu.c</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_apdu.h</itemPath>
+      <itemPath>../../CCID/ccid_lib/ccid_define.h</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_main.c</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_process.c</itemPath>
       <itemPath>../../CCID/ccid_lib/ccid_process.h</itemPath>
@@ -27,6 +28,7 @@
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h</itemPath>
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_common.c</itemPath>
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_common.h</itemPath>
+      <itemPath>../../FIDO2Device/ctap2_lib/ctap2_define.h</itemPath>
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c</itemPath>
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.h</itemPath>
       <itemPath>../../FIDO2Device/ctap2_lib/ctap2_get_assertion.c</itemPath>
@@ -49,35 +51,30 @@
       <itemPath>../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_development.c</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_development.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_flash_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_hid_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_receive.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_receive.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_send.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_nfc_common.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_nfc_receive.c</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_nfc_receive.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_nfc_send.c</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_nfc_send.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
-      <itemPath>../../FIDO2Device/fido2_lib/fido_platform_common.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_receive_apdu.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_receive_apdu.h</itemPath>
+      <itemPath>../../FIDO2Device/fido2_lib/fido_transport_define.h</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.c</itemPath>
       <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.h</itemPath>
     </logicalFolder>
     <logicalFolder name="oath_lib" displayName="oath_lib" projectFiles="true">
       <itemPath>../../CCID/oath_lib/README.md</itemPath>
+      <itemPath>../../CCID/oath_lib/SPEC_DETAIL.md</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath.c</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath.h</itemPath>
       <itemPath>../../CCID/oath_lib/ccid_oath_account.c</itemPath>
@@ -94,6 +91,7 @@
     </logicalFolder>
     <logicalFolder name="openpgp_lib" displayName="openpgp_lib" projectFiles="true">
       <itemPath>../../CCID/openpgp_lib/README.md</itemPath>
+      <itemPath>../../CCID/openpgp_lib/SPEC_DETAIL.md</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_attr.c</itemPath>
@@ -102,6 +100,7 @@
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_crypto.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_data.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_data.h</itemPath>
+      <itemPath>../../CCID/openpgp_lib/ccid_openpgp_define.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_key.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_key.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_key_rsa.c</itemPath>
@@ -110,7 +109,7 @@
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_object.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_pin.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_openpgp_pin.h</itemPath>
-      <itemPath>../../CCID/openpgp_lib/ccid_pin.h</itemPath>
+      <itemPath>../../CCID/openpgp_lib/ccid_openpgp_pin_define.h</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_pin_auth.c</itemPath>
       <itemPath>../../CCID/openpgp_lib/ccid_pin_auth.h</itemPath>
     </logicalFolder>
@@ -119,6 +118,7 @@
       <itemPath>../../CCID/piv_lib/ccid_piv.h</itemPath>
       <itemPath>../../CCID/piv_lib/ccid_piv_authenticate.c</itemPath>
       <itemPath>../../CCID/piv_lib/ccid_piv_authenticate.h</itemPath>
+      <itemPath>../../CCID/piv_lib/ccid_piv_define.h</itemPath>
       <itemPath>../../CCID/piv_lib/ccid_piv_general_auth.c</itemPath>
       <itemPath>../../CCID/piv_lib/ccid_piv_general_auth.h</itemPath>
       <itemPath>../../CCID/piv_lib/ccid_piv_object.c</itemPath>
@@ -189,7 +189,6 @@
         <in>app_event.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
-        <in>app_platform.c</in>
         <in>app_process.c</in>
         <in>app_rtcc.c</in>
         <in>app_settings.c</in>
@@ -212,19 +211,15 @@
       <itemPath>../../TFT/tiny_tft_lib/tiny_tft_define.h</itemPath>
     </logicalFolder>
     <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
-      <itemPath>../../FIDO2Device/u2f_lib/u2f.h</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
+      <itemPath>../../FIDO2Device/u2f_lib/u2f_define.h</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_keyhandle.c</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_keyhandle.h</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_register.c</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_register.h</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
       <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="util_lib" displayName="util_lib" projectFiles="true">
-      <itemPath>../../FIDO2Device/util_lib/rtcc.c</itemPath>
-      <itemPath>../../FIDO2Device/util_lib/rtcc.h</itemPath>
     </logicalFolder>
     <logicalFolder name="wrapper_header"
                    displayName="wrapper_header"
@@ -234,8 +229,12 @@
       <itemPath>../../FIDO2Device/wrapper_header/ccid_flash_object.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/ccid_flash_openpgp_object.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/ccid_flash_piv_object.h</itemPath>
+      <itemPath>../../FIDO2Device/wrapper_header/fido_ble_define.h</itemPath>
+      <itemPath>../../FIDO2Device/wrapper_header/fido_ble_unpairing.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/fido_crypto.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/fido_flash.h</itemPath>
+      <itemPath>../../FIDO2Device/wrapper_header/fido_status.h</itemPath>
+      <itemPath>../../FIDO2Device/wrapper_header/fido_status_indicator.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/fido_timer.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/platform_common.h</itemPath>
       <itemPath>../../FIDO2Device/wrapper_header/rtcc.h</itemPath>
@@ -300,6 +299,8 @@
       </item>
       <item path="../../CCID/ccid_lib/ccid_apdu.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../CCID/ccid_lib/ccid_define.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../CCID/ccid_lib/ccid_main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../../CCID/ccid_lib/ccid_process.c" ex="false" tool="0" flavor2="0">
@@ -307,6 +308,8 @@
       <item path="../../CCID/ccid_lib/ccid_process.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../CCID/oath_lib/README.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../CCID/oath_lib/SPEC_DETAIL.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../CCID/oath_lib/ccid_oath.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -369,6 +372,11 @@
       </item>
       <item path="../../CCID/openpgp_lib/README.md" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../CCID/openpgp_lib/SPEC_DETAIL.md"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../CCID/openpgp_lib/ccid_openpgp.c"
             ex="false"
             tool="0"
@@ -405,6 +413,11 @@
             flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/ccid_openpgp_data.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/openpgp_lib/ccid_openpgp_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -449,7 +462,10 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../CCID/openpgp_lib/ccid_pin.h" ex="false" tool="3" flavor2="0">
+      <item path="../../CCID/openpgp_lib/ccid_openpgp_pin_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../CCID/openpgp_lib/ccid_pin_auth.c"
             ex="false"
@@ -471,6 +487,11 @@
             flavor2="0">
       </item>
       <item path="../../CCID/piv_lib/ccid_piv_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../CCID/piv_lib/ccid_piv_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -618,6 +639,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c"
             ex="false"
             tool="0"
@@ -718,12 +744,7 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_development.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_development.h"
+      <item path="../../FIDO2Device/fido2_lib/fido_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -739,6 +760,11 @@
             flavor2="0">
       </item>
       <item path="../../FIDO2Device/fido2_lib/fido_hid_channel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_hid_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -773,57 +799,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c"
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_attestation.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h"
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_attestation.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_nfc_common.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_nfc_receive.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_nfc_receive.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_nfc_send.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_nfc_send.h"
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_define.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
       <item path="../../FIDO2Device/fido2_lib/fido_platform.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/fido2_lib/fido_platform_common.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -838,6 +829,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_transport_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../FIDO2Device/fido2_lib/fido_u2f_command.c"
             ex="false"
             tool="0"
@@ -848,14 +844,17 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/u2f_lib/u2f.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../FIDO2Device/u2f_lib/u2f_authenticate.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
       <item path="../../FIDO2Device/u2f_lib/u2f_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/u2f_lib/u2f_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -890,10 +889,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../FIDO2Device/util_lib/rtcc.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../../FIDO2Device/util_lib/rtcc.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../FIDO2Device/wrapper_header/ccid_crypto.h"
             ex="false"
             tool="3"
@@ -919,12 +914,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../FIDO2Device/wrapper_header/fido_ble_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/wrapper_header/fido_ble_unpairing.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../FIDO2Device/wrapper_header/fido_crypto.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
       <item path="../../FIDO2Device/wrapper_header/fido_flash.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/wrapper_header/fido_status.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/wrapper_header/fido_status_indicator.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1281,27 +1296,6 @@
             <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch</pElem>
             <pElem>../../FIDO2Device/fido2_lib</pElem>
             <pElem>../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../secure_device_app/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../secure_device_app/src/app_platform.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../secure_device_app/src</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/sys</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/kernel</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../../../opt/ncs_1.9.1/zephyr/include/arch</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
