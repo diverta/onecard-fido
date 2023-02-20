@@ -14,8 +14,8 @@
 #include "fido_platform.h"
 
 // プラットフォーム依存コード
-#include "app_crypto.h"
 #include "app_crypto_ec.h"
+#include "app_crypto_util.h"
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_crypto);
