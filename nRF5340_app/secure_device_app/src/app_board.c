@@ -38,8 +38,8 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data,
-        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", 
-            CONFIG_BT_DIS_MODEL, CONFIG_BT_DIS_FW_REV_STR, CONFIG_BT_DIS_HW_REV_STR);
+        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\",FW_BUILD=\"%d\"", 
+            CONFIG_BT_DIS_MODEL, CONFIG_BT_DIS_FW_REV_STR, CONFIG_BT_DIS_HW_REV_STR, CONFIG_APP_FW_BUILD);
 
     *info_csv_size = strlen((char *)info_csv_data);
     LOG_DBG("Application version info csv created (%d bytes)", *info_csv_size);
