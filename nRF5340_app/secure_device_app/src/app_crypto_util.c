@@ -131,15 +131,35 @@ bool app_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t
 
 //
 // ランダムベクター生成
+//   スタックを相当量消費するため、事前に専用スレッドで
+//   `app_crypto_random_vector_pre_generate`を
+//   実行しておくようにします。
 //
-bool app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size)
+static uint8_t m_random_vector[32];
+static bool random_vector_generated;
+
+void app_crypto_random_vector_pre_generate(void)
 {
-    // ランダムベクターを生成
-    int ret = mbedtls_ctr_drbg_random(app_crypto_ctr_drbg_context(), vector_buf, vector_size);
+    // ランダムベクターを事前生成
+    int ret = mbedtls_ctr_drbg_random(app_crypto_ctr_drbg_context(), m_random_vector, sizeof(m_random_vector));
     if (ret != 0) {
         LOG_ERR("mbedtls_ctr_drbg_random returns %d", ret);
+        random_vector_generated = false;
+    } else {
+        LOG_INF("Random vector pre-generate success");
+        random_vector_generated = true;
+    }
+}
+
+bool app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size)
+{
+    // 生成したランダムベクターを取得
+    if (random_vector_generated == false) {
+        LOG_ERR("Random vector is not pre-generated");
         return false;
     }
+    memcpy(vector_buf, m_random_vector, vector_size);
+    random_vector_generated = false;
 
 #if LOG_DEBUG_RANDOM_VECTOR_DATA
     LOG_DBG("%d bytes", vector_size);

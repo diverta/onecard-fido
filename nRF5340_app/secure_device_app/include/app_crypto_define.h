@@ -24,6 +24,7 @@ extern "C" {
 typedef enum {
     CRYPTO_EVT_NONE = 0,
     CRYPTO_EVT_INIT,
+    CRYPTO_EVT_RANDOM_PREGEN,
 } CRYPTO_EVENT_T;
 
 #ifdef __cplusplus

@@ -17,6 +17,7 @@
 
 // for app_event_notify
 #include "app_crypto_define.h"
+#include "app_crypto_util.h"
 #include "app_event.h"
 
 // ログ出力制御
@@ -86,6 +87,9 @@ static void app_crypto_process_for_event(uint8_t event)
     switch (event) {
         case CRYPTO_EVT_INIT:
             app_crypto_init(NULL);
+            break;
+        case CRYPTO_EVT_RANDOM_PREGEN:
+            app_crypto_random_vector_pre_generate();
             break;
         default:
             break;

@@ -20,6 +20,7 @@ extern "C" {
 //
 bool        app_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted, size_t *encrypted_size);
 bool        app_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted, size_t *decrypted_size);
+void        app_crypto_random_vector_pre_generate(void);
 bool        app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size);
 bool        app_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest);
 bool        app_crypto_generate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *hash_digest);
