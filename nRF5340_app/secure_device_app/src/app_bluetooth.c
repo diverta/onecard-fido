@@ -153,6 +153,10 @@ static void connected(struct bt_conn *conn, uint8_t err)
 
     } else {
         LOG_INF("Connected");
+        int ret = bt_conn_set_security(conn, BT_SECURITY_L4);
+        if (ret != 0) {
+            LOG_ERR("Failed to set security (bt_conn_set_security returns %d)", ret);
+        }
     }
 }
 
