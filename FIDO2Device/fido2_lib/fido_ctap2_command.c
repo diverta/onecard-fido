@@ -131,8 +131,11 @@ static void resume_response_process(bool tup_done)
             command_get_assertion_resume_process();
             break;
         case CTAP2_CMD_RESET:
+            // `ctap2_client_pin_init`内で実行される
+            // `fido_command_generate_random_vector`の実行事前に、
+            // ランダムベクターの生成を指示
             fido_user_presence_verify_end_message("authenticatorReset", tup_done);
-            command_authenticator_reset_resume_process();
+            fido_crypto_random_pre_generate(command_authenticator_reset_resume_process);
             break;
         default:
             break;
