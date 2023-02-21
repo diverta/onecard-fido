@@ -3,6 +3,12 @@
 #
 # Application settings
 #
+config APP_FW_BUILD
+	int "Firmware build revision serial number"
+	default 100
+	help
+	  Serial number of application firmware build revision
+
 config APP_SETTINGS_BUFFER_SIZE
 	int "Read buffer size for app_settings"
 	default 128

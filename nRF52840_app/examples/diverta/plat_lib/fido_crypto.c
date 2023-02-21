@@ -98,6 +98,14 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *
     APP_ERROR_CHECK(err_code);
 }
 
+void fido_crypto_random_pre_generate(void (*resume_func)(void))
+{
+    // 事前処理対応不要のため、コールバック関数を実行
+    if (resume_func != NULL) {
+        (*resume_func)();
+    }
+}
+
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
 {
     // Initialize crypto library.

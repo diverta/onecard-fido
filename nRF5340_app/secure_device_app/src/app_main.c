@@ -9,7 +9,10 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_crypto.h"
+#include "app_crypto_define.h"
 #include "app_event.h"
+#include "app_main.h"
 #include "app_rtcc.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -33,6 +36,7 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 #include "ctap2_client_pin.h"
 #include "ccid.h"
+#include "fido_platform.h"
 #include "rtcc.h"
 
 // for resume after Flash ROM object updated/deleted
@@ -57,16 +61,18 @@ void app_main_init(void)
     // 通知できるようにする
     app_event_main_enable(true);
 
-    // Bluetoothサービス開始を指示
+    // 暗号化関連の初期化
+    // 処理完了後、Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_bluetooth_start();
+    app_main_app_crypto_do_process(CRYPTO_EVT_INIT, app_bluetooth_start);
 }
 
 //
 // データ処理イベント関連
 //
 static bool m_initialized = false;
+static void crypto_random_pre_generated(void);
 
 void app_main_data_channel_initialized(void)
 {
@@ -75,11 +81,19 @@ void app_main_data_channel_initialized(void)
         return;
     }
 
+    // `ctap2_client_pin_init`内で実行される
+    // `fido_command_generate_random_vector`の実行事前に、
+    // ランダムベクターの生成を指示
+    fido_crypto_random_pre_generate(crypto_random_pre_generated);
+}    
+
+static void crypto_random_pre_generated(void)
+{
     // BLEまたはUSB HID I/Fが使用可能になった場合、
     // 業務処理をオープンさせる前に、
     // CTAP2で使用する機密データを初期化
     ctap2_client_pin_init();
-    
+
     // RTCCを初期化
     rtcc_init();
 
@@ -197,4 +211,27 @@ void app_main_button_1_pressed(void)
 {
     // 現在未割り当て
     LOG_INF("Button 2 pressed");
+}
+
+//
+// 暗号化関連処理
+//
+static void (*_resume_func)(void);
+
+void app_main_app_crypto_do_process(uint8_t event, void (*resume_func)(void))
+{
+    // コールバック関数の参照を保持
+    _resume_func = resume_func;
+
+    // 暗号化関連処理を専用スレッドで実行
+    app_crypto_do_process(event);
+}
+
+void app_main_app_crypto_done(void)
+{
+    // コールバック関数を実行
+    if (_resume_func != NULL) {
+        (*_resume_func)();
+        _resume_func = NULL;
+    }
 }

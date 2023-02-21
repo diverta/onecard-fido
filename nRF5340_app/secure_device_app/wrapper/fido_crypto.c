@@ -14,8 +14,10 @@
 #include "fido_platform.h"
 
 // プラットフォーム依存コード
-#include "app_crypto.h"
+#include "app_crypto_define.h"
 #include "app_crypto_ec.h"
+#include "app_crypto_util.h"
+#include "app_main.h"
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(fido_crypto);
@@ -43,6 +45,12 @@ void fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, 
 void fido_crypto_calculate_hmac_sha1(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data)
 {
     app_crypto_generate_hmac_sha1(key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
+}
+
+void fido_crypto_random_pre_generate(void (*resume_func)(void))
+{
+    // ランダムベクターの生成を、専用スレッドで実行させるよう指示
+    app_main_app_crypto_do_process(CRYPTO_EVT_RANDOM_PREGEN, resume_func);
 }
 
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)

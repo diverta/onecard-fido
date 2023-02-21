@@ -335,6 +335,9 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_APP_SETTINGS_DELETED:
             app_main_app_settings_deleted();
             break;
+        case APEVT_APP_CRYPTO_DONE:
+            app_main_app_crypto_done();
+            break;
         default:
             break;
     }

@@ -21,6 +21,7 @@ LOG_MODULE_REGISTER(app_crypto_rsa);
 // 定義体
 #include "app_crypto.h"
 #include "app_crypto_define.h"
+#include "app_crypto_util.h"
 
 //
 // E は定数として、このモジュール内で管理
