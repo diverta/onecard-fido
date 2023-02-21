@@ -70,7 +70,10 @@ void fido_maintenance_attestation_record_updated(void)
         fido_log_debug("Update FIDO attestation record completed ");
 
         // 続いて、AESパスワード生成処理を行う
-        generate_random_password();
+        //  `generate_random_password`内で実行される
+        //  `fido_command_generate_random_vector`の実行事前に、
+        //  ランダムベクターの生成を指示
+        fido_crypto_random_pre_generate(generate_random_password);
     }
 }
 
@@ -119,6 +122,9 @@ void fido_maintenance_attestation_token_counter_file_deleted(void)
         fido_log_debug("Erase token counter file completed");
 
         // 続いて、AESパスワード生成処理を行う
-        generate_random_password();
+        //  `generate_random_password`内で実行される
+        //  `fido_command_generate_random_vector`の実行事前に、
+        //  ランダムベクターの生成を指示
+        fido_crypto_random_pre_generate(generate_random_password);
     }
 }
