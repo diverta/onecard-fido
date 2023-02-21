@@ -16,9 +16,6 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
-// Work for BT address string
-static char addr_str_buf[BT_ADDR_LE_STR_LEN];
-
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
@@ -55,8 +52,9 @@ static void pairing_cancel(struct bt_conn *conn)
 static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 {
     (void)id;
-    bt_addr_le_to_str(addr, addr_str_buf, sizeof(addr_str_buf));
-    LOG_INF("Bonding information deleted: address=%s", log_strdup(addr_str_buf));
+    char addr_str[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
+    LOG_INF("Bonding information deleted: address=%s", addr_str);
 }
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
@@ -71,16 +69,16 @@ struct bt_conn_auth_info_cb info_cb_for_non_pair = {
 
 static void auth_passkey_display(struct bt_conn *conn, unsigned int passkey)
 {
-    (void)conn;
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
-    LOG_INF("Passkey for %s: %06u", log_strdup(addr_str_buf), passkey);
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Passkey for %s: %06u", addr, passkey);
 }
 
 static void auth_cancel(struct bt_conn *conn)
 {
-    (void)conn;
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
-    LOG_WRN("Pairing with authentication cancelled: %s", log_strdup(addr_str_buf));
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_WRN("Pairing with authentication cancelled: %s", addr);
 }
 
 static void auth_pairing_complete(struct bt_conn *conn, bool bonded)
