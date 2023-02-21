@@ -49,18 +49,18 @@ void fido_maintenance_attestation_install(void)
     }
 }
 
-static bool generate_random_password(void)
+static void generate_random_password(void)
 {
     // 32バイトのランダムベクターを生成
     fido_command_generate_random_vector(work_buf, 32);
 
     // Flash ROMに書き出して保存
     if (fido_flash_password_set(work_buf) == false) {
-        return false;
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
+        return;
     }
 
     fido_log_debug("Generated random vector for AES password ");
-    return true;
 }
 
 void fido_maintenance_attestation_record_updated(void)
@@ -70,9 +70,7 @@ void fido_maintenance_attestation_record_updated(void)
         fido_log_debug("Update FIDO attestation record completed ");
 
         // 続いて、AESパスワード生成処理を行う
-        if (generate_random_password() == false) {
-            fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
-        }
+        generate_random_password();
     }
 }
 
@@ -121,8 +119,6 @@ void fido_maintenance_attestation_token_counter_file_deleted(void)
         fido_log_debug("Erase token counter file completed");
 
         // 続いて、AESパスワード生成処理を行う
-        if (generate_random_password() == false) {
-            fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
-        }
+        generate_random_password();
     }
 }
