@@ -120,8 +120,11 @@ static void resume_response_process(bool tup_done)
 
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
+            // `ctap2_make_credential_generate_response_items`内で実行される
+            // `fido_command_generate_random_vector`の実行事前に、
+            // ランダムベクターの生成を指示
             fido_user_presence_verify_end_message("authenticatorMakeCredential", tup_done);
-            command_make_credential_resume_process();
+            fido_crypto_random_pre_generate(command_make_credential_resume_process);
             break;
         case CTAP2_CMD_GET_ASSERTION:
             fido_user_presence_verify_end_message("authenticatorGetAssertion", tup_done);
