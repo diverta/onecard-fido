@@ -274,6 +274,9 @@ void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
     switch (event) {
+        case APEVT_SUBSYS_INIT:
+            app_main_subsys_init();
+            break;
         case APEVT_BUTTON_PUSHED:
         case APEVT_BUTTON_RELEASED:
             button_pressed(event);

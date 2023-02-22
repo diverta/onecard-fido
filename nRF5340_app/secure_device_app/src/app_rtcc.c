@@ -20,6 +20,16 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_rtcc);
 
+//
+// モジュール利用の可否を保持
+//
+static bool rtcc_is_available = false;
+
+bool app_rtcc_is_available(void)
+{
+    return rtcc_is_available;
+}
+
 static const struct device *i2c_dev;
 
 // データ送受信用の一時領域
@@ -270,6 +280,8 @@ static bool set_backup_switchover_mode(uint8_t val)
         LOG_ERR("Write EEPROM backup register fail");
         return false;
     }
+
+    LOG_DBG("Write EEPROM backup register success (0x%02x)", backup_reg_val);
     return true;
 }
 
@@ -394,16 +406,35 @@ static bool set_unix_timestamp(uint32_t seconds_since_epoch, bool sync_calendar,
 //
 // RTCCの初期化
 //
-bool app_rtcc_initialize(void)
+void app_rtcc_initialize(void)
 {
+    // RTCCが搭載されていない場合は終了
+    if (rtcc_is_available == false) {
+        return;
+    }
+
     // 制御レジスター（Control 2 register）を参照、0x00なら正常
     uint8_t c2;
     if (read_register(RV3028C7_REG_CONTROL_2, &c2) == false) {
-        return false;
+        rtcc_is_available = false;
+        return;
     }
     if (c2 != 0x00) {
         LOG_ERR("RTCC is not available");
-        return false;
+        rtcc_is_available = false;
+        return;
+    }
+
+    // バックアップレジスターの値を参照、0x90なら以降の設定処理は不要
+    uint8_t backup_reg_val;
+    if (read_eeprom_backup_register(RV3028C7_REG_EEPROM_BACKUP, &backup_reg_val) == false) {
+        LOG_ERR("Read EEPROM backup register fail");
+        rtcc_is_available = false;
+        return;
+    }
+    if (backup_reg_val == 0x90) {
+        LOG_INF("RTCC device is ready (with default settings)");
+        return;
     }
     //
     // 設定時刻の永続化のため、
@@ -417,7 +448,8 @@ bool app_rtcc_initialize(void)
     uint8_t val = 0x00;
     if (set_backup_switchover_mode(val) == false) {
         LOG_ERR("RTCC backup switchover mode setting failed");
-        return false;
+        rtcc_is_available = false;
+        return;
     }
     // 
     // トリクル充電は行わないよう設定。
@@ -432,10 +464,9 @@ bool app_rtcc_initialize(void)
     uint8_t tcr = 0x03;
     if (enable_trickle_charge(false, tcr) == false) {
         LOG_ERR("RTCC tricle charge setting failed");
-        return false;
+        rtcc_is_available = false;
     }
-
-    return true;
+    LOG_INF("RTCC device is ready (reset with default settings)");
 }
 
 bool app_rtcc_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours)
@@ -485,11 +516,9 @@ static int app_rtcc_init(const struct device *dev)
     (void)dev;
     i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c1));
     if (device_is_ready(i2c_dev) == false) {
-        LOG_ERR("RTCC device is not ready");
         return -ENOTSUP;
     }
-
-    LOG_INF("RTCC device is ready");
+    rtcc_is_available = true;
     return 0;
 }
 

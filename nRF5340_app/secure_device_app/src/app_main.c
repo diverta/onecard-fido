@@ -61,6 +61,15 @@ void app_main_init(void)
     // 通知できるようにする
     app_event_main_enable(true);
 
+    // サブシステム初期化をメインスレッドで実行
+    app_event_notify(APEVT_SUBSYS_INIT);
+}
+
+void app_main_subsys_init(void)
+{
+    // リアルタイムクロックカレンダーの初期化
+    app_rtcc_initialize();
+
     // 暗号化関連の初期化
     // 処理完了後、Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
