@@ -18,6 +18,9 @@
 // for fido_extract_pubkey_in_certificate
 #include "fido_common.h"
 
+// for fido_command_generate_random_vector
+#include "fido_command_common.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -307,7 +310,7 @@ uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void
         return SW_WRONG_DATA;
     }
     uint8_t *challenge = auth_ctx + 3;
-    fido_crypto_generate_random_vector(challenge, challenge_size);
+    fido_command_generate_random_vector(challenge, challenge_size);
 
     // レスポンスデータを生成
     uint8_t *rdata = rapdu->data;
