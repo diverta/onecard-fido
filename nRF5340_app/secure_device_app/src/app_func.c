@@ -13,7 +13,7 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_func);
 
-#define APP_NO_FUNCTION             true
+#define APP_NO_FUNCTION             false
 #define LOG_DEBUG_HID_DATA_FRAME    false
 #define LOG_DEBUG_CCID_DATA_FRAME   false
 #define LOG_DEBUG_BLE_DATA_FRAME    false
