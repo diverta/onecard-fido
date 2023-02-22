@@ -11,6 +11,7 @@
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_func.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
 #include "app_settings.h"
