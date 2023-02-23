@@ -18,6 +18,7 @@ extern "C" {
 // イベント種別
 typedef enum {
     APEVT_NONE = 0,
+    APEVT_SUBSYS_INIT,
     APEVT_BUTTON_PUSHED,
     APEVT_BUTTON_PUSHED_LONG,
     APEVT_BUTTON_RELEASED,

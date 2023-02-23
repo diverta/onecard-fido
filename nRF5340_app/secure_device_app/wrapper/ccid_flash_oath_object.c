@@ -134,7 +134,7 @@ static bool compare_unique_key(const char *settings_key, void *data, size_t size
     (void)size;
 
 #if LOG_SETTINGS_KEY_FOR_FIND
-    LOG_INF("settings key=%s", log_strdup(settings_key));
+    LOG_INF("settings key=%s", settings_key);
     LOG_HEXDUMP_INF(p_unique_key, 16, "unique key in data");
     LOG_HEXDUMP_INF(m_unique_key, 16, "unique key for search");
 #endif

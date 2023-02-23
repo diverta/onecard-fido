@@ -15,15 +15,10 @@
 #include "app_event.h"
 #include "app_ble_fido.h"
 #include "app_ble_smp.h"
-#include "app_log.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
-
-// Work for BT address string
-static char addr_str_buf_1[BT_ADDR_LE_STR_LEN];
-static char addr_str_buf_2[BT_ADDR_LE_STR_LEN];
 
 //
 // パスキー関連
@@ -156,7 +151,11 @@ static void connected(struct bt_conn *conn, uint8_t err)
         LOG_ERR("Connection failed (err 0x%02x)", err);
 
     } else {
-         LOG_INF("Connected");
+        LOG_INF("Connected");
+        int ret = bt_conn_set_security(conn, BT_SECURITY_L4);
+        if (ret != 0) {
+            LOG_ERR("Failed to set security (bt_conn_set_security returns %d)", ret);
+        }
     }
 }
 
@@ -172,31 +171,32 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 #if defined(CONFIG_BT_SMP)
 static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
 {
-    (void)conn;
+    char addr_identity[BT_ADDR_LE_STR_LEN];
+    char addr_rpa[BT_ADDR_LE_STR_LEN];
 
-    bt_addr_le_to_str(identity, addr_str_buf_1, sizeof(addr_str_buf_1));
-    bt_addr_le_to_str(rpa, addr_str_buf_2, sizeof(addr_str_buf_2));
-    LOG_DBG("Identity resolved %s -> %s", log_strdup(addr_str_buf_2), log_strdup(addr_str_buf_1));
+    bt_addr_le_to_str(identity, addr_identity, sizeof(addr_identity));
+    bt_addr_le_to_str(rpa, addr_rpa, sizeof(addr_rpa));
+    LOG_INF("Identity resolved %s -> %s", addr_rpa, addr_identity);
 }
 
 static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
 {
-    (void)conn;
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf_1, sizeof(addr_str_buf_1));
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
 
     if (err == BT_SECURITY_ERR_SUCCESS) {
         if (level < BT_SECURITY_L2) {
-            LOG_WRN("Security change failed: %s level %u", log_strdup(addr_str_buf_1), level);
+            LOG_WRN("Security change failed: %s level %u", addr, level);
 
         } else {
             // セキュリティーレベル変更が成功したら、
             // BLE接続イベントを業務処理スレッドに引き渡す
-            LOG_INF("Connected %s with security level %u", log_strdup(addr_str_buf_1), level);
+            LOG_INF("Connected %s with security level %u", addr, level);
             app_event_notify(APEVT_BLE_CONNECTED);
         }
 
     } else {
-        LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr_str_buf_1), level, err);
+        LOG_WRN("Security failed: %s level %u err %d", addr, level, err);
     }
 }
 #endif

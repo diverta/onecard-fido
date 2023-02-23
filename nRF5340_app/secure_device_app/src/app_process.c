@@ -11,6 +11,7 @@
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_func.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
 #include "app_settings.h"
@@ -274,6 +275,9 @@ void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
     switch (event) {
+        case APEVT_SUBSYS_INIT:
+            app_main_subsys_init();
+            break;
         case APEVT_BUTTON_PUSHED:
         case APEVT_BUTTON_RELEASED:
             button_pressed(event);
