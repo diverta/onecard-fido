@@ -74,7 +74,7 @@ static void crypto_random_pre_generated(void)
     rtcc_init();
 
     // バージョンをデバッグ出力
-    LOG_INF("Secure device application (%s) version %s", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR);
+    LOG_INF("Secure device application (%s) version %s (%d)", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR, CONFIG_APP_FW_BUILD);
 
     // 初期化処理完了
     m_initialized = true;
