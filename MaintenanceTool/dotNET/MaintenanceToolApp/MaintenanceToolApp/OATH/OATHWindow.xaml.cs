@@ -12,9 +12,9 @@ namespace MaintenanceTool.OATH
     public partial class OATHWindow : Window
     {
         // 処理パラメーターの参照を保持
-        private readonly TOTPParameter Parameter = null!;
+        private readonly OATHParameter Parameter = null!;
 
-        public OATHWindow(TOTPParameter parameter)
+        public OATHWindow(OATHParameter parameter)
         {
             // 処理パラメーターの参照を保持
             Parameter = parameter;
