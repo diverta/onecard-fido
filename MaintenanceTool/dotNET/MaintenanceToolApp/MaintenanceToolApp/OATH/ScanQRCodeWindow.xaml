@@ -8,14 +8,14 @@
     <Grid Height="440">
         <GroupBox x:Name="groupBoxExecute" Header="スキャンの実行" VerticalAlignment="Top" Margin="20,10,20,0" Height="185"/>
         <Label x:Name="labelCaption3" Content="認証用のQRコードをスキャンします。&#xA;画面上にQRコードの全体が表示されていることを確認し、&#xA;「スキャン実行」ボタンをクリックしてください。&#xA;&#xA;ご注意：スキャンさせたいQRコードが、下に隠れないよう、&#xA;この画面の位置を調整してください。" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,35,0,0" Height="110" Width="280" VerticalContentAlignment="Center" Background="#FFF0F0F0"/>
-        <Button x:Name="buttonScan" Content="実行" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,155,0,0" Height="25" Width="160" Click="buttonCancel_Click"/>
+        <Button x:Name="buttonScan" Content="実行" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,155,0,0" Height="25" Width="160" Click="buttonScan_Click"/>
         <GroupBox x:Name="groupBoxAccount" Header="アカウント情報" VerticalAlignment="Top" Margin="20,205,20,0" Height="79"/>
-        <Label x:Name="labelIssuerCap" Content="発行者" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="35,223,0,0" Width="70" VerticalContentAlignment="Center" FontSize="11"/>
-        <Label x:Name="labelIssuerVal" Content="GitHub" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,223,0,0" Width="195" VerticalContentAlignment="Center" FontSize="11"/>
-        <Label x:Name="labelAccountCap" Content="名前" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="35,249,0,0" Width="70" VerticalContentAlignment="Center" FontSize="11"/>
-        <Label x:Name="labelAccountVal" Content="makmorit@gmail.com" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,249,0,0" Width="195" VerticalContentAlignment="Center" FontSize="11"/>
+        <Label x:Name="labelIssuerCap" Content="発行者" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="35,223,0,0" Width="70" VerticalContentAlignment="Center"/>
+        <Label x:Name="labelIssuerVal" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,223,0,0" Width="195" VerticalContentAlignment="Center"/>
+        <Label x:Name="labelAccountCap" Content="名前" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="35,249,0,0" Width="70" VerticalContentAlignment="Center"/>
+        <Label x:Name="labelAccountVal" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,249,0,0" Width="195" VerticalContentAlignment="Center"/>
         <GroupBox x:Name="groupBoxPassword" Header="ワンタイムパスワード" VerticalAlignment="Top" Margin="20,295,20,0" Height="79"/>
-        <Label x:Name="labelPassword" Content="999999" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,310,0,0" Width="195" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36" FontWeight="Bold"/>
+        <Label x:Name="labelPassword" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,310,0,0" Width="195" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36" FontWeight="Bold"/>
         <Button x:Name="buttonUpdate" Content="更新" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,320,40,0" Height="40" Width="60"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,390,0,0" Height="25" Width="160" Click="buttonCancel_Click"/>
     </Grid>
