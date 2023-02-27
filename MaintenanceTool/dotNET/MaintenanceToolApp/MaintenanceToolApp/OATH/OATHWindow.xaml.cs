@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaintenanceToolApp;
+using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.AppDefine.Command;
@@ -66,6 +67,12 @@ namespace MaintenanceTool.OATH
                 }
             }
 
+            // TODO: BLEトランスポートをサポートするまでの暫定措置
+            if (Parameter.Transport == TRANSPORT_BLE) {
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+                return;
+            }
+
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = COMMAND_OATH_SCAN_QRCODE;
             TerminateWindow(true);
@@ -80,6 +87,12 @@ namespace MaintenanceTool.OATH
                 }
             }
 
+            // TODO: BLEトランスポートをサポートするまでの暫定措置
+            if (Parameter.Transport == TRANSPORT_BLE) {
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+                return;
+            }
+
             // 実行機能を設定し、画面を閉じる
             Parameter.Command = COMMAND_OATH_SHOW_PASSWORD;
             TerminateWindow(true);
@@ -92,6 +105,12 @@ namespace MaintenanceTool.OATH
                 if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                     return;
                 }
+            }
+
+            // TODO: BLEトランスポートをサポートするまでの暫定措置
+            if (Parameter.Transport == TRANSPORT_BLE) {
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+                return;
             }
 
             // 実行機能を設定し、画面を閉じる
