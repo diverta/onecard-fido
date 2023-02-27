@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using MaintenanceToolApp;
+using System.ComponentModel;
 using System.Windows;
+using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceTool.OATH
@@ -50,14 +52,41 @@ namespace MaintenanceTool.OATH
         //
         private void DoScanQRCode()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+                if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                    return;
+                }
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         private void DoShowPassword()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+                if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                    return;
+                }
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         private void DoDeleteAccount()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+                if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
+                    return;
+                }
+            }
+
+            // TODO: 仮の実装です。
+            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
 
         //
