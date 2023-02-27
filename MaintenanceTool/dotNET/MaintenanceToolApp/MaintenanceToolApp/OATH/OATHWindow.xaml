@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="OATH設定" Width="360" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="Height" Topmost="True">
+        Title="OATH設定" Width="360" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="Height" Topmost="True">
     <Grid Height="335">
         <GroupBox x:Name="groupBoxTransport" Header="接続方法" VerticalAlignment="Top" Margin="20,10,20,0" Height="60"/>
         <RadioButton x:Name="buttonTransportUSB" Content="USB経由" HorizontalAlignment="Left" Margin="45,35,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="buttonTransportUSB_Checked"/>
