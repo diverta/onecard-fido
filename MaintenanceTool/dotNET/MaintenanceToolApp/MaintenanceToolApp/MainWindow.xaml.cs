@@ -149,7 +149,12 @@ namespace MaintenanceToolApp
 
         private void DoOATH()
         {
-            new OATHWindow().ShowDialogWithOwner(this);
+            // OATH画面を開き、実行コマンド種別を設定
+            TOTPParameter param = new TOTPParameter();
+            if (new OATHWindow(param).ShowDialogWithOwner(this)) {
+                // TODO: 仮の実装です。
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            }
         }
 
         private void DoHealthCheck()

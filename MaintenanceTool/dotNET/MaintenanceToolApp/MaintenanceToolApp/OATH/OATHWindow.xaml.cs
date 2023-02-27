@@ -1,6 +1,4 @@
-﻿using MaintenanceToolApp;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 
@@ -14,22 +12,29 @@ namespace MaintenanceTool.OATH
         // 処理パラメーターの参照を保持
         private readonly TOTPParameter Parameter = null!;
 
-        public OATHWindow()
+        public OATHWindow(TOTPParameter parameter)
         {
             // 処理パラメーターの参照を保持
-            Parameter = new TOTPParameter();
+            Parameter = parameter;
 
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();
         }
 
-        public void ShowDialogWithOwner(Window ownerWindow)
+        public bool ShowDialogWithOwner(Window ownerWindow)
         {
-            // この画面を、親画面の中央にモード付きで表示
+            // 実行機能をクリア
+            Parameter.Command = Command.COMMAND_NONE;
+
+            // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
-            ownerWindow.Hide();
-            ShowDialog();
+            bool? b = ShowDialog();
+            if (b == null) {
+                return false;
+            } else {
+                return (bool)b;
+            }
         }
 
         //
@@ -59,8 +64,9 @@ namespace MaintenanceTool.OATH
                 }
             }
 
-            // QRコードのスキャン画面を表示
-            new ScanQRCodeWindow().ShowDialogWithOwner(this);
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_NONE;
+            TerminateWindow(true);
         }
 
         private void DoShowPassword()
@@ -72,8 +78,9 @@ namespace MaintenanceTool.OATH
                 }
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_NONE;
+            TerminateWindow(true);
         }
 
         private void DoDeleteAccount()
@@ -85,8 +92,16 @@ namespace MaintenanceTool.OATH
                 }
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 実行機能を設定し、画面を閉じる
+            Parameter.Command = Command.COMMAND_NONE;
+            TerminateWindow(true);
+        }
+
+        private void TerminateWindow(bool dialogResult)
+        {
+            // この画面を閉じる
+            DialogResult = dialogResult;
+            Close();
         }
 
         //
@@ -105,13 +120,7 @@ namespace MaintenanceTool.OATH
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             // この画面を閉じる
-            Close();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            // 親画面を表示
-            Owner.Show();
+            TerminateWindow(false);
         }
 
         private void buttonScanQRCode_Click(object sender, RoutedEventArgs e)

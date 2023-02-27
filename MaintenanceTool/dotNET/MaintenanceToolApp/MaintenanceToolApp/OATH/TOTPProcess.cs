@@ -2,7 +2,7 @@
 
 namespace MaintenanceTool.OATH
 {
-    internal class TOTPParameter
+    public class TOTPParameter
     {
         public string CommandTitle { get; set; }
         public Command Command { get; set; }
