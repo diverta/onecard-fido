@@ -10,9 +10,9 @@
         <RadioButton x:Name="buttonTransportUSB" Content="USB経由" HorizontalAlignment="Left" Margin="45,35,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="buttonTransportUSB_Checked"/>
         <RadioButton x:Name="buttonTransportBLE" Content="BLE経由" HorizontalAlignment="Left" Margin="135,35,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20" Checked="buttonTransportBLE_Checked"/>
         <GroupBox x:Name="groupBoxTOTP" Header="TOTP（Time-based One-time Password）" VerticalAlignment="Top" Margin="20,80,20,0" Height="185"/>
-        <Button x:Name="buttonScanQRCode" Content="認証用QRコードのスキャン" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,115,0,0" Height="25" Width="250"/>
-        <Button x:Name="buttonShowPassword" Content="ワンタイムパスワードの参照" HorizontalAlignment="Center"  VerticalAlignment="Top" Margin="0,165,0,0" Height="25" Width="250"/>
-        <Button x:Name="buttonDeleteAccount" Content="不要アカウントの削除" HorizontalAlignment="Center"  VerticalAlignment="Top" Margin="0,215,0,0" Height="25" Width="250"/>
+        <Button x:Name="buttonScanQRCode" Content="認証用QRコードのスキャン" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,115,0,0" Height="25" Width="250" Click="buttonScanQRCode_Click"/>
+        <Button x:Name="buttonShowPassword" Content="ワンタイムパスワードの参照" HorizontalAlignment="Center"  VerticalAlignment="Top" Margin="0,165,0,0" Height="25" Width="250" Click="buttonShowPassword_Click"/>
+        <Button x:Name="buttonDeleteAccount" Content="不要アカウントの削除" HorizontalAlignment="Center"  VerticalAlignment="Top" Margin="0,215,0,0" Height="25" Width="250" Click="buttonDeleteAccount_Click"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,285,0,0" Height="25" Width="160" Click="buttonCancel_Click"/>
     </Grid>
 </Window>

@@ -9,8 +9,14 @@ namespace MaintenanceTool.OATH
     /// </summary>
     public partial class OATHWindow : Window
     {
+        // 処理パラメーターの参照を保持
+        private readonly TOTPParameter Parameter = null!;
+
         public OATHWindow()
         {
+            // 処理パラメーターの参照を保持
+            Parameter = new TOTPParameter();
+
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();
@@ -35,7 +41,23 @@ namespace MaintenanceTool.OATH
 
         private void DoSetParameter(Transport transport)
         {
-            // TODO: トランスポート種別を設定
+            // トランスポート種別を設定
+            Parameter.Transport = transport;
+        }
+
+        //
+        // 各機能の処理
+        //
+        private void DoScanQRCode()
+        {
+        }
+
+        private void DoShowPassword()
+        {
+        }
+
+        private void DoDeleteAccount()
+        {
         }
 
         //
@@ -61,6 +83,21 @@ namespace MaintenanceTool.OATH
         {
             // 親画面を表示
             Owner.Show();
+        }
+
+        private void buttonScanQRCode_Click(object sender, RoutedEventArgs e)
+        {
+            DoScanQRCode();
+        }
+
+        private void buttonShowPassword_Click(object sender, RoutedEventArgs e)
+        {
+            DoShowPassword();
+        }
+
+        private void buttonDeleteAccount_Click(object sender, RoutedEventArgs e)
+        {
+            DoDeleteAccount();
         }
     }
 }
