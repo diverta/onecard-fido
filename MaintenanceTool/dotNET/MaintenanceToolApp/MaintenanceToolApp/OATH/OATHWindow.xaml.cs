@@ -59,8 +59,8 @@ namespace MaintenanceTool.OATH
                 }
             }
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // QRコードのスキャン画面を表示
+            new ScanQRCodeWindow().ShowDialogWithOwner(this);
         }
 
         private void DoShowPassword()
