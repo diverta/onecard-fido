@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.BLESettings;
+﻿using MaintenanceTool.OATH;
+using MaintenanceToolApp.BLESettings;
 using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
@@ -148,7 +149,7 @@ namespace MaintenanceToolApp
 
         private void DoOATH()
         {
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            new OATHWindow().ShowDialogWithOwner(this);
         }
 
         private void DoHealthCheck()
