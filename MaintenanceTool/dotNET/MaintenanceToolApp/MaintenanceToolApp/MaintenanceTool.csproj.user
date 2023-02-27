@@ -33,6 +33,12 @@
     <Compile Update="FIDOSettings\SetPinCodeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="OATH\OATHWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="OATH\ScanQRCodeWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="OpenPGP\OpenPGPWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -84,6 +90,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OATH\OATHWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OATH\ScanQRCodeWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OpenPGP\OpenPGPWindow.xaml">
