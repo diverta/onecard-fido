@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="認証用QRコードのスキャン"  Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="Height">
+        Title="認証用QRコードのスキャン"  Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="Height" Topmost="True">
     <Grid Height="440">
         <GroupBox x:Name="groupBoxExecute" Header="スキャンの実行" VerticalAlignment="Top" Margin="20,10,20,0" Height="185"/>
         <Label x:Name="labelCaption3" Content="認証用のQRコードをスキャンします。&#xA;画面上にQRコードの全体が表示されていることを確認し、&#xA;「スキャン実行」ボタンをクリックしてください。&#xA;&#xA;ご注意：スキャンさせたいQRコードが、下に隠れないよう、&#xA;この画面の位置を調整してください。" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,35,0,0" Height="110" Width="280" VerticalContentAlignment="Center" Background="#FFF0F0F0"/>
