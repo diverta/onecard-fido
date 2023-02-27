@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
+using static MaintenanceToolApp.AppDefine.Command;
+using static MaintenanceToolApp.AppDefine.Transport;
 
 namespace MaintenanceTool.OATH
 {
@@ -25,7 +27,7 @@ namespace MaintenanceTool.OATH
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
             // 実行機能をクリア
-            Parameter.Command = Command.COMMAND_NONE;
+            Parameter.Command = COMMAND_NONE;
 
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
@@ -58,42 +60,42 @@ namespace MaintenanceTool.OATH
         private void DoScanQRCode()
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+            if (Parameter.Transport == TRANSPORT_HID) {
                 if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                     return;
                 }
             }
 
             // 実行機能を設定し、画面を閉じる
-            Parameter.Command = Command.COMMAND_NONE;
+            Parameter.Command = COMMAND_OATH_SCAN_QRCODE;
             TerminateWindow(true);
         }
 
         private void DoShowPassword()
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+            if (Parameter.Transport == TRANSPORT_HID) {
                 if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                     return;
                 }
             }
 
             // 実行機能を設定し、画面を閉じる
-            Parameter.Command = Command.COMMAND_NONE;
+            Parameter.Command = COMMAND_OATH_SHOW_PASSWORD;
             TerminateWindow(true);
         }
 
         private void DoDeleteAccount()
         {
             // USB HID接続がない場合はエラーメッセージを表示
-            if (Parameter.Transport == Transport.TRANSPORT_HID) {
+            if (Parameter.Transport == TRANSPORT_HID) {
                 if (WindowUtil.CheckUSBDeviceDisconnected(this)) {
                     return;
                 }
             }
 
             // 実行機能を設定し、画面を閉じる
-            Parameter.Command = Command.COMMAND_NONE;
+            Parameter.Command = COMMAND_OATH_DELETE_ACCOUNT;
             TerminateWindow(true);
         }
 
@@ -109,12 +111,12 @@ namespace MaintenanceTool.OATH
         // 
         private void buttonTransportUSB_Checked(object sender, RoutedEventArgs e)
         {
-            DoSetParameter(Transport.TRANSPORT_HID);
+            DoSetParameter(TRANSPORT_HID);
         }
 
         private void buttonTransportBLE_Checked(object sender, RoutedEventArgs e)
         {
-            DoSetParameter(Transport.TRANSPORT_BLE);
+            DoSetParameter(TRANSPORT_BLE);
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
