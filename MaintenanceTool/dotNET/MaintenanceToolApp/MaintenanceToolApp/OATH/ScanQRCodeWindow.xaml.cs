@@ -35,6 +35,13 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // スキャンしたアカウント情報の項目有無をチェック
+            if (QRCodeUtil.CheckScannedAccountInfo(parsedQRCodeInfo) == false) {
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID);
+                InitFieldValue();
+                return;
+            }
+
             // アカウント情報の各項目を画面表示
             labelAccountVal.Content = parsedQRCodeInfo["account"];
             labelIssuerVal.Content = parsedQRCodeInfo["issuer"];
