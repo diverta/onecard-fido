@@ -1,11 +1,9 @@
 ﻿using MaintenanceToolApp;
 using MaintenanceToolApp.CommonWindow;
-using MaintenanceToolApp.Utility;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
-using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceTool.OATH
 {
@@ -37,15 +35,14 @@ namespace MaintenanceTool.OATH
 
         public void DoScan()
         {
+            // 画面項目の初期化
+            InitFieldValue();
+
             // QRコードのスキャンを画面スレッドで実行
             if (OATHProcess.ScanQRCode(Parameter) == false) {
                 DialogUtil.ShowWarningMessage(this, Title, Parameter.ResultInformativeMessage);
                 return;
             }
-
-            // アカウント情報の各項目を画面表示
-            labelAccountVal.Content = Parameter.OATHAccountName;
-            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
 
             // パラメーターを設定し、コマンドを実行
             Parameter.CommandTitle = Title;
@@ -56,12 +53,18 @@ namespace MaintenanceTool.OATH
             // 進捗画面を表示
             CommonProcessingWindow.OpenForm(this);
 
-            // メッセージをポップアップ表示
-            if (Parameter.CommandSuccess) {
-                DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
-            } else {
+            if (Parameter.CommandSuccess == false) {
+                // 処理失敗時は、エラーメッセージをポップアップ表示
                 DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+                return;
             }
+
+            // アカウント情報の各項目を画面表示
+            labelAccountVal.Content = Parameter.OATHAccountName;
+            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
+
+            // 処理完了メッセージをポップアップ表示
+            DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
         }
 
         private void OnOATHProcessTerminated(OATHParameter parameter)
