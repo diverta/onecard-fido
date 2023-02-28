@@ -22,6 +22,7 @@ namespace MaintenanceTool.OATH
         //
         public string OATHAccountName { get; set; }
         public string OATHAccountIssuer { get; set; }
+        public string OATHBase32Secret { get; set; }
 
         public OATHParameter()
         {
@@ -32,6 +33,7 @@ namespace MaintenanceTool.OATH
             Transport = TRANSPORT_NONE;
             OATHAccountName = string.Empty;
             OATHAccountIssuer = string.Empty;
+            OATHBase32Secret= string.Empty;
         }
     }
 
@@ -154,6 +156,7 @@ namespace MaintenanceTool.OATH
             // アカウント情報の各項目をパラメーターに設定
             parameter.OATHAccountName = parsedQRCodeInfo["account"];
             parameter.OATHAccountIssuer = parsedQRCodeInfo["issuer"];
+            parameter.OATHBase32Secret = parsedQRCodeInfo["secret"];
             return true;
         }
     }

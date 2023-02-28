@@ -269,6 +269,9 @@ namespace MaintenanceTool.OATH
             if (CheckScannedAccountInfoItem(accountInfo, "issuer") == false) {
                 return false;
             }
+            if (CheckScannedAccountInfoItem(accountInfo, "secret") == false) {
+                return false;
+            }
             return true;
         }
 
