@@ -144,7 +144,7 @@ namespace MaintenanceTool.OATH
             // APDUを生成
             byte[] apduBytes;
             if (GenerateAccountAddAPDU(parameter, out apduBytes) == false) {
-                NotifyProcessTerminated(false, "アカウント登録処理用のリクエストデータ生成に失敗しました。");
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OATH_ACCOUNT_ADD_APDU_FAILED);
                 return;
             }
 
@@ -157,12 +157,12 @@ namespace MaintenanceTool.OATH
         {
             // 不明なエラーが発生時は以降の処理を行わない
             if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
-                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW));
+                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_ERROR_OATH_ACCOUNT_ADD_FAILED, responseSW));
                 return;
             }
 
             // 処理成功のログを出力
-            AppLogUtil.OutputLogInfo("認証器にOATHアカウントを登録しました。");
+            AppLogUtil.OutputLogInfo(AppCommon.MSG_INFO_OATH_ACCOUNT_ADD_SUCCESS);
 
             // TODO: 仮の実装です。
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
