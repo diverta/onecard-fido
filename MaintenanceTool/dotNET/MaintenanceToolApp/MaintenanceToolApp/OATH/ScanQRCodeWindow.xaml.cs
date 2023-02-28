@@ -1,6 +1,11 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonWindow;
+using MaintenanceToolApp.Utility;
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceTool.OATH
 {
@@ -42,8 +47,29 @@ namespace MaintenanceTool.OATH
             labelAccountVal.Content = Parameter.OATHAccountName;
             labelIssuerVal.Content = Parameter.OATHAccountIssuer;
 
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // パラメーターを設定し、コマンドを実行
+            Parameter.CommandTitle = Title;
+            Task task = Task.Run(() => {
+                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            // メッセージをポップアップ表示
+            if (Parameter.CommandSuccess) {
+                DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
+            } else {
+                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+            }
+        }
+
+        private void OnOATHProcessTerminated(OATHParameter parameter)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //

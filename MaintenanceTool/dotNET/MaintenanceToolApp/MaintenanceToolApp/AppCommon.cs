@@ -279,6 +279,7 @@
         // OATH機能設定関連
         public const string MSG_ERROR_OATH_QRCODE_SCAN_FAILED = "認証用QRコードが画面からスキャンできませんでした。";
         public const string MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID = "認証用QRコードからスキャンしたアカウント情報が不正です。";
+        public const string MSG_ERROR_OATH_APPLET_SELECT_FAILED = "OATH機能を使用することができません。";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
