@@ -19,7 +19,8 @@ namespace MaintenanceTool.OATH
         //
         private readonly QRDecoder QrDecoder = null!;
 
-        public QRCodeUtil() {
+        public QRCodeUtil()
+        {
             try {
                 ILogger<QRDecoder> logger = new LoggerFactory().CreateLogger<QRDecoder>();
                 QrDecoder = new QRDecoder(logger);
@@ -121,7 +122,6 @@ namespace MaintenanceTool.OATH
                 byte[][] dataArrayList = QrDecoder.ImageDecoder(bitmapScreenShot);
                 if (dataArrayList != null && dataArrayList.Length > 0) {
                     qrCodeString += Encoding.UTF8.GetString(dataArrayList[0]);
-                    AppLogUtil.OutputLogDebug("QR code detected from screen");
                 }
 
             } catch (Exception e) {
@@ -134,6 +134,7 @@ namespace MaintenanceTool.OATH
                 return false;
             }
 
+            AppLogUtil.OutputLogDebug(string.Format("QR code detected from screen: {0}", qrCodeString));
             return true;
         }
 
@@ -249,7 +250,7 @@ namespace MaintenanceTool.OATH
 
             return parameters;
         }
-        
+
         //
         // ユーティリティー
         //
