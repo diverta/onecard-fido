@@ -148,6 +148,22 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // アカウント登録コマンドを実行
+            CCIDParameter param = new CCIDParameter(0x01, 0x00, 0x00, apduBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseAccountAdd);
+        }
+
+        private void DoResponseAccountAdd(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW));
+                return;
+            }
+
+            // 処理成功のログを出力
+            AppLogUtil.OutputLogInfo("認証器にOATHアカウントを登録しました。");
+
             // TODO: 仮の実装です。
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
