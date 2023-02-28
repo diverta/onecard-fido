@@ -276,6 +276,10 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
+        // OATH機能設定関連
+        public const string MSG_ERROR_OATH_QRCODE_SCAN_FAILED = "認証用QRコードが画面からスキャンできませんでした。";
+        public const string MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID = "認証用QRコードからスキャンしたアカウント情報が不正です。";
+
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
         public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";

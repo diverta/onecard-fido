@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolApp;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 
@@ -26,6 +27,18 @@ namespace MaintenanceTool.OATH
 
         public void DoScan()
         {
+            // QRコードのスキャンを実行
+            Dictionary<string, string> parsedQRCodeInfo = new Dictionary<string, string>();
+            if (QRCodeUtil.ScanQRCodeFromScreenShot(parsedQRCodeInfo) == false) {
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_ERROR_OATH_QRCODE_SCAN_FAILED);
+                InitFieldValue();
+                return;
+            }
+
+            // アカウント情報の各項目を画面表示
+            labelAccountVal.Content = parsedQRCodeInfo["account"];
+            labelIssuerVal.Content = parsedQRCodeInfo["issuer"];
+
             // TODO: 仮の実装です。
             DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
         }
