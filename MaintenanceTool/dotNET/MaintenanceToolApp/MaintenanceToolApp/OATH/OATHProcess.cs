@@ -41,17 +41,6 @@ namespace MaintenanceTool.OATH
 
         public void DoProcess()
         {
-            // 実行コマンドにより処理分岐
-            switch (Parameter.Command) {
-            case COMMAND_OATH_SCAN_QRCODE:
-                // QRコードスキャン-->アカウント登録-->ワンタイムパスワード参照を一息で実行
-                new ScanQRCodeWindow().ShowDialogWithOwner(ParentWindow);
-                break;
-            default:
-                // エラーメッセージをポップアップ表示
-                DialogUtil.ShowWarningMessage(ParentWindow, AppCommon.MSG_TOOL_TITLE, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
-                break;
-            }
         }
     }
 }

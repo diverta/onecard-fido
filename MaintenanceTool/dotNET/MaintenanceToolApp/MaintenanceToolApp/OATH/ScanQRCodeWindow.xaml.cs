@@ -10,8 +10,14 @@ namespace MaintenanceTool.OATH
     /// </summary>
     public partial class ScanQRCodeWindow : Window
     {
-        public ScanQRCodeWindow()
+        // パラメーターの参照を保持
+        private readonly OATHParameter Parameter;
+
+        public ScanQRCodeWindow(OATHParameter parameter)
         {
+            // パラメーターの参照を保持
+            Parameter = parameter;
+
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();

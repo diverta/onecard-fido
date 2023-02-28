@@ -10,6 +10,7 @@ using System;
 using System.Reflection;
 using System.Windows;
 using ToolAppCommon;
+using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceToolApp
 {
@@ -153,7 +154,7 @@ namespace MaintenanceToolApp
             OATHParameter param = new OATHParameter();
             if (new OATHWindow(param).ShowDialogWithOwner(this)) {
                 // OATH機能を実行
-                new OATHProcess(param).DoProcess();
+                SwitchOATHWindow(param);
             }
         }
 
@@ -183,6 +184,24 @@ namespace MaintenanceToolApp
         {
             // 画面を閉じる
             Close();
+        }
+
+        //
+        // 画面表示制御
+        //
+        private void SwitchOATHWindow(OATHParameter parameter)
+        {
+            // 実行コマンドにより処理分岐
+            switch (parameter.Command) {
+            case Command.COMMAND_OATH_SCAN_QRCODE:
+                // QRコードスキャン-->アカウント登録-->ワンタイムパスワード参照を一息で実行
+                new ScanQRCodeWindow(parameter).ShowDialogWithOwner(this);
+                break;
+            default:
+                // エラーメッセージをポップアップ表示
+                DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+                break;
+            }
         }
 
         //
