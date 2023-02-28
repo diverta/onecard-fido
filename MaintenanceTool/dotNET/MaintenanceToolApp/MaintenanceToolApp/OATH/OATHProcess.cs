@@ -2,6 +2,7 @@
 using MaintenanceToolApp.PIV;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
 using static MaintenanceToolApp.AppDefine.Command;
@@ -131,8 +132,65 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // アカウント登録処理に移行
+            DoRequestAccountAdd(Parameter);
+        }
+
+        //
+        // アカウント登録処理
+        //
+        private void DoRequestAccountAdd(OATHParameter parameter)
+        {
+            // APDUを生成
+            byte[] apduBytes;
+            if (GenerateAccountAddAPDU(parameter, out apduBytes) == false) {
+                NotifyProcessTerminated(false, "アカウント登録処理用のリクエストデータ生成に失敗しました。");
+                return;
+            }
+
             // TODO: 仮の実装です。
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        }
+
+        public static bool GenerateAccountAddAPDU(OATHParameter Parameter, out byte[] apduBytes)
+        {
+            apduBytes = Array.Empty<byte>();
+            try {
+                // アカウント名をバイト配列化
+                string accountText = string.Format("{0}:{1}", Parameter.OATHAccountIssuer, Parameter.OATHAccountName);
+                byte[] accountBytes = Encoding.ASCII.GetBytes(accountText);
+
+                // Secret（Base32暗号テキスト）をバイト配列化
+                byte[] secretBytes;
+                Base32Util.Decode(Parameter.OATHBase32Secret, out secretBytes);
+
+                // 変数初期化
+                int apduBytesSize = 2 + accountBytes.Length + 4 + secretBytes.Length;
+                apduBytes = new byte[apduBytesSize];
+                int offset = 0;
+
+                // アカウント
+                apduBytes[offset++] = 0x71;
+                apduBytes[offset++] = (byte)accountBytes.Length;
+
+                // アカウントをコピー
+                Array.Copy(accountBytes, 0, apduBytes, offset, accountBytes.Length);
+                offset += accountBytes.Length;
+
+                // Secret
+                apduBytes[offset++] = 0x73;
+                apduBytes[offset++] = (byte)(secretBytes.Length + 2);
+                apduBytes[offset++] = 0x21;
+                apduBytes[offset++] = 0x06;
+
+                // Secretをコピー
+                Array.Copy(secretBytes, 0, apduBytes, offset, secretBytes.Length);
+                return true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("OATHProcess.GenerateAccountAddAPDU: {0}", e.Message));
+                return false;
+            }
         }
 
         //
