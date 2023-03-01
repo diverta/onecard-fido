@@ -44,8 +44,14 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // ワンタイムパスワードを生成
+            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP);
+        }
+
+        private void DoOATHProcess(string commandTitle)
+        {
             // パラメーターを設定し、コマンドを実行
-            Parameter.CommandTitle = Title;
+            Parameter.CommandTitle = commandTitle;
             Task task = Task.Run(() => {
                 new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
             });
@@ -63,6 +69,10 @@ namespace MaintenanceTool.OATH
             labelAccountVal.Content = Parameter.OATHAccountName;
             labelIssuerVal.Content = Parameter.OATHAccountIssuer;
             labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
+
+            // 実行ボタンの代わりに、更新ボタンを使用可能とする
+            buttonScan.IsEnabled = false;
+            buttonUpdate.IsEnabled = true;
         }
 
         private void OnOATHProcessTerminated(OATHParameter parameter)
