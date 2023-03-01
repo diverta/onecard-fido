@@ -48,6 +48,12 @@ namespace MaintenanceTool.OATH
             DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP);
         }
 
+        private void DoUpdate()
+        {
+            // ワンタイムパスワードを更新
+            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP);
+        }
+
         private void DoOATHProcess(string commandTitle)
         {
             // パラメーターを設定し、コマンドを実行
@@ -115,6 +121,11 @@ namespace MaintenanceTool.OATH
         private void buttonScan_Click(object sender, RoutedEventArgs e)
         {
             DoScan();
+        }
+
+        private void buttonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            DoUpdate();
         }
     }
 }
