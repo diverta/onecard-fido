@@ -263,7 +263,7 @@ namespace MaintenanceTool.OATH
 
                 // Challenge（Unix時間）をビッグエンディアンでバイト配列化
                 byte[] challengeBytes = new byte[8];
-                AppUtil.ConvertUint32ToBEBytes(nowEpochSeconds, challengeBytes, 0);
+                AppUtil.ConvertUint32ToBEBytes(challenge, challengeBytes, 4);
 
                 // 変数初期化
                 int apduBytesSize = 2 + accountBytes.Length + 2 + challengeBytes.Length;
