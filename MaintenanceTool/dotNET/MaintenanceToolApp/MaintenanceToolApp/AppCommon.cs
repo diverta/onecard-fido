@@ -283,6 +283,9 @@
         public const string MSG_ERROR_OATH_ACCOUNT_ADD_APDU_FAILED = "OATHアカウント登録処理用のリクエストデータ生成に失敗しました。";
         public const string MSG_ERROR_OATH_ACCOUNT_ADD_FAILED = "認証器にOATHアカウント登録時、エラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_INFO_OATH_ACCOUNT_ADD_SUCCESS = "認証器にOATHアカウントを登録しました。";
+        public const string MSG_ERROR_OATH_CALCULATE_APDU_FAILED = "OATHワンタイムパスワード生成処理用のリクエストデータ生成に失敗しました。";
+        public const string MSG_ERROR_OATH_CALCULATE_FAILED = "OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x{0:x4}）";
+        public const string MSG_INFO_OATH_CALCULATE_SUCCESS = "OATHワンタイムパスワードを生成しました。";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
