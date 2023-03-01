@@ -62,7 +62,7 @@ namespace MaintenanceTool.OATH
             // アカウント情報の各項目を画面表示
             labelAccountVal.Content = Parameter.OATHAccountName;
             labelIssuerVal.Content = Parameter.OATHAccountIssuer;
-            labelPassword.Content = Parameter.OATHTOTPValue;
+            labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
 
             // 処理完了メッセージをポップアップ表示
             DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
