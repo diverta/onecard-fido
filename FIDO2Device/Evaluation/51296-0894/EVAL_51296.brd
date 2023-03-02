@@ -169,6 +169,8 @@
 <text x="22.5" y="26.8" size="0.5" layer="21" rot="R90" align="top-center">LED</text>
 <dimension x1="0" y1="0" x2="0" y2="30" x3="-3" y3="15" textsize="1.778" layer="51"/>
 <dimension x1="0" y1="30" x2="25" y2="30" x3="12.5" y3="33" textsize="1.778" layer="51"/>
+<text x="23.4" y="20.5" size="0.7" layer="21" rot="R90" align="top-center">TFT Module</text>
+<text x="23.4" y="6.7" size="0.7" layer="21" rot="R90" align="top-center">RTCC</text>
 </plain>
 <libraries>
 <library name="Connectors">
@@ -616,7 +618,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="12.7" y="9.7" size="0.8" layer="27"/>
 </element>
 <element name="CN2" library="Connectors" package="HEADER_6PIN" value="IF_6PIN" x="21.2" y="20.5" smashed="yes" rot="R270">
-<attribute name="NAME" x="19.47" y="16.52" size="0.889" layer="25" ratio="11" rot="R90"/>
+<attribute name="NAME" x="19.97" y="28.32" size="0.889" layer="25" ratio="11"/>
 <attribute name="VALUE" x="19.93" y="28.12" size="0.889" layer="27" ratio="11" rot="R270" align="top-left"/>
 </element>
 <element name="CN3" library="Connectors" package="HEADER_4PIN" value="IF_4PIN" x="21.2" y="10.5" smashed="yes" rot="R270">
@@ -672,7 +674,11 @@ design rules under a new name.</description>
 <signal name="LEDA">
 <contactref element="CN1" pad="1"/>
 <contactref element="Q1" pad="3"/>
-<wire x1="7.09" y1="10.2" x2="8.45" y2="7.8" width="0" layer="19" extent="1-1"/>
+<wire x1="8.45" y1="7.8" x2="8.45" y2="8.45" width="0.2032" layer="1"/>
+<wire x1="8.45" y1="8.45" x2="7.9" y2="9" width="0.2032" layer="1"/>
+<wire x1="7.9" y1="9" x2="7.5" y2="9" width="0.2032" layer="1"/>
+<wire x1="7.09" y1="10.2" x2="7.09" y2="9.41" width="0.2032" layer="1"/>
+<wire x1="7.09" y1="9.41" x2="7.5" y2="9" width="0.2032" layer="1"/>
 </signal>
 <signal name="0V">
 <contactref element="CN1" pad="2"/>
@@ -694,16 +700,20 @@ design rules under a new name.</description>
 <vertex x="27" y="-2"/>
 <vertex x="-2" y="-2"/>
 </polygon>
-<via x="8.9" y="9" extent="1-16" drill="0.3"/>
-<wire x1="8.95" y1="7.8" x2="8.95" y2="8.95" width="0.2032" layer="1"/>
-<wire x1="8.95" y1="8.95" x2="8.9" y2="9" width="0.2032" layer="1"/>
+<via x="8.9" y="6.6" extent="1-16" drill="0.3"/>
+<wire x1="8.95" y1="7.8" x2="8.95" y2="6.65" width="0.2032" layer="1"/>
+<wire x1="8.95" y1="6.65" x2="8.9" y2="6.6" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$1">
 <contactref element="R1" pad="2"/>
 <contactref element="Q1" pad="1"/>
 <contactref element="R2" pad="1"/>
-<wire x1="6.2" y1="12.4" x2="6.2" y2="13.8" width="0" layer="19" extent="1-1"/>
-<wire x1="6.4" y1="9.875" x2="6.2" y2="12.4" width="0" layer="19" extent="1-1"/>
+<wire x1="6.2" y1="13.8" x2="6.2" y2="12.4" width="0.2032" layer="1"/>
+<wire x1="6.4" y1="9.875" x2="5.925" y2="9.875" width="0.2032" layer="1"/>
+<wire x1="5.925" y1="9.875" x2="5.4" y2="10.4" width="0.2032" layer="1"/>
+<wire x1="5.4" y1="10.4" x2="5.4" y2="12" width="0.2032" layer="1"/>
+<wire x1="6.2" y1="12.4" x2="5.8" y2="12.4" width="0.2032" layer="1"/>
+<wire x1="5.8" y1="12.4" x2="5.4" y2="12" width="0.2032" layer="1"/>
 </signal>
 <signal name="VDD_NRF">
 <contactref element="R2" pad="2"/>
@@ -756,7 +766,14 @@ design rules under a new name.</description>
 <signal name="LED_CTRL">
 <contactref element="R1" pad="1"/>
 <contactref element="CN2" pad="1"/>
-<wire x1="7.6" y1="13.8" x2="21.2" y2="26.85" width="0" layer="19" extent="1-1"/>
+<wire x1="7.6" y1="13.8" x2="7.6" y2="14.4" width="0.2032" layer="1"/>
+<wire x1="7.6" y1="14.4" x2="10.1" y2="16.9" width="0.2032" layer="1"/>
+<wire x1="10.1" y1="16.9" x2="13" y2="16.9" width="0.2032" layer="1"/>
+<wire x1="21.2" y1="26.85" x2="19.7" y2="25.35" width="0.2032" layer="1"/>
+<wire x1="19.7" y1="25.35" x2="19.7" y2="20.8" width="0.2032" layer="1"/>
+<wire x1="13" y1="16.9" x2="16.4" y2="20.3" width="0.2032" layer="1"/>
+<wire x1="16.4" y1="20.3" x2="19.2" y2="20.3" width="0.2032" layer="1"/>
+<wire x1="19.2" y1="20.3" x2="19.7" y2="20.8" width="0.2032" layer="1"/>
 </signal>
 <signal name="CS">
 <contactref element="CN1" pad="8"/>
@@ -787,25 +804,37 @@ design rules under a new name.</description>
 <contactref element="U1" pad="4"/>
 <contactref element="R3" pad="1"/>
 <contactref element="CN3" pad="2"/>
-<wire x1="17.7" y1="6.6" x2="21.2" y2="7.96" width="0" layer="19" extent="1-1"/>
-<wire x1="13.9" y1="9.15" x2="17.7" y2="6.6" width="0" layer="19" extent="1-1"/>
+<wire x1="17.7" y1="6.6" x2="14.7" y2="6.6" width="0.2032" layer="1"/>
+<wire x1="13.9" y1="9.15" x2="13.9" y2="7.4" width="0.2032" layer="1"/>
+<wire x1="13.9" y1="7.4" x2="14.7" y2="6.6" width="0.2032" layer="1"/>
+<wire x1="21.2" y1="7.96" x2="20.74" y2="7.5" width="0.2032" layer="1"/>
+<wire x1="20.74" y1="7.5" x2="18.6" y2="7.5" width="0.2032" layer="1"/>
+<wire x1="17.7" y1="6.6" x2="18.6" y2="7.5" width="0.2032" layer="1"/>
 </signal>
 <signal name="TWI_SCL">
 <contactref element="U1" pad="3"/>
 <contactref element="R4" pad="1"/>
 <contactref element="CN3" pad="3"/>
-<wire x1="18.9" y1="6.6" x2="21.2" y2="5.42" width="0" layer="19" extent="1-1"/>
-<wire x1="13.9" y1="10.05" x2="18.9" y2="6.6" width="0" layer="19" extent="1-1"/>
+<wire x1="18.9" y1="6.6" x2="18.2" y2="5.9" width="0.2032" layer="1"/>
+<wire x1="14.7" y1="5.9" x2="13.1" y2="7.5" width="0.2032" layer="1"/>
+<wire x1="13.1" y1="7.5" x2="13.1" y2="9.7" width="0.2032" layer="1"/>
+<wire x1="18.9" y1="6.6" x2="20.02" y2="6.6" width="0.2032" layer="1"/>
+<wire x1="20.02" y1="6.6" x2="21.2" y2="5.42" width="0.2032" layer="1"/>
+<wire x1="18.2" y1="5.9" x2="14.7" y2="5.9" width="0.2032" layer="1"/>
+<wire x1="13.9" y1="10.05" x2="13.45" y2="10.05" width="0.2032" layer="1"/>
+<wire x1="13.1" y1="9.7" x2="13.45" y2="10.05" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$9">
 <contactref element="U1" pad="6"/>
 <contactref element="R6" pad="2"/>
-<wire x1="15.1" y1="10.05" x2="16.6" y2="9.1" width="0" layer="19" extent="1-1"/>
+<wire x1="16.6" y1="9.1" x2="15.65" y2="10.05" width="0.2032" layer="1"/>
+<wire x1="15.65" y1="10.05" x2="15.1" y2="10.05" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$10">
 <contactref element="U1" pad="8"/>
 <contactref element="R5" pad="2"/>
-<wire x1="15.1" y1="11.85" x2="16.6" y2="12.4" width="0" layer="19" extent="1-1"/>
+<wire x1="16.6" y1="12.4" x2="16.05" y2="11.85" width="0.2032" layer="1"/>
+<wire x1="16.05" y1="11.85" x2="15.1" y2="11.85" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$2">
 <contactref element="BAT1" pad="+@2"/>
