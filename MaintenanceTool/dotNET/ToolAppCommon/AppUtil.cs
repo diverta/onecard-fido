@@ -127,6 +127,15 @@ namespace ToolAppCommon
             return BitConverter.ToInt16(sub, 0);
         }
 
+        public static UInt32 ToUInt32(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 4);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToUInt32(sub, 0);
+        }
+
         public static UInt16 ToUInt16(byte[] value, int startIndex, bool changeEndian = false)
         {
             byte[] sub = GetSubArray(value, startIndex, 2);

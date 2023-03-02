@@ -1,5 +1,8 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonWindow;
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MaintenanceTool.OATH
@@ -9,8 +12,14 @@ namespace MaintenanceTool.OATH
     /// </summary>
     public partial class ScanQRCodeWindow : Window
     {
-        public ScanQRCodeWindow()
+        // パラメーターの参照を保持
+        private readonly OATHParameter Parameter;
+
+        public ScanQRCodeWindow(OATHParameter parameter)
         {
+            // パラメーターの参照を保持
+            Parameter = parameter;
+
             // 画面項目の初期化
             InitializeComponent();
             InitFieldValue();
@@ -26,8 +35,58 @@ namespace MaintenanceTool.OATH
 
         public void DoScan()
         {
-            // TODO: 仮の実装です。
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // 画面項目の初期化
+            InitFieldValue();
+
+            // QRコードのスキャンを画面スレッドで実行
+            if (OATHProcess.ScanQRCode(Parameter) == false) {
+                DialogUtil.ShowWarningMessage(this, Title, Parameter.ResultInformativeMessage);
+                return;
+            }
+
+            // ワンタイムパスワードを生成
+            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP);
+        }
+
+        private void DoUpdate()
+        {
+            // ワンタイムパスワードを更新
+            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP);
+        }
+
+        private void DoOATHProcess(string commandTitle)
+        {
+            // パラメーターを設定し、コマンドを実行
+            Parameter.CommandTitle = commandTitle;
+            Task task = Task.Run(() => {
+                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            if (Parameter.CommandSuccess == false) {
+                // 処理失敗時は、エラーメッセージをポップアップ表示
+                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+                return;
+            }
+
+            // アカウント情報の各項目を画面表示
+            labelAccountVal.Content = Parameter.OATHAccountName;
+            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
+            labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
+
+            // 実行ボタンの代わりに、更新ボタンを使用可能とする
+            buttonScan.IsEnabled = false;
+            buttonUpdate.IsEnabled = true;
+        }
+
+        private void OnOATHProcessTerminated(OATHParameter parameter)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //
@@ -62,6 +121,11 @@ namespace MaintenanceTool.OATH
         private void buttonScan_Click(object sender, RoutedEventArgs e)
         {
             DoScan();
+        }
+
+        private void buttonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            DoUpdate();
         }
     }
 }

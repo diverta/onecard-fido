@@ -16,7 +16,7 @@
         <Label x:Name="labelAccountVal" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,249,0,0" Width="195" VerticalContentAlignment="Center"/>
         <GroupBox x:Name="groupBoxPassword" Header="ワンタイムパスワード" VerticalAlignment="Top" Margin="20,295,20,0" Height="79"/>
         <Label x:Name="labelPassword" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,310,0,0" Width="195" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36" FontWeight="Bold"/>
-        <Button x:Name="buttonUpdate" Content="更新" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,320,40,0" Height="40" Width="60"/>
+        <Button x:Name="buttonUpdate" Content="更新" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,320,40,0" Height="40" Width="60" Click="buttonUpdate_Click"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,390,0,0" Height="25" Width="160" Click="buttonCancel_Click"/>
     </Grid>
 </Window>

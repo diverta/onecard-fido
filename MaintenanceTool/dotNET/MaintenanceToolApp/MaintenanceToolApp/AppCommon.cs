@@ -276,6 +276,19 @@
         public const string MSG_LABEL_COMMAND_OPENPGP_UNBLOCK = "リセットコードによるPIN番号リセット";
         public const string MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY = "管理用PIN番号の検証";
 
+        // OATH機能設定関連
+        public const string MSG_ERROR_OATH_QRCODE_SCAN_FAILED = "認証用QRコードが画面からスキャンできませんでした。";
+        public const string MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID = "認証用QRコードからスキャンしたアカウント情報が不正です。";
+        public const string MSG_ERROR_OATH_APPLET_SELECT_FAILED = "OATH機能を使用することができません。";
+        public const string MSG_ERROR_OATH_ACCOUNT_ADD_APDU_FAILED = "OATHアカウント登録処理用のリクエストデータ生成に失敗しました。";
+        public const string MSG_ERROR_OATH_ACCOUNT_ADD_FAILED = "認証器にOATHアカウント登録時、エラーが発生しました（SW=0x{0:x4}）";
+        public const string MSG_INFO_OATH_ACCOUNT_ADD_SUCCESS = "認証器にOATHアカウントを登録しました。";
+        public const string MSG_ERROR_OATH_CALCULATE_APDU_FAILED = "OATHワンタイムパスワード生成処理用のリクエストデータ生成に失敗しました。";
+        public const string MSG_ERROR_OATH_CALCULATE_FAILED = "OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x{0:x4}）";
+        public const string MSG_INFO_OATH_CALCULATE_SUCCESS = "OATHワンタイムパスワードを生成しました。";
+        public const string MSG_LABEL_COMMAND_OATH_GENERATE_TOTP = "ワンタイムパスワードの生成";
+        public const string MSG_LABEL_COMMAND_OATH_UPDATE_TOTP = "ワンタイムパスワードの更新";
+
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
         public const string MSG_PROMPT_INPUT_HCHECK_PIN_NUM = "PINコードを数字で入力してください";
