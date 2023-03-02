@@ -134,7 +134,6 @@ namespace MaintenanceTool.OATH
                 return false;
             }
 
-            AppLogUtil.OutputLogDebug(string.Format("QR code detected from screen: {0}", qrCodeString));
             return true;
         }
 
