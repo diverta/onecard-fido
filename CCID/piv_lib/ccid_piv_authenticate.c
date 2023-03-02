@@ -18,6 +18,9 @@
 // for fido_extract_pubkey_in_certificate
 #include "fido_common.h"
 
+// for fido_command_generate_random_vector
+#include "fido_command_common.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -264,6 +267,8 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(void *p_capdu, void *p_rapdu, void 
     return SW_NO_ERROR;
 }
 
+static void ccid_piv_authenticate_mutual_request_resume(void);
+
 uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
@@ -282,7 +287,17 @@ uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
+    // `resume_mutual_request`内で実行される
+    // `fido_command_generate_random_vector`の実行事前に、
+    // ランダムベクターの生成を指示
+    fido_crypto_random_pre_generate(ccid_piv_authenticate_mutual_request_resume);
+    return SW_NO_ERROR;
+}
+
+static uint16_t resume_mutual_request(void)
+{
     // 管理用キーを取得
+    fido_log_debug("mutual authenticate request resume");
     size_t size = sizeof(work_buf);
     uint8_t crypto_alg;
     if (ccid_piv_object_card_admin_key_get(work_buf, &size, &crypto_alg) == false) {
@@ -307,7 +322,7 @@ uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void
         return SW_WRONG_DATA;
     }
     uint8_t *challenge = auth_ctx + 3;
-    fido_crypto_generate_random_vector(challenge, challenge_size);
+    fido_command_generate_random_vector(challenge, challenge_size);
 
     // レスポンスデータを生成
     uint8_t *rdata = rapdu->data;
@@ -333,6 +348,13 @@ uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void
 
     // 正常終了
     return SW_NO_ERROR;
+}
+
+static void ccid_piv_authenticate_mutual_request_resume(void)
+{
+    // `fido_command_generate_random_vector`を含む
+    // 後続処理を実行
+    rapdu->sw = resume_mutual_request();
 }
 
 uint16_t ccid_piv_authenticate_mutual_response(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)

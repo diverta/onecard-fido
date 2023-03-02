@@ -120,7 +120,7 @@ uint16_t ccid_oath_object_account_set(char *account_name, uint8_t account_name_s
     }
 
 #if LOG_ACCOUNT_EXIST_AND_SERIAL
-    fido_log_debug("account record(%s): exist=%d, serial=%d", log_strdup(account_name), exist, serial);
+    fido_log_debug("account record(%s): exist=%d, serial=%d", account_name, exist, serial);
 #endif
 
     // Flash ROMに登録
@@ -144,7 +144,7 @@ uint16_t ccid_oath_object_account_delete(char *account_name, uint8_t account_nam
     }
 
 #if LOG_ACCOUNT_EXIST_AND_SERIAL
-    fido_log_debug("account record(%s): exist=%d, serial=%d", log_strdup(account_name), exist, serial);
+    fido_log_debug("account record(%s): exist=%d, serial=%d", account_name, exist, serial);
 #endif
 
     // 該当レコードが無い場合はエラー
@@ -197,7 +197,7 @@ uint16_t ccid_oath_object_account_read(char *account_name, uint8_t account_name_
     //   131 : Secret長（1バイト）
     //   132 : オプション属性（1バイト）
     //   133 : Challenge（8バイト）
-    fido_log_debug("account record(%s): exist=%d", log_strdup(account_name), *exist);
+    fido_log_debug("account record(%s): exist=%d", account_name, *exist);
     fido_log_print_hexdump_debug(account_read_buff + 4 , 65 + 76, "record bytes");
 #endif
 
@@ -264,7 +264,7 @@ static int fetch_account_data(const char *settings_key, void *account_buff, size
     //   131 : Secret長（1バイト）
     //   132 : オプション属性（1バイト）
     //   133 : Challenge（8バイト）
-    fido_log_debug("account record(%s)", log_strdup(settings_key));
+    fido_log_debug("account record(%s)", settings_key);
     fido_log_print_hexdump_debug(data, size, "record bytes");
 #endif
 

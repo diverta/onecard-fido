@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <bluetooth/uuid.h>
+#include <zephyr/bluetooth/uuid.h>
 
 #ifdef __cplusplus
 extern "C" {

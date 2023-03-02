@@ -18,7 +18,8 @@ extern "C" {
 //
 // 関数群
 //
-bool        app_rtcc_initialize(void);
+bool        app_rtcc_is_available(void);
+void        app_rtcc_initialize(void);
 bool        app_rtcc_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours);
 bool        app_rtcc_get_timestamp(char *buf, size_t size);
 

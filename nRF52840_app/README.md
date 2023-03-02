@@ -55,3 +55,5 @@ nRF52840アプリケーションのファームウェアは、フォルダー[`f
 - <b>[nRF Utilインストール手順](../nRF52840_app/NRFUTILINST.md)</b>
 
 - <b>[nRF Connect for Desktop導入手順](../nRF52840_app/NRFCONNECTINST.md)</b>
+
+- <b>[tinycbor導入手順](../nRF52840_app/firmwares/secure_device_app/TINYCBOR.md)</b>

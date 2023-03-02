@@ -5,7 +5,7 @@
  * Created on 2021/08/23, 10:15
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_board.h"
 #include "app_status_indicator.h"

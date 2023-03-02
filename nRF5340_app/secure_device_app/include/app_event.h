@@ -18,6 +18,7 @@ extern "C" {
 // イベント種別
 typedef enum {
     APEVT_NONE = 0,
+    APEVT_SUBSYS_INIT,
     APEVT_BUTTON_PUSHED,
     APEVT_BUTTON_PUSHED_LONG,
     APEVT_BUTTON_RELEASED,
@@ -41,6 +42,7 @@ typedef enum {
     APEVT_CCID_REQUEST_RECEIVED,
     APEVT_APP_SETTINGS_SAVED,
     APEVT_APP_SETTINGS_DELETED,
+    APEVT_APP_CRYPTO_DONE,
 } APP_EVENT_T;
 
 // データ関連イベント種別

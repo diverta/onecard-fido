@@ -7,16 +7,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <device.h>
-#include <sys/time_units.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/sys/time_units.h>
 
 #include "app_board.h"
-#include "app_board_define.h"
 #include "app_event.h"
 
 // ログ出力制御
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_board);
 
 #define LOG_BUTTON_INITIALIZED  false
@@ -38,8 +38,8 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data,
-        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", 
-            CONFIG_BT_DIS_MODEL, CONFIG_BT_DIS_FW_REV_STR, CONFIG_BT_DIS_HW_REV_STR);
+        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\",FW_BUILD=\"%d\"", 
+            CONFIG_BT_DIS_MODEL, CONFIG_BT_DIS_FW_REV_STR, CONFIG_BT_DIS_HW_REV_STR, CONFIG_APP_FW_BUILD);
 
     *info_csv_size = strlen((char *)info_csv_data);
     LOG_DBG("Application version info csv created (%d bytes)", *info_csv_size);
@@ -49,7 +49,8 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 //
 // ボタン関連
 //
-static const struct device *button_0,   *button_1;
+static const struct gpio_dt_spec button_0 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw0), gpios, {0});
+static const struct gpio_dt_spec button_1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw1), gpios, {0});
 static struct gpio_callback button_cb_0, button_cb_1;
 static bool button_press_enabled = false;
 
@@ -102,7 +103,7 @@ static void button_pressed_0(const struct device *dev, struct gpio_callback *cb,
     static uint32_t time_pressed = 0;
 
     // ボタン検知処理
-    if (button_pressed(dev, SW0_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+    if (button_pressed(dev, button_0.pin, &status_pressed, &time_pressed) == false) {
         return;
     }
 
@@ -117,7 +118,7 @@ static void button_pressed_1(const struct device *dev, struct gpio_callback *cb,
     static uint32_t time_pressed = 0;
 
     // ボタン検知処理
-    if (button_pressed(dev, SW1_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+    if (button_pressed(dev, button_1.pin, &status_pressed, &time_pressed) == false) {
         return;
     }
 
@@ -125,77 +126,78 @@ static void button_pressed_1(const struct device *dev, struct gpio_callback *cb,
     app_event_notify(status_pressed ? APEVT_BUTTON_1_PUSHED : APEVT_BUTTON_1_RELEASED);
 }
 
-static const struct device *initialize_button(const char *name, gpio_pin_t pin, gpio_flags_t flags, struct gpio_callback *callback, gpio_callback_handler_t handler)
+static bool initialize_button(const struct gpio_dt_spec *button, struct gpio_callback *callback, gpio_callback_handler_t handler)
 {
-    const struct device *button = device_get_binding(name);
-    if (button == NULL) {
-        LOG_ERR("Error: didn't find %s device", name);
-        return NULL;
+    if (device_is_ready(button->port) == false) {
+        LOG_ERR("Error: didn't find %s device", button->port->name);
+        return false;
     }
 
-    int ret = gpio_pin_configure(button, pin, flags);
+    int ret = gpio_pin_configure_dt(button, GPIO_INPUT);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure %s pin %d", ret, name, pin);
-        return NULL;
+        LOG_ERR("Error %d: failed to configure %s pin %d", ret, button->port->name, button->pin);
+        return false;
     }
 
-    ret = gpio_pin_interrupt_configure(button, pin, GPIO_INT_EDGE_BOTH);
+    ret = gpio_pin_interrupt_configure_dt(button, GPIO_INT_EDGE_BOTH);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d", ret, name, pin);
-        return NULL;
+        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d", ret, button->port->name, button->pin);
+        return false;
     }
 
     // ボタン押下時のコールバックを設定
-    gpio_init_callback(callback, handler, BIT(pin));
-    gpio_add_callback(button, callback);
+    gpio_init_callback(callback, handler, BIT(button->pin));
+    gpio_add_callback(button->port, callback);
 
     // ボタンの参照を戻す
 #if LOG_BUTTON_INITIALIZED
-    LOG_DBG("Set up button at %s pin %d", name, pin);
+    LOG_DBG("Set up button at %s pin %d", button->port->name, button->pin);
 #endif
-    return button;
+    return true;
 }
 
 //
 // LED関連
 //
-static const struct device *m_led_0, *m_led_1, *m_led_2, *m_led_3;
+static struct gpio_dt_spec m_led_0 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(led0), gpios, {0});
+static struct gpio_dt_spec m_led_1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(led1), gpios, {0});
+static struct gpio_dt_spec m_led_2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(led2), gpios, {0});
+static struct gpio_dt_spec m_led_3 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(led3), gpios, {0});
 
-static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpio_flags_t flags)
+static bool initialize_led(struct gpio_dt_spec *led)
 {
-    const struct device *led = device_get_binding(name);
-    if (led == NULL) {
-        LOG_ERR("Didn't find LED device %s", name);
-        return NULL;
+    if (device_is_ready(led->port) == false) {
+        LOG_ERR("Didn't find LED device %s", led->port->name);
+        return false;
     }
 
-    int ret = gpio_pin_configure(led, pin, flags);
+    int ret = gpio_pin_configure_dt(led, GPIO_OUTPUT);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure LED device %s pin %d", ret, name, pin);
-        return NULL;
+        LOG_ERR("Error %d: failed to configure LED device %s pin %d", ret, led->port->name, led->pin);
+        return false;
     }
 
     // 最初は消灯しておく
-    gpio_pin_set(led, pin, 0);
+    gpio_pin_set(led->port, led->pin, 0);
 
     // LED0の参照を戻す
 #if LOG_BUTTON_INITIALIZED
     LOG_DBG("Set up LED at %s pin %d", name, pin);
 #endif
-    return led;
+    return true;
 }
 
 void app_board_initialize(void)
 {
     // ボタンの初期化
-    button_0 = initialize_button(SW0_GPIO_LABEL, SW0_GPIO_PIN, SW0_GPIO_FLAGS, &button_cb_0, button_pressed_0);
-    button_1 = initialize_button(SW1_GPIO_LABEL, SW1_GPIO_PIN, SW1_GPIO_FLAGS, &button_cb_1, button_pressed_1);
+    initialize_button(&button_0, &button_cb_0, button_pressed_0);
+    initialize_button(&button_1, &button_cb_1, button_pressed_1);
     
     // LED0の初期化
-    m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
-    m_led_1 = initialize_led(LED1_GPIO_LABEL, LED1_GPIO_PIN, LED1_GPIO_FLAGS);
-    m_led_2 = initialize_led(LED2_GPIO_LABEL, LED2_GPIO_PIN, LED2_GPIO_FLAGS);
-    m_led_3 = initialize_led(LED3_GPIO_LABEL, LED3_GPIO_PIN, LED3_GPIO_FLAGS);
+    initialize_led(&m_led_0);
+    initialize_led(&m_led_1);
+    initialize_led(&m_led_2);
+    initialize_led(&m_led_3);
 }
 
 void app_board_led_light(LED_COLOR led_color, bool led_on)
@@ -207,16 +209,16 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
     //   LED4=Blue
     switch (led_color) {
         case LED_COLOR_YELLOW:
-            gpio_pin_set(m_led_0, LED0_GPIO_PIN, led_on ? 1 : 0);
+            gpio_pin_set(m_led_0.port, m_led_0.pin, led_on ? 1 : 0);
             break;
         case LED_COLOR_RED:
-            gpio_pin_set(m_led_1, LED1_GPIO_PIN, led_on ? 1 : 0);
+            gpio_pin_set(m_led_1.port, m_led_1.pin, led_on ? 1 : 0);
             break;
         case LED_COLOR_GREEN:
-            gpio_pin_set(m_led_2, LED2_GPIO_PIN, led_on ? 1 : 0);
+            gpio_pin_set(m_led_2.port, m_led_2.pin, led_on ? 1 : 0);
             break;
         case LED_COLOR_BLUE:
-            gpio_pin_set(m_led_3, LED3_GPIO_PIN, led_on ? 1 : 0);
+            gpio_pin_set(m_led_3.port, m_led_3.pin, led_on ? 1 : 0);
             break;
         default:
             break;
@@ -228,13 +230,19 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 // --> ボタン押下でシステムが再始動
 //
 #include <hal/nrf_gpio.h>
-#include <pm/pm.h>
+#include <zephyr/pm/pm.h>
+
+static const uint8_t cpu = 0;
+static const struct pm_state_info si = {PM_STATE_SOFT_OFF, 0, 0};
 
 void app_board_prepare_for_deep_sleep(void)
 {
     // ポート番号（Port 0=0x00, Port 1=0x20）をピン番号に付加
-    uint32_t sw0_pin_number = SW0_GPIO_PIN;
-    if (strcmp(SW0_GPIO_LABEL, "GPIO_1") == 0) {
+#if LOG_BUTTON_INITIALIZED
+    LOG_DBG("Set up button for deep sleep at %s pin %d", button_0.port->name, button_0.pin);
+#endif
+    uint32_t sw0_pin_number = button_0.pin;
+    if (strcmp(button_0.port->name, "GPIO_1") == 0) {
         sw0_pin_number |= (0x1 << 5);
     }
 
@@ -243,7 +251,7 @@ void app_board_prepare_for_deep_sleep(void)
     nrf_gpio_cfg_sense_set(sw0_pin_number, NRF_GPIO_PIN_SENSE_LOW);
 
     printk("Entering system off; press BUTTON to restart... \n\n\r");
-    pm_power_state_force(0, (struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
+    pm_state_force(cpu, &si);
     k_sleep(K_MSEC(100));
 }
 

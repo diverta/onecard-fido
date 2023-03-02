@@ -1,0 +1,439 @@
+bash-3.2$ brew install ninja gperf ccache qemu dtc wget libmagic
+==> Fetching ninja
+==> Downloading https://ghcr.io/v2/homebrew/core/ninja/manifests/1.11.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/ninja/blobs/sha256:15b65736bfc5c619019cabb2c0f36f2b02a031de9a8bd6c148eb
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:15b65736bfc5c619019cabb2c0f36f2b02a
+######################################################################## 100.0%
+==> Fetching gperf
+==> Downloading https://ghcr.io/v2/homebrew/core/gperf/manifests/3.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gperf/blobs/sha256:95c822396502343d156c6c1548c8486c9163321fca5a876c4a14
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:95c822396502343d156c6c1548c8486c916
+######################################################################## 100.0%
+==> Fetching dependencies for ccache: hiredis, lz4, xz and zstd
+==> Fetching hiredis
+==> Downloading https://ghcr.io/v2/homebrew/core/hiredis/manifests/1.1.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/hiredis/blobs/sha256:70122d31f0b836cac04d879977c2e01fab184bf5de65ece170
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:70122d31f0b836cac04d879977c2e01fab1
+######################################################################## 100.0%
+==> Fetching lz4
+==> Downloading https://ghcr.io/v2/homebrew/core/lz4/manifests/1.9.4
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/lz4/blobs/sha256:88b369cea90a0a119c24aa96a614fe7d77de58d18cb1803023dc92
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:88b369cea90a0a119c24aa96a614fe7d77d
+######################################################################## 100.0%
+==> Fetching xz
+==> Downloading https://ghcr.io/v2/homebrew/core/xz/manifests/5.4.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/xz/blobs/sha256:a3c40525ab04986a06dc672be4912207c55363298aeb9a7e3237500
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:a3c40525ab04986a06dc672be4912207c55
+######################################################################## 100.0%
+==> Fetching zstd
+==> Downloading https://ghcr.io/v2/homebrew/core/zstd/manifests/1.5.4
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/zstd/blobs/sha256:833ef75fe78b4c27e29fc7abaa4a5ee962b622ffa4c1de5e02ef4
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:833ef75fe78b4c27e29fc7abaa4a5ee962b
+######################################################################## 100.0%
+==> Fetching ccache
+==> Downloading https://ghcr.io/v2/homebrew/core/ccache/manifests/4.7.4
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/ccache/blobs/sha256:4e58ab93aa6690b1d754154b33c4e2fe457c6c2710aa29c208d
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:4e58ab93aa6690b1d754154b33c4e2fe457
+######################################################################## 100.0%
+==> Fetching dependencies for qemu: capstone, pcre2, gettext, glib, gmp, libunistring, libidn2, libtasn1, nettle, p11-kit, openssl@1.1, libevent, libnghttp2, unbound, gnutls, jpeg-turbo, libpng, libslirp, libssh, libusb, lzo, ncurses, pixman, snappy and vde
+==> Fetching capstone
+==> Downloading https://ghcr.io/v2/homebrew/core/capstone/manifests/4.0.2
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/capstone/blobs/sha256:dda60f389b39dc6b777940428feccee4a0b50db91629d152a
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:dda60f389b39dc6b777940428feccee4a0b
+######################################################################## 100.0%
+==> Fetching pcre2
+==> Downloading https://ghcr.io/v2/homebrew/core/pcre2/manifests/10.42
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/pcre2/blobs/sha256:76ccbd45954e84db49558afca66ff135e615e5c9069bafe519ce
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:76ccbd45954e84db49558afca66ff135e61
+######################################################################## 100.0%
+==> Fetching gettext
+==> Downloading https://ghcr.io/v2/homebrew/core/gettext/manifests/0.21.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gettext/blobs/sha256:9318777367eae475e9ea226d2bcbd19ef8281d1dd2af3a92c2
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:9318777367eae475e9ea226d2bcbd19ef82
+######################################################################## 100.0%
+==> Fetching glib
+==> Downloading https://ghcr.io/v2/homebrew/core/glib/manifests/2.74.5
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/glib/blobs/sha256:042c7d6a678ebde2d5d5915e8853e0542a41dfb38adfd728e52f4
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:042c7d6a678ebde2d5d5915e8853e0542a4
+######################################################################## 100.0%
+==> Fetching gmp
+==> Downloading https://ghcr.io/v2/homebrew/core/gmp/manifests/6.2.1_1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gmp/blobs/sha256:dddc6d8c871c92f6e5fb1249c28768aa2b4b47c38836a69cf787a6
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:dddc6d8c871c92f6e5fb1249c28768aa2b4
+######################################################################## 100.0%
+==> Fetching libunistring
+==> Downloading https://ghcr.io/v2/homebrew/core/libunistring/manifests/1.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libunistring/blobs/sha256:73ef01fda8958a495f4d7031cb8d270432d4ae2f11760
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:73ef01fda8958a495f4d7031cb8d270432d
+######################################################################## 100.0%
+==> Fetching libidn2
+==> Downloading https://ghcr.io/v2/homebrew/core/libidn2/manifests/2.3.4_1-1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libidn2/blobs/sha256:5dcfc410f76c7885fffea633054c58c61e8a5dd2a6cfae33c2
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:5dcfc410f76c7885fffea633054c58c61e8
+######################################################################## 100.0%
+==> Fetching libtasn1
+==> Downloading https://ghcr.io/v2/homebrew/core/libtasn1/manifests/4.19.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libtasn1/blobs/sha256:2aa4f8396ba40b05b237d503eb4de02c37175903d3e0f26d7
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:2aa4f8396ba40b05b237d503eb4de02c371
+######################################################################## 100.0%
+==> Fetching nettle
+==> Downloading https://ghcr.io/v2/homebrew/core/nettle/manifests/3.8.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/nettle/blobs/sha256:19eca950c962860d44093db86226b8a07ca045973c15f7d3b0d
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:19eca950c962860d44093db86226b8a07ca
+######################################################################## 100.0%
+==> Fetching p11-kit
+==> Downloading https://ghcr.io/v2/homebrew/core/p11-kit/manifests/0.24.1_1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/p11-kit/blobs/sha256:ce3a6723491c5cee1d79e938b377555b67738b7e4a4615bbc4
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:ce3a6723491c5cee1d79e938b377555b677
+######################################################################## 100.0%
+==> Fetching openssl@1.1
+==> Downloading https://ghcr.io/v2/homebrew/core/openssl/1.1/manifests/1.1.1t
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/openssl/1.1/blobs/sha256:43c00851b8447bd5d1fba3e8140b74ca3d4a5b19343e64
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:43c00851b8447bd5d1fba3e8140b74ca3d4
+######################################################################## 100.0%
+==> Fetching libevent
+==> Downloading https://ghcr.io/v2/homebrew/core/libevent/manifests/2.1.12
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libevent/blobs/sha256:b08b593fd2ac8480d59038ca46892844a526af8ddaef9788a
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:b08b593fd2ac8480d59038ca46892844a52
+######################################################################## 100.0%
+==> Fetching libnghttp2
+==> Downloading https://ghcr.io/v2/homebrew/core/libnghttp2/manifests/1.51.0-1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libnghttp2/blobs/sha256:d94c9ee54c042c8d8608fcbd4cee72e0c42dda8e46aee5c
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:d94c9ee54c042c8d8608fcbd4cee72e0c42
+######################################################################## 100.0%
+==> Fetching unbound
+==> Downloading https://ghcr.io/v2/homebrew/core/unbound/manifests/1.17.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/unbound/blobs/sha256:9f0b67ee5dd9d83cba390ad705a6f3b434ea364b2b4930e04f
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:9f0b67ee5dd9d83cba390ad705a6f3b434e
+######################################################################## 100.0%
+==> Fetching gnutls
+==> Downloading https://ghcr.io/v2/homebrew/core/gnutls/manifests/3.8.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gnutls/blobs/sha256:75da330e4d73ade890aa0c998443319d07d4d63089bfd6c16bf
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:75da330e4d73ade890aa0c998443319d07d
+######################################################################## 100.0%
+==> Fetching jpeg-turbo
+==> Downloading https://ghcr.io/v2/homebrew/core/jpeg-turbo/manifests/2.1.5.1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/jpeg-turbo/blobs/sha256:203e5e3e6f9f53e16f532d9019c16c88dcbc411a06cc29a
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:203e5e3e6f9f53e16f532d9019c16c88dcb
+######################################################################## 100.0%
+==> Fetching libpng
+==> Downloading https://ghcr.io/v2/homebrew/core/libpng/manifests/1.6.39
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libpng/blobs/sha256:f7217880961411f37b5ba86376f5a6772bf45d1ae98ee86a016
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:f7217880961411f37b5ba86376f5a6772bf
+######################################################################## 100.0%
+==> Fetching libslirp
+==> Downloading https://ghcr.io/v2/homebrew/core/libslirp/manifests/4.7.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libslirp/blobs/sha256:82fe4e66ac490e882aaf245d4bdf9382826d82fdb3c7bad29
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:82fe4e66ac490e882aaf245d4bdf9382826
+######################################################################## 100.0%
+==> Fetching libssh
+==> Downloading https://ghcr.io/v2/homebrew/core/libssh/manifests/0.10.4
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libssh/blobs/sha256:4c965d61eef0b2ce050e191f399f7f84d9300035d444af06b72
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:4c965d61eef0b2ce050e191f399f7f84d93
+######################################################################## 100.0%
+==> Fetching libusb
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/manifests/1.0.26
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/blobs/sha256:e79be7d4c611f0017567172771761b1df62d140e79ffa6d2538
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:e79be7d4c611f0017567172771761b1df62
+######################################################################## 100.0%
+==> Fetching lzo
+==> Downloading https://ghcr.io/v2/homebrew/core/lzo/manifests/2.10
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/lzo/blobs/sha256:0a20a578e6a31ebbe3c5d708af38b1c3ca5ba503612ed28a197cd3
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:0a20a578e6a31ebbe3c5d708af38b1c3ca5
+######################################################################## 100.0%
+==> Fetching ncurses
+==> Downloading https://ghcr.io/v2/homebrew/core/ncurses/manifests/6.4
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/ncurses/blobs/sha256:2ba0f33a4a8578f779f3dc5dbbc53aede3fa2c7f2c79b97ccf
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:2ba0f33a4a8578f779f3dc5dbbc53aede3f
+######################################################################## 100.0%
+==> Fetching pixman
+==> Downloading https://ghcr.io/v2/homebrew/core/pixman/manifests/0.42.2
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/pixman/blobs/sha256:f7c0d1f71dd2dae2ab48c6d50ca713f3b7a41d74289b41bc493
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:f7c0d1f71dd2dae2ab48c6d50ca713f3b7a
+######################################################################## 100.0%
+==> Fetching snappy
+==> Downloading https://ghcr.io/v2/homebrew/core/snappy/manifests/1.1.9
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/snappy/blobs/sha256:fafb5142d8503a35d03d7db786cbcc44f6c625fefdcfa39a102
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:fafb5142d8503a35d03d7db786cbcc44f6c
+######################################################################## 100.0%
+==> Fetching vde
+==> Downloading https://ghcr.io/v2/homebrew/core/vde/manifests/2.3.3
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/vde/blobs/sha256:88cc1ceea76bdf304ec6750a2c54c979b34869d853fe6942aff1b2
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:88cc1ceea76bdf304ec6750a2c54c979b34
+######################################################################## 100.0%
+==> Fetching qemu
+==> Downloading https://ghcr.io/v2/homebrew/core/qemu/manifests/7.2.0
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/qemu/blobs/sha256:6a32684edc7ed07358a8b9b602198d69a45902ec7c72230caf5c9
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:6a32684edc7ed07358a8b9b602198d69a45
+######################################################################## 100.0%
+==> Fetching dtc
+==> Downloading https://ghcr.io/v2/homebrew/core/dtc/manifests/1.6.1-1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/dtc/blobs/sha256:077453035968d846c52b61c2d159b03031884a5442a04a1375bbbb
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:077453035968d846c52b61c2d159b030318
+######################################################################## 100.0%
+==> Fetching wget
+==> Downloading https://ghcr.io/v2/homebrew/core/wget/manifests/1.21.3_1-1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/wget/blobs/sha256:f97fc2639cd9d2d037c2bf1a94fa664ef2d81143ce8a1fb5b740c
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:f97fc2639cd9d2d037c2bf1a94fa664ef2d
+######################################################################## 100.0%
+==> Fetching libmagic
+==> Downloading https://ghcr.io/v2/homebrew/core/libmagic/manifests/5.44-1
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libmagic/blobs/sha256:cf47bc2045224fc2c4dad701a80e7819883a447ee817d27a6
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:cf47bc2045224fc2c4dad701a80e7819883
+######################################################################## 100.0%
+==> Pouring ninja--1.11.1.monterey.bottle.tar.gz
+==> Caveats
+zsh completions have been installed to:
+  /usr/local/share/zsh/site-functions
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/ninja
+==> Summary
+🍺  /usr/local/Cellar/ninja/1.11.1: 10 files, 464.9KB
+==> Running `brew cleanup ninja`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+==> Pouring gperf--3.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/gperf/3.1: 11 files, 547.9KB
+==> Running `brew cleanup gperf`...
+==> Installing dependencies for ccache: hiredis, lz4, xz and zstd
+==> Installing ccache dependency: hiredis
+==> Pouring hiredis--1.1.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/hiredis/1.1.0: 41 files, 365.1KB
+==> Installing ccache dependency: lz4
+==> Pouring lz4--1.9.4.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/lz4/1.9.4: 22 files, 685.2KB
+==> Installing ccache dependency: xz
+==> Pouring xz--5.4.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/xz/5.4.1: 95 files, 1.6MB
+==> Installing ccache dependency: zstd
+==> Pouring zstd--1.5.4.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/zstd/1.5.4: 31 files, 2.4MB
+==> Installing ccache
+==> Pouring ccache--4.7.4.monterey.bottle.tar.gz
+==> Caveats
+To install symlinks for compilers that will automatically use
+ccache, prepend this directory to your PATH:
+  /usr/local/opt/ccache/libexec
+
+If this is an upgrade and you have previously added the symlinks to
+your PATH, you may need to modify it to the path specified above so
+it points to the current version.
+
+NOTE: ccache can prevent some software from compiling.
+ALSO NOTE: The brew command, by design, will never use ccache.
+==> Summary
+🍺  /usr/local/Cellar/ccache/4.7.4: 75 files, 1.4MB
+==> Running `brew cleanup ccache`...
+==> Installing dependencies for qemu: capstone, pcre2, gettext, glib, gmp, libunistring, libidn2, libtasn1, nettle, p11-kit, openssl@1.1, libevent, libnghttp2, unbound, gnutls, jpeg-turbo, libpng, libslirp, libssh, libusb, lzo, ncurses, pixman, snappy and vde
+==> Installing qemu dependency: capstone
+==> Pouring capstone--4.0.2.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/capstone/4.0.2: 25 files, 14.6MB
+==> Installing qemu dependency: pcre2
+==> Pouring pcre2--10.42.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/pcre2/10.42: 230 files, 6.4MB
+==> Installing qemu dependency: gettext
+==> Pouring gettext--0.21.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/gettext/0.21.1: 1,983 files, 20.6MB
+==> Installing qemu dependency: glib
+==> Pouring glib--2.74.5.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/glib/2.74.5: 449 files, 20.9MB
+==> Installing qemu dependency: gmp
+==> Pouring gmp--6.2.1_1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/gmp/6.2.1_1: 21 files, 3.3MB
+==> Installing qemu dependency: libunistring
+==> Pouring libunistring--1.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libunistring/1.1: 56 files, 5MB
+==> Installing qemu dependency: libidn2
+==> Pouring libidn2--2.3.4_1.monterey.bottle.1.tar.gz
+🍺  /usr/local/Cellar/libidn2/2.3.4_1: 79 files, 1003.4KB
+==> Installing qemu dependency: libtasn1
+==> Pouring libtasn1--4.19.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libtasn1/4.19.0: 61 files, 658.5KB
+==> Installing qemu dependency: nettle
+==> Pouring nettle--3.8.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/nettle/3.8.1: 91 files, 2.8MB
+==> Installing qemu dependency: p11-kit
+==> Pouring p11-kit--0.24.1_1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/p11-kit/0.24.1_1: 67 files, 3.6MB
+==> Installing qemu dependency: openssl@1.1
+==> Pouring openssl@1.1--1.1.1t.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/openssl@1.1/1.1.1t: 8,101 files, 18.5MB
+==> Installing qemu dependency: libevent
+==> Pouring libevent--2.1.12.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libevent/2.1.12: 57 files, 2.0MB
+==> Installing qemu dependency: libnghttp2
+==> Pouring libnghttp2--1.51.0.monterey.bottle.1.tar.gz
+🍺  /usr/local/Cellar/libnghttp2/1.51.0: 13 files, 721.9KB
+==> Installing qemu dependency: unbound
+==> Pouring unbound--1.17.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/unbound/1.17.1: 58 files, 5.7MB
+==> Installing qemu dependency: gnutls
+==> Pouring gnutls--3.8.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/gnutls/3.8.0: 1,281 files, 10.5MB
+==> Installing qemu dependency: jpeg-turbo
+==> Pouring jpeg-turbo--2.1.5.1.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/jpeg-turbo/2.1.5.1: 44 files, 3.9MB
+==> Installing qemu dependency: libpng
+==> Pouring libpng--1.6.39.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libpng/1.6.39: 27 files, 1.3MB
+==> Installing qemu dependency: libslirp
+==> Pouring libslirp--4.7.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libslirp/4.7.0: 11 files, 346.8KB
+==> Installing qemu dependency: libssh
+==> Pouring libssh--0.10.4.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libssh/0.10.4: 23 files, 1.2MB
+==> Installing qemu dependency: libusb
+==> Pouring libusb--1.0.26.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/libusb/1.0.26: 22 files, 531.7KB
+==> Installing qemu dependency: lzo
+==> Pouring lzo--2.10.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/lzo/2.10: 31 files, 572.8KB
+==> Installing qemu dependency: ncurses
+==> Pouring ncurses--6.4.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/ncurses/6.4: 4,001 files, 9.5MB
+==> Installing qemu dependency: pixman
+==> Pouring pixman--0.42.2.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/pixman/0.42.2: 11 files, 1.3MB
+==> Installing qemu dependency: snappy
+==> Pouring snappy--1.1.9.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/snappy/1.1.9: 18 files, 147.6KB
+==> Installing qemu dependency: vde
+==> Pouring vde--2.3.3.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/vde/2.3.3: 66 files, 1.1MB
+==> Installing qemu
+==> Pouring qemu--7.2.0.monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/qemu/7.2.0: 163 files, 506.5MB
+==> Running `brew cleanup qemu`...
+==> Pouring dtc--1.6.1.monterey.bottle.1.tar.gz
+🍺  /usr/local/Cellar/dtc/1.6.1: 18 files, 608.6KB
+==> Running `brew cleanup dtc`...
+==> Pouring wget--1.21.3_1.monterey.bottle.1.tar.gz
+🍺  /usr/local/Cellar/wget/1.21.3_1: 89 files, 4.2MB
+==> Running `brew cleanup wget`...
+==> Pouring libmagic--5.44.monterey.bottle.1.tar.gz
+🍺  /usr/local/Cellar/libmagic/5.44: 354 files, 9.8MB
+==> Running `brew cleanup libmagic`...
+==> Caveats
+==> ninja
+zsh completions have been installed to:
+  /usr/local/share/zsh/site-functions
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/ninja
+==> ccache
+To install symlinks for compilers that will automatically use
+ccache, prepend this directory to your PATH:
+  /usr/local/opt/ccache/libexec
+
+If this is an upgrade and you have previously added the symlinks to
+your PATH, you may need to modify it to the path specified above so
+it points to the current version.
+
+NOTE: ccache can prevent some software from compiling.
+ALSO NOTE: The brew command, by design, will never use ccache.
+bash-3.2$
+bash-3.2$
+bash-3.2$ brew install cmake
+==> Fetching cmake
+==> Downloading https://ghcr.io/v2/homebrew/core/cmake/manifests/3.25.2
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/cmake/blobs/sha256:e08c954dfd2cd60b1275370d6e5bbc569af9480fb70c224f4aec
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:e08c954dfd2cd60b1275370d6e5bbc569af
+######################################################################## 100.0%
+==> Pouring cmake--3.25.2.monterey.bottle.tar.gz
+==> Caveats
+To install the CMake documentation, run:
+  brew install cmake-docs
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/cmake
+==> Summary
+🍺  /usr/local/Cellar/cmake/3.25.2: 3,167 files, 49.1MB
+==> Running `brew cleanup cmake`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+bash-3.2$ 
+bash-3.2$ brew list --versions
+autoconf 2.71
+ca-certificates 2023-01-10
+capstone 4.0.2
+ccache 4.7.4
+cmake 3.25.2
+dtc 1.6.1
+gettext 0.21.1
+glib 2.74.5
+gmp 6.2.1_1
+gnutls 3.8.0
+gperf 3.1
+hiredis 1.1.0
+jpeg-turbo 2.1.5.1
+libevent 2.1.12
+libidn2 2.3.4_1
+libmagic 5.44
+libnghttp2 1.51.0
+libpng 1.6.39
+libslirp 4.7.0
+libssh 0.10.4
+libtasn1 4.19.0
+libunistring 1.1
+libusb 1.0.26
+lz4 1.9.4
+lzo 2.10
+m4 1.4.19
+ncurses 6.4
+nettle 3.8.1
+ninja 1.11.1
+openssl@1.1 1.1.1t
+openssl@3 3.0.8
+p11-kit 0.24.1_1
+pcre2 10.42
+pixman 0.42.2
+pkg-config 0.29.2_3
+pyenv 2.3.12
+qemu 7.2.0
+readline 8.2.1
+snappy 1.1.9
+unbound 1.17.1
+vde 2.3.3
+wget 1.21.3_1
+xz 5.4.1
+zstd 1.5.4
+bash-3.2$
+bash-3.2$

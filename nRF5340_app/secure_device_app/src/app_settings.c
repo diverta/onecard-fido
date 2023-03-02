@@ -6,10 +6,10 @@
  */
 #include <stdio.h>
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <settings/settings.h>
+#include <zephyr/kernel.h>
+#include <zephyr/settings/settings.h>
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_settings);
 
 #define LOG_SETTINGS_DEBUG          false
@@ -98,7 +98,7 @@ static int delete_setting(const char *key)
     }
 
 #if LOG_SETTINGS_DELETE
-    LOG_INF("settings_delete done: key[%s]", log_strdup(settings_key_temp));
+    LOG_INF("settings_delete done: key[%s]", settings_key_temp);
 #endif
 
     return rc;
@@ -130,7 +130,7 @@ static int fetch_setting(const char *key, size_t len, settings_read_cb read_cb, 
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
 #if LOG_SETTINGS_EXIST_KEY
-    LOG_INF("h_set called: key[app/%s] length[%d]", log_strdup(key), len);
+    LOG_INF("h_set called: key[app/%s] length[%d]", key, len);
 #endif
 
     // キーが検索対象であれば、検索対象のデータを読込
@@ -203,7 +203,7 @@ bool app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_size)
     }
 
 #if LOG_SETTINGS_DEBUG
-    LOG_INF("settings_save_one done: key[%s]", log_strdup(settings_key));
+    LOG_INF("settings_save_one done: key[%s]", settings_key);
     LOG_HEXDUMP_INF(value, value_size, "value");
 #endif
 
@@ -228,7 +228,7 @@ static bool app_settings_load(APP_SETTINGS_KEY *key, const char **key_to_find)
     }
 
 #if LOG_SETTINGS_DEBUG
-    LOG_INF("settings_load_subtree done: key[%s]", log_strdup(app_conf.name));
+    LOG_INF("settings_load_subtree done: key[%s]", app_conf.name);
 #endif
     return true;
 }
@@ -278,7 +278,7 @@ bool app_settings_delete(APP_SETTINGS_KEY *key)
     }
 
 #if LOG_SETTINGS_DELETE
-    LOG_INF("settings_delete done: key[%s]", log_strdup(settings_key));
+    LOG_INF("settings_delete done: key[%s]", settings_key);
 #endif
 
     return true;

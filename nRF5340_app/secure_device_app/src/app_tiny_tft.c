@@ -5,12 +5,12 @@
  * Created on 2022/06/08, 13:58
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <device.h>
-#include <drivers/spi.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/spi.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_tiny_tft);
 
 //

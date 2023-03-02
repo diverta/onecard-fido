@@ -5,12 +5,13 @@
  * Created on 2021/04/28, 10:22
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_func.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
 #include "app_settings.h"
@@ -18,7 +19,7 @@
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_process);
 
 //
@@ -274,6 +275,9 @@ void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
     switch (event) {
+        case APEVT_SUBSYS_INIT:
+            app_main_subsys_init();
+            break;
         case APEVT_BUTTON_PUSHED:
         case APEVT_BUTTON_RELEASED:
             button_pressed(event);
@@ -334,6 +338,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_APP_SETTINGS_DELETED:
             app_main_app_settings_deleted();
+            break;
+        case APEVT_APP_CRYPTO_DONE:
+            app_main_app_crypto_done();
             break;
         default:
             break;

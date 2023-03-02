@@ -5,24 +5,22 @@
  * Created on 2021/04/27, 10:18
  */
 #include <zephyr/types.h>
-#include <zephyr.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/conn.h>
+#include <zephyr/kernel.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
 
 #include "app_ble_pairing.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
-
-// Work for BT address string
-static char addr_str_buf[BT_ADDR_LE_STR_LEN];
 
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
 static void pairing_confirm(struct bt_conn *conn)
 {
+#if defined(CONFIG_BT_SMP)
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     int rc = bt_conn_auth_cancel(conn);
@@ -31,6 +29,7 @@ static void pairing_confirm(struct bt_conn *conn)
     } else {
         LOG_DBG("Pairing refused");
     }
+#endif
 }
 
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
@@ -52,29 +51,33 @@ static void pairing_cancel(struct bt_conn *conn)
 static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
 {
     (void)id;
-    bt_addr_le_to_str(addr, addr_str_buf, sizeof(addr_str_buf));
-    LOG_INF("Bonding information deleted: address=%s", log_strdup(addr_str_buf));
+    char addr_str[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
+    LOG_INF("Bonding information deleted: address=%s", addr_str);
 }
 
 static const struct bt_conn_auth_cb cb_for_non_pair = {
     .pairing_confirm = pairing_confirm,
-    .pairing_failed = pairing_failed,
     .cancel = pairing_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_non_pair = {
+    .pairing_failed = pairing_failed,
     .bond_deleted = bond_deleted,
 };
 
 static void auth_passkey_display(struct bt_conn *conn, unsigned int passkey)
 {
-    (void)conn;
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
-    LOG_INF("Passkey for %s: %06u", log_strdup(addr_str_buf), passkey);
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Passkey for %s: %06u", addr, passkey);
 }
 
 static void auth_cancel(struct bt_conn *conn)
 {
-    (void)conn;
-    bt_addr_le_to_str(bt_conn_get_dst(conn), addr_str_buf, sizeof(addr_str_buf));
-    LOG_WRN("Pairing with authentication cancelled: %s", log_strdup(addr_str_buf));
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_WRN("Pairing with authentication cancelled: %s", addr);
 }
 
 static void auth_pairing_complete(struct bt_conn *conn, bool bonded)
@@ -93,6 +96,9 @@ static const struct bt_conn_auth_cb cb_for_pair = {
     .passkey_display = auth_passkey_display,
     .passkey_entry = NULL,
     .cancel = auth_cancel,
+};
+
+struct bt_conn_auth_info_cb info_cb_for_pair = {
     .pairing_complete = auth_pairing_complete,
     .pairing_failed = auth_pairing_failed,
     .bond_deleted = bond_deleted,
@@ -100,6 +106,7 @@ static const struct bt_conn_auth_cb cb_for_pair = {
 
 bool register_callbacks(void)
 {
+#if defined(CONFIG_BT_SMP)
     // コールバック設定を解除
     int rc = bt_conn_auth_cb_register(NULL);
 
@@ -110,6 +117,11 @@ bool register_callbacks(void)
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
             return false;
         }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
+            return false;
+        }
 
     } else {
         // 非ペアリングモード時のコールバックを設定
@@ -118,7 +130,13 @@ bool register_callbacks(void)
             LOG_ERR("bt_conn_auth_cb_register returns %d", rc);
             return false;
         }
+        rc = bt_conn_auth_info_cb_register(&info_cb_for_non_pair);
+        if (rc != 0) {
+            LOG_ERR("bt_conn_auth_info_cb_register returns %d", rc);
+            return false;
+        }
     }
+#endif
 
     return true;
 }

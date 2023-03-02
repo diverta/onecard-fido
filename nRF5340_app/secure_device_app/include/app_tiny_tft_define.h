@@ -7,7 +7,7 @@
 #ifndef APP_TINY_TFT_DEFINE_H
 #define APP_TINY_TFT_DEFINE_H
 
-#include <drivers/gpio.h>
+#include <zephyr/drivers/gpio.h>
 
 #ifdef __cplusplus
 extern "C" {

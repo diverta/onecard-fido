@@ -10,8 +10,8 @@
 //
 // for Bluetooth smp service
 //
-#include <bluetooth/bluetooth.h>
-#include <mgmt/mcumgr/smp_bt.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/mgmt/mcumgr/smp_bt.h>
 #include "os_mgmt/os_mgmt.h"
 #include "img_mgmt/img_mgmt.h"
 

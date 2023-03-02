@@ -6,15 +6,12 @@ export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
 
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
-export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
-
-# Paths for command
-export PATH=${PATH}:/Applications/CMake.app/Contents/bin
+export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/arm-gnu-toolchain-12.2.rel1-darwin-x86_64-arm-none-eabi"
 
 # bash completion
-export NCS_HOME=${HOME}/opt/ncs_1.9.1
+export NCS_HOME=${HOME}/opt/ncs_2.2.0
 export ZEPHYR_BASE=${NCS_HOME}/zephyr
-source ${NCS_HOME}/west-completion.bash
+source ${ZEPHYR_BASE}/zephyr-env.sh
  
 # Enter Python3 venv
 source ${NCS_HOME}/bin/activate
