@@ -327,7 +327,7 @@
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString *)filePath modalResponse:(NSInteger)modalResponse {
         // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示する
-        if (modalResponse != NSFileHandlingPanelOKButton) {
+        if (modalResponse != NSModalResponseOK) {
             return;
         }
         [self setFieldPath:sender filePath:filePath WithField:[self textPubkeyFolderPath] withButton:[self buttonPubkeyFolderPath]];

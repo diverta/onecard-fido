@@ -105,7 +105,7 @@
         CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDAllTypes));
         io_iterator_t serviceIterator = 0;
         kern_return_t kernResult =
-        IOServiceGetMatchingServices(kIOMasterPortDefault, classesToMatch, &serviceIterator);
+        IOServiceGetMatchingServices(kIOMainPortDefault, classesToMatch, &serviceIterator);
         if (kernResult != KERN_SUCCESS) {
             [[ToolLogFile defaultLogger] errorWithFormat:
              @"USBDFUACMCommand: IOServiceGetMatchingServices returned %d", kernResult];

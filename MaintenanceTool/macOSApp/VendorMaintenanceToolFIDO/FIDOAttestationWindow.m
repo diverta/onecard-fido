@@ -118,7 +118,7 @@
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath modalResponse:(NSInteger)modalResponse {
         // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示する
-        if (modalResponse == NSFileHandlingPanelOKButton) {
+        if (modalResponse == NSModalResponseOK) {
             // ファイルパスをディレクトリー、ファイル名に分割し、テキストボックスにはファイル名のみ設定
             NSString *fileName = [filePath lastPathComponent];
             if (sender == [self buttonSelectPkeyPemPath]) {
