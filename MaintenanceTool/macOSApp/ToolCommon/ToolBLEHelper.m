@@ -52,7 +52,7 @@
             return;
         }
         // BLEが無効化されている場合は通知
-        if ([[self manager] state] != CBCentralManagerStatePoweredOn) {
+        if ([[self manager] state] != CBManagerStatePoweredOn) {
             [[self delegate] helperDidFailConnectionWithError:nil reason:BLE_ERR_BLUETOOTH_OFF];
             return;
         }
