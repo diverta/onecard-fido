@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using static MaintenanceToolApp.AppDefine.Command;
 
 namespace MaintenanceTool.OATH
 {
@@ -22,8 +21,12 @@ namespace MaintenanceTool.OATH
             InitFieldValue();
         }
 
-        public bool ShowDialogWithOwner(Window ownerWindow)
+        public bool ShowDialogWithOwner(Window ownerWindow, string title, string caption)
         {
+            // 画面タイトル／キャプションを設定
+            Title = title;
+            labelCaption.Content = caption;
+
             // 画面にアカウント一覧を表示
             DisplayAccountList();
 
@@ -45,16 +48,6 @@ namespace MaintenanceTool.OATH
         //
         private void InitFieldValue()
         {
-            // 実行機能に応じ、表示文言を変更
-            if (Parameter.Command == COMMAND_OATH_SHOW_PASSWORD) {
-                Title = "ワンタイムパスワードを参照するアカウントの選択";
-                labelCaption.Content = "ワンタイムパスワードを参照したいアカウントを、\n下のリストから選択して下さい。";
-            }
-            if (Parameter.Command == COMMAND_OATH_DELETE_ACCOUNT) {
-                Title = "削除するアカウントの選択";
-                labelCaption.Content = "認証器から削除したいアカウントを、\n下のリストから選択して下さい。";
-            }
-
             // 選択ボタンを使用不可
             buttonSelect.IsEnabled = false;
         }
