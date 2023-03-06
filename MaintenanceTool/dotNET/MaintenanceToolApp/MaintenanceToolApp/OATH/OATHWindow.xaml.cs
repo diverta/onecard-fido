@@ -125,6 +125,12 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string informative = string.Format(AppCommon.MSG_PROMPT_OATH_DELETE_ACCOUNT, Parameter.SelectedAccount);
+            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_TITLE_OATH_DELETE_ACCOUNT, informative) == false) {
+                return;
+            }
+
             // 画面を閉じる
             TerminateWindow(true);
         }

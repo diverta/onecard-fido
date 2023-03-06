@@ -290,6 +290,8 @@
         public const string MSG_LABEL_COMMAND_OATH_GENERATE_TOTP = "ワンタイムパスワードの生成";
         public const string MSG_LABEL_COMMAND_OATH_UPDATE_TOTP = "ワンタイムパスワードの更新";
         public const string MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT = "OATHアカウント一覧の取得";
+        public const string MSG_TITLE_OATH_DELETE_ACCOUNT = "OATHアカウントを削除します。";
+        public const string MSG_PROMPT_OATH_DELETE_ACCOUNT = "削除後は、{0}のワンタイムパスワードが参照できなくなります。\n削除処理を開始しますか？";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";
