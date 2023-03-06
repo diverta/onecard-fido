@@ -153,7 +153,7 @@ namespace MaintenanceToolApp
             OATHParameter param = new OATHParameter();
             if (new OATHWindow(param).ShowDialogWithOwner(this)) {
                 // OATH機能を実行
-                new OATHWindowSwitcher(param).Switch(this);
+                new OATHWindowUtility(param).Switch(this);
             }
         }
 
