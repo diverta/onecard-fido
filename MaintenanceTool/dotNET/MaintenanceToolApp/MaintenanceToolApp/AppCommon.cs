@@ -286,8 +286,16 @@
         public const string MSG_ERROR_OATH_CALCULATE_APDU_FAILED = "OATHワンタイムパスワード生成処理用のリクエストデータ生成に失敗しました。";
         public const string MSG_ERROR_OATH_CALCULATE_FAILED = "OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_INFO_OATH_CALCULATE_SUCCESS = "OATHワンタイムパスワードを生成しました。";
+        public const string MSG_ERROR_OATH_LIST_ACCOUNT_FAILED = "OATHアカウント一覧の取得時、エラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_LABEL_COMMAND_OATH_GENERATE_TOTP = "ワンタイムパスワードの生成";
         public const string MSG_LABEL_COMMAND_OATH_UPDATE_TOTP = "ワンタイムパスワードの更新";
+        public const string MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT = "OATHアカウント一覧の取得";
+        public const string MSG_TITLE_OATH_DELETE_ACCOUNT = "OATHアカウントを削除します。";
+        public const string MSG_PROMPT_OATH_DELETE_ACCOUNT = "削除後は、{0}のワンタイムパスワードが参照できなくなります。\n削除処理を開始しますか？";
+        public const string MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP = "ワンタイムパスワードを参照するアカウントの選択";
+        public const string MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP = "ワンタイムパスワードを参照したいアカウントを、\n下のリストから選択して下さい。";
+        public const string MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE = "削除するアカウントの選択";
+        public const string MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE = "認証器から削除したいアカウントを、\n下のリストから選択して下さい。";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";

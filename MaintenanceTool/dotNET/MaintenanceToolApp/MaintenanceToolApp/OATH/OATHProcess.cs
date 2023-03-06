@@ -2,6 +2,7 @@
 using MaintenanceToolApp.PIV;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -25,6 +26,8 @@ namespace MaintenanceTool.OATH
         public string OATHAccountIssuer { get; set; }
         public string OATHBase32Secret { get; set; }
         public UInt32 OATHTOTPValue { get; set; }
+        public List<string> AccountList { get; set; }
+        public string SelectedAccount { get; set; }
 
         public OATHParameter()
         {
@@ -37,6 +40,8 @@ namespace MaintenanceTool.OATH
             OATHAccountIssuer = string.Empty;
             OATHBase32Secret= string.Empty;
             OATHTOTPValue= 0;
+            AccountList = new List<string>();
+            SelectedAccount = string.Empty;
         }
     }
 
@@ -134,12 +139,73 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            if (Parameter.CommandTitle == AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP) {
+            switch (Parameter.CommandTitle) {
+            case AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP:
                 // ワンタイムパスワード生成処理に移行
                 DoRequestCalculate(Parameter);
-            } else {
+                break;
+            case AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP:
                 // アカウント登録処理に移行
                 DoRequestAccountAdd(Parameter);
+                break;
+            default:
+                // アカウント一覧取得処理に移行
+                DoRequestAccountList(Parameter);
+                break;
+            }
+        }
+
+        //
+        // アカウント一覧取得処理
+        //
+        private void DoRequestAccountList(OATHParameter parameter)
+        {
+            // APDUを生成
+            byte[] apduBytes = Array.Empty<byte>();
+
+            // アカウント登録コマンドを実行
+            CCIDParameter param = new CCIDParameter(0x03, 0x00, 0x00, apduBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseAccountList);
+        }
+
+        private void DoResponseAccountList(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_ERROR_OATH_LIST_ACCOUNT_FAILED, responseSW));
+                return;
+            }
+
+            // レスポンスからアカウント名一覧を抽出
+            Parameter.AccountList.Clear();
+            ParseAccountListBytes(responseData, Parameter.AccountList);
+
+            // 上位クラスに制御を戻す
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        }
+
+        private void ParseAccountListBytes(byte[] accountListBytes, List<string> accountList)
+        {
+            int i = 0;
+            while (i < accountListBytes.Length) {
+                // 0x71（アカウント名）出現まで走査
+                if (accountListBytes[i++] != 0x71) {
+                    continue;
+                }
+
+                // アカウント名の長さを取得
+                int nameLength = accountListBytes[i++];
+                if (nameLength == 0 || i > accountListBytes.Length) {
+                    continue;
+                }
+
+                // アカウント名を抽出し、引数の領域に追加
+                byte[] nameBytes = accountListBytes.Skip(i).Take(nameLength).ToArray();
+                string nameString = Encoding.UTF8.GetString(nameBytes);
+                accountList.Add(nameString);
+
+                // 後続バイトを走査
+                i += nameLength;
             }
         }
 

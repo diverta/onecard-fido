@@ -1,4 +1,7 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonWindow;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -93,8 +96,13 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // 実行機能を設定し、画面を閉じる
-            Parameter.Command = COMMAND_OATH_SHOW_PASSWORD;
+            // アカウント選択画面を表示
+            if (SelectOATHAccount(COMMAND_OATH_SHOW_PASSWORD, 
+                AppCommon.MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP, AppCommon.MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP) == false) {
+                return;
+            }
+
+            // 画面を閉じる
             TerminateWindow(true);
         }
 
@@ -113,8 +121,19 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // 実行機能を設定し、画面を閉じる
-            Parameter.Command = COMMAND_OATH_DELETE_ACCOUNT;
+            // アカウント選択画面を表示
+            if (SelectOATHAccount(COMMAND_OATH_DELETE_ACCOUNT, 
+                AppCommon.MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE, AppCommon.MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE) == false) {
+                return;
+            }
+
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string informative = string.Format(AppCommon.MSG_PROMPT_OATH_DELETE_ACCOUNT, Parameter.SelectedAccount);
+            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_TITLE_OATH_DELETE_ACCOUNT, informative) == false) {
+                return;
+            }
+
+            // 画面を閉じる
             TerminateWindow(true);
         }
 
@@ -123,6 +142,54 @@ namespace MaintenanceTool.OATH
             // この画面を閉じる
             DialogResult = dialogResult;
             Close();
+        }
+
+        //
+        // アカウント一覧取得処理
+        //
+        private bool SelectOATHAccount(Command command, string title, string caption)
+        {
+            // アカウント選択画面に表示する一覧を認証器から取得
+            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+                return false;
+            }
+
+            // アカウント選択画面を表示
+            Parameter.Command = command;
+            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this, title, caption) == false) {
+                Parameter.Command = COMMAND_NONE;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool DoOATHProcess(string commandTitle)
+        {
+            // パラメーターを設定し、コマンドを実行
+            Parameter.CommandTitle = commandTitle;
+            Task task = Task.Run(() => {
+                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            if (Parameter.CommandSuccess == false) {
+                // 処理失敗時は、エラーメッセージをポップアップ表示
+                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void OnOATHProcessTerminated(OATHParameter parameter)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //
