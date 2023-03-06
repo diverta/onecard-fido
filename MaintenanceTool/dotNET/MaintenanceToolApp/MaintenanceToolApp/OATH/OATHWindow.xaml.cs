@@ -1,4 +1,7 @@
 ﻿using MaintenanceToolApp;
+using MaintenanceToolApp.CommonWindow;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -93,8 +96,19 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // 実行機能を設定し、画面を閉じる
+            // アカウント選択画面に表示する一覧を認証器から取得
+            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+                return;
+            }
+
+            // アカウント選択画面を表示
             Parameter.Command = COMMAND_OATH_SHOW_PASSWORD;
+            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this) == false) {
+                Parameter.Command = COMMAND_NONE;
+                return;
+            }
+
+            // 画面を閉じる
             TerminateWindow(true);
         }
 
@@ -113,8 +127,19 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // 実行機能を設定し、画面を閉じる
+            // アカウント選択画面に表示する一覧を認証器から取得
+            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+                return;
+            }
+
+            // アカウント選択画面を表示
             Parameter.Command = COMMAND_OATH_DELETE_ACCOUNT;
+            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this) == false) {
+                Parameter.Command = COMMAND_NONE;
+                return;
+            }
+
+            // 画面を閉じる
             TerminateWindow(true);
         }
 
@@ -123,6 +148,37 @@ namespace MaintenanceTool.OATH
             // この画面を閉じる
             DialogResult = dialogResult;
             Close();
+        }
+
+        //
+        // アカウント一覧取得処理
+        //
+        private bool DoOATHProcess(string commandTitle)
+        {
+            // パラメーターを設定し、コマンドを実行
+            Parameter.CommandTitle = commandTitle;
+            Task task = Task.Run(() => {
+                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
+            });
+
+            // 進捗画面を表示
+            CommonProcessingWindow.OpenForm(this);
+
+            if (Parameter.CommandSuccess == false) {
+                // 処理失敗時は、エラーメッセージをポップアップ表示
+                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void OnOATHProcessTerminated(OATHParameter parameter)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                // 進捗画面を閉じる
+                CommonProcessingWindow.NotifyTerminate();
+            }));
         }
 
         //

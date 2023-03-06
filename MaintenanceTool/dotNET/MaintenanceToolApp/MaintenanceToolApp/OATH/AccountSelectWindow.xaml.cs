@@ -108,5 +108,10 @@ namespace MaintenanceTool.OATH
         {
             AccountSelected();
         }
+
+        private void buttonSelect_Click(object sender, RoutedEventArgs e)
+        {
+            TerminateWindow(true);
+        }
     }
 }
