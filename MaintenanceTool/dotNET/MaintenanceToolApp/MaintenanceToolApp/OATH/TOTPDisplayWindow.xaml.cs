@@ -22,12 +22,26 @@ namespace MaintenanceTool.OATH
 
         public void ShowDialogWithOwner(Window ownerWindow)
         {
+            // アカウント情報の各項目を画面に初期表示
+            DisplayAccountInfo();
+
             // この画面を、親画面の中央にモード付きで表示
             Owner = ownerWindow;
             ownerWindow.Hide();
             ShowDialog();
         }
 
+        private void DisplayAccountInfo()
+        {
+            // アカウント情報の各項目を画面表示
+            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
+            labelAccountVal.Content = Parameter.OATHAccountName;
+            labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
+        }
+
+        //
+        // イベント処理部
+        // 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
