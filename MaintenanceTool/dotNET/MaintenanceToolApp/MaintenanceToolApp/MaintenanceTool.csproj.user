@@ -33,6 +33,9 @@
     <Compile Update="FIDOSettings\SetPinCodeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="OATH\AccountSelectWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="OATH\OATHWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -90,6 +93,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OATH\AccountSelectWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OATH\OATHWindow.xaml">
