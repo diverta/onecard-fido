@@ -286,8 +286,10 @@
         public const string MSG_ERROR_OATH_CALCULATE_APDU_FAILED = "OATHワンタイムパスワード生成処理用のリクエストデータ生成に失敗しました。";
         public const string MSG_ERROR_OATH_CALCULATE_FAILED = "OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_INFO_OATH_CALCULATE_SUCCESS = "OATHワンタイムパスワードを生成しました。";
+        public const string MSG_ERROR_OATH_LIST_ACCOUNT_FAILED = "OATHアカウント一覧の取得時、エラーが発生しました（SW=0x{0:x4}）";
         public const string MSG_LABEL_COMMAND_OATH_GENERATE_TOTP = "ワンタイムパスワードの生成";
         public const string MSG_LABEL_COMMAND_OATH_UPDATE_TOTP = "ワンタイムパスワードの更新";
+        public const string MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT = "OATHアカウント一覧の取得";
 
         // ヘルスチェック機能
         public const string MSG_PROMPT_INPUT_HCHECK_PIN = "PINコードを４〜16桁で入力してください";

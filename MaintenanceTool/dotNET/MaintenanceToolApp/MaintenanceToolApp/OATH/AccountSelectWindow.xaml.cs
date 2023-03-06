@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using static MaintenanceToolApp.AppDefine.Command;
 
 namespace MaintenanceTool.OATH
@@ -23,6 +24,9 @@ namespace MaintenanceTool.OATH
 
         public bool ShowDialogWithOwner(Window ownerWindow)
         {
+            // 画面にアカウント一覧を表示
+            DisplayAccountList();
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -50,6 +54,17 @@ namespace MaintenanceTool.OATH
 
             // 選択ボタンを使用不可
             buttonSelect.IsEnabled = false;
+        }
+
+        private void DisplayAccountList()
+        {
+            // 画面にアカウント一覧を表示
+            ListBoxAccount.Items.Clear();
+            foreach (var accountName in Parameter.AccountList) {
+                ListBoxItem item = new ListBoxItem();
+                item.Content = accountName;
+                ListBoxAccount.Items.Add(item);
+            }
         }
 
         private void TerminateWindow(bool dialogResult)

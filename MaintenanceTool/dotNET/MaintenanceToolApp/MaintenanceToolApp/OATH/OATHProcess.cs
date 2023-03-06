@@ -26,6 +26,7 @@ namespace MaintenanceTool.OATH
         public string OATHAccountIssuer { get; set; }
         public string OATHBase32Secret { get; set; }
         public UInt32 OATHTOTPValue { get; set; }
+        public List<string> AccountList { get; set; }
 
         public OATHParameter()
         {
@@ -38,6 +39,7 @@ namespace MaintenanceTool.OATH
             OATHAccountIssuer = string.Empty;
             OATHBase32Secret= string.Empty;
             OATHTOTPValue= 0;
+            AccountList = new List<string>();
         }
     }
 
@@ -173,12 +175,8 @@ namespace MaintenanceTool.OATH
             }
 
             // レスポンスからアカウント名一覧を抽出
-            List<string> accountList = new List<string>();
-            ParseAccountListBytes(responseData, accountList);
-
-            // TODO: 仮の実装です。
-            string dump1 = AppLogUtil.DumpMessage(responseData, responseData.Length);
-            AppLogUtil.OutputLogDebug(string.Format("DoResponseAccountList: SW=0x{0:x4}, {1} bytes\n{2}", responseSW, responseData.Length, dump1));
+            Parameter.AccountList.Clear();
+            ParseAccountListBytes(responseData, Parameter.AccountList);
 
             // 上位クラスに制御を戻す
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
