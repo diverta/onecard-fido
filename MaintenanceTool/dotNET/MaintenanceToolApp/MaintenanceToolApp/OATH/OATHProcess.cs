@@ -134,12 +134,17 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            if (Parameter.CommandTitle == AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP) {
+            switch (Parameter.CommandTitle) {
+            case AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP:
                 // ワンタイムパスワード生成処理に移行
                 DoRequestCalculate(Parameter);
-            } else {
+                break;
+            case AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP:
                 // アカウント登録処理に移行
                 DoRequestAccountAdd(Parameter);
+                break;
+            default:
+                break;
             }
         }
 
