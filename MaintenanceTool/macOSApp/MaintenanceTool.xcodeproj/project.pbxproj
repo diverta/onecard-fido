@@ -1386,12 +1386,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/include",
+					"${HOME}/opt/openssl/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/$(NATIVE_ARCH)";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 0.2.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1416,12 +1416,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/include",
+					"${HOME}/opt/openssl/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/$(NATIVE_ARCH)";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 0.2.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1446,12 +1446,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/include",
+					"${HOME}/opt/openssl/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/$(NATIVE_ARCH)";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 0.2.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1476,12 +1476,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/include",
+					"${HOME}/opt/openssl/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/$(NATIVE_ARCH)";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 0.2.3;
 				ONLY_ACTIVE_ARCH = YES;
