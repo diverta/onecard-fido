@@ -63,7 +63,7 @@ namespace MaintenanceTool.OATH
         //
         // OATHコマンド実行ユーティリティー
         //
-        private static bool DoOATHProcess(Window window, OATHParameter parameter)
+        public static bool DoOATHProcess(Window window, OATHParameter parameter)
         {
             // パラメーターを設定し、コマンドを実行
             Task task = Task.Run(() => {
