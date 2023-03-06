@@ -96,15 +96,8 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // アカウント選択画面に表示する一覧を認証器から取得
-            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
-                return;
-            }
-
             // アカウント選択画面を表示
-            Parameter.Command = COMMAND_OATH_SHOW_PASSWORD;
-            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this) == false) {
-                Parameter.Command = COMMAND_NONE;
+            if (SelectOATHAccount(COMMAND_OATH_SHOW_PASSWORD) == false) {
                 return;
             }
 
@@ -127,15 +120,8 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // アカウント選択画面に表示する一覧を認証器から取得
-            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
-                return;
-            }
-
             // アカウント選択画面を表示
-            Parameter.Command = COMMAND_OATH_DELETE_ACCOUNT;
-            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this) == false) {
-                Parameter.Command = COMMAND_NONE;
+            if (SelectOATHAccount(COMMAND_OATH_DELETE_ACCOUNT) == false) {
                 return;
             }
 
@@ -153,6 +139,23 @@ namespace MaintenanceTool.OATH
         //
         // アカウント一覧取得処理
         //
+        private bool SelectOATHAccount(Command command)
+        {
+            // アカウント選択画面に表示する一覧を認証器から取得
+            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+                return false;
+            }
+
+            // アカウント選択画面を表示
+            Parameter.Command = command;
+            if (new AccountSelectWindow(Parameter).ShowDialogWithOwner(this) == false) {
+                Parameter.Command = COMMAND_NONE;
+                return false;
+            }
+
+            return true;
+        }
+
         private bool DoOATHProcess(string commandTitle)
         {
             // パラメーターを設定し、コマンドを実行
