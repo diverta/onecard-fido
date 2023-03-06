@@ -7,7 +7,7 @@
         Title="処理対象アカウントの選択" Width="360" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="Height" ShowInTaskbar="False">
     <Grid Height="300">
         <Label x:Name="labelCaption" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" VerticalContentAlignment="Center" Width="310" Height="50"/>
-        <ListBox Name="ListBoxAccount" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,75,0,0" Height="150" Width="310">
+        <ListBox Name="ListBoxAccount" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,75,0,0" Height="150" Width="310" SelectionChanged="ListBoxAccount_SelectionChanged">
         </ListBox>
         <Button x:Name="buttonSelect" Content="選択" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,250,125,0" Height="25" Width="100"/>
         <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="125,250,0,0" Height="25" Width="100" Click="buttonCancel_Click"/>

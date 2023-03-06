@@ -27,6 +27,9 @@ namespace MaintenanceTool.OATH
             // 画面にアカウント一覧を表示
             DisplayAccountList();
 
+            // パラメーターをクリア
+            Parameter.SelectedAccount = string.Empty;
+
             // この画面を、オーナー画面の中央にモード付きで表示
             Owner = ownerWindow;
             bool? b = ShowDialog();
@@ -67,6 +70,25 @@ namespace MaintenanceTool.OATH
             }
         }
 
+        private void AccountSelected()
+        {
+            // 選択されたアカウントを取得し、内容をチェック
+            ListBoxItem item = (ListBoxItem)ListBoxAccount.SelectedItem;
+            if (item == null) {
+                return;
+            }
+            string selectedAccount = (string)item.Content;
+            if (string.IsNullOrEmpty(selectedAccount)) {
+                return;
+            }
+
+            // 選択ボタンを使用可能にする
+            buttonSelect.IsEnabled = true;
+
+            // パラメーターに設定
+            Parameter.SelectedAccount = selectedAccount;
+        }
+
         private void TerminateWindow(bool dialogResult)
         {
             // この画面を閉じる
@@ -80,6 +102,11 @@ namespace MaintenanceTool.OATH
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             TerminateWindow(false);
+        }
+
+        private void ListBoxAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AccountSelected();
         }
     }
 }

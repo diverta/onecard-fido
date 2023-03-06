@@ -27,6 +27,7 @@ namespace MaintenanceTool.OATH
         public string OATHBase32Secret { get; set; }
         public UInt32 OATHTOTPValue { get; set; }
         public List<string> AccountList { get; set; }
+        public string SelectedAccount { get; set; }
 
         public OATHParameter()
         {
@@ -40,6 +41,7 @@ namespace MaintenanceTool.OATH
             OATHBase32Secret= string.Empty;
             OATHTOTPValue= 0;
             AccountList = new List<string>();
+            SelectedAccount = string.Empty;
         }
     }
 
