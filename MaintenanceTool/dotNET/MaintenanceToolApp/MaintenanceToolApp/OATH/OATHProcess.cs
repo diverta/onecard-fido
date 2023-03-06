@@ -144,8 +144,39 @@ namespace MaintenanceTool.OATH
                 DoRequestAccountAdd(Parameter);
                 break;
             default:
+                // アカウント一覧取得処理に移行
+                DoRequestAccountList(Parameter);
                 break;
             }
+        }
+
+        //
+        // アカウント一覧取得処理
+        //
+        private void DoRequestAccountList(OATHParameter parameter)
+        {
+            // APDUを生成
+            byte[] apduBytes = Array.Empty<byte>();
+
+            // アカウント登録コマンドを実行
+            CCIDParameter param = new CCIDParameter(0x03, 0x00, 0x00, apduBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseAccountList);
+        }
+
+        private void DoResponseAccountList(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_ERROR_OATH_LIST_ACCOUNT_FAILED, responseSW));
+                return;
+            }
+
+            // TODO: 仮の実装です。
+            string dump1 = AppLogUtil.DumpMessage(responseData, responseData.Length);
+            AppLogUtil.OutputLogDebug(string.Format("DoResponseAccountList: SW=0x{0:x4}, {1} bytes\n{2}", responseSW, responseData.Length, dump1));
+
+            // 上位クラスに制御を戻す
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
         }
 
         //
