@@ -2,6 +2,7 @@
 using MaintenanceToolApp.PIV;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -171,12 +172,41 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
+            // レスポンスからアカウント名一覧を抽出
+            List<string> accountList = new List<string>();
+            ParseAccountListBytes(responseData, accountList);
+
             // TODO: 仮の実装です。
             string dump1 = AppLogUtil.DumpMessage(responseData, responseData.Length);
             AppLogUtil.OutputLogDebug(string.Format("DoResponseAccountList: SW=0x{0:x4}, {1} bytes\n{2}", responseSW, responseData.Length, dump1));
 
             // 上位クラスに制御を戻す
             NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        }
+
+        private void ParseAccountListBytes(byte[] accountListBytes, List<string> accountList)
+        {
+            int i = 0;
+            while (i < accountListBytes.Length) {
+                // 0x71（アカウント名）出現まで走査
+                if (accountListBytes[i++] != 0x71) {
+                    continue;
+                }
+
+                // アカウント名の長さを取得
+                int nameLength = accountListBytes[i++];
+                if (nameLength == 0 || i > accountListBytes.Length) {
+                    continue;
+                }
+
+                // アカウント名を抽出し、引数の領域に追加
+                byte[] nameBytes = accountListBytes.Skip(i).Take(nameLength).ToArray();
+                string nameString = Encoding.UTF8.GetString(nameBytes);
+                accountList.Add(nameString);
+
+                // 後続バイトを走査
+                i += nameLength;
+            }
         }
 
         //
