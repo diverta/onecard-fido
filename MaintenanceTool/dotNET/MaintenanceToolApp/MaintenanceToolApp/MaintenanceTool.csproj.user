@@ -42,6 +42,9 @@
     <Compile Update="OATH\ScanQRCodeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="OATH\TOTPDisplayWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="OpenPGP\OpenPGPWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,6 +105,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OATH\ScanQRCodeWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OATH\TOTPDisplayWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="OpenPGP\OpenPGPWindow.xaml">

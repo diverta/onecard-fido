@@ -5,44 +5,39 @@ using System.Windows;
 namespace MaintenanceTool.OATH
 {
     /// <summary>
-    /// ScanQRCodeWindow.xaml の相互作用ロジック
+    /// TOTPDisplayWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class ScanQRCodeWindow : Window
+    public partial class TOTPDisplayWindow : Window
     {
         // パラメーターの参照を保持
         private readonly OATHParameter Parameter;
 
-        public ScanQRCodeWindow(OATHParameter parameter)
+        public TOTPDisplayWindow(OATHParameter parameter)
         {
             // パラメーターの参照を保持
             Parameter = parameter;
 
             // 画面項目の初期化
             InitializeComponent();
-            InitFieldValue();
         }
 
         public void ShowDialogWithOwner(Window ownerWindow)
         {
+            // アカウント情報の各項目を画面に初期表示
+            DisplayAccountInfo();
+
             // この画面を、親画面の中央にモード付きで表示
             Owner = ownerWindow;
             ownerWindow.Hide();
             ShowDialog();
         }
 
-        public void DoScan()
+        private void DisplayAccountInfo()
         {
-            // 画面項目の初期化
-            InitFieldValue();
-
-            // QRコードのスキャンを画面スレッドで実行
-            if (OATHProcess.ScanQRCode(Parameter) == false) {
-                DialogUtil.ShowWarningMessage(this, Title, Parameter.ResultInformativeMessage);
-                return;
-            }
-
-            // ワンタイムパスワードを生成
-            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP);
+            // アカウント情報の各項目を画面表示
+            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
+            labelAccountVal.Content = Parameter.OATHAccountName;
+            labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
         }
 
         private void DoUpdate()
@@ -60,27 +55,7 @@ namespace MaintenanceTool.OATH
             }
 
             // アカウント情報の各項目を画面表示
-            labelAccountVal.Content = Parameter.OATHAccountName;
-            labelIssuerVal.Content = Parameter.OATHAccountIssuer;
-            labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
-
-            // 実行ボタンの代わりに、更新ボタンを使用可能とする
-            buttonScan.IsEnabled = false;
-            buttonUpdate.IsEnabled = true;
-        }
-
-        //
-        // 画面初期化処理
-        //
-        private void InitFieldValue()
-        {
-            // ワンタイムパスワードの更新ボタンを使用不可とする
-            buttonUpdate.IsEnabled = false;
-
-            // 画面表示項目を初期化
-            labelAccountVal.Content = string.Empty;
-            labelIssuerVal.Content = string.Empty;
-            labelPassword.Content = string.Empty;
+            DisplayAccountInfo();
         }
 
         //
@@ -88,7 +63,6 @@ namespace MaintenanceTool.OATH
         // 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            // この画面を閉じる
             Close();
         }
 
@@ -96,11 +70,6 @@ namespace MaintenanceTool.OATH
         {
             // 親画面を表示
             Owner.Show();
-        }
-
-        private void buttonScan_Click(object sender, RoutedEventArgs e)
-        {
-            DoScan();
         }
 
         private void buttonUpdate_Click(object sender, RoutedEventArgs e)

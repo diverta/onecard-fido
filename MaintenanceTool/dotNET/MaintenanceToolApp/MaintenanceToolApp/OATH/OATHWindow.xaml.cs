@@ -1,7 +1,4 @@
 ﻿using MaintenanceToolApp;
-using MaintenanceToolApp.CommonWindow;
-using System;
-using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -150,7 +147,8 @@ namespace MaintenanceTool.OATH
         private bool SelectOATHAccount(Command command, string title, string caption)
         {
             // アカウント選択画面に表示する一覧を認証器から取得
-            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+            Parameter.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT;
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
                 return false;
             }
 
@@ -162,34 +160,6 @@ namespace MaintenanceTool.OATH
             }
 
             return true;
-        }
-
-        private bool DoOATHProcess(string commandTitle)
-        {
-            // パラメーターを設定し、コマンドを実行
-            Parameter.CommandTitle = commandTitle;
-            Task task = Task.Run(() => {
-                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
-            });
-
-            // 進捗画面を表示
-            CommonProcessingWindow.OpenForm(this);
-
-            if (Parameter.CommandSuccess == false) {
-                // 処理失敗時は、エラーメッセージをポップアップ表示
-                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
-                return false;
-            }
-
-            return true;
-        }
-
-        private void OnOATHProcessTerminated(OATHParameter parameter)
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // 進捗画面を閉じる
-                CommonProcessingWindow.NotifyTerminate();
-            }));
         }
 
         //
