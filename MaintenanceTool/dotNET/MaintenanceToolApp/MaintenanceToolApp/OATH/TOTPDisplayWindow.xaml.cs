@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MaintenanceToolApp;
+using System.ComponentModel;
 using System.Windows;
 
 namespace MaintenanceTool.OATH
@@ -39,6 +40,24 @@ namespace MaintenanceTool.OATH
             labelPassword.Content = string.Format("{0:000000}", Parameter.OATHTOTPValue);
         }
 
+        private void DoUpdate()
+        {
+            // ワンタイムパスワードを更新
+            DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_UPDATE_TOTP);
+        }
+
+        private void DoOATHProcess(string commandTitle)
+        {
+            // パラメーターを設定し、コマンドを実行
+            Parameter.CommandTitle = commandTitle;
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
+                return;
+            }
+
+            // アカウント情報の各項目を画面表示
+            DisplayAccountInfo();
+        }
+
         //
         // イベント処理部
         // 
@@ -51,6 +70,11 @@ namespace MaintenanceTool.OATH
         {
             // 親画面を表示
             Owner.Show();
+        }
+
+        private void buttonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            DoUpdate();
         }
     }
 }
