@@ -1,5 +1,4 @@
 ﻿using MaintenanceToolApp;
-using MaintenanceToolApp.PIV;
 using System;
 using System.Collections.Generic;
 using ToolAppCommon;
@@ -125,7 +124,7 @@ namespace MaintenanceTool.OATH
         {
             // OATH appletを選択
             byte[] aidBytes = new byte[] { 0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01 };
-            CCIDParameter param = new CCIDParameter(PIVCCIDConst.PIV_INS_SELECT, 0x04, 0x00, aidBytes, 0xff);
+            CCIDParameter param = new CCIDParameter(0xa4, 0x04, 0x00, aidBytes, 0xff);
             CCIDProcess.DoRequestCommand(param, DoResponseInsSelectApplication);
         }
 
@@ -144,7 +143,7 @@ namespace MaintenanceTool.OATH
                 break;
             case AppCommon.MSG_LABEL_COMMAND_OATH_GENERATE_TOTP:
                 // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
-                DoAccountAdd();
+                new OATHAccountProcess(Parameter).DoAccountAdd(NotifyAccountAddTerminated);
                 break;
             case AppCommon.MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT:
                 // アカウント削除処理に移行
@@ -155,15 +154,6 @@ namespace MaintenanceTool.OATH
                 new OATHAccountProcess(Parameter).DoAccountList(NotifyProcessTerminated);
                 break;
             }
-        }
-
-        //
-        // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
-        //
-        private void DoAccountAdd()
-        {
-            // アカウント登録処理に移行
-            new OATHAccountProcess(Parameter).DoAccountAdd(NotifyAccountAddTerminated);
         }
 
         private void NotifyAccountAddTerminated(bool success, string errorMessage)
