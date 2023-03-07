@@ -148,8 +148,7 @@ namespace MaintenanceTool.OATH
                 break;
             case AppCommon.MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT:
                 // アカウント削除処理に移行
-                // TODO: 仮の実装です。
-                NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+                new OATHAccountProcess(Parameter).DoAccountDelete(NotifyProcessTerminated);
                 break;
             default:
                 // アカウント一覧取得処理に移行
