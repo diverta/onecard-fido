@@ -290,6 +290,7 @@
         public const string MSG_LABEL_COMMAND_OATH_GENERATE_TOTP = "ワンタイムパスワードの生成";
         public const string MSG_LABEL_COMMAND_OATH_UPDATE_TOTP = "ワンタイムパスワードの更新";
         public const string MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT = "OATHアカウント一覧の取得";
+        public const string MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT = "OATHアカウントの削除";
         public const string MSG_TITLE_OATH_DELETE_ACCOUNT = "OATHアカウントを削除します。";
         public const string MSG_PROMPT_OATH_DELETE_ACCOUNT = "削除後は、{0}のワンタイムパスワードが参照できなくなります。\n削除処理を開始しますか？";
         public const string MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP = "ワンタイムパスワードを参照するアカウントの選択";

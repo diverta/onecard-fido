@@ -146,6 +146,11 @@ namespace MaintenanceTool.OATH
                 // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
                 DoAccountAdd();
                 break;
+            case AppCommon.MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT:
+                // アカウント削除処理に移行
+                // TODO: 仮の実装です。
+                NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+                break;
             default:
                 // アカウント一覧取得処理に移行
                 new OATHAccountProcess(Parameter).DoAccountList(NotifyProcessTerminated);
