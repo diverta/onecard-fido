@@ -1,6 +1,6 @@
 # CCIDドライバー修正ビルド手順
 
-最終更新日：2023/1/16
+最終更新日：2023/3/7
 
 macOSにプレインストールされているCCIDドライバーを修正ビルドする手順について掲載しています。
 
@@ -20,7 +20,7 @@ macOSにプレインストールされているCCIDドライバーを修正ビ�
 本手順書で使用するCCIDドライバーは、その更新のたびに追従作業が必要となります。<br>
 適宜、[USB-IFの該当ページ](https://ccid.apdu.fr/files/)で、更新情報を確認する必要があります。
 
-最終更新日現在のCCIDドライバーのバージョンは、[`1.5.1`](https://salsa.debian.org/rousseau/CCID/blob/master/README.md)となっております。
+最終更新日現在のCCIDドライバーのバージョンは、[`1.5.2`](https://salsa.debian.org/rousseau/CCID/blob/master/README.md)となっております。
 
 ## 作業手順
 
@@ -321,16 +321,28 @@ macOSの「システム情報」アプリを実行し、認識・接続される
 </plist>
 ```
 
-次に、`bundle`というサブディレクトリーに、前述の手順で生成したドライバー`ifd-ccid.bundle`を、権限を変えずにコピーします。<br>
+次に、`bundle_xxx`というサブディレクトリーに、前述の手順で生成したドライバー`ifd-ccid.bundle`を、権限を変えずにコピーします。<br>
+
+[Apple silicon向け]
+```
+cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64
+```
+
+[Intel mac向け]
+```
+cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86
+```
+
+
 以下は実行例になります。
 
 ```
-bash-3.2$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/Info.plist
+bash-3.2$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86/ifd-ccid.bundle
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86/ifd-ccid.bundle/Contents
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86/ifd-ccid.bundle/Contents/MacOS
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86/ifd-ccid.bundle/Contents/Info.plist
 bash-3.2$
 ```
 
@@ -338,29 +350,36 @@ bash-3.2$
 
 インストーラー作成のために必要なファイルが揃ったら、以下のコマンドを実行します。
 
+[Apple silicon向け]
 ```
 cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
-rm -rfv CCIDDriver.pkg
-pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.1 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+rm -rfv CCIDDriver_arm64.pkg
+pkgbuild --root bundle_arm64 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+```
+
+[Intel mac向け]
+```
+cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
+rm -rfv CCIDDriver_x86.pkg
+pkgbuild --root bundle_x86 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_x86.pkg
 ```
 
 下記は実行例になります。<br>
-`CCIDDriver.pkg`というファイル（CCIDドライバーのインストーラー）が作成されます。<br>
-この`CCIDDriver.pkg`を、適宜ほかのmacOS環境に配布し、CCIDドライバーをインストールすることになります。
+`CCIDDriver_xxx.pkg`というファイル（CCIDドライバーのインストーラー）が作成されます。<br>
+この`CCIDDriver_xxx.pkg`を、適宜ほかのmacOS環境に配布し、CCIDドライバーをインストールすることになります。
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
-bash-3.2$ rm -rfv CCIDDriver.pkg
-CCIDDriver.pkg
-bash-3.2$ pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.1 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+bash-3.2$ rm -rfv CCIDDriver_x86.pkg
+CCIDDriver_x86.pkg
+bash-3.2$ pkgbuild --root bundle_x86 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_x86.pkg
 pkgbuild: Reading components from CCIDDriver.plist
 pkgbuild: Adding component at ifd-ccid.bundle
-pkgbuild: Wrote package to CCIDDriver.pkg
+pkgbuild: Wrote package to CCIDDriver_x86.pkg
 bash-3.2$
-bash-3.2$ ls -al *.pkg
--rw-r--r--  1 makmorit  staff  125513  1 16 13:04 CCIDDriver.pkg
+bash-3.2$ ls -al *_x86.pkg
+-rw-r--r--  1 makmorit  staff  120700  3  7 18:34 CCIDDriver_x86.pkg
 bash-3.2$
 ```
-
 
 以上で、CCIDドライバーのインストーラー作成は完了です。
