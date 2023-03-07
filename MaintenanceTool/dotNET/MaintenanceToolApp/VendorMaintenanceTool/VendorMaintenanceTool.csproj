@@ -12,7 +12,7 @@
     <Company>Diverta Inc.</Company>
     <Product>VendorMaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).115</FileVersion>
+    <FileVersion>$(Version).116</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

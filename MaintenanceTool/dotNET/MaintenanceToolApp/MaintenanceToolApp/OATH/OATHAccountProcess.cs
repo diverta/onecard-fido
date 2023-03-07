@@ -43,6 +43,15 @@ namespace MaintenanceTool.OATH
             DoRequestAccountList();
         }
 
+        public void DoAccountDelete(HandlerNotifyProcessTerminated handler)
+        {
+            // 戻り先の関数を保持
+            NotifyProcessTerminated = handler;
+
+            // アカウント削除処理を実行
+            DoRequestAccountDelete();
+        }
+
         //
         // アカウント登録処理
         //
@@ -167,6 +176,62 @@ namespace MaintenanceTool.OATH
 
                 // 後続バイトを走査
                 i += nameLength;
+            }
+        }
+
+        //
+        // アカウント削除処理
+        //
+        private void DoRequestAccountDelete()
+        {
+            // APDUを生成
+            byte[] apduBytes;
+            if (GenerateAccountDeleteAPDU(Parameter, out apduBytes) == false) {
+                NotifyProcessTerminated(false, AppCommon.MSG_ERROR_OATH_ACCOUNT_DELETE_APDU_FAILED);
+                return;
+            }
+
+            // アカウント削除コマンドを実行
+            CCIDParameter param = new CCIDParameter(0x02, 0x00, 0x00, apduBytes, 0xff);
+            CCIDProcess.DoRequestCommand(param, DoResponseAccountDelete);
+        }
+
+        private void DoResponseAccountDelete(bool success, byte[] responseData, UInt16 responseSW)
+        {
+            // 不明なエラーが発生時は以降の処理を行わない
+            if (success == false || responseSW != CCIDProcessConst.SW_SUCCESS) {
+                NotifyProcessTerminated(false, string.Format(AppCommon.MSG_ERROR_OATH_ACCOUNT_DELETE_FAILED, responseSW));
+                return;
+            }
+
+            // 上位クラスに制御を戻す
+            NotifyProcessTerminated(true, AppCommon.MSG_NONE);
+        }
+
+        public static bool GenerateAccountDeleteAPDU(OATHParameter Parameter, out byte[] apduBytes)
+        {
+            apduBytes = Array.Empty<byte>();
+            try {
+                // アカウント名をバイト配列化
+                string accountText = Parameter.SelectedAccount;
+                byte[] accountBytes = Encoding.ASCII.GetBytes(accountText);
+
+                // 変数初期化
+                int apduBytesSize = 2 + accountBytes.Length;
+                apduBytes = new byte[apduBytesSize];
+                int offset = 0;
+
+                // アカウント
+                apduBytes[offset++] = 0x71;
+                apduBytes[offset++] = (byte)accountBytes.Length;
+
+                // アカウントをコピー
+                Array.Copy(accountBytes, 0, apduBytes, offset, accountBytes.Length);
+                return true;
+
+            } catch (Exception e) {
+                AppLogUtil.OutputLogError(string.Format("OATHProcess.GenerateAccountDeleteAPDU: {0}", e.Message));
+                return false;
             }
         }
     }
