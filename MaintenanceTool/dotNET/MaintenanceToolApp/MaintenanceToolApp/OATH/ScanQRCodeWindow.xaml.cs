@@ -55,7 +55,7 @@ namespace MaintenanceTool.OATH
         {
             // パラメーターを設定し、コマンドを実行
             Parameter.CommandTitle = commandTitle;
-            if (OATHWindowUtility.DoOATHProcess(this, Parameter) == false) {
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
                 return;
             }
 

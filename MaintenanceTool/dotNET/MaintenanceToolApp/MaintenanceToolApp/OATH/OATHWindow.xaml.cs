@@ -148,7 +148,7 @@ namespace MaintenanceTool.OATH
         {
             // アカウント選択画面に表示する一覧を認証器から取得
             Parameter.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT;
-            if (OATHWindowUtility.DoOATHProcess(this, Parameter) == false) {
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
                 return false;
             }
 

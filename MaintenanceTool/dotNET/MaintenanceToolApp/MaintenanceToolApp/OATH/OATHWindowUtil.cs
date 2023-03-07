@@ -7,12 +7,12 @@ using static MaintenanceToolApp.AppDefine;
 
 namespace MaintenanceTool.OATH
 {
-    internal class OATHWindowUtility
+    internal class OATHWindowUtil
     {
         // 処理パラメーターの参照を保持
         private readonly OATHParameter Parameter = null!;
 
-        public OATHWindowUtility(OATHParameter parameter)
+        public OATHWindowUtil(OATHParameter parameter)
         {
             // 処理パラメーターの参照を保持
             Parameter = parameter;
