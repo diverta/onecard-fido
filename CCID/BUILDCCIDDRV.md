@@ -1,6 +1,6 @@
 # CCIDドライバー修正ビルド手順
 
-最終更新日：2023/1/16
+最終更新日：2023/3/9
 
 macOSにプレインストールされているCCIDドライバーを修正ビルドする手順について掲載しています。
 
@@ -20,72 +20,61 @@ macOSにプレインストールされているCCIDドライバーを修正ビ�
 本手順書で使用するCCIDドライバーは、その更新のたびに追従作業が必要となります。<br>
 適宜、[USB-IFの該当ページ](https://ccid.apdu.fr/files/)で、更新情報を確認する必要があります。
 
-最終更新日現在のCCIDドライバーのバージョンは、[`1.5.1`](https://salsa.debian.org/rousseau/CCID/blob/master/README.md)となっております。
+最終更新日現在のCCIDドライバーのバージョンは、[`1.5.2`](https://salsa.debian.org/rousseau/CCID/blob/master/README.md)となっております。
 
 ## 作業手順
+
+Apple Silicon向け、Intel mac向けに、それぞれ別々のCCIDドライバーを作成するようにします。<br>
+手順は両者とも同一になります。
 
 #### パッケージを導入
 
 ビルド作業のために必要となるパッケージを、`brew`などで事前にインストールしておきます。<br>
-通常のmacOS環境では`libusb`が導入されていないため、追加インストールします。
+通常のmacOS環境では`libusb`、`pkg-config`が導入されていないため、追加インストールします。
+
+以下のコマンドを実行します。
 
 ```
-bash-3.2$ brew install libusb
-Running `brew update --preinstall`...
-（中略）
-==> Fetching libusb
-==> Downloading https://ghcr.io/v2/homebrew/core/libusb/manifests/1.0.26
-######################################################################## 100.0%
-==> Downloading https://ghcr.io/v2/homebrew/core/libusb/blobs/sha256:72ed40aec0356157f3d5071ecb28c481b3f3502985a320ec184
-==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:72ed40aec0356157f3d5071ecb28c481b3f
-######################################################################## 100.0%
-==> Upgrading libusb
-  1.0.24 -> 1.0.26
-
-==> Pouring libusb--1.0.26.catalina.bottle.tar.gz
-🍺  /usr/local/Cellar/libusb/1.0.26: 22 files, 532.0KB
-==> Running `brew cleanup libusb`...
-（中略）
-==> Checking for dependents of upgraded formulae...
-==> No broken dependents found!
-bash-3.2$
+brew install libusb
+brew install pkg-config
 ```
 
-`libusb`は、`/usr/local/Cellar/libusb/1.0.26/lib`に導入されます。
+`libusb`は、`/opt/homebrew/Cellar/libusb/1.0.26/lib`に導入されます。
 
 ```
-bash-3.2$ ls -al /usr/local/Cellar/libusb/1.0.26/lib
-total 608
-drwxr-xr-x   6 makmorit  staff     192  4 10  2022 .
-drwxr-xr-x  13 makmorit  staff     416  1 16 11:02 ..
--r--r--r--   1 makmorit  staff  141344  1 16 11:02 libusb-1.0.0.dylib
--r--r--r--   1 makmorit  staff  165968  4 10  2022 libusb-1.0.a
-lrwxr-xr-x   1 makmorit  staff      18  4 10  2022 libusb-1.0.dylib -> libusb-1.0.0.dylib
-drwxr-xr-x   3 makmorit  staff      96  1 16 11:02 pkgconfig
+bash-3.2$ cd /opt/homebrew/Cellar/libusb/1.0.26/lib
+bash-3.2$ ls -al
+total 752
+drwxr-xr-x   7 devmorit  admin     224  3  9 16:40 .
+drwxr-xr-x  14 devmorit  admin     448  3  8 18:27 ..
+-r--r--r--   1 devmorit  admin  177456  3  8 17:48 libusb-1.0.0.dylib
+-r--r--r--   1 devmorit  admin  194408  4 10  2022 libusb-1.0.a
+lrwxr-xr-x   1 devmorit  admin      18  4 10  2022 libusb-1.0.dylib -> libusb-1.0.0.dylib
+drwxr-xr-x   3 devmorit  admin      96  3  8 17:48 pkgconfig
 bash-3.2$
 ```
 
 ビルド作業や、ビルド後のCCIDドライバー実行の際は、動的リンクが不要であるため、必ず`.dylib`ファイルをリネームしておくようにします。
 
 ```
-bash-3.2$ cd /usr/local/Cellar/libusb/1.0.26/lib
+bash-3.2$ cd /opt/homebrew/Cellar/libusb/1.0.26/lib
 bash-3.2$ mv libusb-1.0.0.dylib __libusb-1.0.0.dylib
 bash-3.2$ mv libusb-1.0.dylib __libusb-1.0.dylib
 bash-3.2$
 bash-3.2$ ls -al
-total 608
-drwxr-xr-x   6 makmorit  staff     192  1 16 11:21 .
-drwxr-xr-x  13 makmorit  staff     416  1 16 11:02 ..
--r--r--r--   1 makmorit  staff  141344  1 16 11:02 __libusb-1.0.0.dylib
-lrwxr-xr-x   1 makmorit  staff      18  4 10  2022 __libusb-1.0.dylib -> libusb-1.0.0.dylib
--r--r--r--   1 makmorit  staff  165968  4 10  2022 libusb-1.0.a
-drwxr-xr-x   3 makmorit  staff      96  1 16 11:02 pkgconfig
+total 752
+drwxr-xr-x   7 devmorit  admin     224  3  9 16:41 .
+drwxr-xr-x  14 devmorit  admin     448  3  8 18:27 ..
+-r--r--r--   1 devmorit  admin  177456  3  8 17:48 __libusb-1.0.0.dylib
+lrwxr-xr-x   1 devmorit  admin      18  4 10  2022 __libusb-1.0.dylib -> libusb-1.0.0.dylib
+-r--r--r--   1 devmorit  admin  194408  4 10  2022 libusb-1.0.a
+drwxr-xr-x   3 devmorit  admin      96  3  8 17:48 pkgconfig
 bash-3.2$
 ```
 
 #### ソースコードを取得
 
-下記サイトからソースコード（`ccid-1.5.1.tar.bz2`）をダウンロードします。
+下記サイトからソースコード（`ccid-1.5.2.tar.bz2`）をダウンロードします。
 - <b>[CCID free software driver](https://ccid.apdu.fr)</b>
 
 サイト[`https://ccid.apdu.fr`](https://ccid.apdu.fr)を表示し、青い「Download」ボタンをクリックします。
@@ -96,73 +85,39 @@ bash-3.2$
 
 <img src="assets03/0002.jpg" width="640">
 
-ダウンロードした「`ccid-1.5.1.tar.bz2`」を解凍します。
+ダウンロードした「`ccid-1.5.2.tar.bz2`」を解凍します。
 
 <img src="assets03/0003.jpg" width="480">
 
-解凍したフォルダー`ccid-1.5.1`を、`${HOME}/opt/`配下に<b>移動します</b>。
+解凍したフォルダー`ccid-1.5.2`を、`${HOME}/opt/`配下に<b>移動します</b>。
 
 ```
 bash-3.2$ ls -al ${HOME}/Downloads
-total 1464
-drwx------@  6 makmorit  staff     192  1 16 11:24 .
-drwxr-xr-x+ 42 makmorit  staff    1344  1 16 09:06 ..
-:
-drwxr-xr-x@ 31 makmorit  staff     992 11 14 19:42 ccid-1.5.1
--rw-r--r--@  1 makmorit  staff  702586  1 16 11:23 ccid-1.5.1.tar.bz2
-bash-3.2$
-bash-3.2$ mv ${HOME}/Downloads/ccid-1.5.1 ${HOME}/opt
+total 1400
+drwx------+  6 devmorit  staff     192  3  9 16:47 .
+drwxr-x---+ 24 devmorit  staff     768  3  9 16:37 ..
+drwxr-xr-x@ 31 devmorit  staff     992  2  1 00:28 ccid-1.5.2
+-rw-r--r--@  1 devmorit  staff  705174  3  8 16:58 ccid-1.5.2.tar.bz2
+bash-3.2$ mv ${HOME}/Downloads/ccid-1.5.2 ${HOME}/opt
 bash-3.2$
 bash-3.2$ ls -al ${HOME}/opt/
-total 32
-drwxr-xr-x  10 makmorit  staff    320  1 16 11:25 .
-drwxr-xr-x+ 42 makmorit  staff   1344  1 16 09:06 ..
-:
-drwxr-xr-x@ 31 makmorit  staff    992 11 14 19:42 ccid-1.5.1
-:
+total 24
+drwxr-xr-x   6 devmorit  staff   192  3  9 16:53 .
+drwxr-x---+ 24 devmorit  staff   768  3  9 16:37 ..
+drwxr-xr-x@ 31 devmorit  staff   992  2  1 00:28 ccid-1.5.2
+drwxr-xr-x   8 devmorit  staff   256  3  8 15:14 openssl
+drwxrwxr-x@ 24 devmorit  staff   768  2 23 17:37 tinycbor
 bash-3.2$
-
 ```
 
 #### メイクファイルの生成
 
-ソースコードフォルダー`ccid-1.4.32`に移動したら、シェル`./MacOSX/configure`を実行し、メイクファイルを生成します。
+ソースコードフォルダー`ccid-1.4.32`に移動したら、シェル`./MacOSX/configure`を実行し、メイクファイルを生成します。<br>
+以下のコマンドを実行します。（実行例は<b>[こちら](assets03/ccid_make_arm64.log)</b>）
 
 ```
-bash-3.2$ cd ${HOME}/opt/ccid-1.5.1/
-bash-3.2$ ./MacOSX/configure
-+ ./configure 'CFLAGS= -DRESPONSECODE_DEFINED_IN_WINTYPES_H' PCSC_CFLAGS=-I/Users/makmorit/opt/ccid-1.5.1/MacOSX 'PCSC_LIBS=-framework PCSC' LIBUSB_CFLAGS=-I/usr/local/Cellar/libusb/1.0.26/include/libusb-1.0 'LIBUSB_LIBS=-L/usr/local/Cellar/libusb/1.0.26/lib -lusb-1.0 -lobjc -Wl,-framework,IOKit -Wl,-framework,CoreFoundation -Wl,-framework,Security' LDFLAGS= --enable-usbdropdir=/usr/local/libexec/SmartCardServices/drivers --disable-dependency-tracking --enable-oslog --disable-static --disable-pcsclite --enable-composite-as-multislot
-checking for a BSD-compatible install... /usr/local/bin/ginstall -c
-checking whether build environment is sane... yes
-checking for a race-free mkdir -p... /usr/local/bin/gmkdir -p
-（中略）
-libccid has been configured with following options:
-
-Version:             1.5.1
-Host:                x86_64-apple-darwin19.6.0
-Compiler:            gcc
-Preprocessor flags:  
-Compiler flags:       -DRESPONSECODE_DEFINED_IN_WINTYPES_H
-（中略）
-libusb support:          yes
-composite as multislot:  yes
-multi threading:         yes
-bundle directory name:   ifd-ccid.bundle
-USB drop directory:      /usr/local/libexec/SmartCardServices/drivers
-serial Twin support:     no
-serial twin install dir: /usr/local/libexec/SmartCardServices/drivers/serial
-serial config directory:
-compiled for pcsc-lite:  no
-syslog debug:            no
-os_log debug:            yes
-class driver:            yes
-（中略）
-+ r=0
-+ rm -f src/Info.plist
-+ exit 0
-bash-3.2$ echo $?
-0
-bash-3.2$
+cd ${HOME}/opt/ccid-1.5.2/
+./MacOSX/configure
 ```
 
 #### サポートデバイスリストの修正内容
@@ -194,7 +149,7 @@ MDBT50Q Dongleは、製造元ID＝`0xF055`、製品ID＝`0x0001`とします。<
 以下のコマンドを実行すると、エディター等を使用しなくても、サポートデバイスリストを修正することができます。
 
 ```
-cd ${HOME}/opt/ccid-1.5.1/
+cd ${HOME}/opt/ccid-1.5.2/
 patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/supported_readers.txt.patch
 ```
 
@@ -203,7 +158,7 @@ patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriv
 ```
 bash-3.2$ patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/supported_readers.txt.patch
 patching file readers/supported_readers.txt
-Hunk #1 succeeded at 926 with fuzz 2 (offset 134 lines).
+Hunk #1 succeeded at 940 with fuzz 2 (offset 148 lines).
 bash-3.2$
 bash-3.2$ cat readers/supported_readers.txt | grep Diverta
 # Diverta Inc.
@@ -220,14 +175,11 @@ bash-3.2$ make
 /Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
 Making all in readers
 make[2]: Nothing to be done for `all'.
-（中略）
-make[3]: Nothing to be done for `all-am'.
-Making all in src
-  CC       parse-parse.o
-  CC       parse-debug.o
-  CC       parse-ccid_usb.o
-（中略）
+Making all in examples
+  CC       scardcontrol-scardcontrol.o
+:
   CCLD     libccid.la
+ld: warning: -undefined dynamic_lookup may not work with chained fixups
 make[2]: Nothing to be done for `all-am'.
 bash-3.2$
 bash-3.2$ echo $?
@@ -245,22 +197,13 @@ bash-3.2$
 bash-3.2$ sudo make install
 Password:
 Making install in readers
-make[2]: Nothing to be done for `install-exec-am'.
-make[2]: Nothing to be done for `install-data-am'.
-（中略）
+:
 Making install in src
-./create_Info_plist.pl ./../readers/supported_readers.txt ./Info.plist.src --target=libccid.dylib --version=1.5.1  > Info.plist
-/bin/sh /Users/makmorit/opt/ccid-1.5.1/install-sh -d "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/"
+./create_Info_plist.pl ./../readers/supported_readers.txt ./Info.plist.src --target=libccid.dylib --version=1.5.2  > Info.plist
+/bin/sh /Users/devmorit/opt/ccid-1.5.2/install-sh -d "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/"
 cp Info.plist "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/"
 cp .libs/libccid.dylib "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib"
-***************
-copy the src/92_pcscd_ccid.rules file in udev directory (/etc/udev/rules.d/)
-***************
-make[2]: Nothing to be done for `install-exec-am'.
-make[2]: Nothing to be done for `install-data-am'.
-bash-3.2$
-bash-3.2$ echo $?
-0
+:
 bash-3.2$
 ```
 
@@ -321,16 +264,28 @@ macOSの「システム情報」アプリを実行し、認識・接続される
 </plist>
 ```
 
-次に、`bundle`というサブディレクトリーに、前述の手順で生成したドライバー`ifd-ccid.bundle`を、権限を変えずにコピーします。<br>
+次に、`bundle_xxx`というサブディレクトリーに、前述の手順で生成したドライバー`ifd-ccid.bundle`を、権限を変えずにコピーします。<br>
+
+[Apple silicon向け]
+```
+cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64
+```
+
+[Intel mac向け]
+```
+cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_x86
+```
+
+
 以下は実行例になります。
 
 ```
-bash-3.2$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
-/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/Info.plist
+bash-3.2$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/MacOS
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/Info.plist
 bash-3.2$
 ```
 
@@ -338,29 +293,37 @@ bash-3.2$
 
 インストーラー作成のために必要なファイルが揃ったら、以下のコマンドを実行します。
 
+[Apple silicon向け]
 ```
 cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
-rm -rfv CCIDDriver.pkg
-pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.1 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+rm -rfv CCIDDriver_arm64.pkg
+pkgbuild --root bundle_arm64 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_arm64.pkg
+```
+
+[Intel mac向け]
+```
+cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
+rm -rfv CCIDDriver_x86.pkg
+pkgbuild --root bundle_x86 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_x86.pkg
 ```
 
 下記は実行例になります。<br>
-`CCIDDriver.pkg`というファイル（CCIDドライバーのインストーラー）が作成されます。<br>
-この`CCIDDriver.pkg`を、適宜ほかのmacOS環境に配布し、CCIDドライバーをインストールすることになります。
+`CCIDDriver_xxx.pkg`というファイル（CCIDドライバーのインストーラー）が作成されます。<br>
+この`CCIDDriver_xxx.pkg`を、適宜ほかのmacOS環境に配布し、CCIDドライバーをインストールすることになります。
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
-bash-3.2$ rm -rfv CCIDDriver.pkg
-CCIDDriver.pkg
-bash-3.2$ pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.1 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+bash-3.2$ rm -rfv CCIDDriver_arm64.pkg
+bash-3.2$ pkgbuild --root bundle_arm64 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_arm64.pkg
 pkgbuild: Reading components from CCIDDriver.plist
 pkgbuild: Adding component at ifd-ccid.bundle
-pkgbuild: Wrote package to CCIDDriver.pkg
+pkgbuild: Wrote package to CCIDDriver_arm64.pkg
 bash-3.2$
 bash-3.2$ ls -al *.pkg
--rw-r--r--  1 makmorit  staff  125513  1 16 13:04 CCIDDriver.pkg
+-rw-r--r--  1 devmorit  staff  119701  3  9 17:04 CCIDDriver.pkg
+-rw-r--r--  1 devmorit  staff  119699  3  9 17:05 CCIDDriver_arm64.pkg
+-rw-r--r--  1 devmorit  staff  120700  3  8 19:03 CCIDDriver_x86.pkg
 bash-3.2$
 ```
-
 
 以上で、CCIDドライバーのインストーラー作成は完了です。

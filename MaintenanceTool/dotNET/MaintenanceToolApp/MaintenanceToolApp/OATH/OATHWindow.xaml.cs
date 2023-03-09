@@ -1,7 +1,4 @@
 ﻿using MaintenanceToolApp;
-using MaintenanceToolApp.CommonWindow;
-using System;
-using System.Threading.Tasks;
 using System.Windows;
 using ToolAppCommon;
 using static MaintenanceToolApp.AppDefine;
@@ -127,14 +124,8 @@ namespace MaintenanceTool.OATH
                 return;
             }
 
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            string informative = string.Format(AppCommon.MSG_PROMPT_OATH_DELETE_ACCOUNT, Parameter.SelectedAccount);
-            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_TITLE_OATH_DELETE_ACCOUNT, informative) == false) {
-                return;
-            }
-
-            // 画面を閉じる
-            TerminateWindow(true);
+            // アカウントを認証器から削除
+            DeleteOATHAccount();
         }
 
         private void TerminateWindow(bool dialogResult)
@@ -150,7 +141,8 @@ namespace MaintenanceTool.OATH
         private bool SelectOATHAccount(Command command, string title, string caption)
         {
             // アカウント選択画面に表示する一覧を認証器から取得
-            if (DoOATHProcess(AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT) == false) {
+            Parameter.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT;
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
                 return false;
             }
 
@@ -164,32 +156,25 @@ namespace MaintenanceTool.OATH
             return true;
         }
 
-        private bool DoOATHProcess(string commandTitle)
+        //
+        // アカウント削除処理
+        //
+        private void DeleteOATHAccount()
         {
-            // パラメーターを設定し、コマンドを実行
-            Parameter.CommandTitle = commandTitle;
-            Task task = Task.Run(() => {
-                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
-            });
-
-            // 進捗画面を表示
-            CommonProcessingWindow.OpenForm(this);
-
-            if (Parameter.CommandSuccess == false) {
-                // 処理失敗時は、エラーメッセージをポップアップ表示
-                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
-                return false;
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            string informative = string.Format(AppCommon.MSG_PROMPT_OATH_DELETE_ACCOUNT, Parameter.SelectedAccount);
+            if (DialogUtil.DisplayPromptPopup(this, AppCommon.MSG_TITLE_OATH_DELETE_ACCOUNT, informative) == false) {
+                return;
             }
 
-            return true;
-        }
+            // アカウントを認証器から削除
+            Parameter.CommandTitle = AppCommon.MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT;
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
+                return;
+            }
 
-        private void OnOATHProcessTerminated(OATHParameter parameter)
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // 進捗画面を閉じる
-                CommonProcessingWindow.NotifyTerminate();
-            }));
+            // 処理成功時は、メッセージをポップアップ表示
+            DialogUtil.ShowInfoMessage(this, Title, Parameter.ResultMessage);
         }
 
         //

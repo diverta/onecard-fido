@@ -1,8 +1,5 @@
 ﻿using MaintenanceToolApp;
-using MaintenanceToolApp.CommonWindow;
-using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MaintenanceTool.OATH
@@ -58,16 +55,7 @@ namespace MaintenanceTool.OATH
         {
             // パラメーターを設定し、コマンドを実行
             Parameter.CommandTitle = commandTitle;
-            Task task = Task.Run(() => {
-                new OATHProcess(Parameter).DoProcess(OnOATHProcessTerminated);
-            });
-
-            // 進捗画面を表示
-            CommonProcessingWindow.OpenForm(this);
-
-            if (Parameter.CommandSuccess == false) {
-                // 処理失敗時は、エラーメッセージをポップアップ表示
-                DialogUtil.ShowWarningMessage(this, Parameter.ResultMessage, Parameter.ResultInformativeMessage);
+            if (OATHWindowUtil.DoOATHProcess(this, Parameter) == false) {
                 return;
             }
 
@@ -79,14 +67,6 @@ namespace MaintenanceTool.OATH
             // 実行ボタンの代わりに、更新ボタンを使用可能とする
             buttonScan.IsEnabled = false;
             buttonUpdate.IsEnabled = true;
-        }
-
-        private void OnOATHProcessTerminated(OATHParameter parameter)
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                // 進捗画面を閉じる
-                CommonProcessingWindow.NotifyTerminate();
-            }));
         }
 
         //

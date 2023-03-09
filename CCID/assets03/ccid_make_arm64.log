@@ -1,0 +1,301 @@
+bash-3.2$ cd ${HOME}/opt/ccid-1.5.2/
+bash-3.2$ ./MacOSX/configure
++ ./configure 'CFLAGS= -DRESPONSECODE_DEFINED_IN_WINTYPES_H' PCSC_CFLAGS=-I/Users/devmorit/opt/ccid-1.5.2/MacOSX 'PCSC_LIBS=-framework PCSC' LIBUSB_CFLAGS=-I/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0 'LIBUSB_LIBS=-L/opt/homebrew/Cellar/libusb/1.0.26/lib -lusb-1.0 -lobjc -Wl,-framework,IOKit -Wl,-framework,CoreFoundation -Wl,-framework,Security' LDFLAGS= --enable-usbdropdir=/usr/local/libexec/SmartCardServices/drivers --disable-dependency-tracking --enable-oslog --disable-static --disable-pcsclite --enable-composite-as-multislot
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... ././install-sh -c -d
+checking for gawk... no
+checking for mawk... no
+checking for nawk... no
+checking for awk... awk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+checking build system type... aarch64-apple-darwin21.6.0
+checking host system type... aarch64-apple-darwin21.6.0
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... none
+checking how to run the C preprocessor... gcc -E
+checking whether make sets $(MAKE)... (cached) yes
+checking whether ln -s works... yes
+checking for flex... flex
+checking for lex output file root... lex.yy
+checking for lex library... none needed
+checking for library containing yywrap... -ll
+checking whether yytext is a pointer... yes
+checking for ar... ar
+checking the archiver (ar) interface... ar
+checking for pkg-config... /opt/homebrew/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+configure: WARNING: libpcsclite not found by pkg-config
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for ifdhandler.h... yes
+checking for reader.h... yes
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
+checking if the linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) is GNU ld... no
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking the maximum length of command line arguments... 786432
+checking how to convert aarch64-apple-darwin21.6.0 file names to aarch64-apple-darwin21.6.0 format... func_convert_file_noop
+checking how to convert aarch64-apple-darwin21.6.0 file names to toolchain format... func_convert_file_noop
+checking for /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld option to reload object files... -r
+checking for file... file
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for archiver @FILE support... no
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /bin/dd
+checking how to truncate binary pipes... /bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dsymutil... dsymutil
+checking for nmedit... nmedit
+checking for lipo... lipo
+checking for otool... otool
+checking for otool64... no
+checking for -single_module linker flag... yes
+checking for -exported_symbols_list linker flag... yes
+checking for -force_load linker flag... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... yes
+checking for gcc option to produce PIC... -fno-common -DPIC
+checking if gcc PIC flag -fno-common -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries... yes
+checking dynamic linker characteristics... darwin21.6.0 dyld
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... no
+checking for errno.h... yes
+checking for fcntl.h... yes
+checking for stdlib.h... (cached) yes
+checking for unistd.h... (cached) yes
+checking for termios.h... yes
+checking for string.h... (cached) yes
+checking for sys/time.h... yes
+checking for sys/types.h... (cached) yes
+checking for stdarg.h... yes
+checking for arpa/inet.h... yes
+checking for stdio.h... (cached) yes
+checking for an ANSI C-conforming const... yes
+checking for size_t... yes
+checking for select... yes
+checking for strerror... yes
+checking for strncpy... yes
+checking for memcpy... yes
+checking for strlcpy... yes
+checking for strlcat... yes
+checking for libusb-1.0 >= 1.0.9... yes
+checking for libusb.h... yes
+checking for libusb_init... yes
+checking for -fvisibility=hidden... yes
+checking whether gcc is Clang... yes
+checking whether pthreads work with "-pthread" and "-lpthread"... yes
+checking whether Clang needs flag to prevent "argument unused" warning when linking with -pthread... no
+checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+checking whether more special flags are required for pthreads... no
+checking for PTHREAD_PRIO_INHERIT... yes
+Package libpcsclite was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libpcsclite.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libpcsclite' found
+
+libccid has been configured with following options:
+
+Version:             1.5.2
+Host:                aarch64-apple-darwin21.6.0
+Compiler:            gcc
+Preprocessor flags:  
+Compiler flags:       -DRESPONSECODE_DEFINED_IN_WINTYPES_H
+Preprocessor flags:  
+Linker flags:        
+Libraries:           
+
+PCSC_CFLAGS:         -I/Users/devmorit/opt/ccid-1.5.2/MacOSX
+PCSC_LIBS:           -framework PCSC
+PTHREAD_CFLAGS:      -pthread
+PTHREAD_LIBS:        -lpthread
+BUNDLE_HOST:         MacOS
+DYN_LIB_EXT:         dylib
+LIBUSB_CFLAGS:       -I/opt/homebrew/Cellar/libusb/1.0.26/include/libusb-1.0
+LIBUSB_LIBS:         -L/opt/homebrew/Cellar/libusb/1.0.26/lib -lusb-1.0 -lobjc -Wl,-framework,IOKit -Wl,-framework,CoreFoundation -Wl,-framework,Security
+SYMBOL_VISIBILITY:   -fvisibility=hidden
+NOCLASS:             
+
+libusb support:          yes
+composite as multislot:  yes
+multi threading:         yes
+bundle directory name:   ifd-ccid.bundle
+USB drop directory:      /usr/local/libexec/SmartCardServices/drivers
+serial Twin support:     no
+serial twin install dir: /usr/local/libexec/SmartCardServices/drivers/serial
+serial config directory: 
+compiled for pcsc-lite:  no
+syslog debug:            no
+os_log debug:            yes
+class driver:            yes
+
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating src/Makefile
+config.status: creating readers/Makefile
+config.status: creating contrib/Makefile
+config.status: creating contrib/Kobil_mIDentity_switch/Makefile
+config.status: creating contrib/RSA_SecurID/Makefile
+config.status: creating examples/Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
++ r=0
++ rm -f src/Info.plist
++ exit 0
+bash-3.2$ 
+bash-3.2$ patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/supported_readers.txt.patch
+patching file readers/supported_readers.txt
+Hunk #1 succeeded at 940 with fuzz 2 (offset 148 lines).
+bash-3.2$ 
+bash-3.2$ cat readers/supported_readers.txt | grep Diverta
+# Diverta Inc.
+0xF055:0x0001:Diverta Inc. Secure Dongle
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ make
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+Making all in readers
+make[2]: Nothing to be done for `all'.
+Making all in examples
+  CC       scardcontrol-scardcontrol.o
+  CC       scardcontrol-PCSCv2part10.o
+  CCLD     scardcontrol
+Making all in contrib
+Making all in Kobil_mIDentity_switch
+  CC       Kobil_mIDentity_switch-Kobil_mIDentity_switch.o
+  CCLD     Kobil_mIDentity_switch
+Making all in RSA_SecurID
+  CC       RSA_SecurID_getpasswd-RSA_SecurID_getpasswd.o
+  CCLD     RSA_SecurID_getpasswd
+make[3]: Nothing to be done for `all-am'.
+Making all in src
+  CC       parse-parse.o
+  CC       parse-debug.o
+  CC       parse-ccid_usb.o
+  CC       parse-sys_unix.o
+  CC       parse-tokenparser.o
+  CC       parse-strlcpy.o
+  CC       parse-simclist.o
+  CCLD     parse
+  CC       libccid_la-ccid.lo
+  CC       libccid_la-commands.lo
+  CC       libccid_la-ifdhandler.lo
+  CC       libccid_la-sys_unix.lo
+  CC       libccid_la-utils.lo
+  CC       libccid_la-ccid_usb.lo
+  CC       libccid_la-tokenparser.lo
+  CC       libccid_la-strlcpy.lo
+  CC       libccid_la-simclist.lo
+  CC       libccid_la-debug.lo
+  CC       towitoko/libccid_la-atr.lo
+  CC       towitoko/libccid_la-pps.lo
+  CC       openct/libccid_la-buffer.lo
+  CC       openct/libccid_la-checksum.lo
+  CC       openct/libccid_la-proto-t1.lo
+  CCLD     libccid.la
+ld: warning: -undefined dynamic_lookup may not work with chained fixups
+make[2]: Nothing to be done for `all-am'.
+bash-3.2$ 
+bash-3.2$ echo $?
+0
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ sudo make install 
+Password:
+Making install in readers
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+Making install in examples
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+Making install in contrib
+Making install in Kobil_mIDentity_switch
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+Making install in RSA_SecurID
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+Making install in src
+./create_Info_plist.pl ./../readers/supported_readers.txt ./Info.plist.src --target=libccid.dylib --version=1.5.2  > Info.plist
+/bin/sh /Users/devmorit/opt/ccid-1.5.2/install-sh -d "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/"
+cp Info.plist "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/"
+cp .libs/libccid.dylib "/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib"
+***************
+copy the src/92_pcscd_ccid.rules file in udev directory (/etc/udev/rules.d/)
+***************
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ cd /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/
+bash-3.2$ cat Info.plist | grep Diverta
+		<string>Diverta Inc. Secure Dongle</string>
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/MacOS
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/devmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle_arm64/ifd-ccid.bundle/Contents/Info.plist
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
+bash-3.2$ rm -rfv CCIDDriver_arm64.pkg
+bash-3.2$ pkgbuild --root bundle_arm64 --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --version 1.5.2 --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver_arm64.pkg
+pkgbuild: Reading components from CCIDDriver.plist
+pkgbuild: Adding component at ifd-ccid.bundle
+pkgbuild: Wrote package to CCIDDriver_arm64.pkg
+bash-3.2$ 
+bash-3.2$ ls -al *.pkg
+-rw-r--r--  1 devmorit  staff  119701  3  9 17:04 CCIDDriver.pkg
+-rw-r--r--  1 devmorit  staff  119699  3  9 17:05 CCIDDriver_arm64.pkg
+-rw-r--r--  1 devmorit  staff  120700  3  8 19:03 CCIDDriver_x86.pkg
+bash-3.2$ 
+bash-3.2$ 
+bash-3.2$ 
