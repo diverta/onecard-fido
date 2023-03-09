@@ -1,6 +1,6 @@
 # CCIDドライバーインストール手順
 
-最終更新日：2023/1/16
+最終更新日：2023/3/9
 
 ## 概要
 CCIDドライバーをmacOS環境にインストールし、[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェースを利用できるようにするための手順について掲載しています。
@@ -10,8 +10,13 @@ Windows環境では、CCIDドライバーが最初からシステムに組み込
 
 ## インストール媒体の取得
 
-CCIDドライバー「[CCIDDriver.pkg](../CCID/macOSDriver/CCIDDriver.pkg)」を、GitHubからダウンロード／解凍します。<br>
-該当ページの「Download」ボタンをクリックすると、[CCIDDriver.pkg](../CCID/macOSDriver/CCIDDriver.pkg)がダウンロードできます。
+CCIDドライバーを、GitHubからダウンロード／解凍します。<br>
+Apple Silicon向け、Intel mac向けに、対応するCCIDドライバーを用意しています。
+
+- Apple Silicon向け：[`CCIDDriver_arm64.pkg`](../CCID/macOSDriver/CCIDDriver_arm64.pkg)
+- Intel mac向け：[`CCIDDriver_x86.pkg`](../CCID/macOSDriver/CCIDDriver_x86.pkg)
+
+該当ページの「Download」ボタンをクリックすると、CCIDドライバーのインストール用パッケージがダウンロードできます。
 
 <img src="assets02/0001.jpg" width="640">
 
@@ -36,7 +41,7 @@ CCIDドライバー「[CCIDDriver.pkg](../CCID/macOSDriver/CCIDDriver.pkg)」を
 
 インストーラを閉じたら、PCを再起動します。
 
-<img src="assets02/0006.jpg" width="300">
+<img src="assets02/0006.jpg" width="360">
 
 再起動が完了してログインしたら、MDBT50Q DongleをPCのUSBポートに装着します。<br>
 １〜２秒ほどで、下図のような「スマートカードペアリング」画面が表示される場合がありますが、ここではペアリングせず画面を閉じてください。
