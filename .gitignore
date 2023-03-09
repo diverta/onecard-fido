@@ -35,3 +35,5 @@ xcuserdata
 MaintenanceTool/macOSApp/libcrypto.a
 MaintenanceTool/macOSApp/libtinycbor.a
 
+MaintenanceTool/macOSApp/bundle_arm64
+MaintenanceTool/macOSApp/bundleVendor_arm64
