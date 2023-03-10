@@ -34,6 +34,4 @@ xcuserdata
 # ignore for Xcode project of maintenance tool
 MaintenanceTool/macOSApp/libcrypto.a
 MaintenanceTool/macOSApp/libtinycbor.a
-
-MaintenanceTool/macOSApp/bundle_arm64
-MaintenanceTool/macOSApp/bundleVendor_arm64
+MaintenanceTool/macOSApp/build
