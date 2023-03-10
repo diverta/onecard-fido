@@ -1,14 +1,19 @@
 # インストール手順
 
-最終更新日：2023/1/16
+最終更新日：2023/3/10
 
 ## 概要
 FIDO認証器管理ツールをmacOS環境にインストールする手順について掲載しています。
 
 ## インストール媒体の取得
 
-[macOS版 FIDO認証器管理ツール](MaintenanceTool.pkg)を、GitHubからダウンロード／解凍します。<br>
-該当ページの「Download」ボタンをクリックすると、[MaintenanceTool.pkg](MaintenanceTool.pkg)がダウンロードできます。
+macOS版 FIDO認証器管理ツールを、GitHubからダウンロード／解凍します。<br>
+Apple Silicon向け、Intel mac向けに、対応する管理ツールを用意しています。
+
+- Apple Silicon向け：[`MaintenanceTool_arm64.pkg`](../../MaintenanceTool/macOSApp/packages/arm64/MaintenanceTool_arm64.pkg)
+- Intel mac向け：[`MaintenanceTool_x86.pkg`](../../MaintenanceTool/macOSApp/packages/x86/MaintenanceTool_x86.pkg)
+
+該当ページの「Download」ボタンをクリックすると、管理ツールのインストール用パッケージがダウンロードできます。
 
 <img src="assets/0001.jpg" width="640">
 

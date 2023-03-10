@@ -31,18 +31,5 @@ build
 .DS_Store
 xcuserdata
 
-# ignore for nRF Connect SDK
-pyvenvs/ncs/.west
-pyvenvs/ncs/bin
-pyvenvs/ncs/bootloader
-pyvenvs/ncs/include
-pyvenvs/ncs/lib
-pyvenvs/ncs/mbedtls
-pyvenvs/ncs/modules
-pyvenvs/ncs/nrf
-pyvenvs/ncs/nrfxlib
-pyvenvs/ncs/test
-pyvenvs/ncs/tools
-pyvenvs/ncs/zephyr
-pyvenvs/ncs/pyvenv.cfg
-pyvenvs/ncs/west-completion.bash
+# ignore for Xcode project of maintenance tool
+MaintenanceTool/macOSApp/build
