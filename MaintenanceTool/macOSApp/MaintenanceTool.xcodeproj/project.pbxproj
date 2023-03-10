@@ -361,7 +361,6 @@
 		7A86402C2900E35E008E9D1C /* usb_cdc_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_cdc_util.h; sourceTree = "<group>"; };
 		7A86402D2900E35F008E9D1C /* usb_cdc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
 		7A86402E2900E35F008E9D1C /* usb_dfu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_dfu_util.h; sourceTree = "<group>"; };
-		7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VendorMaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VendorMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
 		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
 		7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCCSettingWindow.h; sourceTree = "<group>"; };
@@ -415,7 +414,6 @@
 		7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOAttestationWindow.xib; sourceTree = "<group>"; };
 		7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationWindow.m; sourceTree = "<group>"; };
 		7AC89EF5296FCC6B0024B384 /* FIDOAttestationWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOAttestationWindow.h; sourceTree = "<group>"; };
-		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ACABD842887CFF100756123 /* DFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUCommand.h; sourceTree = "<group>"; };
 		7ACABD852887D00500756123 /* DFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUCommand.m; sourceTree = "<group>"; };
 		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
@@ -471,6 +469,8 @@
 		7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLESMPCommand.m; sourceTree = "<group>"; };
 		7AF9B0F12728E4250070F8A4 /* ToolBLESMPCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLESMPCommand.h; sourceTree = "<group>"; };
+		89063D7B29BAC29600092C9B /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89063D7C29BAC2F100092C9B /* VendorMaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VendorMaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895E617829B86F100085ADA3 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		895E617929B86F100085ADA3 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		899EA1D929A746A10077BABD /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
@@ -534,8 +534,8 @@
 				7ACD98F5296E653700D08A24 /* VendorMaintenanceToolApp */,
 				7ACD9906296EA57600D08A24 /* VendorMaintenanceToolFIDO */,
 				64ED9A781647439300F39EAE /* Frameworks */,
-				7ACA8D792251B55100B132E2 /* MaintenanceTool.app */,
-				7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */,
+				89063D7B29BAC29600092C9B /* MaintenanceTool.app */,
+				89063D7C29BAC2F100092C9B /* VendorMaintenanceTool.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -945,7 +945,7 @@
 			);
 			name = MaintenanceTool;
 			productName = CoreBluetoothOSXCentral;
-			productReference = 7ACA8D792251B55100B132E2 /* MaintenanceTool.app */;
+			productReference = 89063D7B29BAC29600092C9B /* MaintenanceTool.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7A8B3DA9296E56640005F7B1 /* VendorMaintenanceTool */ = {
@@ -962,7 +962,7 @@
 			);
 			name = VendorMaintenanceTool;
 			productName = CoreBluetoothOSXCentral;
-			productReference = 7A8B3E24296E56640005F7B1 /* VendorMaintenanceTool.app */;
+			productReference = 89063D7C29BAC2F100092C9B /* VendorMaintenanceTool.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1391,7 +1391,10 @@
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = (
+					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/tinycbor/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.2.4;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1421,7 +1424,10 @@
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = (
+					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/tinycbor/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.2.4;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1451,7 +1457,10 @@
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = (
+					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/tinycbor/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.2.4;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1481,7 +1490,10 @@
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
+				LIBRARY_SEARCH_PATHS = (
+					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/tinycbor/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.2.4;
 				ONLY_ACTIVE_ARCH = YES;
