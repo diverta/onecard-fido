@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "OATHCommand.h"
 #import "OATHWindow.h"
 
 @interface OATHWindow ()
@@ -19,8 +20,11 @@
 @implementation OATHWindow
 
     - (void)windowDidLoad {
+        // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
+        // コマンドクラスの初期化
+        [OATHCommand instance];
     }
 
     - (void)initFieldValue {

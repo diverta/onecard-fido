@@ -8,7 +8,7 @@
 #ifndef OATHCommand_h
 #define OATHCommand_h
 
-#import "AppCommand.h"
+#import "AppDefine.h"
 
 @interface OATHCommandParameter : NSObject
 
@@ -16,7 +16,11 @@
 
 @end
 
-@interface OATHCommand : AppCommand
+@interface OATHCommand : NSObject
+
+    @property (nonatomic) OATHCommandParameter     *parameter;
+
+    + (OATHCommand *)instance;
 
 @end
 

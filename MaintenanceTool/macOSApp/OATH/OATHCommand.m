@@ -6,24 +6,55 @@
 //
 #import "OATHCommand.h"
 
+// コマンドクラスのインスタンスを保持
+static OATHCommand *sharedInstance;
+
 @implementation OATHCommandParameter
 
 @end
 
 @interface OATHCommand ()
 
-    // 処理のパラメーターを保持
-    @property (nonatomic) OATHCommandParameter     *commandParameter;
-
 @end
 
 @implementation OATHCommand
 
-    - (id)initWithDelegate:(id)delegate {
-        self = [super initWithDelegate:delegate];
+#pragma mark - Methods for singleton
+
+    + (OATHCommand *)instance {
+        // このクラスのインスタンス化を１度だけ行う
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [[self alloc] init];
+        });
+        // インスタンスの参照を戻す
+        return sharedInstance;
+    }
+
+    + (id)allocWithZone:(NSZone *)zone {
+        // このクラスのインスタンス化を１度だけ行う
+        __block id ret = nil;
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [super allocWithZone:zone];
+            ret = sharedInstance;
+        });
+        
+        // インスタンスの参照を戻す（２回目以降の呼び出しではnilが戻る）
+        return ret;
+    }
+
+    - (id)copyWithZone:(NSZone *)zone{
+        return self;
+    }
+
+#pragma mark - Methods of this instance
+
+    - (id)init {
+        self = [super init];
         if (self) {
             // ヘルパークラスのインスタンスを生成
-            [self setCommandParameter:[[OATHCommandParameter alloc] init]];
+            [self setParameter:[[OATHCommandParameter alloc] init]];
         }
         return self;
     }
