@@ -11,6 +11,7 @@
 #import "DFUCommand.h"
 #import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
+#import "OATHCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolPGPCommand.h"
 #import "ToolPIVCommand.h"
@@ -42,6 +43,7 @@
     @property (nonatomic) UtilityCommand        *utilityCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
+    @property (nonatomic) OATHCommand           *oathCommand;
     @property (nonatomic) VendorFunctionCommand *vendorFunctionCommand;
 
 @end
@@ -60,6 +62,7 @@
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
+        [self setOathCommand:[[OATHCommand alloc] initWithDelegate:self]];
         [self setVendorFunctionCommand:[[VendorFunctionCommand alloc] initWithDelegate:self]];
 
         // テキストエリアの初期化
@@ -109,9 +112,8 @@
     }
 
     - (IBAction)buttonOATHSettingDidPress:(id)sender {
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                       withObject:self forSelector:@selector(displayCommandResultDone)
-                                     parentWindow:[self window]];
+        // OATH設定画面を開く
+        [[self oathCommand] oathWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {
