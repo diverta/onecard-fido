@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,7 +17,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="358" height="410"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="358" height="410"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -33,14 +33,14 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box boxType="secondary" title="MDBT50Q用" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                    <box title="MDBT50Q用" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
                         <rect key="frame" x="17" y="221" width="324" height="155"/>
                         <view key="contentView" id="HzA-xp-MO5">
                             <rect key="frame" x="3" y="3" width="318" height="135"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ces-dO-XfH" userLabel="buttonUSBDFU">
-                                    <rect key="frame" x="5" y="94" width="308" height="32"/>
+                                    <rect key="frame" x="4" y="94" width="310" height="32"/>
                                     <buttonCell key="cell" type="push" title="ファームウェアを更新（USB）" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edW-3W-MnQ">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -76,7 +76,7 @@ FIDO認証器は、バージョン0.3.0以降のファームウェアが導入�
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box fixedFrame="YES" boxType="secondary" title="MDBT53用" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                    <box fixedFrame="YES" title="MDBT53用" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
                         <rect key="frame" x="17" y="57" width="324" height="150"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="lLQ-Iq-3Cq">

@@ -1,37 +1,46 @@
 # インストール手順
 
-最終更新日：2023/1/16
+最終更新日：2023/3/13
 
 ## 概要
 macOS版 FIDO認証器管理ツール（ベンダー向け）をmacOS環境にインストールする手順について掲載しています。
 
 ## インストール媒体の取得
 
-[macOS版 FIDO認証器管理ツール（ベンダー向け）](../../MaintenanceTool/macOSApp/VendorMaintenanceTool.pkg)を、GitHubからダウンロード／解凍します。<br>
-該当ページの「Download」ボタンをクリックすると、[VendorMaintenanceTool.pkg](../../MaintenanceTool/macOSApp/VendorMaintenanceTool.pkg)がダウンロードできます。
+macOS版 FIDO認証器管理ツール（ベンダー向け）を、GitHubからダウンロード／解凍します。<br>
+Apple Silicon向け、Intel mac向けに、対応する管理ツールを用意しています。
 
-<img src="assets08/0004.jpg" width="660">
+- Apple Silicon向け：[`MaintenanceTool_arm64.pkg`](../../MaintenanceTool/macOSApp/packages/arm64/VendorMaintenanceTool_arm64.pkg)
+- Intel mac向け：[`MaintenanceTool_x86.pkg`](../../MaintenanceTool/macOSApp/packages/x86/VendorMaintenanceTool_x86.pkg)
+
+該当ページの「Download」ボタンをクリックすると、管理ツールのインストール用パッケージがダウンロードできます。
+
+<img src="assets08/0002.jpg" width="660">
 
 ## インストールの実行
 
 ダウンロードされたファイルを右クリックし「開く」を実行してください。<br>
 （最終更新日現在、アプリに署名がされていないので、アイコンをダブルクリックしても実行することができないための措置になります）
 
-<img src="assets08/0005.jpg" width="400">
+<img src="assets08/0003.jpg" width="450">
 
 警告画面が表示されますが、続いて「開く」を実行します。
 
-<img src="assets08/0006.jpg" width="270">
+<img src="assets08/0004.jpg" width="450">
 
 インストーラーが起動しますので、指示に従いインストールを進めます。
 
-<img src="assets08/0007.jpg" width="360">
+<img src="assets08/0005.jpg" width="400">
+
+インストールが完了します。
+
+<img src="assets08/0006.jpg" width="400">
 
 インストールが完了すると、アプリケーションフォルダーに、FIDO認証器管理ツールのアイコンができます。<br>
 アイコンをダブルクリックして実行します。
 
-<img src="assets08/0008.jpg" width="400">
+<img src="assets08/0007.jpg" width="450">
 
 FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="assets08/0001.jpg" width="360">
+<img src="assets08/0001.jpg" width="400">

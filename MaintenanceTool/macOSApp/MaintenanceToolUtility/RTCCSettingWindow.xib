@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -21,7 +21,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="358" height="417"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="358" height="417"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -37,7 +37,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box fixedFrame="YES" boxType="secondary" title="接続方法" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
+                    <box fixedFrame="YES" title="接続方法" translatesAutoresizingMaskIntoConstraints="NO" id="0Q0-zA-Izt" userLabel="通信方法の選択">
                         <rect key="frame" x="17" y="323" width="324" height="65"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="vwy-KZ-ZkM">
@@ -70,7 +70,7 @@
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box fixedFrame="YES" boxType="secondary" title="現在時刻参照・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
+                    <box fixedFrame="YES" title="現在時刻参照・設定" translatesAutoresizingMaskIntoConstraints="NO" id="oK7-io-KFY">
                         <rect key="frame" x="17" y="176" width="324" height="136"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="lLQ-Iq-3Cq">
@@ -121,7 +121,7 @@
                         </view>
                         <font key="titleFont" metaFont="system"/>
                     </box>
-                    <box boxType="secondary" title="参照・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                    <box title="参照・設定した時刻が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
                         <rect key="frame" x="17" y="57" width="324" height="108"/>
                         <view key="contentView" id="HzA-xp-MO5">
                             <rect key="frame" x="3" y="3" width="318" height="88"/>
