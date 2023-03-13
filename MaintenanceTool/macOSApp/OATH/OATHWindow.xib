@@ -16,14 +16,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="358" height="261"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="328"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="358" height="261"/>
+                <rect key="frame" x="0.0" y="0.0" width="358" height="328"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
-                        <rect key="frame" x="29" y="235" width="300" height="17"/>
+                        <rect key="frame" x="29" y="302" width="300" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
@@ -33,8 +33,35 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <box fixedFrame="YES" title="接続方法" translatesAutoresizingMaskIntoConstraints="NO" id="NPu-HD-Fhg" userLabel="通信方法の選択">
+                        <rect key="frame" x="17" y="241" width="324" height="65"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="mvK-pH-D43">
+                            <rect key="frame" x="3" y="3" width="318" height="45"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wdb-fm-uXX" userLabel="buttonTransportUSB">
+                                    <rect key="frame" x="19" y="16" width="73" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="USB経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1b8-wf-W2I">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vqH-HP-rxo" userLabel="buttonTransportBLE">
+                                    <rect key="frame" x="120" y="16" width="70" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="radio" title="BLE経由" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="psI-Nk-BEg">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                </button>
+                            </subviews>
+                        </view>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
                     <box fixedFrame="YES" title="TOTP（Time-based One-time Password）" translatesAutoresizingMaskIntoConstraints="NO" id="m9P-vY-hmz">
-                        <rect key="frame" x="17" y="52" width="324" height="178"/>
+                        <rect key="frame" x="17" y="56" width="324" height="178"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="66A-uk-zyc">
                             <rect key="frame" x="3" y="3" width="318" height="158"/>
@@ -92,7 +119,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
             </connections>
-            <point key="canvasLocation" x="119" y="146.5"/>
+            <point key="canvasLocation" x="119" y="180"/>
         </window>
     </objects>
 </document>
