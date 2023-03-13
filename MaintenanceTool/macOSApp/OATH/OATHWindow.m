@@ -15,17 +15,21 @@
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
+    // コマンドクラス、パラメーターの参照を保持
+    @property (assign) OATHCommand                     *oathCommand;
+    @property (assign) OATHCommandParameter            *commandParameter;
 
 @end
 
 @implementation OATHWindow
 
     - (void)windowDidLoad {
+        // コマンドクラスの初期化
+        [self setOathCommand:[OATHCommand instance]];
+        [self setCommandParameter:[[self oathCommand] parameter]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
-        // コマンドクラスの初期化
-        [OATHCommand instance];
     }
 
     - (void)initFieldValue {
@@ -37,16 +41,16 @@
     - (IBAction)buttonTransportSelected:(id)sender {
         // トランスポート種別を設定
         if (sender == [self buttonTransportUSB]) {
-            [[[OATHCommand instance] parameter] setTransportType:TRANSPORT_HID];
+            [[self commandParameter] setTransportType:TRANSPORT_HID];
         }
         if (sender == [self buttonTransportBLE]) {
-            [[[OATHCommand instance] parameter] setTransportType:TRANSPORT_BLE];
+            [[self commandParameter] setTransportType:TRANSPORT_BLE];
         }
     }
 
     - (IBAction)buttonScanQRCodeDidPress:(id)sender {
         // CCID I/F接続チェック
-        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+        if ([[self commandParameter] transportType] == TRANSPORT_HID) {
             if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
@@ -55,7 +59,7 @@
 
     - (IBAction)buttonShowPasswordDidPress:(id)sender {
         // CCID I/F接続チェック
-        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+        if ([[self commandParameter] transportType] == TRANSPORT_HID) {
             if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
@@ -64,7 +68,7 @@
 
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
         // CCID I/F接続チェック
-        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+        if ([[self commandParameter] transportType] == TRANSPORT_HID) {
             if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
@@ -83,7 +87,7 @@
 
     - (bool)checkUSBCCIDConnection {
         // USB CCIDインターフェースに接続可能でない場合は処理中止
-        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[OATHCommand instance] isUSBCCIDCanConnect]];
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[self oathCommand] isUSBCCIDCanConnect]];
     }
 
 #pragma mark - For OATHWindow open/close
