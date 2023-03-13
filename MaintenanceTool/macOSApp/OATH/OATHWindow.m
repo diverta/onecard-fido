@@ -47,7 +47,7 @@
     - (IBAction)buttonScanQRCodeDidPress:(id)sender {
         // CCID I/F接続チェック
         if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
-            if ([self checkUSBHIDConnection] == false) {
+            if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
         }
@@ -56,7 +56,7 @@
     - (IBAction)buttonShowPasswordDidPress:(id)sender {
         // CCID I/F接続チェック
         if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
-            if ([self checkUSBHIDConnection] == false) {
+            if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
         }
@@ -65,7 +65,7 @@
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
         // CCID I/F接続チェック
         if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
-            if ([self checkUSBHIDConnection] == false) {
+            if ([self checkUSBCCIDConnection] == false) {
                 return;
             }
         }
@@ -81,7 +81,7 @@
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
-    - (bool)checkUSBHIDConnection {
+    - (bool)checkUSBCCIDConnection {
         // USB CCIDインターフェースに接続可能でない場合は処理中止
         return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[OATHCommand instance] isUSBCCIDCanConnect]];
     }
