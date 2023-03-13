@@ -30,10 +30,17 @@
     - (void)initFieldValue {
         // ラジオボタン「USB経由」を選択状態にする
         [[self buttonTransportUSB] setState:NSControlStateValueOn];
+        [self buttonTransportSelected:[self buttonTransportUSB]];
     }
 
     - (IBAction)buttonTransportSelected:(id)sender {
-        // TODO: トランスポート種別を設定
+        // トランスポート種別を設定
+        if (sender == [self buttonTransportUSB]) {
+            [[[OATHCommand instance] parameter] setTransportType:TRANSPORT_HID];
+        }
+        if (sender == [self buttonTransportBLE]) {
+            [[[OATHCommand instance] parameter] setTransportType:TRANSPORT_BLE];
+        }
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {

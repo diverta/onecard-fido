@@ -13,6 +13,7 @@
 @interface OATHCommandParameter : NSObject
 
     @property (nonatomic) Command       command;
+    @property (nonatomic) TransportType transportType;
 
 @end
 
