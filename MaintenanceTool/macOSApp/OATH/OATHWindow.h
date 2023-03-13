@@ -11,7 +11,7 @@
 
 @interface OATHWindow : NSWindowController
 
-    - (void)setParentWindowRef:(id)ref;
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent;
 
 @end
 

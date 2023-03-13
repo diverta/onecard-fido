@@ -18,8 +18,6 @@
 
 @interface OATHCommand : AppCommand
 
-    - (void)oathWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-
 @end
 
 #endif /* OATHCommand_h */

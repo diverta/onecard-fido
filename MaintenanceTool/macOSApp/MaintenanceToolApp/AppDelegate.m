@@ -11,7 +11,7 @@
 #import "DFUCommand.h"
 #import "FIDOSettingCommand.h"
 #import "HcheckCommand.h"
-#import "OATHCommand.h"
+#import "OATHWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPGPCommand.h"
 #import "ToolPIVCommand.h"
@@ -43,8 +43,8 @@
     @property (nonatomic) UtilityCommand        *utilityCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
     @property (nonatomic) ToolPGPCommand        *toolPGPCommand;
-    @property (nonatomic) OATHCommand           *oathCommand;
     @property (nonatomic) VendorFunctionCommand *vendorFunctionCommand;
+    @property (nonatomic) OATHWindow            *oathWindow;
 
 @end
 
@@ -62,8 +62,10 @@
         [self setUtilityCommand:[[UtilityCommand alloc] initWithDelegate:self]];
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         [self setToolPGPCommand:[[ToolPGPCommand alloc] initWithDelegate:self]];
-        [self setOathCommand:[[OATHCommand alloc] initWithDelegate:self]];
         [self setVendorFunctionCommand:[[VendorFunctionCommand alloc] initWithDelegate:self]];
+
+        // 画面のインスタンスを生成
+        [self setOathWindow:[[OATHWindow alloc] initWithWindowNibName:@"OATHWindow"]];
 
         // テキストエリアの初期化
         [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
@@ -113,7 +115,7 @@
 
     - (IBAction)buttonOATHSettingDidPress:(id)sender {
         // OATH設定画面を開く
-        [[self oathCommand] oathWindowWillOpen:self parentWindow:[self window]];
+        [[self oathWindow] windowWillOpenWithParentWindow:[self window]];
     }
 
     - (IBAction)buttonSetPivParamDidPress:(id)sender {

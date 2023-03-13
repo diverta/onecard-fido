@@ -32,11 +32,6 @@
         // TODO: トランスポート種別を設定
     }
 
-    - (void)setParentWindowRef:(id)ref {
-        // 親画面の参照を保持
-        [self setParentWindow:(NSWindow *)ref];
-    }
-
     - (IBAction)buttonCancelDidPress:(id)sender {
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseCancel];
@@ -45,6 +40,34 @@
     - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+#pragma mark - For OATHWindow open/close
+
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent {
+        // 親画面の参照を保持
+        [self setParentWindow:parent];
+        // すでにダイアログが開いている場合は終了
+        if ([[[self parentWindow] sheets] count] > 0) {
+            return false;
+        }
+        // すでにダイアログがロード済みの場合は、画面項目を再度初期化
+        if ([self isWindowLoaded]) {
+            [self initFieldValue];
+        }
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [self window];
+        OATHWindow * __weak weakSelf = self;
+        [[self parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf windowDidCloseWithModalResponse:response];
+        }];
+        return true;
+    }
+
+    - (void)windowDidCloseWithModalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [self close];
     }
 
 @end
