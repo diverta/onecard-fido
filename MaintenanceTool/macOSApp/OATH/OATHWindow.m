@@ -6,13 +6,13 @@
 //
 #import "OATHWindow.h"
 
-// このウィンドウクラスのインスタンスを保持
-static OATHWindow *sharedInstance;
-
 @interface OATHWindow ()
 
     // 親画面の参照を保持
-    @property (nonatomic) NSWindow                         *parentWindow;
+    @property (nonatomic) NSWindow                     *parentWindow;
+    // 画面項目を保持
+    @property (assign) IBOutlet NSButton               *buttonTransportUSB;
+    @property (assign) IBOutlet NSButton               *buttonTransportBLE;
 
 @end
 
@@ -20,6 +20,16 @@ static OATHWindow *sharedInstance;
 
     - (void)windowDidLoad {
         [super windowDidLoad];
+        [self initFieldValue];
+    }
+
+    - (void)initFieldValue {
+        // ラジオボタン「USB経由」を選択状態にする
+        [[self buttonTransportUSB] setState:NSControlStateValueOn];
+    }
+
+    - (IBAction)buttonTransportSelected:(id)sender {
+        // TODO: トランスポート種別を設定
     }
 
     - (void)setParentWindowRef:(id)ref {

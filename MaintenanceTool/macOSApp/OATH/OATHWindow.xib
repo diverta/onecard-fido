@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="OATHWindow">
             <connections>
+                <outlet property="buttonTransportBLE" destination="vqH-HP-rxo" id="5ru-pA-V5M"/>
+                <outlet property="buttonTransportUSB" destination="Wdb-fm-uXX" id="a9l-t2-IHN"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -47,6 +49,9 @@
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="eRY-Lg-MbV"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vqH-HP-rxo" userLabel="buttonTransportBLE">
                                     <rect key="frame" x="120" y="16" width="70" height="18"/>
@@ -55,6 +60,9 @@
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonTransportSelected:" target="-2" id="K1W-cb-16m"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </view>
