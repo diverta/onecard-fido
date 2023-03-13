@@ -6,6 +6,7 @@
 //
 #import "OATHCommand.h"
 #import "OATHWindow.h"
+#import "ToolCommonFunc.h"
 
 @interface OATHWindow ()
 
@@ -43,6 +44,33 @@
         }
     }
 
+    - (IBAction)buttonScanQRCodeDidPress:(id)sender {
+        // CCID I/F接続チェック
+        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
+        }
+    }
+
+    - (IBAction)buttonShowPasswordDidPress:(id)sender {
+        // CCID I/F接続チェック
+        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
+        }
+    }
+
+    - (IBAction)buttonDeleteAccountDidPress:(id)sender {
+        // CCID I/F接続チェック
+        if ([[[OATHCommand instance] parameter] transportType] == TRANSPORT_HID) {
+            if ([self checkUSBHIDConnection] == false) {
+                return;
+            }
+        }
+    }
+
     - (IBAction)buttonCancelDidPress:(id)sender {
         // このウィンドウを終了
         [self terminateWindow:NSModalResponseCancel];
@@ -51,6 +79,11 @@
     - (void)terminateWindow:(NSModalResponse)response {
         // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USB CCIDインターフェースに接続可能でない場合は処理中止
+        return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[OATHCommand instance] isUSBCCIDCanConnect]];
     }
 
 #pragma mark - For OATHWindow open/close

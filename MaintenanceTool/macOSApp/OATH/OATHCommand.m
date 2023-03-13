@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2023/03/13.
 //
 #import "OATHCommand.h"
+#import "ToolCCIDHelper.h"
 
 // コマンドクラスのインスタンスを保持
 static OATHCommand *sharedInstance;
@@ -13,7 +14,10 @@ static OATHCommand *sharedInstance;
 
 @end
 
-@interface OATHCommand ()
+@interface OATHCommand () <ToolCCIDHelperDelegate>
+
+    // ヘルパークラスの参照を保持
+    @property (nonatomic) ToolCCIDHelper               *toolCCIDHelper;
 
 @end
 
@@ -54,9 +58,18 @@ static OATHCommand *sharedInstance;
         self = [super init];
         if (self) {
             // ヘルパークラスのインスタンスを生成
+            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self setParameter:[[OATHCommandParameter alloc] init]];
         }
         return self;
+    }
+
+    - (bool)isUSBCCIDCanConnect {
+        // USB CCIDインターフェースに接続可能でない場合は false
+        return [[self toolCCIDHelper] checkHelperCanConnect];
+    }
+
+    - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
     }
 
 @end

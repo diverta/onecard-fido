@@ -22,6 +22,7 @@
     @property (nonatomic) OATHCommandParameter     *parameter;
 
     + (OATHCommand *)instance;
+    - (bool)isUSBCCIDCanConnect;
 
 @end
 
