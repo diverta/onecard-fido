@@ -4,9 +4,11 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
 #import "ToolCommonFunc.h"
+#import "ToolPopupWindow.h"
 
 @interface OATHWindow ()
 
@@ -55,6 +57,15 @@
                 return;
             }
         }
+        // TODO: BLEトランスポートをサポートするまでの暫定措置
+        if ([[self commandParameter] transportType] == TRANSPORT_BLE) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
+        // 実行機能を設定し、画面を閉じる
+        [[self commandParameter] setCommand:COMMAND_OATH_SCAN_QRCODE];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonShowPasswordDidPress:(id)sender {
@@ -64,6 +75,15 @@
                 return;
             }
         }
+        // TODO: BLEトランスポートをサポートするまでの暫定措置
+        if ([[self commandParameter] transportType] == TRANSPORT_BLE) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
+        // 実行機能を設定し、画面を閉じる
+        [[self commandParameter] setCommand:COMMAND_OATH_SHOW_PASSWORD];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
@@ -73,6 +93,15 @@
                 return;
             }
         }
+        // TODO: BLEトランスポートをサポートするまでの暫定措置
+        if ([[self commandParameter] transportType] == TRANSPORT_BLE) {
+            [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
+        // TODO: 仮の実装です。
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:nil forSelector:nil parentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -116,6 +145,28 @@
     - (void)windowDidCloseWithModalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
+        // Cancelボタンクリック時は以降の処理を実行しない
+        if (modalResponse == NSModalResponseCancel) {
+            return;
+        }
+        // 実行コマンドにより処理分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_OATH_SCAN_QRCODE:
+                // TODO: 仮の実装です。
+                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                break;
+            case COMMAND_OATH_SHOW_PASSWORD:
+                // TODO: 仮の実装です。
+                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                break;
+            default:
+                // エラーメッセージをポップアップ表示
+                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                break;
+        }
     }
 
 @end
