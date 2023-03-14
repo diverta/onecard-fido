@@ -40,7 +40,7 @@
         return hasPermission;
     }
 
-    - (bool)scanQRCodeFromScreenShot {
+    + (NSString *)scanQRCodeFromScreenShot {
         // デスクトップのスクリーンショットを取得し、イメージを抽出
         CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
         CIImage *ciImage = [[CIImage alloc] initWithCGImage:screenShot];
@@ -50,15 +50,11 @@
         NSString *messageString = [self extractQRMessageFrom:ciImage];
         if (messageString == nil) {
             [[ToolLogFile defaultLogger] debug:@"QR code not detected"];
-            return false;
         }
-        // 抽出されたメッセージを解析
-        [self parseQRMessageFrom:messageString];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"QR code detected: %@", [self parsedQRCodeInfo]];
-        return true;
+        return messageString;
     }
 
-    - (NSString *)extractQRMessageFrom:(CIImage *)ciImage {
+    + (NSString *)extractQRMessageFrom:(CIImage *)ciImage {
         // イメージから解析情報を抽出
         CIContext *context = [[CIContext alloc] init];
         NSDictionary *options = @{CIDetectorAccuracy: CIDetectorAccuracyHigh};
@@ -106,6 +102,7 @@
                 i++;
             }
         }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"QR code detected: %@", [self parsedQRCodeInfo]];
     }
 
     - (void)extractParameterFrom:(NSString *)parameterString parameterNo:(int)number toDictionary:(NSMutableDictionary *)parameters {

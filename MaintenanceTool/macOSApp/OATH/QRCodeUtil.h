@@ -10,7 +10,8 @@
 @interface QRCodeUtil : NSObject
 
     + (bool)hasScreenshotPermission;
-    - (bool)scanQRCodeFromScreenShot;
+    + (NSString *)scanQRCodeFromScreenShot;
+    - (void)parseQRMessageFrom:(NSString *)messageString;
 
 @end
 
