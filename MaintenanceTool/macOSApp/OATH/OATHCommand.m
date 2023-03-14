@@ -8,6 +8,7 @@
 #import "OATHCommand.h"
 #import "QRCodeUtil.h"
 #import "ToolCCIDHelper.h"
+#import "ToolLogFile.h"
 
 // コマンドクラスのインスタンスを保持
 static OATHCommand *sharedInstance;
@@ -74,14 +75,48 @@ static OATHCommand *sharedInstance;
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
     }
 
-    - (bool)ScanQRCode {
+    - (bool)scanQRCode {
         // QRコードのスキャンを実行
         NSString *message = [QRCodeUtil scanQRCodeFromScreenShot];
         if (message == nil) {
             [[self parameter] setResultInformativeMessage:MSG_ERROR_OATH_QRCODE_SCAN_FAILED];
             return false;
         }
+        // スキャンしたアカウント情報の項目有無をチェック
         QRCodeUtil *qrCodeUtil = [[QRCodeUtil alloc] initWithQRMessageString:message];
+        if ([self checkScannedAccountInfo:qrCodeUtil] == false) {
+            [[self parameter] setResultInformativeMessage:MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID];
+            return false;
+        }
+        [[ToolLogFile defaultLogger] info:@"Scan account info from QR code success"];
+        return true;
+    }
+
+    - (bool)checkScannedAccountInfo:(QRCodeUtil *)qrCodeUtil {
+        // スキャンしたアカウント情報の項目有無をチェック
+        if ([self checkScannedAccountInfoItem:qrCodeUtil forKey:@"protocol"] == false) {
+            return false;
+        }
+        if ([self checkScannedAccountInfoItem:qrCodeUtil forKey:@"method"] == false) {
+            return false;
+        }
+        if ([self checkScannedAccountInfoItem:qrCodeUtil forKey:@"account"] == false) {
+            return false;
+        }
+        if ([self checkScannedAccountInfoItem:qrCodeUtil forKey:@"issuer"] == false) {
+            return false;
+        }
+        if ([self checkScannedAccountInfoItem:qrCodeUtil forKey:@"secret"] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkScannedAccountInfoItem:(QRCodeUtil *)qrCodeUtil forKey:(NSString *)key {
+        if ([qrCodeUtil valueForKey:key] == nil) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Scanned account info invalid: %@ not exist", key];
+            return false;
+        }
         return true;
     }
 

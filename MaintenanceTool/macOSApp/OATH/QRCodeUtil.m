@@ -185,4 +185,8 @@
         return range;
     }
 
+    - (NSString *)valueForKey:(NSString *)key {
+        return [[self parsedQRCodeInfo] valueForKey:key];
+    }
+
 @end

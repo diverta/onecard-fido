@@ -13,6 +13,7 @@
     + (NSString *)scanQRCodeFromScreenShot;
 
     - (QRCodeUtil *)initWithQRMessageString:(NSString *)messageString;
+    - (NSString *)valueForKey:(NSString *)key;
 
 @end
 

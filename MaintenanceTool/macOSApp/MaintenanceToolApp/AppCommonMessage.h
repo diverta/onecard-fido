@@ -366,6 +366,7 @@
 #define MSG_ERROR_OATH_SCREENSHOT_PERMISSION        @"画面収録が許可されていません。"
 #define MSG_INFORMATIVE_OATH_SCREENSHOT_PERMISSION  @"システム環境設定の「セキュリティとプライバシー」で「%@」に画面収録を許可するよう設定してください。"
 #define MSG_ERROR_OATH_QRCODE_SCAN_FAILED           @"認証用QRコードが画面からスキャンできませんでした。"
+#define MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID @"認証用QRコードからスキャンしたアカウント情報が不正です。"
 
 #pragma mark - ベンダー向け機能関連
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM              @"鍵ファイルに格納された秘密鍵の長さが不正です。"

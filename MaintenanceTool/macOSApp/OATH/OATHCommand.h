@@ -24,7 +24,7 @@
 
     + (OATHCommand *)instance;
     - (bool)isUSBCCIDCanConnect;
-    - (bool)ScanQRCode;
+    - (bool)scanQRCode;
 
 @end
 
