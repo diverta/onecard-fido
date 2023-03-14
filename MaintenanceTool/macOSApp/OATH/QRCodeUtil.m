@@ -21,7 +21,7 @@
 
 @implementation QRCodeUtil
 
-    - (bool)hasScreenshotPermission {
+    + (bool)hasScreenshotPermission {
         // 画面収録の許可があるかどうかを問い合わせる
         CGDisplayStreamRef streamRef;
         streamRef = CGDisplayStreamCreateWithDispatchQueue(
@@ -35,7 +35,7 @@
             hasPermission = true;
             CFRelease(streamRef);
         } else {
-            [[ToolLogFile defaultLogger] error:@"No permission for screen shot capture"];
+            [[ToolLogFile defaultLogger] error:@"QRCodeUtil: No permission for screen shot capture"];
         }
         return hasPermission;
     }
