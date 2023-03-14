@@ -10,6 +10,11 @@
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
+    // 画面項目を保持
+    @property (assign) IBOutlet NSTextField            *labelIssuerVal;
+    @property (assign) IBOutlet NSTextField            *labelAccountVal;
+    @property (assign) IBOutlet NSTextField            *labelPassword;
+    @property (assign) IBOutlet NSButton               *buttonUpdate;
 
 @end
 
@@ -22,6 +27,12 @@
     }
 
     - (void)initFieldValue {
+    }
+
+    - (IBAction)buttonScanDidPress:(id)sender {
+    }
+
+    - (IBAction)buttonUpdateDidPress:(id)sender {
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {

@@ -9,6 +9,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ScanQRCodeWindow">
             <connections>
+                <outlet property="buttonUpdate" destination="yW2-iH-hwH" id="qdX-lL-ozZ"/>
+                <outlet property="labelAccountVal" destination="adx-xe-gGC" id="vgW-mO-ScG"/>
+                <outlet property="labelIssuerVal" destination="xwQ-Ka-K4x" id="qOM-hM-d22"/>
+                <outlet property="labelPassword" destination="fkO-3i-mzz" id="6nz-50-zD0"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -60,6 +64,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonScanDidPress:" target="-2" id="vi0-wA-pjm"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </view>
@@ -148,11 +155,14 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="buttonUpdateDidPress:" target="-2" id="uO4-oa-mG5"/>
+                                    </connections>
                                 </button>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fkO-3i-mzz" userLabel="labelPassword">
                                     <rect key="frame" x="42" y="14" width="208" height="40"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="000000" id="tGy-D5-CKP">
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="tGy-D5-CKP">
                                         <font key="font" metaFont="systemBold" size="32"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
