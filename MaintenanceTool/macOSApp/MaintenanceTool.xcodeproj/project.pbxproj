@@ -194,6 +194,8 @@
 		7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
 		7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
 		7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
+		7AA7A3E429C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */; };
+		7AA7A3E529C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
@@ -239,6 +241,8 @@
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
 		7AD9827E287FF982002A6846 /* AppBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AD9827D287FF982002A6846 /* AppBLECommand.m */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
+		7AE073F329C0104D00972EBE /* ScanQRCodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */; };
+		7AE073F429C0104D00972EBE /* ScanQRCodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */; };
 		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE533BE28765D1D00770A75 /* AppCommand.m */; };
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
@@ -391,6 +395,8 @@
 		7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USBDFUTransferCommand.m; sourceTree = "<group>"; };
 		7A986E682942DEFE000FC524 /* BLEUnpairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEUnpairingCommand.h; sourceTree = "<group>"; };
 		7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEUnpairingCommand.m; sourceTree = "<group>"; };
+		7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanQRCodeWindow.h; sourceTree = "<group>"; };
+		7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanQRCodeWindow.m; sourceTree = "<group>"; };
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
@@ -454,6 +460,7 @@
 		7AD9827D287FF982002A6846 /* AppBLECommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppBLECommand.m; sourceTree = "<group>"; };
 		7AD9827F287FFBC9002A6846 /* AppBLECommandDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBLECommandDefine.h; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanQRCodeWindow.xib; sourceTree = "<group>"; };
 		7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVSetting.m; sourceTree = "<group>"; };
 		7AE4CBB225844C3C00691DBC /* ToolPIVSetting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVSetting.h; sourceTree = "<group>"; };
 		7AE533BD28765D1D00770A75 /* AppCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppCommand.h; sourceTree = "<group>"; };
@@ -748,6 +755,9 @@
 		7A822075281A80D400FDBFA8 /* OATH */ = {
 			isa = PBXGroup;
 			children = (
+				7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */,
+				7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */,
+				7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */,
 				7AC9261929BEC4A9004CDD48 /* OATHWindow.h */,
 				7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */,
 				7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */,
@@ -1027,6 +1037,7 @@
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
+				7AE073F329C0104D00972EBE /* ScanQRCodeWindow.xib in Resources */,
 				7A154FEE2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin in Resources */,
 				7A9167FB28FE2B1E0096A848 /* DFUWindow.xib in Resources */,
 				7A306C4B27719FEA00AB6412 /* export_pubkey_and_backup.sh in Resources */,
@@ -1072,6 +1083,7 @@
 				7A8B3E05296E56640005F7B1 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A8B3E06296E56640005F7B1 /* HcheckWindow.xib in Resources */,
 				7A8B3E07296E56640005F7B1 /* add_sub_key.param in Resources */,
+				7AE073F429C0104D00972EBE /* ScanQRCodeWindow.xib in Resources */,
 				7A8B3E08296E56640005F7B1 /* app_update.PCA10095_01.0.4.8.bin in Resources */,
 				7A8B3E09296E56640005F7B1 /* DFUWindow.xib in Resources */,
 				7A8B3E0A296E56640005F7B1 /* export_pubkey_and_backup.sh in Resources */,
@@ -1159,6 +1171,7 @@
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
 				7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
+				7AA7A3E429C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
 				7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */,
 				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,
 				7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */,
@@ -1246,6 +1259,7 @@
 				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
 				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
 				7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
+				7AA7A3E529C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
 				7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */,
 				7A8B3DDC296E56640005F7B1 /* ToolPIVImporter.m in Sources */,
 				7A8B3DDD296E56640005F7B1 /* ToolPopupWindow.m in Sources */,
