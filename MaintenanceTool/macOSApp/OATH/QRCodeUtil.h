@@ -11,7 +11,8 @@
 
     + (bool)hasScreenshotPermission;
     + (NSString *)scanQRCodeFromScreenShot;
-    - (void)parseQRMessageFrom:(NSString *)messageString;
+
+    - (QRCodeUtil *)initWithQRMessageString:(NSString *)messageString;
 
 @end
 

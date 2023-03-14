@@ -77,6 +77,16 @@
         return nil;
     }
 
+#pragma mark - For parsing QR code message string
+
+    - (QRCodeUtil *)initWithQRMessageString:(NSString *)messageString {
+        self = [super init];
+        if (self) {
+            [self parseQRMessageFrom:messageString];
+        }
+        return self;
+    }
+
     - (void)parseQRMessageFrom:(NSString *)messageString {
         // 配列を初期化
         [self setParsedQRCodeInfo:[[NSMutableDictionary alloc] init]];
@@ -102,7 +112,6 @@
                 i++;
             }
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"QR code detected: %@", [self parsedQRCodeInfo]];
     }
 
     - (void)extractParameterFrom:(NSString *)parameterString parameterNo:(int)number toDictionary:(NSMutableDictionary *)parameters {
