@@ -4,7 +4,9 @@
 //
 //  Created by Makoto Morita on 2023/03/14.
 //
+#import "AppCommonMessage.h"
 #import "ScanQRCodeWindow.h"
+#import "ToolPopupWindow.h"
 
 @interface ScanQRCodeWindow ()
 
@@ -27,12 +29,24 @@
     }
 
     - (void)initFieldValue {
+        // ワンタイムパスワードの更新ボタンを使用不可とする
+        [[self buttonUpdate] setEnabled:false];
+        // 画面表示項目を初期化
+        [[self labelIssuerVal] setStringValue:@""];
+        [[self labelAccountVal] setStringValue:@""];
+        [[self labelPassword] setStringValue:@""];
     }
 
     - (IBAction)buttonScanDidPress:(id)sender {
+        // TODO: 仮の実装です。
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:nil forSelector:nil parentWindow:[self window]];
     }
 
     - (IBAction)buttonUpdateDidPress:(id)sender {
+        // TODO: 仮の実装です。
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                       withObject:nil forSelector:nil parentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
