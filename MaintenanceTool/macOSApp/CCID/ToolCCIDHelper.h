@@ -14,6 +14,7 @@
 @interface ToolCCIDHelper : NSObject
 
     - (id)initWithDelegate:(id<ToolCCIDHelperDelegate>)delegate;
+    - (bool)checkHelperCanConnect;
     - (bool)ccidHelperWillConnect;
     - (void)ccidHelperWillDisconnect;
     - (void)ccidHelperWillSendIns:(uint8_t)sendIns p1:(uint8_t)sendP1 p2:(uint8_t)sendP2 data:(NSData *)sendData le:(uint16_t)sendLe;

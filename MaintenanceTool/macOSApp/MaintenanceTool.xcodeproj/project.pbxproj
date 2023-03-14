@@ -214,6 +214,12 @@
 		7AC89EF2296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */; };
 		7AC89EF3296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */; };
 		7AC89EF4296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */; };
+		7AC9261C29BEC4A9004CDD48 /* OATHWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */; };
+		7AC9261D29BEC4A9004CDD48 /* OATHWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */; };
+		7AC9261E29BEC4A9004CDD48 /* OATHWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */; };
+		7AC9261F29BEC4A9004CDD48 /* OATHWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */; };
+		7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9262129BEE129004CDD48 /* OATHCommand.m */; };
+		7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9262129BEE129004CDD48 /* OATHCommand.m */; };
 		7ACABD862887D00500756123 /* DFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABD852887D00500756123 /* DFUCommand.m */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
@@ -414,6 +420,11 @@
 		7AC89EEE296FBD6C0024B384 /* FIDOAttestationWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOAttestationWindow.xib; sourceTree = "<group>"; };
 		7AC89EEF296FBD6D0024B384 /* FIDOAttestationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOAttestationWindow.m; sourceTree = "<group>"; };
 		7AC89EF5296FCC6B0024B384 /* FIDOAttestationWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOAttestationWindow.h; sourceTree = "<group>"; };
+		7AC9261929BEC4A9004CDD48 /* OATHWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OATHWindow.h; sourceTree = "<group>"; };
+		7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OATHWindow.m; sourceTree = "<group>"; };
+		7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OATHWindow.xib; sourceTree = "<group>"; };
+		7AC9262029BEE0BF004CDD48 /* OATHCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHCommand.h; sourceTree = "<group>"; };
+		7AC9262129BEE129004CDD48 /* OATHCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHCommand.m; sourceTree = "<group>"; };
 		7ACABD842887CFF100756123 /* DFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUCommand.h; sourceTree = "<group>"; };
 		7ACABD852887D00500756123 /* DFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUCommand.m; sourceTree = "<group>"; };
 		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
@@ -737,8 +748,13 @@
 		7A822075281A80D400FDBFA8 /* OATH */ = {
 			isa = PBXGroup;
 			children = (
+				7AC9261929BEC4A9004CDD48 /* OATHWindow.h */,
+				7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */,
+				7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */,
 				7A822076281A811500FDBFA8 /* QRCodeUtil.h */,
 				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
+				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
+				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
 			);
 			path = OATH;
 			sourceTree = "<group>";
@@ -1001,6 +1017,7 @@
 				7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */,
 				7A3F4F262875633C003CFE67 /* icon.png in Resources */,
 				7A3F4F1F28755F91003CFE67 /* UtilityWindow.xib in Resources */,
+				7AC9261E29BEC4A9004CDD48 /* OATHWindow.xib in Resources */,
 				7A292D9027702D450010EE4A /* generate_main_key.param in Resources */,
 				7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */,
 				7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
@@ -1045,6 +1062,7 @@
 				7A8B3DFD296E56640005F7B1 /* PGPPreferenceWindow.xib in Resources */,
 				7A8B3DFE296E56640005F7B1 /* icon.png in Resources */,
 				7A8B3DFF296E56640005F7B1 /* UtilityWindow.xib in Resources */,
+				7AC9261F29BEC4A9004CDD48 /* OATHWindow.xib in Resources */,
 				7A8B3E00296E56640005F7B1 /* generate_main_key.param in Resources */,
 				7A8B3E01296E56640005F7B1 /* transfer_subkey_to_card.sh in Resources */,
 				7ACD98FE296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
@@ -1111,6 +1129,7 @@
 				7A03A1D9287E87AE00BADBB7 /* U2FHcheckCommand.m in Sources */,
 				7A8640302900E35F008E9D1C /* usb_cdc_util.c in Sources */,
 				7AF042C6287D3113009518C3 /* HcheckPinWindow.m in Sources */,
+				7AC9261C29BEC4A9004CDD48 /* OATHWindow.m in Sources */,
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
 				7AC89EF3296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
@@ -1155,6 +1174,7 @@
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */,
 				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
+				7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
@@ -1196,6 +1216,7 @@
 				7A8B3DBE296E56640005F7B1 /* U2FHcheckCommand.m in Sources */,
 				7A8B3DBF296E56640005F7B1 /* usb_cdc_util.c in Sources */,
 				7A8B3DC0296E56640005F7B1 /* HcheckPinWindow.m in Sources */,
+				7AC9261D29BEC4A9004CDD48 /* OATHWindow.m in Sources */,
 				7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */,
 				7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */,
 				7AC89EF4296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
@@ -1240,6 +1261,7 @@
 				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,
 				7A8B3DE8296E56640005F7B1 /* nrf52_app_image.c in Sources */,
 				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
+				7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
 				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
@@ -1379,7 +1401,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 67;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1411,7 +1433,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 67;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1445,7 +1467,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 67;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1477,7 +1499,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 67;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";

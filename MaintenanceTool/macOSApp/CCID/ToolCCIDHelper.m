@@ -35,6 +35,21 @@
         return self;
     }
 
+    - (bool)checkHelperCanConnect {
+        // すでに接続済みの場合は終了
+        if (tool_pcsc_scard_connected()) {
+            return true;
+        }
+        // CCIDデバイスと接続
+        tool_pcsc_scard_init();
+        if (tool_pcsc_scard_connect() == false) {
+            return false;
+        }
+        // 接続された場合は切断
+        tool_pcsc_scard_disconnect();
+        return true;
+    }
+
     - (bool)ccidHelperWillConnect {
         // すでに接続済みの場合は終了
         if (tool_pcsc_scard_connected()) {
