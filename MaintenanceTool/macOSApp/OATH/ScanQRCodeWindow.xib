@@ -13,6 +13,7 @@
                 <outlet property="labelAccountVal" destination="adx-xe-gGC" id="vgW-mO-ScG"/>
                 <outlet property="labelIssuerVal" destination="xwQ-Ka-K4x" id="qOM-hM-d22"/>
                 <outlet property="labelPassword" destination="fkO-3i-mzz" id="6nz-50-zD0"/>
+                <outlet property="labelTitle" destination="kD7-1A-1Hy" id="Tcp-4D-62S"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>

@@ -13,6 +13,7 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // 画面項目を保持
+    @property (assign) IBOutlet NSTextField            *labelTitle;
     @property (assign) IBOutlet NSTextField            *labelIssuerVal;
     @property (assign) IBOutlet NSTextField            *labelAccountVal;
     @property (assign) IBOutlet NSTextField            *labelPassword;
