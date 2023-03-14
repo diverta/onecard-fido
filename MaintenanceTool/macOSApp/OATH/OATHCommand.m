@@ -88,7 +88,12 @@ static OATHCommand *sharedInstance;
             [[self parameter] setResultInformativeMessage:MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID];
             return false;
         }
-        [[ToolLogFile defaultLogger] info:@"Scan account info from QR code success"];
+        // アカウント情報の各項目をパラメーターに設定
+        [[self parameter] setOathAccountName:[qrCodeUtil valueForKey:@"account"]];
+        [[self parameter] setOathAccountIssuer:[qrCodeUtil valueForKey:@"issuer"]];
+        [[self parameter] setOathBase32Secret:[qrCodeUtil valueForKey:@"secret"]];
+        // 処理正常終了
+        [[ToolLogFile defaultLogger] debug:@"Scan account info from QR code success"];
         return true;
     }
 

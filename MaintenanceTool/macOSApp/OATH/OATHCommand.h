@@ -15,6 +15,9 @@
     @property (nonatomic) Command       command;
     @property (nonatomic) TransportType transportType;
     @property (nonatomic) NSString     *resultInformativeMessage;
+    @property (nonatomic) NSString     *oathAccountName;
+    @property (nonatomic) NSString     *oathAccountIssuer;
+    @property (nonatomic) NSString     *oathBase32Secret;
 
 @end
 

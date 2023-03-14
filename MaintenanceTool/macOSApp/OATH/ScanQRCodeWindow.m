@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2023/03/14.
 //
 #import "AppCommonMessage.h"
+#import "OATHCommand.h"
 #import "ScanQRCodeWindow.h"
 #import "ToolPopupWindow.h"
 
@@ -39,8 +40,22 @@
     }
 
     - (IBAction)buttonScanDidPress:(id)sender {
+        // 画面項目の初期化
+        [self initFieldValue];
+        // QRコードのスキャンを画面スレッドで実行
+        if ([[OATHCommand instance] scanQRCode] == false) {
+            NSString *informative = [[[OATHCommand instance] parameter] resultInformativeMessage];
+            [[ToolPopupWindow defaultWindow] critical:[[self labelTitle] stringValue] informativeText:informative
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
         // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+        NSString *informative = [NSString stringWithFormat:@"%@ \n%@ \n%@",
+            [[[OATHCommand instance] parameter] oathAccountIssuer],
+            [[[OATHCommand instance] parameter] oathAccountName],
+            [[[OATHCommand instance] parameter] oathBase32Secret]
+        ];
+        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:informative
                                        withObject:nil forSelector:nil parentWindow:[self window]];
     }
 
