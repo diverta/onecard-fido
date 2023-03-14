@@ -4,7 +4,9 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "AppCommonMessage.h"
 #import "OATHCommand.h"
+#import "QRCodeUtil.h"
 #import "ToolCCIDHelper.h"
 
 // コマンドクラスのインスタンスを保持
@@ -70,6 +72,17 @@ static OATHCommand *sharedInstance;
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
+    }
+
+    - (bool)ScanQRCode {
+        // QRコードのスキャンを実行
+        NSString *message = [QRCodeUtil scanQRCodeFromScreenShot];
+        if (message == nil) {
+            [[self parameter] setResultInformativeMessage:MSG_ERROR_OATH_QRCODE_SCAN_FAILED];
+            return false;
+        }
+        QRCodeUtil *qrCodeUtil = [[QRCodeUtil alloc] initWithQRMessageString:message];
+        return true;
     }
 
 @end

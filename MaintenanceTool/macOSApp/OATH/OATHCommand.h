@@ -14,6 +14,7 @@
 
     @property (nonatomic) Command       command;
     @property (nonatomic) TransportType transportType;
+    @property (nonatomic) NSString     *resultInformativeMessage;
 
 @end
 
@@ -23,6 +24,7 @@
 
     + (OATHCommand *)instance;
     - (bool)isUSBCCIDCanConnect;
+    - (bool)ScanQRCode;
 
 @end
 
