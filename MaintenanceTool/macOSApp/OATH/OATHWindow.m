@@ -132,6 +132,8 @@
         if ([self isWindowLoaded]) {
             [self initFieldValue];
         }
+        // 実行機能をクリア
+        [[self commandParameter] setCommand:COMMAND_NONE];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [self window];
         OATHWindow * __weak weakSelf = self;
