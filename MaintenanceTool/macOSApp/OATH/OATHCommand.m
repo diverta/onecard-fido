@@ -20,7 +20,10 @@ static OATHCommand *sharedInstance;
 @interface OATHCommand () <ToolCCIDHelperDelegate>
 
     // ヘルパークラスの参照を保持
-    @property (nonatomic) ToolCCIDHelper               *toolCCIDHelper;
+    @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
+    // コマンド完了後に継続される処理を保持
+    @property (nonatomic) id                    targetForContinue;
+    @property (nonatomic) SEL                   selectorForContinue;
 
 @end
 
@@ -123,6 +126,55 @@ static OATHCommand *sharedInstance;
             return false;
         }
         return true;
+    }
+
+#pragma mark - Public methods
+
+    - (void)commandWillPerformForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+
+        // 処理開始を通知
+        [self notifyProcessStarted];
+
+        // TODO: 仮の実装です。
+        [[self parameter] setResultInformativeMessage:MSG_CMDTST_MENU_NOT_SUPPORTED];
+        [self notifyProcessTerminated:false];
+    }
+
+#pragma mark - Private common methods
+
+    - (void)notifyProcessStarted {
+        // コマンド処理結果を初期化
+        [[self parameter] setCommandSuccess:false];
+        // コマンド開始メッセージをログファイルに出力
+        if ([[self parameter] commandTitle]) {
+            NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [[self parameter] commandTitle]];
+            [[ToolLogFile defaultLogger] info:startMsg];
+        }
+    }
+
+    - (void)notifyProcessTerminated:(bool)success {
+        // 結果を退避
+        [[self parameter] setCommandSuccess:success];
+        // コマンド終了メッセージを生成
+        if ([[self parameter] commandTitle]) {
+            NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [[self parameter] commandTitle],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
+            if (success == false) {
+                // コマンド異常終了メッセージをログ出力
+                [[ToolLogFile defaultLogger] error:endMsg];
+            } else {
+                // コマンド正常終了メッセージをログ出力
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
+            [[self parameter] setResultMessage:endMsg];
+        }
+        // 戻り先がある場合は制御を戻す
+        if ([self targetForContinue] && [self selectorForContinue]) {
+            [[self targetForContinue] performSelector:[self selectorForContinue] withObject:nil afterDelay:0.0];
+        }
     }
 
 @end

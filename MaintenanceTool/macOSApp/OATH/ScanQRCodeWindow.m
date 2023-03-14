@@ -49,14 +49,8 @@
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
-        // TODO: 仮の実装です。
-        NSString *informative = [NSString stringWithFormat:@"%@ \n%@ \n%@",
-            [[[OATHCommand instance] parameter] oathAccountIssuer],
-            [[[OATHCommand instance] parameter] oathAccountName],
-            [[[OATHCommand instance] parameter] oathBase32Secret]
-        ];
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:informative
-                                       withObject:nil forSelector:nil parentWindow:[self window]];
+        // ワンタイムパスワードを生成
+        [self doOATHProcessWithCommandTitle:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP];
     }
 
     - (IBAction)buttonUpdateDidPress:(id)sender {
@@ -101,6 +95,24 @@
     - (void)windowDidCloseWithModalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
+    }
+
+#pragma mark - Private functions
+
+    - (void)doOATHProcessWithCommandTitle:(NSString *)commandTitle {
+        // パラメーターを設定し、コマンドを実行
+        [[[OATHCommand instance] parameter] setCommandTitle:commandTitle];
+        [[OATHCommand instance] commandWillPerformForTarget:self forSelector:@selector(oathProcessDidTerminated)];
+    }
+
+    - (void)oathProcessDidTerminated {
+        // 処理失敗時は、エラーメッセージをポップアップ表示
+        if ([[[OATHCommand instance] parameter] commandSuccess] == false) {
+            NSString *message = [[[OATHCommand instance] parameter] resultMessage];
+            NSString *informative = [[[OATHCommand instance] parameter] resultInformativeMessage];
+            [[ToolPopupWindow defaultWindow] critical:message informativeText:informative
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+        }
     }
 
 @end
