@@ -12,6 +12,7 @@
 @interface ToolCommonFunc : NSObject
 
     + (NSString *)getAppVersionString;
+    + (NSString *)getAppBundleNameString;
     + (bool)isVendorMaintenanceTool;
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
