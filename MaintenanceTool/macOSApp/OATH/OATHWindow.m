@@ -7,6 +7,7 @@
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
+#import "QRCodeUtil.h"
 #import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
@@ -65,6 +66,14 @@
         // TODO: BLEトランスポートをサポートするまでの暫定措置
         if ([[self commandParameter] transportType] == TRANSPORT_BLE) {
             [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
+        // 画面収録の許可があるかどうかチェック
+        if ([QRCodeUtil hasScreenshotPermission] == false) {
+            NSString *bundleName = [ToolCommonFunc getAppBundleNameString];
+            NSString *informative = [NSString stringWithFormat:MSG_INFORMATIVE_OATH_SCREENSHOT_PERMISSION, bundleName];
+            [[ToolPopupWindow defaultWindow] critical:MSG_ERROR_OATH_SCREENSHOT_PERMISSION informativeText:informative
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }

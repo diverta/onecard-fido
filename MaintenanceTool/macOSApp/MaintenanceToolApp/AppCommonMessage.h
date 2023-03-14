@@ -362,6 +362,10 @@
 #define MSG_LABEL_COMMAND_OPENPGP_UNBLOCK           @"リセットコードによるPIN番号リセット"
 #define MSG_LABEL_COMMAND_OPENPGP_ADMIN_PIN_VERIFY  @"管理用PIN番号の検証"
 
+#pragma mark - OATH機能関連
+#define MSG_ERROR_OATH_SCREENSHOT_PERMISSION        @"画面収録が許可されていません。"
+#define MSG_INFORMATIVE_OATH_SCREENSHOT_PERMISSION  @"システム環境設定の「セキュリティとプライバシー」で「%@」に画面収録を許可するよう設定してください。"
+
 #pragma mark - ベンダー向け機能関連
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM              @"鍵ファイルに格納された秘密鍵の長さが不正です。"
 #define MSG_INVALID_SKEY_HEADER_IN_PEM              @"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"
