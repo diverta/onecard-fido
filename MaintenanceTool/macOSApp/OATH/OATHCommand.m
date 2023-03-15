@@ -196,24 +196,28 @@ static OATHCommand *sharedInstance;
     }
 
     - (void)notifyProcessTerminated:(bool)success withInformative:(NSString *)informative {
-        // 結果を退避
-        [[self parameter] setCommandSuccess:success];
-        [[self parameter] setResultInformativeMessage:informative];
         // CCIDデバイスから切断
         [[self toolCCIDHelper] ccidHelperWillDisconnect];
-        // コマンド終了メッセージを生成
-        if ([[self parameter] commandTitle]) {
-            NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [[self parameter] commandTitle],
-                                success ? MSG_SUCCESS : MSG_FAILURE];
-            if (success == false) {
-                // コマンド異常終了メッセージをログ出力
-                [[ToolLogFile defaultLogger] error:endMsg];
-            } else {
-                // コマンド正常終了メッセージをログ出力
-                [[ToolLogFile defaultLogger] info:endMsg];
-            }
-            [[self parameter] setResultMessage:endMsg];
+        // エラーメッセージを画面＆ログ出力
+        if (success == false && [informative length] > 0) {
+            // ログ出力する文言からは、改行文字を除去
+            NSString *logMessage = [informative stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            [[ToolLogFile defaultLogger] error:logMessage];
+            [[self parameter] setResultInformativeMessage:informative];
         }
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [[self parameter] commandTitle],
+                            success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success == false) {
+            // コマンド異常終了メッセージをログ出力
+            [[ToolLogFile defaultLogger] error:endMsg];
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            [[ToolLogFile defaultLogger] info:endMsg];
+        }
+        // 結果を退避
+        [[self parameter] setCommandSuccess:success];
+        [[self parameter] setResultMessage:endMsg];
         // 戻り先がある場合は制御を戻す
         if ([self targetForContinue] && [self selectorForContinue]) {
             [[self targetForContinue] performSelector:[self selectorForContinue] withObject:nil afterDelay:0.0];
