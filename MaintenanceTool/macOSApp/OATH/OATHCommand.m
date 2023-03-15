@@ -176,11 +176,42 @@ static OATHCommand *sharedInstance;
             [self notifyProcessTerminated:false withInformative:message];
             return;
         }
-        // TODO: アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
+        // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
-            [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+            [self doRequestAccountAdd];
             return;
         }
+    }
+
+#pragma mark - Account functions
+
+    - (void)doRequestAccountAdd {
+        // アカウント登録処理用APDUを生成
+        NSData *apduBytes = [self GenerateAccountAddAPDU];
+        // TODO: 仮の実装です。
+        [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+    }
+
+    - (NSData *)GenerateAccountAddAPDU {
+        // アカウント名をバイト配列化
+        NSString *accountText = [NSString stringWithFormat:@"%@:%@", [[self parameter] oathAccountIssuer], [[self parameter] oathAccountName]];
+        NSData *accountBytes = [accountText dataUsingEncoding:NSUTF8StringEncoding];
+        // Secret（Base32暗号テキスト）をバイト配列化
+        // TODO: 別途ユーティリティークラスに切り出し予定
+        NSString *encoding = [[self parameter] oathBase32Secret];
+        encoding = [encoding stringByReplacingOccurrencesOfString:@"=" withString:@""];
+        NSData *encodedData = [encoding dataUsingEncoding:NSASCIIStringEncoding];
+        unsigned char *encodedBytes = (unsigned char *)[encodedData bytes];
+        // NSUInteger overflow check
+        NSUInteger encodedLength = [encodedData length];
+        if (encodedLength >= (NSUIntegerMax - 7)) {
+            return nil;
+        }
+        NSUInteger encodedBlocks = (encodedLength + 7) >> 3;
+        NSUInteger expectedDataLength = encodedBlocks * 5;
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Encoded base32 data length %d", expectedDataLength];
+        // TODO: 仮の実装です。
+        return nil;
     }
 
 #pragma mark - Private common methods
