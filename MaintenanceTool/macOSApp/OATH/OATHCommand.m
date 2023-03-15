@@ -24,6 +24,8 @@ static OATHCommand *sharedInstance;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
+    // CCID I/Fにリクエストしたコマンドバイトを保持
+    @property (nonatomic) uint8_t               commandIns;
 
 @end
 
@@ -76,7 +78,15 @@ static OATHCommand *sharedInstance;
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self commandIns]) {
+            default:
+                [self doResponseInsSelectApplication:resp status:sw];
+                break;
+        }
     }
+
+#pragma mark - Scanning QR code
 
     - (bool)scanQRCode {
         // QRコードのスキャンを実行
@@ -138,9 +148,39 @@ static OATHCommand *sharedInstance;
         // 処理開始を通知
         [self notifyProcessStarted];
 
-        // TODO: 仮の実装です。
-        [[self parameter] setResultInformativeMessage:MSG_CMDTST_MENU_NOT_SUPPORTED];
-        [self notifyProcessTerminated:false];
+        // CCIDインタフェース経由で認証器に接続
+        if ([[self toolCCIDHelper] ccidHelperWillConnect] == false) {
+            // OATH機能を認識できなかった旨のエラーメッセージを設定し、上位クラスに制御を戻す
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_APPLET_SELECT_FAILED];
+            return;
+        }
+        // 機能実行に先立ち、アプレットをSELECT
+        [self doRequestInsSelectApplication];
+    }
+
+#pragma mark - Private methods
+
+    - (void)doRequestInsSelectApplication {
+        // アプレットIDを生成
+        static uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
+        NSData *oathAidBytes = [NSData dataWithBytes:aid length:sizeof(aid)];
+        // コマンドを実行
+        [self setCommandIns:0xa4];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:0xa4 p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
+    }
+
+    - (void)doResponseInsSelectApplication:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // TODO: アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
+            [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+            return;
+        }
     }
 
 #pragma mark - Private common methods
@@ -155,9 +195,12 @@ static OATHCommand *sharedInstance;
         }
     }
 
-    - (void)notifyProcessTerminated:(bool)success {
+    - (void)notifyProcessTerminated:(bool)success withInformative:(NSString *)informative {
         // 結果を退避
         [[self parameter] setCommandSuccess:success];
+        [[self parameter] setResultInformativeMessage:informative];
+        // CCIDデバイスから切断
+        [[self toolCCIDHelper] ccidHelperWillDisconnect];
         // コマンド終了メッセージを生成
         if ([[self parameter] commandTitle]) {
             NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [[self parameter] commandTitle],

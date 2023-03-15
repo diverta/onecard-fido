@@ -367,6 +367,7 @@
 #define MSG_INFORMATIVE_OATH_SCREENSHOT_PERMISSION  @"システム環境設定の「セキュリティとプライバシー」で「%@」に画面収録を許可するよう設定してください。"
 #define MSG_ERROR_OATH_QRCODE_SCAN_FAILED           @"認証用QRコードが画面からスキャンできませんでした。"
 #define MSG_ERROR_OATH_SCANNED_ACCOUNT_INFO_INVALID @"認証用QRコードからスキャンしたアカウント情報が不正です。"
+#define MSG_ERROR_OATH_APPLET_SELECT_FAILED         @"OATH機能を使用することができません。"
 #define MSG_LABEL_COMMAND_OATH_GENERATE_TOTP        @"ワンタイムパスワードの生成"
 
 #pragma mark - ベンダー向け機能関連
