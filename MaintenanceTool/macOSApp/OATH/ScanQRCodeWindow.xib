@@ -9,6 +9,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ScanQRCodeWindow">
             <connections>
+                <outlet property="buttonScan" destination="T3S-sV-bCr" id="5Y0-tL-NPE"/>
                 <outlet property="buttonUpdate" destination="yW2-iH-hwH" id="qdX-lL-ozZ"/>
                 <outlet property="labelAccountVal" destination="adx-xe-gGC" id="vgW-mO-ScG"/>
                 <outlet property="labelIssuerVal" destination="xwQ-Ka-K4x" id="qOM-hM-d22"/>

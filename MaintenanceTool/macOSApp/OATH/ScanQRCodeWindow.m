@@ -18,6 +18,7 @@
     @property (assign) IBOutlet NSTextField            *labelIssuerVal;
     @property (assign) IBOutlet NSTextField            *labelAccountVal;
     @property (assign) IBOutlet NSTextField            *labelPassword;
+    @property (assign) IBOutlet NSButton               *buttonScan;
     @property (assign) IBOutlet NSButton               *buttonUpdate;
 
 @end
@@ -32,6 +33,7 @@
 
     - (void)initFieldValue {
         // ワンタイムパスワードの更新ボタンを使用不可とする
+        [[self buttonScan] setEnabled:true];
         [[self buttonUpdate] setEnabled:false];
         // 画面表示項目を初期化
         [[self labelIssuerVal] setStringValue:@""];
@@ -113,6 +115,14 @@
             [[ToolPopupWindow defaultWindow] critical:message informativeText:informative
                                            withObject:nil forSelector:nil parentWindow:[self window]];
         }
+        // アカウント情報の各項目を画面表示
+        [[self labelAccountVal] setStringValue:[[[OATHCommand instance] parameter] oathAccountName]];
+        [[self labelIssuerVal] setStringValue:[[[OATHCommand instance] parameter] oathAccountIssuer]];
+        NSString *totp = [NSString stringWithFormat:@"%06d", [[[OATHCommand instance] parameter] oathTotpValue]];
+        [[self labelPassword] setStringValue:totp];
+        // 実行ボタンの代わりに、更新ボタンを使用可能とする
+        [[self buttonScan] setEnabled:false];
+        [[self buttonUpdate] setEnabled:true];
     }
 
 @end
