@@ -37,7 +37,9 @@ bool base32_decode(uint8_t *decoded, size_t *decoded_size, const char *encoded)
     if (encoded_size >= (255 - 7)) {
         return false;
     }
-    uint8_t encoded_blocks = (encoded_size + 7) >> 3;
+
+    // Expected decoded size
+    // uint8_t encoded_blocks = (encoded_size + 7) >> 3;
     // uint8_t expected_size = encoded_blocks * 5;
 
     // Destination area check
