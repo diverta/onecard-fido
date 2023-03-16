@@ -216,6 +216,11 @@ static OATHCommand *sharedInstance;
         }
         // 処理成功のログを出力
         [[ToolLogFile defaultLogger] info:MSG_INFO_OATH_ACCOUNT_ADD_SUCCESS];
+        // ワンタイムパスワード生成処理に遷移
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
+            [self doRequestCalculate];
+            return;
+        }
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
@@ -225,6 +230,30 @@ static OATHCommand *sharedInstance;
         NSString *account = [[self parameter] oathAccount];
         NSString *base32_secret = [[self parameter] oathBase32Secret];
         if (generate_account_add_apdu([account UTF8String], [base32_secret UTF8String]) == false) {
+            return nil;
+        }
+        return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
+    }
+
+#pragma mark - Calculate TOTP
+
+    - (void)doRequestCalculate {
+        // ワンタイムパスワード生成処理用APDUを生成
+        NSData *apduBytes = [self generateAPDUForCalculate];
+        if (apduBytes == nil) {
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_CALCULATE_APDU_FAILED];
+            return;
+        }
+       // TODO: 仮の実装です。
+       [[ToolLogFile defaultLogger] debugWithFormat:@"Generated oath APDU (%d bytes)", [apduBytes length]];
+       [[ToolLogFile defaultLogger] hexdump:apduBytes];
+       [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+    }
+
+    - (NSData *)generateAPDUForCalculate {
+        // アカウントを入力とし、APDUバイト配列を生成
+        NSString *account = [[self parameter] oathAccount];
+        if (generate_apdu_for_calculate([account UTF8String]) == false) {
             return nil;
         }
         return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
