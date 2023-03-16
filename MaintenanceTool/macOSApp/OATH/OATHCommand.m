@@ -83,6 +83,9 @@ static OATHCommand *sharedInstance;
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
         // コマンドに応じ、以下の処理に分岐
         switch ([self commandIns]) {
+            case 0x01:
+                [self doResponseAccountAdd:resp status:sw];
+                break;
             default:
                 [self doResponseInsSelectApplication:resp status:sw];
                 break;
@@ -169,7 +172,7 @@ static OATHCommand *sharedInstance;
         NSData *oathAidBytes = [NSData dataWithBytes:aid length:sizeof(aid)];
         // コマンドを実行
         [self setCommandIns:0xa4];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:0xa4 p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
     }
 
     - (void)doResponseInsSelectApplication:(NSData *)responseData status:(uint16_t)responseSW {
@@ -191,10 +194,26 @@ static OATHCommand *sharedInstance;
     - (void)doRequestAccountAdd {
         // アカウント登録処理用APDUを生成
         NSData *apduBytes = [self GenerateAccountAddAPDU];
-         // TODO: 仮の実装です。
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Generated oath APDU (%d bytes)", [apduBytes length]];
-        [[ToolLogFile defaultLogger] hexdump:apduBytes];
-        [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+        if (apduBytes == nil) {
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_ACCOUNT_ADD_APDU_FAILED];
+            return;
+        }
+        // アカウント登録コマンドを実行
+        [self setCommandIns:0x01];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseAccountAdd:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_ACCOUNT_ADD_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // 処理成功のログを出力
+        [[ToolLogFile defaultLogger] info:MSG_INFO_OATH_ACCOUNT_ADD_SUCCESS];
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
     - (NSData *)GenerateAccountAddAPDU {
