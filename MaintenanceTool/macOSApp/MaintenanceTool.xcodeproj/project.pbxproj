@@ -257,6 +257,8 @@
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
 		7AF60FF429C2B95400C1A4F0 /* base32_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF329C2B95400C1A4F0 /* base32_util.c */; };
 		7AF60FF529C2B95400C1A4F0 /* base32_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF329C2B95400C1A4F0 /* base32_util.c */; };
+		7AF60FF829C2E20500C1A4F0 /* oath_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF729C2E20500C1A4F0 /* oath_util.c */; };
+		7AF60FF929C2E20500C1A4F0 /* oath_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF729C2E20500C1A4F0 /* oath_util.c */; };
 		7AF7B5DF28753E5A00D4DFFC /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */; };
 		7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
 		895E617A29B86F100085ADA3 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895E617829B86F100085ADA3 /* libcrypto.a */; };
@@ -487,6 +489,8 @@
 		7AF4EDBC273507A000C126D9 /* BLEDFUDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUDefine.h; sourceTree = "<group>"; };
 		7AF60FF229C2B95400C1A4F0 /* base32_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base32_util.h; sourceTree = "<group>"; };
 		7AF60FF329C2B95400C1A4F0 /* base32_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base32_util.c; sourceTree = "<group>"; };
+		7AF60FF629C2E20500C1A4F0 /* oath_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = oath_util.h; sourceTree = "<group>"; };
+		7AF60FF729C2E20500C1A4F0 /* oath_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = oath_util.c; sourceTree = "<group>"; };
 		7AF7B5DD28753E5A00D4DFFC /* ToolHIDHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLESMPCommand.m; sourceTree = "<group>"; };
@@ -759,6 +763,10 @@
 		7A822075281A80D400FDBFA8 /* OATH */ = {
 			isa = PBXGroup;
 			children = (
+				7AF60FF229C2B95400C1A4F0 /* base32_util.h */,
+				7AF60FF329C2B95400C1A4F0 /* base32_util.c */,
+				7AF60FF629C2E20500C1A4F0 /* oath_util.h */,
+				7AF60FF729C2E20500C1A4F0 /* oath_util.c */,
 				7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */,
 				7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */,
 				7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */,
@@ -769,8 +777,6 @@
 				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
 				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
 				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
-				7AF60FF229C2B95400C1A4F0 /* base32_util.h */,
-				7AF60FF329C2B95400C1A4F0 /* base32_util.c */,
 			);
 			path = OATH;
 			sourceTree = "<group>";
@@ -1188,6 +1194,7 @@
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
+				7AF60FF829C2E20500C1A4F0 /* oath_util.c in Sources */,
 				7A1BCD4B28862DA6007AEE12 /* FIDOPinSettingWindow.m in Sources */,
 				7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */,
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
@@ -1277,6 +1284,7 @@
 				7A8B3DE2296E56640005F7B1 /* debug_log.c in Sources */,
 				7A8B3DE3296E56640005F7B1 /* UtilityWindow.m in Sources */,
 				7A8B3DE4296E56640005F7B1 /* ToolCommon.m in Sources */,
+				7AF60FF929C2E20500C1A4F0 /* oath_util.c in Sources */,
 				7A8B3DE5296E56640005F7B1 /* FIDOPinSettingWindow.m in Sources */,
 				7A8B3DE6296E56640005F7B1 /* HcheckCommand.m in Sources */,
 				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,

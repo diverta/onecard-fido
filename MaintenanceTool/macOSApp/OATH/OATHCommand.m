@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2023/03/13.
 //
 #import "base32_util.h"
+#import "oath_util.h"
 
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
@@ -190,29 +191,20 @@ static OATHCommand *sharedInstance;
     - (void)doRequestAccountAdd {
         // アカウント登録処理用APDUを生成
         NSData *apduBytes = [self GenerateAccountAddAPDU];
-        // TODO: 仮の実装です。
+         // TODO: 仮の実装です。
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Generated oath APDU (%d bytes)", [apduBytes length]];
+        [[ToolLogFile defaultLogger] hexdump:apduBytes];
         [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
     }
 
     - (NSData *)GenerateAccountAddAPDU {
-        // アカウント名をバイト配列化
-        NSString *accountText = [NSString stringWithFormat:@"%@:%@", [[self parameter] oathAccountIssuer], [[self parameter] oathAccountName]];
-        NSData *accountBytes = [accountText dataUsingEncoding:NSUTF8StringEncoding];
-        // Secret（Base32暗号テキスト）をバイト配列化
-        // TODO: 別途ユーティリティークラスに切り出し予定
-        NSString *encoding = [[self parameter] oathBase32Secret];
-        size_t    encoded_size = [encoding length];
-        uint8_t   decoded[encoded_size];
-        size_t    decoded_size = sizeof(decoded);
-        if (base32_decode(decoded, &decoded_size, [encoding UTF8String]) == false) {
+        // アカウント、Secretを入力とし、APDUバイト配列を生成
+        NSString *account = [NSString stringWithFormat:@"%@:%@", [[self parameter] oathAccountIssuer], [[self parameter] oathAccountName]];
+        NSString *base32_secret = [[self parameter] oathBase32Secret];
+        if (generate_account_add_apdu([account UTF8String], [base32_secret UTF8String]) == false) {
             return nil;
         }
-        NSData *data = [[NSData alloc] initWithBytes:decoded length:decoded_size];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"oath secret (%d bytes)", [data length]];
-        [[ToolLogFile defaultLogger] hexdump:data];
-
-        // TODO: 仮の実装です。
-        return nil;
+        return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
     }
 
 #pragma mark - Private common methods
