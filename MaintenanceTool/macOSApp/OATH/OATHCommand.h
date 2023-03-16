@@ -21,6 +21,7 @@
     @property (nonatomic) NSString     *oathAccountName;
     @property (nonatomic) NSString     *oathAccountIssuer;
     @property (nonatomic) NSString     *oathBase32Secret;
+    @property (nonatomic) uint32_t      oathTotpValue;
 
     - (NSString *)oathAccount;
 

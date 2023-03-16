@@ -90,6 +90,9 @@ static OATHCommand *sharedInstance;
             case 0x01:
                 [self doResponseAccountAdd:resp status:sw];
                 break;
+            case 0x04:
+                [self doResponseCalculate:resp status:sw];
+                break;
             default:
                 [self doResponseInsSelectApplication:resp status:sw];
                 break;
@@ -244,10 +247,26 @@ static OATHCommand *sharedInstance;
             [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_CALCULATE_APDU_FAILED];
             return;
         }
-       // TODO: 仮の実装です。
-       [[ToolLogFile defaultLogger] debugWithFormat:@"Generated oath APDU (%d bytes)", [apduBytes length]];
-       [[ToolLogFile defaultLogger] hexdump:apduBytes];
-       [self notifyProcessTerminated:false withInformative:MSG_CMDTST_MENU_NOT_SUPPORTED];
+        // ワンタイムパスワード生成コマンドを実行
+        [self setCommandIns:0x04];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseCalculate:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_CALCULATE_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // レスポンスの4～7バイト目をエンディアン変換し、ワンタイムパスワードを生成（下６桁を抽出）
+        uint8_t *responseBytes = (uint8_t *)[responseData bytes];
+        uint32_t totpSrcInt = [ToolCommon getLENumber32FromBEBytes:(responseBytes + 3)];
+        [[self parameter] setOathTotpValue:(totpSrcInt % 1000000)];
+        // 処理成功のログを出力
+        [[ToolLogFile defaultLogger] info:MSG_INFO_OATH_CALCULATE_SUCCESS];
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
     - (NSData *)generateAPDUForCalculate {
