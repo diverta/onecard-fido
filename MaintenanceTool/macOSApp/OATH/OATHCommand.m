@@ -4,6 +4,8 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "base32_util.h"
+
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "QRCodeUtil.h"
@@ -199,17 +201,16 @@ static OATHCommand *sharedInstance;
         // Secret（Base32暗号テキスト）をバイト配列化
         // TODO: 別途ユーティリティークラスに切り出し予定
         NSString *encoding = [[self parameter] oathBase32Secret];
-        encoding = [encoding stringByReplacingOccurrencesOfString:@"=" withString:@""];
-        NSData *encodedData = [encoding dataUsingEncoding:NSASCIIStringEncoding];
-        unsigned char *encodedBytes = (unsigned char *)[encodedData bytes];
-        // NSUInteger overflow check
-        NSUInteger encodedLength = [encodedData length];
-        if (encodedLength >= (NSUIntegerMax - 7)) {
+        size_t    encoded_size = [encoding length];
+        uint8_t   decoded[encoded_size];
+        size_t    decoded_size = sizeof(decoded);
+        if (base32_decode(decoded, &decoded_size, [encoding UTF8String]) == false) {
             return nil;
         }
-        NSUInteger encodedBlocks = (encodedLength + 7) >> 3;
-        NSUInteger expectedDataLength = encodedBlocks * 5;
-        [[ToolLogFile defaultLogger] debugWithFormat:@"Encoded base32 data length %d", expectedDataLength];
+        NSData *data = [[NSData alloc] initWithBytes:decoded length:decoded_size];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"oath secret (%d bytes)", [data length]];
+        [[ToolLogFile defaultLogger] hexdump:data];
+
         // TODO: 仮の実装です。
         return nil;
     }

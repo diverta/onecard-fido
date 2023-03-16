@@ -255,6 +255,8 @@
 		7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
 		7AF43D15279E37080016086E /* ToolProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF43D12279E37080016086E /* ToolProcessingWindow.xib */; };
 		7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
+		7AF60FF429C2B95400C1A4F0 /* base32_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF329C2B95400C1A4F0 /* base32_util.c */; };
+		7AF60FF529C2B95400C1A4F0 /* base32_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF60FF329C2B95400C1A4F0 /* base32_util.c */; };
 		7AF7B5DF28753E5A00D4DFFC /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */; };
 		7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
 		895E617A29B86F100085ADA3 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895E617829B86F100085ADA3 /* libcrypto.a */; };
@@ -483,6 +485,8 @@
 		7AF43D13279E37080016086E /* ToolProcessingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolProcessingWindow.m; sourceTree = "<group>"; };
 		7AF43D14279E37080016086E /* ToolProcessingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolProcessingWindow.h; sourceTree = "<group>"; };
 		7AF4EDBC273507A000C126D9 /* BLEDFUDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUDefine.h; sourceTree = "<group>"; };
+		7AF60FF229C2B95400C1A4F0 /* base32_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base32_util.h; sourceTree = "<group>"; };
+		7AF60FF329C2B95400C1A4F0 /* base32_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base32_util.c; sourceTree = "<group>"; };
 		7AF7B5DD28753E5A00D4DFFC /* ToolHIDHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7AF7B5DE28753E5A00D4DFFC /* ToolHIDHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLESMPCommand.m; sourceTree = "<group>"; };
@@ -765,6 +769,8 @@
 				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
 				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
 				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
+				7AF60FF229C2B95400C1A4F0 /* base32_util.h */,
+				7AF60FF329C2B95400C1A4F0 /* base32_util.c */,
 			);
 			path = OATH;
 			sourceTree = "<group>";
@@ -1190,6 +1196,7 @@
 				7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
+				7AF60FF429C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
@@ -1278,6 +1285,7 @@
 				7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
 				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
+				7AF60FF529C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
 				7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */,
 				7A8B3DED296E56640005F7B1 /* ToolPIVCommand.m in Sources */,
