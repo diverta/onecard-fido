@@ -18,6 +18,10 @@ static OATHCommand *sharedInstance;
 
 @implementation OATHCommandParameter
 
+    - (NSString *)oathAccount {
+        return [NSString stringWithFormat:@"%@:%@", [self oathAccountIssuer], [self oathAccountName]];
+    }
+
 @end
 
 @interface OATHCommand () <ToolCCIDHelperDelegate>
@@ -218,7 +222,7 @@ static OATHCommand *sharedInstance;
 
     - (NSData *)GenerateAccountAddAPDU {
         // アカウント、Secretを入力とし、APDUバイト配列を生成
-        NSString *account = [NSString stringWithFormat:@"%@:%@", [[self parameter] oathAccountIssuer], [[self parameter] oathAccountName]];
+        NSString *account = [[self parameter] oathAccount];
         NSString *base32_secret = [[self parameter] oathBase32Secret];
         if (generate_account_add_apdu([account UTF8String], [base32_secret UTF8String]) == false) {
             return nil;

@@ -22,6 +22,8 @@
     @property (nonatomic) NSString     *oathAccountIssuer;
     @property (nonatomic) NSString     *oathBase32Secret;
 
+    - (NSString *)oathAccount;
+
 @end
 
 @interface OATHCommand : NSObject
