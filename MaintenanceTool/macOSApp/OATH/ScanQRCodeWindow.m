@@ -56,9 +56,8 @@
     }
 
     - (IBAction)buttonUpdateDidPress:(id)sender {
-        // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                       withObject:nil forSelector:nil parentWindow:[self window]];
+        // ワンタイムパスワードを生成
+        [self doOATHProcessWithCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {

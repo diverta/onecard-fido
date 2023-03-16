@@ -194,6 +194,11 @@ static OATHCommand *sharedInstance;
             [self doRequestAccountAdd];
             return;
         }
+        // ワンタイムパスワード生成処理に移行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP]) {
+            [self doRequestCalculate];
+            return;
+        }
     }
 
 #pragma mark - Account functions

@@ -375,6 +375,7 @@
 #define MSG_ERROR_OATH_CALCULATE_FAILED             @"OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x%04x）"
 #define MSG_INFO_OATH_CALCULATE_SUCCESS             @"OATHワンタイムパスワードを生成しました。"
 #define MSG_LABEL_COMMAND_OATH_GENERATE_TOTP        @"ワンタイムパスワードの生成"
+#define MSG_LABEL_COMMAND_OATH_UPDATE_TOTP          @"ワンタイムパスワードの更新"
 
 #pragma mark - ベンダー向け機能関連
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM              @"鍵ファイルに格納された秘密鍵の長さが不正です。"
