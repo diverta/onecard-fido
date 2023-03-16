@@ -83,6 +83,8 @@
         if ([self isWindowLoaded]) {
             [self initFieldValue];
         }
+        // アプリケーションをフローティング表示状態に変更
+        [[self parentWindow] setLevel:NSFloatingWindowLevel];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [self window];
         ScanQRCodeWindow * __weak weakSelf = self;
@@ -96,6 +98,8 @@
     - (void)windowDidCloseWithModalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
+        // アプリケーションを通常のウィンドウ状態に戻す
+        [[self parentWindow] setLevel:NSNormalWindowLevel];
     }
 
 #pragma mark - Private functions
