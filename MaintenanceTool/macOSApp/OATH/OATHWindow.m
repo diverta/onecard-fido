@@ -7,6 +7,8 @@
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
+#import "QRCodeUtil.h"
+#import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
 
@@ -14,6 +16,8 @@
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
+    // 子画面の参照を保持
+    @property (nonatomic) ScanQRCodeWindow             *scanQRCodeWindow;
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
@@ -29,6 +33,8 @@
         // コマンドクラスの初期化
         [self setOathCommand:[OATHCommand instance]];
         [self setCommandParameter:[[self oathCommand] parameter]];
+        // 子画面の生成
+        [self setScanQRCodeWindow:[[ScanQRCodeWindow alloc] initWithWindowNibName:@"ScanQRCodeWindow"]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -60,6 +66,14 @@
         // TODO: BLEトランスポートをサポートするまでの暫定措置
         if ([[self commandParameter] transportType] == TRANSPORT_BLE) {
             [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
+        }
+        // 画面収録の許可があるかどうかチェック
+        if ([QRCodeUtil hasScreenshotPermission] == false) {
+            NSString *bundleName = [ToolCommonFunc getAppBundleNameString];
+            NSString *informative = [NSString stringWithFormat:MSG_INFORMATIVE_OATH_SCREENSHOT_PERMISSION, bundleName];
+            [[ToolPopupWindow defaultWindow] critical:MSG_ERROR_OATH_SCREENSHOT_PERMISSION informativeText:informative
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
@@ -154,9 +168,8 @@
         // 実行コマンドにより処理分岐
         switch ([[self commandParameter] command]) {
             case COMMAND_OATH_SCAN_QRCODE:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                // 認証用QRコードスキャン画面を表示
+                [[self scanQRCodeWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             case COMMAND_OATH_SHOW_PASSWORD:
                 // TODO: 仮の実装です。
