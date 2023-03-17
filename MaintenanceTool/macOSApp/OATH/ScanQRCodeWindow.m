@@ -20,12 +20,18 @@
     @property (assign) IBOutlet NSTextField            *labelPassword;
     @property (assign) IBOutlet NSButton               *buttonScan;
     @property (assign) IBOutlet NSButton               *buttonUpdate;
+    // コマンドクラス、パラメーターの参照を保持
+    @property (assign) OATHCommand                     *oathCommand;
+    @property (assign) OATHCommandParameter            *commandParameter;
 
 @end
 
 @implementation ScanQRCodeWindow
 
     - (void)windowDidLoad {
+        // コマンドクラス、パラメーターの参照を保持
+        [self setOathCommand:[OATHCommand instance]];
+        [self setCommandParameter:[[self oathCommand] parameter]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -45,8 +51,8 @@
         // 画面項目の初期化
         [self initFieldValue];
         // QRコードのスキャンを画面スレッドで実行
-        if ([[OATHCommand instance] scanQRCode] == false) {
-            NSString *informative = [[[OATHCommand instance] parameter] resultInformativeMessage];
+        if ([[self oathCommand] scanQRCode] == false) {
+            NSString *informative = [[self commandParameter] resultInformativeMessage];
             [[ToolPopupWindow defaultWindow] critical:[[self labelTitle] stringValue] informativeText:informative
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
@@ -106,22 +112,22 @@
 
     - (void)doOATHProcessWithCommandTitle:(NSString *)commandTitle {
         // パラメーターを設定し、コマンドを実行
-        [[[OATHCommand instance] parameter] setCommandTitle:commandTitle];
-        [[OATHCommand instance] commandWillPerformForTarget:self forSelector:@selector(oathProcessDidTerminated)];
+        [[self commandParameter] setCommandTitle:commandTitle];
+        [[self oathCommand] commandWillPerformForTarget:self forSelector:@selector(oathProcessDidTerminated)];
     }
 
     - (void)oathProcessDidTerminated {
         // 処理失敗時は、エラーメッセージをポップアップ表示
-        if ([[[OATHCommand instance] parameter] commandSuccess] == false) {
-            NSString *message = [[[OATHCommand instance] parameter] resultMessage];
-            NSString *informative = [[[OATHCommand instance] parameter] resultInformativeMessage];
+        if ([[self commandParameter] commandSuccess] == false) {
+            NSString *message = [[self commandParameter] resultMessage];
+            NSString *informative = [[self commandParameter] resultInformativeMessage];
             [[ToolPopupWindow defaultWindow] critical:message informativeText:informative
                                            withObject:nil forSelector:nil parentWindow:[self window]];
         }
         // アカウント情報の各項目を画面表示
-        [[self labelAccountVal] setStringValue:[[[OATHCommand instance] parameter] oathAccountName]];
-        [[self labelIssuerVal] setStringValue:[[[OATHCommand instance] parameter] oathAccountIssuer]];
-        NSString *totp = [NSString stringWithFormat:@"%06d", [[[OATHCommand instance] parameter] oathTotpValue]];
+        [[self labelAccountVal] setStringValue:[[self commandParameter] oathAccountName]];
+        [[self labelIssuerVal] setStringValue:[[self commandParameter] oathAccountIssuer]];
+        NSString *totp = [NSString stringWithFormat:@"%06d", [[self commandParameter] oathTotpValue]];
         [[self labelPassword] setStringValue:totp];
         // 実行ボタンの代わりに、更新ボタンを使用可能とする
         [[self buttonScan] setEnabled:false];
