@@ -10,6 +10,7 @@
 #import "AppCommonMessage.h"
 #import "OATHAccountCommand.h"
 #import "OATHCommand.h"
+#import "OATHTotpCommand.h"
 #import "QRCodeUtil.h"
 #import "ToolCCIDHelper.h"
 #import "ToolLogFile.h"
@@ -88,9 +89,6 @@ static OATHCommand *sharedInstance;
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
         // コマンドに応じ、以下の処理に分岐
         switch ([self commandIns]) {
-            case 0x04:
-                [self doResponseCalculate:resp status:sw];
-                break;
             case 0xa4:
                 [self doResponseInsSelectApplication:resp status:sw];
                 break;
@@ -228,41 +226,20 @@ static OATHCommand *sharedInstance;
 #pragma mark - Calculate TOTP
 
     - (void)doRequestCalculate {
-        // ワンタイムパスワード生成処理用APDUを生成
-        NSData *apduBytes = [self generateAPDUForCalculate];
-        if (apduBytes == nil) {
-            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_CALCULATE_APDU_FAILED];
-            return;
-        }
-        // ワンタイムパスワード生成コマンドを実行
-        [self setCommandIns:0x04];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+        // ワンタイムパスワード生成処理を実行
+        [[[OATHTotpCommand alloc] init] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
     }
 
-    - (void)doResponseCalculate:(NSData *)responseData status:(uint16_t)responseSW {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (responseSW != 0x9000) {
-            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_CALCULATE_FAILED, responseSW];
-            [self notifyProcessTerminated:false withInformative:message];
+    - (void)doResponseCalculate {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
             return;
         }
-        // レスポンスの4～7バイト目をエンディアン変換し、ワンタイムパスワードを生成（下６桁を抽出）
-        uint8_t *responseBytes = (uint8_t *)[responseData bytes];
-        uint32_t totpSrcInt = [ToolCommon getLENumber32FromBEBytes:(responseBytes + 3)];
-        [[self parameter] setOathTotpValue:(totpSrcInt % 1000000)];
         // 処理成功のログを出力
         [[ToolLogFile defaultLogger] info:MSG_INFO_OATH_CALCULATE_SUCCESS];
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
-    }
-
-    - (NSData *)generateAPDUForCalculate {
-        // アカウントを入力とし、APDUバイト配列を生成
-        NSString *account = [[self parameter] oathAccount];
-        if (generate_apdu_for_calculate([account UTF8String]) == false) {
-            return nil;
-        }
-        return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
     }
 
 #pragma mark - Private common methods
