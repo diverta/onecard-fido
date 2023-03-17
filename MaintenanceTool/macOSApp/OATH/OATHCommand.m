@@ -8,6 +8,7 @@
 #import "oath_util.h"
 
 #import "AppCommonMessage.h"
+#import "OATHAccountCommand.h"
 #import "OATHCommand.h"
 #import "QRCodeUtil.h"
 #import "ToolCCIDHelper.h"
@@ -87,14 +88,13 @@ static OATHCommand *sharedInstance;
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
         // コマンドに応じ、以下の処理に分岐
         switch ([self commandIns]) {
-            case 0x01:
-                [self doResponseAccountAdd:resp status:sw];
-                break;
             case 0x04:
                 [self doResponseCalculate:resp status:sw];
                 break;
-            default:
+            case 0xa4:
                 [self doResponseInsSelectApplication:resp status:sw];
+                break;
+            default:
                 break;
         }
     }
@@ -204,22 +204,14 @@ static OATHCommand *sharedInstance;
 #pragma mark - Account functions
 
     - (void)doRequestAccountAdd {
-        // アカウント登録処理用APDUを生成
-        NSData *apduBytes = [self GenerateAccountAddAPDU];
-        if (apduBytes == nil) {
-            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_ACCOUNT_ADD_APDU_FAILED];
-            return;
-        }
-        // アカウント登録コマンドを実行
-        [self setCommandIns:0x01];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+        // アカウント登録処理を実行
+        [[[OATHAccountCommand alloc] init] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
     }
 
-    - (void)doResponseAccountAdd:(NSData *)responseData status:(uint16_t)responseSW {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (responseSW != 0x9000) {
-            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_ACCOUNT_ADD_FAILED, responseSW];
-            [self notifyProcessTerminated:false withInformative:message];
+    - (void)doResponseAccountAdd {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
             return;
         }
         // 処理成功のログを出力
@@ -231,16 +223,6 @@ static OATHCommand *sharedInstance;
         }
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
-    }
-
-    - (NSData *)GenerateAccountAddAPDU {
-        // アカウント、Secretを入力とし、APDUバイト配列を生成
-        NSString *account = [[self parameter] oathAccount];
-        NSString *base32_secret = [[self parameter] oathBase32Secret];
-        if (generate_account_add_apdu([account UTF8String], [base32_secret UTF8String]) == false) {
-            return nil;
-        }
-        return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
     }
 
 #pragma mark - Calculate TOTP
