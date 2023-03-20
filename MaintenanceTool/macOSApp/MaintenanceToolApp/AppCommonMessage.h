@@ -376,6 +376,10 @@
 #define MSG_INFO_OATH_CALCULATE_SUCCESS             @"OATHワンタイムパスワードを生成しました。"
 #define MSG_LABEL_COMMAND_OATH_GENERATE_TOTP        @"ワンタイムパスワードの生成"
 #define MSG_LABEL_COMMAND_OATH_UPDATE_TOTP          @"ワンタイムパスワードの更新"
+#define MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP         @"ワンタイムパスワードを参照するアカウントの選択"
+#define MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP       @"ワンタイムパスワードを参照したいアカウントを、\n下のリストから選択して下さい。"
+#define MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE       @"削除するアカウントの選択"
+#define MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE     @"認証器から削除したいアカウントを、\n下のリストから選択して下さい。"
 
 #pragma mark - ベンダー向け機能関連
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM              @"鍵ファイルに格納された秘密鍵の長さが不正です。"

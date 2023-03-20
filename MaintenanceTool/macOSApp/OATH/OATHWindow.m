@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "AccountSelectWindow.h"
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
@@ -18,6 +19,7 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // 子画面の参照を保持
     @property (nonatomic) ScanQRCodeWindow             *scanQRCodeWindow;
+    @property (nonatomic) AccountSelectWindow          *accountSelectWindow;
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
@@ -35,6 +37,7 @@
         [self setCommandParameter:[[self oathCommand] parameter]];
         // 子画面の生成
         [self setScanQRCodeWindow:[[ScanQRCodeWindow alloc] initWithWindowNibName:@"ScanQRCodeWindow"]];
+        [self setAccountSelectWindow:[[AccountSelectWindow alloc] initWithWindowNibName:@"AccountSelectWindow"]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -95,9 +98,9 @@
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
-        // 実行機能を設定し、画面を閉じる
+        // アカウント選択画面を表示
         [[self commandParameter] setCommand:COMMAND_OATH_SHOW_PASSWORD];
-        [self terminateWindow:NSModalResponseOK];
+        [self selectOATHAccountWithTitle:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP caption:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP];
     }
 
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
@@ -113,9 +116,9 @@
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
-        // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                       withObject:nil forSelector:nil parentWindow:[self window]];
+        // アカウント選択画面を表示
+        [[self commandParameter] setCommand:COMMAND_OATH_DELETE_ACCOUNT];
+        [self selectOATHAccountWithTitle:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE caption:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -131,6 +134,30 @@
     - (bool)checkUSBCCIDConnection {
         // USB CCIDインターフェースに接続可能でない場合は処理中止
         return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[self oathCommand] isUSBCCIDCanConnect]];
+    }
+
+#pragma mark - For OATH account selection
+
+    - (void)selectOATHAccountWithTitle:(NSString *)title caption:(NSString *)caption {
+        // OATH設定画面を開く
+        [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] ForTarget:self forSelector:@selector(oathAccountDidSelect)];
+    }
+
+    - (void)oathAccountDidSelect {
+        // 実行コマンドに応じ分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_OATH_SHOW_PASSWORD:
+                // 画面を閉じる
+                [self terminateWindow:NSModalResponseOK];
+                break;
+            case COMMAND_OATH_DELETE_ACCOUNT:
+                // TODO: 仮の実装です。
+                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
+                                               withObject:nil forSelector:nil parentWindow:[self window]];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - For OATHWindow open/close
