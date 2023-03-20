@@ -12,6 +12,8 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                 *parentWindow;
     // 画面項目を保持
+    @property (assign) IBOutlet NSTextField        *labelTitle;
+    @property (assign) IBOutlet NSTextField        *labelCaption;
     @property (assign) IBOutlet NSButton           *buttonSelect;
     // パラメーターの参照を保持
     @property (assign) OATHCommandParameter        *commandParameter;
@@ -32,6 +34,8 @@
     }
 
     - (void)initFieldValue {
+        // 選択ボタンを使用不可
+        [[self buttonSelect] setEnabled:false];
     }
 
     - (IBAction)buttonSelectDidPress:(id)sender {
@@ -51,7 +55,8 @@
 
 #pragma mark - For AccountSelectWindow open/close
 
-    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent ForTarget:(id)object forSelector:(SEL)selector {
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent withTitle:(NSString *)title withCaption:(NSString *)caption
+                                 ForTarget:(id)object forSelector:(SEL)selector {
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
@@ -72,6 +77,9 @@
             // ダイアログが閉じられた時の処理
             [weakSelf windowDidCloseWithModalResponse:response];
         }];
+        // タイトルとキャプションを表示
+        [[self labelTitle] setStringValue:title];
+        [[self labelCaption] setStringValue:caption];
         return true;
     }
 

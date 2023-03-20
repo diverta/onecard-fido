@@ -140,7 +140,8 @@
 
     - (void)selectOATHAccountWithTitle:(NSString *)title caption:(NSString *)caption {
         // OATH設定画面を開く
-        [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] ForTarget:self forSelector:@selector(oathAccountDidSelect)];
+        [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] withTitle:title withCaption:caption
+                                                         ForTarget:self forSelector:@selector(oathAccountDidSelect)];
     }
 
     - (void)oathAccountDidSelect {

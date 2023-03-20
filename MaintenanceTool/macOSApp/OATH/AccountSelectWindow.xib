@@ -8,7 +8,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AccountSelectWindow">
             <connections>
-                <outlet property="buttonSelect" destination="Hmp-dV-eUS" id="mBK-91-iaa"/>
+                <outlet property="buttonSelect" destination="Hmp-dV-eUS" id="JHq-7K-bjW"/>
+                <outlet property="labelCaption" destination="dGa-ez-qRK" id="ZKV-aG-bSH"/>
+                <outlet property="labelTitle" destination="kD7-1A-1Hy" id="I5a-i7-71t"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -28,7 +30,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="処理対象アカウントの選択" id="Wzj-Q9-FAI">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" id="Wzj-Q9-FAI">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -39,8 +41,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="zYP-3y-f4i">
                             <font key="font" metaFont="system"/>
-                            <string key="title">ワンタイムパスワードを参照したいアカウントを、
-下のリストから選択して下さい。</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
