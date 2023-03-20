@@ -12,14 +12,16 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                 *parentWindow;
     // 画面項目を保持
-    @property (assign) IBOutlet NSTextField        *labelTitle;
-    @property (assign) IBOutlet NSTextField        *labelCaption;
     @property (assign) IBOutlet NSButton           *buttonSelect;
     // パラメーターの参照を保持
     @property (assign) OATHCommandParameter        *commandParameter;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                        targetForContinue;
     @property (nonatomic) SEL                       selectorForContinue;
+    // 画面項目（タイトル／キャプション／アカウント一覧）に表示するデータを保持
+    @property (nonatomic) NSString                 *titleString;
+    @property (nonatomic) NSString                 *captionString;
+    @property (nonatomic) NSArray<NSDictionary *>  *accountArray;
 
 @end
 
@@ -70,6 +72,14 @@
         if ([self isWindowLoaded]) {
             [self initFieldValue];
         }
+        // タイトル、キャプションを表示
+        [self setTitleString:title];
+        [self setCaptionString:caption];
+        // TODO: 仮の実装です。（アカウント一覧を表示）
+        static int a = 0;
+        NSString *string1 = [NSString stringWithFormat:@"sample%d", a++];
+        NSString *string2 = [NSString stringWithFormat:@"sample%d", a++];
+        [self setAccountArray:@[@{@"account":string1}, @{@"account":string2}]];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [self window];
         AccountSelectWindow * __weak weakSelf = self;
@@ -77,9 +87,6 @@
             // ダイアログが閉じられた時の処理
             [weakSelf windowDidCloseWithModalResponse:response];
         }];
-        // タイトルとキャプションを表示
-        [[self labelTitle] setStringValue:title];
-        [[self labelCaption] setStringValue:caption];
         return true;
     }
 

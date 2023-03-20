@@ -9,8 +9,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="AccountSelectWindow">
             <connections>
                 <outlet property="buttonSelect" destination="Hmp-dV-eUS" id="JHq-7K-bjW"/>
-                <outlet property="labelCaption" destination="dGa-ez-qRK" id="ZKV-aG-bSH"/>
-                <outlet property="labelTitle" destination="kD7-1A-1Hy" id="I5a-i7-71t"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -35,6 +33,9 @@
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="titleString" id="LK2-bP-HF0"/>
+                        </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dGa-ez-qRK" userLabel="labelCaption">
                         <rect key="frame" x="29" y="211" width="300" height="40"/>
@@ -44,6 +45,9 @@
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="captionString" id="jwr-GL-Er7"/>
+                        </connections>
                     </textField>
                     <button verticalHuggingPriority="750" id="Hmp-dV-eUS" userLabel="buttonSelect">
                         <rect key="frame" x="72" y="13" width="100" height="32"/>
@@ -88,7 +92,7 @@ Gw
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="AutomaticTableColumnIdentifier.0" width="282" minWidth="40" maxWidth="1000" id="giy-PC-5yy">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="account">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
@@ -103,14 +107,17 @@ Gw
                                                     <rect key="frame" x="8" y="0.0" width="277" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fau-G4-Ypb">
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fau-G4-Ypb" userLabel="account">
                                                             <rect key="frame" x="0.0" y="4" width="277" height="16"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Issuer:Account" id="oZb-YE-fCU">
+                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="account" id="oZb-YE-fCU">
                                                                 <font key="font" usesAppearanceFont="YES"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="Xan-Wi-A6s" name="value" keyPath="objectValue.account" id="n8H-lo-GwK"/>
+                                                            </connections>
                                                         </textField>
                                                     </subviews>
                                                     <connections>
@@ -118,8 +125,14 @@ Gw
                                                     </connections>
                                                 </tableCellView>
                                             </prototypeCellViews>
+                                            <connections>
+                                                <binding destination="SUb-ve-xzQ" name="value" keyPath="arrangedObjects" id="LIy-IB-egf"/>
+                                            </connections>
                                         </tableColumn>
                                     </tableColumns>
+                                    <connections>
+                                        <binding destination="SUb-ve-xzQ" name="content" keyPath="arrangedObjects" id="Jb8-Cf-Od7"/>
+                                    </connections>
                                 </tableView>
                             </subviews>
                         </clipView>
@@ -144,5 +157,10 @@ Gw
             </connections>
             <point key="canvasLocation" x="119" y="160"/>
         </window>
+        <arrayController id="SUb-ve-xzQ" userLabel="AccountArrayController">
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="accountArray" id="TDF-93-ucM"/>
+            </connections>
+        </arrayController>
     </objects>
 </document>
