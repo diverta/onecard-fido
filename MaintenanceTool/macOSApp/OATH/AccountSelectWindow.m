@@ -28,8 +28,6 @@
 @implementation AccountSelectWindow
 
     - (void)windowDidLoad {
-        // パラメーターの参照を保持
-        [self setCommandParameter:[[OATHCommand instance] parameter]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -62,6 +60,8 @@
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
+        // パラメーターの参照を保持
+        [self setCommandParameter:[[OATHCommand instance] parameter]];
         // 親画面の参照を保持
         [self setParentWindow:parent];
         // すでにダイアログが開いている場合は終了
