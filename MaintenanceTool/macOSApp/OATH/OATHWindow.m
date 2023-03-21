@@ -8,6 +8,7 @@
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
+#import "OATHWindowUtil.h"
 #import "QRCodeUtil.h"
 #import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
@@ -100,7 +101,7 @@
         }
         // アカウント選択画面を表示
         [[self commandParameter] setCommand:COMMAND_OATH_SHOW_PASSWORD];
-        [self selectOATHAccountWithTitle:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP caption:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP];
+        [self listOATHAccount];
     }
 
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
@@ -118,7 +119,7 @@
         }
         // アカウント選択画面を表示
         [[self commandParameter] setCommand:COMMAND_OATH_DELETE_ACCOUNT];
-        [self selectOATHAccountWithTitle:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE caption:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE];
+        [self listOATHAccount];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -138,10 +139,17 @@
 
 #pragma mark - For OATH account selection
 
-    - (void)selectOATHAccountWithTitle:(NSString *)title caption:(NSString *)caption {
-        // OATH設定画面を開く
-        [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] withTitle:title withCaption:caption
-                                                         ForTarget:self forSelector:@selector(oathAccountDidSelect)];
+    - (void)listOATHAccount {
+        // アカウント選択画面に表示する一覧を認証器から取得
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(selectOATHAccount) withParentWindow:[self window]];
+    }
+
+    - (void)selectOATHAccount {
+        // アカウント選択画面を表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] ForTarget:self forSelector:@selector(oathAccountDidSelect)];
+        }
     }
 
     - (void)oathAccountDidSelect {

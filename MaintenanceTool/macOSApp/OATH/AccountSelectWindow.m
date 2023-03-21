@@ -4,8 +4,9 @@
 //
 //  Created by Makoto Morita on 2023/03/20.
 //
-#import "OATHCommand.h"
 #import "AccountSelectWindow.h"
+#import "AppCommonMessage.h"
+#import "OATHCommand.h"
 
 @interface AccountSelectWindow () <NSTableViewDelegate>
 
@@ -55,8 +56,7 @@
 
 #pragma mark - For AccountSelectWindow open/close
 
-    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent withTitle:(NSString *)title withCaption:(NSString *)caption
-                                 ForTarget:(id)object forSelector:(SEL)selector {
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent ForTarget:(id)object forSelector:(SEL)selector {
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
@@ -73,8 +73,14 @@
             [self initFieldValue];
         }
         // タイトル、キャプションを表示
-        [self setTitleString:title];
-        [self setCaptionString:caption];
+        if ([[self commandParameter] command] == COMMAND_OATH_SHOW_PASSWORD) {
+            [self setTitleString:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP];
+            [self setCaptionString:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP];
+        }
+        if ([[self commandParameter] command] == COMMAND_OATH_DELETE_ACCOUNT) {
+            [self setTitleString:MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE];
+            [self setCaptionString:MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_DELETE];
+        }
         // アカウント一覧を表示
         NSMutableArray<NSDictionary *> *array = [[NSMutableArray alloc] init];
         for (NSString *account in [[self commandParameter] accountList]) {

@@ -11,7 +11,7 @@
 
 @interface AccountSelectWindow : NSWindowController
 
-    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent withTitle:(NSString *)title withCaption:(NSString *)caption ForTarget:(id)object forSelector:(SEL)selector;
+    - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent ForTarget:(id)object forSelector:(SEL)selector;
 
 @end
 
