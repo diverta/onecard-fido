@@ -376,6 +376,7 @@
 #define MSG_INFO_OATH_CALCULATE_SUCCESS             @"OATHワンタイムパスワードを生成しました。"
 #define MSG_LABEL_COMMAND_OATH_GENERATE_TOTP        @"ワンタイムパスワードの生成"
 #define MSG_LABEL_COMMAND_OATH_UPDATE_TOTP          @"ワンタイムパスワードの更新"
+#define MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT         @"OATHアカウント一覧の取得"
 #define MSG_TITLE_OATH_ACCOUNT_SEL_FOR_TOTP         @"ワンタイムパスワードを参照するアカウントの選択"
 #define MSG_CAPTION_OATH_ACCOUNT_SEL_FOR_TOTP       @"ワンタイムパスワードを参照したいアカウントを、\n下のリストから選択して下さい。"
 #define MSG_TITLE_OATH_ACCOUNT_SEL_FOR_DELETE       @"削除するアカウントの選択"

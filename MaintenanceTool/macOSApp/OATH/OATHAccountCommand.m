@@ -60,6 +60,15 @@
         [self doRequestAccountAdd];
     }
 
+    - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+        // TODO: 仮の実装です。
+        [[self parameter] setAccountList:@[@"GitHub:sample", @"DropBox:sample2",]];
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
 #pragma mark - Account add
 
     - (void)doRequestAccountAdd {

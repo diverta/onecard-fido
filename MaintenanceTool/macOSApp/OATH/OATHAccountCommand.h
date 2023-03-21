@@ -10,6 +10,7 @@
 @interface OATHAccountCommand : NSObject
 
     - (void)doAccountAddForTarget:(id)object forSelector:(SEL)selector;
+    - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector;
 
 @end
 
