@@ -7,7 +7,7 @@
 #import "OATHCommand.h"
 #import "AccountSelectWindow.h"
 
-@interface AccountSelectWindow ()
+@interface AccountSelectWindow () <NSTableViewDelegate>
 
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                 *parentWindow;
@@ -102,6 +102,21 @@
         if ([self targetForContinue] && [self selectorForContinue]) {
             [[self targetForContinue] performSelector:[self selectorForContinue] withObject:nil afterDelay:0.0];
         }
+    }
+
+#pragma mark - For account selection
+
+    - (NSIndexSet *)tableView:(NSTableView *)tableView selectionIndexesForProposedSelection:(NSIndexSet *)proposedSelectionIndexes {
+        // 例外抑止
+        if ([proposedSelectionIndexes count] != 1 || [proposedSelectionIndexes count] > [[self accountArray] count]) {
+            return proposedSelectionIndexes;
+        }
+        // 選択されたアカウントを保持
+        NSDictionary *selectedItem = [[self accountArray] objectAtIndex:[proposedSelectionIndexes firstIndex]];
+        [[self commandParameter] setSelectedAccount:[selectedItem objectForKey:@"account"]];
+        // 選択ボタンを使用可
+        [[self buttonSelect] setEnabled:true];
+        return proposedSelectionIndexes;
     }
 
 @end

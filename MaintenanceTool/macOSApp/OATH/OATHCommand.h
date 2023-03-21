@@ -23,6 +23,7 @@
     @property (nonatomic) NSString     *oathBase32Secret;
     @property (nonatomic) uint32_t      oathTotpValue;
     @property (nonatomic) NSArray      *accountList;
+    @property (nonatomic) NSString     *selectedAccount;
 
     - (NSString *)oathAccount;
 

@@ -132,6 +132,7 @@ Gw
                                     </tableColumns>
                                     <connections>
                                         <binding destination="SUb-ve-xzQ" name="content" keyPath="arrangedObjects" id="Jb8-Cf-Od7"/>
+                                        <outlet property="delegate" destination="-2" id="VgT-RA-HIL"/>
                                     </connections>
                                 </tableView>
                             </subviews>
