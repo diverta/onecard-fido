@@ -75,11 +75,12 @@
         // タイトル、キャプションを表示
         [self setTitleString:title];
         [self setCaptionString:caption];
-        // TODO: 仮の実装です。（アカウント一覧を表示）
-        static int a = 0;
-        NSString *string1 = [NSString stringWithFormat:@"sample%d", a++];
-        NSString *string2 = [NSString stringWithFormat:@"sample%d", a++];
-        [self setAccountArray:@[@{@"account":string1}, @{@"account":string2}]];
+        // アカウント一覧を表示
+        NSMutableArray<NSDictionary *> *array = [[NSMutableArray alloc] init];
+        for (NSString *account in [[self commandParameter] accountList]) {
+            [array addObject:@{@"account": account}];
+        }
+        [self setAccountArray:array];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [self window];
         AccountSelectWindow * __weak weakSelf = self;
