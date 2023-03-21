@@ -45,6 +45,9 @@
             case 0x01:
                 [self doResponseAccountAdd:resp status:sw];
                 break;
+            case 0x03:
+                [self doResponseAccountList:resp status:sw];
+                break;
             default:
                 break;
         }
@@ -58,6 +61,14 @@
         [self setSelectorForContinue:selector];
         // アカウント登録処理を実行
         [self doRequestAccountAdd];
+    }
+
+    - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+        // アカウント一覧取得処理
+        [self doRequestAccountList];
     }
 
 #pragma mark - Account add
@@ -93,6 +104,56 @@
             return nil;
         }
         return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
+    }
+
+#pragma mark - Account list
+
+    - (void)doRequestAccountList {
+        // アカウント一覧取得コマンドを実行
+        NSData *apduBytes = [[NSData alloc] init];
+        [self setCommandIns:0x03];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseAccountList:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_LIST_ACCOUNT_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // レスポンスからアカウント名一覧を抽出
+        [self parseAccountListBytes:responseData];
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (void)parseAccountListBytes:(NSData *)accountListData {
+        // 領域を初期化
+        NSMutableArray<NSString *> *array = [[NSMutableArray alloc] init];
+        uint8_t *accountListBytes = (uint8_t *)[accountListData bytes];
+        size_t size = [accountListData length];
+        size_t i = 0;
+        while (i < size) {
+            // 0x71（アカウント名）出現まで走査
+            if (accountListBytes[i++] != 0x71) {
+                continue;
+            }
+            // アカウント名の長さを取得
+            int nameLength = accountListBytes[i++];
+            if (nameLength == 0 || i > size) {
+                continue;
+            }
+            // アカウント名を抽出し、配列に格納
+            uint8_t *nameBytes = accountListBytes + i;
+            NSData *nameData = [[NSData alloc] initWithBytes:nameBytes length:nameLength];
+            NSString *nameString = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
+            [array addObject:nameString];
+            // 後続バイトを走査
+            i += nameLength;
+        }
+        // パラメーターに配列を格納
+        [[self parameter] setAccountList:array];
     }
 
 #pragma mark - Private common methods

@@ -197,6 +197,11 @@ static OATHCommand *sharedInstance;
             [self doRequestCalculate];
             return;
         }
+        // アカウント一覧取得処理に移行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT]) {
+            [self doRequestAccountList];
+            return;
+        }
     }
 
 #pragma mark - Account functions
@@ -217,6 +222,21 @@ static OATHCommand *sharedInstance;
         // ワンタイムパスワード生成処理に遷移
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
             [self doRequestCalculate];
+            return;
+        }
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (void)doRequestAccountList {
+        // アカウント一覧取得処理を実行
+        [[[OATHAccountCommand alloc] init] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
+    }
+
+    - (void)doResponseAccountList {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
             return;
         }
         // 上位クラスに制御を戻す
