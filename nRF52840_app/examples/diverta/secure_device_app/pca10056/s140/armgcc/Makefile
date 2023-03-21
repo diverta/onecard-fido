@@ -61,7 +61,7 @@ SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares/secure_device_app
 
 # tinycbor root directory
-TINYCBOR_ROOT := $(HOME)/opt/tinycbor
+TINYCBOR_ROOT := $(HOME)/opt/tinycbor-nRF5
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := secure_device_app_gcc_nrf52.ld
