@@ -45,6 +45,9 @@
             case 0x01:
                 [self doResponseAccountAdd:resp status:sw];
                 break;
+            case 0x03:
+                [self doResponseAccountList:resp status:sw];
+                break;
             default:
                 break;
         }
@@ -64,9 +67,8 @@
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-        // TODO: 仮の実装です。
-        [[self parameter] setAccountList:@[@"GitHub:sample", @"DropBox:sample2",]];
-        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+        // アカウント一覧取得処理
+        [self doRequestAccountList];
     }
 
 #pragma mark - Account add
@@ -102,6 +104,28 @@
             return nil;
         }
         return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
+    }
+
+#pragma mark - Account list
+
+    - (void)doRequestAccountList {
+        // アカウント一覧取得コマンドを実行
+        NSData *apduBytes = [[NSData alloc] init];
+        [self setCommandIns:0x03];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseAccountList:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_LIST_ACCOUNT_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // TODO: 仮の実装です。
+        [[self parameter] setAccountList:@[@"GitHub:sample", @"DropBox:sample2",]];
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
 #pragma mark - Private common methods
