@@ -122,10 +122,38 @@
             [self notifyProcessTerminated:false withInformative:message];
             return;
         }
-        // TODO: 仮の実装です。
-        [[self parameter] setAccountList:@[@"GitHub:sample", @"DropBox:sample2",]];
+        // レスポンスからアカウント名一覧を抽出
+        [self parseAccountListBytes:responseData];
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (void)parseAccountListBytes:(NSData *)accountListData {
+        // 領域を初期化
+        NSMutableArray<NSString *> *array = [[NSMutableArray alloc] init];
+        uint8_t *accountListBytes = (uint8_t *)[accountListData bytes];
+        size_t size = [accountListData length];
+        size_t i = 0;
+        while (i < size) {
+            // 0x71（アカウント名）出現まで走査
+            if (accountListBytes[i++] != 0x71) {
+                continue;
+            }
+            // アカウント名の長さを取得
+            int nameLength = accountListBytes[i++];
+            if (nameLength == 0 || i > size) {
+                continue;
+            }
+            // アカウント名を抽出し、配列に格納
+            uint8_t *nameBytes = accountListBytes + i;
+            NSData *nameData = [[NSData alloc] initWithBytes:nameBytes length:nameLength];
+            NSString *nameString = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
+            [array addObject:nameString];
+            // 後続バイトを走査
+            i += nameLength;
+        }
+        // パラメーターに配列を格納
+        [[self parameter] setAccountList:array];
     }
 
 #pragma mark - Private common methods
