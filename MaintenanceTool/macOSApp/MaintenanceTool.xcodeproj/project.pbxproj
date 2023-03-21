@@ -27,6 +27,8 @@
 		7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1AC453294960EC002CFA5E /* EraseBondsCommand.m */; };
 		7A1BCD4B28862DA6007AEE12 /* FIDOPinSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */; };
 		7A1BCD4C28862DA6007AEE12 /* FIDOPinSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */; };
+		7A20452B29C93BD00074E7FA /* OATHWindowUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A20452A29C93BD00074E7FA /* OATHWindowUtil.m */; };
+		7A20452C29C93BD00074E7FA /* OATHWindowUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A20452A29C93BD00074E7FA /* OATHWindowUtil.m */; };
 		7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A23613528867A4200322E93 /* BLESettingWindow.xib */; };
 		7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
 		7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613B28867DA600322E93 /* BLESettingCommand.m */; };
@@ -311,6 +313,8 @@
 		7A1BCD4928862DA6007AEE12 /* FIDOPinSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FIDOPinSettingWindow.m; sourceTree = "<group>"; };
 		7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIDOPinSettingWindow.xib; sourceTree = "<group>"; };
 		7A1BCD4D2886304E007AEE12 /* FIDOPinSettingWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDOPinSettingWindow.h; sourceTree = "<group>"; };
+		7A20452929C93BAC0074E7FA /* OATHWindowUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHWindowUtil.h; sourceTree = "<group>"; };
+		7A20452A29C93BD00074E7FA /* OATHWindowUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHWindowUtil.m; sourceTree = "<group>"; };
 		7A23613528867A4200322E93 /* BLESettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLESettingWindow.xib; sourceTree = "<group>"; };
 		7A23613628867A4200322E93 /* BLESettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLESettingWindow.h; sourceTree = "<group>"; };
 		7A23613728867A4200322E93 /* BLESettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLESettingWindow.m; sourceTree = "<group>"; };
@@ -799,6 +803,8 @@
 				7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */,
 				7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */,
 				7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */,
+				7A20452929C93BAC0074E7FA /* OATHWindowUtil.h */,
+				7A20452A29C93BD00074E7FA /* OATHWindowUtil.m */,
 			);
 			path = OATH;
 			sourceTree = "<group>";
@@ -1204,6 +1210,7 @@
 				7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */,
 				7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */,
 				7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */,
+				7A20452B29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
@@ -1297,6 +1304,7 @@
 				7A8B3DD5296E56640005F7B1 /* PIVPreferenceWindow.m in Sources */,
 				7A8B3DD6296E56640005F7B1 /* ToolBLEDFUCommand.m in Sources */,
 				7A8B3DD7296E56640005F7B1 /* HcheckWindow.m in Sources */,
+				7A20452C29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
 				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
