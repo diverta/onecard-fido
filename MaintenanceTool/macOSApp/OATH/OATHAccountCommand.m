@@ -17,7 +17,7 @@
     // ヘルパークラスの参照を保持
     @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
     // パラメーターの参照を保持
-    @property (assign) OATHCommandParameter    *parameter;
+    @property (nonatomic) OATHCommandParameter *parameter;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;

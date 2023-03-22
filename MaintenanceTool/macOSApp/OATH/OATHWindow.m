@@ -27,8 +27,8 @@
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
     // コマンドクラス、パラメーターの参照を保持
-    @property (assign) OATHCommand                     *oathCommand;
-    @property (assign) OATHCommandParameter            *commandParameter;
+    @property (nonatomic) OATHCommand                  *oathCommand;
+    @property (nonatomic) OATHCommandParameter         *commandParameter;
 
 @end
 
