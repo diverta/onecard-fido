@@ -8,7 +8,6 @@
 #import "OATHCommand.h"
 #import "OATHWindowUtil.h"
 #import "TOTPDisplayWindow.h"
-#import "ToolPopupWindow.h"
 
 @interface TOTPDisplayWindow ()
 
@@ -31,9 +30,9 @@
     }
 
     - (IBAction)buttonUpdateDidPress:(id)sender {
-        // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-            withObject:nil forSelector:nil parentWindow:[self window]];
+        // ワンタイムパスワードを認証器で生成
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(displayTOTP) withParentWindow:[self window]];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -47,6 +46,13 @@
     }
 
 #pragma mark - For TOTP display
+
+    - (void)displayTOTP {
+        // 画面項目（アカウント／ワンタイムパスワード）に表示
+        if ([[self commandParameter] commandSuccess]) {
+            [self displayAccountInfo];
+        }
+    }
 
     - (void)displayAccountInfo {
         // 画面項目（アカウント／ワンタイムパスワード）に表示
