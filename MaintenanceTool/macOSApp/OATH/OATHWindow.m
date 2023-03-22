@@ -175,12 +175,6 @@
 #pragma mark - For display TOTP
 
     - (void)calculateTOTPForDisplay {
-        // アカウントを発行者・名前に分割
-        NSArray<NSString *> *array = [[[self commandParameter] selectedAccount] componentsSeparatedByString:@":"];
-        if ([array count] == 2) {
-            [[self commandParameter] setOathAccountIssuer:[array objectAtIndex:0]];
-            [[self commandParameter] setOathAccountName:[array objectAtIndex:1]];
-        }
         // ワンタイムパスワード参照画面に表示するTOTPを認証器で生成
         [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
         [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(displayTOTP) withParentWindow:[self window]];
