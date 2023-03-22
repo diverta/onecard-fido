@@ -19,8 +19,7 @@
     @property (assign) IBOutlet NSTextField            *labelAccountVal;
     @property (assign) IBOutlet NSTextField            *labelPassword;
     @property (assign) IBOutlet NSButton               *buttonUpdate;
-    // コマンドクラス、パラメーターの参照を保持
-    @property (assign) OATHCommand                     *oathCommand;
+    // パラメーターの参照を保持
     @property (assign) OATHCommandParameter            *commandParameter;
 
 @end
@@ -28,9 +27,6 @@
 @implementation TOTPDisplayWindow
 
     - (void)windowDidLoad {
-        // コマンドクラス、パラメーターの参照を保持
-        [self setOathCommand:[OATHCommand instance]];
-        [self setCommandParameter:[[self oathCommand] parameter]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -64,6 +60,8 @@
 #pragma mark - For TOTPDisplayWindow open/close
 
     - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent {
+        // パラメーターの参照を保持
+        [self setCommandParameter:[[OATHCommand instance] parameter]];
         // 親画面の参照を保持
         [self setParentWindow:parent];
         // すでにダイアログが開いている場合は終了
