@@ -57,6 +57,8 @@
 		7A5775A529C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
 		7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
 		7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
+		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
+		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
@@ -358,6 +360,7 @@
 		7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHAccountCommand.m; sourceTree = "<group>"; };
 		7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHTotpCommand.h; sourceTree = "<group>"; };
 		7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHTotpCommand.m; sourceTree = "<group>"; };
+		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
 		7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolInfoWindow.xib; sourceTree = "<group>"; };
 		7A667220258ADF5000CAF308 /* ToolInfoWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolInfoWindow.m; sourceTree = "<group>"; };
 		7A667222258ADF6300CAF308 /* ToolInfoWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolInfoWindow.h; sourceTree = "<group>"; };
@@ -782,6 +785,7 @@
 		7A822075281A80D400FDBFA8 /* OATH */ = {
 			isa = PBXGroup;
 			children = (
+				7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */,
 				7AF60FF229C2B95400C1A4F0 /* base32_util.h */,
 				7AF60FF329C2B95400C1A4F0 /* base32_util.c */,
 				7AF60FF629C2E20500C1A4F0 /* oath_util.h */,
@@ -1090,6 +1094,7 @@
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */,
+				7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
@@ -1137,6 +1142,7 @@
 				7A8B3E11296E56640005F7B1 /* card_reset.param in Resources */,
 				7A8B3E12296E56640005F7B1 /* transfer_subkey_to_card.param in Resources */,
 				7A8B3E13296E56640005F7B1 /* RTCCSettingWindow.xib in Resources */,
+				7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */,
 				7A8B3E14296E56640005F7B1 /* generate_main_key.sh in Resources */,
 				7A8B3E15296E56640005F7B1 /* HcheckPinWindow.xib in Resources */,
 				7A8B3E16296E56640005F7B1 /* Images.xcassets in Resources */,
