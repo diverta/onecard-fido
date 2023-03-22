@@ -15,7 +15,11 @@
     // 親画面の参照を保持
     @property (nonatomic) NSWindow                     *parentWindow;
     // パラメーターの参照を保持
-    @property (assign) OATHCommandParameter            *commandParameter;
+    @property (nonatomic) OATHCommandParameter         *commandParameter;
+    // 画面項目（アカウント／ワンタイムパスワード）に表示するデータを保持
+    @property (nonatomic) NSString                     *accountIssuerString;
+    @property (nonatomic) NSString                     *accountNameString;
+    @property (nonatomic) NSString                     *totpString;
 
 @end
 
@@ -42,6 +46,15 @@
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
+#pragma mark - For TOTP display
+
+    - (void)displayAccountInfo {
+        // 画面項目（アカウント／ワンタイムパスワード）に表示
+        [self setAccountIssuerString:[[self commandParameter] oathAccountIssuer]];
+        [self setAccountNameString:[[self commandParameter] oathAccountName]];
+        [self setTotpString:[NSString stringWithFormat:@"%06d", [[self commandParameter] oathTotpValue]]];
+    }
+
 #pragma mark - For TOTPDisplayWindow open/close
 
     - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent {
@@ -53,6 +66,8 @@
         if ([[[self parentWindow] sheets] count] > 0) {
             return false;
         }
+        // 画面項目（アカウント／ワンタイムパスワード）に表示
+        [self displayAccountInfo];
         // アプリケーションをフローティング表示状態に変更
         [[self parentWindow] setLevel:NSFloatingWindowLevel];
         // ダイアログをモーダルで表示
