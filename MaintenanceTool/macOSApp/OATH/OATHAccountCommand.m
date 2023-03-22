@@ -100,7 +100,7 @@
         // アカウント、Secretを入力とし、APDUバイト配列を生成
         NSString *account = [[self parameter] oathAccount];
         NSString *base32_secret = [[self parameter] oathBase32Secret];
-        if (generate_account_add_apdu([account UTF8String], [base32_secret UTF8String]) == false) {
+        if (generate_account_add_apdu([account UTF8String], [account length], [base32_secret UTF8String], [base32_secret length]) == false) {
             return nil;
         }
         return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];

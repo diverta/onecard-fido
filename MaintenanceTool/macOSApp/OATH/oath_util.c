@@ -23,13 +23,10 @@ size_t generated_oath_apdu_size(void)
     return apdu_size;
 }
 
-bool generate_account_add_apdu(const char *account, const char *base32_secret)
+bool generate_account_add_apdu(const char *account, size_t account_size, const char *base32_secret, size_t base32_secret_size)
 {
-    // Account長
-    size_t account_size = strlen(account);
     // Secret（Base32暗号テキスト）をバイト配列化
-    size_t  encoded_size = strlen(base32_secret);
-    uint8_t decoded[encoded_size];
+    uint8_t decoded[base32_secret_size];
     size_t  decoded_size = sizeof(decoded);
     if (base32_decode(decoded, &decoded_size, base32_secret) == false) {
         return false;
@@ -61,10 +58,8 @@ static void convert_uint64_to_be_bytes(uint64_t ui, uint8_t *b, int offset)
     }
 }
 
-bool generate_apdu_for_calculate(const char *account)
+bool generate_apdu_for_calculate(const char *account, size_t account_size)
 {
-    // Account長
-    size_t account_size = strlen(account);
     // 現在のUNIX時刻を取得
     time_t t = time(NULL);
     uint64_t now_epoch_seconds = (uint64_t)t;
