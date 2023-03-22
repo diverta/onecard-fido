@@ -8,10 +8,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TOTPDisplayWindow">
             <connections>
-                <outlet property="buttonUpdate" destination="yW2-iH-hwH" id="Lhq-b2-5FA"/>
-                <outlet property="labelAccountVal" destination="adx-xe-gGC" id="VLE-z6-ICs"/>
-                <outlet property="labelIssuerVal" destination="xwQ-Ka-K4x" id="duN-il-e61"/>
-                <outlet property="labelPassword" destination="fkO-3i-mzz" id="eNd-Qc-8Ft"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -66,6 +62,9 @@
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
+                                    <connections>
+                                        <binding destination="-2" name="value" keyPath="accountIssuerString" id="WqI-Gb-SUP"/>
+                                    </connections>
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qih-aq-CI8" userLabel="labelAccountCap">
                                     <rect key="frame" x="18" y="14" width="79" height="18"/>
@@ -90,6 +89,9 @@
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
+                                    <connections>
+                                        <binding destination="-2" name="value" keyPath="accountNameString" id="11T-xo-m8O"/>
+                                    </connections>
                                 </textField>
                             </subviews>
                             <constraints>
@@ -132,6 +134,9 @@
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
+                                    <connections>
+                                        <binding destination="-2" name="value" keyPath="totpString" id="UQb-V4-2KR"/>
+                                    </connections>
                                 </textField>
                             </subviews>
                         </view>
