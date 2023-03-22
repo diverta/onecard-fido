@@ -16,7 +16,7 @@
     // ヘルパークラスの参照を保持
     @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
     // パラメーターの参照を保持
-    @property (assign) OATHCommandParameter    *parameter;
+    @property (nonatomic) OATHCommandParameter *parameter;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
@@ -91,7 +91,7 @@
     - (NSData *)generateAPDUForCalculate {
         // アカウントを入力とし、APDUバイト配列を生成
         NSString *account = [[self parameter] oathAccount];
-        if (generate_apdu_for_calculate([account UTF8String]) == false) {
+        if (generate_apdu_for_calculate([account UTF8String], [account length]) == false) {
             return nil;
         }
         return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];

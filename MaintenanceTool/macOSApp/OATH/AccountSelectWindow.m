@@ -15,7 +15,7 @@
     // 画面項目を保持
     @property (assign) IBOutlet NSButton           *buttonSelect;
     // パラメーターの参照を保持
-    @property (assign) OATHCommandParameter        *commandParameter;
+    @property (nonatomic) OATHCommandParameter     *commandParameter;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                        targetForContinue;
     @property (nonatomic) SEL                       selectorForContinue;

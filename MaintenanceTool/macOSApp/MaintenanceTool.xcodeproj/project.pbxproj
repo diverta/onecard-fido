@@ -57,6 +57,10 @@
 		7A5775A529C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
 		7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
 		7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
+		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
+		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
+		7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
+		7A5FCD8329CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
@@ -358,6 +362,9 @@
 		7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHAccountCommand.m; sourceTree = "<group>"; };
 		7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHTotpCommand.h; sourceTree = "<group>"; };
 		7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHTotpCommand.m; sourceTree = "<group>"; };
+		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
+		7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOTPDisplayWindow.m; sourceTree = "<group>"; };
+		7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOTPDisplayWindow.h; sourceTree = "<group>"; };
 		7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolInfoWindow.xib; sourceTree = "<group>"; };
 		7A667220258ADF5000CAF308 /* ToolInfoWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolInfoWindow.m; sourceTree = "<group>"; };
 		7A667222258ADF6300CAF308 /* ToolInfoWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolInfoWindow.h; sourceTree = "<group>"; };
@@ -789,22 +796,25 @@
 				7AE22FC929C7F55900DB2361 /* AccountSelectWindow.h */,
 				7AE22FCA29C7F55900DB2361 /* AccountSelectWindow.m */,
 				7AE22FC629C7E95D00DB2361 /* AccountSelectWindow.xib */,
-				7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */,
-				7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */,
-				7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */,
+				7A5775A229C3F06100F12A1C /* OATHAccountCommand.h */,
+				7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */,
+				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
+				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
+				7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */,
+				7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */,
 				7AC9261929BEC4A9004CDD48 /* OATHWindow.h */,
 				7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */,
 				7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */,
-				7A822076281A811500FDBFA8 /* QRCodeUtil.h */,
-				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
-				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
-				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
-				7A5775A229C3F06100F12A1C /* OATHAccountCommand.h */,
-				7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */,
-				7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */,
-				7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */,
 				7A20452929C93BAC0074E7FA /* OATHWindowUtil.h */,
 				7A20452A29C93BD00074E7FA /* OATHWindowUtil.m */,
+				7A822076281A811500FDBFA8 /* QRCodeUtil.h */,
+				7A822077281A812F00FDBFA8 /* QRCodeUtil.m */,
+				7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */,
+				7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */,
+				7AE073F229C0104D00972EBE /* ScanQRCodeWindow.xib */,
+				7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */,
+				7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */,
+				7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */,
 			);
 			path = OATH;
 			sourceTree = "<group>";
@@ -1090,6 +1100,7 @@
 				7AB6312B277B01FB004917B9 /* card_reset.param in Resources */,
 				7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */,
 				7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */,
+				7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */,
 				7A292D8E27702A4E0010EE4A /* generate_main_key.sh in Resources */,
 				7AF042C3287D3064009518C3 /* HcheckPinWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
@@ -1137,6 +1148,7 @@
 				7A8B3E11296E56640005F7B1 /* card_reset.param in Resources */,
 				7A8B3E12296E56640005F7B1 /* transfer_subkey_to_card.param in Resources */,
 				7A8B3E13296E56640005F7B1 /* RTCCSettingWindow.xib in Resources */,
+				7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */,
 				7A8B3E14296E56640005F7B1 /* generate_main_key.sh in Resources */,
 				7A8B3E15296E56640005F7B1 /* HcheckPinWindow.xib in Resources */,
 				7A8B3E16296E56640005F7B1 /* Images.xcassets in Resources */,
@@ -1172,6 +1184,7 @@
 				7A9167FE28FE30870096A848 /* DFUWindow.m in Sources */,
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
 				7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */,
+				7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */,
 				7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */,
 				7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */,
 				7AB3C9B7276B13E900DEDD0E /* ToolPGPCommand.m in Sources */,
@@ -1266,6 +1279,7 @@
 				7A8B3DB3296E56640005F7B1 /* DFUWindow.m in Sources */,
 				7A8B3DB4296E56640005F7B1 /* ToolInfoWindow.m in Sources */,
 				7A8B3DB5296E56640005F7B1 /* FIDOSettingCommand.m in Sources */,
+				7A5FCD8329CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */,
 				7A8B3DB6296E56640005F7B1 /* AppCommand.m in Sources */,
 				7A8B3DB7296E56640005F7B1 /* ToolLogFile.m in Sources */,
 				7A8B3DB8296E56640005F7B1 /* ToolPGPCommand.m in Sources */,
@@ -1469,7 +1483,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1501,7 +1515,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1535,7 +1549,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1567,7 +1581,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";

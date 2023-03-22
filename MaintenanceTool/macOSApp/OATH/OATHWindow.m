@@ -13,6 +13,7 @@
 #import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
+#import "TOTPDisplayWindow.h"
 
 @interface OATHWindow ()
 
@@ -21,12 +22,13 @@
     // 子画面の参照を保持
     @property (nonatomic) ScanQRCodeWindow             *scanQRCodeWindow;
     @property (nonatomic) AccountSelectWindow          *accountSelectWindow;
+    @property (nonatomic) TOTPDisplayWindow            *totpDisplayWindow;
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
     // コマンドクラス、パラメーターの参照を保持
-    @property (assign) OATHCommand                     *oathCommand;
-    @property (assign) OATHCommandParameter            *commandParameter;
+    @property (nonatomic) OATHCommand                  *oathCommand;
+    @property (nonatomic) OATHCommandParameter         *commandParameter;
 
 @end
 
@@ -39,6 +41,7 @@
         // 子画面の生成
         [self setScanQRCodeWindow:[[ScanQRCodeWindow alloc] initWithWindowNibName:@"ScanQRCodeWindow"]];
         [self setAccountSelectWindow:[[AccountSelectWindow alloc] initWithWindowNibName:@"AccountSelectWindow"]];
+        [self setTotpDisplayWindow:[[TOTPDisplayWindow alloc] initWithWindowNibName:@"TOTPDisplayWindow"]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -169,6 +172,27 @@
         }
     }
 
+#pragma mark - For display TOTP
+
+    - (void)calculateTOTPForDisplay {
+        // アカウントを発行者・名前に分割
+        NSArray<NSString *> *array = [[[self commandParameter] selectedAccount] componentsSeparatedByString:@":"];
+        if ([array count] == 2) {
+            [[self commandParameter] setOathAccountIssuer:[array objectAtIndex:0]];
+            [[self commandParameter] setOathAccountName:[array objectAtIndex:1]];
+        }
+        // ワンタイムパスワード参照画面に表示するTOTPを認証器で生成
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(displayTOTP) withParentWindow:[self window]];
+    }
+
+    - (void)displayTOTP {
+        // ワンタイムパスワード参照画面を表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[self totpDisplayWindow] windowWillOpenWithParentWindow:[self parentWindow]];
+        }
+    }
+
 #pragma mark - For OATHWindow open/close
 
     - (bool)windowWillOpenWithParentWindow:(NSWindow *)parent {
@@ -208,9 +232,8 @@
                 [[self scanQRCodeWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             case COMMAND_OATH_SHOW_PASSWORD:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                // ワンタイムパスワードを生成
+                [self calculateTOTPForDisplay];
                 break;
             default:
                 // エラーメッセージをポップアップ表示
