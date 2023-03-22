@@ -13,6 +13,7 @@
 #import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
+#import "TOTPDisplayWindow.h"
 
 @interface OATHWindow ()
 
@@ -21,6 +22,7 @@
     // 子画面の参照を保持
     @property (nonatomic) ScanQRCodeWindow             *scanQRCodeWindow;
     @property (nonatomic) AccountSelectWindow          *accountSelectWindow;
+    @property (nonatomic) TOTPDisplayWindow            *totpDisplayWindow;
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
@@ -39,6 +41,7 @@
         // 子画面の生成
         [self setScanQRCodeWindow:[[ScanQRCodeWindow alloc] initWithWindowNibName:@"ScanQRCodeWindow"]];
         [self setAccountSelectWindow:[[AccountSelectWindow alloc] initWithWindowNibName:@"AccountSelectWindow"]];
+        [self setTotpDisplayWindow:[[TOTPDisplayWindow alloc] initWithWindowNibName:@"TOTPDisplayWindow"]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -208,9 +211,8 @@
                 [[self scanQRCodeWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             case COMMAND_OATH_SHOW_PASSWORD:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                // ワンタイムパスワード参照画面を表示
+                [[self totpDisplayWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             default:
                 // エラーメッセージをポップアップ表示
