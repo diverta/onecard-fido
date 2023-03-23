@@ -249,7 +249,17 @@ static OATHCommand *sharedInstance;
     }
 
     - (void)doRequestAccountDelete {
-        // TODO: 仮の実装です。
+        // アカウント削除処理を実行
+        [[[OATHAccountCommand alloc] init] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
+    }
+
+    - (void)doResponseAccountDelete {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
+            return;
+        }
+        // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 

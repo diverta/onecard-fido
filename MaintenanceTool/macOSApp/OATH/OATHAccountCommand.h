@@ -11,6 +11,7 @@
 
     - (void)doAccountAddForTarget:(id)object forSelector:(SEL)selector;
     - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector;
+    - (void)doAccountDeleteForTarget:(id)object forSelector:(SEL)selector;
 
 @end
 

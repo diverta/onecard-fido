@@ -45,6 +45,9 @@
             case 0x01:
                 [self doResponseAccountAdd:resp status:sw];
                 break;
+            case 0x02:
+                [self doResponseAccountDelete:resp status:sw];
+                break;
             case 0x03:
                 [self doResponseAccountList:resp status:sw];
                 break;
@@ -154,6 +157,52 @@
         }
         // パラメーターに配列を格納
         [[self parameter] setAccountList:array];
+    }
+
+#pragma mark - Account delete
+
+    - (void)doAccountDeleteForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+        // アカウント削除処理用APDUを生成
+        NSData *apduBytes = [self generateAPDUForDelete];
+        if (apduBytes == nil) {
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_ACCOUNT_DELETE_APDU_FAILED];
+            return;
+        }
+        // アカウント削除コマンドを実行
+        [self setCommandIns:0x02];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseAccountDelete:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_ACCOUNT_DELETE_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (NSData *)generateAPDUForDelete {
+        // アカウントをバイト配列化
+        NSString *account = [[self parameter] oathAccount];
+        const char *accountBytes = [account UTF8String];
+        size_t accountSize = [account length];
+        // 変数初期化
+        size_t apduBytesSize = 2 + accountSize;
+        uint8_t apduBytes[apduBytesSize];
+        size_t offset = 0;
+        // アカウント
+        apduBytes[offset++] = 0x71;
+        apduBytes[offset++] = (uint8_t)accountSize;
+        // アカウントをコピー
+        memcpy(apduBytes + offset, accountBytes, accountSize);
+        // APDUを戻す
+        return [[NSData alloc] initWithBytes:apduBytes length:apduBytesSize];
     }
 
 #pragma mark - Private common methods

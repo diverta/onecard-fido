@@ -375,6 +375,8 @@
 #define MSG_ERROR_OATH_CALCULATE_FAILED             @"OATHワンタイムパスワード生成時、エラーが発生しました（SW=0x%04x）"
 #define MSG_INFO_OATH_CALCULATE_SUCCESS             @"OATHワンタイムパスワードを生成しました。"
 #define MSG_ERROR_OATH_LIST_ACCOUNT_FAILED          @"OATHアカウント一覧の取得時、エラーが発生しました（SW=0x%04x）"
+#define MSG_ERROR_OATH_ACCOUNT_DELETE_APDU_FAILED   @"OATHアカウント削除処理用のリクエストデータ生成に失敗しました。"
+#define MSG_ERROR_OATH_ACCOUNT_DELETE_FAILED        @"OATHアカウント削除時、エラーが発生しました（SW=0x%04x）"
 #define MSG_LABEL_COMMAND_OATH_GENERATE_TOTP        @"ワンタイムパスワードの生成"
 #define MSG_LABEL_COMMAND_OATH_UPDATE_TOTP          @"ワンタイムパスワードの更新"
 #define MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT         @"OATHアカウント一覧の取得"
