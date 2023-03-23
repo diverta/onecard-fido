@@ -163,9 +163,8 @@
                 [self terminateWindow:NSModalResponseOK];
                 break;
             case COMMAND_OATH_DELETE_ACCOUNT:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self window]];
+                // OATHアカウントを削除
+                [self deleteOATHAccount];
                 break;
             default:
                 break;
@@ -185,6 +184,25 @@
         if ([[self commandParameter] commandSuccess]) {
             [[self totpDisplayWindow] windowWillOpenWithParentWindow:[self parentWindow]];
         }
+    }
+
+#pragma mark - For account delete
+
+    - (void)deleteOATHAccount {
+        // 事前に確認ダイアログを表示
+        NSString *informative = [NSString stringWithFormat:MSG_PROMPT_OATH_DELETE_ACCOUNT, [[self commandParameter] selectedAccount]];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_TITLE_OATH_DELETE_ACCOUNT informativeText:informative
+                                             withObject:self forSelector:@selector(deleteOATHAccountPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // TODO: 仮の実装です。
+        [[ToolPopupWindow defaultWindow] critical:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT informativeText:MSG_CMDTST_MENU_NOT_SUPPORTED
+                                       withObject:nil forSelector:nil parentWindow:[self window]];
     }
 
 #pragma mark - For OATHWindow open/close
