@@ -4,13 +4,16 @@
 //
 //  Created by Makoto Morita on 2023/03/13.
 //
+#import "AccountSelectWindow.h"
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
 #import "OATHWindow.h"
+#import "OATHWindowUtil.h"
 #import "QRCodeUtil.h"
 #import "ScanQRCodeWindow.h"
 #import "ToolCommonFunc.h"
 #import "ToolPopupWindow.h"
+#import "TOTPDisplayWindow.h"
 
 @interface OATHWindow ()
 
@@ -18,12 +21,14 @@
     @property (nonatomic) NSWindow                     *parentWindow;
     // 子画面の参照を保持
     @property (nonatomic) ScanQRCodeWindow             *scanQRCodeWindow;
+    @property (nonatomic) AccountSelectWindow          *accountSelectWindow;
+    @property (nonatomic) TOTPDisplayWindow            *totpDisplayWindow;
     // 画面項目を保持
     @property (assign) IBOutlet NSButton               *buttonTransportUSB;
     @property (assign) IBOutlet NSButton               *buttonTransportBLE;
     // コマンドクラス、パラメーターの参照を保持
-    @property (assign) OATHCommand                     *oathCommand;
-    @property (assign) OATHCommandParameter            *commandParameter;
+    @property (nonatomic) OATHCommand                  *oathCommand;
+    @property (nonatomic) OATHCommandParameter         *commandParameter;
 
 @end
 
@@ -35,6 +40,8 @@
         [self setCommandParameter:[[self oathCommand] parameter]];
         // 子画面の生成
         [self setScanQRCodeWindow:[[ScanQRCodeWindow alloc] initWithWindowNibName:@"ScanQRCodeWindow"]];
+        [self setAccountSelectWindow:[[AccountSelectWindow alloc] initWithWindowNibName:@"AccountSelectWindow"]];
+        [self setTotpDisplayWindow:[[TOTPDisplayWindow alloc] initWithWindowNibName:@"TOTPDisplayWindow"]];
         // 画面項目の初期化
         [super windowDidLoad];
         [self initFieldValue];
@@ -95,9 +102,9 @@
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
-        // 実行機能を設定し、画面を閉じる
+        // アカウント選択画面を表示
         [[self commandParameter] setCommand:COMMAND_OATH_SHOW_PASSWORD];
-        [self terminateWindow:NSModalResponseOK];
+        [self listOATHAccount];
     }
 
     - (IBAction)buttonDeleteAccountDidPress:(id)sender {
@@ -113,9 +120,9 @@
                                            withObject:nil forSelector:nil parentWindow:[self window]];
             return;
         }
-        // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                       withObject:nil forSelector:nil parentWindow:[self window]];
+        // アカウント選択画面を表示
+        [[self commandParameter] setCommand:COMMAND_OATH_DELETE_ACCOUNT];
+        [self listOATHAccount];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -131,6 +138,79 @@
     - (bool)checkUSBCCIDConnection {
         // USB CCIDインターフェースに接続可能でない場合は処理中止
         return [ToolCommonFunc checkUSBHIDConnectionOnWindow:[self window] connected:[[self oathCommand] isUSBCCIDCanConnect]];
+    }
+
+#pragma mark - For OATH account selection
+
+    - (void)listOATHAccount {
+        // アカウント選択画面に表示する一覧を認証器から取得
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(selectOATHAccount) withParentWindow:[self window]];
+    }
+
+    - (void)selectOATHAccount {
+        // アカウント選択画面を表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[self accountSelectWindow] windowWillOpenWithParentWindow:[self window] ForTarget:self forSelector:@selector(oathAccountDidSelect)];
+        }
+    }
+
+    - (void)oathAccountDidSelect {
+        // 実行コマンドに応じ分岐
+        switch ([[self commandParameter] command]) {
+            case COMMAND_OATH_SHOW_PASSWORD:
+                // 画面を閉じる
+                [self terminateWindow:NSModalResponseOK];
+                break;
+            case COMMAND_OATH_DELETE_ACCOUNT:
+                // OATHアカウントを削除
+                [self deleteOATHAccount];
+                break;
+            default:
+                break;
+        }
+    }
+
+#pragma mark - For display TOTP
+
+    - (void)calculateTOTPForDisplay {
+        // ワンタイムパスワード参照画面に表示するTOTPを認証器で生成
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(displayTOTP) withParentWindow:[self window]];
+    }
+
+    - (void)displayTOTP {
+        // ワンタイムパスワード参照画面を表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[self totpDisplayWindow] windowWillOpenWithParentWindow:[self parentWindow]];
+        }
+    }
+
+#pragma mark - For account delete
+
+    - (void)deleteOATHAccount {
+        // 事前に確認ダイアログを表示
+        NSString *informative = [NSString stringWithFormat:MSG_PROMPT_OATH_DELETE_ACCOUNT, [[self commandParameter] selectedAccount]];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_TITLE_OATH_DELETE_ACCOUNT informativeText:informative
+                                             withObject:self forSelector:@selector(deleteOATHAccountPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // アカウントを認証器から削除
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(deleteOATHAccountDone) withParentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountDone {
+        // 処理成功時は、メッセージをポップアップ表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[ToolPopupWindow defaultWindow] informational:[[self commandParameter] resultMessage] informativeText:nil
+                                                withObject:nil forSelector:nil parentWindow:[self window]];
+        }
     }
 
 #pragma mark - For OATHWindow open/close
@@ -172,9 +252,8 @@
                 [[self scanQRCodeWindow] windowWillOpenWithParentWindow:[self parentWindow]];
                 break;
             case COMMAND_OATH_SHOW_PASSWORD:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self parentWindow]];
+                // ワンタイムパスワードを生成
+                [self calculateTOTPForDisplay];
                 break;
             default:
                 // エラーメッセージをポップアップ表示
