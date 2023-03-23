@@ -51,6 +51,9 @@
             case 0x03:
                 [self doResponseAccountList:resp status:sw];
                 break;
+            case 0x04:
+                [self doResponseCalculate:resp status:sw];
+                break;
             default:
                 break;
         }
@@ -191,6 +194,47 @@
         memcpy(apduBytes + offset, accountBytes, accountSize);
         // APDUを戻す
         return [[NSData alloc] initWithBytes:apduBytes length:apduBytesSize];
+    }
+
+#pragma mark - Calculate TOTP
+
+    - (void)doCalculateForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+        // ワンタイムパスワード生成処理用APDUを生成
+        NSData *apduBytes = [self generateAPDUForCalculate];
+        if (apduBytes == nil) {
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_CALCULATE_APDU_FAILED];
+            return;
+        }
+        // ワンタイムパスワード生成コマンドを実行
+        [self setCommandIns:0x04];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:0x00 data:apduBytes le:0xff];
+    }
+
+    - (void)doResponseCalculate:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_ERROR_OATH_CALCULATE_FAILED, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // レスポンスの4～7バイト目をエンディアン変換し、ワンタイムパスワードを生成（下６桁を抽出）
+        uint8_t *responseBytes = (uint8_t *)[responseData bytes];
+        uint32_t totpSrcInt = [ToolCommon getLENumber32FromBEBytes:(responseBytes + 3)];
+        [[self parameter] setOathTotpValue:(totpSrcInt % 1000000)];
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (NSData *)generateAPDUForCalculate {
+        // アカウントを入力とし、APDUバイト配列を生成
+        NSString *account = [[self parameter] oathAccount];
+        if (generate_apdu_for_calculate([account UTF8String], [account length]) == false) {
+            return nil;
+        }
+        return [[NSData alloc] initWithBytes:generated_oath_apdu_bytes() length:generated_oath_apdu_size()];
     }
 
 #pragma mark - Private common methods

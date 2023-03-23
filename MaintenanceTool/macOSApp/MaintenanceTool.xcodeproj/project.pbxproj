@@ -55,8 +55,6 @@
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
 		7A5775A429C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
 		7A5775A529C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
-		7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
-		7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
 		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
@@ -360,8 +358,6 @@
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
 		7A5775A229C3F06100F12A1C /* OATHAccountCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHAccountCommand.h; sourceTree = "<group>"; };
 		7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHAccountCommand.m; sourceTree = "<group>"; };
-		7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHTotpCommand.h; sourceTree = "<group>"; };
-		7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHTotpCommand.m; sourceTree = "<group>"; };
 		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
 		7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOTPDisplayWindow.m; sourceTree = "<group>"; };
 		7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOTPDisplayWindow.h; sourceTree = "<group>"; };
@@ -800,8 +796,6 @@
 				7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */,
 				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
 				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
-				7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */,
-				7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */,
 				7AC9261929BEC4A9004CDD48 /* OATHWindow.h */,
 				7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */,
 				7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */,
@@ -1204,7 +1198,6 @@
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
-				7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */,
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
@@ -1299,7 +1292,6 @@
 				7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */,
 				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
 				7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */,
-				7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */,
 				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,

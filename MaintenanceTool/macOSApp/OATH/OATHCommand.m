@@ -10,7 +10,6 @@
 #import "AppCommonMessage.h"
 #import "OATHAccountCommand.h"
 #import "OATHCommand.h"
-#import "OATHTotpCommand.h"
 #import "QRCodeUtil.h"
 #import "ToolCCIDHelper.h"
 #import "ToolLogFile.h"
@@ -267,7 +266,7 @@ static OATHCommand *sharedInstance;
 
     - (void)doRequestCalculate {
         // ワンタイムパスワード生成処理を実行
-        [[[OATHTotpCommand alloc] init] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
+        [[[OATHAccountCommand alloc] init] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
     }
 
     - (void)doResponseCalculate {
