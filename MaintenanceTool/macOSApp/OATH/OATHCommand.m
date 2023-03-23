@@ -171,7 +171,7 @@ static OATHCommand *sharedInstance;
         }
         // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
-            [self doRequestAccountAdd];
+            [[self oathAccountCommand] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
             return;
         }
         // ワンタイムパスワード生成処理に移行
@@ -181,22 +181,17 @@ static OATHCommand *sharedInstance;
         }
         // アカウント一覧取得処理に移行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT]) {
-            [self doRequestAccountList];
+            [[self oathAccountCommand] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
             return;
         }
         // アカウント削除処理に移行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT]) {
-            [self doRequestAccountDelete];
+            [[self oathAccountCommand] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
             return;
         }
     }
 
 #pragma mark - Account functions
-
-    - (void)doRequestAccountAdd {
-        // アカウント登録処理を実行
-        [[[OATHAccountCommand alloc] init] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
-    }
 
     - (void)doResponseAccountAdd {
         // エラーが発生時は以降の処理を行わない
@@ -215,11 +210,6 @@ static OATHCommand *sharedInstance;
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
-    - (void)doRequestAccountList {
-        // アカウント一覧取得処理を実行
-        [[[OATHAccountCommand alloc] init] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
-    }
-
     - (void)doResponseAccountList {
         // エラーが発生時は以降の処理を行わない
         if ([[self parameter] commandSuccess] == false) {
@@ -228,11 +218,6 @@ static OATHCommand *sharedInstance;
         }
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
-    }
-
-    - (void)doRequestAccountDelete {
-        // アカウント削除処理を実行
-        [[[OATHAccountCommand alloc] init] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
     }
 
     - (void)doResponseAccountDelete {
