@@ -85,7 +85,7 @@ static OATHCommand *sharedInstance;
 
     - (bool)isUSBCCIDCanConnect {
         // USB CCIDインターフェースに接続可能でない場合は false
-        return [[self toolCCIDHelper] checkHelperCanConnect];
+        return [[self oathAccountCommand] isUSBCCIDCanConnect];
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {

@@ -35,6 +35,11 @@
         return self;
     }
 
+    - (bool)isUSBCCIDCanConnect {
+        // USB CCIDインターフェースに接続可能でない場合は false
+        return [[self toolCCIDHelper] checkHelperCanConnect];
+    }
+
     - (OATHCommandParameter *)parameter {
         // パラメーターの参照を戻す
         return [[OATHCommand instance] parameter];
