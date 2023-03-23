@@ -40,6 +40,16 @@
         return [[self toolCCIDHelper] checkHelperCanConnect];
     }
 
+    - (bool)ccidHelperWillConnect {
+        // USB CCIDインターフェースに接続
+        return [[self toolCCIDHelper] ccidHelperWillConnect];
+    }
+
+    - (void)ccidHelperWillDisconnect {
+        // USB CCIDインターフェース接続を切断
+        [[self toolCCIDHelper] ccidHelperWillDisconnect];
+    }
+
     - (OATHCommandParameter *)parameter {
         // パラメーターの参照を戻す
         return [[OATHCommand instance] parameter];

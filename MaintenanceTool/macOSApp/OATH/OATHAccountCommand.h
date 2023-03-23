@@ -10,6 +10,9 @@
 @interface OATHAccountCommand : NSObject
 
     - (bool)isUSBCCIDCanConnect;
+    - (bool)ccidHelperWillConnect;
+    - (void)ccidHelperWillDisconnect;
+
     - (void)doSelectApplicationForTarget:(id)object forSelector:(SEL)selector;
     - (void)doAccountAddForTarget:(id)object forSelector:(SEL)selector;
     - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector;

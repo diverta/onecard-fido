@@ -11,7 +11,6 @@
 #import "OATHAccountCommand.h"
 #import "OATHCommand.h"
 #import "QRCodeUtil.h"
-#import "ToolCCIDHelper.h"
 #import "ToolLogFile.h"
 
 // コマンドクラスのインスタンスを保持
@@ -25,11 +24,10 @@ static OATHCommand *sharedInstance;
 
 @end
 
-@interface OATHCommand () <ToolCCIDHelperDelegate>
+@interface OATHCommand ()
 
-    // ヘルパークラスの参照を保持
+    // コマンドクラスの参照を保持
     @property (nonatomic) OATHAccountCommand   *oathAccountCommand;
-    @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
@@ -74,8 +72,6 @@ static OATHCommand *sharedInstance;
     - (id)init {
         self = [super init];
         if (self) {
-            // ヘルパークラスのインスタンスを生成
-            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             // コマンドクラスの参照を保持
             [self setOathAccountCommand:[[OATHAccountCommand alloc] init]];
             [self setParameter:[[OATHCommandParameter alloc] init]];
@@ -86,9 +82,6 @@ static OATHCommand *sharedInstance;
     - (bool)isUSBCCIDCanConnect {
         // USB CCIDインターフェースに接続可能でない場合は false
         return [[self oathAccountCommand] isUSBCCIDCanConnect];
-    }
-
-    - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
     }
 
 #pragma mark - Scanning QR code
@@ -152,7 +145,7 @@ static OATHCommand *sharedInstance;
         // 処理開始を通知
         [self notifyProcessStarted];
         // CCIDインタフェース経由で認証器に接続
-        if ([[self toolCCIDHelper] ccidHelperWillConnect] == false) {
+        if ([[self oathAccountCommand] ccidHelperWillConnect] == false) {
             // OATH機能を認識できなかった旨のエラーメッセージを設定し、上位クラスに制御を戻す
             [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_APPLET_SELECT_FAILED];
             return;
@@ -263,7 +256,7 @@ static OATHCommand *sharedInstance;
 
     - (void)notifyProcessTerminated:(bool)success withInformative:(NSString *)informative {
         // CCIDデバイスから切断
-        [[self toolCCIDHelper] ccidHelperWillDisconnect];
+        [[self oathAccountCommand] ccidHelperWillDisconnect];
         // エラーメッセージを画面＆ログ出力
         if (success == false && [informative length] > 0) {
             // ログ出力する文言からは、改行文字を除去
