@@ -53,10 +53,8 @@
 		7A4E6C82299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
-		7A5775A429C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
-		7A5775A529C3F07F00F12A1C /* OATHAccountCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */; };
-		7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
-		7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */; };
+		7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
+		7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
 		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
@@ -358,10 +356,8 @@
 		7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PIVPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVPreferenceWindow.h; sourceTree = "<group>"; };
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
-		7A5775A229C3F06100F12A1C /* OATHAccountCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHAccountCommand.h; sourceTree = "<group>"; };
-		7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHAccountCommand.m; sourceTree = "<group>"; };
-		7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHTotpCommand.h; sourceTree = "<group>"; };
-		7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHTotpCommand.m; sourceTree = "<group>"; };
+		7A5775A229C3F06100F12A1C /* OATHCCIDCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHCCIDCommand.h; sourceTree = "<group>"; };
+		7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHCCIDCommand.m; sourceTree = "<group>"; };
 		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
 		7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOTPDisplayWindow.m; sourceTree = "<group>"; };
 		7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOTPDisplayWindow.h; sourceTree = "<group>"; };
@@ -796,12 +792,10 @@
 				7AE22FC929C7F55900DB2361 /* AccountSelectWindow.h */,
 				7AE22FCA29C7F55900DB2361 /* AccountSelectWindow.m */,
 				7AE22FC629C7E95D00DB2361 /* AccountSelectWindow.xib */,
-				7A5775A229C3F06100F12A1C /* OATHAccountCommand.h */,
-				7A5775A329C3F07F00F12A1C /* OATHAccountCommand.m */,
+				7A5775A229C3F06100F12A1C /* OATHCCIDCommand.h */,
+				7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */,
 				7AC9262029BEE0BF004CDD48 /* OATHCommand.h */,
 				7AC9262129BEE129004CDD48 /* OATHCommand.m */,
-				7A5775A629C3FA2200F12A1C /* OATHTotpCommand.h */,
-				7A5775A729C3FA5200F12A1C /* OATHTotpCommand.m */,
 				7AC9261929BEC4A9004CDD48 /* OATHWindow.h */,
 				7AC9261A29BEC4A9004CDD48 /* OATHWindow.m */,
 				7AC9261B29BEC4A9004CDD48 /* OATHWindow.xib */,
@@ -1204,7 +1198,6 @@
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
-				7A5775A829C3FA5200F12A1C /* OATHTotpCommand.m in Sources */,
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
@@ -1227,7 +1220,7 @@
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
-				7A5775A429C3F07F00F12A1C /* OATHAccountCommand.m in Sources */,
+				7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7AA7A3E429C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
 				7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */,
@@ -1299,7 +1292,6 @@
 				7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */,
 				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
 				7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */,
-				7A5775A929C3FA5200F12A1C /* OATHTotpCommand.m in Sources */,
 				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,
@@ -1322,7 +1314,7 @@
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
 				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
-				7A5775A529C3F07F00F12A1C /* OATHAccountCommand.m in Sources */,
+				7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7AA7A3E529C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
 				7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */,
@@ -1483,7 +1475,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1515,7 +1507,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1549,7 +1541,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1581,7 +1573,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";

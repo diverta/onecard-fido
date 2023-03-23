@@ -163,9 +163,8 @@
                 [self terminateWindow:NSModalResponseOK];
                 break;
             case COMMAND_OATH_DELETE_ACCOUNT:
-                // TODO: 仮の実装です。
-                [[ToolPopupWindow defaultWindow] critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil
-                                               withObject:nil forSelector:nil parentWindow:[self window]];
+                // OATHアカウントを削除
+                [self deleteOATHAccount];
                 break;
             default:
                 break;
@@ -175,12 +174,6 @@
 #pragma mark - For display TOTP
 
     - (void)calculateTOTPForDisplay {
-        // アカウントを発行者・名前に分割
-        NSArray<NSString *> *array = [[[self commandParameter] selectedAccount] componentsSeparatedByString:@":"];
-        if ([array count] == 2) {
-            [[self commandParameter] setOathAccountIssuer:[array objectAtIndex:0]];
-            [[self commandParameter] setOathAccountName:[array objectAtIndex:1]];
-        }
         // ワンタイムパスワード参照画面に表示するTOTPを認証器で生成
         [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_UPDATE_TOTP];
         [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(displayTOTP) withParentWindow:[self window]];
@@ -190,6 +183,33 @@
         // ワンタイムパスワード参照画面を表示
         if ([[self commandParameter] commandSuccess]) {
             [[self totpDisplayWindow] windowWillOpenWithParentWindow:[self parentWindow]];
+        }
+    }
+
+#pragma mark - For account delete
+
+    - (void)deleteOATHAccount {
+        // 事前に確認ダイアログを表示
+        NSString *informative = [NSString stringWithFormat:MSG_PROMPT_OATH_DELETE_ACCOUNT, [[self commandParameter] selectedAccount]];
+        [[ToolPopupWindow defaultWindow] criticalPrompt:MSG_TITLE_OATH_DELETE_ACCOUNT informativeText:informative
+                                             withObject:self forSelector:@selector(deleteOATHAccountPromptDone) parentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountPromptDone {
+        // ポップアップでデフォルトのNoボタンがクリックされた場合は、以降の処理を行わない
+        if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
+            return;
+        }
+        // アカウントを認証器から削除
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(deleteOATHAccountDone) withParentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountDone {
+        // 処理成功時は、メッセージをポップアップ表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[ToolPopupWindow defaultWindow] informational:[[self commandParameter] resultMessage] informativeText:nil
+                                                withObject:nil forSelector:nil parentWindow:[self window]];
         }
     }
 

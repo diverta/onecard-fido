@@ -120,6 +120,12 @@
         // 選択されたアカウントを保持
         NSDictionary *selectedItem = [[self accountArray] objectAtIndex:[proposedSelectionIndexes firstIndex]];
         [[self commandParameter] setSelectedAccount:[selectedItem objectForKey:@"account"]];
+        // 選択アカウントを、さらに発行者・名前に分割して設定
+        NSArray<NSString *> *array = [[[self commandParameter] selectedAccount] componentsSeparatedByString:@":"];
+        if ([array count] == 2) {
+            [[self commandParameter] setOathAccountIssuer:[array objectAtIndex:0]];
+            [[self commandParameter] setOathAccountName:[array objectAtIndex:1]];
+        }
         // 選択ボタンを使用可
         [[self buttonSelect] setEnabled:true];
         return proposedSelectionIndexes;
