@@ -16,8 +16,6 @@
 
     // ヘルパークラスの参照を保持
     @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
-    // パラメーターの参照を保持
-    @property (nonatomic) OATHCommandParameter *parameter;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
@@ -33,10 +31,13 @@
         if (self) {
             // ヘルパークラスのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
-            // パラメーターの参照を保持
-            [self setParameter:[[OATHCommand instance] parameter]];
         }
         return self;
+    }
+
+    - (OATHCommandParameter *)parameter {
+        // パラメーターの参照を戻す
+        return [[OATHCommand instance] parameter];
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {

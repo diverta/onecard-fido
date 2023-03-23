@@ -76,6 +76,8 @@ static OATHCommand *sharedInstance;
         if (self) {
             // ヘルパークラスのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
+            // コマンドクラスの参照を保持
+            [self setOathAccountCommand:[[OATHAccountCommand alloc] init]];
             [self setParameter:[[OATHCommandParameter alloc] init]];
         }
         return self;
@@ -147,8 +149,6 @@ static OATHCommand *sharedInstance;
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-        // コマンドクラスの参照を保持
-        [self setOathAccountCommand:[[OATHAccountCommand alloc] init]];
         // 処理開始を通知
         [self notifyProcessStarted];
         // CCIDインタフェース経由で認証器に接続
