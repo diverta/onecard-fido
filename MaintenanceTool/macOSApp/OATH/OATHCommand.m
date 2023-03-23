@@ -8,7 +8,7 @@
 #import "oath_util.h"
 
 #import "AppCommonMessage.h"
-#import "OATHAccountCommand.h"
+#import "OATHCCIDCommand.h"
 #import "OATHCommand.h"
 #import "QRCodeUtil.h"
 #import "ToolLogFile.h"
@@ -27,7 +27,7 @@ static OATHCommand *sharedInstance;
 @interface OATHCommand ()
 
     // コマンドクラスの参照を保持
-    @property (nonatomic) OATHAccountCommand   *oathAccountCommand;
+    @property (nonatomic) OATHCCIDCommand      *oathCCIDCommand;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
@@ -73,7 +73,7 @@ static OATHCommand *sharedInstance;
         self = [super init];
         if (self) {
             // コマンドクラスの参照を保持
-            [self setOathAccountCommand:[[OATHAccountCommand alloc] init]];
+            [self setOathCCIDCommand:[[OATHCCIDCommand alloc] init]];
             [self setParameter:[[OATHCommandParameter alloc] init]];
         }
         return self;
@@ -81,7 +81,7 @@ static OATHCommand *sharedInstance;
 
     - (bool)isUSBCCIDCanConnect {
         // USB CCIDインターフェースに接続可能でない場合は false
-        return [[self oathAccountCommand] isUSBCCIDCanConnect];
+        return [[self oathCCIDCommand] isUSBCCIDCanConnect];
     }
 
 #pragma mark - Scanning QR code
@@ -145,13 +145,13 @@ static OATHCommand *sharedInstance;
         // 処理開始を通知
         [self notifyProcessStarted];
         // CCIDインタフェース経由で認証器に接続
-        if ([[self oathAccountCommand] ccidHelperWillConnect] == false) {
+        if ([[self oathCCIDCommand] ccidHelperWillConnect] == false) {
             // OATH機能を認識できなかった旨のエラーメッセージを設定し、上位クラスに制御を戻す
             [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_APPLET_SELECT_FAILED];
             return;
         }
         // 機能実行に先立ち、アプレットをSELECT
-        [[self oathAccountCommand] doSelectApplicationForTarget:self forSelector:@selector(doResponseInsSelectApplication)];
+        [[self oathCCIDCommand] doSelectApplicationForTarget:self forSelector:@selector(doResponseInsSelectApplication)];
     }
 
 #pragma mark - Private methods
@@ -164,7 +164,7 @@ static OATHCommand *sharedInstance;
         }
         // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
-            [[self oathAccountCommand] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
+            [[self oathCCIDCommand] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
             return;
         }
         // ワンタイムパスワード生成処理に移行
@@ -174,12 +174,12 @@ static OATHCommand *sharedInstance;
         }
         // アカウント一覧取得処理に移行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT]) {
-            [[self oathAccountCommand] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
+            [[self oathCCIDCommand] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
             return;
         }
         // アカウント削除処理に移行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT]) {
-            [[self oathAccountCommand] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
+            [[self oathCCIDCommand] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
             return;
         }
     }
@@ -227,7 +227,7 @@ static OATHCommand *sharedInstance;
 
     - (void)doRequestCalculate {
         // ワンタイムパスワード生成処理を実行
-        [[[OATHAccountCommand alloc] init] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
+        [[self oathCCIDCommand] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
     }
 
     - (void)doResponseCalculate {
@@ -256,7 +256,7 @@ static OATHCommand *sharedInstance;
 
     - (void)notifyProcessTerminated:(bool)success withInformative:(NSString *)informative {
         // CCIDデバイスから切断
-        [[self oathAccountCommand] ccidHelperWillDisconnect];
+        [[self oathCCIDCommand] ccidHelperWillDisconnect];
         // エラーメッセージを画面＆ログ出力
         if (success == false && [informative length] > 0) {
             // ログ出力する文言からは、改行文字を除去

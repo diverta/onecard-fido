@@ -1,5 +1,5 @@
 //
-//  OATHAccountCommand.m
+//  OATHCCIDCommand.m
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2023/03/17.
@@ -8,11 +8,11 @@
 #import "oath_util.h"
 
 #import "AppCommonMessage.h"
-#import "OATHAccountCommand.h"
+#import "OATHCCIDCommand.h"
 #import "OATHCommand.h"
 #import "ToolCCIDHelper.h"
 
-@interface OATHAccountCommand () <ToolCCIDHelperDelegate>
+@interface OATHCCIDCommand () <ToolCCIDHelperDelegate>
 
     // ヘルパークラスの参照を保持
     @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation OATHAccountCommand
+@implementation OATHCCIDCommand
 
     - (id)init {
         self = [super init];
