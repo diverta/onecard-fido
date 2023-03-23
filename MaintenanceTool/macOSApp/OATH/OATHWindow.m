@@ -200,9 +200,17 @@
         if ([[ToolPopupWindow defaultWindow] isButtonNoClicked]) {
             return;
         }
-        // TODO: 仮の実装です。
-        [[ToolPopupWindow defaultWindow] critical:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT informativeText:MSG_CMDTST_MENU_NOT_SUPPORTED
-                                       withObject:nil forSelector:nil parentWindow:[self window]];
+        // アカウントを認証器から削除
+        [[self commandParameter] setCommandTitle:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(deleteOATHAccountDone) withParentWindow:[self window]];
+    }
+
+    - (void)deleteOATHAccountDone {
+        // 処理成功時は、メッセージをポップアップ表示
+        if ([[self commandParameter] commandSuccess]) {
+            [[ToolPopupWindow defaultWindow] informational:[[self commandParameter] resultMessage] informativeText:nil
+                                                withObject:nil forSelector:nil parentWindow:[self window]];
+        }
     }
 
 #pragma mark - For OATHWindow open/close

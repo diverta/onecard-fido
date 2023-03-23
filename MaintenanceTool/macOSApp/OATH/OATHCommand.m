@@ -202,6 +202,11 @@ static OATHCommand *sharedInstance;
             [self doRequestAccountList];
             return;
         }
+        // アカウント削除処理に移行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT]) {
+            [self doRequestAccountDelete];
+            return;
+        }
     }
 
 #pragma mark - Account functions
@@ -240,6 +245,11 @@ static OATHCommand *sharedInstance;
             return;
         }
         // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (void)doRequestAccountDelete {
+        // TODO: 仮の実装です。
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
