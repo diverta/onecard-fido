@@ -49,19 +49,12 @@
         }
     }
 
-#pragma mark - Public methods
+#pragma mark - Calculate TOTP
 
     - (void)doCalculateForTarget:(id)object forSelector:(SEL)selector {
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-        // ワンタイムパスワード生成処理を実行
-        [self doRequestCalculate];
-    }
-
-#pragma mark - Calculate TOTP
-
-    - (void)doRequestCalculate {
         // ワンタイムパスワード生成処理用APDUを生成
         NSData *apduBytes = [self generateAPDUForCalculate];
         if (apduBytes == nil) {

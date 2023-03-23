@@ -56,27 +56,12 @@
         }
     }
 
-#pragma mark - Public methods
+#pragma mark - Account add
 
     - (void)doAccountAddForTarget:(id)object forSelector:(SEL)selector {
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-        // アカウント登録処理を実行
-        [self doRequestAccountAdd];
-    }
-
-    - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector {
-        // コールバックを保持
-        [self setTargetForContinue:object];
-        [self setSelectorForContinue:selector];
-        // アカウント一覧取得処理
-        [self doRequestAccountList];
-    }
-
-#pragma mark - Account add
-
-    - (void)doRequestAccountAdd {
         // アカウント登録処理用APDUを生成
         NSData *apduBytes = [self GenerateAccountAddAPDU];
         if (apduBytes == nil) {
@@ -111,7 +96,10 @@
 
 #pragma mark - Account list
 
-    - (void)doRequestAccountList {
+    - (void)doAccountListForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
         // アカウント一覧取得コマンドを実行
         NSData *apduBytes = [[NSData alloc] init];
         [self setCommandIns:0x03];
