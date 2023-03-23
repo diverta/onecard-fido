@@ -42,6 +42,9 @@
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
         // コマンドに応じ、以下の処理に分岐
         switch ([self commandIns]) {
+            case 0xa4:
+                [self doResponseInsSelectApplication:resp status:sw];
+                break;
             case 0x01:
                 [self doResponseAccountAdd:resp status:sw];
                 break;
@@ -57,6 +60,29 @@
             default:
                 break;
         }
+    }
+
+    - (void)doSelectApplicationForTarget:(id)object forSelector:(SEL)selector {
+        // コールバックを保持
+        [self setTargetForContinue:object];
+        [self setSelectorForContinue:selector];
+        // アプレットIDを生成
+        static uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
+        NSData *oathAidBytes = [NSData dataWithBytes:aid length:sizeof(aid)];
+        // コマンドを実行
+        [self setCommandIns:0xa4];
+        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
+    }
+
+    - (void)doResponseInsSelectApplication:(NSData *)responseData status:(uint16_t)responseSW {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (responseSW != 0x9000) {
+            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW];
+            [self notifyProcessTerminated:false withInformative:message];
+            return;
+        }
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
 #pragma mark - Account add

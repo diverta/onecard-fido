@@ -28,6 +28,7 @@ static OATHCommand *sharedInstance;
 @interface OATHCommand () <ToolCCIDHelperDelegate>
 
     // ヘルパークラスの参照を保持
+    @property (nonatomic) OATHAccountCommand   *oathAccountCommand;
     @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
@@ -86,14 +87,6 @@ static OATHCommand *sharedInstance;
     }
 
     - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
-        // コマンドに応じ、以下の処理に分岐
-        switch ([self commandIns]) {
-            case 0xa4:
-                [self doResponseInsSelectApplication:resp status:sw];
-                break;
-            default:
-                break;
-        }
     }
 
 #pragma mark - Scanning QR code
@@ -154,10 +147,10 @@ static OATHCommand *sharedInstance;
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-
+        // コマンドクラスの参照を保持
+        [self setOathAccountCommand:[[OATHAccountCommand alloc] init]];
         // 処理開始を通知
         [self notifyProcessStarted];
-
         // CCIDインタフェース経由で認証器に接続
         if ([[self toolCCIDHelper] ccidHelperWillConnect] == false) {
             // OATH機能を認識できなかった旨のエラーメッセージを設定し、上位クラスに制御を戻す
@@ -165,25 +158,15 @@ static OATHCommand *sharedInstance;
             return;
         }
         // 機能実行に先立ち、アプレットをSELECT
-        [self doRequestInsSelectApplication];
+        [[self oathAccountCommand] doSelectApplicationForTarget:self forSelector:@selector(doResponseInsSelectApplication)];
     }
 
 #pragma mark - Private methods
 
-    - (void)doRequestInsSelectApplication {
-        // アプレットIDを生成
-        static uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
-        NSData *oathAidBytes = [NSData dataWithBytes:aid length:sizeof(aid)];
-        // コマンドを実行
-        [self setCommandIns:0xa4];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
-    }
-
-    - (void)doResponseInsSelectApplication:(NSData *)responseData status:(uint16_t)responseSW {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (responseSW != 0x9000) {
-            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW];
-            [self notifyProcessTerminated:false withInformative:message];
+    - (void)doResponseInsSelectApplication {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
             return;
         }
         // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
