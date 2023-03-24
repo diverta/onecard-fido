@@ -48,6 +48,17 @@ extern "C" {
 #endif
 
 //
+// TFT接続時のピン定義
+//
+#define SPI_SCK_PIN     NRF_GPIO_PIN_MAP(1,15)
+#define SPI_MISO_PIN    NRF_GPIO_PIN_MAP(1,14)
+#define SPI_MOSI_PIN    NRF_GPIO_PIN_MAP(1,13)
+#define SPI_SS_PIN      NRF_GPIO_PIN_MAP(1,12)
+#define TFT_RESET       NRF_GPIO_PIN_MAP(1,11)
+#define TFT_D_C         NRF_GPIO_PIN_MAP(1,10)
+#define TFT_LED         NRF_GPIO_PIN_MAP(1,9)
+
+//
 // LEDのピン
 //
 #if defined(BOARD_PCA10059)
