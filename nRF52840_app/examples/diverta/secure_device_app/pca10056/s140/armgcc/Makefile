@@ -398,6 +398,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_maintenance_attestation.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
+  $(PLTLIB_DIR)/app_tiny_tft.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
