@@ -42,18 +42,23 @@ CFLAGS += -DMBEDTLS_RSA_C -DMBEDTLS_OID_C -DMBEDTLS_DES_C
 CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 
 # disable ATECC608A (or ATECC608A is not installed)
-# CFLAGS += -DNO_SECURE_IC
+CFLAGS += -DNO_SECURE_IC
+
+# disable TFT display (or TFT module is not connected)
+CFLAGS += -DNO_TTFT_MODULE
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 CCID_DIR := $(PROJ_DIR)/../../../../CCID
+TTFT_DIR := $(PROJ_DIR)/../../../../TFT
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 WRPHDR_DIR := $(FIDO_DIR)/wrapper_header
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PIVLIB_DIR := $(CCID_DIR)/piv_lib
+TTFLIB_DIR := $(TTFT_DIR)/tiny_tft_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 WRPLIB_DIR := $(PROJ_DIR)/../wrapper_lib
@@ -435,6 +440,8 @@ SRC_FILES += \
   $(WRPLIB_DIR)/fido_status.c \
   $(WRPLIB_DIR)/fido_timer.c \
   $(WRPLIB_DIR)/rtcc.c \
+  $(TTFLIB_DIR)/tiny_tft_const.c \
+  $(TTFLIB_DIR)/tiny_tft.c \
 
 ifeq ("$(TARGET_BOARD)","PCA10059_02")
 # Source files to targets (Boards with ATECC608A)
@@ -474,6 +481,7 @@ INC_FOLDERS += \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
   $(WRPHDR_DIR) \
+  $(TTFLIB_DIR) \
 
 # Source files of OpenPGP card emulation
 OPGLIB_DIR := $(CCID_DIR)/openpgp_lib
