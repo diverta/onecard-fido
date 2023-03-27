@@ -173,6 +173,8 @@
 <text x="22.5" y="33" size="0.6" layer="21" rot="R90" align="top-center">GRN</text>
 <text x="22.5" y="35.5" size="0.6" layer="21" rot="R90" align="top-center">RED</text>
 <text x="23.5" y="33" size="0.7" layer="21" rot="R90" align="top-center">Full Color LED</text>
+<dimension x1="0" y1="38" x2="0" y2="0" x3="-2" y3="19" textsize="1.778" layer="51"/>
+<dimension x1="0" y1="38" x2="25" y2="38" x3="12.5" y3="40" textsize="1.778" layer="51"/>
 </plain>
 <libraries>
 <library name="Connectors">
