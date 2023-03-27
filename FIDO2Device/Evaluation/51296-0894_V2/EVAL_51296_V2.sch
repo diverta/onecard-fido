@@ -602,8 +602,8 @@ P-channel enhancement mode Field-Effect Transistor</description>
 <wire x1="-0.45" y1="-0.41" x2="-0.45" y2="0.02" width="0.01" layer="51"/>
 <rectangle x1="-0.55" y1="0.2" x2="-0.1" y2="0.8" layer="29"/>
 <rectangle x1="0.1" y1="0.2" x2="0.55" y2="0.8" layer="29"/>
-<smd name="1" x="-0.325" y="0.5" dx="0.35" dy="0.5" layer="1" stop="no" thermals="no" cream="no"/>
-<smd name="2" x="0.325" y="0.5" dx="0.35" dy="0.5" layer="1" stop="no" thermals="no" cream="no"/>
+<smd name="2" x="-0.325" y="0.5" dx="0.35" dy="0.5" layer="1" stop="no" thermals="no" cream="no"/>
+<smd name="1" x="0.325" y="0.5" dx="0.35" dy="0.5" layer="1" stop="no" thermals="no" cream="no"/>
 <smd name="3" x="0" y="-0.19" dx="0.5" dy="0.3" layer="1" stop="no" thermals="no" cream="no"/>
 <wire x1="-0.07" y1="-0.41" x2="-0.07" y2="-0.5" width="0.01" layer="51"/>
 <wire x1="0.07" y1="-0.41" x2="0.07" y2="-0.5" width="0.01" layer="51"/>
@@ -1601,11 +1601,11 @@ Operating Temperature: - 40 C 〜 + 85 C&lt;br&gt;
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402N" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402N" value="1.2k"/>
 <part name="R5" library="Parts" deviceset="RESISTOR" device="_0402N" value="330"/>
-<part name="R10" library="Parts" deviceset="RESISTOR" device="_200MIL" value="0"/>
-<part name="R11" library="Parts" deviceset="RESISTOR" device="_200MIL" value="0"/>
-<part name="R12" library="Parts" deviceset="RESISTOR" device="_200MIL" value="0"/>
-<part name="R13" library="Parts" deviceset="RESISTOR" device="_200MIL" value="0"/>
-<part name="R14" library="Parts" deviceset="RESISTOR" device="_200MIL" value="0"/>
+<part name="R10" library="Parts" deviceset="RESISTOR" device="_200MIL" value="*"/>
+<part name="R11" library="Parts" deviceset="RESISTOR" device="_200MIL" value="*"/>
+<part name="R12" library="Parts" deviceset="RESISTOR" device="_200MIL" value="*"/>
+<part name="R13" library="Parts" deviceset="RESISTOR" device="_200MIL" value="*"/>
+<part name="R14" library="Parts" deviceset="RESISTOR" device="_200MIL" value="*"/>
 </parts>
 <sheets>
 <sheet>
