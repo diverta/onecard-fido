@@ -21,8 +21,7 @@ bool aes_256_cbc_enc(uint8_t *key, uint8_t *plain, size_t plain_size, uint8_t *e
     void  *buff = malloc(size);
 
     // Perform encryption
-    CCCryptorStatus result = CCCrypt(kCCEncrypt, kCCAlgorithmAES, kCCOptionPKCS7Padding,
-                                     key, key_size, NULL, plain, plain_size, buff, size, encoded_size);
+    CCCryptorStatus result = CCCrypt(kCCEncrypt, kCCAlgorithmAES, 0, key, key_size, NULL, plain, plain_size, buff, size, encoded_size);
     // Copy encrypted bytes
     if (result == kCCSuccess) {
         memcpy(encoded, buff, *encoded_size);
@@ -44,8 +43,7 @@ bool aes_256_cbc_dec(uint8_t *key, uint8_t *encoded, size_t encoded_size, uint8_
     void  *buff = malloc(size);
 
     // Perform decryption
-    CCCryptorStatus result = CCCrypt(kCCDecrypt, kCCAlgorithmAES, kCCOptionPKCS7Padding,
-                                     key, key_size, NULL, encoded, encoded_size, buff, size, decoded_size);
+    CCCryptorStatus result = CCCrypt(kCCDecrypt, kCCAlgorithmAES, 0, key, key_size, NULL, encoded, encoded_size, buff, size, decoded_size);
     // Copy decrypted bytes
     if (result == kCCSuccess) {
         memcpy(decoded, buff, *decoded_size);
