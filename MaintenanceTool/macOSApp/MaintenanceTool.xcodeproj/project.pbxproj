@@ -191,6 +191,8 @@
 		7A8B3E1E296E56640005F7B1 /* BLEDFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */; };
 		7A8B3E1F296E56640005F7B1 /* FIDOPinSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A1BCD4A28862DA6007AEE12 /* FIDOPinSettingWindow.xib */; };
 		7A8B3E20296E56640005F7B1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
+		7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
+		7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
 		7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
 		7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */; };
 		7A9167FB28FE2B1E0096A848 /* DFUWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9167FA28FE2B1E0096A848 /* DFUWindow.xib */; };
@@ -395,6 +397,8 @@
 		7A86402D2900E35F008E9D1C /* usb_cdc_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
 		7A86402E2900E35F008E9D1C /* usb_dfu_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_dfu_util.h; sourceTree = "<group>"; };
 		7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VendorMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
+		7A8BE07529D271F3001152A1 /* aes_256_cbc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aes_256_cbc.h; sourceTree = "<group>"; };
+		7A8BE07629D27229001152A1 /* aes_256_cbc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = aes_256_cbc.c; sourceTree = "<group>"; };
 		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
 		7A8DFAB62939EBB800B8C834 /* RTCCSettingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCCSettingWindow.h; sourceTree = "<group>"; };
 		7A8DFAB72939EBB800B8C834 /* RTCCSettingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCCSettingWindow.m; sourceTree = "<group>"; };
@@ -766,6 +770,8 @@
 				7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */,
 				7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */,
 				7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */,
+				7A8BE07529D271F3001152A1 /* aes_256_cbc.h */,
+				7A8BE07629D27229001152A1 /* aes_256_cbc.c */,
 			);
 			path = tool_crypto;
 			sourceTree = "<group>";
@@ -1219,6 +1225,7 @@
 				7A20452B29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */,
+				7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */,
 				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
 				7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
@@ -1313,6 +1320,7 @@
 				7A20452C29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8B3DD9296E56640005F7B1 /* AES256CBC.c in Sources */,
+				7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */,
 				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
 				7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
