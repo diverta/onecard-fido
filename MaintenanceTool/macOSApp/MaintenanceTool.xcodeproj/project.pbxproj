@@ -39,6 +39,8 @@
 		7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A314AC927CF13EF009B4F77 /* ToolPGPCcidCommand.m */; };
 		7A335F70296BA7FC00D01742 /* PIVInitialSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */; };
 		7A33FBF828864A2000EAF3C4 /* CTAP2ManageCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A33FBF728864A2000EAF3C4 /* CTAP2ManageCommand.m */; };
+		7A39F5E129D2E3F2009F8CD7 /* triple_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A39F5E029D2E3F2009F8CD7 /* triple_des.c */; };
+		7A39F5E229D2E3F2009F8CD7 /* triple_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A39F5E029D2E3F2009F8CD7 /* triple_des.c */; };
 		7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1A28755F91003CFE67 /* UtilityWindow.m */; };
 		7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1B28755F91003CFE67 /* UtilityCommand.m */; };
 		7A3F4F1F28755F91003CFE67 /* UtilityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1C28755F91003CFE67 /* UtilityWindow.xib */; };
@@ -338,6 +340,8 @@
 		7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVInitialSetting.m; sourceTree = "<group>"; };
 		7A33FBF6288649F800EAF3C4 /* CTAP2ManageCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAP2ManageCommand.h; sourceTree = "<group>"; };
 		7A33FBF728864A2000EAF3C4 /* CTAP2ManageCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAP2ManageCommand.m; sourceTree = "<group>"; };
+		7A39F5DF29D2E3C8009F8CD7 /* triple_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triple_des.h; sourceTree = "<group>"; };
+		7A39F5E029D2E3F2009F8CD7 /* triple_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = triple_des.c; sourceTree = "<group>"; };
 		7A3F4F1728755D12003CFE67 /* AppDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDefine.h; sourceTree = "<group>"; };
 		7A3F4F1828755F91003CFE67 /* UtilityCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityCommand.h; sourceTree = "<group>"; };
 		7A3F4F1928755F91003CFE67 /* UtilityWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityWindow.h; sourceTree = "<group>"; };
@@ -777,6 +781,8 @@
 				7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */,
 				7A8BE07529D271F3001152A1 /* aes_256_cbc.h */,
 				7A8BE07629D27229001152A1 /* aes_256_cbc.c */,
+				7A39F5DF29D2E3C8009F8CD7 /* triple_des.h */,
+				7A39F5E029D2E3F2009F8CD7 /* triple_des.c */,
 			);
 			path = tool_crypto;
 			sourceTree = "<group>";
@@ -1259,6 +1265,7 @@
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7AE22FCB29C7F55900DB2361 /* AccountSelectWindow.m in Sources */,
 				7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */,
+				7A39F5E129D2E3F2009F8CD7 /* triple_des.c in Sources */,
 				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
 				7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
@@ -1355,6 +1362,7 @@
 				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,
 				7AE22FCC29C7F55900DB2361 /* AccountSelectWindow.m in Sources */,
 				7A8B3DE8296E56640005F7B1 /* nrf52_app_image.c in Sources */,
+				7A39F5E229D2E3F2009F8CD7 /* triple_des.c in Sources */,
 				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
 				7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
