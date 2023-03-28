@@ -8,11 +8,9 @@
 #import "oath_util.h"
 
 #import "AppCommonMessage.h"
-#import "OATHAccountCommand.h"
+#import "OATHCCIDCommand.h"
 #import "OATHCommand.h"
-#import "OATHTotpCommand.h"
 #import "QRCodeUtil.h"
-#import "ToolCCIDHelper.h"
 #import "ToolLogFile.h"
 
 // コマンドクラスのインスタンスを保持
@@ -26,10 +24,10 @@ static OATHCommand *sharedInstance;
 
 @end
 
-@interface OATHCommand () <ToolCCIDHelperDelegate>
+@interface OATHCommand ()
 
-    // ヘルパークラスの参照を保持
-    @property (nonatomic) ToolCCIDHelper       *toolCCIDHelper;
+    // コマンドクラスの参照を保持
+    @property (nonatomic) OATHCCIDCommand      *oathCCIDCommand;
     // コマンド完了後に継続される処理を保持
     @property (nonatomic) id                    targetForContinue;
     @property (nonatomic) SEL                   selectorForContinue;
@@ -74,8 +72,8 @@ static OATHCommand *sharedInstance;
     - (id)init {
         self = [super init];
         if (self) {
-            // ヘルパークラスのインスタンスを生成
-            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
+            // コマンドクラスの参照を保持
+            [self setOathCCIDCommand:[[OATHCCIDCommand alloc] init]];
             [self setParameter:[[OATHCommandParameter alloc] init]];
         }
         return self;
@@ -83,18 +81,7 @@ static OATHCommand *sharedInstance;
 
     - (bool)isUSBCCIDCanConnect {
         // USB CCIDインターフェースに接続可能でない場合は false
-        return [[self toolCCIDHelper] checkHelperCanConnect];
-    }
-
-    - (void)ccidHelperDidReceiveResponse:(NSData *)resp status:(uint16_t)sw {
-        // コマンドに応じ、以下の処理に分岐
-        switch ([self commandIns]) {
-            case 0xa4:
-                [self doResponseInsSelectApplication:resp status:sw];
-                break;
-            default:
-                break;
-        }
+        return [[self oathCCIDCommand] isUSBCCIDCanConnect];
     }
 
 #pragma mark - Scanning QR code
@@ -155,41 +142,29 @@ static OATHCommand *sharedInstance;
         // コールバックを保持
         [self setTargetForContinue:object];
         [self setSelectorForContinue:selector];
-
         // 処理開始を通知
         [self notifyProcessStarted];
-
         // CCIDインタフェース経由で認証器に接続
-        if ([[self toolCCIDHelper] ccidHelperWillConnect] == false) {
+        if ([[self oathCCIDCommand] ccidHelperWillConnect] == false) {
             // OATH機能を認識できなかった旨のエラーメッセージを設定し、上位クラスに制御を戻す
             [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_APPLET_SELECT_FAILED];
             return;
         }
         // 機能実行に先立ち、アプレットをSELECT
-        [self doRequestInsSelectApplication];
+        [[self oathCCIDCommand] doSelectApplicationForTarget:self forSelector:@selector(doResponseInsSelectApplication)];
     }
 
 #pragma mark - Private methods
 
-    - (void)doRequestInsSelectApplication {
-        // アプレットIDを生成
-        static uint8_t aid[] = {0xa0, 0x00, 0x00, 0x05, 0x27, 0x21, 0x01};
-        NSData *oathAidBytes = [NSData dataWithBytes:aid length:sizeof(aid)];
-        // コマンドを実行
-        [self setCommandIns:0xa4];
-        [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x04 p2:0x00 data:oathAidBytes le:0xff];
-    }
-
-    - (void)doResponseInsSelectApplication:(NSData *)responseData status:(uint16_t)responseSW {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (responseSW != 0x9000) {
-            NSString *message = [NSString stringWithFormat:MSG_OCCUR_UNKNOWN_ERROR_SW, responseSW];
-            [self notifyProcessTerminated:false withInformative:message];
+    - (void)doResponseInsSelectApplication {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
             return;
         }
         // アカウント登録処理-->ワンタイムパスワード生成処理を一息に実行
         if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_GENERATE_TOTP]) {
-            [self doRequestAccountAdd];
+            [[self oathCCIDCommand] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
             return;
         }
         // ワンタイムパスワード生成処理に移行
@@ -197,14 +172,19 @@ static OATHCommand *sharedInstance;
             [self doRequestCalculate];
             return;
         }
+        // アカウント一覧取得処理に移行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_LIST_ACCOUNT]) {
+            [[self oathCCIDCommand] doAccountListForTarget:self forSelector:@selector(doResponseAccountList)];
+            return;
+        }
+        // アカウント削除処理に移行
+        if ([[[self parameter] commandTitle] isEqualToString:MSG_LABEL_COMMAND_OATH_DELETE_ACCOUNT]) {
+            [[self oathCCIDCommand] doAccountDeleteForTarget:self forSelector:@selector(doResponseAccountDelete)];
+            return;
+        }
     }
 
 #pragma mark - Account functions
-
-    - (void)doRequestAccountAdd {
-        // アカウント登録処理を実行
-        [[[OATHAccountCommand alloc] init] doAccountAddForTarget:self forSelector:@selector(doResponseAccountAdd)];
-    }
 
     - (void)doResponseAccountAdd {
         // エラーが発生時は以降の処理を行わない
@@ -223,11 +203,31 @@ static OATHCommand *sharedInstance;
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
+    - (void)doResponseAccountList {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
+            return;
+        }
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
+    - (void)doResponseAccountDelete {
+        // エラーが発生時は以降の処理を行わない
+        if ([[self parameter] commandSuccess] == false) {
+            [self notifyProcessTerminated:false withInformative:[[self parameter] resultInformativeMessage]];
+            return;
+        }
+        // 上位クラスに制御を戻す
+        [self notifyProcessTerminated:true withInformative:MSG_NONE];
+    }
+
 #pragma mark - Calculate TOTP
 
     - (void)doRequestCalculate {
         // ワンタイムパスワード生成処理を実行
-        [[[OATHTotpCommand alloc] init] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
+        [[self oathCCIDCommand] doCalculateForTarget:self forSelector:@selector(doResponseCalculate)];
     }
 
     - (void)doResponseCalculate {
@@ -256,7 +256,7 @@ static OATHCommand *sharedInstance;
 
     - (void)notifyProcessTerminated:(bool)success withInformative:(NSString *)informative {
         // CCIDデバイスから切断
-        [[self toolCCIDHelper] ccidHelperWillDisconnect];
+        [[self oathCCIDCommand] ccidHelperWillDisconnect];
         // エラーメッセージを画面＆ログ出力
         if (success == false && [informative length] > 0) {
             // ログ出力する文言からは、改行文字を除去

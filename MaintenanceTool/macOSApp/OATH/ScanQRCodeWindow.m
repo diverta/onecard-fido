@@ -6,6 +6,7 @@
 //
 #import "AppCommonMessage.h"
 #import "OATHCommand.h"
+#import "OATHWindowUtil.h"
 #import "ScanQRCodeWindow.h"
 #import "ToolPopupWindow.h"
 
@@ -21,8 +22,8 @@
     @property (assign) IBOutlet NSButton               *buttonScan;
     @property (assign) IBOutlet NSButton               *buttonUpdate;
     // コマンドクラス、パラメーターの参照を保持
-    @property (assign) OATHCommand                     *oathCommand;
-    @property (assign) OATHCommandParameter            *commandParameter;
+    @property (nonatomic) OATHCommand                  *oathCommand;
+    @property (nonatomic) OATHCommandParameter         *commandParameter;
 
 @end
 
@@ -113,16 +114,13 @@
     - (void)doOATHProcessWithCommandTitle:(NSString *)commandTitle {
         // パラメーターを設定し、コマンドを実行
         [[self commandParameter] setCommandTitle:commandTitle];
-        [[self oathCommand] commandWillPerformForTarget:self forSelector:@selector(oathProcessDidTerminated)];
+        [[[OATHWindowUtil alloc] init] commandWillPerformForTarget:self forSelector:@selector(oathProcessDidTerminated) withParentWindow:[self window]];
     }
 
     - (void)oathProcessDidTerminated {
-        // 処理失敗時は、エラーメッセージをポップアップ表示
+        // 処理失敗時は以降の処理を行わない
         if ([[self commandParameter] commandSuccess] == false) {
-            NSString *message = [[self commandParameter] resultMessage];
-            NSString *informative = [[self commandParameter] resultInformativeMessage];
-            [[ToolPopupWindow defaultWindow] critical:message informativeText:informative
-                                           withObject:nil forSelector:nil parentWindow:[self window]];
+            return;
         }
         // アカウント情報の各項目を画面表示
         [[self labelAccountVal] setStringValue:[[self commandParameter] oathAccountName]];
