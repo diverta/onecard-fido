@@ -12,6 +12,7 @@
 @interface CryptoTestCommand : NSObject
 
     - (void)testAES256CBC;
+    - (void)testTripleDES;
 
 @end
 

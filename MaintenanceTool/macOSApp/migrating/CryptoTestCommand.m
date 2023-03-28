@@ -13,6 +13,10 @@
 #import "AES256CBC.h"
 #import "CryptoTestCommand.h"
 
+// for des
+#import "tool_piv_admin.h"
+#import "tool_crypto_des.h"
+
 @interface CryptoTestCommand ()
 
 @end
@@ -86,6 +90,53 @@
         fido_blob_free(&pkey);
         fido_blob_free(&pe);
         fido_blob_free(&pd);
+    }
+
+    - (void)testTripleDES {
+        uint8_t *pw = tool_piv_admin_des_default_key();
+
+        // for research
+        [[ToolLogFile defaultLogger] debugWithFormat:@"DES key (%d bytes)", 24];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:pw size:24];
+
+        // 為念で３回テスト
+        uint8_t encrypted1[] = {
+            0xb3, 0xd8, 0xb3, 0x50, 0xfd, 0x75, 0x1b, 0x19
+        };
+        [self testTripleDESWithPW:pw withBytes:encrypted1 withSize:sizeof(encrypted1)];
+
+        uint8_t encrypted2[] = {
+            0xed, 0x41, 0x93, 0x13, 0xe0, 0xd9, 0x72, 0x81
+        };
+        [self testTripleDESWithPW:pw withBytes:encrypted2 withSize:sizeof(encrypted2)];
+        
+        uint8_t encrypted3[] = {
+            0x29, 0x95, 0x48, 0xbe, 0x6f, 0x1a, 0xab, 0xd6
+        };
+        [self testTripleDESWithPW:pw withBytes:encrypted3 withSize:sizeof(encrypted3)];
+    }
+
+    - (void)testTripleDESWithPW:(uint8_t *)pw withBytes:(uint8_t *)encrypted withSize:(size_t)size {
+        uint8_t decrypted[8];
+        size_t decryptedSize = sizeof(decrypted);
+
+        [[ToolLogFile defaultLogger] debugWithFormat:@"DES encrypted (%d bytes)", size];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:encrypted size:size];
+
+        // TODO: 移行後の処理
+        
+        // 移行前の処理
+        if (tool_crypto_des_import_key(pw, 24) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"tool_crypto_des_import_key: %s", log_debug_message()];
+            return;
+        }
+        if (tool_crypto_des_decrypt(encrypted, sizeof(encrypted), decrypted, &decryptedSize) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"tool_crypto_des_decrypt: %s", log_debug_message()];
+            return;
+        }
+
+        [[ToolLogFile defaultLogger] debugWithFormat:@"DES decrypted (%d bytes)", decryptedSize];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:decrypted size:decryptedSize];
     }
 
 @end
