@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "aes_256_cbc.h"
 #include "fido_crypto.h"
 #include "fido_blob.h"
 #include "debug_log.h"
 #include "FIDODefines.h"
-#include "AES256CBC.h"
 #include "ECDH.h"
 
 // for OpenSSL
@@ -120,13 +120,10 @@ uint8_t generate_pin_hash_enc(const char *cur_pin) {
     ph->len = 16;
     // 共通鍵を使用し暗号化
     fido_blob_set(shared, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(shared, ph, phe) < 0) {
-        log_debug("%s: aes256_cbc_enc", __func__);
-        goto fail;
+    size_t size = sizeof(pinHashEnc);
+    if (aes_256_cbc_enc(shared->ptr, ph->ptr, ph->len, pinHashEnc, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(pinHashEnc, phe->ptr, phe->len);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -182,15 +179,11 @@ uint8_t generate_new_pin_enc(const char *new_pin) {
     }
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, ppin, pe) < 0) {
-        goto fail;
+    newPinEncSize = sizeof(newPinEnc);
+    if (aes_256_cbc_enc(key->ptr, ppin->ptr, ppin->len, newPinEnc, &newPinEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
 
-    // 配列に退避
-    memcpy(newPinEnc, pe->ptr, pe->len);
-    newPinEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
-    
 fail:
     // 作業領域を解放
     fido_blob_free(&ppin);
@@ -269,12 +262,10 @@ uint8_t decrypto_pin_token(
     // 共通鍵を使用し、PINコードを復号化
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
     fido_blob_set(pe, encrypted_pin_token, pin_token_size);
-    if (aes256_cbc_dec(key, pe, pd) < 0) {
-        goto fail;
+    size_t size = pin_token_size;
+    if (aes_256_cbc_dec(key->ptr, pe->ptr, pe->len, decrypted_pin_token, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(decrypted_pin_token, pd->ptr, pin_token_size);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -378,14 +369,10 @@ uint8_t generate_salt_enc(uint8_t *hmac_secret_salt, size_t hmac_secret_salt_siz
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(psalt, hmac_secret_salt, hmac_secret_salt_size);
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, psalt, pe) < 0) {
-        goto fail;
+    saltEncSize = sizeof(saltEnc);
+    if (aes_256_cbc_enc(key->ptr, psalt->ptr, psalt->len, saltEnc, &saltEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    
-    // 配列に退避
-    memcpy(saltEnc, pe->ptr, pe->len);
-    saltEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放

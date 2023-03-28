@@ -7,6 +7,7 @@
 #ifndef aes_256_cbc_h
 #define aes_256_cbc_h
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
