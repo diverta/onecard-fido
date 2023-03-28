@@ -39,7 +39,7 @@
         uint8_t encoded[encoded_size];
 
         if (aes_256_cbc_enc(key, data_bytes, data_size, encoded, &encoded_size) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"aes_256_cbc_enc fail"];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"aes_256_cbc_enc: %s", log_debug_message()];
             return;
         }
 
@@ -50,7 +50,7 @@
         uint8_t decoded[encoded_size];
 
         if (aes_256_cbc_dec(key, encoded, encoded_size, decoded, &decoded_size) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"aes_256_cbc_dec fail"];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"aes_256_cbc_dec: %s", log_debug_message()];
             return;
         }
 
@@ -66,7 +66,7 @@
         fido_blob_set(ppin, data_bytes, data_size);
 
         if (aes256_cbc_enc(pkey, ppin, pe) != 0) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"aes256_cbc_enc fail: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"aes256_cbc_enc: %s", log_debug_message()];
             goto fail;
         }
 
@@ -74,7 +74,7 @@
         [[ToolLogFile defaultLogger] hexdumpOfBytes:pe->ptr size:pe->len];
 
         if (aes256_cbc_dec(pkey, pe, pd) != 0) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"aes256_cbc_dec fail: %s", log_debug_message()];
+            [[ToolLogFile defaultLogger] errorWithFormat:@"aes256_cbc_dec: %s", log_debug_message()];
             goto fail;
         }
 

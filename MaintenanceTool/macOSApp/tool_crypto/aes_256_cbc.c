@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include "debug_log.h"
 
 bool aes_256_cbc_enc(uint8_t *key, uint8_t *plain, size_t plain_size, uint8_t *encoded, size_t *encoded_size)
 {
@@ -26,6 +27,8 @@ bool aes_256_cbc_enc(uint8_t *key, uint8_t *plain, size_t plain_size, uint8_t *e
     if (result == kCCSuccess) {
         memcpy(encoded, buff, *encoded_size);
         ret = true;
+    } else {
+        log_debug("%s fail: CCCryptorStatus=%d", __func__, result);
     }
 
     // Deallocate buffer
@@ -48,6 +51,8 @@ bool aes_256_cbc_dec(uint8_t *key, uint8_t *encoded, size_t encoded_size, uint8_
     if (result == kCCSuccess) {
         memcpy(decoded, buff, *decoded_size);
         ret = true;
+    } else {
+        log_debug("%s fail: CCCryptorStatus=%d", __func__, result);
     }
 
     // Deallocate buffer
