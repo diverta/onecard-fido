@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "aes_256_cbc.h"
 #include "fido_crypto.h"
 #include "fido_blob.h"
 #include "debug_log.h"
 #include "FIDODefines.h"
-#include "AES256CBC.h"
 #include "ECDH.h"
 
 // for OpenSSL
@@ -120,13 +120,10 @@ uint8_t generate_pin_hash_enc(const char *cur_pin) {
     ph->len = 16;
     // 共通鍵を使用し暗号化
     fido_blob_set(shared, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(shared, ph, phe) < 0) {
-        log_debug("%s: aes256_cbc_enc", __func__);
-        goto fail;
+    size_t size = sizeof(pinHashEnc);
+    if (aes_256_cbc_enc(shared->ptr, ph->ptr, ph->len, pinHashEnc, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(pinHashEnc, phe->ptr, phe->len);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -182,15 +179,11 @@ uint8_t generate_new_pin_enc(const char *new_pin) {
     }
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, ppin, pe) < 0) {
-        goto fail;
+    newPinEncSize = sizeof(newPinEnc);
+    if (aes_256_cbc_enc(key->ptr, ppin->ptr, ppin->len, newPinEnc, &newPinEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
 
-    // 配列に退避
-    memcpy(newPinEnc, pe->ptr, pe->len);
-    newPinEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
-    
 fail:
     // 作業領域を解放
     fido_blob_free(&ppin);
@@ -269,12 +262,10 @@ uint8_t decrypto_pin_token(
     // 共通鍵を使用し、PINコードを復号化
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
     fido_blob_set(pe, encrypted_pin_token, pin_token_size);
-    if (aes256_cbc_dec(key, pe, pd) < 0) {
-        goto fail;
+    size_t size = pin_token_size;
+    if (aes_256_cbc_dec(key->ptr, pe->ptr, pe->len, decrypted_pin_token, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(decrypted_pin_token, pd->ptr, pin_token_size);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -378,14 +369,10 @@ uint8_t generate_salt_enc(uint8_t *hmac_secret_salt, size_t hmac_secret_salt_siz
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(psalt, hmac_secret_salt, hmac_secret_salt_size);
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, psalt, pe) < 0) {
-        goto fail;
+    saltEncSize = sizeof(saltEnc);
+    if (aes_256_cbc_enc(key->ptr, psalt->ptr, psalt->len, saltEnc, &saltEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    
-    // 配列に退避
-    memcpy(saltEnc, pe->ptr, pe->len);
-    saltEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -442,77 +429,9 @@ fail:
     return ok;
 }
 
-//
-// 鍵・証明書インストール関連処理
-//
-// skeyCertBytesEnc: Encrypt private key & certificate using sharedSecret
-//   AES256-CBC(sharedSecret, IV=0, privateKey || certificate)
-static uint8_t skeyCertBytes[1024];
-static size_t  skeyCertBytesSize;
-static uint8_t skeyCertBytesEnc[1024];
-static size_t  skeyCertBytesEncSize;
-
 // 公開鍵の妥当性検証用
 static uint8_t pubkey_from_cert[64];
 static uint8_t pubkey_from_privkey[64];
-
-uint8_t *skey_cert_bytes_enc(void) {
-    return skeyCertBytesEnc;
-}
-
-size_t skey_cert_bytes_enc_size(void) {
-    // 16の倍数に整形された後のバイト長を戻す
-    return skeyCertBytesEncSize;
-}
-
-size_t skey_cert_bytes_size(void) {
-    // 16の倍数に整形される前のバイト長を戻す
-    return skeyCertBytesSize;
-}
-
-uint8_t generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_bytes_size) {
-    fido_blob_t *pdata;
-    fido_blob_t *key;
-    fido_blob_t *pe;
-    uint8_t      ok = CTAP1_ERR_OTHER;
-
-    // 作業領域の確保
-    memset(skeyCertBytes, 0, sizeof(skeyCertBytes));
-    memset(skeyCertBytesEnc, 0, sizeof(skeyCertBytesEnc));
-    if ((pdata = fido_blob_new()) == NULL ||
-        (key = fido_blob_new()) == NULL ||
-        (pe = fido_blob_new()) == NULL) {
-        goto fail;
-    }
-    // オリジナルのバイトデータ長を退避
-    skeyCertBytesSize = skey_cert_bytes_size;
-    // バイトデータを作業領域にコピー
-    memcpy(skeyCertBytes, skey_cert_bytes, skey_cert_bytes_size);
-    // 暗号化に先立ち、暗号化されるバイトデータ長が16の倍数になるよう整形
-    size_t block_size = 16;
-    size_t block_num = skey_cert_bytes_size / block_size;
-    if ((skey_cert_bytes_size % block_size) != 0) {
-        block_num++;
-    }
-    // 共通鍵を使用し、鍵・証明書バイナリーデータを暗号化
-    fido_blob_set(pdata, skeyCertBytes, block_num * block_size);
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, pdata, pe) < 0) {
-        goto fail;
-    }
-    // 配列に退避
-    memcpy(skeyCertBytesEnc, pe->ptr, pe->len);
-    skeyCertBytesEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
-
-fail:
-    // 作業領域を解放
-    fido_blob_free(&pdata);
-    fido_blob_free(&key);
-    fido_blob_free(&pe);
-
-    return ok;
-}
 
 static bool extract_pubkey_from_cert(uint8_t *public_key, uint8_t *cert_data, size_t cert_data_length)
 {
