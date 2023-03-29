@@ -24,6 +24,56 @@
 
 @implementation CryptoTestCommand
 
+    - (void)testECKey {
+        // SAMPLE: 公開鍵は証明書（CRT）から、秘密鍵はPEMから抽出したものを使用
+        uint8_t public_key[] = {
+            0x90,0x99,0x23,0x34,0xd1,0xdb,0x65,0x29,0xf3,0xda,0x89,0x52,0x42,0x33,0xfb,0xf6,
+            0x3c,0xa5,0x25,0x02,0xe3,0x41,0x91,0xe8,0xa5,0x16,0x6f,0x3f,0xcc,0x32,0xf3,0x3b,
+            0x30,0xbd,0x98,0xbb,0x85,0x6f,0x75,0x85,0x05,0xe7,0x81,0x4e,0x19,0x57,0x65,0xc2,
+            0xdf,0x9b,0xbe,0x2b,0x20,0x7a,0xe8,0xaa,0x21,0xb2,0xbd,0xfc,0x1b,0x13,0x77,0x1f,
+        };
+        uint8_t skey_bytes[] = {
+            0xcf, 0x91, 0x6d, 0x82, 0x30, 0x03, 0xcb, 0x4b, 0x4d, 0xc8, 0x6a, 0xff, 0x05, 0x14, 0x49, 0xc1,
+            0xf4, 0x11, 0xfc, 0x67, 0x37, 0xb7, 0x3a, 0x71, 0x53, 0xa3, 0x4e, 0x65, 0x0d, 0x03, 0x95, 0xd0,
+        };
+        // Securityフレームワークで処理できる形式（0x04 || X || Y|| K）に変換
+        uint8_t pkeyBytes[97];
+        pkeyBytes[0] = 0x04;
+        memcpy(pkeyBytes + 1, public_key, 64);
+        memcpy(pkeyBytes + 1 + 64, skey_bytes, 32);
+
+        [[ToolLogFile defaultLogger] debugWithFormat:@"EC key data for restore (%d bytes)", sizeof(pkeyBytes)];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:pkeyBytes size:sizeof(pkeyBytes)];
+
+        // Private key data
+        NSData *keyData = [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
+        // Options (SECP256R1, private)
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        options[(__bridge id)kSecAttrKeyType]  = (__bridge id)kSecAttrKeyTypeECSECPrimeRandom;
+        options[(__bridge id)kSecAttrKeyClass] = (__bridge id)kSecAttrKeyClassPrivate;
+        // Create SecKeyRef of EC private key
+        NSError *error = nil;
+        CFErrorRef ee = (__bridge CFErrorRef)error;
+        SecKeyRef ref = SecKeyCreateWithData((__bridge CFDataRef)keyData, (__bridge CFDictionaryRef)options, &ee);
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateWithData: %@", error.description];
+            return;
+        }
+        if (ref == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCreateWithData fail"];
+            return;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateWithData: %@", ref];
+
+        // Create SecKeyRef of EC public key
+        SecKeyRef repPub = SecKeyCopyPublicKey(ref);
+        if (repPub == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
+            return;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey: %@", repPub];
+    }
+    
     - (void)testAES256CBC {
         NSData *data = [@"This is a sample string.12345678" dataUsingEncoding:NSUTF8StringEncoding];
 

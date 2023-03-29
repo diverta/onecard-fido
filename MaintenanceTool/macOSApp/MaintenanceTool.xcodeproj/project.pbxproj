@@ -240,6 +240,8 @@
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
 		7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
+		7ACD730A29D41BF60016BF1B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACD730929D41BF50016BF1B /* Security.framework */; };
+		7ACD730B29D429940016BF1B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACD730929D41BF50016BF1B /* Security.framework */; };
 		7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
 		7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
 		7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */; };
@@ -476,6 +478,7 @@
 		7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
+		7ACD730929D41BF50016BF1B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionWindow.m; sourceTree = "<group>"; };
 		7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VendorFunctionWindow.xib; sourceTree = "<group>"; };
 		7ACD98F8296E671500D08A24 /* VendorFunctionCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionCommand.h; sourceTree = "<group>"; };
@@ -548,6 +551,7 @@
 				7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */,
 				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
+				7ACD730B29D429940016BF1B /* Security.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +566,7 @@
 				7A8B3DF7296E56640005F7B1 /* CoreImage.framework in Frameworks */,
 				7A8B3DF8296E56640005F7B1 /* IOKit.framework in Frameworks */,
 				7A8B3DF9296E56640005F7B1 /* IOBluetooth.framework in Frameworks */,
+				7ACD730A29D41BF60016BF1B /* Security.framework in Frameworks */,
 				7A8B3DFA296E56640005F7B1 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,6 +608,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ACD730929D41BF50016BF1B /* Security.framework */,
 				895E617829B86F100085ADA3 /* libcrypto.a */,
 				895E617929B86F100085ADA3 /* libtinycbor.a */,
 				7A80509B2819066A000BF498 /* CoreImage.framework */,
