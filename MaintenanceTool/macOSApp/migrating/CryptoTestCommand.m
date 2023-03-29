@@ -129,6 +129,7 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"triple_des_import_key: %s", log_debug_message()];
             return;
         }
+        memset(decrypted, 0, kCCKeySizeDES);
         if (triple_des_decrypt(encrypted, sizeof(encrypted), decrypted, &decryptedSize) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"triple_des_import_key: %s", log_debug_message()];
             return;
@@ -142,6 +143,7 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"tool_crypto_des_import_key: %s", log_debug_message()];
             return;
         }
+        memset(decrypted, 0, kCCKeySizeDES);
         if (tool_crypto_des_decrypt(encrypted, sizeof(encrypted), decrypted, &decryptedSize) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"tool_crypto_des_decrypt: %s", log_debug_message()];
             return;
