@@ -67,7 +67,6 @@
 		7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */; };
 		7A6C807727C4AE28002FEFC8 /* card_edit_passwd.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */; };
 		7A6C807827C4AE28002FEFC8 /* card_edit_unblock.param in Resources */ = {isa = PBXBuildFile; fileRef = 7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */; };
-		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A72011B27794E5400EE3AD6 /* PGPPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */; };
 		7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */; };
@@ -105,7 +104,6 @@
 		7A8B3DC0296E56640005F7B1 /* HcheckPinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042C5287D3113009518C3 /* HcheckPinWindow.m */; };
 		7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
 		7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
-		7A8B3DC3296E56640005F7B1 /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3F4F1B28755F91003CFE67 /* UtilityCommand.m */; };
 		7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A726F45287EAEE600DB456E /* CTAP2HcheckCommand.m */; };
 		7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
@@ -205,6 +203,8 @@
 		7A91680228FE497E0096A848 /* USBDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680128FE497E0096A848 /* USBDFUCommand.m */; };
 		7A91680528FE7A990096A848 /* USBDFUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680428FE7A990096A848 /* USBDFUImage.m */; };
 		7A91680828FE80B10096A848 /* nrf52_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680628FE80B10096A848 /* nrf52_app_image.c */; };
+		7A9245D229D3E71B0048D5CC /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9245D029D3E71B0048D5CC /* tool_crypto_des.c */; };
+		7A9245D329D3E71B0048D5CC /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9245D029D3E71B0048D5CC /* tool_crypto_des.c */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
 		7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
@@ -378,8 +378,6 @@
 		7A6C807327C4AE28002FEFC8 /* card_edit_passwd.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_passwd.param; sourceTree = "<group>"; };
 		7A6C807427C4AE28002FEFC8 /* card_edit_passwd.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_edit_passwd.sh; sourceTree = "<group>"; };
 		7A6C807527C4AE28002FEFC8 /* card_edit_unblock.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_edit_unblock.param; sourceTree = "<group>"; };
-		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
-		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
 		7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PGPPreferenceWindow.m; sourceTree = "<group>"; };
 		7A72011827794E5400EE3AD6 /* PGPPreferenceWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PGPPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A72011927794E5400EE3AD6 /* PGPPreferenceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGPPreferenceWindow.h; sourceTree = "<group>"; };
@@ -421,6 +419,8 @@
 		7A91680428FE7A990096A848 /* USBDFUImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = USBDFUImage.m; sourceTree = "<group>"; };
 		7A91680628FE80B10096A848 /* nrf52_app_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nrf52_app_image.c; sourceTree = "<group>"; };
 		7A91680728FE80B10096A848 /* nrf52_app_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrf52_app_image.h; sourceTree = "<group>"; };
+		7A9245D029D3E71B0048D5CC /* tool_crypto_des.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
+		7A9245D129D3E71B0048D5CC /* tool_crypto_des.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
 		7A92D0E228754B140094D2DB /* AppCommonMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppCommonMessage.h; sourceTree = "<group>"; };
@@ -775,8 +775,6 @@
 				7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */,
 				7ACC0BF4257770B800F4026B /* tool_crypto_certificate.h */,
 				7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */,
-				7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */,
-				7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */,
 				7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */,
 				7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */,
 				7A8BE07529D271F3001152A1 /* aes_256_cbc.h */,
@@ -861,6 +859,8 @@
 		7A8BE07D29D2CC30001152A1 /* migrating */ = {
 			isa = PBXGroup;
 			children = (
+				7A9245D129D3E71B0048D5CC /* tool_crypto_des.h */,
+				7A9245D029D3E71B0048D5CC /* tool_crypto_des.c */,
 				7A8BE07F29D2CC5B001152A1 /* AES256CBC.h */,
 				7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */,
 				7A8BE08329D2CC7E001152A1 /* CryptoTestCommand.h */,
@@ -1220,7 +1220,6 @@
 				7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */,
 				7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */,
 				7AC89EF3296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
-				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7A3F4F1E28755F91003CFE67 /* UtilityCommand.m in Sources */,
 				7A726F46287EAEE600DB456E /* CTAP2HcheckCommand.m in Sources */,
 				7A72011A27794E5400EE3AD6 /* PGPPreferenceWindow.m in Sources */,
@@ -1257,6 +1256,7 @@
 				7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */,
 				7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
+				7A9245D229D3E71B0048D5CC /* tool_crypto_des.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7AF60FF829C2E20500C1A4F0 /* oath_util.c in Sources */,
@@ -1317,7 +1317,6 @@
 				7A8B3DC1296E56640005F7B1 /* mcumgr_app_image.c in Sources */,
 				7A8B3DC2296E56640005F7B1 /* ToolFilePanel.m in Sources */,
 				7AC89EF4296FBD6D0024B384 /* FIDOAttestationWindow.m in Sources */,
-				7A8B3DC3296E56640005F7B1 /* tool_crypto_des.c in Sources */,
 				7A8B3DC4296E56640005F7B1 /* UtilityCommand.m in Sources */,
 				7A8B3DC5296E56640005F7B1 /* CTAP2HcheckCommand.m in Sources */,
 				7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */,
@@ -1354,6 +1353,7 @@
 				7A8B3DE0296E56640005F7B1 /* RTCCSettingCommand.m in Sources */,
 				7A8B3DE1296E56640005F7B1 /* BLESettingCommand.m in Sources */,
 				7A8B3DE2296E56640005F7B1 /* debug_log.c in Sources */,
+				7A9245D329D3E71B0048D5CC /* tool_crypto_des.c in Sources */,
 				7A8B3DE3296E56640005F7B1 /* UtilityWindow.m in Sources */,
 				7A8B3DE4296E56640005F7B1 /* ToolCommon.m in Sources */,
 				7AF60FF929C2E20500C1A4F0 /* oath_util.c in Sources */,
