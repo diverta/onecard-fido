@@ -83,37 +83,54 @@
         NSData* data2sign = [[NSData alloc] initWithBytes:sample length:sizeof(sample)];
         
         // 署名を生成
-        NSData* signature = nil;
-        CFErrorRef err = NULL;
         SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256;
-        if (SecKeyIsAlgorithmSupported(ref, kSecKeyOperationTypeSign, algorithm) == false) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyIsAlgorithmSupported fail"];
-            return;
-        }
-        signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature(ref, algorithm, (__bridge CFDataRef)data2sign, &err));
+        NSData* signature = [self createECDSASignatureWithData:data2sign withPrivkeyRef:ref withAlgorithm:algorithm];
         if (signature == nil) {
-            NSError *err2 = CFBridgingRelease(err);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateSignature: %@", err2.description];
             return;
         }
-
         [[ToolLogFile defaultLogger] debugWithFormat:@"ECDSA signature (%d bytes)", [signature length]];
         [[ToolLogFile defaultLogger] hexdump:signature];
         
         // 署名を検証
-        if (SecKeyIsAlgorithmSupported(repPub, kSecKeyOperationTypeVerify, algorithm) == false) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyIsAlgorithmSupported fail"];
-            return;
+        if ([self verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:repPub withAlgorithm:algorithm]) {
+            [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
         }
-        CFErrorRef error2 = NULL;
-        bool verified = SecKeyVerifySignature(repPub, algorithm, (__bridge CFDataRef)data2sign, (__bridge CFDataRef)signature, &error2);
+    }
+
+    - (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(SecKeyRef)privkey withAlgorithm:(SecKeyAlgorithm)algorithm {
+        // 署名アルゴリズムの妥当性チェック
+        if (SecKeyIsAlgorithmSupported(privkey, kSecKeyOperationTypeSign, algorithm) == false) {
+            [[ToolLogFile defaultLogger] error:@"createECDSASignatureWithData fail: algorithm not supported"];
+            return nil;
+        }
+        // 署名を生成
+        CFErrorRef error = NULL;
+        NSData *signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature(privkey, algorithm, (__bridge CFDataRef)data, &error));
+        if (signature == nil) {
+            NSError *err = CFBridgingRelease(error);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"createECDSASignatureWithData fail: %@", err.description];
+            return nil;
+        }
+        // 生成された署名を戻す
+        return signature;
+    }
+
+    - (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(SecKeyRef)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm {
+        // 署名アルゴリズムの妥当性チェック
+        if (SecKeyIsAlgorithmSupported(pubkey, kSecKeyOperationTypeVerify, algorithm) == false) {
+            [[ToolLogFile defaultLogger] error:@"verifyECDSASignature fail: algorithm not supported"];
+            return false;
+        }
+        // 署名を検証
+        CFErrorRef error = NULL;
+        bool verified = SecKeyVerifySignature(pubkey, algorithm, (__bridge CFDataRef)dataToSign, (__bridge CFDataRef)signature, &error);
         if (verified == false) {
-            NSError *err2 = CFBridgingRelease(error2);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyVerifySignature: %@", err2.description];
-            return;
+            NSError *err = CFBridgingRelease(error);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"verifyECDSASignature fail: %@", err.description];
+            return false;
         }
-        // 検証成功
-        [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
+        // 署名検証成功
+        return true;
     }
     
     - (void)testAES256CBC {
