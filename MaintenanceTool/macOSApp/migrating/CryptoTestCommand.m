@@ -72,6 +72,48 @@
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey: %@", repPub];
+
+        // サンプルの署名ベース
+        uint8_t sample[] = {
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+            0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0f, 0x10, 0x11,
+            0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
+            0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21,
+        };
+        NSData* data2sign = [[NSData alloc] initWithBytes:sample length:sizeof(sample)];
+        
+        // 署名を生成
+        NSData* signature = nil;
+        CFErrorRef err = NULL;
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256;
+        if (SecKeyIsAlgorithmSupported(ref, kSecKeyOperationTypeSign, algorithm) == false) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyIsAlgorithmSupported fail"];
+            return;
+        }
+        signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature(ref, algorithm, (__bridge CFDataRef)data2sign, &err));
+        if (signature == nil) {
+            NSError *err2 = CFBridgingRelease(err);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateSignature: %@", err2.description];
+            return;
+        }
+
+        [[ToolLogFile defaultLogger] debugWithFormat:@"ECDSA signature (%d bytes)", [signature length]];
+        [[ToolLogFile defaultLogger] hexdump:signature];
+        
+        // 署名を検証
+        if (SecKeyIsAlgorithmSupported(repPub, kSecKeyOperationTypeVerify, algorithm) == false) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyIsAlgorithmSupported fail"];
+            return;
+        }
+        CFErrorRef error2 = NULL;
+        bool verified = SecKeyVerifySignature(repPub, algorithm, (__bridge CFDataRef)data2sign, (__bridge CFDataRef)signature, &error2);
+        if (verified == false) {
+            NSError *err2 = CFBridgingRelease(error2);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyVerifySignature: %@", err2.description];
+            return;
+        }
+        // 検証成功
+        [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
     }
     
     - (void)testAES256CBC {
