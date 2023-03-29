@@ -124,11 +124,18 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"DES encrypted (%d bytes)", size];
         [[ToolLogFile defaultLogger] hexdumpOfBytes:encrypted size:size];
 
-        // TODO: 移行後の処理
+        // 移行後の処理
         if (triple_des_import_key(pw, kCCKeySize3DES) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"triple_des_import_key: %s", log_debug_message()];
             return;
         }
+        if (triple_des_decrypt(encrypted, sizeof(encrypted), decrypted, &decryptedSize) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"triple_des_import_key: %s", log_debug_message()];
+            return;
+        }
+
+        [[ToolLogFile defaultLogger] debugWithFormat:@"triple_des_decrypt (%d bytes)", decryptedSize];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:decrypted size:decryptedSize];
 
         // 移行前の処理
         if (tool_crypto_des_import_key(pw, kCCKeySize3DES) == false) {
@@ -140,7 +147,7 @@
             return;
         }
 
-        [[ToolLogFile defaultLogger] debugWithFormat:@"DES decrypted (%d bytes)", decryptedSize];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"tool_crypto_des_decrypt (%d bytes)", decryptedSize];
         [[ToolLogFile defaultLogger] hexdumpOfBytes:decrypted size:decryptedSize];
     }
 
