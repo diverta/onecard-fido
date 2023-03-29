@@ -4,16 +4,17 @@
 //
 //  Created by Makoto Morita on 2023/03/28.
 //
+#import <CommonCrypto/CommonCryptor.h>
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
 #include "debug_log.h"
-#include "tool_crypto_common.h"
 
 // DES鍵を保持
-static uint8_t des_key[DES_LEN_3DES];
+static uint8_t des_key[kCCKeySize3DES];
 
 bool triple_des_import_key(const unsigned char *key_raw, const size_t key_raw_size)
 {
@@ -22,7 +23,7 @@ bool triple_des_import_key(const unsigned char *key_raw, const size_t key_raw_si
         log_debug("%s: DES parameter is NULL", __func__);
         return false;
     }
-    if (key_raw_size != DES_LEN_3DES) {
+    if (key_raw_size != kCCKeySize3DES) {
         log_debug("%s: DES invalid key size", __func__);
         return false;
     }

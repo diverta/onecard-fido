@@ -16,7 +16,6 @@
 
 // for des
 #import "tool_piv_admin.h"
-#import "tool_crypto_common.h"
 #import "tool_crypto_des.h"
 
 @interface CryptoTestCommand ()
@@ -98,8 +97,8 @@
         uint8_t *pw = tool_piv_admin_des_default_key();
 
         // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"DES key (%d bytes)", DES_LEN_3DES];
-        [[ToolLogFile defaultLogger] hexdumpOfBytes:pw size:DES_LEN_3DES];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"DES key (%d bytes)", kCCKeySize3DES];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:pw size:kCCKeySize3DES];
 
         // 為念で３回テスト
         uint8_t encrypted1[] = {
@@ -119,20 +118,20 @@
     }
 
     - (void)testTripleDESWithPW:(uint8_t *)pw withBytes:(uint8_t *)encrypted withSize:(size_t)size {
-        uint8_t decrypted[DES_LEN_DES];
+        uint8_t decrypted[kCCKeySizeDES];
         size_t decryptedSize = sizeof(decrypted);
 
         [[ToolLogFile defaultLogger] debugWithFormat:@"DES encrypted (%d bytes)", size];
         [[ToolLogFile defaultLogger] hexdumpOfBytes:encrypted size:size];
 
         // TODO: 移行後の処理
-        if (triple_des_import_key(pw, DES_LEN_3DES) == false) {
+        if (triple_des_import_key(pw, kCCKeySize3DES) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"triple_des_import_key: %s", log_debug_message()];
             return;
         }
 
         // 移行前の処理
-        if (tool_crypto_des_import_key(pw, DES_LEN_3DES) == false) {
+        if (tool_crypto_des_import_key(pw, kCCKeySize3DES) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"tool_crypto_des_import_key: %s", log_debug_message()];
             return;
         }
