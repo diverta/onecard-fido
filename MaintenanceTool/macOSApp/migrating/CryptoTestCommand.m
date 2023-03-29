@@ -37,42 +37,21 @@
             0xf4, 0x11, 0xfc, 0x67, 0x37, 0xb7, 0x3a, 0x71, 0x53, 0xa3, 0x4e, 0x65, 0x0d, 0x03, 0x95, 0xd0,
         };
         // Securityフレームワークで処理できる形式（0x04 || X || Y|| K）に変換
-        uint8_t pkeyBytes[97];
-        pkeyBytes[0] = 0x04;
-        memcpy(pkeyBytes + 1, public_key, 64);
-        memcpy(pkeyBytes + 1 + 64, skey_bytes, 32);
-
-        [[ToolLogFile defaultLogger] debugWithFormat:@"EC key data for restore (%d bytes)", sizeof(pkeyBytes)];
-        [[ToolLogFile defaultLogger] hexdumpOfBytes:pkeyBytes size:sizeof(pkeyBytes)];
-
-        // Private key data
-        NSData *keyData = [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
-        // Options (SECP256R1, private)
-        NSMutableDictionary *options = [NSMutableDictionary dictionary];
-        options[(__bridge id)kSecAttrKeyType]  = (__bridge id)kSecAttrKeyTypeECSECPrimeRandom;
-        options[(__bridge id)kSecAttrKeyClass] = (__bridge id)kSecAttrKeyClassPrivate;
-        // Create SecKeyRef of EC private key
-        NSError *error = nil;
-        CFErrorRef ee = (__bridge CFErrorRef)error;
-        SecKeyRef ref = SecKeyCreateWithData((__bridge CFDataRef)keyData, (__bridge CFDictionaryRef)options, &ee);
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateWithData: %@", error.description];
+        NSData *privkeyData = [self generatePrivkeyDataFromPrivkeyBytes:skey_bytes withPubkeyBytes:public_key];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"EC key data for restore (%d bytes)", [privkeyData length]];
+        [[ToolLogFile defaultLogger] hexdump:privkeyData];
+        // EC秘密鍵を内部形式に変換
+        id privSecKeyRef = [self generatePrivkeyFromData:privkeyData];
+        if (privSecKeyRef == nil) {
             return;
         }
-        if (ref == nil) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyCreateWithData fail"];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"privSecKeyRef: %@", privSecKeyRef];
+        // EC公開鍵を内部形式に変換
+        id pubSecKeyRef = [self generatePubkeyFromPrivkey:privSecKeyRef];
+        if (pubSecKeyRef == nil) {
             return;
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateWithData: %@", ref];
-
-        // Create SecKeyRef of EC public key
-        SecKeyRef repPub = SecKeyCopyPublicKey(ref);
-        if (repPub == nil) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
-            return;
-        }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey: %@", repPub];
-
+        [[ToolLogFile defaultLogger] debugWithFormat:@"pubSecKeyRef: %@", pubSecKeyRef];
         // サンプルの署名ベース
         uint8_t sample[] = {
             0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -81,31 +60,67 @@
             0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21,
         };
         NSData* data2sign = [[NSData alloc] initWithBytes:sample length:sizeof(sample)];
-        
         // 署名を生成
         SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256;
-        NSData* signature = [self createECDSASignatureWithData:data2sign withPrivkeyRef:ref withAlgorithm:algorithm];
+        NSData* signature = [self createECDSASignatureWithData:data2sign withPrivkeyRef:privSecKeyRef withAlgorithm:algorithm];
         if (signature == nil) {
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"ECDSA signature (%d bytes)", [signature length]];
         [[ToolLogFile defaultLogger] hexdump:signature];
-        
         // 署名を検証
-        if ([self verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:repPub withAlgorithm:algorithm]) {
+        if ([self verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:pubSecKeyRef withAlgorithm:algorithm]) {
             [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
         }
     }
 
-    - (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(SecKeyRef)privkey withAlgorithm:(SecKeyAlgorithm)algorithm {
+    - (NSData *)generatePrivkeyDataFromPrivkeyBytes:(uint8_t *)privBytes withPubkeyBytes:(uint8_t *)pubBytes {
+        // Securityフレームワークで処理できる形式（0x04 || X || Y || K）に変換
+        uint8_t pkeyBytes[97];
+        pkeyBytes[0] = 0x04;
+        memcpy(pkeyBytes + 1, pubBytes, 64);
+        memcpy(pkeyBytes + 1 + 64, privBytes, 32);
+        // NSDataに変換して戻す
+        return [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
+    }
+
+    - (id)generatePrivkeyFromData:(NSData *)privkeyData {
+        // Options (SECP256R1, private)
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        options[(__bridge id)kSecAttrKeyType]  = (__bridge id)kSecAttrKeyTypeECSECPrimeRandom;
+        options[(__bridge id)kSecAttrKeyClass] = (__bridge id)kSecAttrKeyClassPrivate;
+        // Create SecKeyRef of EC private key
+        CFErrorRef error = NULL;
+        id ref = CFBridgingRelease(SecKeyCreateWithData((__bridge CFDataRef)privkeyData, (__bridge CFDictionaryRef)options, &error));
+        if (error) {
+            NSError *err = CFBridgingRelease(error);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateWithData: %@", err.description];
+            return nil;
+        }
+        if (ref == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCreateWithData fail"];
+        }
+        return ref;
+    }
+
+    - (id)generatePubkeyFromPrivkey:(id)privSecKeyRef {
+        // Create SecKeyRef of EC public key
+        id ref = CFBridgingRelease(SecKeyCopyPublicKey((__bridge SecKeyRef)privSecKeyRef));
+        if (ref == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
+        }
+        return ref;
+    }
+
+    - (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(id)privkey withAlgorithm:(SecKeyAlgorithm)algorithm {
         // 署名アルゴリズムの妥当性チェック
-        if (SecKeyIsAlgorithmSupported(privkey, kSecKeyOperationTypeSign, algorithm) == false) {
+        if (SecKeyIsAlgorithmSupported((__bridge SecKeyRef)privkey, kSecKeyOperationTypeSign, algorithm) == false) {
             [[ToolLogFile defaultLogger] error:@"createECDSASignatureWithData fail: algorithm not supported"];
             return nil;
         }
         // 署名を生成
         CFErrorRef error = NULL;
-        NSData *signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature(privkey, algorithm, (__bridge CFDataRef)data, &error));
+        NSData *signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature((__bridge SecKeyRef)privkey, algorithm, (__bridge CFDataRef)data, &error));
         if (signature == nil) {
             NSError *err = CFBridgingRelease(error);
             [[ToolLogFile defaultLogger] errorWithFormat:@"createECDSASignatureWithData fail: %@", err.description];
@@ -115,15 +130,15 @@
         return signature;
     }
 
-    - (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(SecKeyRef)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm {
+    - (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(id)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm {
         // 署名アルゴリズムの妥当性チェック
-        if (SecKeyIsAlgorithmSupported(pubkey, kSecKeyOperationTypeVerify, algorithm) == false) {
+        if (SecKeyIsAlgorithmSupported((__bridge SecKeyRef)pubkey, kSecKeyOperationTypeVerify, algorithm) == false) {
             [[ToolLogFile defaultLogger] error:@"verifyECDSASignature fail: algorithm not supported"];
             return false;
         }
         // 署名を検証
         CFErrorRef error = NULL;
-        bool verified = SecKeyVerifySignature(pubkey, algorithm, (__bridge CFDataRef)dataToSign, (__bridge CFDataRef)signature, &error);
+        bool verified = SecKeyVerifySignature((__bridge SecKeyRef)pubkey, algorithm, (__bridge CFDataRef)dataToSign, (__bridge CFDataRef)signature, &error);
         if (verified == false) {
             NSError *err = CFBridgingRelease(error);
             [[ToolLogFile defaultLogger] errorWithFormat:@"verifyECDSASignature fail: %@", err.description];
