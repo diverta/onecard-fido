@@ -27,25 +27,12 @@
 
     - (void)testECDH {
         // EC鍵ペアを生成
-        NSString *tag = @"Keypair01";
-        // get security access control
-        CFErrorRef aclCFError = NULL;
-        id acl = CFBridgingRelease(SecAccessControlCreateWithFlags(
-            kCFAllocatorDefault, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, kSecAccessControlPrivateKeyUsage, &aclCFError));
-        if (aclCFError) {
-            NSError *err = CFBridgingRelease(aclCFError);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecAccessControlCreateWithFlags: %@", err.description];
-            return;
-        }
-        // generate attrs
-        NSDictionary<NSString *, id> *attrs = @{
-            (__bridge NSString *)kSecAttrKeyType : (__bridge NSString *)kSecAttrKeyTypeECSECPrimeRandom,
-            (__bridge NSString *)kSecAttrKeySizeInBits : @256,
-            (__bridge NSString *)kSecAttrTokenID : (__bridge NSString *)kSecAttrTokenIDSecureEnclave,
-            (__bridge NSString *)kSecPrivateKeyAttrs : @{
-                (__bridge NSString *)kSecAttrIsPermanent : @YES,
-                (__bridge NSString *)kSecAttrApplicationTag : tag,
-                (__bridge NSString *)kSecAttrAccessControl : acl
+        NSDictionary *attrs = @{
+            (id)kSecClass : (id)kSecClassKey,
+            (id)kSecAttrKeyType : (id)kSecAttrKeyTypeECSECPrimeRandom,
+            (id)kSecAttrKeySizeInBits : @256,
+            (id)kSecPrivateKeyAttrs : @{
+                (id)kSecAttrIsPermanent : @NO,
             }
         };
         // get ec key pair
