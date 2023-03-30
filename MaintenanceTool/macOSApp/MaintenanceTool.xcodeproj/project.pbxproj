@@ -240,6 +240,8 @@
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
 		7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
+		7ACD730A29D41BF60016BF1B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACD730929D41BF50016BF1B /* Security.framework */; };
+		7ACD730B29D429940016BF1B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACD730929D41BF50016BF1B /* Security.framework */; };
 		7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
 		7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
 		7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */; };
@@ -264,6 +266,8 @@
 		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE533BE28765D1D00770A75 /* AppCommand.m */; };
 		7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE6031B2875218100DA5BF3 /* ToolLogFile.m */; };
+		7AE70BC929D564840022DF76 /* ToolSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE70BC829D564840022DF76 /* ToolSecurity.m */; };
+		7AE70BCA29D564840022DF76 /* ToolSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE70BC829D564840022DF76 /* ToolSecurity.m */; };
 		7AF03FC5277C3BA400ED0E44 /* card_status.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AF03FC4277C3BA400ED0E44 /* card_status.sh */; };
 		7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AF042B8287CF868009518C3 /* HcheckWindow.xib */; };
 		7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
@@ -476,6 +480,7 @@
 		7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
+		7ACD730929D41BF50016BF1B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionWindow.m; sourceTree = "<group>"; };
 		7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VendorFunctionWindow.xib; sourceTree = "<group>"; };
 		7ACD98F8296E671500D08A24 /* VendorFunctionCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorFunctionCommand.h; sourceTree = "<group>"; };
@@ -505,6 +510,8 @@
 		7AE533BE28765D1D00770A75 /* AppCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppCommand.m; sourceTree = "<group>"; };
 		7AE6031B2875218100DA5BF3 /* ToolLogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolLogFile.m; sourceTree = "<group>"; };
 		7AE6031D287521A800DA5BF3 /* ToolLogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolLogFile.h; sourceTree = "<group>"; };
+		7AE70BC829D564840022DF76 /* ToolSecurity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolSecurity.m; sourceTree = "<group>"; };
+		7AE70BCB29D5649B0022DF76 /* ToolSecurity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolSecurity.h; sourceTree = "<group>"; };
 		7AF03FC4277C3BA400ED0E44 /* card_status.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_status.sh; sourceTree = "<group>"; };
 		7AF042B8287CF868009518C3 /* HcheckWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HcheckWindow.xib; sourceTree = "<group>"; };
 		7AF042BA287CFC69009518C3 /* HcheckWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HcheckWindow.m; sourceTree = "<group>"; };
@@ -548,6 +555,7 @@
 				7A80509C2819066A000BF498 /* CoreImage.framework in Frameworks */,
 				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
+				7ACD730B29D429940016BF1B /* Security.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +570,7 @@
 				7A8B3DF7296E56640005F7B1 /* CoreImage.framework in Frameworks */,
 				7A8B3DF8296E56640005F7B1 /* IOKit.framework in Frameworks */,
 				7A8B3DF9296E56640005F7B1 /* IOBluetooth.framework in Frameworks */,
+				7ACD730A29D41BF60016BF1B /* Security.framework in Frameworks */,
 				7A8B3DFA296E56640005F7B1 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,6 +612,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ACD730929D41BF50016BF1B /* Security.framework */,
 				895E617829B86F100085ADA3 /* libcrypto.a */,
 				895E617929B86F100085ADA3 /* libtinycbor.a */,
 				7A80509B2819066A000BF498 /* CoreImage.framework */,
@@ -718,6 +728,8 @@
 				7AE6031B2875218100DA5BF3 /* ToolLogFile.m */,
 				7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */,
 				7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */,
+				7AE70BCB29D5649B0022DF76 /* ToolSecurity.h */,
+				7AE70BC829D564840022DF76 /* ToolSecurity.m */,
 				7A3F4F2028755FB1003CFE67 /* ToolVersionWindow.h */,
 				7A3F4F2128755FB1003CFE67 /* ToolVersionWindow.m */,
 				7A3F4F2228755FB1003CFE67 /* ToolVersionWindow.xib */,
@@ -1241,6 +1253,7 @@
 				7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */,
 				7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */,
 				7AF042BC287CFC69009518C3 /* HcheckWindow.m in Sources */,
+				7AE70BC929D564840022DF76 /* ToolSecurity.m in Sources */,
 				7A20452B29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */,
@@ -1338,6 +1351,7 @@
 				7A8B3DD5296E56640005F7B1 /* PIVPreferenceWindow.m in Sources */,
 				7A8B3DD6296E56640005F7B1 /* ToolBLEDFUCommand.m in Sources */,
 				7A8B3DD7296E56640005F7B1 /* HcheckWindow.m in Sources */,
+				7AE70BCA29D564840022DF76 /* ToolSecurity.m in Sources */,
 				7A20452C29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */,
@@ -1507,7 +1521,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 73;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1539,7 +1553,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 73;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1573,7 +1587,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 73;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1605,7 +1619,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 73;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
