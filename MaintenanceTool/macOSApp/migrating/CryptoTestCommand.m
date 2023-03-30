@@ -45,6 +45,20 @@
         }
         // content of ec key pair
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef];
+        // get ec public key
+        id secKeyRef = CFBridgingRelease(SecKeyCopyPublicKey((__bridge SecKeyRef)privateSecKeyRef));
+        if (secKeyRef == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
+            return;
+        }
+        // content of ec public key
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey done: %@", secKeyRef];
+        NSData *data = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)secKeyRef, &keyCFError));
+        if (data == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
+            return;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data];
     }
 
     - (void)testECKey {
