@@ -8,6 +8,7 @@
 #import "aes_256_cbc.h"
 #import "triple_des.h"
 #import "ToolLogFile.h"
+#import "ToolSecurity.h"
 
 // on migrating
 #import "debug_log.h"
@@ -36,18 +37,18 @@
             0xcf, 0x91, 0x6d, 0x82, 0x30, 0x03, 0xcb, 0x4b, 0x4d, 0xc8, 0x6a, 0xff, 0x05, 0x14, 0x49, 0xc1,
             0xf4, 0x11, 0xfc, 0x67, 0x37, 0xb7, 0x3a, 0x71, 0x53, 0xa3, 0x4e, 0x65, 0x0d, 0x03, 0x95, 0xd0,
         };
-        // Securityフレームワークで処理できる形式（0x04 || X || Y|| K）に変換
-        NSData *privkeyData = [self generatePrivkeyDataFromPrivkeyBytes:skey_bytes withPubkeyBytes:public_key];
+        // Securityフレームワークで処理できる形式（0x04 || X || Y || K）に変換
+        NSData *privkeyData = [ToolSecurity generatePrivkeyDataFromPrivkeyBytes:skey_bytes withPubkeyBytes:public_key];
         [[ToolLogFile defaultLogger] debugWithFormat:@"EC key data for restore (%d bytes)", [privkeyData length]];
         [[ToolLogFile defaultLogger] hexdump:privkeyData];
         // EC秘密鍵を内部形式に変換
-        id privSecKeyRef = [self generatePrivkeyFromData:privkeyData];
+        id privSecKeyRef = [ToolSecurity generatePrivkeyFromData:privkeyData];
         if (privSecKeyRef == nil) {
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"privSecKeyRef: %@", privSecKeyRef];
         // EC公開鍵を内部形式に変換
-        id pubSecKeyRef = [self generatePubkeyFromPrivkey:privSecKeyRef];
+        id pubSecKeyRef = [ToolSecurity generatePubkeyFromPrivkey:privSecKeyRef];
         if (pubSecKeyRef == nil) {
             return;
         }
@@ -62,90 +63,16 @@
         NSData* data2sign = [[NSData alloc] initWithBytes:sample length:sizeof(sample)];
         // 署名を生成
         SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256;
-        NSData* signature = [self createECDSASignatureWithData:data2sign withPrivkeyRef:privSecKeyRef withAlgorithm:algorithm];
+        NSData* signature = [ToolSecurity createECDSASignatureWithData:data2sign withPrivkeyRef:privSecKeyRef withAlgorithm:algorithm];
         if (signature == nil) {
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"ECDSA signature (%d bytes)", [signature length]];
         [[ToolLogFile defaultLogger] hexdump:signature];
         // 署名を検証
-        if ([self verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:pubSecKeyRef withAlgorithm:algorithm]) {
+        if ([ToolSecurity verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:pubSecKeyRef withAlgorithm:algorithm]) {
             [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
         }
-    }
-
-    - (NSData *)generatePrivkeyDataFromPrivkeyBytes:(uint8_t *)privBytes withPubkeyBytes:(uint8_t *)pubBytes {
-        // Securityフレームワークで処理できる形式（0x04 || X || Y || K）に変換
-        uint8_t pkeyBytes[97];
-        pkeyBytes[0] = 0x04;
-        memcpy(pkeyBytes + 1, pubBytes, 64);
-        memcpy(pkeyBytes + 1 + 64, privBytes, 32);
-        // NSDataに変換して戻す
-        return [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
-    }
-
-    - (id)generatePrivkeyFromData:(NSData *)privkeyData {
-        // Options (SECP256R1, private)
-        NSMutableDictionary *options = [NSMutableDictionary dictionary];
-        options[(__bridge id)kSecAttrKeyType]  = (__bridge id)kSecAttrKeyTypeECSECPrimeRandom;
-        options[(__bridge id)kSecAttrKeyClass] = (__bridge id)kSecAttrKeyClassPrivate;
-        // Create SecKeyRef of EC private key
-        CFErrorRef error = NULL;
-        id ref = CFBridgingRelease(SecKeyCreateWithData((__bridge CFDataRef)privkeyData, (__bridge CFDictionaryRef)options, &error));
-        if (error) {
-            NSError *err = CFBridgingRelease(error);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateWithData: %@", err.description];
-            return nil;
-        }
-        if (ref == nil) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyCreateWithData fail"];
-        }
-        return ref;
-    }
-
-    - (id)generatePubkeyFromPrivkey:(id)privSecKeyRef {
-        // Create SecKeyRef of EC public key
-        id ref = CFBridgingRelease(SecKeyCopyPublicKey((__bridge SecKeyRef)privSecKeyRef));
-        if (ref == nil) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
-        }
-        return ref;
-    }
-
-    - (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(id)privkey withAlgorithm:(SecKeyAlgorithm)algorithm {
-        // 署名アルゴリズムの妥当性チェック
-        if (SecKeyIsAlgorithmSupported((__bridge SecKeyRef)privkey, kSecKeyOperationTypeSign, algorithm) == false) {
-            [[ToolLogFile defaultLogger] error:@"createECDSASignatureWithData fail: algorithm not supported"];
-            return nil;
-        }
-        // 署名を生成
-        CFErrorRef error = NULL;
-        NSData *signature = (NSData *)CFBridgingRelease(SecKeyCreateSignature((__bridge SecKeyRef)privkey, algorithm, (__bridge CFDataRef)data, &error));
-        if (signature == nil) {
-            NSError *err = CFBridgingRelease(error);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"createECDSASignatureWithData fail: %@", err.description];
-            return nil;
-        }
-        // 生成された署名を戻す
-        return signature;
-    }
-
-    - (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(id)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm {
-        // 署名アルゴリズムの妥当性チェック
-        if (SecKeyIsAlgorithmSupported((__bridge SecKeyRef)pubkey, kSecKeyOperationTypeVerify, algorithm) == false) {
-            [[ToolLogFile defaultLogger] error:@"verifyECDSASignature fail: algorithm not supported"];
-            return false;
-        }
-        // 署名を検証
-        CFErrorRef error = NULL;
-        bool verified = SecKeyVerifySignature((__bridge SecKeyRef)pubkey, algorithm, (__bridge CFDataRef)dataToSign, (__bridge CFDataRef)signature, &error);
-        if (verified == false) {
-            NSError *err = CFBridgingRelease(error);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"verifyECDSASignature fail: %@", err.description];
-            return false;
-        }
-        // 署名検証成功
-        return true;
     }
     
     - (void)testAES256CBC {
