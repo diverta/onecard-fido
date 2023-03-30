@@ -429,6 +429,8 @@ fail:
     return ok;
 }
 
+/* 以下は移行済み
+ *
 // 公開鍵の妥当性検証用
 static uint8_t pubkey_from_cert[64];
 static uint8_t pubkey_from_privkey[64];
@@ -531,3 +533,4 @@ uint8_t validate_skey_cert(uint8_t *skey_bytes, size_t skey_bytes_size,
         return CTAP1_ERR_OTHER;
     }
 }
+ */
