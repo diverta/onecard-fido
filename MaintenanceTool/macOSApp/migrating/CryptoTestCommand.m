@@ -25,6 +25,41 @@
 
 @implementation CryptoTestCommand
 
+    - (void)testECDH {
+        // EC鍵ペアを生成
+        NSString *tag = @"Keypair01";
+        // get security access control
+        CFErrorRef aclCFError = NULL;
+        id acl = CFBridgingRelease(SecAccessControlCreateWithFlags(
+            kCFAllocatorDefault, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, kSecAccessControlPrivateKeyUsage, &aclCFError));
+        if (aclCFError) {
+            NSError *err = CFBridgingRelease(aclCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecAccessControlCreateWithFlags: %@", err.description];
+            return;
+        }
+        // generate attrs
+        NSDictionary<NSString *, id> *attrs = @{
+            (__bridge NSString *)kSecAttrKeyType : (__bridge NSString *)kSecAttrKeyTypeECSECPrimeRandom,
+            (__bridge NSString *)kSecAttrKeySizeInBits : @256,
+            (__bridge NSString *)kSecAttrTokenID : (__bridge NSString *)kSecAttrTokenIDSecureEnclave,
+            (__bridge NSString *)kSecPrivateKeyAttrs : @{
+                (__bridge NSString *)kSecAttrIsPermanent : @YES,
+                (__bridge NSString *)kSecAttrApplicationTag : tag,
+                (__bridge NSString *)kSecAttrAccessControl : acl
+            }
+        };
+        // get ec key pair
+        CFErrorRef keyCFError = NULL;
+        id privateSecKeyRef = CFBridgingRelease(SecKeyCreateRandomKey((__bridge CFDictionaryRef)attrs, &keyCFError));
+        if (keyCFError) {
+            NSError *err = CFBridgingRelease(keyCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateRandomKey: %@", err.description];
+            return;
+        }
+        // content of ec key pair
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef];
+    }
+
     - (void)testECKey {
         // SAMPLE: 公開鍵は証明書（CRT）から、秘密鍵はPEMから抽出したものを使用
         uint8_t public_key[] = {
