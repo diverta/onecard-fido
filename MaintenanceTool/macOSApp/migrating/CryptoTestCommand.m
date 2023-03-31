@@ -34,8 +34,8 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef];
         // get ec public & private key in external representation
         CFErrorRef keyCFError = NULL;
-        NSData *data = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)privateSecKeyRef, &keyCFError));
-        if (data == nil) {
+        NSData *data1 = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)privateSecKeyRef, &keyCFError));
+        if (data1 == nil) {
             [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
             return;
         }
@@ -44,17 +44,22 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCopyExternalRepresentation: %@", err.description];
             return;
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data1];
+        // こちらのバイト配列を抽出（頭の0x04を含める）
+        uint8_t pubkeyBytesForTest1[65];
+        [data1 getBytes:pubkeyBytesForTest1 length:sizeof(pubkeyBytesForTest1)];
+        [[ToolLogFile defaultLogger] debug:@"pubkeyBytesForTest(1)"];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:pubkeyBytesForTest1 size:sizeof(pubkeyBytesForTest1)];
 
-        // get ec public key
-        id secKeyRef = [ToolSecurity generatePubkeyFromPrivkey:privateSecKeyRef];
-        if (secKeyRef == nil) {
+        // EC鍵ペアをもう１セット生成（ECDH共通鍵生成用）
+        id privateSecKeyRef2 = [ToolSecurity generatePrivkeyFromRandom];
+        if (privateSecKeyRef2 == nil) {
             return;
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey done: %@", secKeyRef];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey(2) done: %@", privateSecKeyRef2];
         // get ec public key in external representation
-        data = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)secKeyRef, &keyCFError));
-        if (data == nil) {
+        NSData *data2 = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)privateSecKeyRef2, &keyCFError));
+        if (data2 == nil) {
             [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
             return;
         }
@@ -63,7 +68,12 @@
             [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCopyExternalRepresentation: %@", err.description];
             return;
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation(2) done: %@", data2];
+        // こちらのバイト配列を抽出（頭の0x04を含める）
+        uint8_t pubkeyBytesForTest2[65];
+        [data2 getBytes:pubkeyBytesForTest2 length:sizeof(pubkeyBytesForTest2)];
+        [[ToolLogFile defaultLogger] debug:@"pubkeyBytesForTest(2)"];
+        [[ToolLogFile defaultLogger] hexdumpOfBytes:pubkeyBytesForTest2 size:sizeof(pubkeyBytesForTest2)];
     }
 
     - (void)testECKey {
