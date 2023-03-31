@@ -27,24 +27,13 @@
 
     - (void)testECDH {
         // EC鍵ペアを生成
-        NSDictionary *attrs = @{
-            (id)kSecClass : (id)kSecClassKey,
-            (id)kSecAttrKeyType : (id)kSecAttrKeyTypeECSECPrimeRandom,
-            (id)kSecAttrKeySizeInBits : @256,
-            (id)kSecPrivateKeyAttrs : @{
-                (id)kSecAttrIsPermanent : @NO,
-            }
-        };
-        // get ec key pair
-        CFErrorRef keyCFError = NULL;
-        id privateSecKeyRef = CFBridgingRelease(SecKeyCreateRandomKey((__bridge CFDictionaryRef)attrs, &keyCFError));
-        if (keyCFError) {
-            NSError *err = CFBridgingRelease(keyCFError);
-            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateRandomKey: %@", err.description];
+        id privateSecKeyRef = [ToolSecurity generatePrivkeyFromRandom];
+        if (privateSecKeyRef == nil) {
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef];
         // get ec public & private key in external representation
+        CFErrorRef keyCFError = NULL;
         NSData *data = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)privateSecKeyRef, &keyCFError));
         if (data == nil) {
             [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
@@ -56,10 +45,10 @@
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data];
+
         // get ec public key
-        id secKeyRef = CFBridgingRelease(SecKeyCopyPublicKey((__bridge SecKeyRef)privateSecKeyRef));
+        id secKeyRef = [ToolSecurity generatePubkeyFromPrivkey:privateSecKeyRef];
         if (secKeyRef == nil) {
-            [[ToolLogFile defaultLogger] error:@"SecKeyCopyPublicKey fail"];
             return;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyPublicKey done: %@", secKeyRef];

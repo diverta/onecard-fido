@@ -42,6 +42,30 @@
         return ref;
     }
 
+    + (id)generatePrivkeyFromRandom {
+        // EC鍵ペア生成用の属性を設定（SECP256R1、キーストアに保存しない）
+        NSDictionary *attrs = @{
+            (__bridge id)kSecClass : (__bridge id)kSecClassKey,
+            (__bridge id)kSecAttrKeyType : (__bridge id)kSecAttrKeyTypeECSECPrimeRandom,
+            (__bridge id)kSecAttrKeySizeInBits : @256,
+            (__bridge id)kSecPrivateKeyAttrs : @{
+                (__bridge id)kSecAttrIsPermanent : @NO,
+            }
+        };
+        // EC鍵ペアを生成
+        CFErrorRef keyCFError = NULL;
+        id privateSecKeyRef = CFBridgingRelease(SecKeyCreateRandomKey((__bridge CFDictionaryRef)attrs, &keyCFError));
+        if (keyCFError) {
+            NSError *err = CFBridgingRelease(keyCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateRandomKey: %@", err.description];
+            return nil;
+        }
+        if (privateSecKeyRef == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCreateRandomKey fail"];
+        }
+        return privateSecKeyRef;
+    }
+
     + (id)generatePubkeyFromPrivkey:(id)privSecKeyRef {
         // Create SecKeyRef of EC public key
         id ref = CFBridgingRelease(SecKeyCopyPublicKey((__bridge SecKeyRef)privSecKeyRef));
