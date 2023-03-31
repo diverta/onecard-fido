@@ -51,6 +51,35 @@
         return ref;
     }
 
+    + (id)generatePubkeyFromData:(NSData *)pubkeyData {
+        // Options (SECP256R1, public)
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        options[(__bridge id)kSecAttrKeyType]  = (__bridge id)kSecAttrKeyTypeECSECPrimeRandom;
+        options[(__bridge id)kSecAttrKeyClass] = (__bridge id)kSecAttrKeyClassPublic;
+        // Create SecKeyRef of EC public key
+        CFErrorRef error = NULL;
+        id ref = CFBridgingRelease(SecKeyCreateWithData((__bridge CFDataRef)pubkeyData, (__bridge CFDictionaryRef)options, &error));
+        if (error) {
+            NSError *err = CFBridgingRelease(error);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCreateWithData: %@", err.description];
+            return nil;
+        }
+        if (ref == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCreateWithData fail"];
+        }
+        return ref;
+    }
+
+    + (id)generatePublicSecKeyRefFromPubkeyBytes:(uint8_t *)pubBytes {
+        // 公開鍵バイト配列を、Securityフレームワークの内部形式（SecKeyRef）に変換
+        NSData *pubData = [ToolSecurity generatePubkeyDataFromPubkeyBytes:pubBytes];
+        id publicSecKeyRef = [ToolSecurity generatePubkeyFromData:pubData];
+        if (publicSecKeyRef == nil) {
+            return nil;
+        }
+        return publicSecKeyRef;
+    }
+
     + (id)generatePrivkeyFromRandom {
         // EC鍵ペア生成用の属性を設定（SECP256R1、キーストアに保存しない）
         NSDictionary *attrs = @{

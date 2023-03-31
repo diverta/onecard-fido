@@ -49,6 +49,13 @@
         [ToolSecurity getKeyFromPrivateSecKeyRef:privateSecKeyRef2 toPrivkeyBuffer:NULL toPubkeyBuffer:pubkeyBytesForTest2];
         [[ToolLogFile defaultLogger] debug:@"pubkeyBytesForTest(2)"];
         [[ToolLogFile defaultLogger] hexdumpOfBytes:pubkeyBytesForTest2 size:sizeof(pubkeyBytesForTest2)];
+        // 抽出バイト配列から公開鍵をリストア
+        id restoredPubkey2 = [ToolSecurity generatePublicSecKeyRefFromPubkeyBytes:pubkeyBytesForTest2];
+        if (restoredPubkey2 == nil) {
+            return;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"generatePublicSecKeyRefFromPubkeyBytes(2) done: %@", restoredPubkey2];
+
     }
 
     - (void)testECKey {

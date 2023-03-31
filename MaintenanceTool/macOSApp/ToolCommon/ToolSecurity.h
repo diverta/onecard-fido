@@ -14,6 +14,8 @@
     + (NSData *)generatePrivkeyDataFromPrivkeyBytes:(uint8_t *)privBytes withPubkeyBytes:(uint8_t *)pubBytes;
     + (NSData *)generatePubkeyDataFromPubkeyBytes:(uint8_t *)pubBytes;
     + (id)generatePrivkeyFromData:(NSData *)privkeyData;
+    + (id)generatePubkeyFromData:(NSData *)pubkeyData;
+    + (id)generatePublicSecKeyRefFromPubkeyBytes:(uint8_t *)pubBytes;
     + (id)generatePrivkeyFromRandom;
     + (id)generatePubkeyFromPrivkey:(id)privSecKeyRef;
     + (bool)getKeyFromPrivateSecKeyRef:(id)secKeyRef toPrivkeyBuffer:(uint8_t *)privkeyBytes toPubkeyBuffer:(uint8_t *)pubkeyBytes;
