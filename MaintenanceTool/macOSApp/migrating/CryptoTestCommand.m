@@ -27,16 +27,20 @@
 
     - (void)testECDH {
         // EC鍵ペアを生成
-        id privateSecKeyRef = [ToolSecurity generatePrivkeyFromRandom];
-        if (privateSecKeyRef == nil) {
+        id privateSecKeyRef1 = [ToolSecurity generatePrivkeyFromRandom];
+        if (privateSecKeyRef1 == nil) {
             return;
         }
-        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCreateRandomKey done: %@", privateSecKeyRef1];
         // こちらのバイト配列を抽出
         uint8_t pubkeyBytesForTest1[64];
-        [ToolSecurity getKeyFromPrivateSecKeyRef:privateSecKeyRef toPrivkeyBuffer:NULL toPubkeyBuffer:pubkeyBytesForTest1];
-        [[ToolLogFile defaultLogger] debug:@"pubkeyBytesForTest(1)"];
-        [[ToolLogFile defaultLogger] hexdumpOfBytes:pubkeyBytesForTest1 size:sizeof(pubkeyBytesForTest1)];
+        [ToolSecurity getKeyFromPrivateSecKeyRef:privateSecKeyRef1 toPrivkeyBuffer:NULL toPubkeyBuffer:pubkeyBytesForTest1];
+        // 抽出バイト配列から公開鍵をリストア
+        id restoredPubkey1 = [ToolSecurity generatePublicSecKeyRefFromPubkeyBytes:pubkeyBytesForTest1];
+        if (restoredPubkey1 == nil) {
+            return;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"generatePublicSecKeyRefFromPubkeyBytes(1) done: %@", restoredPubkey1];
 
         // EC鍵ペアをもう１セット生成（ECDH共通鍵生成用）
         id privateSecKeyRef2 = [ToolSecurity generatePrivkeyFromRandom];
@@ -47,8 +51,6 @@
         // こちらのバイト配列を抽出
         uint8_t pubkeyBytesForTest2[64];
         [ToolSecurity getKeyFromPrivateSecKeyRef:privateSecKeyRef2 toPrivkeyBuffer:NULL toPubkeyBuffer:pubkeyBytesForTest2];
-        [[ToolLogFile defaultLogger] debug:@"pubkeyBytesForTest(2)"];
-        [[ToolLogFile defaultLogger] hexdumpOfBytes:pubkeyBytesForTest2 size:sizeof(pubkeyBytesForTest2)];
         // 抽出バイト配列から公開鍵をリストア
         id restoredPubkey2 = [ToolSecurity generatePublicSecKeyRefFromPubkeyBytes:pubkeyBytesForTest2];
         if (restoredPubkey2 == nil) {
@@ -56,6 +58,29 @@
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"generatePublicSecKeyRefFromPubkeyBytes(2) done: %@", restoredPubkey2];
 
+        // 共通鍵の算出用設定
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA256;
+        NSDictionary *parameters = @{
+            (__bridge id)kSecKeyKeyExchangeParameterRequestedSize : @32,
+            (__bridge id)kSecClass : (__bridge id)kSecClassKey,
+            (__bridge id)kSecAttrKeyType : (__bridge id)kSecAttrKeyTypeECSECPrimeRandom,
+            (__bridge id)kSecAttrKeySizeInBits : @256,
+            (__bridge id)kSecPrivateKeyAttrs : @{
+                (__bridge id)kSecAttrIsPermanent : @NO,
+            },
+            (__bridge id)kSecPublicKeyAttrs : @{
+                (__bridge id)kSecAttrIsPermanent : @NO,
+            },
+        };
+        // 共通鍵を生成（１）
+        CFErrorRef error = NULL;
+        NSData *exchangedKey1 = CFBridgingRelease(SecKeyCopyKeyExchangeResult(
+            (__bridge SecKeyRef)privateSecKeyRef1, algorithm, (__bridge SecKeyRef)restoredPubkey2, (__bridge CFDictionaryRef)parameters, &error));
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyKeyExchangeResult(1) done: %@", exchangedKey1];
+        // 共通鍵を生成（２）
+        NSData *exchangedKey2 = CFBridgingRelease(SecKeyCopyKeyExchangeResult(
+            (__bridge SecKeyRef)privateSecKeyRef2, algorithm, (__bridge SecKeyRef)restoredPubkey1, (__bridge CFDictionaryRef)parameters, &error));
+        [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyKeyExchangeResult(2) done: %@", exchangedKey2];
     }
 
     - (void)testECKey {
