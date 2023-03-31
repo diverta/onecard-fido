@@ -23,6 +23,15 @@
         return [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
     }
 
+    + (NSData *)generatePubkeyDataFromPubkeyBytes:(uint8_t *)pubBytes {
+        // Securityフレームワークで処理できる形式（0x04 || X || Y）に変換
+        uint8_t pkeyBytes[65];
+        pkeyBytes[0] = 0x04;
+        memcpy(pkeyBytes + 1, pubBytes, 64);
+        // NSDataに変換して戻す
+        return [[NSData alloc] initWithBytes:pkeyBytes length:sizeof(pkeyBytes)];
+    }
+
     + (id)generatePrivkeyFromData:(NSData *)privkeyData {
         // Options (SECP256R1, private)
         NSMutableDictionary *options = [NSMutableDictionary dictionary];

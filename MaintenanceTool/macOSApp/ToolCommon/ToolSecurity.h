@@ -12,6 +12,7 @@
 @interface ToolSecurity : NSObject
 
     + (NSData *)generatePrivkeyDataFromPrivkeyBytes:(uint8_t *)privBytes withPubkeyBytes:(uint8_t *)pubBytes;
+    + (NSData *)generatePubkeyDataFromPubkeyBytes:(uint8_t *)pubBytes;
     + (id)generatePrivkeyFromData:(NSData *)privkeyData;
     + (id)generatePrivkeyFromRandom;
     + (id)generatePubkeyFromPrivkey:(id)privSecKeyRef;
