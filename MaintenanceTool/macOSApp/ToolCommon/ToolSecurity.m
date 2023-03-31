@@ -172,4 +172,35 @@
         return true;
     }
 
+    + (NSData *)generateECDHSharedSecretWithPrivate:(id)privateSecKeyRef withPublic:(id)publicSecKeyRef {
+        // 共通鍵の算出用設定（ECDH, SECP256R1 key, SHA256 hash）
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA256;
+        NSDictionary *parameters = @{
+            (__bridge id)kSecKeyKeyExchangeParameterRequestedSize : @32,
+            (__bridge id)kSecClass : (__bridge id)kSecClassKey,
+            (__bridge id)kSecAttrKeyType : (__bridge id)kSecAttrKeyTypeECSECPrimeRandom,
+            (__bridge id)kSecAttrKeySizeInBits : @256,
+            (__bridge id)kSecPrivateKeyAttrs : @{
+                (__bridge id)kSecAttrIsPermanent : @NO,
+            },
+            (__bridge id)kSecPublicKeyAttrs : @{
+                (__bridge id)kSecAttrIsPermanent : @NO,
+            },
+        };
+        // 共通鍵を生成
+        CFErrorRef keyCFError = NULL;
+        NSData *sharedSecretData = CFBridgingRelease(SecKeyCopyKeyExchangeResult(
+            (__bridge SecKeyRef)privateSecKeyRef, algorithm, (__bridge SecKeyRef)publicSecKeyRef, (__bridge CFDictionaryRef)parameters, &keyCFError));
+        if (keyCFError) {
+            NSError *err = CFBridgingRelease(keyCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCopyKeyExchangeResult: %@", err.description];
+            return nil;
+        }
+        if (sharedSecretData == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyKeyExchangeResult fail"];
+            return nil;
+        }
+        return sharedSecretData;
+    }
+
 @end

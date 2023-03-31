@@ -58,28 +58,12 @@
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"generatePublicSecKeyRefFromPubkeyBytes(2) done: %@", restoredPubkey2];
 
-        // 共通鍵の算出用設定
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA256;
-        NSDictionary *parameters = @{
-            (__bridge id)kSecKeyKeyExchangeParameterRequestedSize : @32,
-            (__bridge id)kSecClass : (__bridge id)kSecClassKey,
-            (__bridge id)kSecAttrKeyType : (__bridge id)kSecAttrKeyTypeECSECPrimeRandom,
-            (__bridge id)kSecAttrKeySizeInBits : @256,
-            (__bridge id)kSecPrivateKeyAttrs : @{
-                (__bridge id)kSecAttrIsPermanent : @NO,
-            },
-            (__bridge id)kSecPublicKeyAttrs : @{
-                (__bridge id)kSecAttrIsPermanent : @NO,
-            },
-        };
         // 共通鍵を生成（１）
         CFErrorRef error = NULL;
-        NSData *exchangedKey1 = CFBridgingRelease(SecKeyCopyKeyExchangeResult(
-            (__bridge SecKeyRef)privateSecKeyRef1, algorithm, (__bridge SecKeyRef)restoredPubkey2, (__bridge CFDictionaryRef)parameters, &error));
+        NSData *exchangedKey1 = [ToolSecurity generateECDHSharedSecretWithPrivate:privateSecKeyRef1 withPublic:restoredPubkey2];
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyKeyExchangeResult(1) done: %@", exchangedKey1];
         // 共通鍵を生成（２）
-        NSData *exchangedKey2 = CFBridgingRelease(SecKeyCopyKeyExchangeResult(
-            (__bridge SecKeyRef)privateSecKeyRef2, algorithm, (__bridge SecKeyRef)restoredPubkey1, (__bridge CFDictionaryRef)parameters, &error));
+        NSData *exchangedKey2 = [ToolSecurity generateECDHSharedSecretWithPrivate:privateSecKeyRef2 withPublic:restoredPubkey1];
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyKeyExchangeResult(2) done: %@", exchangedKey2];
     }
 

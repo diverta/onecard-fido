@@ -22,6 +22,7 @@
 
     + (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(id)privkey withAlgorithm:(SecKeyAlgorithm)algorithm;
     + (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(id)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm;
+    + (NSData *)generateECDHSharedSecretWithPrivate:(id)privateSecKeyRef withPublic:(id)publicSecKeyRef;
 
 @end
 
