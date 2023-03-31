@@ -75,6 +75,29 @@
         return ref;
     }
 
+    + (bool)getKeyFromPrivateSecKeyRef:(id)secKeyRef toPrivkeyBuffer:(uint8_t *)privkeyBytes toPubkeyBuffer:(uint8_t *)pubkeyBytes {
+        // Securityフレームワーク内部形式の秘密鍵／公開鍵を、外部表現形式（0x04 || X || Y || K）に変換
+        CFErrorRef keyCFError = NULL;
+        NSData *keyData = CFBridgingRelease(SecKeyCopyExternalRepresentation((__bridge SecKeyRef)secKeyRef, &keyCFError));
+        if (keyData == nil) {
+            [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
+            return false;
+        }
+        if (keyCFError) {
+            NSError *err = CFBridgingRelease(keyCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCopyExternalRepresentation: %@", err.description];
+            return false;
+        }
+        // バイト配列を抽出
+        if (pubkeyBytes != NULL) {
+            [keyData getBytes:pubkeyBytes range:NSMakeRange(1, 64)];
+        }
+        if (privkeyBytes != NULL) {
+            [keyData getBytes:privkeyBytes range:NSMakeRange(65, 32)];
+        }
+        return true;
+    }
+
     + (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(id)privkey withAlgorithm:(SecKeyAlgorithm)algorithm {
         // 署名アルゴリズムの妥当性チェック
         if (SecKeyIsAlgorithmSupported((__bridge SecKeyRef)privkey, kSecKeyOperationTypeSign, algorithm) == false) {

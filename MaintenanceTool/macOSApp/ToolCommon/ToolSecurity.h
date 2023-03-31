@@ -15,6 +15,7 @@
     + (id)generatePrivkeyFromData:(NSData *)privkeyData;
     + (id)generatePrivkeyFromRandom;
     + (id)generatePubkeyFromPrivkey:(id)privSecKeyRef;
+    + (bool)getKeyFromPrivateSecKeyRef:(id)secKeyRef toPrivkeyBuffer:(uint8_t *)privkeyBytes toPubkeyBuffer:(uint8_t *)pubkeyBytes;
 
     + (NSData *)createECDSASignatureWithData:(NSData *)data withPrivkeyRef:(id)privkey withAlgorithm:(SecKeyAlgorithm)algorithm;
     + (bool)verifyECDSASignature:(NSData *)signature withDataToSign:(NSData *)dataToSign withPubkeyRef:(id)pubkey withAlgorithm:(SecKeyAlgorithm)algorithm;
