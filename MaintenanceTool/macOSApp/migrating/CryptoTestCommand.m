@@ -58,6 +58,11 @@
             [[ToolLogFile defaultLogger] error:@"SecKeyCopyExternalRepresentation fail"];
             return;
         }
+        if (keyCFError) {
+            NSError *err = CFBridgingRelease(keyCFError);
+            [[ToolLogFile defaultLogger] errorWithFormat:@"SecKeyCopyExternalRepresentation: %@", err.description];
+            return;
+        }
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyExternalRepresentation done: %@", data];
     }
 
