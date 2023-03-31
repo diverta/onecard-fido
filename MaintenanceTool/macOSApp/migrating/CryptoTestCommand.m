@@ -59,7 +59,6 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"generatePublicSecKeyRefFromPubkeyBytes(2) done: %@", restoredPubkey2];
 
         // 共通鍵を生成（１）
-        CFErrorRef error = NULL;
         NSData *exchangedKey1 = [ToolSecurity generateECDHSharedSecretWithPrivate:privateSecKeyRef1 withPublic:restoredPubkey2];
         [[ToolLogFile defaultLogger] debugWithFormat:@"SecKeyCopyKeyExchangeResult(1) done: %@", exchangedKey1];
         // 共通鍵を生成（２）
