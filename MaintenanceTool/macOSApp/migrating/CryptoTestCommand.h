@@ -11,7 +11,7 @@
 
 @interface CryptoTestCommand : NSObject
 
-    - (void)testECDH;
+    - (void)testECDHWithSample;
     - (void)testECKey;
     - (void)testAES256CBC;
     - (void)testTripleDES;
