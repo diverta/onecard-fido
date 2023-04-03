@@ -1516,13 +1516,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/include",
+					"${HOME}/opt/openssl-3.0.8/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/openssl-3.0.8/lib",
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
@@ -1549,13 +1549,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/include",
+					"${HOME}/opt/openssl-3.0.8/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "MaintenanceTool/MaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/openssl-3.0.8/lib",
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
@@ -1582,13 +1582,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/include",
+					"${HOME}/opt/openssl-3.0.8/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/openssl-3.0.8/lib",
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
@@ -1615,13 +1615,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MaintenanceTool/MaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/include",
+					"${HOME}/opt/openssl-3.0.8/include",
 					"${HOME}/opt/tinycbor/src",
 				);
 				INFOPLIST_FILE = "VendorMaintenanceTool/VendorMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = (
-					"${HOME}/opt/openssl/lib",
+					"${HOME}/opt/openssl-3.0.8/lib",
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
