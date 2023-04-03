@@ -487,12 +487,8 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // 内部形式の公開鍵を、バイトデータに変換
-    if (EC_POINT_point2bn(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, bn_public_key, ctx) == NULL) {
-        log_debug("%s: EC_POINT_point2bn failed", __func__);
-        goto fail;
-    }
-    if (BN_bn2bin(bn_public_key, conv_buf) == 0) {
-        log_debug("%s: BN_bn2bin failed", __func__);
+    if (EC_POINT_point2oct(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, conv_buf, sizeof(conv_buf), ctx) == 0) {
+        log_debug("%s: EC_POINT_point2oct failed", __func__);
         goto fail;
     }
 
