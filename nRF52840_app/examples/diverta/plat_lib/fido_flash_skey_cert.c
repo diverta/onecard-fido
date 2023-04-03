@@ -164,7 +164,9 @@ bool fido_flash_skey_cert_write(void)
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればシステムエラー扱い)
         NRF_LOG_ERROR("no space in flash, calling FDS GC ");
-        fido_flash_fds_force_gc();
+        if (fido_flash_fds_force_gc() == false) {
+            return false;
+        }
     }
     
     return true;
