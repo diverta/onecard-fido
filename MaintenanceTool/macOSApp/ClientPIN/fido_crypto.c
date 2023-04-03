@@ -429,8 +429,6 @@ fail:
     return ok;
 }
 
-/* 以下は移行済み
- *
 // 公開鍵の妥当性検証用
 static uint8_t pubkey_from_cert[64];
 static uint8_t pubkey_from_privkey[64];
@@ -475,8 +473,7 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // EC_POINTを生成
-    EC_KEY *eckey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
-    const EC_GROUP *group = EC_KEY_get0_group(eckey);
+    const EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
     EC_POINT *ec_point = EC_POINT_new(group);
     if (ec_point == NULL) {
         log_debug("%s: EC_POINT_new failed", __func__);
@@ -490,12 +487,8 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // 内部形式の公開鍵を、バイトデータに変換
-    if (EC_POINT_point2bn(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, bn_public_key, ctx) == NULL) {
-        log_debug("%s: EC_POINT_point2bn failed", __func__);
-        goto fail;
-    }
-    if (BN_bn2bin(bn_public_key, conv_buf) == 0) {
-        log_debug("%s: BN_bn2bin failed", __func__);
+    if (EC_POINT_point2oct(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, conv_buf, sizeof(conv_buf), ctx) == 0) {
+        log_debug("%s: EC_POINT_point2oct failed", __func__);
         goto fail;
     }
 
@@ -533,4 +526,3 @@ uint8_t validate_skey_cert(uint8_t *skey_bytes, size_t skey_bytes_size,
         return CTAP1_ERR_OTHER;
     }
 }
- */
