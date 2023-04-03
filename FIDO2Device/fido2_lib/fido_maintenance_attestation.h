@@ -15,6 +15,7 @@ extern "C" {
 // 関数群
 //
 void        fido_maintenance_attestation_install(void);
+void        fido_maintenance_attestation_install_retry(void);
 void        fido_maintenance_attestation_reset(void);
 void        fido_maintenance_attestation_record_updated(void);
 void        fido_maintenance_attestation_aes_password_record_updated(void);

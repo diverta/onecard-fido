@@ -414,6 +414,9 @@ void fido_maintenance_command_flash_gc_done(void)
     // GC実行直前の処理を再実行
     uint8_t mnt_cmd = fido_maintenance_command_byte();
     switch (mnt_cmd) {
+        case MNT_COMMAND_INSTALL_ATTESTATION:
+            fido_maintenance_attestation_install_retry();
+            break;
         default:
             break;
     }
