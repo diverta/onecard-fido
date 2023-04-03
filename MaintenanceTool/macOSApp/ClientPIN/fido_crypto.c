@@ -473,8 +473,7 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // EC_POINTを生成
-    EC_KEY *eckey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
-    const EC_GROUP *group = EC_KEY_get0_group(eckey);
+    const EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
     EC_POINT *ec_point = EC_POINT_new(group);
     if (ec_point == NULL) {
         log_debug("%s: EC_POINT_new failed", __func__);
