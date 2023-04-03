@@ -153,8 +153,11 @@
       <itemPath>../../../../CCID/piv_lib/ccid_ykpiv_import_key.h</itemPath>
     </logicalFolder>
     <logicalFolder name="plat_lib" displayName="plat_lib" projectFiles="true">
+      <itemPath>../plat_lib/app_tiny_tft.c</itemPath>
+      <itemPath>../plat_lib/app_tiny_tft.h</itemPath>
       <itemPath>../plat_lib/application_init.c</itemPath>
       <itemPath>../plat_lib/application_init.h</itemPath>
+      <itemPath>../plat_lib/application_init_define.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
@@ -202,6 +205,16 @@
     <df root="../secure_device_app" name="0">
       <in>main.c</in>
     </df>
+    <logicalFolder name="tiny_tft_lib"
+                   displayName="tiny_tft_lib"
+                   projectFiles="true">
+      <itemPath>../../../../TFT/tiny_tft_lib/README.md</itemPath>
+      <itemPath>../../../../TFT/tiny_tft_lib/tiny_tft.c</itemPath>
+      <itemPath>../../../../TFT/tiny_tft_lib/tiny_tft.h</itemPath>
+      <itemPath>../../../../TFT/tiny_tft_lib/tiny_tft_const.c</itemPath>
+      <itemPath>../../../../TFT/tiny_tft_lib/tiny_tft_const.h</itemPath>
+      <itemPath>../../../../TFT/tiny_tft_lib/tiny_tft_define.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
@@ -264,6 +277,7 @@
     <Elem>../../../../FIDO2Device/util_lib</Elem>
     <Elem>../wrapper_lib</Elem>
     <Elem>../../../../FIDO2Device/wrapper_header</Elem>
+    <Elem>../../../../TFT/tiny_tft_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -1012,6 +1026,36 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../../TFT/tiny_tft_lib/README.md"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../TFT/tiny_tft_lib/tiny_tft.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../TFT/tiny_tft_lib/tiny_tft.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../TFT/tiny_tft_lib/tiny_tft_const.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../TFT/tiny_tft_lib/tiny_tft_const.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../TFT/tiny_tft_lib/tiny_tft_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../ble_lib/ble_service_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../ble_lib/ble_service_common.h" ex="false" tool="3" flavor2="0">
@@ -1049,9 +1093,18 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../plat_lib/app_tiny_tft.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/app_tiny_tft.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../plat_lib/application_init.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/application_init.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/application_init_define.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="0">
       </item>
