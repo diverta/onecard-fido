@@ -4,13 +4,14 @@
 //
 //  Created by Makoto Morita on 2023/01/11.
 //
+#import "debug_log.h"
+#import "fido_crypto.h"
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
 #import "FIDOAttestationCommand.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
-#import "ToolSecurity.h"
 #import "VendorFunctionCommand.h"
 
 @interface FIDOAttestationCommand () <AppHIDCommandDelegate>
@@ -180,7 +181,8 @@
         }
 
         // 秘密鍵と証明書の整合性検証を行う
-        if ([self validatePrivateKeyData:dataSkey withCertData:dataCert] == false) {
+        if (validate_skey_cert((uint8_t *)[dataSkey bytes], [dataSkey length], (uint8_t *)[dataCert bytes], [dataCert length]) != CTAP1_ERR_SUCCESS) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Public key validation failed: %s", log_debug_message()];
             [self setErrorMessage:MSG_INVALID_SKEY_OR_CERT];
             return false;
         }
@@ -189,65 +191,6 @@
         [requestData appendData:dataSkey];
         [requestData appendData:dataCert];
         return true;
-    }
-
-    - (bool)validatePrivateKeyData:(NSData *)privateKeyData withCertData:(NSData *)certData {
-        // 証明書から公開鍵を抽出
-        NSData *pubkeyData = [self extractPubkeyDataFromCertData:certData];
-        if (pubkeyData == nil) {
-            return false;
-        }
-        // Securityフレームワークで処理できる形式（0x04 || X || Y || K）に変換
-        uint8_t *privkeyBytes = (uint8_t *)[privateKeyData bytes];
-        uint8_t *pubkeyBytes  = (uint8_t *)[pubkeyData bytes];
-        NSData  *privkeyData  = [ToolSecurity generatePrivkeyDataFromPrivkeyBytes:privkeyBytes withPubkeyBytes:pubkeyBytes];
-        // EC秘密鍵を内部形式に変換
-        id privSecKeyRef = [ToolSecurity generatePrivkeyFromData:privkeyData];
-        if (privSecKeyRef == nil) {
-            return false;
-        }
-        // EC公開鍵を内部形式に変換
-        id pubSecKeyRef = [ToolSecurity generatePubkeyFromPrivkey:privSecKeyRef];
-        if (pubSecKeyRef == nil) {
-            return false;
-        }
-        // サンプルの署名ベース
-        uint8_t sample[] = {
-            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-            0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0f, 0x10, 0x11,
-            0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
-            0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21,
-        };
-        NSData *data2sign = [[NSData alloc] initWithBytes:sample length:sizeof(sample)];
-        // 署名を生成
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmECDSASignatureMessageX962SHA256;
-        NSData *signature = [ToolSecurity createECDSASignatureWithData:data2sign withPrivkeyRef:privSecKeyRef withAlgorithm:algorithm];
-        if (signature == nil) {
-            return false;
-        }
-        // 署名を検証
-        if ([ToolSecurity verifyECDSASignature:signature withDataToSign:data2sign withPubkeyRef:pubSecKeyRef withAlgorithm:algorithm]) {
-            [[ToolLogFile defaultLogger] info:@"ECDSA signature verify success"];
-        }
-        return true;
-    }
-
-    - (NSData *)extractPubkeyDataFromCertData:(NSData *)dataCert {
-        // 開始バイトが不正な場合は終了
-        uint8_t *cert_data = (uint8_t *)[dataCert bytes];
-        size_t cert_data_length = [dataCert length];
-        if (cert_data[0] != 0x30) {
-            return nil;
-        }
-        for (size_t i = 3; i < cert_data_length; i++) {
-            if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
-                cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
-                // 03 42 00 04 というシーケンスが発見されたら、その後ろから64バイト分のデータをコピー
-                NSData *data = [[NSData alloc] initWithBytes:(cert_data + i + 1) length:64];
-                return data;
-            }
-        }
-        return nil;
     }
 
     #pragma mark - Read private key data
