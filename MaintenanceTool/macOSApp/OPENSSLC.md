@@ -69,7 +69,7 @@ CXXFLAGS=-mmacosx-version-min=11.0
 make
 ```
 
-ご参考：[上記コマンド実行時のログ](assets09/OpenSSL3.0.8_Build.txt)
+ご参考：[上記コマンド実行時のログ](assets09/OpenSSL3.0.8_Build.log)
 
 ### インストールの実行
 
@@ -80,4 +80,4 @@ make test
 make install
 ```
 
-ご参考：[上記コマンド実行時のログ](assets09/OpenSSL3.0.8_Install.txt)
+ご参考：[上記コマンド実行時のログ](assets09/OpenSSL3.0.8_Install.log)
