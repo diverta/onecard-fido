@@ -30,6 +30,7 @@ typedef enum : NSInteger {
     - (void)debugWithFormat:(NSString *)format, ...;
     - (void)dump:(NSString *)logMessage;
     - (void)hexdump:(NSData *)data;
+    - (void)hexdumpOfBytes:(uint8_t *)bytes size:(size_t)size;
     - (NSString *)logFilePathString;
 
 @end

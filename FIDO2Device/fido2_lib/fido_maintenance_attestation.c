@@ -49,6 +49,15 @@ void fido_maintenance_attestation_install(void)
     }
 }
 
+void fido_maintenance_attestation_install_retry(void)
+{
+    // 鍵・証明書データをFlash ROMへ書込
+    fido_log_warning("Install FIDO attestation retry");
+    if (fido_flash_skey_cert_write() == false) {
+        fido_maintenance_send_command_status(CTAP2_ERR_VENDOR_FIRST);
+    }
+}
+
 static void generate_random_password(void)
 {
     // 32バイトのランダムベクターを生成

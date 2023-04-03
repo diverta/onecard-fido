@@ -4,10 +4,10 @@
 //
 //  Created by Makoto Morita on 2020/12/01.
 //
+#import <CommonCrypto/CommonCryptor.h>
 #import "debug_log.h"
-#import "tool_crypto_common.h"
-#import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
+#import "triple_des.h"
 
 #import "AppCommonMessage.h"
 #import "FirmwareResetCommand.h"
@@ -21,6 +21,9 @@
 #import "ToolPIVCommon.h"
 #import "ToolPIVImporter.h"
 #import "ToolPIVSetting.h"
+
+#define CRYPTO_ALG_3DES     0x03
+#define DES_LEN_DES         8
 
 @implementation ToolPIVParameter
 
@@ -955,14 +958,14 @@
     - (NSData *)decryptPivAdminAuthWitness:(NSData *)encryptedWitness {
         // デフォルトのPIV管理パスワードを取得
         unsigned char *pw = tool_piv_admin_des_default_key();
-        if (tool_crypto_des_import_key(pw, DES_LEN_3DES) == false) {
+        if (triple_des_import_key(pw, kCCKeySize3DES) == false) {
             return nil;
         }
         // PIV管理パスワードを使用し、チャレンジを復号化
         const unsigned char *encrypted = [encryptedWitness bytes];
         unsigned char decrypted[DES_LEN_DES];
         size_t decryptedSize = DES_LEN_DES;
-        if (tool_crypto_des_decrypt(encrypted, DES_LEN_DES, decrypted, &decryptedSize) == false) {
+        if (triple_des_decrypt(encrypted, DES_LEN_DES, decrypted, &decryptedSize) == false) {
             return nil;
         }
         // 復号化されたチャレンジを戻す
