@@ -124,7 +124,7 @@ static uint8_t es256_pk_from_EC_KEY(es256_pk_t *pk, const EC_KEY *ec) {
         (y = BN_CTX_get(ctx)) == NULL)
         goto fail;
     
-    if (EC_POINT_get_affine_coordinates_GFp(g, q, x, y, ctx) == 0 ||
+    if (EC_POINT_get_affine_coordinates(g, q, x, y, ctx) == 0 ||
         (n = BN_num_bytes(x)) < 0 || (size_t)n > sizeof(pk->x) ||
         (n = BN_num_bytes(y)) < 0 || (size_t)n > sizeof(pk->y)) {
         log_debug("%s: EC_POINT_get_affine_coordinates_GFp", __func__);
