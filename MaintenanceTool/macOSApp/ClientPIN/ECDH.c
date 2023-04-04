@@ -119,82 +119,6 @@ fail:
     return ok;
 }
 
-static uint8_t es256_pk_from_EC_KEY(es256_pk_t *pk, const EC_KEY *ec) {
-    BN_CTX          *ctx = NULL;
-    BIGNUM          *x = NULL;
-    BIGNUM          *y = NULL;
-    const EC_POINT  *q = NULL;
-    const EC_GROUP  *g = NULL;
-    uint8_t         ok = CTAP1_ERR_OTHER;
-    int             n;
-    
-    if ((q = EC_KEY_get0_public_key(ec)) == NULL ||
-        (g = EC_KEY_get0_group(ec)) == NULL)
-        goto fail;
-    
-    if ((ctx = BN_CTX_new()) == NULL ||
-        (x = BN_CTX_get(ctx)) == NULL ||
-        (y = BN_CTX_get(ctx)) == NULL)
-        goto fail;
-    
-    if (EC_POINT_get_affine_coordinates(g, q, x, y, ctx) == 0 ||
-        (n = BN_num_bytes(x)) < 0 || (size_t)n > sizeof(pk->x) ||
-        (n = BN_num_bytes(y)) < 0 || (size_t)n > sizeof(pk->y)) {
-        log_debug("%s: EC_POINT_get_affine_coordinates_GFp", __func__);
-        goto fail;
-    }
-    
-    if ((n = BN_bn2bin(x, pk->x)) < 0 || (size_t)n > sizeof(pk->x) ||
-        (n = BN_bn2bin(y, pk->y)) < 0 || (size_t)n > sizeof(pk->y)) {
-        log_debug("%s: BN_bn2bin", __func__);
-        goto fail;
-    }
-    
-    ok = CTAP1_ERR_SUCCESS;
-
-fail:
-    if (ctx != NULL)
-        BN_CTX_free(ctx);
-    
-    return ok;
-}
-
-static uint8_t es256_derive_pk(const es256_sk_t *sk, es256_pk_t *pk) {
-    BIGNUM          *d = NULL;
-    EC_KEY          *ec = NULL;
-    EC_POINT        *q = NULL;
-    const EC_GROUP  *g = NULL;
-    const int       nid = NID_X9_62_prime256v1;
-    uint8_t         ok = CTAP1_ERR_OTHER;
-    
-    if ((d = BN_bin2bn(sk->d, (int)sizeof(sk->d), NULL)) == NULL ||
-        (ec = EC_KEY_new_by_curve_name(nid)) == NULL ||
-        (g = EC_KEY_get0_group(ec)) == NULL ||
-        (q = EC_POINT_new(g)) == NULL) {
-        log_debug("%s: get", __func__);
-        goto fail;
-    }
-    
-    if (EC_POINT_mul(g, q, d, NULL, NULL, NULL) == 0 ||
-        EC_KEY_set_public_key(ec, q) == 0 ||
-        es256_pk_from_EC_KEY(pk, ec) != CTAP1_ERR_SUCCESS) {
-        log_debug("%s: set", __func__);
-        goto fail;
-    }
-    
-    ok = CTAP1_ERR_SUCCESS;
-
-fail:
-    if (d != NULL)
-        BN_clear_free(d);
-    if (q != NULL)
-        EC_POINT_free(q);
-    if (ec != NULL)
-        EC_KEY_free(ec);
-    
-    return ok;
-}
-
 EVP_PKEY *es256_pk_to_EVP_PKEY(const es256_pk_t *k) {
     BN_CTX   *bnctx = NULL;
     EC_KEY   *ec = NULL;
@@ -374,8 +298,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     }
     
     // ECDHキーペアを新規生成
-    if (es256_sk_create(sk, pk) != CTAP1_ERR_SUCCESS ||
-        es256_derive_pk(sk, pk) != CTAP1_ERR_SUCCESS) {
+    if (es256_sk_create(sk, pk) != CTAP1_ERR_SUCCESS) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
