@@ -60,7 +60,7 @@ static void es256_pk_set_y(es256_pk_t *pk, const unsigned char *y) {
     memcpy(pk->y, y, sizeof(pk->y));
 }
 
-static uint8_t es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
+static EVP_PKEY *es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
     EVP_PKEY_CTX    *pctx = NULL;
     EVP_PKEY_CTX    *kctx = NULL;
     EVP_PKEY        *p = NULL;
@@ -68,7 +68,6 @@ static uint8_t es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
     BIGNUM          *d = NULL;
     const int       nid = NID_X9_62_prime256v1;
     int             n;
-    uint8_t         ok = CTAP1_ERR_OTHER;
     
     if ((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL)) == NULL ||
         EVP_PKEY_paramgen_init(pctx) <= 0 ||
@@ -102,13 +101,10 @@ static uint8_t es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
     }
     memcpy(pubkey->x, created_pubkey + 1,  32);
     memcpy(pubkey->y, created_pubkey + 33, 32);
-    ok = CTAP1_ERR_SUCCESS;
 
 fail:
     if (p != NULL)
         EVP_PKEY_free(p);
-    if (k != NULL)
-        EVP_PKEY_free(k);
     if (pctx != NULL)
         EVP_PKEY_CTX_free(pctx);
     if (kctx != NULL)
@@ -116,7 +112,7 @@ fail:
     if (d != NULL)
         BN_free(d);
     
-    return ok;
+    return k;
 }
 
 EVP_PKEY *es256_pk_to_EVP_PKEY(const es256_pk_t *k) {
@@ -288,6 +284,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     es256_sk_t  *sk   = NULL; /* our private key */
     es256_pk_t  *ak   = NULL; /* authenticator's public key */
     fido_blob_t *ecdh = NULL; /* shared ecdh secret; returned */
+    EVP_PKEY    *pkey = NULL;
 
     // 作業領域の確保
     if ((sk = es256_sk_new()) == NULL ||
@@ -298,7 +295,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     }
     
     // ECDHキーペアを新規生成
-    if (es256_sk_create(sk, pk) != CTAP1_ERR_SUCCESS) {
+    if ((pkey = es256_sk_create(sk, pk)) == NULL) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
@@ -328,6 +325,7 @@ fail:
     es256_pk_free(&pk);
     if (ecdh != NULL)
         fido_blob_free(&ecdh);
+    EVP_PKEY_free(pkey);
 
     return r;
 }
