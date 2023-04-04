@@ -347,10 +347,10 @@ fail:
 
 uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
     uint8_t r;
-    es256_pk_t  *pk = NULL; /* our public key; returned */
-    es256_sk_t  *sk = NULL; /* our private key */
-    es256_pk_t  *ak = NULL; /* authenticator's public key */
-    fido_blob_t *ecdh;      /* shared ecdh secret; returned */
+    es256_pk_t  *pk   = NULL; /* our public key; returned */
+    es256_sk_t  *sk   = NULL; /* our private key */
+    es256_pk_t  *ak   = NULL; /* authenticator's public key */
+    fido_blob_t *ecdh = NULL; /* shared ecdh secret; returned */
 
     // 作業領域の確保
     if ((sk = es256_sk_new()) == NULL ||
@@ -392,7 +392,8 @@ fail:
     es256_sk_free(&sk);
     es256_pk_free(&ak);
     es256_pk_free(&pk);
-    fido_blob_free(&ecdh);
+    if (ecdh != NULL)
+        fido_blob_free(&ecdh);
 
     return r;
 }
