@@ -15,6 +15,7 @@
 #include <openssl/sha.h>
 
 // 生成された鍵を保持
+static uint8_t      created_pubkey[65];
 static uint8_t      shared_secret_key[32];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
@@ -59,7 +60,7 @@ static void es256_pk_set_y(es256_pk_t *pk, const unsigned char *y) {
     memcpy(pk->y, y, sizeof(pk->y));
 }
 
-static uint8_t es256_sk_create(es256_sk_t *key) {
+static uint8_t es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
     EVP_PKEY_CTX    *pctx = NULL;
     EVP_PKEY_CTX    *kctx = NULL;
     EVP_PKEY        *p = NULL;
@@ -86,10 +87,21 @@ static uint8_t es256_sk_create(es256_sk_t *key) {
     if (EVP_PKEY_get_bn_param(k, OSSL_PKEY_PARAM_PRIV_KEY, &d) == 0 ||
         (n = BN_num_bytes(d)) < 0 || (size_t)n > sizeof(key->d) ||
         (n = BN_bn2bin(d, key->d)) < 0 || (size_t)n > sizeof(key->d)) {
-        log_debug("%s: EC_KEY_get0_private_key", __func__);
+        log_debug("%s: EVP_PKEY_get_bn_param", __func__);
         goto fail;
     }
     
+    size_t size = 0;
+    if (EVP_PKEY_get_octet_string_param(k, OSSL_PKEY_PARAM_PUB_KEY, created_pubkey, sizeof(created_pubkey), &size) == 0) {
+        log_debug("%s: EVP_PKEY_get_octet_string_param", __func__);
+        goto fail;
+    }
+    if (size != sizeof(created_pubkey)) {
+        log_debug("%s: EVP_PKEY_get_octet_string_param: size=%d", __func__, size);
+        goto fail;
+    }
+    memcpy(pubkey->x, created_pubkey + 1,  32);
+    memcpy(pubkey->y, created_pubkey + 33, 32);
     ok = CTAP1_ERR_SUCCESS;
 
 fail:
@@ -362,7 +374,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     }
     
     // ECDHキーペアを新規生成
-    if (es256_sk_create(sk) != CTAP1_ERR_SUCCESS ||
+    if (es256_sk_create(sk, pk) != CTAP1_ERR_SUCCESS ||
         es256_derive_pk(sk, pk) != CTAP1_ERR_SUCCESS) {
         r = CTAP1_ERR_OTHER;
         goto fail;
