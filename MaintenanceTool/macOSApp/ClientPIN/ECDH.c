@@ -44,7 +44,7 @@ static void es256_pk_set_y(es256_pk_t *pk, const unsigned char *y) {
     memcpy(pk->y, y, sizeof(pk->y));
 }
 
-static EVP_PKEY *es256_sk_create(void) {
+static EVP_PKEY *generate_keypair_for_ecdh(void) {
     EVP_PKEY_CTX    *pctx = NULL;
     EVP_PKEY_CTX    *kctx = NULL;
     EVP_PKEY        *p = NULL;
@@ -218,8 +218,8 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
         goto fail;
     }
     
-    // ECDHキーペアを新規生成
-    if ((pkey = es256_sk_create()) == NULL) {
+    // ECDHで使用するキーペアを新規生成
+    if ((pkey = generate_keypair_for_ecdh()) == NULL) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
