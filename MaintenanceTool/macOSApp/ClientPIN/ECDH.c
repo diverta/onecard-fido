@@ -20,22 +20,6 @@ static uint8_t      shared_secret_key[32];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
 
-static es256_sk_t *es256_sk_new(void) {
-    return (es256_sk_t *)calloc(1UL, sizeof(es256_sk_t));
-}
-
-static void es256_sk_free(es256_sk_t **skp) {
-    es256_sk_t *sk;
-    
-    if (skp == NULL || (sk = *skp) == NULL)
-        return;
-    
-    explicit_bzero(sk, sizeof(es256_sk_t));
-    free(sk);
-    
-    *skp = NULL;
-}
-
 static es256_pk_t *es256_pk_new(void) {
     return (es256_pk_t *)calloc(1UL, sizeof(es256_pk_t));
 }
@@ -60,14 +44,12 @@ static void es256_pk_set_y(es256_pk_t *pk, const unsigned char *y) {
     memcpy(pk->y, y, sizeof(pk->y));
 }
 
-static EVP_PKEY *es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
+static EVP_PKEY *es256_sk_create(void) {
     EVP_PKEY_CTX    *pctx = NULL;
     EVP_PKEY_CTX    *kctx = NULL;
     EVP_PKEY        *p = NULL;
     EVP_PKEY        *k = NULL;
-    BIGNUM          *d = NULL;
     const int       nid = NID_X9_62_prime256v1;
-    int             n;
     
     if ((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL)) == NULL ||
         EVP_PKEY_paramgen_init(pctx) <= 0 ||
@@ -83,13 +65,6 @@ static EVP_PKEY *es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
         goto fail;
     }
     
-    if (EVP_PKEY_get_bn_param(k, OSSL_PKEY_PARAM_PRIV_KEY, &d) == 0 ||
-        (n = BN_num_bytes(d)) < 0 || (size_t)n > sizeof(key->d) ||
-        (n = BN_bn2bin(d, key->d)) < 0 || (size_t)n > sizeof(key->d)) {
-        log_debug("%s: EVP_PKEY_get_bn_param", __func__);
-        goto fail;
-    }
-    
     size_t size = 0;
     if (EVP_PKEY_get_octet_string_param(k, OSSL_PKEY_PARAM_PUB_KEY, created_pubkey, sizeof(created_pubkey), &size) == 0) {
         log_debug("%s: EVP_PKEY_get_octet_string_param", __func__);
@@ -99,8 +74,9 @@ static EVP_PKEY *es256_sk_create(es256_sk_t *key, es256_pk_t *pubkey) {
         log_debug("%s: EVP_PKEY_get_octet_string_param: size=%d", __func__, size);
         goto fail;
     }
-    memcpy(pubkey->x, created_pubkey + 1,  32);
-    memcpy(pubkey->y, created_pubkey + 33, 32);
+    // 生成された鍵を内部配列に保持
+    memcpy(public_key_X, created_pubkey + 1,  32);
+    memcpy(public_key_Y, created_pubkey + 33, 32);
 
 fail:
     if (p != NULL)
@@ -109,8 +85,6 @@ fail:
         EVP_PKEY_CTX_free(pctx);
     if (kctx != NULL)
         EVP_PKEY_CTX_free(kctx);
-    if (d != NULL)
-        BN_free(d);
     
     return k;
 }
@@ -234,22 +208,18 @@ fail:
 
 uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
     uint8_t r;
-    es256_pk_t  *pk   = NULL; /* our public key; returned */
-    es256_sk_t  *sk   = NULL; /* our private key */
     es256_pk_t  *ak   = NULL; /* authenticator's public key */
     fido_blob_t *ecdh = NULL; /* shared ecdh secret; returned */
     EVP_PKEY    *pkey = NULL;
 
     // 作業領域の確保
-    if ((sk = es256_sk_new()) == NULL ||
-        (pk = es256_pk_new()) == NULL ||
-        (ak = es256_pk_new()) == NULL) {
+    if ((ak = es256_pk_new()) == NULL) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
     
     // ECDHキーペアを新規生成
-    if ((pkey = es256_sk_create(sk, pk)) == NULL) {
+    if ((pkey = es256_sk_create()) == NULL) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
@@ -270,13 +240,9 @@ fail:
     // 生成された鍵を内部配列に保持
     if (r == CTAP1_ERR_SUCCESS) {
         memcpy(shared_secret_key, ecdh->ptr, ecdh->len);
-        memcpy(public_key_X, pk->x, 32);
-        memcpy(public_key_Y, pk->y, 32);
     }
     // 確保領域を解放
-    es256_sk_free(&sk);
     es256_pk_free(&ak);
-    es256_pk_free(&pk);
     if (ecdh != NULL)
         fido_blob_free(&ecdh);
     if (pkey != NULL)
