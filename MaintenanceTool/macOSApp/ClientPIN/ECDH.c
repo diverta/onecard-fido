@@ -9,6 +9,7 @@
 #include "debug_log.h"
 
 // for OpenSSL
+#include <openssl/core_names.h>
 #include <openssl/ec.h>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
@@ -63,8 +64,7 @@ static uint8_t es256_sk_create(es256_sk_t *key) {
     EVP_PKEY_CTX    *kctx = NULL;
     EVP_PKEY        *p = NULL;
     EVP_PKEY        *k = NULL;
-    const EC_KEY    *ec;
-    const BIGNUM    *d;
+    BIGNUM          *d = NULL;
     const int       nid = NID_X9_62_prime256v1;
     int             n;
     uint8_t         ok = CTAP1_ERR_OTHER;
@@ -83,8 +83,7 @@ static uint8_t es256_sk_create(es256_sk_t *key) {
         goto fail;
     }
     
-    if ((ec = EVP_PKEY_get0_EC_KEY(k)) == NULL ||
-        (d = EC_KEY_get0_private_key(ec)) == NULL ||
+    if (EVP_PKEY_get_bn_param(k, OSSL_PKEY_PARAM_PRIV_KEY, &d) == 0 ||
         (n = BN_num_bytes(d)) < 0 || (size_t)n > sizeof(key->d) ||
         (n = BN_bn2bin(d, key->d)) < 0 || (size_t)n > sizeof(key->d)) {
         log_debug("%s: EC_KEY_get0_private_key", __func__);
@@ -102,6 +101,8 @@ fail:
         EVP_PKEY_CTX_free(pctx);
     if (kctx != NULL)
         EVP_PKEY_CTX_free(kctx);
+    if (d != NULL)
+        BN_free(d);
     
     return ok;
 }
