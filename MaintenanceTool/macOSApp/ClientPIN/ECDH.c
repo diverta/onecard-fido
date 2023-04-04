@@ -364,7 +364,6 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     // ECDHキーペアを新規生成
     if (es256_sk_create(sk) != CTAP1_ERR_SUCCESS ||
         es256_derive_pk(sk, pk) != CTAP1_ERR_SUCCESS) {
-        log_debug("%s: es256_derive_pk", __func__);
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
@@ -375,7 +374,6 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     
     // 共通鍵を生成
     if (perform_ecdh(sk, ak, &ecdh) < 0) {
-        log_debug("%s: perform_ecdh", __func__);
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
