@@ -30,6 +30,8 @@ static unsigned char m_ec_pk[ECCP256_KEY_SIZE];
 static EVP_PKEY    *m_private_key = NULL;
 static RSA         *m_rsa_private_key = NULL;
 static BIGNUM      *m_rsa_bn_e = NULL;
+static BIGNUM      *m_rsa_bn_p = NULL;
+static BIGNUM      *m_rsa_bn_q = NULL;
 static BIGNUM      *m_ec_bn = NULL;
 static FILE        *m_input_file = NULL;
 
@@ -38,6 +40,8 @@ static void initialize_references(void)
     m_private_key = NULL;
     m_rsa_private_key = NULL;
     m_rsa_bn_e = NULL;
+    m_rsa_bn_p = NULL;
+    m_rsa_bn_q = NULL;
     m_ec_bn = NULL;
     m_input_file = NULL;
 }
@@ -52,6 +56,12 @@ static bool extract_rsa_2048_terminate(bool success)
     }
     if (m_rsa_bn_e != NULL) {
         BN_free(m_rsa_bn_e);
+    }
+    if (m_rsa_bn_p != NULL) {
+        BN_free(m_rsa_bn_p);
+    }
+    if (m_rsa_bn_q != NULL) {
+        BN_free(m_rsa_bn_q);
     }
     return success;
 }
@@ -110,17 +120,23 @@ static bool get_bn_param_from_rsa_pkey(const EVP_PKEY *private_key, const char *
 
 static bool extract_rsa_2048(EVP_PKEY *private_key, unsigned char *pkey_data, size_t *pkey_size)
 {
-    const BIGNUM *bn_p, *bn_q, *bn_dmp1, *bn_dmq1, *bn_iqmp;
+    const BIGNUM *bn_dmp1, *bn_dmq1, *bn_iqmp;
     m_rsa_private_key = EVP_PKEY_get1_RSA(private_key);
     if (m_rsa_private_key == NULL) {
         log_debug("%s: Invalid RSA private key", __func__);
         return extract_rsa_2048_terminate(false);
     }
-    RSA_get0_factors(m_rsa_private_key, &bn_p, &bn_q);
     RSA_get0_crt_params(m_rsa_private_key, &bn_dmp1, &bn_dmq1, &bn_iqmp);
 
     // Get RSA public exponent "e" value
     if (get_bn_param_from_rsa_pkey(private_key, OSSL_PKEY_PARAM_RSA_E, &m_rsa_bn_e) == false) {
+        return extract_rsa_2048_terminate(false);
+    }
+    // Get RSA prime factors ("p", "q" in RFC8017)
+    if (get_bn_param_from_rsa_pkey(private_key, OSSL_PKEY_PARAM_RSA_FACTOR1, &m_rsa_bn_p) == false) {
+        return extract_rsa_2048_terminate(false);
+    }
+    if (get_bn_param_from_rsa_pkey(private_key, OSSL_PKEY_PARAM_RSA_FACTOR2, &m_rsa_bn_q) == false) {
         return extract_rsa_2048_terminate(false);
     }
     // 秘密鍵の各要素を抽出
@@ -128,11 +144,11 @@ static bool extract_rsa_2048(EVP_PKEY *private_key, unsigned char *pkey_data, si
         log_debug("%s: Invalid public exponent for import (only 0x10001 supported)", __func__);
         return extract_rsa_2048_terminate(false);
     }
-    if (set_component(p, bn_p, RSA2048_PQ_SIZE) == false) {
+    if (set_component(p, m_rsa_bn_p, RSA2048_PQ_SIZE) == false) {
         log_debug("%s: Failed setting P component", __func__);
         return extract_rsa_2048_terminate(false);
     }
-    if (set_component(q, bn_q, RSA2048_PQ_SIZE) == false) {
+    if (set_component(q, m_rsa_bn_q, RSA2048_PQ_SIZE) == false) {
         log_debug("%s: Failed setting Q component", __func__);
         return extract_rsa_2048_terminate(false);
     }
