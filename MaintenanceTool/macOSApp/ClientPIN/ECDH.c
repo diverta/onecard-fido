@@ -12,6 +12,7 @@
 #include <openssl/core_names.h>
 #include <openssl/ec.h>
 #include <openssl/evp.h>
+#include <openssl/param_build.h>
 #include <openssl/sha.h>
 
 // 生成された鍵を保持
@@ -66,60 +67,58 @@ fail:
 }
 
 static EVP_PKEY *convert_pubkey_for_ecdh(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
-    BN_CTX   *bnctx = NULL;
-    EC_KEY   *ec = NULL;
-    EC_POINT *q = NULL;
-    EVP_PKEY *pkey = NULL;
-    BIGNUM   *x = NULL;
-    BIGNUM   *y = NULL;
-    const EC_GROUP *g = NULL;
-    const int nid = NID_X9_62_prime256v1;
-    int       ok = -1;
+    OSSL_PARAM_BLD *param_bld = NULL;
+    OSSL_PARAM     *params    = NULL;
+    EVP_PKEY_CTX   *ctx       = NULL;
+    EVP_PKEY       *pkey      = NULL;
     
-    if ((bnctx = BN_CTX_new()) == NULL ||
-        (x = BN_CTX_get(bnctx)) == NULL ||
-        (y = BN_CTX_get(bnctx)) == NULL)
+    param_bld = OSSL_PARAM_BLD_new();
+    if (param_bld == NULL) {
+        log_debug("%s: OSSL_PARAM_BLD_new", __func__);
         goto fail;
-    
-    if (BN_bin2bn(agreement_pubkey_X, 32, x) == NULL ||
-        BN_bin2bn(agreement_pubkey_Y, 32, y) == NULL) {
-        log_debug("%s: BN_bin2bn", __func__);
+    }
+    if (OSSL_PARAM_BLD_push_utf8_string(param_bld, OSSL_PKEY_PARAM_GROUP_NAME, SN_X9_62_prime256v1, 0) == 0) {
+        log_debug("%s: OSSL_PARAM_BLD_push_utf8_string", __func__);
         goto fail;
     }
     
-    if ((ec = EC_KEY_new_by_curve_name(nid)) == NULL ||
-        (g = EC_KEY_get0_group(ec)) == NULL) {
-        log_debug("%s: EC_KEY init", __func__);
+    // Construct parameters
+    pubkey_work[0] = POINT_CONVERSION_UNCOMPRESSED;
+    memcpy(pubkey_work + 1,  agreement_pubkey_X, 32);
+    memcpy(pubkey_work + 33, agreement_pubkey_Y, 32);
+    if (OSSL_PARAM_BLD_push_octet_string(param_bld, OSSL_PKEY_PARAM_PUB_KEY, pubkey_work, sizeof(pubkey_work)) == 0) {
+        log_debug("%s: OSSL_PARAM_BLD_push_octet_string", __func__);
+        goto fail;
+    }
+    params = OSSL_PARAM_BLD_to_param(param_bld);
+    if (params == NULL) {
+        log_debug("%s: OSSL_PARAM_BLD_to_param", __func__);
+        goto fail;
+    }
+    ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+    if (ctx == NULL) {
+        log_debug("%s: EVP_PKEY_CTX_new_from_name", __func__);
         goto fail;
     }
     
-    if ((q = EC_POINT_new(g)) == NULL ||
-        EC_POINT_set_affine_coordinates_GFp(g, q, x, y, bnctx) == 0 ||
-        EC_KEY_set_public_key(ec, q) == 0) {
-        log_debug("%s: EC_KEY_set_public_key", __func__);
+    // Convert agreement pubkey to EVP_PKEY
+    int ret_code;
+    if ((ret_code = EVP_PKEY_fromdata_init(ctx)) <= 0) {
+        log_debug("%s: EVP_PKEY_fromdata_init returns %d", __func__, ret_code);
         goto fail;
     }
-    
-    if ((pkey = EVP_PKEY_new()) == NULL ||
-        EVP_PKEY_assign_EC_KEY(pkey, ec) == 0) {
-        log_debug("%s: EVP_PKEY_assign_EC_KEY", __func__);
+    if ((ret_code = EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_PUBLIC_KEY, params)) <= 0) {
+        log_debug("%s: EVP_PKEY_fromdata returns %d", __func__, ret_code);
         goto fail;
     }
-    
-    ec = NULL; /* at this point, ec belongs to evp */
-    ok = 0;
 
 fail:
-    if (bnctx != NULL)
-        BN_CTX_free(bnctx);
-    if (ec != NULL)
-        EC_KEY_free(ec);
-    if (q != NULL)
-        EC_POINT_free(q);
-    if (ok < 0 && pkey != NULL) {
-        EVP_PKEY_free(pkey);
-        pkey = NULL;
-    }
+    if (param_bld != NULL)
+        OSSL_PARAM_BLD_free(param_bld);
+    if (params != NULL)
+        OSSL_PARAM_free(params);
+    if (ctx != NULL)
+        EVP_PKEY_CTX_free(ctx);
     
     return pkey;
 }
