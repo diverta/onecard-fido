@@ -4,7 +4,6 @@
 //
 //  Created by Makoto Morita on 2019/04/22.
 //
-#include "ECDH.h"
 #include "FIDODefines.h"
 #include "debug_log.h"
 
@@ -17,7 +16,8 @@
 
 // 生成された鍵を保持
 static uint8_t      pubkey_work[65];
-static uint8_t      shared_secret_key[32];
+static uint8_t      seckey_work[SHA256_DIGEST_LENGTH];
+static uint8_t      shared_secret_key[SHA256_DIGEST_LENGTH];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
 
@@ -123,17 +123,9 @@ fail:
     return pkey;
 }
 
-static uint8_t perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp, fido_blob_t **ecdh) {
+static uint8_t perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp) {
     EVP_PKEY_CTX *ctx = NULL;
-    fido_blob_t  *secret = NULL;
     uint8_t       ok = CTAP1_ERR_OTHER;
-    
-    *ecdh = NULL;   /* shared ecdh secret; returned */
-    
-    /* allocate blobs for secret & ecdh */
-    if ((secret = fido_blob_new()) == NULL ||
-        (*ecdh = fido_blob_new()) == NULL)
-        goto fail;
     
     /* set ecdh parameters */
     if ((ctx = EVP_PKEY_CTX_new(sk_evp, NULL)) == NULL ||
@@ -144,37 +136,28 @@ static uint8_t perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp, fido_blob_t **ec
     }
     
     /* perform ecdh */
-    if (EVP_PKEY_derive(ctx, NULL, &secret->len) <= 0 ||
-        (secret->ptr = calloc(1, secret->len)) == NULL ||
-        EVP_PKEY_derive(ctx, secret->ptr, &secret->len) <= 0) {
+    size_t size = sizeof(seckey_work);
+    if (EVP_PKEY_derive(ctx, seckey_work, &size) <= 0) {
         log_debug("%s: EVP_PKEY_derive", __func__);
         goto fail;
     }
     
     /* use sha256 as a kdf on the resulting secret */
-    (*ecdh)->len = SHA256_DIGEST_LENGTH;
-    if (((*ecdh)->ptr = calloc(1, (*ecdh)->len)) == NULL ||
-        SHA256(secret->ptr, secret->len, (*ecdh)->ptr) == NULL) {
-        log_debug("%s: sha256", __func__);
+    if (SHA256(seckey_work, sizeof(seckey_work), shared_secret_key) == NULL) {
+        log_debug("%s: SHA256", __func__);
         goto fail;
     }
-    
     ok = CTAP1_ERR_SUCCESS;
 
 fail:
     if (ctx != NULL)
         EVP_PKEY_CTX_free(ctx);
-    if (ok < 0)
-        fido_blob_free(ecdh);
-    
-    fido_blob_free(&secret);
     
     return ok;
 }
 
 uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
     uint8_t r;
-    fido_blob_t *ecdh = NULL; /* shared ecdh secret; returned */
     EVP_PKEY    *pkey = NULL;
     EVP_PKEY    *qkey = NULL;
 
@@ -191,7 +174,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     }
     
     // 共通鍵を生成
-    if (perform_ecdh(pkey, qkey, &ecdh) < 0) {
+    if (perform_ecdh(pkey, qkey) < 0) {
         r = CTAP1_ERR_OTHER;
         goto fail;
     }
@@ -199,13 +182,6 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     r = CTAP1_ERR_SUCCESS;
 
 fail:
-    // 生成された鍵を内部配列に保持
-    if (r == CTAP1_ERR_SUCCESS) {
-        memcpy(shared_secret_key, ecdh->ptr, ecdh->len);
-    }
-    // 確保領域を解放
-    if (ecdh != NULL)
-        fido_blob_free(&ecdh);
     if (pkey != NULL)
         EVP_PKEY_free(pkey);
     if (qkey != NULL)
