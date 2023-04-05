@@ -4,7 +4,7 @@
 //
 //  Created by Makoto Morita on 2019/04/22.
 //
-#include "FIDODefines.h"
+#include <stdbool.h>
 #include "debug_log.h"
 
 // for OpenSSL
@@ -123,9 +123,9 @@ fail:
     return pkey;
 }
 
-static uint8_t perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp) {
+static bool perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp) {
+    bool         ret  = false;
     EVP_PKEY_CTX *ctx = NULL;
-    uint8_t       ok = CTAP1_ERR_OTHER;
     
     /* set ecdh parameters */
     if ((ctx = EVP_PKEY_CTX_new(sk_evp, NULL)) == NULL ||
@@ -147,39 +147,32 @@ static uint8_t perform_ecdh(EVP_PKEY *sk_evp, EVP_PKEY *pk_evp) {
         log_debug("%s: SHA256", __func__);
         goto fail;
     }
-    ok = CTAP1_ERR_SUCCESS;
+    ret = true;
 
 fail:
     if (ctx != NULL)
         EVP_PKEY_CTX_free(ctx);
     
-    return ok;
+    return ret;
 }
 
-uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
-    uint8_t r;
+bool ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
+    bool        ret   = false;
     EVP_PKEY    *pkey = NULL;
     EVP_PKEY    *qkey = NULL;
-
     // ECDHで使用するキーペアを新規生成
     if ((pkey = generate_keypair_for_ecdh()) == NULL) {
-        r = CTAP1_ERR_OTHER;
         goto fail;
     }
-    
     // 受領した公開鍵を内部形式に変換
     if ((qkey = convert_pubkey_for_ecdh(agreement_pubkey_X, agreement_pubkey_Y)) == NULL) {
-        r = CTAP1_ERR_OTHER;
         goto fail;
     }
-    
     // 共通鍵を生成
-    if (perform_ecdh(pkey, qkey) < 0) {
-        r = CTAP1_ERR_OTHER;
+    if (perform_ecdh(pkey, qkey) == false) {
         goto fail;
     }
-    
-    r = CTAP1_ERR_SUCCESS;
+    ret = true;
 
 fail:
     if (pkey != NULL)
@@ -187,7 +180,7 @@ fail:
     if (qkey != NULL)
         EVP_PKEY_free(qkey);
 
-    return r;
+    return ret;
 }
 
 uint8_t *ECDH_shared_secret_key(void) {
