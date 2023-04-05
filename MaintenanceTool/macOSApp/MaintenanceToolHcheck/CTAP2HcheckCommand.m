@@ -16,6 +16,7 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "tool_ecdh.h"
 
 @interface CTAP2HcheckCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
 
@@ -379,12 +380,13 @@
             [[ToolLogFile defaultLogger] hexdump:keyAgreementResponse];
             return nil;
         }
+        // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
+        if (tool_ecdh_create_shared_secret_key(ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y()) == false) {
+            return nil;
+        }
         // getPinTokenリクエストを生成して戻す
         char *pin_cur = (char *)[[[self commandParameter] pin] UTF8String];
-        status_code = ctap2_cbor_encode_client_pin_token_get(
-                            ctap2_cbor_decode_agreement_pubkey_X(),
-                            ctap2_cbor_decode_agreement_pubkey_Y(),
-                            pin_cur);
+        status_code = ctap2_cbor_encode_client_pin_token_get(pin_cur);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

@@ -266,12 +266,7 @@ static uint8_t generate_set_pin_cbor(bool change_pin) {
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_client_pin_set_or_change(
-    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *new_pin, char *old_pin) {
-    // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
-    if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
+uint8_t ctap2_cbor_encode_client_pin_set_or_change(char *new_pin, char *old_pin) {
     // pinHashEncを生成
     bool change_pin = (old_pin != NULL);
     if (change_pin) {
@@ -360,12 +355,7 @@ static uint8_t generate_get_pin_token_cbor(void) {
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_client_pin_token_get(
-    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *cur_pin) {
-    // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
-    if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
+uint8_t ctap2_cbor_encode_client_pin_token_get(char *cur_pin) {
     // pinHashEncを生成
     if (generate_pin_hash_enc(cur_pin) != CTAP1_ERR_SUCCESS) {
         return CTAP1_ERR_OTHER;
