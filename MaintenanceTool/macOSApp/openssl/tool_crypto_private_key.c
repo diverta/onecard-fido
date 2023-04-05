@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2020/12/01.
 //
 #include <string.h>
+#include <openssl/core_names.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
 
@@ -28,13 +29,14 @@ static unsigned char m_ec_pk[ECCP256_KEY_SIZE];
 //
 static EVP_PKEY    *m_private_key = NULL;
 static RSA         *m_rsa_private_key = NULL;
-static EC_KEY      *m_ec_private_key = NULL;
+static BIGNUM      *m_ec_bn = NULL;
 static FILE        *m_input_file = NULL;
 
 static void initialize_references(void)
 {
     m_private_key = NULL;
     m_rsa_private_key = NULL;
+    m_ec_bn = NULL;
     m_input_file = NULL;
 }
 
@@ -51,8 +53,8 @@ static bool extract_rsa_2048_terminate(bool success)
 
 static bool extract_eccp_256_terminate(bool success)
 {
-    if (m_ec_private_key != NULL) {
-        EC_KEY_free(m_ec_private_key);
+    if (m_ec_bn != NULL) {
+        BN_free(m_ec_bn);
     }
     return success;
 }
@@ -143,15 +145,16 @@ static bool extract_rsa_2048(EVP_PKEY *private_key, unsigned char *pkey_data, si
 
 static bool extract_eccp_256(EVP_PKEY *private_key, unsigned char *pkey_data, size_t *pkey_size)
 {
-    m_ec_private_key = EVP_PKEY_get1_EC_KEY(private_key);
-    if (m_ec_private_key == NULL) {
+    if (EVP_PKEY_get_bn_param(private_key, OSSL_PKEY_PARAM_PRIV_KEY, &m_ec_bn) == 0) {
         log_debug("%s: Invalid EC private key", __func__);
         return extract_eccp_256_terminate(false);
     }
-    const BIGNUM *s = EC_KEY_get0_private_key(m_ec_private_key);
-
+    if (m_ec_bn == NULL) {
+        log_debug("%s: EC private key is null", __func__);
+        return extract_eccp_256_terminate(false);
+    }
     // 秘密鍵の要素を抽出
-    if (set_component(m_ec_pk, s, ECCP256_KEY_SIZE) == false) {
+    if (set_component(m_ec_pk, m_ec_bn, ECCP256_KEY_SIZE) == false) {
         log_debug("%s: Failed setting EC private key", __func__);
         return extract_eccp_256_terminate(false);
     }
