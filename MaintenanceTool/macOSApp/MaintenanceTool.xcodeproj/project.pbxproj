@@ -197,8 +197,6 @@
 		7A8B3E20296E56640005F7B1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
 		7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
-		7A8BE08029D2CC5C001152A1 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */; };
-		7A8BE08129D2CC5C001152A1 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */; };
 		7A8BE08429D2CC7E001152A1 /* CryptoTestCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */; };
 		7A8BE08529D2CC7E001152A1 /* CryptoTestCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */; };
 		7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
@@ -411,8 +409,6 @@
 		7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VendorMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
 		7A8BE07529D271F3001152A1 /* aes_256_cbc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aes_256_cbc.h; sourceTree = "<group>"; };
 		7A8BE07629D27229001152A1 /* aes_256_cbc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = aes_256_cbc.c; sourceTree = "<group>"; };
-		7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
-		7A8BE07F29D2CC5B001152A1 /* AES256CBC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AES256CBC.h; sourceTree = "<group>"; };
 		7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoTestCommand.m; sourceTree = "<group>"; };
 		7A8BE08329D2CC7E001152A1 /* CryptoTestCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoTestCommand.h; sourceTree = "<group>"; };
 		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
@@ -870,8 +866,6 @@
 		7A8BE07D29D2CC30001152A1 /* migrating */ = {
 			isa = PBXGroup;
 			children = (
-				7A8BE07F29D2CC5B001152A1 /* AES256CBC.h */,
-				7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */,
 				7A8BE08329D2CC7E001152A1 /* CryptoTestCommand.h */,
 				7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */,
 			);
@@ -1273,7 +1267,6 @@
 				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
 				7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
-				7A8BE08029D2CC5C001152A1 /* AES256CBC.c in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AF60FF429C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
@@ -1369,7 +1362,6 @@
 				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
 				7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
-				7A8BE08129D2CC5C001152A1 /* AES256CBC.c in Sources */,
 				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
 				7AF60FF529C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
