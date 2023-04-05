@@ -386,7 +386,7 @@
         }
         // getPinTokenリクエストを生成して戻す
         char *pin_cur = (char *)[[[self commandParameter] pin] UTF8String];
-        status_code = ctap2_cbor_encode_client_pin_token_get(pin_cur);
+        status_code = ctap2_cbor_encode_client_pin_token_get(pin_cur, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
@@ -405,10 +405,7 @@
             return nil;
         }
         // makeCredentialリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_make_credential(
-                            ctap2_cbor_decode_agreement_pubkey_X(),
-                            ctap2_cbor_decode_agreement_pubkey_Y(),
-                            ctap2_cbor_decrypted_pin_token());
+        status_code = ctap2_cbor_encode_make_credential(ctap2_cbor_decrypted_pin_token());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
@@ -444,11 +441,11 @@
         }
         // getAssertionリクエストを生成して戻す
         status_code = ctap2_cbor_encode_get_assertion(
-                            ctap2_cbor_decode_agreement_pubkey_X(),
-                            ctap2_cbor_decode_agreement_pubkey_Y(),
                             ctap2_cbor_decrypted_pin_token(),
                             ctap2_cbor_decode_credential_id(),
                             ctap2_cbor_decode_credential_id_size(),
+                            tool_ecdh_public_key_X(),
+                            tool_ecdh_public_key_Y(),
                             (uint8_t *)[[self hmacSecretSalt] bytes], up);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()

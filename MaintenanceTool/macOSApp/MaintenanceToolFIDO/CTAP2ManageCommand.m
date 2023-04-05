@@ -239,7 +239,7 @@
         if ([pinOld length] != 0) {
             pin_old = (char *)[pinOld UTF8String];
         }
-        status_code = ctap2_cbor_encode_client_pin_set_or_change(pin_new, pin_old);
+        status_code = ctap2_cbor_encode_client_pin_set_or_change(pin_new, pin_old, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
