@@ -569,9 +569,9 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7A712EBA2570BC9400E45E2D /* common_crypto */,
 				7A8BE07D29D2CC30001152A1 /* migrating */,
 				7A61343529DD122300DB9714 /* openssl */,
-				7A712EBA2570BC9400E45E2D /* tool_crypto */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7AB4B156271E6E340099D51B /* FIDO */,
@@ -785,7 +785,7 @@
 			path = PIV;
 			sourceTree = "<group>";
 		};
-		7A712EBA2570BC9400E45E2D /* tool_crypto */ = {
+		7A712EBA2570BC9400E45E2D /* common_crypto */ = {
 			isa = PBXGroup;
 			children = (
 				7A8BE07529D271F3001152A1 /* aes_256_cbc.h */,
@@ -793,7 +793,7 @@
 				7A39F5DF29D2E3C8009F8CD7 /* triple_des.h */,
 				7A39F5E029D2E3F2009F8CD7 /* triple_des.c */,
 			);
-			path = tool_crypto;
+			path = common_crypto;
 			sourceTree = "<group>";
 		};
 		7A75A6EC25677FDF003AF1A6 /* CCID */ = {
