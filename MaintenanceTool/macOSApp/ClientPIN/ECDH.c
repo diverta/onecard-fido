@@ -15,7 +15,7 @@
 #include <openssl/sha.h>
 
 // 生成された鍵を保持
-static uint8_t      created_pubkey[65];
+static uint8_t      pubkey_work[65];
 static uint8_t      shared_secret_key[32];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
@@ -42,17 +42,17 @@ static EVP_PKEY *generate_keypair_for_ecdh(void) {
     }
     
     size_t size = 0;
-    if (EVP_PKEY_get_octet_string_param(k, OSSL_PKEY_PARAM_PUB_KEY, created_pubkey, sizeof(created_pubkey), &size) == 0) {
+    if (EVP_PKEY_get_octet_string_param(k, OSSL_PKEY_PARAM_PUB_KEY, pubkey_work, sizeof(pubkey_work), &size) == 0) {
         log_debug("%s: EVP_PKEY_get_octet_string_param", __func__);
         goto fail;
     }
-    if (size != sizeof(created_pubkey)) {
+    if (size != sizeof(pubkey_work)) {
         log_debug("%s: EVP_PKEY_get_octet_string_param: size=%d", __func__, size);
         goto fail;
     }
     // 生成された鍵を内部配列に保持
-    memcpy(public_key_X, created_pubkey + 1,  32);
-    memcpy(public_key_Y, created_pubkey + 33, 32);
+    memcpy(public_key_X, pubkey_work + 1,  32);
+    memcpy(public_key_Y, pubkey_work + 33, 32);
 
 fail:
     if (p != NULL)
