@@ -14,6 +14,7 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "tool_ecdh.h"
 
 @interface CTAP2ManageCommand () <AppHIDCommandDelegate>
 
@@ -224,7 +225,10 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
-        
+        // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
+        if (tool_ecdh_create_shared_secret_key(ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y()) == false) {
+            return nil;
+        }
         // 画面から入力されたPINコードを取得
         NSString *pinNew = [[self commandParameter] pinNew];
         NSString *pinOld = [[self commandParameter] pinOld];
@@ -235,9 +239,7 @@
         if ([pinOld length] != 0) {
             pin_old = (char *)[pinOld UTF8String];
         }
-        status_code = ctap2_cbor_encode_client_pin_set_or_change(
-                        ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y(),
-                        pin_new, pin_old);
+        status_code = ctap2_cbor_encode_client_pin_set_or_change(pin_new, pin_old, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

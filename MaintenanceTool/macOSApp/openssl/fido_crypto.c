@@ -12,7 +12,7 @@
 #include "fido_blob.h"
 #include "debug_log.h"
 #include "FIDODefines.h"
-#include "ECDH.h"
+#include "tool_ecdh.h"
 
 // for OpenSSL
 #include <openssl/evp.h>
@@ -119,7 +119,7 @@ uint8_t generate_pin_hash_enc(const char *cur_pin) {
     }
     ph->len = 16;
     // 共通鍵を使用し暗号化
-    fido_blob_set(shared, ECDH_shared_secret_key(), 32);
+    fido_blob_set(shared, tool_ecdh_shared_secret_key(), 32);
     size_t size = sizeof(pinHashEnc);
     if (aes_256_cbc_enc(shared->ptr, ph->ptr, ph->len, pinHashEnc, &size)) {
         ok = CTAP1_ERR_SUCCESS;
@@ -178,7 +178,7 @@ uint8_t generate_new_pin_enc(const char *new_pin) {
         goto fail;
     }
     // 共通鍵を使用し、PINコードを暗号化
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     newPinEncSize = sizeof(newPinEnc);
     if (aes_256_cbc_enc(key->ptr, ppin->ptr, ppin->len, newPinEnc, &newPinEncSize)) {
         ok = CTAP1_ERR_SUCCESS;
@@ -207,7 +207,7 @@ uint8_t generate_pin_auth(bool change_pin) {
         goto fail;
     }
     // 共通鍵と暗号化されたPINコードを使用し、pinAuthを生成
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     if ((ctx = HMAC_CTX_new()) == NULL) {
         log_debug("%s: HMAC_CTX_new", __func__);
         goto fail;
@@ -260,7 +260,7 @@ uint8_t decrypto_pin_token(
         goto fail;
     }
     // 共通鍵を使用し、PINコードを復号化
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     fido_blob_set(pe, encrypted_pin_token, pin_token_size);
     size_t size = pin_token_size;
     if (aes_256_cbc_dec(key->ptr, pe->ptr, pe->len, decrypted_pin_token, &size)) {
@@ -368,7 +368,7 @@ uint8_t generate_salt_enc(uint8_t *hmac_secret_salt, size_t hmac_secret_salt_siz
     }
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(psalt, hmac_secret_salt, hmac_secret_salt_size);
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     saltEncSize = sizeof(saltEnc);
     if (aes_256_cbc_enc(key->ptr, psalt->ptr, psalt->len, saltEnc, &saltEncSize)) {
         ok = CTAP1_ERR_SUCCESS;
@@ -397,7 +397,7 @@ uint8_t generate_salt_auth(uint8_t *salt_enc, size_t salt_enc_size) {
         goto fail;
     }
     // 共通鍵と暗号化されたsaltを使用し、saltAuthを生成
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     if ((ctx = HMAC_CTX_new()) == NULL) {
         log_debug("%s: HMAC_CTX_new", __func__);
         goto fail;
