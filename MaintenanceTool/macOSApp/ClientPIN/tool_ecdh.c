@@ -1,5 +1,5 @@
 //
-//  ECDH.c
+//  tool_ecdh.c
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/04/22.
@@ -156,7 +156,7 @@ fail:
     return ret;
 }
 
-bool ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
+bool tool_ecdh_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
     bool        ret   = false;
     EVP_PKEY    *pkey = NULL;
     EVP_PKEY    *qkey = NULL;
@@ -183,14 +183,14 @@ fail:
     return ret;
 }
 
-uint8_t *ECDH_shared_secret_key(void) {
+uint8_t *tool_ecdh_shared_secret_key(void) {
     return shared_secret_key;
 }
 
-uint8_t *ECDH_public_key_X(void) {
+uint8_t *tool_ecdh_public_key_X(void) {
     return public_key_X;
 }
 
-uint8_t *ECDH_public_key_Y(void) {
+uint8_t *tool_ecdh_public_key_Y(void) {
     return public_key_Y;
 }

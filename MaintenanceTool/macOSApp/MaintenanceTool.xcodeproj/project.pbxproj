@@ -109,7 +109,7 @@
 		7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
 		7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
-		7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
+		7A8B3DC9296E56640005F7B1 /* tool_ecdh.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* tool_ecdh.c */; };
 		7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B160271E6E8B0099D51B /* CBOREncoder.c */; };
 		7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680428FE7A990096A848 /* USBDFUImage.m */; };
 		7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B162271E6E8B0099D51B /* fido_crypto.c */; };
@@ -216,7 +216,7 @@
 		7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
 		7AB3C9B7276B13E900DEDD0E /* ToolPGPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */; };
 		7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15A271E6E8B0099D51B /* fido_blob.c */; };
-		7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
+		7AB4B16C271E6E8B0099D51B /* tool_ecdh.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* tool_ecdh.c */; };
 		7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */; };
 		7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B160271E6E8B0099D51B /* CBOREncoder.c */; };
 		7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B162271E6E8B0099D51B /* fido_crypto.c */; };
@@ -439,9 +439,9 @@
 		7AB3C9B5276B13CC00DEDD0E /* ToolPGPCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCommand.h; sourceTree = "<group>"; };
 		7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPGPCommand.m; sourceTree = "<group>"; };
 		7AB4B157271E6E8B0099D51B /* debug_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug_log.h; sourceTree = "<group>"; };
-		7AB4B158271E6E8B0099D51B /* ECDH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
+		7AB4B158271E6E8B0099D51B /* tool_ecdh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_ecdh.h; sourceTree = "<group>"; };
 		7AB4B15A271E6E8B0099D51B /* fido_blob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fido_blob.c; sourceTree = "<group>"; };
-		7AB4B15C271E6E8B0099D51B /* ECDH.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ECDH.c; sourceTree = "<group>"; };
+		7AB4B15C271E6E8B0099D51B /* tool_ecdh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_ecdh.c; sourceTree = "<group>"; };
 		7AB4B15D271E6E8B0099D51B /* fido_crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
 		7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CBORDecoder.c; sourceTree = "<group>"; };
 		7AB4B160271E6E8B0099D51B /* CBOREncoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CBOREncoder.c; sourceTree = "<group>"; };
@@ -974,8 +974,8 @@
 				7AB4B161271E6E8B0099D51B /* CBOREncoder.h */,
 				7AB4B166271E6E8B0099D51B /* debug_log.c */,
 				7AB4B157271E6E8B0099D51B /* debug_log.h */,
-				7AB4B15C271E6E8B0099D51B /* ECDH.c */,
-				7AB4B158271E6E8B0099D51B /* ECDH.h */,
+				7AB4B15C271E6E8B0099D51B /* tool_ecdh.c */,
+				7AB4B158271E6E8B0099D51B /* tool_ecdh.h */,
 				7AB4B15A271E6E8B0099D51B /* fido_blob.c */,
 				7AB4B168271E6E8B0099D51B /* fido_blob.h */,
 				7AB4B162271E6E8B0099D51B /* fido_crypto.c */,
@@ -1222,7 +1222,7 @@
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
-				7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */,
+				7AB4B16C271E6E8B0099D51B /* tool_ecdh.c in Sources */,
 				7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */,
 				7A91680528FE7A990096A848 /* USBDFUImage.m in Sources */,
 				7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */,
@@ -1318,7 +1318,7 @@
 				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,
-				7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */,
+				7A8B3DC9296E56640005F7B1 /* tool_ecdh.c in Sources */,
 				7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */,
 				7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */,
 				7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */,
