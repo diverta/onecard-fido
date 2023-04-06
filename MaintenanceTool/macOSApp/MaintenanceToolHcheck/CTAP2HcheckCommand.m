@@ -392,7 +392,7 @@
             return nil;
         }
         // getPinTokenリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_generate_get_pin_token_cbor(tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
+        status_code = ctap2_cbor_encode_generate_get_pin_token_cbor(tool_ecdh_public_key_X(), tool_ecdh_public_key_Y(), pin_hash_enc());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

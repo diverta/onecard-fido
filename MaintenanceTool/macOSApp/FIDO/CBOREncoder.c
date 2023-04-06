@@ -263,7 +263,7 @@ uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_p
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
+uint8_t ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *pin_hash_enc) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -317,7 +317,7 @@ uint8_t ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_hash_enc(), 16);
+    ret = cbor_encode_byte_string(&map, pin_hash_enc, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
