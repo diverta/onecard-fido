@@ -243,6 +243,7 @@
         }
         bool change_pin = (pin_old != NULL);
         if (fido_client_pin_generate_pinauth(pin_new, pin_old, change_pin) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
             return nil;
         }
         // SetPINまたはChangePINリクエストを生成して戻す
