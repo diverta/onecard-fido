@@ -507,7 +507,7 @@ static uint8_t encode_pubkey_cred_params(CborEncoder *encoder) {
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_generate_make_credential_cbor(void) {
+uint8_t ctap2_cbor_encode_generate_make_credential_cbor(uint8_t *client_data_hash, uint8_t *pin_auth) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -534,7 +534,7 @@ uint8_t ctap2_cbor_encode_generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, client_data_hash(), 32);
+    ret = cbor_encode_byte_string(&map, client_data_hash, 32);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -588,7 +588,7 @@ uint8_t ctap2_cbor_encode_generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    ret = cbor_encode_byte_string(&map, pin_auth, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }

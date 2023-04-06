@@ -416,7 +416,7 @@
             return nil;
         }
         // makeCredentialリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_generate_make_credential_cbor();
+        status_code = ctap2_cbor_encode_generate_make_credential_cbor(client_data_hash(), pin_auth());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
