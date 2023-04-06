@@ -45,3 +45,20 @@ bool fido_client_pin_generate_pinauth_from_pintoken(uint8_t *pin_token)
     // 処理成功
     return true;
 }
+
+bool fido_client_pin_generate_salt_auth(uint8_t *hmac_secret_salt)
+{
+    // saltEncを生成
+    // Encrypt two salts (Called salt1 (32 bytes) and salt2 (32 bytes)) using sharedSecret
+    // AES256-CBC(sharedSecret, IV=0, salt1 (32 bytes) || salt2 (32 bytes))
+    if (generate_salt_enc(hmac_secret_salt, 64) != CTAP1_ERR_SUCCESS) {
+        return false;
+    }
+    // saltAuthを生成
+    // LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
+    if (generate_salt_auth(salt_enc(), 64) != CTAP1_ERR_SUCCESS) {
+        return false;
+    }
+    // 処理成功
+    return true;
+}

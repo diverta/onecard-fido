@@ -697,17 +697,6 @@ static uint8_t encode_hmac_secret_map(
 }
 
 static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt) {
-    // saltEncを生成
-    // Encrypt two salts (Called salt1 (32 bytes) and salt2 (32 bytes)) using sharedSecret
-    // AES256-CBC(sharedSecret, IV=0, salt1 (32 bytes) || salt2 (32 bytes))
-    if (generate_salt_enc(hmac_secret_salt, 64) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // saltAuthを生成
-    // LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
-    if (generate_salt_auth(salt_enc(), 64) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
     // Mapに格納する要素数 = 1
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(encoder, &map, 1);
