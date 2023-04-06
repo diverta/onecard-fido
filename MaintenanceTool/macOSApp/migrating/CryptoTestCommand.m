@@ -11,12 +11,12 @@
 
 // on migrating
 #import "debug_log.h"
-#import "AES256CBC.h"
 #import "CryptoTestCommand.h"
 
 // for des
 #import "tool_piv_admin.h"
 /* 移行前の処理
+#import "AES256CBC.h"
 #import "tool_crypto_des.h"
  */
 
@@ -25,7 +25,10 @@
 @end
 
 @implementation CryptoTestCommand
-    
+
+    - (void)performTest {
+    }
+
     - (void)testAES256CBC {
         NSData *data = [@"This is a sample string.12345678" dataUsingEncoding:NSUTF8StringEncoding];
 
@@ -64,7 +67,7 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"decoded data (%d bytes)", decoded_size];
         [[ToolLogFile defaultLogger] hexdumpOfBytes:decoded size:decoded_size];
 
-        // 移行前の処理
+        /* 移行前の処理
         fido_blob_t *pkey = fido_blob_new();
         fido_blob_t *ppin = fido_blob_new();
         fido_blob_t *pe   = fido_blob_new();
@@ -93,6 +96,7 @@
         fido_blob_free(&pkey);
         fido_blob_free(&pe);
         fido_blob_free(&pd);
+         */
     }
 
     - (void)testTripleDES {
