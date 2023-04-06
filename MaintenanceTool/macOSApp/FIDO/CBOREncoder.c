@@ -165,7 +165,8 @@ static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder, uint8_t *ecdh_pu
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
+uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y,
+    uint8_t *pin_auth, uint8_t *new_pin_enc, size_t new_pin_enc_size, uint8_t *pin_hash_enc) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -227,7 +228,7 @@ uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_p
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    ret = cbor_encode_byte_string(&map, pin_auth, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -236,7 +237,7 @@ uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_p
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, new_pin_enc(), new_pin_enc_size());
+    ret = cbor_encode_byte_string(&map, new_pin_enc, new_pin_enc_size);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -246,7 +247,7 @@ uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_p
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
-        ret = cbor_encode_byte_string(&map, pin_hash_enc(), 16);
+        ret = cbor_encode_byte_string(&map, pin_hash_enc, 16);
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
