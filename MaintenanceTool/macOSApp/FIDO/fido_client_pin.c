@@ -9,6 +9,9 @@
 #include "fido_client_pin.h"
 #include "FIDODefines.h"
 
+// ヘルスチェック実行用のテストデータ
+static const char *challenge = "This is challenge";
+
 bool fido_client_pin_generate_pinauth(char *new_pin, char *old_pin, bool change_pin)
 {
     // pinHashEncを生成
@@ -23,6 +26,20 @@ bool fido_client_pin_generate_pinauth(char *new_pin, char *old_pin, bool change_
     }
     // pinAuthを生成
     if (generate_pin_auth(change_pin) != CTAP1_ERR_SUCCESS) {
+        return false;
+    }
+    // 処理成功
+    return true;
+}
+
+bool fido_client_pin_generate_pinauth_from_pintoken(uint8_t *pin_token)
+{
+    // clientDataHashを生成
+    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
+        return false;
+    }
+    // pinAuthを生成
+    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
         return false;
     }
     // 処理成功

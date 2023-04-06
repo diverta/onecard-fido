@@ -16,6 +16,7 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "fido_client_pin.h"
 #import "fido_crypto.h"
 #import "tool_ecdh.h"
 
@@ -409,8 +410,13 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
+        // PINトークンからpinAuthを生成
+        uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
+        if (fido_client_pin_generate_pinauth_from_pintoken(decrypted_pin_token) == false) {
+            return nil;
+        }
         // makeCredentialリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_make_credential(ctap2_cbor_decrypted_pin_token());
+        status_code = ctap2_cbor_encode_generate_make_credential_cbor();
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

@@ -507,7 +507,7 @@ static uint8_t encode_pubkey_cred_params(CborEncoder *encoder) {
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_make_credential_cbor(void) {
+uint8_t ctap2_cbor_encode_generate_make_credential_cbor(void) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -610,19 +610,6 @@ static uint8_t generate_make_credential_cbor(void) {
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_make_credential(uint8_t *pin_token) {
-    // clientDataHashを生成
-    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // pinAuthを生成
-    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_make_credential_cbor();
 }
 
 static uint8_t encode_allow_list(
