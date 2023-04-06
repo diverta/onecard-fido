@@ -15,7 +15,7 @@ uint8_t *ctap2_cbor_encode_request_bytes(void);
 size_t   ctap2_cbor_encode_request_bytes_size(void);
 uint8_t  ctap2_cbor_encode_get_agreement_key(void);
 uint8_t  ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y);
-uint8_t  ctap2_cbor_encode_client_pin_token_get(char *cur_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y);
+uint8_t  ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y);
 uint8_t  ctap2_cbor_encode_make_credential(uint8_t *pin_token);
 uint8_t  ctap2_cbor_encode_get_assertion(
     uint8_t *pin_token, uint8_t *credential_id, size_t credential_id_size,

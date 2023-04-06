@@ -234,7 +234,7 @@
         NSString *pinNew = [[self commandParameter] pinNew];
         NSString *pinOld = [[self commandParameter] pinOld];
 
-        // SetPINまたはChangePINリクエストを生成して戻す
+        // pinAuthを生成
         char *pin_new = (char *)[pinNew UTF8String];
         char *pin_old = NULL;
         if ([pinOld length] != 0) {
@@ -244,7 +244,7 @@
         if (fido_client_pin_generate_pinauth(pin_new, pin_old, change_pin) == false) {
             return nil;
         }
-        // リクエストCBORを生成
+        // SetPINまたはChangePINリクエストを生成して戻す
         status_code = ctap2_cbor_encode_generate_set_pin_cbor(change_pin, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()

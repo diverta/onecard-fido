@@ -16,6 +16,7 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "fido_crypto.h"
 #import "tool_ecdh.h"
 
 @interface CTAP2HcheckCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
@@ -384,9 +385,13 @@
         if (tool_ecdh_create_shared_secret_key(ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y()) == false) {
             return nil;
         }
-        // getPinTokenリクエストを生成して戻す
+        // pinHashEncを生成
         char *pin_cur = (char *)[[[self commandParameter] pin] UTF8String];
-        status_code = ctap2_cbor_encode_client_pin_token_get(pin_cur, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
+        if (generate_pin_hash_enc(pin_cur) != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        // getPinTokenリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_generate_get_pin_token_cbor(tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

@@ -263,7 +263,7 @@ uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_p
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
+uint8_t ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -330,15 +330,6 @@ static uint8_t generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_client_pin_token_get(char *cur_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
-    // pinHashEncを生成
-    if (generate_pin_hash_enc(cur_pin) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_get_pin_token_cbor(ecdh_public_key_x, ecdh_public_key_y);
 }
 
 static uint8_t encode_rp(CborEncoder *encoder) {
