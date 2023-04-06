@@ -25,7 +25,6 @@
 #define COSE_ALG_ES256      -7
 
 // ヘルスチェック実行用のテストデータ
-static const char *challenge = "This is challenge";
 static const char *rpid = "diverta.co.jp";
 static const char *rpname = "Diverta inc.";
 static const char *userid = "1234567890123456";
@@ -730,7 +729,7 @@ static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_pub
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_get_assertion_cbor(
+uint8_t ctap2_cbor_encode_generate_get_assertion_cbor(
     uint8_t *credential_id, size_t credential_id_size, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt, bool user_presence) {
     // Mapに格納する要素数
     size_t map_elements_num;
@@ -825,19 +824,4 @@ static uint8_t generate_get_assertion_cbor(
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_get_assertion(
-    uint8_t *pin_token, uint8_t *credential_id, size_t credential_id_size,
-    uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt, bool user_presence) {
-    // clientDataHashを生成
-    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // pinAuthを生成
-    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_get_assertion_cbor(credential_id, credential_id_size, ecdh_public_key_x, ecdh_public_key_y, hmac_secret_salt, user_presence);
 }

@@ -450,14 +450,20 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
+        // PINトークンからpinAuthを生成
+        uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
+        if (fido_client_pin_generate_pinauth_from_pintoken(decrypted_pin_token) == false) {
+            return nil;
+        }
+        // HMAC暗号からsaltAuthを生成
+        uint8_t *hmac_secret_salt = (uint8_t *)[[self hmacSecretSalt] bytes];
         // getAssertionリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_get_assertion(
-                            ctap2_cbor_decrypted_pin_token(),
+        status_code = ctap2_cbor_encode_generate_get_assertion_cbor(
                             ctap2_cbor_decode_credential_id(),
                             ctap2_cbor_decode_credential_id_size(),
                             tool_ecdh_public_key_X(),
                             tool_ecdh_public_key_Y(),
-                            (uint8_t *)[[self hmacSecretSalt] bytes], up);
+                            hmac_secret_salt, up);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
