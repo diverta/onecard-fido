@@ -462,11 +462,12 @@
         }
         // getAssertionリクエストを生成して戻す
         status_code = ctap2_cbor_encode_generate_get_assertion_cbor(
+                            client_data_hash(), pin_auth(),
                             ctap2_cbor_decode_credential_id(),
                             ctap2_cbor_decode_credential_id_size(),
                             tool_ecdh_public_key_X(),
                             tool_ecdh_public_key_Y(),
-                            hmac_secret_salt, up);
+                            salt_enc(), salt_auth(), up);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
