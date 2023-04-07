@@ -44,3 +44,46 @@ void tiny_tft_base_init(void)
     app_tiny_tft_set_c_s(HIGH);
     app_tiny_tft_set_d_c(HIGH);
 }
+
+//
+// データ転送関連
+//
+static uint8_t work_buf[16];
+
+bool tiny_tft_base_write_byte(uint8_t b)
+{
+    // １バイトを転送
+    work_buf[0] = b;
+    return app_tiny_tft_write(work_buf, 1);
+}
+
+bool tiny_tft_base_write_dword(uint32_t l)
+{
+    // ４バイトを転送
+    work_buf[0] = l >> 24;
+    work_buf[1] = l >> 16;
+    work_buf[2] = l >> 8;
+    work_buf[3] = l;
+    return app_tiny_tft_write(work_buf, 4);
+}
+
+void tiny_tft_base_write_command(uint8_t command_byte) 
+{
+    // Send the command byte
+    app_tiny_tft_set_d_c(LOW);
+    tiny_tft_base_write_byte(command_byte);
+    app_tiny_tft_set_d_c(HIGH);
+}
+
+void tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
+{
+    // Send the command byte
+    app_tiny_tft_set_d_c(LOW);
+    tiny_tft_base_write_byte(command_byte);
+
+    // Send the data bytes
+    app_tiny_tft_set_d_c(HIGH);
+    if (data_size > 0) {
+        app_tiny_tft_write(data_bytes, data_size);
+    }
+}
