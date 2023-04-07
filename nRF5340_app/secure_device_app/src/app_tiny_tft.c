@@ -49,15 +49,15 @@ static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gp
 
 static int app_tiny_tft_init(const struct device *dev)
 {
-    // SPI（spi2）デバイス初期化
+    // SPI（spi4）デバイス初期化
     (void)dev;
-    spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi2));
+    spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi4));
     if (device_is_ready(spi_dev) == false) {
-        LOG_ERR("SPI master #2 is not ready");
+        LOG_ERR("SPI master #4 is not ready");
         return -ENOTSUP;
     }
 
-    LOG_INF("SPI master #2 is ready");
+    LOG_INF("SPI master #4 is ready");
 
     // 制御用GPIOデバイス初期化
     m_tft_c_s = initialize_gpio(TFT_C_S_GPIO_LABEL, TFT_C_S_GPIO_PIN, TFT_C_S_GPIO_FLAGS);
