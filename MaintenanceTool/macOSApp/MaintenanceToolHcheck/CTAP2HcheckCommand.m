@@ -460,6 +460,7 @@
         // HMAC暗号からsaltAuthを生成
         uint8_t *hmac_secret_salt = (uint8_t *)[[self hmacSecretSalt] bytes];
         if (fido_client_pin_generate_salt_auth(hmac_secret_salt) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate saltAuth fail: %s", log_debug_message()];
             return nil;
         }
         // getAssertionリクエストを生成して戻す
