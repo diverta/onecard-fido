@@ -97,11 +97,11 @@ static void begin_spi(uint32_t freq)
 
     // Perform reset
     app_tiny_tft_set_rst(HIGH);
-    app_tiny_tft_delay_ms(100);
+    tiny_tft_base_delay_ms(100);
     app_tiny_tft_set_rst(LOW);
-    app_tiny_tft_delay_ms(100);
+    tiny_tft_base_delay_ms(100);
     app_tiny_tft_set_rst(HIGH);
-    app_tiny_tft_delay_ms(200);
+    tiny_tft_base_delay_ms(200);
 }
 
 static void send_command(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
@@ -148,7 +148,7 @@ static void initialize_display(uint8_t *addr)
             if (ms == 255) {
                 ms = 500;
             }
-            app_tiny_tft_delay_ms(ms);
+            tiny_tft_base_delay_ms(ms);
         }
     }
 }

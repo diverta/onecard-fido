@@ -135,11 +135,6 @@ void app_tiny_tft_set_led(int value)
     gpio_pin_set(m_tft_led.port, m_tft_led.pin, value ? 0 : 1);
 }
 
-void app_tiny_tft_delay_ms(uint32_t ms)
-{
-    k_sleep(K_MSEC(ms));
-}
-
 #else
 
 bool app_tiny_tft_initialize(uint32_t frequency)
@@ -173,11 +168,6 @@ void app_tiny_tft_set_d_c(int value)
 void app_tiny_tft_set_led(int value)
 {
     (void)value;
-}
-
-void app_tiny_tft_delay_ms(uint32_t ms)
-{
-    (void)ms;
 }
 
 #endif

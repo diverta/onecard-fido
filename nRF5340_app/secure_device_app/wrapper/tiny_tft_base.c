@@ -4,6 +4,9 @@
  *
  * Created on 2023/04/07, 17:36
  */
+#include <zephyr/types.h>
+#include <zephyr/kernel.h>
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -25,4 +28,9 @@ void tiny_tft_base_start_write(void)
 void tiny_tft_base_end_write(void)
 {
     app_tiny_tft_set_c_s(HIGH);
+}
+
+void tiny_tft_base_delay_ms(uint32_t ms)
+{
+    k_sleep(K_MSEC(ms));
 }
