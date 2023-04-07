@@ -7,6 +7,7 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
+#include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/spi.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -21,31 +22,31 @@ LOG_MODULE_REGISTER(app_tiny_tft);
 #include "app_tiny_tft.h"
 
 // 制御用GPIO
-static const struct device *m_tft_c_s, *m_tft_rst, *m_tft_d_c, *m_tft_led;
+static const struct gpio_dt_spec m_tft_c_s = GPIO_DT_SPEC_GET_OR(DT_ALIAS(tftcs),  gpios, {0});
+static const struct gpio_dt_spec m_tft_rst = GPIO_DT_SPEC_GET_OR(DT_ALIAS(tftrst), gpios, {0});
+static const struct gpio_dt_spec m_tft_d_c = GPIO_DT_SPEC_GET_OR(DT_ALIAS(tftdc),  gpios, {0});
+static const struct gpio_dt_spec m_tft_led = GPIO_DT_SPEC_GET_OR(DT_ALIAS(tftled), gpios, {0});
 
 // SPI
 static const struct device *spi_dev;
 static struct spi_config spi_cfg;
 
-static const struct device *initialize_gpio(const char *name, gpio_pin_t pin, gpio_flags_t flags)
+static bool initialize_gpio(const struct gpio_dt_spec *device, gpio_flags_t flags)
 {
-    const struct device *dev = device_get_binding(name);
-    if (dev == NULL) {
-        LOG_ERR("Didn't find GPIO device %s", name);
-        return NULL;
+    if (device_is_ready(device->port) == false) {
+        LOG_ERR("Didn't find GPIO device %s", device->port->name);
+        return false;
     }
 
-    int ret = gpio_pin_configure(dev, pin, flags);
+    int ret = gpio_pin_configure_dt(device, flags);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure GPIO device %s pin %d", ret, name, pin);
-        return NULL;
+        LOG_ERR("Error %d: failed to configure GPIO device %s pin %d", ret, device->port->name, device->pin);
+        return false;
     }
 
     // 最初はOffに設定
-    gpio_pin_set(dev, pin, 0);
-
-    // デバイスの参照を戻す
-    return dev;
+    gpio_pin_set(device->port, device->pin, 0);
+    return true;
 }
 
 static int app_tiny_tft_init(const struct device *dev)
@@ -61,10 +62,10 @@ static int app_tiny_tft_init(const struct device *dev)
     LOG_INF("SPI master #4 is ready");
 
     // 制御用GPIOデバイス初期化
-    m_tft_c_s = initialize_gpio(TFT_C_S_GPIO_LABEL, TFT_C_S_GPIO_PIN, TFT_C_S_GPIO_FLAGS);
-    m_tft_rst = initialize_gpio(TFT_RST_GPIO_LABEL, TFT_RST_GPIO_PIN, TFT_RST_GPIO_FLAGS);
-    m_tft_d_c = initialize_gpio(TFT_D_C_GPIO_LABEL, TFT_D_C_GPIO_PIN, TFT_D_C_GPIO_FLAGS);
-    m_tft_led = initialize_gpio(TFT_LED_GPIO_LABEL, TFT_LED_GPIO_PIN, TFT_LED_GPIO_FLAGS);
+    initialize_gpio(&m_tft_c_s, TFT_C_S_GPIO_FLAGS);
+    initialize_gpio(&m_tft_rst, TFT_RST_GPIO_FLAGS);
+    initialize_gpio(&m_tft_d_c, TFT_D_C_GPIO_FLAGS);
+    initialize_gpio(&m_tft_led, TFT_LED_GPIO_FLAGS);
     LOG_INF("Tiny TFT device is ready");
 
     return 0;
@@ -116,22 +117,22 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
 //
 void app_tiny_tft_set_c_s(int value)
 {
-    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, value ? 0 : 1);
+    gpio_pin_set(m_tft_c_s.port, m_tft_c_s.pin, value ? 0 : 1);
 }
 
 void app_tiny_tft_set_rst(int value)
 {
-    gpio_pin_set(m_tft_rst, TFT_RST_GPIO_PIN, value ? 0 : 1);
+    gpio_pin_set(m_tft_rst.port, m_tft_rst.pin, value ? 0 : 1);
 }
 
 void app_tiny_tft_set_d_c(int value)
 {
-    gpio_pin_set(m_tft_d_c, TFT_D_C_GPIO_PIN, value ? 0 : 1);
+    gpio_pin_set(m_tft_d_c.port, m_tft_d_c.pin, value ? 0 : 1);
 }
 
 void app_tiny_tft_set_led(int value)
 {
-    gpio_pin_set(m_tft_led, TFT_LED_GPIO_PIN, value ? 0 : 1);
+    gpio_pin_set(m_tft_led.port, m_tft_led.pin, value ? 0 : 1);
 }
 
 void app_tiny_tft_delay_ms(uint32_t ms)
