@@ -86,24 +86,6 @@ static void tiny_tft_initialize(void)
     _cp437      = false;
 }
 
-static void begin_spi(uint32_t freq) 
-{
-    // Initialize spi config
-    app_tiny_tft_initialize(freq);
-
-    // Init basic control pins common to all connection types
-    app_tiny_tft_set_c_s(HIGH);
-    app_tiny_tft_set_d_c(HIGH);
-
-    // Perform reset
-    app_tiny_tft_set_rst(HIGH);
-    tiny_tft_base_delay_ms(100);
-    app_tiny_tft_set_rst(LOW);
-    tiny_tft_base_delay_ms(100);
-    app_tiny_tft_set_rst(HIGH);
-    tiny_tft_base_delay_ms(200);
-}
-
 static void send_command(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
 {
     // Send the command byte
@@ -268,13 +250,25 @@ static uint16_t swap_bit(uint16_t x)
 //
 // TFTディスプレイを初期化
 //
+void perform_reset(void)
+{
+    // Perform reset
+    app_tiny_tft_set_rst(HIGH);
+    tiny_tft_base_delay_ms(100);
+    app_tiny_tft_set_rst(LOW);
+    tiny_tft_base_delay_ms(100);
+    app_tiny_tft_set_rst(HIGH);
+    tiny_tft_base_delay_ms(200);
+}
+
 void tiny_tft_init_display(void)
 {
     // Initialization values for graphics
     tiny_tft_initialize();
     
-    // Default SPI data clock frequency
-    begin_spi(4000000);
+    // Initialize SPI & perform reset
+    tiny_tft_base_init();
+    perform_reset();
 
     // Initialization code
     initialize_display(tiny_tft_const_init_command_1());

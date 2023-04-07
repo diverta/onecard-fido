@@ -34,3 +34,13 @@ void tiny_tft_base_delay_ms(uint32_t ms)
 {
     k_sleep(K_MSEC(ms));
 }
+
+void tiny_tft_base_init(void)
+{
+    // Initialize spi config (SPI data clock frequency)
+    app_tiny_tft_initialize(4000000);
+
+    // Init basic control pins common to all connection types
+    app_tiny_tft_set_c_s(HIGH);
+    app_tiny_tft_set_d_c(HIGH);
+}

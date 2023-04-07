@@ -17,6 +17,7 @@ extern "C" {
 void        tiny_tft_base_start_write(void);
 void        tiny_tft_base_end_write(void);
 void        tiny_tft_base_delay_ms(uint32_t ms);
+void        tiny_tft_base_init(void);
 
 #ifdef __cplusplus
 }
