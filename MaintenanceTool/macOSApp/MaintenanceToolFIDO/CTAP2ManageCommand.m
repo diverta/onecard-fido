@@ -14,6 +14,8 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "fido_client_pin.h"
+#import "fido_crypto.h"
 #import "tool_ecdh.h"
 
 @interface CTAP2ManageCommand () <AppHIDCommandDelegate>
@@ -233,13 +235,20 @@
         NSString *pinNew = [[self commandParameter] pinNew];
         NSString *pinOld = [[self commandParameter] pinOld];
 
-        // SetPINまたはChangePINリクエストを生成して戻す
+        // pinAuthを生成
         char *pin_new = (char *)[pinNew UTF8String];
         char *pin_old = NULL;
         if ([pinOld length] != 0) {
             pin_old = (char *)[pinOld UTF8String];
         }
-        status_code = ctap2_cbor_encode_client_pin_set_or_change(pin_new, pin_old, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
+        bool change_pin = (pin_old != NULL);
+        if (fido_client_pin_generate_pinauth(pin_new, pin_old, change_pin) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
+            return nil;
+        }
+        // SetPINまたはChangePINリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_generate_set_pin_cbor(change_pin, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y(),
+            pin_auth(), new_pin_enc(), new_pin_enc_size(), pin_hash_enc());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

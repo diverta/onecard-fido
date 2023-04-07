@@ -15,6 +15,7 @@
 #include "tool_ecdh.h"
 
 // for OpenSSL
+#include <openssl/core_names.h>
 #include <openssl/evp.h>
 #include <openssl/hmac.h>
 #include <openssl/sha.h>
@@ -195,53 +196,55 @@ fail:
 
 uint8_t generate_pin_auth(bool change_pin) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
 
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(pinAuth, 0, sizeof(pinAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 共通鍵と暗号化されたPINコードを使用し、pinAuthを生成
-    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, tool_ecdh_shared_secret_key(), 32, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, newPinEnc, newPinEncSize) == 0) {
-        log_debug("%s: HMAC_Update(newPinEnc)", __func__);
+    if (EVP_MAC_update(ctx, newPinEnc, newPinEncSize) == 0) {
+        log_debug("%s: EVP_MAC_update(newPinEnc)", __func__);
         goto fail;
     }
     if (change_pin) {
-        if (HMAC_Update(ctx, pinHashEnc, sizeof(pinHashEnc)) == 0) {
-            log_debug("%s: HMAC_Update(pinHashEnc)", __func__);
+        if (EVP_MAC_update(ctx, pinHashEnc, sizeof(pinHashEnc)) == 0) {
+            log_debug("%s: EVP_MAC_update(pinHashEnc)", __func__);
             goto fail;
         }
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(pinAuth, dgst, sizeof(pinAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
 
@@ -307,49 +310,51 @@ fail:
 
 uint8_t generate_pin_auth_from_client_data(uint8_t *decrypted_pin_token, uint8_t *client_data_hash) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
     size_t        pin_token_size = 16;
     size_t        client_data_hash_size = SHA256_DIGEST_LENGTH;
     
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(pinAuth, 0, sizeof(pinAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 復号化されたPINトークンと、clientDataHashを使用し、pinAuthを生成
-    fido_blob_set(key, decrypted_pin_token, pin_token_size);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, decrypted_pin_token, pin_token_size, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, client_data_hash, client_data_hash_size) == 0) {
-        log_debug("%s: HMAC_Update(clientDataHash)", __func__);
+    if (EVP_MAC_update(ctx, client_data_hash, client_data_hash_size) == 0) {
+        log_debug("%s: EVP_MAC_update(clientDataHash)", __func__);
         goto fail;
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(pinAuth, dgst, sizeof(pinAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
 
@@ -385,47 +390,49 @@ fail:
 
 uint8_t generate_salt_auth(uint8_t *salt_enc, size_t salt_enc_size) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
     
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(saltAuth, 0, sizeof(saltAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 共通鍵と暗号化されたsaltを使用し、saltAuthを生成
-    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, tool_ecdh_shared_secret_key(), 32, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, salt_enc, salt_enc_size) == 0) {
-        log_debug("%s: HMAC_Update(saltEnc)", __func__);
+    if (EVP_MAC_update(ctx, salt_enc, salt_enc_size) == 0) {
+        log_debug("%s: EVP_MAC_update(saltEnc)", __func__);
         goto fail;
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(saltAuth, dgst, sizeof(saltAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
 

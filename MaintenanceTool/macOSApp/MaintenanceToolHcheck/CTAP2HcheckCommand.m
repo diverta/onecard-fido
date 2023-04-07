@@ -16,6 +16,8 @@
 #import "ToolCommon.h"
 #import "ToolLogFile.h"
 #import "debug_log.h"
+#import "fido_client_pin.h"
+#import "fido_crypto.h"
 #import "tool_ecdh.h"
 
 @interface CTAP2HcheckCommand () <AppHIDCommandDelegate, AppBLECommandDelegate>
@@ -384,9 +386,13 @@
         if (tool_ecdh_create_shared_secret_key(ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y()) == false) {
             return nil;
         }
-        // getPinTokenリクエストを生成して戻す
+        // pinHashEncを生成
         char *pin_cur = (char *)[[[self commandParameter] pin] UTF8String];
-        status_code = ctap2_cbor_encode_client_pin_token_get(pin_cur, tool_ecdh_public_key_X(), tool_ecdh_public_key_Y());
+        if (generate_pin_hash_enc(pin_cur) != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        // getPinTokenリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_generate_get_pin_token_cbor(tool_ecdh_public_key_X(), tool_ecdh_public_key_Y(), pin_hash_enc());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
@@ -404,8 +410,14 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
+        // PINトークンからpinAuthを生成
+        uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
+        if (fido_client_pin_generate_pinauth_from_clientdata(decrypted_pin_token) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
+            return nil;
+        }
         // makeCredentialリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_make_credential(ctap2_cbor_decrypted_pin_token());
+        status_code = ctap2_cbor_encode_generate_make_credential_cbor(client_data_hash(), pin_auth());
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
@@ -439,14 +451,26 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
+        // PINトークンからpinAuthを生成
+        uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
+        if (fido_client_pin_generate_pinauth_from_clientdata(decrypted_pin_token) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
+            return nil;
+        }
+        // HMAC暗号からsaltAuthを生成
+        uint8_t *hmac_secret_salt = (uint8_t *)[[self hmacSecretSalt] bytes];
+        if (fido_client_pin_generate_salt_auth(hmac_secret_salt) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate saltAuth fail: %s", log_debug_message()];
+            return nil;
+        }
         // getAssertionリクエストを生成して戻す
-        status_code = ctap2_cbor_encode_get_assertion(
-                            ctap2_cbor_decrypted_pin_token(),
+        status_code = ctap2_cbor_encode_generate_get_assertion_cbor(
+                            client_data_hash(), pin_auth(),
                             ctap2_cbor_decode_credential_id(),
                             ctap2_cbor_decode_credential_id_size(),
                             tool_ecdh_public_key_X(),
                             tool_ecdh_public_key_Y(),
-                            (uint8_t *)[[self hmacSecretSalt] bytes], up);
+                            salt_enc(), salt_auth(), up);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

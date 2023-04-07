@@ -7,7 +7,6 @@
 #include "CBOREncoder.h"
 #include "FIDODefines.h"
 #include "cbor.h"
-#include "fido_crypto.h"
 #include "debug_log.h"
 
 // Values for COSE_Key format
@@ -25,7 +24,6 @@
 #define COSE_ALG_ES256      -7
 
 // ヘルスチェック実行用のテストデータ
-static const char *challenge = "This is challenge";
 static const char *rpid = "diverta.co.jp";
 static const char *rpname = "Diverta inc.";
 static const char *userid = "1234567890123456";
@@ -166,7 +164,8 @@ static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder, uint8_t *ecdh_pu
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
+uint8_t ctap2_cbor_encode_generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y,
+    uint8_t *pin_auth, uint8_t *new_pin_enc, size_t new_pin_enc_size, uint8_t *pin_hash_enc) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -228,7 +227,7 @@ static uint8_t generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    ret = cbor_encode_byte_string(&map, pin_auth, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -237,7 +236,7 @@ static uint8_t generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, new_pin_enc(), new_pin_enc_size());
+    ret = cbor_encode_byte_string(&map, new_pin_enc, new_pin_enc_size);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -247,7 +246,7 @@ static uint8_t generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
-        ret = cbor_encode_byte_string(&map, pin_hash_enc(), 16);
+        ret = cbor_encode_byte_string(&map, pin_hash_enc, 16);
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
@@ -263,27 +262,7 @@ static uint8_t generate_set_pin_cbor(bool change_pin, uint8_t *ecdh_public_key_x
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_encode_client_pin_set_or_change(char *new_pin, char *old_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
-    // pinHashEncを生成
-    bool change_pin = (old_pin != NULL);
-    if (change_pin) {
-        if (generate_pin_hash_enc(old_pin) != CTAP1_ERR_SUCCESS) {
-            return CTAP1_ERR_OTHER;
-        }
-    }
-    // newPinEncを生成
-    if (generate_new_pin_enc(new_pin) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // pinAuthを生成
-    if (generate_pin_auth(change_pin) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_set_pin_cbor(change_pin, ecdh_public_key_x, ecdh_public_key_y);
-}
-
-static uint8_t generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
+uint8_t ctap2_cbor_encode_generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *pin_hash_enc) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -337,7 +316,7 @@ static uint8_t generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_hash_enc(), 16);
+    ret = cbor_encode_byte_string(&map, pin_hash_enc, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -350,15 +329,6 @@ static uint8_t generate_get_pin_token_cbor(uint8_t *ecdh_public_key_x, uint8_t *
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_client_pin_token_get(char *cur_pin, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y) {
-    // pinHashEncを生成
-    if (generate_pin_hash_enc(cur_pin) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_get_pin_token_cbor(ecdh_public_key_x, ecdh_public_key_y);
 }
 
 static uint8_t encode_rp(CborEncoder *encoder) {
@@ -536,7 +506,7 @@ static uint8_t encode_pubkey_cred_params(CborEncoder *encoder) {
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_make_credential_cbor(void) {
+uint8_t ctap2_cbor_encode_generate_make_credential_cbor(uint8_t *client_data_hash, uint8_t *pin_auth) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -563,7 +533,7 @@ static uint8_t generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, client_data_hash(), 32);
+    ret = cbor_encode_byte_string(&map, client_data_hash, 32);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -617,7 +587,7 @@ static uint8_t generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    ret = cbor_encode_byte_string(&map, pin_auth, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -639,19 +609,6 @@ static uint8_t generate_make_credential_cbor(void) {
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_make_credential(uint8_t *pin_token) {
-    // clientDataHashを生成
-    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // pinAuthを生成
-    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_make_credential_cbor();
 }
 
 static uint8_t encode_allow_list(
@@ -698,7 +655,7 @@ static uint8_t encode_allow_list(
 }
 
 static uint8_t encode_hmac_secret_map(
-    CborEncoder *encoder, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt, uint8_t *salt_auth) {
+    CborEncoder *encoder, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *salt_enc, uint8_t *salt_auth) {
     // Mapに格納する要素数 = 3
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(encoder, &map, 3);
@@ -718,7 +675,7 @@ static uint8_t encode_hmac_secret_map(
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
-        ret = cbor_encode_byte_string(&map, hmac_secret_salt, 64);
+        ret = cbor_encode_byte_string(&map, salt_enc, 64);
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
@@ -739,18 +696,7 @@ static uint8_t encode_hmac_secret_map(
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt) {
-    // saltEncを生成
-    // Encrypt two salts (Called salt1 (32 bytes) and salt2 (32 bytes)) using sharedSecret
-    // AES256-CBC(sharedSecret, IV=0, salt1 (32 bytes) || salt2 (32 bytes))
-    if (generate_salt_enc(hmac_secret_salt, 64) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // saltAuthを生成
-    // LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
-    if (generate_salt_auth(salt_enc(), 64) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
+static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *salt_enc, uint8_t *salt_auth) {
     // Mapに格納する要素数 = 1
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(encoder, &map, 1);
@@ -760,7 +706,7 @@ static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_pub
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
-        ret = encode_hmac_secret_map(&map, ecdh_public_key_x, ecdh_public_key_y, salt_enc(), salt_auth());
+        ret = encode_hmac_secret_map(&map, ecdh_public_key_x, ecdh_public_key_y, salt_enc, salt_auth);
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
@@ -772,8 +718,9 @@ static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *ecdh_pub
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t generate_get_assertion_cbor(
-    uint8_t *credential_id, size_t credential_id_size, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt, bool user_presence) {
+uint8_t ctap2_cbor_encode_generate_get_assertion_cbor(uint8_t *client_data_hash, uint8_t *pin_auth,
+    uint8_t *credential_id, size_t credential_id_size, uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y,
+    uint8_t *salt_enc, uint8_t *salt_auth, bool user_presence) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -809,7 +756,7 @@ static uint8_t generate_get_assertion_cbor(
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, client_data_hash(), 32);
+    ret = cbor_encode_byte_string(&map, client_data_hash, 32);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -827,7 +774,7 @@ static uint8_t generate_get_assertion_cbor(
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = encode_extensions_for_get(&map, ecdh_public_key_x, ecdh_public_key_y, hmac_secret_salt);
+    ret = encode_extensions_for_get(&map, ecdh_public_key_x, ecdh_public_key_y, salt_enc, salt_auth);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -845,7 +792,7 @@ static uint8_t generate_get_assertion_cbor(
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    ret = cbor_encode_byte_string(&map, pin_auth, 16);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -867,19 +814,4 @@ static uint8_t generate_get_assertion_cbor(
     encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     requestBytesLength = encoded_buff_size + 1;
     return CTAP1_ERR_SUCCESS;
-}
-
-uint8_t ctap2_cbor_encode_get_assertion(
-    uint8_t *pin_token, uint8_t *credential_id, size_t credential_id_size,
-    uint8_t *ecdh_public_key_x, uint8_t *ecdh_public_key_y, uint8_t *hmac_secret_salt, bool user_presence) {
-    // clientDataHashを生成
-    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // pinAuthを生成
-    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
-        return CTAP1_ERR_OTHER;
-    }
-    // リクエストCBORを生成
-    return generate_get_assertion_cbor(credential_id, credential_id_size, ecdh_public_key_x, ecdh_public_key_y, hmac_secret_salt, user_presence);
 }

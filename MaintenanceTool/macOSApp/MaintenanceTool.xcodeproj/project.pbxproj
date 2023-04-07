@@ -56,6 +56,8 @@
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
 		7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
 		7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
+		7A5C178129DE88C30076D8BF /* fido_client_pin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C178029DE88C30076D8BF /* fido_client_pin.c */; };
+		7A5C178229DE88C30076D8BF /* fido_client_pin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C178029DE88C30076D8BF /* fido_client_pin.c */; };
 		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
@@ -359,6 +361,8 @@
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
 		7A5775A229C3F06100F12A1C /* OATHCCIDCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHCCIDCommand.h; sourceTree = "<group>"; };
 		7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHCCIDCommand.m; sourceTree = "<group>"; };
+		7A5C177F29DE88C30076D8BF /* fido_client_pin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_client_pin.h; sourceTree = "<group>"; };
+		7A5C178029DE88C30076D8BF /* fido_client_pin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fido_client_pin.c; sourceTree = "<group>"; };
 		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
 		7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOTPDisplayWindow.m; sourceTree = "<group>"; };
 		7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOTPDisplayWindow.h; sourceTree = "<group>"; };
@@ -975,6 +979,8 @@
 		7AB4B156271E6E340099D51B /* FIDO */ = {
 			isa = PBXGroup;
 			children = (
+				7A5C177F29DE88C30076D8BF /* fido_client_pin.h */,
+				7A5C178029DE88C30076D8BF /* fido_client_pin.c */,
 				7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */,
 				7AB4B165271E6E8B0099D51B /* CBORDecoder.h */,
 				7AB4B160271E6E8B0099D51B /* CBOREncoder.c */,
@@ -1199,6 +1205,7 @@
 				7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */,
 				7AD9827E287FF982002A6846 /* AppBLECommand.m in Sources */,
 				7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */,
+				7A5C178129DE88C30076D8BF /* fido_client_pin.c in Sources */,
 				7A9167FE28FE30870096A848 /* DFUWindow.m in Sources */,
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
 				7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */,
@@ -1294,6 +1301,7 @@
 				7A8B3DB0296E56640005F7B1 /* RTCCSettingWindow.m in Sources */,
 				7A8B3DB1296E56640005F7B1 /* AppBLECommand.m in Sources */,
 				7A8B3DB2296E56640005F7B1 /* ToolPGPCcidCommand.m in Sources */,
+				7A5C178229DE88C30076D8BF /* fido_client_pin.c in Sources */,
 				7A8B3DB3296E56640005F7B1 /* DFUWindow.m in Sources */,
 				7A8B3DB4296E56640005F7B1 /* ToolInfoWindow.m in Sources */,
 				7A8B3DB5296E56640005F7B1 /* FIDOSettingCommand.m in Sources */,
@@ -1501,7 +1509,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1533,7 +1541,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1567,7 +1575,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1599,7 +1607,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
