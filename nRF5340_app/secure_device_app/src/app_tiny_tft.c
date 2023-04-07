@@ -18,6 +18,7 @@ LOG_MODULE_REGISTER(app_tiny_tft);
 //
 #ifdef CONFIG_USE_TINY_TFT
 #include "app_tiny_tft_define.h"
+#include "app_tiny_tft.h"
 
 // 制御用GPIO
 static const struct device *m_tft_c_s, *m_tft_rst, *m_tft_d_c, *m_tft_led;
@@ -98,9 +99,9 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
     m_tx_bufs.buffers = &m_tx_buf;
     m_tx_bufs.count = 1;
 
-    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, 1);
+    app_tiny_tft_set_c_s(0);
     int ret = spi_write(spi_dev, &spi_cfg, &m_tx_bufs);
-    gpio_pin_set(m_tft_c_s, TFT_C_S_GPIO_PIN, 0);
+    app_tiny_tft_set_c_s(1);
 
     if (ret != 0) {
         LOG_ERR("spi_write returns %d", ret);
