@@ -412,7 +412,8 @@
         }
         // PINトークンからpinAuthを生成
         uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
-        if (fido_client_pin_generate_pinauth_from_pintoken(decrypted_pin_token) == false) {
+        if (fido_client_pin_generate_pinauth_from_clientdata(decrypted_pin_token) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
             return nil;
         }
         // makeCredentialリクエストを生成して戻す
@@ -452,7 +453,8 @@
         }
         // PINトークンからpinAuthを生成
         uint8_t *decrypted_pin_token = ctap2_cbor_decrypted_pin_token();
-        if (fido_client_pin_generate_pinauth_from_pintoken(decrypted_pin_token) == false) {
+        if (fido_client_pin_generate_pinauth_from_clientdata(decrypted_pin_token) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Generate pinAuth fail: %s", log_debug_message()];
             return nil;
         }
         // HMAC暗号からsaltAuthを生成

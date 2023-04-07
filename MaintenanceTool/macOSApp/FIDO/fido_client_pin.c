@@ -32,7 +32,7 @@ bool fido_client_pin_generate_pinauth(char *new_pin, char *old_pin, bool change_
     return true;
 }
 
-bool fido_client_pin_generate_pinauth_from_pintoken(uint8_t *pin_token)
+bool fido_client_pin_generate_pinauth_from_clientdata(uint8_t *pin_token)
 {
     // clientDataHashを生成
     if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
