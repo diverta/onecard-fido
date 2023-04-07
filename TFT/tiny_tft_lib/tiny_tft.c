@@ -455,12 +455,12 @@ static void write_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
 
 static void start_write(void)
 {
-    app_tiny_tft_set_c_s(LOW);
+    tiny_tft_base_start_write();
 }
 
 static void end_write(void)
 {
-    app_tiny_tft_set_c_s(HIGH);
+    tiny_tft_base_end_write();
 }
 
 static void draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
