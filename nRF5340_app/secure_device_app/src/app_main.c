@@ -42,10 +42,17 @@ void app_main_subsys_init(void)
     app_rtcc_initialize();
 
     // 暗号化関連の初期化
-    // 処理完了後、Bluetoothサービス開始を指示
+    //   別スレッドでランダムシードを生成
+    app_crypto_do_process(CRYPTO_EVT_INIT);
+}
+
+void app_main_app_crypto_init_done(void)
+{
+    // 暗号化関連の初期化処理完了
+    //   Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_crypto_do_process(CRYPTO_EVT_INIT);
+    app_bluetooth_start();
 }
 
 //
