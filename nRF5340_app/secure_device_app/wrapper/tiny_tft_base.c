@@ -20,6 +20,16 @@ fido_log_module_register(tiny_tft_base);
 // プラットフォーム非依存コード
 #include "tiny_tft_define.h"
 
+void tiny_tft_base_start_reset(void)
+{
+    app_tiny_tft_set_rst(LOW);
+}
+
+void tiny_tft_base_end_reset(void)
+{
+    app_tiny_tft_set_rst(HIGH);
+}
+
 void tiny_tft_base_start_write(void)
 {
     app_tiny_tft_set_c_s(LOW);

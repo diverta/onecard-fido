@@ -211,12 +211,10 @@ static uint16_t swap_bit(uint16_t x)
 void perform_reset(void)
 {
     // Perform reset
-    app_tiny_tft_set_rst(HIGH);
-    tiny_tft_base_delay_ms(100);
-    app_tiny_tft_set_rst(LOW);
-    tiny_tft_base_delay_ms(100);
-    app_tiny_tft_set_rst(HIGH);
-    tiny_tft_base_delay_ms(200);
+    tiny_tft_base_start_reset();
+    tiny_tft_base_delay_ms(50);
+    tiny_tft_base_end_reset();
+    tiny_tft_base_delay_ms(150);
 }
 
 void tiny_tft_init_display(void)
