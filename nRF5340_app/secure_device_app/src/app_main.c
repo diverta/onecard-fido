@@ -45,7 +45,7 @@ void app_main_subsys_init(void)
     // 処理完了後、Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_main_app_crypto_do_process(CRYPTO_EVT_INIT, app_bluetooth_start);
+    app_crypto_do_process(CRYPTO_EVT_INIT);
 }
 
 //
