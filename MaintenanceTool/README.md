@@ -1,6 +1,6 @@
 # FIDO認証器管理ツール
 
-最終更新日：2023/2/6
+最終更新日：2023/3/13
 
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うためのツールです。<br>
@@ -19,7 +19,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
-* OATH機能設定（最終更新日現在、開発中）
+* OATH機能設定（最終更新日現在、Windows版のみ搭載）
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 * 認証器の時刻設定機能
@@ -37,7 +37,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 <img src="../MaintenanceTool/macOSApp/assets01/0001.jpg" width="400">
 
 #### 動作環境
-macOS Sierra (Version 10.12.6)〜macOS Catalina (Version 10.15.7)
+macOS Big Sur (Version 11)〜macOS Monterey (Version 12)
 
 ## [Windows版](../MaintenanceTool/dotNET/README.md)
 

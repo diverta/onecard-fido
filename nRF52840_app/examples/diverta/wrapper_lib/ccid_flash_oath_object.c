@@ -162,6 +162,9 @@ static bool find_unique_record(uint16_t file_id, uint16_t record_key, uint8_t *p
             // 同じキーのレコードかどうか判定 (先頭バイトを比較)
             uint8_t *p_read_buffer = (uint8_t *)read_buffer;
             if (memcmp(p_unique_key, p_read_buffer + unique_key_offset, unique_key_size) == 0) {
+                // 同じキーのレコードである場合、該当レコードのserialを
+                // 引数の領域に設定して戻す。
+                *serial = _serial;
                 found = true;
                 if (function != NULL) {
                     success = function(&m_fds_record_desc);

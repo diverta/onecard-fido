@@ -19,7 +19,8 @@ namespace MaintenanceTool.OATH
         //
         private readonly QRDecoder QrDecoder = null!;
 
-        public QRCodeUtil() {
+        public QRCodeUtil()
+        {
             try {
                 ILogger<QRDecoder> logger = new LoggerFactory().CreateLogger<QRDecoder>();
                 QrDecoder = new QRDecoder(logger);
@@ -121,7 +122,6 @@ namespace MaintenanceTool.OATH
                 byte[][] dataArrayList = QrDecoder.ImageDecoder(bitmapScreenShot);
                 if (dataArrayList != null && dataArrayList.Length > 0) {
                     qrCodeString += Encoding.UTF8.GetString(dataArrayList[0]);
-                    AppLogUtil.OutputLogDebug("QR code detected from screen");
                 }
 
             } catch (Exception e) {
@@ -249,10 +249,40 @@ namespace MaintenanceTool.OATH
 
             return parameters;
         }
-        
+
         //
         // ユーティリティー
         //
+        public static bool CheckScannedAccountInfo(Dictionary<string, string> accountInfo)
+        {
+            // スキャンしたアカウント情報の項目有無をチェック
+            if (CheckScannedAccountInfoItem(accountInfo, "protocol") == false) {
+                return false;
+            }
+            if (CheckScannedAccountInfoItem(accountInfo, "method") == false) {
+                return false;
+            }
+            if (CheckScannedAccountInfoItem(accountInfo, "account") == false) {
+                return false;
+            }
+            if (CheckScannedAccountInfoItem(accountInfo, "issuer") == false) {
+                return false;
+            }
+            if (CheckScannedAccountInfoItem(accountInfo, "secret") == false) {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool CheckScannedAccountInfoItem(Dictionary<string, string> accountInfo, string itemKeyName)
+        {
+            if (accountInfo.ContainsKey(itemKeyName) == false) {
+                AppLogUtil.OutputLogError(string.Format("Scanned account info invalid: {0} not exist", itemKeyName));
+                return false;
+            }
+            return true;
+        }
+
         public static bool SaveBitmapScreenShotToFile(Bitmap bitmapScreenShot)
         {
             // 例外抑止

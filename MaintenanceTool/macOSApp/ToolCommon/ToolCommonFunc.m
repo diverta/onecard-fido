@@ -20,6 +20,10 @@
         return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     }
 
+    + (NSString *)getAppBundleNameString {
+        return [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
+    }
+
     + (bool)isVendorMaintenanceTool {
         NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
         return [bundleIdentifier isEqualToString:@"jp.co.diverta.VendorMaintenanceTool"];

@@ -1,4 +1,5 @@
-﻿using MaintenanceToolApp.BLESettings;
+﻿using MaintenanceTool.OATH;
+using MaintenanceToolApp.BLESettings;
 using MaintenanceToolApp.DFU;
 using MaintenanceToolApp.FIDOSettings;
 using MaintenanceToolApp.HealthCheck;
@@ -148,7 +149,12 @@ namespace MaintenanceToolApp
 
         private void DoOATH()
         {
-            DialogUtil.ShowWarningMessage(this, Title, AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED);
+            // OATH画面を開き、実行コマンド種別を設定
+            OATHParameter param = new OATHParameter();
+            if (new OATHWindow(param).ShowDialogWithOwner(this)) {
+                // OATH機能を実行
+                new OATHWindowUtil(param).Switch(this);
+            }
         }
 
         private void DoHealthCheck()
@@ -157,7 +163,7 @@ namespace MaintenanceToolApp
             HealthCheckParameter param = new HealthCheckParameter();
             bool b = new HealthCheckWindow(param).ShowDialogWithOwner(this);
             if (b) {
-                // ユーティリティー機能を実行
+                // ヘルスチェック機能を実行
                 new HealthCheckProcess(param).DoProcess();
             }
         }

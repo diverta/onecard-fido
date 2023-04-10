@@ -21,7 +21,7 @@
 
 @implementation QRCodeUtil
 
-    - (bool)hasScreenshotPermission {
+    + (bool)hasScreenshotPermission {
         // 画面収録の許可があるかどうかを問い合わせる
         CGDisplayStreamRef streamRef;
         streamRef = CGDisplayStreamCreateWithDispatchQueue(
@@ -35,12 +35,12 @@
             hasPermission = true;
             CFRelease(streamRef);
         } else {
-            [[ToolLogFile defaultLogger] error:@"No permission for screen shot capture"];
+            [[ToolLogFile defaultLogger] error:@"QRCodeUtil: No permission for screen shot capture"];
         }
         return hasPermission;
     }
 
-    - (bool)scanQRCodeFromScreenShot {
+    + (NSString *)scanQRCodeFromScreenShot {
         // デスクトップのスクリーンショットを取得し、イメージを抽出
         CGImageRef screenShot = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
         CIImage *ciImage = [[CIImage alloc] initWithCGImage:screenShot];
@@ -50,15 +50,11 @@
         NSString *messageString = [self extractQRMessageFrom:ciImage];
         if (messageString == nil) {
             [[ToolLogFile defaultLogger] debug:@"QR code not detected"];
-            return false;
         }
-        // 抽出されたメッセージを解析
-        [self parseQRMessageFrom:messageString];
-        [[ToolLogFile defaultLogger] debugWithFormat:@"QR code detected: %@", [self parsedQRCodeInfo]];
-        return true;
+        return messageString;
     }
 
-    - (NSString *)extractQRMessageFrom:(CIImage *)ciImage {
+    + (NSString *)extractQRMessageFrom:(CIImage *)ciImage {
         // イメージから解析情報を抽出
         CIContext *context = [[CIContext alloc] init];
         NSDictionary *options = @{CIDetectorAccuracy: CIDetectorAccuracyHigh};
@@ -79,6 +75,16 @@
         }
         // 解析できなかった場合はNULL
         return nil;
+    }
+
+#pragma mark - For parsing QR code message string
+
+    - (QRCodeUtil *)initWithQRMessageString:(NSString *)messageString {
+        self = [super init];
+        if (self) {
+            [self parseQRMessageFrom:messageString];
+        }
+        return self;
     }
 
     - (void)parseQRMessageFrom:(NSString *)messageString {
@@ -177,6 +183,10 @@
         }
         NSRange range = NSMakeRange(offset, found.location - offset);
         return range;
+    }
+
+    - (NSString *)valueForKey:(NSString *)key {
+        return [[self parsedQRCodeInfo] valueForKey:key];
     }
 
 @end

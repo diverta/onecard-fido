@@ -1,6 +1,6 @@
 # Windows版 FIDO認証器管理ツール
 
-最終更新日：2023/1/30
+最終更新日：2023/3/7
 
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うためのツールです。
@@ -37,7 +37,7 @@ Windows 10のバージョン「Windows 10 November 2019 Update」以降におい
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
-* OATH機能設定（最終更新日現在、開発中）
+* OATH機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 * 認証器の時刻設定機能
@@ -74,6 +74,9 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 
 - <b>[OpenPGP機能設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
+
+- <b>[OATH機能設定手順](../../MaintenanceTool/dotNET/OATHSETTING.md)</b><br>
+[OATH機能](../../CCID/OATH/README.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/dotNET/UPDATEFW_USB.md)</b><br>
 管理ツールから、MDBT50Q Dongleのファームウェアを更新する手順を掲載しています。

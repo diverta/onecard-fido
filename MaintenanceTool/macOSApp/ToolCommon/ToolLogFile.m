@@ -110,6 +110,17 @@ static ToolLogFile *sharedInstance;
         [self outputLogText:hex type:LOG_TYPE_NONE];
     }
 
+    - (void)hexdumpOfBytes:(uint8_t *)bytes size:(size_t)size {
+        NSMutableString *hex = [[NSMutableString alloc] init];
+        for (int i = 0; i < size; i++) {
+            [hex appendFormat:@"%02x ", bytes[i]];
+            if ((i % 16 == 15) && (i < size - 1)) {
+                [hex appendString:@"\n"];
+            }
+        }
+        [self outputLogText:hex type:LOG_TYPE_NONE];
+    }
+
     - (NSString *)logFilePathString {
         // ログファイルパス文字列を戻す
         return [self logFilePath];

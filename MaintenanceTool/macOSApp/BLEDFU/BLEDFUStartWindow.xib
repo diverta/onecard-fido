@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,8 +11,8 @@
                 <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="NlF-yn-gO0"/>
                 <outlet property="buttonOK" destination="y4V-cK-FxX" id="cHH-8J-6VL"/>
                 <outlet property="labelCurrentVersion" destination="IzL-CG-LOW" id="FnX-gv-ksM"/>
-                <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
                 <outlet property="labelDescription" destination="S5S-JP-fCE" id="w0g-99-QrA"/>
+                <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
             </connections>
         </customObject>
@@ -22,7 +22,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="358" height="280"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="358" height="280"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -38,7 +38,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box boxType="secondary" title="バージョン情報" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
+                    <box title="バージョン情報" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
                         <rect key="frame" x="17" y="165" width="324" height="83"/>
                         <view key="contentView" id="HzA-xp-MO5">
                             <rect key="frame" x="3" y="3" width="318" height="68"/>
@@ -121,7 +121,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y4V-cK-FxX" userLabel="ButtonOK">
-                        <rect key="frame" x="90" y="13" width="82" height="32"/>
+                        <rect key="frame" x="89" y="14" width="84" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="70" id="LIU-nl-dhi"/>
                         </constraints>
@@ -137,7 +137,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8IE-Qs-RbR" userLabel="ButtonCancel">
-                        <rect key="frame" x="186" y="13" width="82" height="32"/>
+                        <rect key="frame" x="185" y="14" width="76" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZ9-cW-UX4">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
