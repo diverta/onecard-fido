@@ -4,7 +4,6 @@
  *
  * Created on 2022/06/09, 17:11
  */
-#include "app_tiny_tft.h"
 #include "tiny_tft_const.h"
 #include "tiny_tft_define.h"
 
@@ -499,4 +498,42 @@ static size_t write_buffer(const uint8_t *buffer, size_t size)
 size_t tiny_tft_print(const char *s)
 {
     return write_buffer((const uint8_t *)s, strlen(s));
+}
+
+//
+// テスト用
+//
+void tiny_tft_test(void)
+{
+    // TFTディスプレイを初期化
+    static bool init = true;
+    if (init) {
+        tiny_tft_init_display();
+        fido_log_info("TFT display initialize done");
+        init = false;
+    }
+    static uint8_t cnt = 0;
+    switch (cnt++) {
+        case 0:
+            tiny_tft_fill_screen(ST77XX_YELLOW);
+            fido_log_info("TFT display filled by yellow");
+            break;
+        case 1:
+            tiny_tft_set_text_wrap(false);
+            tiny_tft_set_cursor(0, 0);
+            tiny_tft_set_text_color(ST77XX_RED);
+            tiny_tft_set_text_size(1);
+            tiny_tft_print("Hello world!\n");
+            break;
+        case 2:
+            tiny_tft_set_text_color(ST77XX_MAGENTA);
+            tiny_tft_set_text_size(2);
+            tiny_tft_print("Hello world!\n");
+            break;
+        default:
+            tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black");
+            cnt = 0;
+            break;
+    }
 }

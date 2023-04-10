@@ -14,10 +14,12 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_tiny_tft);
 
+#define APP_NO_USE_TINY_TFT         false
+
 //
 // デバイスの初期化
 //
-#ifdef CONFIG_USE_TINY_TFT
+#if !APP_NO_USE_TINY_TFT
 #include "app_tiny_tft_define.h"
 #include "app_tiny_tft.h"
 
@@ -136,7 +138,11 @@ void app_tiny_tft_set_led(int value)
 }
 
 #else
-
+//
+// プラットフォーム固有の障害切り分け時には、
+// デバイス設定・操作コードをビルド対象から外し、
+// 以下のブロックを有効化します。
+//
 bool app_tiny_tft_initialize(uint32_t frequency)
 {
     (void)frequency;
@@ -169,5 +175,4 @@ void app_tiny_tft_set_led(int value)
 {
     (void)value;
 }
-
 #endif
