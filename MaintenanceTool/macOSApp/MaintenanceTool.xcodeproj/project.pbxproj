@@ -1526,7 +1526,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1559,7 +1559,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1592,7 +1592,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1625,7 +1625,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
