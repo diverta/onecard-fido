@@ -1,5 +1,7 @@
 # BLEペアリング手順
 
+最終更新日：2023/4/11
+
 ## 概要
 
 [FIDO認証器管理ツール](../../MaintenanceTool/macOSApp/README.md)を使用し、PCとFIDO認証器をBLEペアリングする手順について掲載しています。
