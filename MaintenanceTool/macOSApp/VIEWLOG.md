@@ -16,11 +16,11 @@ FIDO認証器管理ツールの実行中に出力されるログは、macOSの�
 ログファイルの格納場所を、macOSのFinderで開くことができます。<br>
 管理ツールの「ユーティリティー」画面で「管理ツールのログを参照」ボタンをクリックします。
 
-<img src="assets02/0002.jpg" width="400">
+<img src="assets02/0002.jpg" width="370">
 
 ログファイル「MaintenanceTool.log」を格納するディレクトリーが、Finderで表示されます。
 
-<img src="assets02/0003.jpg" width="435">
+<img src="assets02/0003.jpg" width="495">
 
 ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより参照することが可能です。
 
