@@ -38,6 +38,7 @@ extern "C" {
 #include "fido_timer.h"
 #include "platform_common.h"
 #include "rtcc.h"
+#include "tiny_tft_base.h"
 
 #ifdef FIDO_ZEPHYR
 // Zephyrに依存する処理

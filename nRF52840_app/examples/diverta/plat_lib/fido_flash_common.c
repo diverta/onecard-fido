@@ -38,17 +38,19 @@ void fido_flash_storage_init(void)
 //
 // 共通関数
 //
-void fido_flash_fds_force_gc(void)
+bool fido_flash_fds_force_gc(void)
 {
     // FDSガベージコレクションを強制実行
     // NGの場合はシステムエラー扱い（処理続行不可）
     ret_code_t err_code = fds_gc();
     if (err_code != NRF_SUCCESS) {
-        APP_ERROR_CHECK(err_code);
+        NRF_LOG_ERROR("fds_gc returns 0x%02x ", err_code);
+        return false;
     }
 
     // アプリケーション側でGCを発生させた旨のフラグを設定
     fido_flash_event_set_gc_forced();
+    return true;
 }
 
 bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer)

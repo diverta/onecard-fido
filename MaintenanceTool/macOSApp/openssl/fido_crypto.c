@@ -7,14 +7,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "aes_256_cbc.h"
 #include "fido_crypto.h"
 #include "fido_blob.h"
 #include "debug_log.h"
 #include "FIDODefines.h"
-#include "AES256CBC.h"
-#include "ECDH.h"
+#include "tool_ecdh.h"
 
 // for OpenSSL
+#include <openssl/core_names.h>
 #include <openssl/evp.h>
 #include <openssl/hmac.h>
 #include <openssl/sha.h>
@@ -119,14 +120,11 @@ uint8_t generate_pin_hash_enc(const char *cur_pin) {
     }
     ph->len = 16;
     // 共通鍵を使用し暗号化
-    fido_blob_set(shared, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(shared, ph, phe) < 0) {
-        log_debug("%s: aes256_cbc_enc", __func__);
-        goto fail;
+    fido_blob_set(shared, tool_ecdh_shared_secret_key(), 32);
+    size_t size = sizeof(pinHashEnc);
+    if (aes_256_cbc_enc(shared->ptr, ph->ptr, ph->len, pinHashEnc, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(pinHashEnc, phe->ptr, phe->len);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -181,16 +179,12 @@ uint8_t generate_new_pin_enc(const char *new_pin) {
         goto fail;
     }
     // 共通鍵を使用し、PINコードを暗号化
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, ppin, pe) < 0) {
-        goto fail;
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
+    newPinEncSize = sizeof(newPinEnc);
+    if (aes_256_cbc_enc(key->ptr, ppin->ptr, ppin->len, newPinEnc, &newPinEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
 
-    // 配列に退避
-    memcpy(newPinEnc, pe->ptr, pe->len);
-    newPinEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
-    
 fail:
     // 作業領域を解放
     fido_blob_free(&ppin);
@@ -202,53 +196,55 @@ fail:
 
 uint8_t generate_pin_auth(bool change_pin) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
 
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(pinAuth, 0, sizeof(pinAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 共通鍵と暗号化されたPINコードを使用し、pinAuthを生成
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, tool_ecdh_shared_secret_key(), 32, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, newPinEnc, newPinEncSize) == 0) {
-        log_debug("%s: HMAC_Update(newPinEnc)", __func__);
+    if (EVP_MAC_update(ctx, newPinEnc, newPinEncSize) == 0) {
+        log_debug("%s: EVP_MAC_update(newPinEnc)", __func__);
         goto fail;
     }
     if (change_pin) {
-        if (HMAC_Update(ctx, pinHashEnc, sizeof(pinHashEnc)) == 0) {
-            log_debug("%s: HMAC_Update(pinHashEnc)", __func__);
+        if (EVP_MAC_update(ctx, pinHashEnc, sizeof(pinHashEnc)) == 0) {
+            log_debug("%s: EVP_MAC_update(pinHashEnc)", __func__);
             goto fail;
         }
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(pinAuth, dgst, sizeof(pinAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
 
@@ -267,14 +263,12 @@ uint8_t decrypto_pin_token(
         goto fail;
     }
     // 共通鍵を使用し、PINコードを復号化
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
     fido_blob_set(pe, encrypted_pin_token, pin_token_size);
-    if (aes256_cbc_dec(key, pe, pd) < 0) {
-        goto fail;
+    size_t size = pin_token_size;
+    if (aes_256_cbc_dec(key->ptr, pe->ptr, pe->len, decrypted_pin_token, &size)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    // 配列に退避
-    memcpy(decrypted_pin_token, pd->ptr, pin_token_size);
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -316,49 +310,51 @@ fail:
 
 uint8_t generate_pin_auth_from_client_data(uint8_t *decrypted_pin_token, uint8_t *client_data_hash) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
     size_t        pin_token_size = 16;
     size_t        client_data_hash_size = SHA256_DIGEST_LENGTH;
     
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(pinAuth, 0, sizeof(pinAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 復号化されたPINトークンと、clientDataHashを使用し、pinAuthを生成
-    fido_blob_set(key, decrypted_pin_token, pin_token_size);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, decrypted_pin_token, pin_token_size, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, client_data_hash, client_data_hash_size) == 0) {
-        log_debug("%s: HMAC_Update(clientDataHash)", __func__);
+    if (EVP_MAC_update(ctx, client_data_hash, client_data_hash_size) == 0) {
+        log_debug("%s: EVP_MAC_update(clientDataHash)", __func__);
         goto fail;
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(pinAuth, dgst, sizeof(pinAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
 
@@ -377,15 +373,11 @@ uint8_t generate_salt_enc(uint8_t *hmac_secret_salt, size_t hmac_secret_salt_siz
     }
     // 共通鍵を使用し、PINコードを暗号化
     fido_blob_set(psalt, hmac_secret_salt, hmac_secret_salt_size);
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, psalt, pe) < 0) {
-        goto fail;
+    fido_blob_set(key, tool_ecdh_shared_secret_key(), 32);
+    saltEncSize = sizeof(saltEnc);
+    if (aes_256_cbc_enc(key->ptr, psalt->ptr, psalt->len, saltEnc, &saltEncSize)) {
+        ok = CTAP1_ERR_SUCCESS;
     }
-    
-    // 配列に退避
-    memcpy(saltEnc, pe->ptr, pe->len);
-    saltEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
     
 fail:
     // 作業領域を解放
@@ -398,121 +390,55 @@ fail:
 
 uint8_t generate_salt_auth(uint8_t *salt_enc, size_t salt_enc_size) {
     uint8_t       dgst[SHA256_DIGEST_LENGTH];
-    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
-    const EVP_MD *md = NULL;
-    HMAC_CTX     *ctx = NULL;
-    fido_blob_t  *key;
+    size_t        dgst_len = SHA256_DIGEST_LENGTH;
+    EVP_MAC      *mac = NULL;
+    EVP_MAC_CTX  *ctx = NULL;
+    OSSL_PARAM    params[2];
     uint8_t       ok = CTAP1_ERR_OTHER;
     
-    // 作業領域の確保
+    // 作業領域をクリア
     memset(saltAuth, 0, sizeof(saltAuth));
-    if ((key = fido_blob_new()) == NULL) {
-        goto fail;
-    }
     // 共通鍵と暗号化されたsaltを使用し、saltAuthを生成
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if ((ctx = HMAC_CTX_new()) == NULL) {
-        log_debug("%s: HMAC_CTX_new", __func__);
+    if ((mac = EVP_MAC_fetch(NULL, OSSL_MAC_NAME_HMAC, NULL)) == NULL) {
+        log_debug("%s: EVP_MAC_fetch", __func__);
         goto fail;
     }
-    if ((md = EVP_sha256()) == NULL) {
-        log_debug("%s: EVP_sha256", __func__);
+    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL) {
+        log_debug("%s: EVP_MAC_CTX_new", __func__);
         goto fail;
     }
-    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
-        log_debug("%s: HMAC_Init_ex", __func__);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_ALG_PARAM_DIGEST, OSSL_DIGEST_NAME_SHA2_256, 0);
+    params[1] = OSSL_PARAM_construct_end();
+    if (EVP_MAC_init(ctx, tool_ecdh_shared_secret_key(), 32, params) == 0) {
+        log_debug("%s: EVP_MAC_init", __func__);
         goto fail;
     }
-    if (HMAC_Update(ctx, salt_enc, salt_enc_size) == 0) {
-        log_debug("%s: HMAC_Update(saltEnc)", __func__);
+    if (EVP_MAC_update(ctx, salt_enc, salt_enc_size) == 0) {
+        log_debug("%s: EVP_MAC_update(saltEnc)", __func__);
         goto fail;
     }
-    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
-        log_debug("%s: HMAC_Final", __func__);
+    if (EVP_MAC_final(ctx, dgst, &dgst_len, sizeof(dgst)) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: EVP_MAC_final", __func__);
         goto fail;
     }
     // 配列に退避
     memcpy(saltAuth, dgst, sizeof(saltAuth));
+    log_debug("%s success", __func__);
     ok = CTAP1_ERR_SUCCESS;
     
 fail:
-    // 作業領域を解放
-    fido_blob_free(&key);
-    
+    if (ctx != NULL) {
+        EVP_MAC_CTX_free(ctx);
+    }
+    if (mac != NULL) {
+        EVP_MAC_free(mac);
+    }
     return ok;
 }
-
-//
-// 鍵・証明書インストール関連処理
-//
-// skeyCertBytesEnc: Encrypt private key & certificate using sharedSecret
-//   AES256-CBC(sharedSecret, IV=0, privateKey || certificate)
-static uint8_t skeyCertBytes[1024];
-static size_t  skeyCertBytesSize;
-static uint8_t skeyCertBytesEnc[1024];
-static size_t  skeyCertBytesEncSize;
 
 // 公開鍵の妥当性検証用
 static uint8_t pubkey_from_cert[64];
 static uint8_t pubkey_from_privkey[64];
-
-uint8_t *skey_cert_bytes_enc(void) {
-    return skeyCertBytesEnc;
-}
-
-size_t skey_cert_bytes_enc_size(void) {
-    // 16の倍数に整形された後のバイト長を戻す
-    return skeyCertBytesEncSize;
-}
-
-size_t skey_cert_bytes_size(void) {
-    // 16の倍数に整形される前のバイト長を戻す
-    return skeyCertBytesSize;
-}
-
-uint8_t generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_bytes_size) {
-    fido_blob_t *pdata;
-    fido_blob_t *key;
-    fido_blob_t *pe;
-    uint8_t      ok = CTAP1_ERR_OTHER;
-
-    // 作業領域の確保
-    memset(skeyCertBytes, 0, sizeof(skeyCertBytes));
-    memset(skeyCertBytesEnc, 0, sizeof(skeyCertBytesEnc));
-    if ((pdata = fido_blob_new()) == NULL ||
-        (key = fido_blob_new()) == NULL ||
-        (pe = fido_blob_new()) == NULL) {
-        goto fail;
-    }
-    // オリジナルのバイトデータ長を退避
-    skeyCertBytesSize = skey_cert_bytes_size;
-    // バイトデータを作業領域にコピー
-    memcpy(skeyCertBytes, skey_cert_bytes, skey_cert_bytes_size);
-    // 暗号化に先立ち、暗号化されるバイトデータ長が16の倍数になるよう整形
-    size_t block_size = 16;
-    size_t block_num = skey_cert_bytes_size / block_size;
-    if ((skey_cert_bytes_size % block_size) != 0) {
-        block_num++;
-    }
-    // 共通鍵を使用し、鍵・証明書バイナリーデータを暗号化
-    fido_blob_set(pdata, skeyCertBytes, block_num * block_size);
-    fido_blob_set(key, ECDH_shared_secret_key(), 32);
-    if (aes256_cbc_enc(key, pdata, pe) < 0) {
-        goto fail;
-    }
-    // 配列に退避
-    memcpy(skeyCertBytesEnc, pe->ptr, pe->len);
-    skeyCertBytesEncSize = pe->len;
-    ok = CTAP1_ERR_SUCCESS;
-
-fail:
-    // 作業領域を解放
-    fido_blob_free(&pdata);
-    fido_blob_free(&key);
-    fido_blob_free(&pe);
-
-    return ok;
-}
 
 static bool extract_pubkey_from_cert(uint8_t *public_key, uint8_t *cert_data, size_t cert_data_length)
 {
@@ -554,8 +480,7 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // EC_POINTを生成
-    EC_KEY *eckey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
-    const EC_GROUP *group = EC_KEY_get0_group(eckey);
+    const EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
     EC_POINT *ec_point = EC_POINT_new(group);
     if (ec_point == NULL) {
         log_debug("%s: EC_POINT_new failed", __func__);
@@ -569,12 +494,8 @@ static bool generate_pubkey_from_privkey(uint8_t *public_key, uint8_t *skey_byte
     }
 
     // 内部形式の公開鍵を、バイトデータに変換
-    if (EC_POINT_point2bn(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, bn_public_key, ctx) == NULL) {
-        log_debug("%s: EC_POINT_point2bn failed", __func__);
-        goto fail;
-    }
-    if (BN_bn2bin(bn_public_key, conv_buf) == 0) {
-        log_debug("%s: BN_bn2bin failed", __func__);
+    if (EC_POINT_point2oct(group, ec_point, POINT_CONVERSION_UNCOMPRESSED, conv_buf, sizeof(conv_buf), ctx) == 0) {
+        log_debug("%s: EC_POINT_point2oct failed", __func__);
         goto fail;
     }
 

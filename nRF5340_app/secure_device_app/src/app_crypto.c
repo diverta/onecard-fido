@@ -83,20 +83,20 @@ void app_crypto_do_process(uint8_t event)
 
 static void app_crypto_process_for_event(uint8_t event)
 {
-    // イベントに応じて処理分岐
+    // イベントに応じて処理分岐 --> メインスレッドに制御を戻す
     switch (event) {
         case CRYPTO_EVT_INIT:
             app_crypto_init(NULL);
+            app_event_notify(APEVT_APP_CRYPTO_INIT_DONE);
             break;
         case CRYPTO_EVT_RANDOM_PREGEN:
             app_crypto_random_vector_pre_generate();
+            app_event_notify(APEVT_APP_CRYPTO_RANDOM_PREGEN_DONE);
             break;
         default:
+            app_event_notify(APEVT_NONE);
             break;
     }
-
-    // メインスレッドに制御を戻す
-    app_event_notify(APEVT_APP_CRYPTO_DONE);
 }
 
 //

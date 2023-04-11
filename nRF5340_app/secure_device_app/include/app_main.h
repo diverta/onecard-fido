@@ -18,6 +18,7 @@ extern "C" {
 //
 void        app_main_init(void);
 void        app_main_subsys_init(void);
+void        app_main_app_crypto_init_done(void);
 void        app_main_app_crypto_do_process(uint8_t event, void (*resume_func)(void));
 void        app_main_app_crypto_done(void);
 
