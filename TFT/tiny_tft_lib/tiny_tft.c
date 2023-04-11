@@ -4,7 +4,6 @@
  *
  * Created on 2022/06/09, 17:11
  */
-#include "app_tiny_tft.h"
 #include "tiny_tft_const.h"
 #include "tiny_tft_define.h"
 
@@ -14,35 +13,6 @@
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(tiny_tft);
 #endif
-
-//
-// データ転送関連
-//
-static uint8_t work_buf[16];
-
-static bool tiny_tft_write(uint8_t b)
-{
-    // １バイトを転送
-    work_buf[0] = b;
-    return app_tiny_tft_write(work_buf, 1);
-}
-
-static bool tiny_tft_write_32(uint32_t l)
-{
-    // ４バイトを転送
-    work_buf[0] = l >> 24;
-    work_buf[1] = l >> 16;
-    work_buf[2] = l >> 8;
-    work_buf[3] = l;
-    return app_tiny_tft_write(work_buf, 4);
-}
-
-static void tiny_tft_write_command(uint8_t command_byte) 
-{
-    app_tiny_tft_set_d_c(LOW);
-    tiny_tft_write(command_byte);
-    app_tiny_tft_set_d_c(HIGH);
-}
 
 //
 // TFT操作に必要な変数群
@@ -86,37 +56,6 @@ static void tiny_tft_initialize(void)
     _cp437      = false;
 }
 
-static void begin_spi(uint32_t freq) 
-{
-    // Initialize spi config
-    app_tiny_tft_initialize(freq);
-
-    // Init basic control pins common to all connection types
-    app_tiny_tft_set_c_s(HIGH);
-    app_tiny_tft_set_d_c(HIGH);
-
-    // Perform reset
-    app_tiny_tft_set_rst(HIGH);
-    app_tiny_tft_delay_ms(100);
-    app_tiny_tft_set_rst(LOW);
-    app_tiny_tft_delay_ms(100);
-    app_tiny_tft_set_rst(HIGH);
-    app_tiny_tft_delay_ms(200);
-}
-
-static void send_command(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
-{
-    // Send the command byte
-    app_tiny_tft_set_d_c(LOW);
-    tiny_tft_write(command_byte);
-
-    // Send the data bytes
-    app_tiny_tft_set_d_c(HIGH);
-    if (data_size > 0) {
-        app_tiny_tft_write(data_bytes, data_size);
-    }
-}
-
 static void initialize_display(uint8_t *addr) 
 {
     uint16_t offset = 0;
@@ -138,7 +77,7 @@ static void initialize_display(uint8_t *addr)
         ms = arg_num & ST_CMD_DELAY;
         // Mask out delay bit
         arg_num &= ~ST_CMD_DELAY;
-        send_command(cmd, addr + offset, arg_num);
+        tiny_tft_base_write_data(cmd, addr + offset, arg_num);
         offset += arg_num;
 
         if (ms) {
@@ -148,7 +87,7 @@ static void initialize_display(uint8_t *addr)
             if (ms == 255) {
                 ms = 500;
             }
-            app_tiny_tft_delay_ms(ms);
+            tiny_tft_base_delay_ms(ms);
         }
     }
 }
@@ -203,7 +142,7 @@ static void set_origin_and_orientation(uint8_t orientation_)
             break;
     }
 
-    send_command(ST77XX_MADCTL, &madctl, 1);
+    tiny_tft_base_write_data(ST77XX_MADCTL, &madctl, 1);
 }
 
 //
@@ -219,15 +158,15 @@ static void set_addr_window(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     uint32_t ya = ((uint32_t)y << 16) | (y + h - 1);
 
     // Column addr set
-    tiny_tft_write_command(ST77XX_CASET);
-    tiny_tft_write_32(xa);
+    tiny_tft_base_write_command(ST77XX_CASET);
+    tiny_tft_base_write_dword(xa);
 
     // Row addr set
-    tiny_tft_write_command(ST77XX_RASET);
-    tiny_tft_write_32(ya);
+    tiny_tft_base_write_command(ST77XX_RASET);
+    tiny_tft_base_write_dword(ya);
 
     // write to RAM
-    tiny_tft_write_command(ST77XX_RAMWR);
+    tiny_tft_base_write_command(ST77XX_RAMWR);
 }
 
 static void issue_color_pixels(uint16_t color, uint32_t len) 
@@ -240,8 +179,8 @@ static void issue_color_pixels(uint16_t color, uint32_t len)
     // Issue a series of pixels, all the same color
     uint8_t hi = color >> 8, lo = color;
     while (len--) {
-        tiny_tft_write(hi);
-        tiny_tft_write(lo);
+        tiny_tft_base_write_byte(hi);
+        tiny_tft_base_write_byte(lo);
     }
 }
 
@@ -249,8 +188,8 @@ static void issue_color_pixel(uint16_t color)
 {
     // Issue a pixel of color
     uint8_t hi = color >> 8, lo = color;
-    tiny_tft_write(hi);
-    tiny_tft_write(lo);
+    tiny_tft_base_write_byte(hi);
+    tiny_tft_base_write_byte(lo);
 }
 
 static uint16_t swap_bit(uint16_t x) 
@@ -268,13 +207,23 @@ static uint16_t swap_bit(uint16_t x)
 //
 // TFTディスプレイを初期化
 //
+void perform_reset(void)
+{
+    // Perform reset
+    tiny_tft_base_start_reset();
+    tiny_tft_base_delay_ms(50);
+    tiny_tft_base_end_reset();
+    tiny_tft_base_delay_ms(150);
+}
+
 void tiny_tft_init_display(void)
 {
     // Initialization values for graphics
     tiny_tft_initialize();
     
-    // Default SPI data clock frequency
-    begin_spi(4000000);
+    // Initialize SPI & perform reset
+    tiny_tft_base_init();
+    perform_reset();
 
     // Initialization code
     initialize_display(tiny_tft_const_init_command_1());
@@ -283,7 +232,7 @@ void tiny_tft_init_display(void)
 
     // Change MADCTL color filter
     uint8_t data = 0xC0;
-    send_command(ST77XX_MADCTL, &data, 1);
+    tiny_tft_base_write_data(ST77XX_MADCTL, &data, 1);
 
     // Set origin of (0,0) and orientation of TFT display
     set_origin_and_orientation(3);
@@ -455,12 +404,12 @@ static void write_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
 
 static void start_write(void)
 {
-    app_tiny_tft_set_c_s(LOW);
+    tiny_tft_base_start_write();
 }
 
 static void end_write(void)
 {
-    app_tiny_tft_set_c_s(HIGH);
+    tiny_tft_base_end_write();
 }
 
 static void draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
@@ -549,4 +498,42 @@ static size_t write_buffer(const uint8_t *buffer, size_t size)
 size_t tiny_tft_print(const char *s)
 {
     return write_buffer((const uint8_t *)s, strlen(s));
+}
+
+//
+// テスト用
+//
+void tiny_tft_test(void)
+{
+    // TFTディスプレイを初期化
+    static bool init = true;
+    if (init) {
+        tiny_tft_init_display();
+        fido_log_info("TFT display initialize done");
+        init = false;
+    }
+    static uint8_t cnt = 0;
+    switch (cnt++) {
+        case 0:
+            tiny_tft_fill_screen(ST77XX_YELLOW);
+            fido_log_info("TFT display filled by yellow");
+            break;
+        case 1:
+            tiny_tft_set_text_wrap(false);
+            tiny_tft_set_cursor(0, 0);
+            tiny_tft_set_text_color(ST77XX_RED);
+            tiny_tft_set_text_size(1);
+            tiny_tft_print("Hello world!\n");
+            break;
+        case 2:
+            tiny_tft_set_text_color(ST77XX_MAGENTA);
+            tiny_tft_set_text_size(2);
+            tiny_tft_print("Hello world!\n");
+            break;
+        default:
+            tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black");
+            cnt = 0;
+            break;
+    }
 }

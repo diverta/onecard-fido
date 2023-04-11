@@ -290,7 +290,9 @@ uint16_t ccid_piv_authenticate_mutual_request(void *p_capdu, void *p_rapdu, void
     // `resume_mutual_request`内で実行される
     // `fido_command_generate_random_vector`の実行事前に、
     // ランダムベクターの生成を指示
+    // （完了するまで、レスポンスを抑止）
     fido_crypto_random_pre_generate(ccid_piv_authenticate_mutual_request_resume);
+    ccid_piv_apdu_resume_prepare(p_capdu, p_rapdu);
     return SW_NO_ERROR;
 }
 
@@ -354,7 +356,10 @@ static void ccid_piv_authenticate_mutual_request_resume(void)
 {
     // `fido_command_generate_random_vector`を含む
     // 後続処理を実行
-    rapdu->sw = resume_mutual_request();
+    uint16_t sw = resume_mutual_request();
+
+    // レスポンス処理を指示
+    ccid_piv_apdu_resume_process(sw);        
 }
 
 uint16_t ccid_piv_authenticate_mutual_response(void *p_capdu, void *p_rapdu, void *data_obj_ber_tlv_info)

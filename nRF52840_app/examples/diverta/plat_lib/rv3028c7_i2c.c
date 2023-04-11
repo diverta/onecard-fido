@@ -381,7 +381,7 @@ bool rv3028c7_initialize(void)
 {
     // デバイスの初期化
     if (fido_twi_init() == false) {
-        NRF_LOG_DEBUG("rv3028c7_initialize failed: Communication with device failed. Same as in hardware dependent modules.");
+        NRF_LOG_ERROR("rv3028c7_initialize failed: Communication with device failed. Same as in hardware dependent modules.");
         return false;
     }
 
@@ -391,8 +391,19 @@ bool rv3028c7_initialize(void)
         return false;
     }
     if (c2 != 0x00) {
-        NRF_LOG_DEBUG("RTCC is not available");
+        NRF_LOG_ERROR("RTCC is not available");
         return false;
+    }
+
+    // バックアップレジスターの右側７ビットを参照、0x10なら以降の設定処理は不要
+    uint8_t backup_reg_val;
+    if (read_eeprom_backup_register(RV3028C7_REG_EEPROM_BACKUP, &backup_reg_val) == false) {
+        NRF_LOG_ERROR("Read EEPROM backup register fail");
+        return false;
+    }
+    if ((backup_reg_val & 0x7f) == 0x10) {
+        NRF_LOG_INFO("RTCC device is ready (with default settings)");
+        return true;
     }
 
     //
@@ -406,7 +417,7 @@ bool rv3028c7_initialize(void)
     // 3 = Level Switching Mode
     uint8_t val = 0x00;
     if (set_backup_switchover_mode(val) == false) {
-        NRF_LOG_DEBUG("RTCC backup switchover mode setting failed");
+        NRF_LOG_ERROR("RTCC backup switchover mode setting failed");
         return false;
     }
 
@@ -422,10 +433,11 @@ bool rv3028c7_initialize(void)
     //
     uint8_t tcr = 0x03;
     if (enable_trickle_charge(false, tcr) == false) {
-        NRF_LOG_DEBUG("RTCC tricle charge setting failed");
+        NRF_LOG_ERROR("RTCC tricle charge setting failed");
         return false;
     }
 
+    NRF_LOG_INFO("RTCC device is ready (reset with default settings)");
     return true;
 }
 
@@ -470,7 +482,7 @@ bool rv3028c7_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_
     //    2020年12月31日 19:32:01 UTC
     //    2021年 1月 1日 04:32:01 JST <-- カレンダーから取得できるのはこちら
     if (set_unix_timestamp(seconds_since_epoch, true, timezone_diff_hours) == false) {
-        NRF_LOG_DEBUG("Current timestamp setting failed");
+        NRF_LOG_ERROR("Current timestamp setting failed");
         return false;
     }
 

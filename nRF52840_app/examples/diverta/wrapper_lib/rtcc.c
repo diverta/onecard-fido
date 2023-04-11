@@ -27,7 +27,6 @@ void rtcc_init(void)
     // RTCCの初期化
     rtcc_is_available = rv3028c7_initialize();
     if (rtcc_is_available == false) {
-        NRF_LOG_INFO("RTCC is unavailable");
         return;
     }
     if (rv3028c7_get_timestamp(work_buf, sizeof(work_buf)) == false) {
@@ -42,7 +41,6 @@ bool rtcc_update_timestamp_by_unixtime(uint32_t unixtime, uint8_t timezone_diff_
 {
     // RTCCが搭載されていない場合は終了
     if (rtcc_is_available == false) {
-        NRF_LOG_ERROR("RTCC is unavailable");
         return false;
     }
 

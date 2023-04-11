@@ -220,9 +220,6 @@ static void usb_configured(void)
     // LED点滅制御に通知
     app_status_indicator_notify_usb_available(true);
 
-    // USBチャネル初期化完了
-    data_channel_initialized();
-
     // 各種業務処理を実行
     app_main_hid_configured();
 }
@@ -252,8 +249,11 @@ static void enter_to_bootloader(void)
 
 static void led_blink_begin(void)
 {
-    // USBが使用可能でない場合は、BLEアドバタイズを開始
-    if (app_status_indicator_is_usb_available() == false) {
+    if (app_status_indicator_is_usb_available()) {
+        // USBチャネル初期化完了
+        data_channel_initialized();
+    } else {
+        // USBが使用可能でない場合は、BLEアドバタイズを開始
         app_ble_start_advertising();
     }
 
@@ -339,7 +339,10 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_APP_SETTINGS_DELETED:
             app_main_app_settings_deleted();
             break;
-        case APEVT_APP_CRYPTO_DONE:
+        case APEVT_APP_CRYPTO_INIT_DONE:
+            app_main_app_crypto_init_done();
+            break;
+        case APEVT_APP_CRYPTO_RANDOM_PREGEN_DONE:
             app_main_app_crypto_done();
             break;
         default:
