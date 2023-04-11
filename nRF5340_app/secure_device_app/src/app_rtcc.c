@@ -425,14 +425,14 @@ void app_rtcc_initialize(void)
         return;
     }
 
-    // バックアップレジスターの値を参照、0x90なら以降の設定処理は不要
+    // バックアップレジスターの右側７ビットを参照、0x10なら以降の設定処理は不要
     uint8_t backup_reg_val;
     if (read_eeprom_backup_register(RV3028C7_REG_EEPROM_BACKUP, &backup_reg_val) == false) {
         LOG_ERR("Read EEPROM backup register fail");
         rtcc_is_available = false;
         return;
     }
-    if (backup_reg_val == 0x90) {
+    if ((backup_reg_val & 0x7f) == 0x10) {
         LOG_INF("RTCC device is ready (with default settings)");
         return;
     }
