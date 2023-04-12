@@ -74,6 +74,21 @@
         return true;
     }
 
+#pragma mark - Utilities for data check
+
+    + (bool)checkIfStringBytesIsValid:(uint8_t *)bytes size:(size_t)size {
+        // 表示可能バイトから成るかどうかチェック
+        for (size_t i = 0; i < size; i++) {
+            if (bytes[i] < 32 || bytes[i] > 126) {
+                [[ToolLogFile defaultLogger] errorWithFormat:@"Invalid string bytes (%lu bytes)", size];
+                [[ToolLogFile defaultLogger] hexdumpOfBytes:bytes size:size];
+                return false;
+            }
+        }
+        // チェックOKの場合
+        return true;
+    }
+
 #pragma mark - Utilities for maintenance commands
 
     + (NSData *)commandDataForPairingRequest {

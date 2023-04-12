@@ -11,6 +11,7 @@
 #import "OATHCCIDCommand.h"
 #import "OATHCommand.h"
 #import "ToolCCIDHelper.h"
+#import "ToolCommonFunc.h"
 
 @interface OATHCCIDCommand () <ToolCCIDHelperDelegate>
 
@@ -159,12 +160,15 @@
             return;
         }
         // レスポンスからアカウント名一覧を抽出
-        [self parseAccountListBytes:responseData];
+        if ([self parseAccountListBytes:responseData] == false) {
+            [self notifyProcessTerminated:false withInformative:MSG_ERROR_OATH_LIST_ACCOUNT_DATA_INVALID];
+            return;
+        }
         // 上位クラスに制御を戻す
         [self notifyProcessTerminated:true withInformative:MSG_NONE];
     }
 
-    - (void)parseAccountListBytes:(NSData *)accountListData {
+    - (bool)parseAccountListBytes:(NSData *)accountListData {
         // 領域を初期化
         NSMutableArray<NSString *> *array = [[NSMutableArray alloc] init];
         uint8_t *accountListBytes = (uint8_t *)[accountListData bytes];
@@ -180,8 +184,12 @@
             if (nameLength == 0 || i > size) {
                 continue;
             }
-            // アカウント名を抽出し、配列に格納
+            // アカウント名のバイト配列内容をチェック
             uint8_t *nameBytes = accountListBytes + i;
+            if ([ToolCommonFunc checkIfStringBytesIsValid:nameBytes size:nameLength] == false) {
+                return false;
+            }
+            // アカウント名を抽出し、配列に格納
             NSData *nameData = [[NSData alloc] initWithBytes:nameBytes length:nameLength];
             NSString *nameString = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
             [array addObject:nameString];
@@ -190,6 +198,7 @@
         }
         // パラメーターに配列を格納
         [[self parameter] setAccountList:array];
+        return true;
     }
 
 #pragma mark - Account delete
