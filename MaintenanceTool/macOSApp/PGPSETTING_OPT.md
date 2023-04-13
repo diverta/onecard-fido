@@ -21,11 +21,11 @@ PGP秘密鍵のインストールは「OpenPGP設定画面」上から行いま�
 管理ツールを起動し、USBポートにMDBT50Q Dongleを装着します。<br>
 管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、管理ツール画面の「OpenPGP設定」ボタンをクリックします。
 
-<img src="assets07/0003.jpg" width="400">
+<img src="assets07/0003.jpg" width="360">
 
 ホーム画面の上に、OpenPGP設定画面がポップアップ表示されます。
 
-<img src="assets07/0004.jpg" width="400">
+<img src="assets07/0004.jpg" width="360">
 
 以後の設定作業は、すべてこの「OpenPGP設定画面」で実行します。
 
