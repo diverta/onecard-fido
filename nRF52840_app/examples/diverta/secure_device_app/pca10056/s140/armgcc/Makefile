@@ -440,6 +440,7 @@ SRC_FILES += \
   $(WRPLIB_DIR)/fido_status.c \
   $(WRPLIB_DIR)/fido_timer.c \
   $(WRPLIB_DIR)/rtcc.c \
+  $(WRPLIB_DIR)/tiny_tft_base.c \
   $(TTFLIB_DIR)/tiny_tft_const.c \
   $(TTFLIB_DIR)/tiny_tft.c \
 
