@@ -24,6 +24,7 @@
                 <sourceRootElem>../wrapper_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/wrapper_header</sourceRootElem>
                 <sourceRootElem>../../../../TFT/tiny_tft_lib</sourceRootElem>
+                <sourceRootElem>../../../components</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
