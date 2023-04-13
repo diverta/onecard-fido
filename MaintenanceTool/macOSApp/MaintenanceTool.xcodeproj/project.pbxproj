@@ -48,19 +48,30 @@
 		7A3F4F2428755FB1003CFE67 /* ToolVersionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F2228755FB1003CFE67 /* ToolVersionWindow.xib */; };
 		7A3F4F262875633C003CFE67 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F4F252875633C003CFE67 /* icon.png */; };
 		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
-		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
 		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
-		7A4E6C81299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */; };
-		7A4E6C82299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
 		7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
 		7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */; };
+		7A5C178129DE88C30076D8BF /* fido_client_pin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C178029DE88C30076D8BF /* fido_client_pin.c */; };
+		7A5C178229DE88C30076D8BF /* fido_client_pin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C178029DE88C30076D8BF /* fido_client_pin.c */; };
 		7A5FCD7E29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD7F29CA94A2000FA929 /* TOTPDisplayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */; };
 		7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
 		7A5FCD8329CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */; };
+		7A61343C29DD129C00DB9714 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343729DD129C00DB9714 /* fido_crypto.c */; };
+		7A61343D29DD129C00DB9714 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343729DD129C00DB9714 /* fido_crypto.c */; };
+		7A61343E29DD129C00DB9714 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343829DD129C00DB9714 /* fido_blob.c */; };
+		7A61343F29DD129C00DB9714 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343829DD129C00DB9714 /* fido_blob.c */; };
+		7A61344029DD129C00DB9714 /* tool_ecdh.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343929DD129C00DB9714 /* tool_ecdh.c */; };
+		7A61344129DD129C00DB9714 /* tool_ecdh.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61343929DD129C00DB9714 /* tool_ecdh.c */; };
+		7A61344829DD138F00DB9714 /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344229DD138F00DB9714 /* tool_crypto_certificate.c */; };
+		7A61344929DD138F00DB9714 /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344229DD138F00DB9714 /* tool_crypto_certificate.c */; };
+		7A61344A29DD138F00DB9714 /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344329DD138F00DB9714 /* tool_crypto_common.c */; };
+		7A61344B29DD138F00DB9714 /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344329DD138F00DB9714 /* tool_crypto_common.c */; };
+		7A61344C29DD138F00DB9714 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344529DD138F00DB9714 /* tool_crypto_private_key.c */; };
+		7A61344D29DD138F00DB9714 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A61344529DD138F00DB9714 /* tool_crypto_private_key.c */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
 		7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
@@ -80,7 +91,6 @@
 		7A8640282900D7AC008E9D1C /* USBDFUACMCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8640272900D7AC008E9D1C /* USBDFUACMCommand.m */; };
 		7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402B2900E35E008E9D1C /* usb_dfu_util.c */; };
 		7A8640302900E35F008E9D1C /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A86402D2900E35F008E9D1C /* usb_cdc_util.c */; };
-		7A8B3DAB296E56640005F7B1 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15A271E6E8B0099D51B /* fido_blob.c */; };
 		7A8B3DAC296E56640005F7B1 /* UnpairingRequestWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A775B4B294C4C8F00EDE37F /* UnpairingRequestWindow.m */; };
 		7A8B3DAD296E56640005F7B1 /* DFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABD852887D00500756123 /* DFUCommand.m */; };
 		7A8B3DAE296E56640005F7B1 /* AppHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF1CE632876A5D00065ECD3 /* AppHIDCommand.m */; };
@@ -109,10 +119,8 @@
 		7A8B3DC6296E56640005F7B1 /* PGPPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A72011727794E5400EE3AD6 /* PGPPreferenceWindow.m */; };
 		7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
 		7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
-		7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
 		7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B160271E6E8B0099D51B /* CBOREncoder.c */; };
 		7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A91680428FE7A990096A848 /* USBDFUImage.m */; };
-		7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B162271E6E8B0099D51B /* fido_crypto.c */; };
 		7A8B3DCD296E56640005F7B1 /* BLESettingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613728867A4200322E93 /* BLESettingWindow.m */; };
 		7A8B3DCE296E56640005F7B1 /* ToolProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF43D13279E37080016086E /* ToolProcessingWindow.m */; };
 		7A8B3DCF296E56640005F7B1 /* BLEDFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACFD89D27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m */; };
@@ -125,7 +133,6 @@
 		7A8B3DD6296E56640005F7B1 /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
 		7A8B3DD7296E56640005F7B1 /* HcheckWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF042BA287CFC69009518C3 /* HcheckWindow.m */; };
 		7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A23613E28868E5F00322E93 /* BLEPairingCommand.m */; };
-		7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7A8B3DDB296E56640005F7B1 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
 		7A8B3DDC296E56640005F7B1 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
 		7A8B3DDD296E56640005F7B1 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
@@ -146,10 +153,8 @@
 		7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A8B3DED296E56640005F7B1 /* ToolPIVCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A6687912575CCC70054F0DE /* ToolPIVCommand.m */; };
 		7A8B3DEE296E56640005F7B1 /* ToolCommonFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92D0E428754F3C0094D2DB /* ToolCommonFunc.m */; };
-		7A8B3DEF296E56640005F7B1 /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7A8B3DF0296E56640005F7B1 /* PIVInitialSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A335F6F296BA7FC00D01742 /* PIVInitialSetting.m */; };
 		7A8B3DF1296E56640005F7B1 /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
-		7A8B3DF2296E56640005F7B1 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
 		7A8B3DF3296E56640005F7B1 /* USBDFUTransferCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A95408F28FFD007006D5C33 /* USBDFUTransferCommand.m */; };
 		7A8B3DF6296E56640005F7B1 /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A8B3DF7296E56640005F7B1 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A80509B2819066A000BF498 /* CoreImage.framework */; };
@@ -192,8 +197,6 @@
 		7A8B3E20296E56640005F7B1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
 		7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07629D27229001152A1 /* aes_256_cbc.c */; };
-		7A8BE08029D2CC5C001152A1 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */; };
-		7A8BE08129D2CC5C001152A1 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */; };
 		7A8BE08429D2CC7E001152A1 /* CryptoTestCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */; };
 		7A8BE08529D2CC7E001152A1 /* CryptoTestCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */; };
 		7A8DFAB82939EBB800B8C834 /* RTCCSettingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */; };
@@ -209,17 +212,13 @@
 		7A986E6A2942DF1D000FC524 /* BLEUnpairingCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */; };
 		7AA7A3E429C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */; };
 		7AA7A3E529C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */; };
-		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AADEF5B2772ECBC00E186BA /* transfer_subkey_to_card.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */; };
 		7AADEF5C2772ECBC00E186BA /* transfer_subkey_to_card.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */; };
 		7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
 		7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
 		7AB3C9B7276B13E900DEDD0E /* ToolPGPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */; };
-		7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15A271E6E8B0099D51B /* fido_blob.c */; };
-		7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15C271E6E8B0099D51B /* ECDH.c */; };
 		7AB4B16D271E6E8B0099D51B /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */; };
 		7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B160271E6E8B0099D51B /* CBOREncoder.c */; };
-		7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B162271E6E8B0099D51B /* fido_crypto.c */; };
 		7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B166271E6E8B0099D51B /* debug_log.c */; };
 		7AB6312B277B01FB004917B9 /* card_reset.param in Resources */ = {isa = PBXBuildFile; fileRef = 7AB63129277B01FB004917B9 /* card_reset.param */; };
 		7AB6312C277B01FB004917B9 /* card_reset.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7AB6312A277B01FB004917B9 /* card_reset.sh */; };
@@ -235,7 +234,6 @@
 		7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9262129BEE129004CDD48 /* OATHCommand.m */; };
 		7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AC9262129BEE129004CDD48 /* OATHCommand.m */; };
 		7ACABD862887D00500756123 /* DFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABD852887D00500756123 /* DFUCommand.m */; };
-		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7ACC0E07287522F900B03F74 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E05287522F900B03F74 /* ToolFilePanel.m */; };
 		7ACC0E0A2875241B00B03F74 /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */; };
 		7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */; };
@@ -281,6 +279,8 @@
 		895E617B29B86F100085ADA3 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895E617929B86F100085ADA3 /* libtinycbor.a */; };
 		895E617C29B86F210085ADA3 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895E617829B86F100085ADA3 /* libcrypto.a */; };
 		895E617D29B86F210085ADA3 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895E617929B86F100085ADA3 /* libtinycbor.a */; };
+		89E64D6629E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip in Resources */ = {isa = PBXBuildFile; fileRef = 89E64D6529E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip */; };
+		89E64D6729E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip in Resources */ = {isa = PBXBuildFile; fileRef = 89E64D6529E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -328,7 +328,6 @@
 		7A23613B28867DA600322E93 /* BLESettingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLESettingCommand.m; sourceTree = "<group>"; };
 		7A23613D28868E4A00322E93 /* BLEPairingCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEPairingCommand.h; sourceTree = "<group>"; };
 		7A23613E28868E5F00322E93 /* BLEPairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEPairingCommand.m; sourceTree = "<group>"; };
-		7A25976B257889F500EF5924 /* tool_crypto_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
 		7A292D8D27702A4E0010EE4A /* generate_main_key.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_main_key.sh; sourceTree = "<group>"; };
 		7A292D8F27702D450010EE4A /* generate_main_key.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generate_main_key.param; sourceTree = "<group>"; };
 		7A306C4A27719FEA00AB6412 /* export_pubkey_and_backup.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = export_pubkey_and_backup.sh; sourceTree = "<group>"; };
@@ -352,21 +351,33 @@
 		7A3F4F252875633C003CFE67 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVImporter.h; sourceTree = "<group>"; };
 		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
-		7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
-		7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_private_key.c; sourceTree = "<group>"; };
 		7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUStartWindow.h; sourceTree = "<group>"; };
 		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
 		7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEDFUCommand.m; sourceTree = "<group>"; };
-		7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.8.zip; sourceTree = "<group>"; };
 		7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PIVPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVPreferenceWindow.h; sourceTree = "<group>"; };
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
 		7A5775A229C3F06100F12A1C /* OATHCCIDCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OATHCCIDCommand.h; sourceTree = "<group>"; };
 		7A5775A329C3F07F00F12A1C /* OATHCCIDCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OATHCCIDCommand.m; sourceTree = "<group>"; };
+		7A5C177F29DE88C30076D8BF /* fido_client_pin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_client_pin.h; sourceTree = "<group>"; };
+		7A5C178029DE88C30076D8BF /* fido_client_pin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fido_client_pin.c; sourceTree = "<group>"; };
 		7A5FCD7D29CA94A2000FA929 /* TOTPDisplayWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TOTPDisplayWindow.xib; sourceTree = "<group>"; };
 		7A5FCD8029CA99D3000FA929 /* TOTPDisplayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOTPDisplayWindow.m; sourceTree = "<group>"; };
 		7A5FCD8129CA99D3000FA929 /* TOTPDisplayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOTPDisplayWindow.h; sourceTree = "<group>"; };
+		7A61343629DD129C00DB9714 /* fido_crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
+		7A61343729DD129C00DB9714 /* fido_crypto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fido_crypto.c; sourceTree = "<group>"; };
+		7A61343829DD129C00DB9714 /* fido_blob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fido_blob.c; sourceTree = "<group>"; };
+		7A61343929DD129C00DB9714 /* tool_ecdh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_ecdh.c; sourceTree = "<group>"; };
+		7A61343A29DD129C00DB9714 /* tool_ecdh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_ecdh.h; sourceTree = "<group>"; };
+		7A61343B29DD129C00DB9714 /* fido_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_blob.h; sourceTree = "<group>"; };
+		7A61344229DD138F00DB9714 /* tool_crypto_certificate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_crypto_certificate.c; sourceTree = "<group>"; };
+		7A61344329DD138F00DB9714 /* tool_crypto_common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
+		7A61344429DD138F00DB9714 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
+		7A61344529DD138F00DB9714 /* tool_crypto_private_key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tool_crypto_private_key.c; sourceTree = "<group>"; };
+		7A61344629DD138F00DB9714 /* tool_crypto_certificate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_crypto_certificate.h; sourceTree = "<group>"; };
+		7A61344729DD138F00DB9714 /* tool_crypto_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tool_crypto_common.h; sourceTree = "<group>"; };
+		7A61344E29DD2BAE00DB9714 /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
 		7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolInfoWindow.xib; sourceTree = "<group>"; };
 		7A667220258ADF5000CAF308 /* ToolInfoWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolInfoWindow.m; sourceTree = "<group>"; };
 		7A667222258ADF6300CAF308 /* ToolInfoWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolInfoWindow.h; sourceTree = "<group>"; };
@@ -401,8 +412,6 @@
 		7A8B3E27296E59990005F7B1 /* VendorMaintenanceTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VendorMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
 		7A8BE07529D271F3001152A1 /* aes_256_cbc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aes_256_cbc.h; sourceTree = "<group>"; };
 		7A8BE07629D27229001152A1 /* aes_256_cbc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = aes_256_cbc.c; sourceTree = "<group>"; };
-		7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
-		7A8BE07F29D2CC5B001152A1 /* AES256CBC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AES256CBC.h; sourceTree = "<group>"; };
 		7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoTestCommand.m; sourceTree = "<group>"; };
 		7A8BE08329D2CC7E001152A1 /* CryptoTestCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoTestCommand.h; sourceTree = "<group>"; };
 		7A8DFAB52939EBB800B8C834 /* RTCCSettingWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RTCCSettingWindow.xib; sourceTree = "<group>"; };
@@ -430,7 +439,6 @@
 		7A986E692942DF1D000FC524 /* BLEUnpairingCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLEUnpairingCommand.m; sourceTree = "<group>"; };
 		7AA7A3E229C01E32004F3F03 /* ScanQRCodeWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanQRCodeWindow.h; sourceTree = "<group>"; };
 		7AA7A3E329C01E32004F3F03 /* ScanQRCodeWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanQRCodeWindow.m; sourceTree = "<group>"; };
-		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AADEF592772ECBC00E186BA /* transfer_subkey_to_card.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transfer_subkey_to_card.param; sourceTree = "<group>"; };
 		7AADEF5A2772ECBC00E186BA /* transfer_subkey_to_card.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = transfer_subkey_to_card.sh; sourceTree = "<group>"; };
 		7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mcumgr_cbor_decode.c; sourceTree = "<group>"; };
@@ -439,17 +447,11 @@
 		7AB3C9B5276B13CC00DEDD0E /* ToolPGPCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCommand.h; sourceTree = "<group>"; };
 		7AB3C9B6276B13E900DEDD0E /* ToolPGPCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPGPCommand.m; sourceTree = "<group>"; };
 		7AB4B157271E6E8B0099D51B /* debug_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug_log.h; sourceTree = "<group>"; };
-		7AB4B158271E6E8B0099D51B /* ECDH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
-		7AB4B15A271E6E8B0099D51B /* fido_blob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fido_blob.c; sourceTree = "<group>"; };
-		7AB4B15C271E6E8B0099D51B /* ECDH.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ECDH.c; sourceTree = "<group>"; };
-		7AB4B15D271E6E8B0099D51B /* fido_crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
 		7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CBORDecoder.c; sourceTree = "<group>"; };
 		7AB4B160271E6E8B0099D51B /* CBOREncoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CBOREncoder.c; sourceTree = "<group>"; };
 		7AB4B161271E6E8B0099D51B /* CBOREncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBOREncoder.h; sourceTree = "<group>"; };
-		7AB4B162271E6E8B0099D51B /* fido_crypto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fido_crypto.c; sourceTree = "<group>"; };
 		7AB4B165271E6E8B0099D51B /* CBORDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBORDecoder.h; sourceTree = "<group>"; };
 		7AB4B166271E6E8B0099D51B /* debug_log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debug_log.c; sourceTree = "<group>"; };
-		7AB4B168271E6E8B0099D51B /* fido_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_blob.h; sourceTree = "<group>"; };
 		7AB576E627CF039000DAFA3F /* ToolPGPCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPGPCommon.h; sourceTree = "<group>"; };
 		7AB63129277B01FB004917B9 /* card_reset.param */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = card_reset.param; sourceTree = "<group>"; };
 		7AB6312A277B01FB004917B9 /* card_reset.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = card_reset.sh; sourceTree = "<group>"; };
@@ -465,13 +467,10 @@
 		7ACABD842887CFF100756123 /* DFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUCommand.h; sourceTree = "<group>"; };
 		7ACABD852887D00500756123 /* DFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUCommand.m; sourceTree = "<group>"; };
 		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
-		7ACC0BF4257770B800F4026B /* tool_crypto_certificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_certificate.h; sourceTree = "<group>"; };
-		7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_certificate.c; sourceTree = "<group>"; };
 		7ACC0E05287522F900B03F74 /* ToolFilePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
 		7ACC0E06287522F900B03F74 /* ToolFilePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
 		7ACC0E082875241B00B03F74 /* ToolPopupWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7ACC0E092875241B00B03F74 /* ToolPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
-		7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
 		7ACD730929D41BF50016BF1B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7ACD98F6296E671500D08A24 /* VendorFunctionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VendorFunctionWindow.m; sourceTree = "<group>"; };
 		7ACD98F7296E671500D08A24 /* VendorFunctionWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VendorFunctionWindow.xib; sourceTree = "<group>"; };
@@ -532,6 +531,7 @@
 		895E617929B86F100085ADA3 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		899EA1D929A746A10077BABD /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		89D544BB29A7433400C93519 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		89E64D6529E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_03.0.3.9.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -569,11 +569,12 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7A712EBA2570BC9400E45E2D /* common_crypto */,
 				7A8BE07D29D2CC30001152A1 /* migrating */,
-				7A712EBA2570BC9400E45E2D /* tool_crypto */,
+				7A61343529DD122300DB9714 /* openssl */,
 				7A4D116E271E62CD0095C29E /* BLEDFU */,
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
-				7AB4B156271E6E340099D51B /* ClientPIN */,
+				7AB4B156271E6E340099D51B /* FIDO */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
 				7A3F4F1628755CB5003CFE67 /* MaintenanceToolApp */,
 				7AACA24F288677870093340D /* MaintenanceToolBLE */,
@@ -701,7 +702,6 @@
 		7A4C217C287520DA005CC8D0 /* ToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7ACC0E0B28753B2E00B03F74 /* FIDODefines.h */,
 				7A175F18287D62A80055F6B3 /* ToolBLEHelper.h */,
 				7A175F19287D62ED0055F6B3 /* ToolBLEHelper.m */,
 				7A175F1B287D654E0055F6B3 /* ToolBLEHelperDefine.h */,
@@ -745,6 +745,25 @@
 			path = BLEDFU;
 			sourceTree = "<group>";
 		};
+		7A61343529DD122300DB9714 /* openssl */ = {
+			isa = PBXGroup;
+			children = (
+				7A61343B29DD129C00DB9714 /* fido_blob.h */,
+				7A61343829DD129C00DB9714 /* fido_blob.c */,
+				7A61343629DD129C00DB9714 /* fido_crypto.h */,
+				7A61343729DD129C00DB9714 /* fido_crypto.c */,
+				7A61344629DD138F00DB9714 /* tool_crypto_certificate.h */,
+				7A61344229DD138F00DB9714 /* tool_crypto_certificate.c */,
+				7A61344729DD138F00DB9714 /* tool_crypto_common.h */,
+				7A61344329DD138F00DB9714 /* tool_crypto_common.c */,
+				7A61344429DD138F00DB9714 /* tool_crypto_private_key.h */,
+				7A61344529DD138F00DB9714 /* tool_crypto_private_key.c */,
+				7A61343A29DD129C00DB9714 /* tool_ecdh.h */,
+				7A61343929DD129C00DB9714 /* tool_ecdh.c */,
+			);
+			path = openssl;
+			sourceTree = "<group>";
+		};
 		7A6687902575CCA80054F0DE /* PIV */ = {
 			isa = PBXGroup;
 			children = (
@@ -766,21 +785,15 @@
 			path = PIV;
 			sourceTree = "<group>";
 		};
-		7A712EBA2570BC9400E45E2D /* tool_crypto */ = {
+		7A712EBA2570BC9400E45E2D /* common_crypto */ = {
 			isa = PBXGroup;
 			children = (
-				7A25976B257889F500EF5924 /* tool_crypto_common.h */,
-				7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */,
-				7ACC0BF4257770B800F4026B /* tool_crypto_certificate.h */,
-				7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */,
-				7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */,
-				7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */,
 				7A8BE07529D271F3001152A1 /* aes_256_cbc.h */,
 				7A8BE07629D27229001152A1 /* aes_256_cbc.c */,
 				7A39F5DF29D2E3C8009F8CD7 /* triple_des.h */,
 				7A39F5E029D2E3F2009F8CD7 /* triple_des.c */,
 			);
-			path = tool_crypto;
+			path = common_crypto;
 			sourceTree = "<group>";
 		};
 		7A75A6EC25677FDF003AF1A6 /* CCID */ = {
@@ -857,8 +870,6 @@
 		7A8BE07D29D2CC30001152A1 /* migrating */ = {
 			isa = PBXGroup;
 			children = (
-				7A8BE07F29D2CC5B001152A1 /* AES256CBC.h */,
-				7A8BE07E29D2CC5B001152A1 /* AES256CBC.c */,
 				7A8BE08329D2CC7E001152A1 /* CryptoTestCommand.h */,
 				7A8BE08229D2CC7E001152A1 /* CryptoTestCommand.m */,
 			);
@@ -909,7 +920,7 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A4E6C80299242480094F66E /* appkg.PCA10059_03.0.3.8.zip */,
+				89E64D6529E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip */,
 				7A154FED2938BCA70042F01A /* app_update.PCA10095_01.0.4.8.bin */,
 				7A292D8D27702A4E0010EE4A /* generate_main_key.sh */,
 				7A292D8F27702D450010EE4A /* generate_main_key.param */,
@@ -965,23 +976,20 @@
 			path = OpenPGP;
 			sourceTree = "<group>";
 		};
-		7AB4B156271E6E340099D51B /* ClientPIN */ = {
+		7AB4B156271E6E340099D51B /* FIDO */ = {
 			isa = PBXGroup;
 			children = (
+				7A5C177F29DE88C30076D8BF /* fido_client_pin.h */,
+				7A5C178029DE88C30076D8BF /* fido_client_pin.c */,
 				7AB4B15E271E6E8B0099D51B /* CBORDecoder.c */,
 				7AB4B165271E6E8B0099D51B /* CBORDecoder.h */,
 				7AB4B160271E6E8B0099D51B /* CBOREncoder.c */,
 				7AB4B161271E6E8B0099D51B /* CBOREncoder.h */,
+				7A61344E29DD2BAE00DB9714 /* FIDODefines.h */,
 				7AB4B166271E6E8B0099D51B /* debug_log.c */,
 				7AB4B157271E6E8B0099D51B /* debug_log.h */,
-				7AB4B15C271E6E8B0099D51B /* ECDH.c */,
-				7AB4B158271E6E8B0099D51B /* ECDH.h */,
-				7AB4B15A271E6E8B0099D51B /* fido_blob.c */,
-				7AB4B168271E6E8B0099D51B /* fido_blob.h */,
-				7AB4B162271E6E8B0099D51B /* fido_crypto.c */,
-				7AB4B15D271E6E8B0099D51B /* fido_crypto.h */,
 			);
-			path = ClientPIN;
+			path = FIDO;
 			sourceTree = "<group>";
 		};
 		7ACABD832887CF9000756123 /* MaintenanceToolDFU */ = {
@@ -1099,7 +1107,6 @@
 				7ACD98FD296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
 				7A23613828867A4200322E93 /* BLESettingWindow.xib in Resources */,
 				7A775B4F294C4C8F00EDE37F /* UnpairingRequestWindow.xib in Resources */,
-				7A4E6C81299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */,
 				7ACFD89E27213EAF00AAEFE2 /* BLEDFUProcessingWindow.xib in Resources */,
 				7AF042B9287CF868009518C3 /* HcheckWindow.xib in Resources */,
 				7A8528FF277176F10096F41D /* add_sub_key.param in Resources */,
@@ -1126,6 +1133,7 @@
 				7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */,
 				7AC89EF1296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
+				89E64D6629E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip in Resources */,
 				7A6C807627C4AE28002FEFC8 /* card_edit_passwd.param in Resources */,
 				7A852900277176F10096F41D /* add_sub_key.sh in Resources */,
 				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
@@ -1147,7 +1155,6 @@
 				7ACD98FE296E671600D08A24 /* VendorFunctionWindow.xib in Resources */,
 				7A8B3E02296E56640005F7B1 /* BLESettingWindow.xib in Resources */,
 				7A8B3E04296E56640005F7B1 /* UnpairingRequestWindow.xib in Resources */,
-				7A4E6C82299242480094F66E /* appkg.PCA10059_03.0.3.8.zip in Resources */,
 				7A8B3E05296E56640005F7B1 /* BLEDFUProcessingWindow.xib in Resources */,
 				7A8B3E06296E56640005F7B1 /* HcheckWindow.xib in Resources */,
 				7A8B3E07296E56640005F7B1 /* add_sub_key.param in Resources */,
@@ -1174,6 +1181,7 @@
 				7A8B3E19296E56640005F7B1 /* PIVPreferenceWindow.xib in Resources */,
 				7AC89EF2296FBD6D0024B384 /* FIDOAttestationWindow.xib in Resources */,
 				7A8B3E1A296E56640005F7B1 /* InfoPlist.strings in Resources */,
+				89E64D6729E4E8AB008465B7 /* appkg.PCA10059_03.0.3.9.zip in Resources */,
 				7A8B3E1B296E56640005F7B1 /* card_edit_passwd.param in Resources */,
 				7A8B3E1D296E56640005F7B1 /* add_sub_key.sh in Resources */,
 				7A8B3E1E296E56640005F7B1 /* BLEDFUStartWindow.xib in Resources */,
@@ -1189,19 +1197,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AB4B16B271E6E8B0099D51B /* fido_blob.c in Sources */,
 				7A775B4E294C4C8F00EDE37F /* UnpairingRequestWindow.m in Sources */,
 				7ACABD862887D00500756123 /* DFUCommand.m in Sources */,
+				7A61344029DD129C00DB9714 /* tool_ecdh.c in Sources */,
 				7AF1CE642876A5D00065ECD3 /* AppHIDCommand.m in Sources */,
 				7A91680228FE497E0096A848 /* USBDFUCommand.m in Sources */,
 				7A8DFAB92939EBB800B8C834 /* RTCCSettingWindow.m in Sources */,
 				7AD9827E287FF982002A6846 /* AppBLECommand.m in Sources */,
 				7A314ACA27CF13EF009B4F77 /* ToolPGPCcidCommand.m in Sources */,
+				7A5C178129DE88C30076D8BF /* fido_client_pin.c in Sources */,
 				7A9167FE28FE30870096A848 /* DFUWindow.m in Sources */,
 				7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */,
 				7A199C1128853F7300AF8B62 /* FIDOSettingCommand.m in Sources */,
+				7A61344829DD138F00DB9714 /* tool_crypto_certificate.c in Sources */,
 				7A5FCD8229CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */,
 				7AE533BF28765D1D00770A75 /* AppCommand.m in Sources */,
+				7A61343C29DD129C00DB9714 /* fido_crypto.c in Sources */,
 				7AE6031C2875218100DA5BF3 /* ToolLogFile.m in Sources */,
 				7AB3C9B7276B13E900DEDD0E /* ToolPGPCommand.m in Sources */,
 				7A33FBF828864A2000EAF3C4 /* CTAP2ManageCommand.m in Sources */,
@@ -1222,10 +1233,8 @@
 				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FB296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
-				7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */,
 				7AB4B16F271E6E8B0099D51B /* CBOREncoder.c in Sources */,
 				7A91680528FE7A990096A848 /* USBDFUImage.m in Sources */,
-				7AB4B170271E6E8B0099D51B /* fido_crypto.c in Sources */,
 				7A23613928867A4200322E93 /* BLESettingWindow.m in Sources */,
 				7AF43D16279E37080016086E /* ToolProcessingWindow.m in Sources */,
 				7ACFD89F27213EAF00AAEFE2 /* BLEDFUProcessingWindow.m in Sources */,
@@ -1240,7 +1249,6 @@
 				7A20452B29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A23613F28868E5F00322E93 /* BLEPairingCommand.m in Sources */,
 				7A8BE07729D27229001152A1 /* aes_256_cbc.c in Sources */,
-				7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */,
 				7A5775A429C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9904296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7AA7A3E429C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
@@ -1251,11 +1259,13 @@
 				7A86402F2900E35F008E9D1C /* usb_dfu_util.c in Sources */,
 				7A0EC405293D8B450078833B /* RTCCSettingCommand.m in Sources */,
 				7A23613C28867DA600322E93 /* BLESettingCommand.m in Sources */,
+				7A61343E29DD129C00DB9714 /* fido_blob.c in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3F4F1D28755F91003CFE67 /* UtilityWindow.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7AF60FF829C2E20500C1A4F0 /* oath_util.c in Sources */,
 				7A1BCD4B28862DA6007AEE12 /* FIDOPinSettingWindow.m in Sources */,
+				7A61344C29DD138F00DB9714 /* tool_crypto_private_key.c in Sources */,
 				7AF042BF287D00D5009518C3 /* HcheckCommand.m in Sources */,
 				7A822078281A812F00FDBFA8 /* QRCodeUtil.m in Sources */,
 				7AE22FCB29C7F55900DB2361 /* AccountSelectWindow.m in Sources */,
@@ -1264,18 +1274,16 @@
 				7A1AC454294960EC002CFA5E /* EraseBondsCommand.m in Sources */,
 				7AC9262229BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD98FF296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
-				7A8BE08029D2CC5C001152A1 /* AES256CBC.c in Sources */,
 				7A175F1A287D62ED0055F6B3 /* ToolBLEHelper.m in Sources */,
 				7AF60FF429C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
 				7A92D0E628754F3C0094D2DB /* ToolCommonFunc.m in Sources */,
-				7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */,
 				7A335F70296BA7FC00D01742 /* PIVInitialSetting.m in Sources */,
+				7A61344A29DD138F00DB9714 /* tool_crypto_common.c in Sources */,
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7A8BE08429D2CC7E001152A1 /* CryptoTestCommand.m in Sources */,
-				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
 				7A95409028FFD007006D5C33 /* USBDFUTransferCommand.m in Sources */,
 				7ACD9909296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */,
 			);
@@ -1285,19 +1293,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A8B3DAB296E56640005F7B1 /* fido_blob.c in Sources */,
 				7A8B3DAC296E56640005F7B1 /* UnpairingRequestWindow.m in Sources */,
 				7A8B3DAD296E56640005F7B1 /* DFUCommand.m in Sources */,
+				7A61344129DD129C00DB9714 /* tool_ecdh.c in Sources */,
 				7A8B3DAE296E56640005F7B1 /* AppHIDCommand.m in Sources */,
 				7A8B3DAF296E56640005F7B1 /* USBDFUCommand.m in Sources */,
 				7A8B3DB0296E56640005F7B1 /* RTCCSettingWindow.m in Sources */,
 				7A8B3DB1296E56640005F7B1 /* AppBLECommand.m in Sources */,
 				7A8B3DB2296E56640005F7B1 /* ToolPGPCcidCommand.m in Sources */,
+				7A5C178229DE88C30076D8BF /* fido_client_pin.c in Sources */,
 				7A8B3DB3296E56640005F7B1 /* DFUWindow.m in Sources */,
 				7A8B3DB4296E56640005F7B1 /* ToolInfoWindow.m in Sources */,
 				7A8B3DB5296E56640005F7B1 /* FIDOSettingCommand.m in Sources */,
+				7A61344929DD138F00DB9714 /* tool_crypto_certificate.c in Sources */,
 				7A5FCD8329CA99D3000FA929 /* TOTPDisplayWindow.m in Sources */,
 				7A8B3DB6296E56640005F7B1 /* AppCommand.m in Sources */,
+				7A61343D29DD129C00DB9714 /* fido_crypto.c in Sources */,
 				7A8B3DB7296E56640005F7B1 /* ToolLogFile.m in Sources */,
 				7A8B3DB8296E56640005F7B1 /* ToolPGPCommand.m in Sources */,
 				7A8B3DB9296E56640005F7B1 /* CTAP2ManageCommand.m in Sources */,
@@ -1318,10 +1329,8 @@
 				7A8B3DC7296E56640005F7B1 /* mcumgr_cbor_decode.c in Sources */,
 				7ACD98FC296E671600D08A24 /* VendorFunctionWindow.m in Sources */,
 				7A8B3DC8296E56640005F7B1 /* ToolBLESMPCommand.m in Sources */,
-				7A8B3DC9296E56640005F7B1 /* ECDH.c in Sources */,
 				7A8B3DCA296E56640005F7B1 /* CBOREncoder.c in Sources */,
 				7A8B3DCB296E56640005F7B1 /* USBDFUImage.m in Sources */,
-				7A8B3DCC296E56640005F7B1 /* fido_crypto.c in Sources */,
 				7A8B3DCD296E56640005F7B1 /* BLESettingWindow.m in Sources */,
 				7A8B3DCE296E56640005F7B1 /* ToolProcessingWindow.m in Sources */,
 				7A8B3DCF296E56640005F7B1 /* BLEDFUProcessingWindow.m in Sources */,
@@ -1336,7 +1345,6 @@
 				7A20452C29C93BD00074E7FA /* OATHWindowUtil.m in Sources */,
 				7A8B3DD8296E56640005F7B1 /* BLEPairingCommand.m in Sources */,
 				7A8BE07829D27229001152A1 /* aes_256_cbc.c in Sources */,
-				7A8B3DDA296E56640005F7B1 /* tool_crypto_certificate.c in Sources */,
 				7A5775A529C3F07F00F12A1C /* OATHCCIDCommand.m in Sources */,
 				7ACD9905296E9FFF00D08A24 /* BootloaderModeCommand.m in Sources */,
 				7AA7A3E529C01E32004F3F03 /* ScanQRCodeWindow.m in Sources */,
@@ -1347,11 +1355,13 @@
 				7A8B3DDF296E56640005F7B1 /* usb_dfu_util.c in Sources */,
 				7A8B3DE0296E56640005F7B1 /* RTCCSettingCommand.m in Sources */,
 				7A8B3DE1296E56640005F7B1 /* BLESettingCommand.m in Sources */,
+				7A61343F29DD129C00DB9714 /* fido_blob.c in Sources */,
 				7A8B3DE2296E56640005F7B1 /* debug_log.c in Sources */,
 				7A8B3DE3296E56640005F7B1 /* UtilityWindow.m in Sources */,
 				7A8B3DE4296E56640005F7B1 /* ToolCommon.m in Sources */,
 				7AF60FF929C2E20500C1A4F0 /* oath_util.c in Sources */,
 				7A8B3DE5296E56640005F7B1 /* FIDOPinSettingWindow.m in Sources */,
+				7A61344D29DD138F00DB9714 /* tool_crypto_private_key.c in Sources */,
 				7A8B3DE6296E56640005F7B1 /* HcheckCommand.m in Sources */,
 				7A8B3DE7296E56640005F7B1 /* QRCodeUtil.m in Sources */,
 				7AE22FCC29C7F55900DB2361 /* AccountSelectWindow.m in Sources */,
@@ -1360,18 +1370,16 @@
 				7A8B3DE9296E56640005F7B1 /* EraseBondsCommand.m in Sources */,
 				7AC9262329BEE129004CDD48 /* OATHCommand.m in Sources */,
 				7ACD9900296E671600D08A24 /* VendorFunctionCommand.m in Sources */,
-				7A8BE08129D2CC5C001152A1 /* AES256CBC.c in Sources */,
 				7A8B3DEA296E56640005F7B1 /* ToolBLEHelper.m in Sources */,
 				7AF60FF529C2B95400C1A4F0 /* base32_util.c in Sources */,
 				7A8B3DEB296E56640005F7B1 /* ToolPIVSetting.m in Sources */,
 				7A8B3DEC296E56640005F7B1 /* BLEDFUStartWindow.m in Sources */,
 				7A8B3DED296E56640005F7B1 /* ToolPIVCommand.m in Sources */,
 				7A8B3DEE296E56640005F7B1 /* ToolCommonFunc.m in Sources */,
-				7A8B3DEF296E56640005F7B1 /* tool_crypto_common.c in Sources */,
 				7A8B3DF0296E56640005F7B1 /* PIVInitialSetting.m in Sources */,
+				7A61344B29DD138F00DB9714 /* tool_crypto_common.c in Sources */,
 				7A8B3DF1296E56640005F7B1 /* tool_piv_admin.c in Sources */,
 				7A8BE08529D2CC7E001152A1 /* CryptoTestCommand.m in Sources */,
-				7A8B3DF2296E56640005F7B1 /* tool_crypto_private_key.c in Sources */,
 				7A8B3DF3296E56640005F7B1 /* USBDFUTransferCommand.m in Sources */,
 				7ACD990A296EA62700D08A24 /* FIDOAttestationCommand.m in Sources */,
 			);
@@ -1501,7 +1509,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 81;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1518,7 +1526,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1533,7 +1541,7 @@
 				CODE_SIGN_ENTITLEMENTS = MaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 81;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1551,7 +1559,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.MaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1567,7 +1575,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 81;
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
@@ -1584,7 +1592,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1599,7 +1607,7 @@
 				CODE_SIGN_ENTITLEMENTS = VendorMaintenanceTool/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 81;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "";
@@ -1617,7 +1625,7 @@
 					"${HOME}/opt/tinycbor/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.diverta.VendorMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";

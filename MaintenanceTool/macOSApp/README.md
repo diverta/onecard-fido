@@ -22,7 +22,7 @@ PC環境から、FIDO認証器の動作に必要な各種設定／動作テス�
 * バージョン情報取得機能
 * PIV機能設定
 * OpenPGP機能設定
-* OATH機能設定（最終更新日現在、開発中）
+* OATH機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 * 認証器の時刻設定機能
@@ -55,10 +55,13 @@ FIDO認証器から、FIDO認証情報を消去する手順について掲載し
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
 - <b>[PIV機能設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)</b><br>
-[PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
+[PIV機能](../../CCID/PIV/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[OpenPGP機能設定手順](../../MaintenanceTool/macOSApp/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。
+
+- <b>[OATH機能設定手順](../../MaintenanceTool/macOSApp/OATHSETTING.md)</b><br>
+[OATH機能](../../CCID/OATH/README.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順（USB）](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b><br>
 管理ツールから、MDBT50Q Dongleのファームウェアを更新する手順を掲載しています。

@@ -5,6 +5,7 @@
  * Created on 2020/06/01, 9:55
  */
 #include "ccid.h"
+#include "ccid_apdu.h"
 #include "ccid_define.h"
 #include "ccid_piv.h"
 #include "ccid_piv_define.h"
@@ -245,4 +246,29 @@ void ccid_piv_apdu_process(void *p_capdu, void *p_rapdu)
 void ccid_piv_stop_applet(void)
 {
     ccid_piv_admin_mode_set(false);
+}
+
+//
+// レスポンス抑止／再開処理
+//
+// APDU格納領域の参照を待避
+static command_apdu_t  *m_capdu;
+static response_apdu_t *m_rapdu;
+
+void ccid_piv_apdu_resume_prepare(void *capdu, void *rapdu)
+{
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    ccid_apdu_response_set_pending(true);
+
+    // APDU格納領域の参照を待避
+    m_capdu = (command_apdu_t *)capdu;
+    m_rapdu = (response_apdu_t *)rapdu;
+}
+
+void ccid_piv_apdu_resume_process(uint16_t sw)
+{
+    // レスポンス処理再開を指示
+    m_rapdu->sw = sw;
+    ccid_apdu_response_set_pending(false);
+    ccid_apdu_resume_process(m_capdu, m_rapdu);
 }
