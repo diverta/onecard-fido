@@ -7,13 +7,17 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Copyright>Copyright © 2017-2023 Diverta Inc.</Copyright>
     <Company>Diverta Inc.</Company>
     <Product>MaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).116</FileVersion>
+    <FileVersion>$(Version).117</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\appkg.PCA10059_03.0.3.9.zip" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
@@ -38,7 +42,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\add_sub_key.bat" />
     <EmbeddedResource Include="Resources\add_sub_key.param" />
-    <EmbeddedResource Include="Resources\appkg.PCA10059_03.0.3.8.zip" />
+    <EmbeddedResource Include="Resources\appkg.PCA10059_03.0.3.9.zip" />
     <EmbeddedResource Include="Resources\app_update.PCA10095_01.0.4.8.bin" />
     <EmbeddedResource Include="Resources\card_reset.bat" />
     <EmbeddedResource Include="Resources\card_reset.param" />
