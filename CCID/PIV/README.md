@@ -13,7 +13,7 @@
 <img src="../../FIDO2Device/MDBT50Q_Dongle/assets01/0004.jpg" width="720">
 
 nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をPCに装着すると、macOSにPIN番号を使ってログインできるようになります。<br>
-詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
+詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](../../CCID/PIV/PIVPINLOGIN.md)」</b>をご参照願います。
 
 ## 手順書
 
@@ -24,12 +24,12 @@ CCIDドライバーをmacOS環境にインストールし、MDBT50Q DongleのCCI
 - <b>[PIV機能の設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)</b><br>
 MDBT50Q Dongleに対し、[FIDO認証器管理ツール（macOS版）](../../MaintenanceTool/macOSApp/README.md)を使用して、PIV機能に必要な各種設定を行う手順を掲載します。
 
-- <b>[PIN番号を使用したmacOSログイン確認手順](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)</b><br>
+- <b>[PIN番号を使用したmacOSログイン確認手順](../../CCID/PIV/PIVPINLOGIN.md)</b><br>
 MDBT50Q DongleのPIV機能を使用して、macOSにPIN番号でログインする手順を掲載します。
 
 ## 開発情報
 
-- <b>[PIN番号を使用したmacOSログイン時の動作](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN_DEV.md)</b><br>
+- <b>[PIN番号を使用したmacOSログイン時の動作](../../CCID/PIV/PIVPINLOGIN_DEV.md)</b><br>
 MDBT50Q DongleのPIV機能を使用して、macOSにPIN番号でログイン時、PC〜nRF52840間で行われるやり取りについて掲載しています。
 
 #### 開発時に使用した手順書

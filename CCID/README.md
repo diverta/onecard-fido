@@ -26,7 +26,7 @@ PGP公開鍵でファイルを暗号化すると、PGP秘密鍵がインスト�
 
 ## 各種手順書
 
-- <b>[PIN番号を使用したmacOSログイン確認手順](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)</b><br>
+- <b>[PIN番号を使用したmacOSログイン確認手順](../CCID/PIV/PIVPINLOGIN.md)</b><br>
 MDBT50Q DongleのPIV機能を使用し、PIN番号によりmacOSにログインするための確認手順について掲載します。
 
 - <b>[CCIDドライバーインストール手順](../CCID/INSTALLPRG.md)</b><br>

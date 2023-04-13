@@ -16,11 +16,11 @@ FIDO認証器管理ツールの実行中に出力されるログは、macOSの�
 ログファイルの格納場所を、macOSのFinderで開くことができます。<br>
 管理ツールの「ユーティリティー」画面で「管理ツールのログを参照」ボタンをクリックします。
 
-<img src="assets08/0008.jpg" width="400">
+<img src="assets08/0008.jpg" width="370">
 
 ログファイル「`VendorMaintenanceTool.log`」を格納するディレクトリーが、Finderで表示されます。
 
-<img src="assets08/0009.jpg" width="410">
+<img src="assets08/0009.jpg" width="540">
 
 ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより内容を参照することが可能です。
 
@@ -49,7 +49,7 @@ cd 6f be a8 9b 80 09 d8 f1 47 50 f5 40 75 c7 2b
 2023-03-13 10:07:01.492 [debug] HID Recv CONT frame: seq=0 length=43
 01 00 33 01 00 cb cb bf e2 db 31 59 76 ff b0 c8
 98 1d 2b bc 17 36 9f 82 15 f5 de 16 7c ee 38 f4
-79 6d b5 64 7e 9e 5a dc be 23 91 a4 f9 08 b2 98 
+79 6d b5 64 7e 9e 5a dc be 23 91 a4 f9 08 b2 98
 2023-03-13 10:07:01.493 [info] HID PINGテストが成功しました。
 2023-03-13 10:07:09.026 [info] FIDO認証器管理ツールを終了しました。
 ```

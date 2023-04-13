@@ -1,6 +1,6 @@
 # Windows版 FIDO認証器管理ツール
 
-最終更新日：2023/3/7
+最終更新日：2023/4/13
 
 ## 概要
 PC環境から、FIDO認証器の動作に必要な各種設定／動作テスト等を行うためのツールです。
@@ -70,7 +70,7 @@ FIDO認証器から、FIDO認証情報を消去する手順について掲載し
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
 - <b>[PIV機能設定手順](../../MaintenanceTool/dotNET/PIVSETTING.md)</b><br>
-[PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
+[PIV機能](../../CCID/PIV/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[OpenPGP機能設定手順](../../MaintenanceTool/dotNET/PGPSETTING.md)</b><br>
 [OpenPGP機能](../../CCID/OpenPGP/README.md)に必要な各種設定の手順を掲載しています。

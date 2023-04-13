@@ -34,6 +34,6 @@ MDBT53 Dongleと、Edgeブラウザー、デモサイトを使用して、WebAut
 
 MDBT53 Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
 
-### [PIN番号を使用したmacOSログイン確認手順](PIVPINLOGIN.md)
+### [PIN番号を使用したmacOSログイン確認手順](../../CCID/PIV/PIVPINLOGIN.md)
 
 MDBT53 Dongleに設定したPIV機能を使用し、PIN番号によるmacOSログインを行うための確認手順を掲載しています。
