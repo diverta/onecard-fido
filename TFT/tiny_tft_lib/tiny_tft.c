@@ -515,6 +515,7 @@ void tiny_tft_test(void)
     static uint8_t cnt = 0;
     switch (cnt++) {
         case 0:
+            tiny_tft_base_backlight_on();
             tiny_tft_fill_screen(ST77XX_YELLOW);
             fido_log_info("TFT display filled by yellow");
             break;
@@ -532,6 +533,7 @@ void tiny_tft_test(void)
             break;
         default:
             tiny_tft_fill_screen(ST77XX_BLACK);
+            tiny_tft_base_backlight_off();
             fido_log_info("TFT display filled by black");
             cnt = 0;
             break;
