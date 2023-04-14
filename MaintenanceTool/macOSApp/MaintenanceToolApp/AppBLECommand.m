@@ -150,6 +150,12 @@
         // エラーメッセージを設定し、デバイス接続を切断
         [self setLastCommandMessage:errorMessage];
         [self setLastCommandSuccess:false];
+        // 接続前にエラー判定された場合は、切断処理は行わず、上位クラスに完了通知を行う
+        if ([errorMessage isEqualToString:MSG_BLE_PARING_ERR_PAIR_MODE] ||
+            [errorMessage isEqualToString:MSG_OCCUR_PAIRINGMODE_ERROR]) {
+            [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
+            return;
+        }
         [[self toolBLEHelper] helperWillDisconnect];
     }
 

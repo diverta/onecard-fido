@@ -7,12 +7,12 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Copyright>Copyright © 2017-2023 Diverta Inc.</Copyright>
     <Company>Diverta Inc.</Company>
     <Product>VendorMaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).116</FileVersion>
+    <FileVersion>$(Version).117</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

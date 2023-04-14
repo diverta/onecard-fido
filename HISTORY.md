@@ -2,6 +2,11 @@
 
 ## プログラム更新履歴
 
+#### 2022/11/15
+
+FIDO認証器管理ツール（macOS版／Windows版）を更新いたしました<br>
+詳細につきましては、ドキュメント<b>[「Release 202205」](https://github.com/diverta/onecard-fido/releases/tag/Release_202205)</b>をご参照願います。
+
 #### 2022/07/25
 
 FIDO認証器管理ツール（macOS版／Windows版）から、ベンダー向け機能をFIDO認証器開発ツール（macOS版／Windows版）に切り出しました。<br>

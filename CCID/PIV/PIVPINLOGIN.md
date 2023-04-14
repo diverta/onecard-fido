@@ -1,5 +1,7 @@
 # PIN番号を使用したmacOSログイン確認手順
 
+最終更新日：2023/4/13
+
 ## 概要
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に設定した[PIV機能](../../CCID/ccid_lib/README.md)を使用し、PIN番号によるmacOSログインを行うための確認手順を掲載します。
 
@@ -11,10 +13,10 @@
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールします。
 
 ### [管理ツールのインストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)
-最新バージョンの[管理ツール](../../MaintenanceTool/macOSApp/MaintenanceTool.pkg)をmacOS環境に導入します。
+最新バージョンの[管理ツール](../../MaintenanceTool/macOSApp/README.md)をmacOS環境に導入します。
 
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
-最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF52840_app)）をMDBT50Q Dongleに導入します。
+最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF52840_app/firmwares/secure_device_app/README.md)）をMDBT50Q Dongleに導入します。
 
 ### [PIV機能の基本設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
 macOS環境に導入した管理ツールにより、MDBT50Q Dongleに対し、PIV機能の基本設定を行います。<br>
@@ -37,10 +39,10 @@ macOS環境に導入した管理ツールにより、MDBT50Q Dongleに対し、P
 下図のようなダイアログが表示されます。<br>
 「PIV認証用証明書」を選択し「ペアリング」ボタンをクリックします。
 
-<img src="assets03/0002.jpg" width="330">
+<img src="assets03/0002.jpg" width="400">
 
 下図のようなダイアログがポップアップ表示されます。<br>
-macOSユーザーのパスワードを入力するか、Touch IDを使用します。
+macOSユーザーのパスワードを入力します。
 
 <img src="assets03/0003.jpg" width="400">
 

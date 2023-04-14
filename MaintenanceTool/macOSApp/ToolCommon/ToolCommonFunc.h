@@ -18,6 +18,7 @@
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool)checkFileExist:(NSTextField *)textField forPath:(NSString *)path informativeText:(NSString *)informativeText onWindow:(NSWindow *)window;
     + (bool)checkUSBHIDConnectionOnWindow:(NSWindow *)window connected:(bool)connected;
+    + (bool)checkIfStringBytesIsValid:(uint8_t *)bytes size:(size_t)size;
 
     + (NSData *)commandDataForPairingRequest;
     + (NSData *)commandDataForEraseBondingData;
