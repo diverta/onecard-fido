@@ -22,16 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 #define SPI_INSTANCE  1
 // SPI instance
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);
-// Flag used to indicate that SPI instance completed the transfer.
-static volatile bool spi_xfer_done;
-
-static void spi_event_handler(nrf_drv_spi_evt_t const *p_event, void *p_context)
-{
-    (void)p_context;
-    if (p_event->type == NRF_DRV_SPI_EVENT_DONE) {
-        spi_xfer_done = true;
-    }
-}
 
 bool app_tiny_tft_initialize(uint32_t frequency)
 {
@@ -41,13 +31,14 @@ bool app_tiny_tft_initialize(uint32_t frequency)
     }
 
     nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
+    spi_config.ss_pin   = TFT_C_S;
     spi_config.mosi_pin = SPI_MOSI_PIN;
     spi_config.sck_pin  = SPI_SCK_PIN;
     if (frequency == 4000000) {
         spi_config.frequency = NRF_DRV_SPI_FREQ_4M;
     }
 
-    uint32_t err_code = nrf_drv_spi_init(&spi, &spi_config, spi_event_handler, NULL);
+    uint32_t err_code = nrf_drv_spi_init(&spi, &spi_config, NULL, NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("nrf_drv_spi_init returns %d ", err_code);
         return false;
@@ -55,13 +46,11 @@ bool app_tiny_tft_initialize(uint32_t frequency)
     NRF_LOG_DEBUG("nrf_drv_spi_init returns %d ", err_code);
 
     // Initialize GPIOs
-    fido_board_gpio_cfg_output(TFT_C_S);
     fido_board_gpio_cfg_output(TFT_RESET);
     fido_board_gpio_cfg_output(TFT_D_C);
     fido_board_gpio_cfg_output(TFT_LED);
 
     // Set GPIOs HIGH
-    fido_board_gpio_pin_set(TFT_C_S);
     fido_board_gpio_pin_set(TFT_RESET);
     fido_board_gpio_pin_set(TFT_D_C);
     fido_board_gpio_pin_set(TFT_LED);
@@ -73,8 +62,6 @@ bool app_tiny_tft_initialize(uint32_t frequency)
 
 bool app_tiny_tft_write(uint8_t *buf, size_t len)
 {
-    spi_xfer_done = false;
-
     uint32_t err_code = nrf_drv_spi_transfer(&spi, buf, len, NULL, 0);
     if (err_code == NRF_ERROR_BUSY) {
         NRF_LOG_ERROR("SPI driver is not ready for a new transfer");
@@ -84,26 +71,12 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
         NRF_LOG_ERROR("nrf_drv_spi_transfer returns %d ", err_code);
         return false;
     }
-
-    uint32_t cnt;
-    for (cnt = 0; spi_xfer_done == false && cnt < 100000; cnt++) {
-        fido_board_delay_us(10);
-    }
-    if (cnt == 100000) {
-        NRF_LOG_ERROR("SPI transfer timed out");
-        return false;
-    }
-
     return true;
 }
 
 void app_tiny_tft_set_c_s(int value)
 {
-    if (value > 0) {
-        fido_board_gpio_pin_set(TFT_C_S);
-    } else {
-        fido_board_gpio_pin_clear(TFT_C_S);
-    }
+    (void)value;
 }
 
 void app_tiny_tft_set_rst(int value)
