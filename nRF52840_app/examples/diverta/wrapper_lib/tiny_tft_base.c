@@ -102,3 +102,13 @@ void tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t
         app_tiny_tft_write(data_bytes, data_size);
     }
 }
+
+void tiny_tft_base_backlight_on(void)
+{
+    app_tiny_tft_set_led(LOW);
+}
+
+void tiny_tft_base_backlight_off(void)
+{
+    app_tiny_tft_set_led(HIGH);
+}
