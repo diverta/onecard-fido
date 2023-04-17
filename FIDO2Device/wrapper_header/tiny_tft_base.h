@@ -22,8 +22,8 @@ void        tiny_tft_base_delay_ms(uint32_t ms);
 void        tiny_tft_base_init(void);
 bool        tiny_tft_base_write_byte(uint8_t b);
 bool        tiny_tft_base_write_dword(uint32_t l);
-void        tiny_tft_base_write_command(uint8_t command_byte);
-void        tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size);
+bool        tiny_tft_base_write_command(uint8_t command_byte);
+bool        tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size);
 void        tiny_tft_base_backlight_on(void);
 void        tiny_tft_base_backlight_off(void);
 

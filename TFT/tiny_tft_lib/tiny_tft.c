@@ -77,7 +77,10 @@ static void initialize_display(uint8_t *addr)
         ms = arg_num & ST_CMD_DELAY;
         // Mask out delay bit
         arg_num &= ~ST_CMD_DELAY;
-        tiny_tft_base_write_data(cmd, addr + offset, arg_num);
+        if (tiny_tft_base_write_data(cmd, addr + offset, arg_num) == false) {
+            fido_log_error("tiny_tft_base_write_data (0x%02x) fail", cmd);
+            return;
+        }
         offset += arg_num;
 
         if (ms) {
@@ -142,7 +145,10 @@ static void set_origin_and_orientation(uint8_t orientation_)
             break;
     }
 
-    tiny_tft_base_write_data(ST77XX_MADCTL, &madctl, 1);
+    if (tiny_tft_base_write_data(ST77XX_MADCTL, &madctl, 1) == false) {
+        fido_log_error("tiny_tft_base_write_data (ST77XX_MADCTL) fail");
+        return;
+    }
 }
 
 //
@@ -158,15 +164,24 @@ static void set_addr_window(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     uint32_t ya = ((uint32_t)y << 16) | (y + h - 1);
 
     // Column addr set
-    tiny_tft_base_write_command(ST77XX_CASET);
+    if (tiny_tft_base_write_command(ST77XX_CASET) == false) {
+        fido_log_error("tiny_tft_base_write_command (ST77XX_CASET) fail");
+        return;
+    }
     tiny_tft_base_write_dword(xa);
 
     // Row addr set
-    tiny_tft_base_write_command(ST77XX_RASET);
+    if (tiny_tft_base_write_command(ST77XX_RASET) == false) {
+        fido_log_error("tiny_tft_base_write_command (ST77XX_RASET) fail");
+        return;
+    }
     tiny_tft_base_write_dword(ya);
 
     // write to RAM
-    tiny_tft_base_write_command(ST77XX_RAMWR);
+    if (tiny_tft_base_write_command(ST77XX_RAMWR) == false) {
+        fido_log_error("tiny_tft_base_write_command (ST77XX_RAMWR) fail");
+        return;
+    }
 }
 
 static void issue_color_pixels(uint16_t color, uint32_t len) 
@@ -232,7 +247,10 @@ void tiny_tft_init_display(void)
 
     // Change MADCTL color filter
     uint8_t data = 0xC0;
-    tiny_tft_base_write_data(ST77XX_MADCTL, &data, 1);
+    if (tiny_tft_base_write_data(ST77XX_MADCTL, &data, 1) == false) {
+        fido_log_error("tiny_tft_base_write_data (ST77XX_MADCTL) fail");
+        return;
+    }
 
     // Set origin of (0,0) and orientation of TFT display
     set_origin_and_orientation(3);

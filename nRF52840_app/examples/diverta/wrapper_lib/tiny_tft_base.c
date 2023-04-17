@@ -82,25 +82,33 @@ bool tiny_tft_base_write_dword(uint32_t l)
     return app_tiny_tft_write(work_buf, 4);
 }
 
-void tiny_tft_base_write_command(uint8_t command_byte) 
+bool tiny_tft_base_write_command(uint8_t command_byte) 
 {
     // Send the command byte
     app_tiny_tft_set_d_c(LOW);
-    tiny_tft_base_write_byte(command_byte);
+    if (tiny_tft_base_write_byte(command_byte) == false) {
+        return false;
+    }
     app_tiny_tft_set_d_c(HIGH);
+    return true;
 }
 
-void tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
+bool tiny_tft_base_write_data(uint8_t command_byte, uint8_t *data_bytes, uint8_t data_size) 
 {
     // Send the command byte
     app_tiny_tft_set_d_c(LOW);
-    tiny_tft_base_write_byte(command_byte);
+    if (tiny_tft_base_write_byte(command_byte) == false) {
+        return false;
+    }
 
     // Send the data bytes
     app_tiny_tft_set_d_c(HIGH);
     if (data_size > 0) {
-        app_tiny_tft_write(data_bytes, data_size);
+        if (app_tiny_tft_write(data_bytes, data_size) == false) {
+            return false;
+        }
     }
+    return true;
 }
 
 void tiny_tft_base_backlight_on(void)
