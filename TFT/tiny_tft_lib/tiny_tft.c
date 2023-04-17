@@ -56,7 +56,7 @@ static void tiny_tft_initialize(void)
     _cp437      = false;
 }
 
-static void initialize_display(uint8_t *addr) 
+static bool initialize_display(uint8_t *addr) 
 {
     uint16_t offset = 0;
     uint16_t ms;
@@ -79,7 +79,7 @@ static void initialize_display(uint8_t *addr)
         arg_num &= ~ST_CMD_DELAY;
         if (tiny_tft_base_write_data(cmd, addr + offset, arg_num) == false) {
             fido_log_error("tiny_tft_base_write_data (0x%02x) fail", cmd);
-            return;
+            return false;
         }
         offset += arg_num;
 
@@ -93,9 +93,10 @@ static void initialize_display(uint8_t *addr)
             tiny_tft_base_delay_ms(ms);
         }
     }
+    return true;
 }
 
-static void set_origin_and_orientation(uint8_t orientation_) 
+static bool set_origin_and_orientation(uint8_t orientation_) 
 {
     uint8_t madctl = 0;
 
@@ -147,8 +148,9 @@ static void set_origin_and_orientation(uint8_t orientation_)
 
     if (tiny_tft_base_write_data(ST77XX_MADCTL, &madctl, 1) == false) {
         fido_log_error("tiny_tft_base_write_data (ST77XX_MADCTL) fail");
-        return;
+        return false;
     }
+    return true;
 }
 
 //
@@ -222,7 +224,7 @@ static uint16_t swap_bit(uint16_t x)
 //
 // TFTディスプレイを初期化
 //
-void perform_reset(void)
+static void perform_reset(void)
 {
     // Perform reset
     tiny_tft_base_start_reset();
@@ -233,17 +235,29 @@ void perform_reset(void)
 
 void tiny_tft_init_display(void)
 {
+    // モジュールが利用できない場合
+    if (tiny_tft_is_available() == false) {
+        fido_log_error("TFT display is not available");
+        return;
+    }
+
     // Initialization values for graphics
     tiny_tft_initialize();
-    
+
     // Initialize SPI & perform reset
     tiny_tft_base_init();
     perform_reset();
 
     // Initialization code
-    initialize_display(tiny_tft_const_init_command_1());
-    initialize_display(tiny_tft_const_init_command_2());
-    initialize_display(tiny_tft_const_init_command_3());
+    if (initialize_display(tiny_tft_const_init_command_1()) == false) {
+        return;
+    }
+    if (initialize_display(tiny_tft_const_init_command_2()) == false) {
+        return;
+    }
+    if (initialize_display(tiny_tft_const_init_command_3()) == false) {
+        return;
+    }
 
     // Change MADCTL color filter
     uint8_t data = 0xC0;
@@ -253,7 +267,10 @@ void tiny_tft_init_display(void)
     }
 
     // Set origin of (0,0) and orientation of TFT display
-    set_origin_and_orientation(3);
+    if (set_origin_and_orientation(3) == false) {
+        return;
+    }
+    fido_log_info("TFT display initialize done");
 }
 
 //
