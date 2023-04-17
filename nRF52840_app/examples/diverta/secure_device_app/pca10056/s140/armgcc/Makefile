@@ -42,18 +42,23 @@ CFLAGS += -DMBEDTLS_RSA_C -DMBEDTLS_OID_C -DMBEDTLS_DES_C
 CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 
 # disable ATECC608A (or ATECC608A is not installed)
-# CFLAGS += -DNO_SECURE_IC
+CFLAGS += -DNO_SECURE_IC
+
+# disable TFT display (or TFT module is not connected)
+CFLAGS += -DNO_TTFT_MODULE
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.1.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 CCID_DIR := $(PROJ_DIR)/../../../../CCID
+TTFT_DIR := $(PROJ_DIR)/../../../../TFT
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 WRPHDR_DIR := $(FIDO_DIR)/wrapper_header
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PIVLIB_DIR := $(CCID_DIR)/piv_lib
+TTFLIB_DIR := $(TTFT_DIR)/tiny_tft_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 WRPLIB_DIR := $(PROJ_DIR)/../wrapper_lib
@@ -77,12 +82,15 @@ SRC_FILES += \
   $(SDK_CUSTOM_ROOT)/components/boards/boards.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_rng.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_spi.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rng.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_spim.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
@@ -395,6 +403,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_maintenance_attestation.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
+  $(PLTLIB_DIR)/app_tiny_tft.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -431,6 +440,9 @@ SRC_FILES += \
   $(WRPLIB_DIR)/fido_status.c \
   $(WRPLIB_DIR)/fido_timer.c \
   $(WRPLIB_DIR)/rtcc.c \
+  $(WRPLIB_DIR)/tiny_tft_base.c \
+  $(TTFLIB_DIR)/tiny_tft_const.c \
+  $(TTFLIB_DIR)/tiny_tft.c \
 
 ifeq ("$(TARGET_BOARD)","PCA10059_02")
 # Source files to targets (Boards with ATECC608A)
@@ -470,6 +482,7 @@ INC_FOLDERS += \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
   $(WRPHDR_DIR) \
+  $(TTFLIB_DIR) \
 
 # Source files of OpenPGP card emulation
 OPGLIB_DIR := $(CCID_DIR)/openpgp_lib

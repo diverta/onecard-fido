@@ -187,6 +187,10 @@ static void application_init_resume(void)
     rtcc_init();
 #endif
 
+#if defined(NO_TTFT_MODULE)
+    NRF_LOG_INFO("TFT display is not installed.");
+#endif
+
     // アプリケーション初期化完了フラグを設定
     // (各業務処理が実行可能)
     application_init_status = APP_INI_STAT_EN_PROC;

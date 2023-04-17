@@ -2,10 +2,16 @@
  * File:   tiny_tft_base.c
  * Author: makmorit
  *
- * Created on 2023/04/07, 17:36
+ * Created on 2023/04/13, 16:45
  */
-#include <zephyr/types.h>
-#include <zephyr/kernel.h>
+#include <sdk_config.h>
+
+#include "sdk_common.h"
+
+// for logging informations
+#define NRF_LOG_MODULE_NAME tiny_tft_base
+#include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -13,12 +19,11 @@
 // プラットフォーム依存コード
 #include "app_tiny_tft.h"
 
-#ifdef FIDO_ZEPHYR
-fido_log_module_register(tiny_tft_base);
-#endif
-
 // プラットフォーム非依存コード
 #include "tiny_tft_define.h"
+
+// for GPIO use
+#include "fido_board_define.h"
 
 void tiny_tft_base_start_reset(void)
 {
@@ -42,7 +47,7 @@ void tiny_tft_base_end_write(void)
 
 void tiny_tft_base_delay_ms(uint32_t ms)
 {
-    k_sleep(K_MSEC(ms));
+    fido_board_delay_ms(ms);
 }
 
 void tiny_tft_base_init(void)

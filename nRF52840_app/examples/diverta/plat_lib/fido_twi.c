@@ -11,7 +11,6 @@
 #include "app_error.h"
 #include "app_util_platform.h"
 #include "nrf_drv_twi.h"
-#include "nrf_delay.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_twi
