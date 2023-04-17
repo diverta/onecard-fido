@@ -224,6 +224,8 @@ static uint16_t swap_bit(uint16_t x)
 //
 // TFTディスプレイを初期化
 //
+static bool initialized = false;
+
 static void perform_reset(void)
 {
     // Perform reset
@@ -236,6 +238,7 @@ static void perform_reset(void)
 void tiny_tft_init_display(void)
 {
     // モジュールが利用できない場合
+    initialized = false;
     if (tiny_tft_is_available() == false) {
         fido_log_error("TFT display is not available");
         return;
@@ -270,6 +273,9 @@ void tiny_tft_init_display(void)
     if (set_origin_and_orientation(3) == false) {
         return;
     }
+
+    // Initialization complete
+    initialized = true;
     fido_log_info("TFT display initialize done");
 }
 
@@ -349,6 +355,11 @@ static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
 
 void tiny_tft_fill_screen(uint16_t color)
 {
+    // If not initialized
+    if (initialized == false) {
+        return;
+    }
+
     // Fill the screen completely with one color
     fill_rect(0, 0, _width, _height, color);
 }
@@ -532,6 +543,11 @@ static size_t write_buffer(const uint8_t *buffer, size_t size)
 
 size_t tiny_tft_print(const char *s)
 {
+    // If not initialized
+    if (initialized == false) {
+        return 0;
+    }
+
     return write_buffer((const uint8_t *)s, strlen(s));
 }
 
