@@ -24,9 +24,6 @@
 // for RTCC module use
 #include "rtcc.h"
 
-// for TFT module use
-#include "tiny_tft.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME application_init
 #include "nrf_log.h"
@@ -192,9 +189,6 @@ static void application_init_resume(void)
 
 #if defined(NO_TTFT_MODULE)
     NRF_LOG_INFO("TFT display is not installed.");
-#else
-    // TFTモジュール初期化
-    tiny_tft_init_display();
 #endif
 
     // アプリケーション初期化完了フラグを設定
