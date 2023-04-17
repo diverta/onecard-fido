@@ -31,7 +31,7 @@ bool app_tiny_tft_initialize(uint32_t frequency)
     }
 
     nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
-    spi_config.ss_pin   = TFT_C_S;
+    spi_config.ss_pin   = SPI_SS_PIN;
     spi_config.mosi_pin = SPI_MOSI_PIN;
     spi_config.sck_pin  = SPI_SCK_PIN;
     if (frequency == 4000000) {
