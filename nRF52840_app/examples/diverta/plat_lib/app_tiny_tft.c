@@ -32,7 +32,6 @@ static void spi_event_handler(nrf_drv_spi_evt_t const *p_event, void *p_context)
     (void)p_event;
     (void)p_context;
     spi_xfer_done = true;
-    NRF_LOG_DEBUG("Transfer completed.");
 
     if (m_rx_buf[0] != 0) {
         NRF_LOG_DEBUG(" Received:");
@@ -42,6 +41,11 @@ static void spi_event_handler(nrf_drv_spi_evt_t const *p_event, void *p_context)
 
 bool app_tiny_tft_initialize(uint32_t frequency)
 {
+    static bool init = true;
+    if (init == false) {
+        return true;
+    }
+
     nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
     spi_config.mosi_pin = SPI_MOSI_PIN;
     spi_config.sck_pin  = SPI_SCK_PIN;
@@ -55,18 +59,21 @@ bool app_tiny_tft_initialize(uint32_t frequency)
         return false;
     }
     NRF_LOG_DEBUG("nrf_drv_spi_init returns %d ", err_code);
-    
+
     // Initialize GPIOs
     fido_board_gpio_cfg_output(TFT_C_S);
     fido_board_gpio_cfg_output(TFT_RESET);
     fido_board_gpio_cfg_output(TFT_D_C);
     fido_board_gpio_cfg_output(TFT_LED);
-    
+
     // Set GPIOs HIGH
     fido_board_gpio_pin_set(TFT_C_S);
     fido_board_gpio_pin_set(TFT_RESET);
     fido_board_gpio_pin_set(TFT_D_C);
     fido_board_gpio_pin_set(TFT_LED);
+
+    // TFT initialization finished
+    init = false;
     return true;
 }
 
@@ -84,7 +91,7 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
     while (!spi_xfer_done) {
         __WFE();
     }
-    NRF_LOG_DEBUG("nrf_drv_spi_transfer returns %d ", err_code);
+
     return true;
 }
 
