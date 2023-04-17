@@ -85,8 +85,13 @@ bool app_tiny_tft_write(uint8_t *buf, size_t len)
         return false;
     }
 
-    while (!spi_xfer_done) {
-        __WFE();
+    uint32_t cnt;
+    for (cnt = 0; spi_xfer_done == false && cnt < 100000; cnt++) {
+        fido_board_delay_us(10);
+    }
+    if (cnt == 100000) {
+        NRF_LOG_ERROR("SPI transfer timed out");
+        return false;
     }
 
     return true;
