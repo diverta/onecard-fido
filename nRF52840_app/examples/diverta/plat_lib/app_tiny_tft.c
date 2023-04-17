@@ -24,18 +24,12 @@ NRF_LOG_MODULE_REGISTER();
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE);
 // Flag used to indicate that SPI instance completed the transfer.
 static volatile bool spi_xfer_done;
-static uint8_t m_rx_buf[16];
-static const uint8_t m_length = sizeof(m_rx_buf);
 
 static void spi_event_handler(nrf_drv_spi_evt_t const *p_event, void *p_context)
 {
-    (void)p_event;
     (void)p_context;
-    spi_xfer_done = true;
-
-    if (m_rx_buf[0] != 0) {
-        NRF_LOG_DEBUG(" Received:");
-        NRF_LOG_HEXDUMP_DEBUG(m_rx_buf, strlen((const char *)m_rx_buf));
+    if (p_event->type == NRF_DRV_SPI_EVENT_DONE) {
+        spi_xfer_done = true;
     }
 }
 
@@ -79,11 +73,14 @@ bool app_tiny_tft_initialize(uint32_t frequency)
 
 bool app_tiny_tft_write(uint8_t *buf, size_t len)
 {
-    memset(m_rx_buf, 0, m_length);
     spi_xfer_done = false;
 
-    uint32_t err_code = nrf_drv_spi_transfer(&spi, buf, len, m_rx_buf, m_length);
-    if (err_code != NRF_SUCCESS) {
+    uint32_t err_code = nrf_drv_spi_transfer(&spi, buf, len, NULL, 0);
+    if (err_code == NRF_ERROR_BUSY) {
+        NRF_LOG_ERROR("SPI driver is not ready for a new transfer");
+        return false;
+
+    } else if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("nrf_drv_spi_transfer returns %d ", err_code);
         return false;
     }
