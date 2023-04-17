@@ -1,0 +1,18 @@
+,,,,,,,,
+,,,EVAL_51296_V2 1PCS BOM  (Bill of Materials),,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,Your Instructions / Notes
+1,BAT1,1,Linx Technologies,BAT-HLD-012-SMT,Coin Cell Battery Holder,,SMD,
+2,C1,1,Taiyo Yuden,UMK105B7104KV-FR,0.1uF,"0402",SMD,
+3,CN1,1,Molex,51296-0894,0.5mm-8pins FFC & FPC Connector,,SMD,
+4,"D1, D2",2,Nexperia,"PMEG2005BELD,315",Schottky Rectifier,SOD882D,SMD,
+5,D3,1,Kingbright,APHF1608LSEEQBDZGKC,1.6 x 0.8 mm Full-Color Surface Mount LED,"0603",SMD,
+6,Q1,1,Nexperia,BSS84AKQBZ,P-Channel MOSFET,SOT8015,SMD,
+7,R1,1,Vishay,CRCW04025K10FKEDC,"Resistor, 5.1k ohm 1% 1/16W","0402",SMD,
+8,R2,1,Vishay,CRCW040220K0FKEDC,"Resistor, 20k ohm 1% 1/16W","0402",SMD,
+9,"R3, R4",2,Vishay,CRCW04021K20FKEDC,"Resistor, 1.2k ohm 1% 1/16W","0402",SMD,
+10,R5,1,Vishay,CRCW0402330RFKEDC,"Resistor, 330 ohm 1% 1/16W","0402",SMD,
+11,"R6, R7, R8, R9",4,Vishay,CRCW040210K0JNEDC,"Resistor, 10k ohm 5% 1/16W","0402",SMD,
+12,U1,1,Micro Crystal AG,RV-3028-C7 32.768kHz 1ppm TA QC,Real Time Clock 32.768kHz I2C Time Acc. 1ppm,SON-8,SMD,'RV-3028-C7 32.768kHz 1ppm TA QA' as alternative
