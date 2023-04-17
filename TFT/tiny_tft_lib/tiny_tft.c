@@ -540,13 +540,6 @@ size_t tiny_tft_print(const char *s)
 //
 void tiny_tft_test(void)
 {
-    // TFTディスプレイを初期化
-    static bool init = true;
-    if (init) {
-        tiny_tft_init_display();
-        fido_log_info("TFT display initialize done");
-        init = false;
-    }
     static uint8_t cnt = 0;
     switch (cnt++) {
         case 0:
