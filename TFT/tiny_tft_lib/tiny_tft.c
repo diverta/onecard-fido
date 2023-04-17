@@ -534,13 +534,13 @@ void tiny_tft_test(void)
     switch (cnt++) {
         case 0:
             tiny_tft_base_backlight_on();
-            tiny_tft_fill_screen(ST77XX_YELLOW);
-            fido_log_info("TFT display filled by yellow");
+            tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black");
             break;
         case 1:
             tiny_tft_set_text_wrap(false);
             tiny_tft_set_cursor(0, 0);
-            tiny_tft_set_text_color(ST77XX_RED);
+            tiny_tft_set_text_color(ST77XX_YELLOW);
             tiny_tft_set_text_size(1);
             tiny_tft_print("Hello world!\n");
             break;
@@ -549,10 +549,23 @@ void tiny_tft_test(void)
             tiny_tft_set_text_size(2);
             tiny_tft_print("Hello world!\n");
             break;
+        case 3:
+            tiny_tft_set_text_color(ST77XX_GREEN);
+            tiny_tft_set_text_size(3);
+            tiny_tft_print("123.456\n");
+            break;
+        case 4:
+            tiny_tft_fill_screen(ST77XX_GREEN);
+            fido_log_info("TFT display filled by green");
+            break;
+        case 5:
+            tiny_tft_fill_screen(ST77XX_BLUE);
+            fido_log_info("TFT display filled by blue");
+            break;
         default:
             tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black again");
             tiny_tft_base_backlight_off();
-            fido_log_info("TFT display filled by black");
             cnt = 0;
             break;
     }
