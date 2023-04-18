@@ -253,7 +253,9 @@ static void led_blink_begin(void)
         // USBチャネル初期化完了
         data_channel_initialized();
     } else {
-        // USBが使用可能でない場合は、BLEアドバタイズを開始
+        // USBが使用可能でない場合、
+        // ペアリングモード初期設定-->BLEアドバタイズ開始
+        app_ble_pairing_mode_initialize();
         app_ble_start_advertising();
     }
 

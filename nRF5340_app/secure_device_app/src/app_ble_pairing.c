@@ -189,6 +189,27 @@ bool app_ble_pairing_mode(void)
     return m_pairing_mode;
 }
 
+void app_ble_pairing_mode_initialize(void)
+{
+    // ペアリング情報の登録件数を照会
+    bool run_as_pairing_mode = false;
+    uint8_t peer_count = app_ble_pairing_get_peer_count();
+    if (peer_count == 0) {
+        // ペアリング情報が存在しない場合は、優先してペアリングモードとする
+        LOG_INF("Already bonded peer is not exist.");
+        run_as_pairing_mode = true;
+
+    } else {
+        // ペアリング情報が１件以上存在すれば、非ペアリングモードとする
+        LOG_INF("Already bonded peer is exist (count=%d).", peer_count);
+    }
+
+    // ペアリングモードを設定
+    if (app_ble_pairing_mode_set(run_as_pairing_mode) == false) {
+        LOG_ERR("Initial pairing mode set failed");
+    }
+}
+
 //
 // ペアリング情報削除処理
 //
