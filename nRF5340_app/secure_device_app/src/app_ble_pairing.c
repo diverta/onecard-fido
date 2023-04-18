@@ -36,6 +36,18 @@ static void count_bonded(const struct bt_bond_info *info, void *data)
 #endif
 }
 
+uint8_t app_ble_pairing_get_peer_count(void)
+{
+    m_bonded_count = 0;
+    bt_foreach_bond(BT_ID_DEFAULT, count_bonded, NULL);
+
+#if LOG_BONDED_PEER_ADDRESS
+    LOG_DBG("Bonded peer count=%u", m_bonded_count);
+#endif
+
+    return m_bonded_count;
+}
+
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
