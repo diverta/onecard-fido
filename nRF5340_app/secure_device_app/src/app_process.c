@@ -257,8 +257,13 @@ static void led_blink_begin(void)
         app_ble_start_advertising();
     }
 
-    // アイドル時のLED点滅パターンを設定
-    app_status_indicator_idle();
+    if (app_ble_pairing_mode()) {
+        // ペアリングモード時は黄色LEDを連続点灯させる
+        app_status_indicator_pairing_mode();
+    } else {
+        // アイドル時のLED点滅パターンを設定
+        app_status_indicator_idle();
+    }
 
     // LED点滅管理用のタイマーを始動
     //   100msごとにAPEVT_LED_BLINKが通知される
