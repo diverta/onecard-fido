@@ -48,19 +48,11 @@ static void change_to_pairing_mode(void)
     // ペアリングモード遷移-->アドバタイズ再開
     if (app_ble_pairing_mode_set(true)) {
         app_ble_start_advertising();
-
-        // 所定秒数経過後に、アドバタイズを
-        // 停止させるためのタイマーを開始
-        uint32_t advertise_ms = CONFIG_BT_LIM_ADV_TIMEOUT * 1000;
-        app_timer_start_for_ble_advertise(advertise_ms, APEVT_BLE_ADVERTISE_STOPPED);
     }
 }
 
 static void change_to_non_pairing_mode(void)
 {
-    // ペアリングモード遷移時に開始させたタイマーを停止
-    app_timer_stop_for_ble_advertise();
-    
     // 非ペアリングモード遷移前に、
     // アイドル時のLED点滅パターンを設定
     app_status_indicator_idle();
