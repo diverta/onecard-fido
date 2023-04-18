@@ -45,11 +45,8 @@ void fido_command_abort_flag_set(bool flag)
 //
 // CTAP2、U2Fで共用する各種処理
 //
-void tiny_tft_test(void);
 bool fido_command_mainsw_event_handler(void)
 {
-    tiny_tft_test();
-
     // ボタンが短押しされた時の処理を実行
     if (fido_u2f_command_on_mainsw_event() == true) {
         return true;
