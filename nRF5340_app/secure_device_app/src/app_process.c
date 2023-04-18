@@ -25,6 +25,24 @@ LOG_MODULE_REGISTER(app_process);
 //
 // ペアリングモード変更処理
 //
+static void initialize_pairing_mode(void)
+{
+    // ペアリングモード初期設定
+    app_ble_pairing_mode_initialize();
+
+    // BLEアドバタイズ開始を指示
+    app_ble_start_advertising();
+
+    // LED点灯パターン設定
+    if (app_ble_pairing_mode()) {
+        // ペアリングモード時は黄色LEDを連続点灯させる
+        app_status_indicator_pairing_mode();
+    } else {
+        // アイドル時のLED点滅パターンを設定
+        app_status_indicator_idle();
+    }
+}
+
 static void change_to_pairing_mode(void)
 {
     // ペアリングモード遷移-->アドバタイズ再開
@@ -201,11 +219,8 @@ static void ble_disconnected(void)
     idling_timer_start();
 
     // BLE切断時の処理
-    if (app_ble_pairing_mode()) {
-        // ペアリングモード時は、
-        // 非ペアリングモード遷移-->アドバタイズ再開
-        change_to_non_pairing_mode();
-    }
+    // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
+    initialize_pairing_mode();
 }
 
 static void usb_configured(void)
@@ -253,19 +268,13 @@ static void led_blink_begin(void)
     if (app_status_indicator_is_usb_available()) {
         // USBチャネル初期化完了
         data_channel_initialized();
-    } else {
-        // USBが使用可能でない場合、
-        // ペアリングモード初期設定-->BLEアドバタイズ開始
-        app_ble_pairing_mode_initialize();
-        app_ble_start_advertising();
-    }
-
-    if (app_ble_pairing_mode()) {
-        // ペアリングモード時は黄色LEDを連続点灯させる
-        app_status_indicator_pairing_mode();
-    } else {
         // アイドル時のLED点滅パターンを設定
         app_status_indicator_idle();
+
+    } else {
+        // USBが使用可能でない場合、
+        // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
+        initialize_pairing_mode();
     }
 
     // LED点滅管理用のタイマーを始動
