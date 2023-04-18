@@ -15,6 +15,27 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
+#define LOG_BONDED_PEER_ADDRESS false
+
+// ペアリング済みの数を保持
+static uint8_t m_bonded_count = 0;
+
+static void count_bonded(const struct bt_bond_info *info, void *data)
+{
+    (void)data;
+    m_bonded_count++;
+
+#if LOG_BONDED_PEER_ADDRESS
+    uint8_t adr[BT_ADDR_SIZE];
+    for (int i = 0; i < BT_ADDR_SIZE; i++) {
+        adr[BT_ADDR_SIZE - i - 1] = info->addr.a.val[i];
+    }
+    LOG_HEXDUMP_DBG(adr, BT_ADDR_SIZE, "Bonded peer address");
+#else
+    (void)info;
+#endif
+}
+
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
