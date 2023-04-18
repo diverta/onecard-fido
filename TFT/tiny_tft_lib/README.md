@@ -10,7 +10,7 @@
 
 FORMIKEというメーカーの0.96インチTFT「KWH009ST01-F01」を使用する前提です。
 
-<img src="../assets01/0003.jpg" width="240">
+<img src="../assets01/0009.jpg" width="360">
 
 
 ## 構成
