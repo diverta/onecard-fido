@@ -60,7 +60,6 @@ static void set_passkey_for_pairing(void)
 //
 // work queue for advertise
 static struct k_work advertise_work;
-static struct k_work stop_advertise_work;
 
 // advertising data
 static struct bt_data ad[3];
@@ -123,25 +122,6 @@ static bool k_work_submission(struct k_work *p_work, const char *p_name)
 bool app_ble_start_advertising(void)
 {
     return k_work_submission(&advertise_work, "Advertising");
-}
-
-//
-// BLEアドバタイズ停止
-//
-static void advertise_stop(struct k_work *work)
-{
-    // アドバタイジングを停止
-    (void)work;
-    int rc = bt_le_adv_stop();
-    LOG_INF("Advertising stopped (rc=%d)", rc);
-
-    // BLEアドバタイズ停止イベントを業務処理スレッドに引き渡す
-    app_event_notify(APEVT_BLE_ADVERTISE_STOPPED);
-}
-
-bool app_ble_stop_advertising(void)
-{
-    return k_work_submission(&stop_advertise_work, "Stop advertise");
 }
 
 static void connected(struct bt_conn *conn, uint8_t err)
@@ -243,7 +223,6 @@ void app_bluetooth_start(void)
 
     // アドバタイズ処理を work queue に入れる
     k_work_init(&advertise_work, advertise);
-    k_work_init(&stop_advertise_work, advertise_stop);
 
     // Enable Bluetooth.
     //   同時に、内部でNVSの初期化(nvs_init)が行われます。

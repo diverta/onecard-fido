@@ -51,18 +51,6 @@ static void change_to_pairing_mode(void)
     }
 }
 
-static void change_to_non_pairing_mode(void)
-{
-    // 非ペアリングモード遷移前に、
-    // アイドル時のLED点滅パターンを設定
-    app_status_indicator_idle();
-
-    // 非ペアリングモード遷移-->アドバタイズ再開
-    if (app_ble_pairing_mode_set(false)) {
-        app_ble_start_advertising();
-    }
-}
-
 //
 // ボタンイベント振分け処理
 //
@@ -189,16 +177,6 @@ static void ble_advertise_started(void)
     data_channel_initialized();
 }
 
-static void ble_advertise_stopped(void)
-{
-    // アドバタイズが停止時の処理
-    if (app_ble_pairing_mode()) {
-        // ペアリングモード時は、
-        // 非ペアリングモード遷移-->アドバタイズ再開
-        change_to_non_pairing_mode();
-    }
-}
-
 static void ble_connected(void)
 {
     // BLE接続アイドルタイマーを停止
@@ -305,9 +283,6 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();
-            break;
-        case APEVT_BLE_ADVERTISE_STOPPED:
-            ble_advertise_stopped();
             break;
         case APEVT_BLE_CONNECTED:
             ble_connected();
