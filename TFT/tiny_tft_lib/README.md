@@ -1,6 +1,6 @@
 # Tiny TFT Library
 
-最終更新日：2023/4/17
+最終更新日：2023/4/18
 
 ## 概要
 超小型TFTディスプレイを、nRF52840／nRF5340アプリケーションに接続するためのライブラリーです。<br>
@@ -36,7 +36,9 @@ FORMIKEというメーカーの0.96インチTFT「KWH009ST01-F01」を使用す�
 |#|モジュール名|説明|
 |:---:|:---|:---|
 |1|`fido_board_define.h`|TFTモジュール接続時のピン定義を記述|
-|2|`app_tiny_tft.c/.h`|SPI経由でデータ送受信処理を実行します。|
+|2|`wrapper_lib/tiny_tft_base.c`|ラッパーモジュール[注1]|
+|3|`plat_lib/app_tiny_tft.c`|SPI設定／GPIO設定／データ送受信処理|
+|4|`plat_lib/app_tiny_tft.h`|関数定義|
 
 <b>【nRF Connect SDK用】</b>
 
