@@ -31,6 +31,7 @@ LOG_MODULE_REGISTER(app_func);
 #include "ccid.h"
 #include "fido_platform.h"
 #include "rtcc.h"
+#include "tiny_tft.h"
 
 // for resume after Flash ROM object updated/deleted
 #include "fido_flash.h"
