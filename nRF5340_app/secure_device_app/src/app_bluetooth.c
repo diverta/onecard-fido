@@ -148,7 +148,6 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
-#if defined(CONFIG_BT_SMP)
 static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
 {
     char addr_identity[BT_ADDR_LE_STR_LEN];
@@ -179,7 +178,6 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
         LOG_WRN("Security failed: %s level %u err %d", addr, level, err);
     }
 }
-#endif
 
 // 接続時コールバックの設定
 BT_CONN_CB_DEFINE(conn_callbacks) = {

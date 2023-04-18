@@ -53,7 +53,6 @@ static bool m_pairing_mode = false;
 
 static void pairing_confirm(struct bt_conn *conn)
 {
-#if defined(CONFIG_BT_SMP)
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     int rc = bt_conn_auth_cancel(conn);
@@ -62,7 +61,6 @@ static void pairing_confirm(struct bt_conn *conn)
     } else {
         LOG_DBG("Pairing refused");
     }
-#endif
 }
 
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
@@ -139,7 +137,6 @@ struct bt_conn_auth_info_cb info_cb_for_pair = {
 
 bool register_callbacks(void)
 {
-#if defined(CONFIG_BT_SMP)
     // コールバック設定を解除
     int rc = bt_conn_auth_cb_register(NULL);
 
@@ -169,7 +166,6 @@ bool register_callbacks(void)
             return false;
         }
     }
-#endif
 
     return true;
 }
