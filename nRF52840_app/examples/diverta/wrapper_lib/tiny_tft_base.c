@@ -30,7 +30,7 @@ NRF_LOG_MODULE_REGISTER();
 //
 bool tiny_tft_is_available(void)
 {
-#ifdef NO_TTFT_MODULE
+#if defined(NO_TTFT_MODULE)
     return false;
 #else
     return true;
