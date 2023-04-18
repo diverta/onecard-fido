@@ -14,6 +14,7 @@ extern "C" {
 //
 // 関数群
 //
+bool        tiny_tft_is_available(void);
 void        tiny_tft_base_start_reset(void);
 void        tiny_tft_base_end_reset(void);
 void        tiny_tft_base_start_write(void);

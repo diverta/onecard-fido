@@ -56,7 +56,7 @@ static void tiny_tft_initialize(void)
     _cp437      = false;
 }
 
-static void initialize_display(uint8_t *addr) 
+static bool initialize_display(uint8_t *addr) 
 {
     uint16_t offset = 0;
     uint16_t ms;
@@ -79,7 +79,7 @@ static void initialize_display(uint8_t *addr)
         arg_num &= ~ST_CMD_DELAY;
         if (tiny_tft_base_write_data(cmd, addr + offset, arg_num) == false) {
             fido_log_error("tiny_tft_base_write_data (0x%02x) fail", cmd);
-            return;
+            return false;
         }
         offset += arg_num;
 
@@ -93,9 +93,10 @@ static void initialize_display(uint8_t *addr)
             tiny_tft_base_delay_ms(ms);
         }
     }
+    return true;
 }
 
-static void set_origin_and_orientation(uint8_t orientation_) 
+static bool set_origin_and_orientation(uint8_t orientation_) 
 {
     uint8_t madctl = 0;
 
@@ -147,8 +148,9 @@ static void set_origin_and_orientation(uint8_t orientation_)
 
     if (tiny_tft_base_write_data(ST77XX_MADCTL, &madctl, 1) == false) {
         fido_log_error("tiny_tft_base_write_data (ST77XX_MADCTL) fail");
-        return;
+        return false;
     }
+    return true;
 }
 
 //
@@ -222,7 +224,9 @@ static uint16_t swap_bit(uint16_t x)
 //
 // TFTディスプレイを初期化
 //
-void perform_reset(void)
+static bool initialized = false;
+
+static void perform_reset(void)
 {
     // Perform reset
     tiny_tft_base_start_reset();
@@ -233,17 +237,30 @@ void perform_reset(void)
 
 void tiny_tft_init_display(void)
 {
+    // モジュールが利用できない場合
+    initialized = false;
+    if (tiny_tft_is_available() == false) {
+        fido_log_error("TFT display is not available");
+        return;
+    }
+
     // Initialization values for graphics
     tiny_tft_initialize();
-    
+
     // Initialize SPI & perform reset
     tiny_tft_base_init();
     perform_reset();
 
     // Initialization code
-    initialize_display(tiny_tft_const_init_command_1());
-    initialize_display(tiny_tft_const_init_command_2());
-    initialize_display(tiny_tft_const_init_command_3());
+    if (initialize_display(tiny_tft_const_init_command_1()) == false) {
+        return;
+    }
+    if (initialize_display(tiny_tft_const_init_command_2()) == false) {
+        return;
+    }
+    if (initialize_display(tiny_tft_const_init_command_3()) == false) {
+        return;
+    }
 
     // Change MADCTL color filter
     uint8_t data = 0xC0;
@@ -253,7 +270,13 @@ void tiny_tft_init_display(void)
     }
 
     // Set origin of (0,0) and orientation of TFT display
-    set_origin_and_orientation(3);
+    if (set_origin_and_orientation(3) == false) {
+        return;
+    }
+
+    // Initialization complete
+    initialized = true;
+    fido_log_info("TFT display initialize done");
 }
 
 //
@@ -332,6 +355,11 @@ static void fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
 
 void tiny_tft_fill_screen(uint16_t color)
 {
+    // If not initialized
+    if (initialized == false) {
+        return;
+    }
+
     // Fill the screen completely with one color
     fill_rect(0, 0, _width, _height, color);
 }
@@ -515,6 +543,11 @@ static size_t write_buffer(const uint8_t *buffer, size_t size)
 
 size_t tiny_tft_print(const char *s)
 {
+    // If not initialized
+    if (initialized == false) {
+        return 0;
+    }
+
     return write_buffer((const uint8_t *)s, strlen(s));
 }
 
@@ -523,24 +556,17 @@ size_t tiny_tft_print(const char *s)
 //
 void tiny_tft_test(void)
 {
-    // TFTディスプレイを初期化
-    static bool init = true;
-    if (init) {
-        tiny_tft_init_display();
-        fido_log_info("TFT display initialize done");
-        init = false;
-    }
     static uint8_t cnt = 0;
     switch (cnt++) {
         case 0:
             tiny_tft_base_backlight_on();
-            tiny_tft_fill_screen(ST77XX_YELLOW);
-            fido_log_info("TFT display filled by yellow");
+            tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black");
             break;
         case 1:
             tiny_tft_set_text_wrap(false);
             tiny_tft_set_cursor(0, 0);
-            tiny_tft_set_text_color(ST77XX_RED);
+            tiny_tft_set_text_color(ST77XX_YELLOW);
             tiny_tft_set_text_size(1);
             tiny_tft_print("Hello world!\n");
             break;
@@ -549,10 +575,23 @@ void tiny_tft_test(void)
             tiny_tft_set_text_size(2);
             tiny_tft_print("Hello world!\n");
             break;
+        case 3:
+            tiny_tft_set_text_color(ST77XX_GREEN);
+            tiny_tft_set_text_size(3);
+            tiny_tft_print("123.456\n");
+            break;
+        case 4:
+            tiny_tft_fill_screen(ST77XX_GREEN);
+            fido_log_info("TFT display filled by green");
+            break;
+        case 5:
+            tiny_tft_fill_screen(ST77XX_BLUE);
+            fido_log_info("TFT display filled by blue");
+            break;
         default:
             tiny_tft_fill_screen(ST77XX_BLACK);
+            fido_log_info("TFT display filled by black again");
             tiny_tft_base_backlight_off();
-            fido_log_info("TFT display filled by black");
             cnt = 0;
             break;
     }

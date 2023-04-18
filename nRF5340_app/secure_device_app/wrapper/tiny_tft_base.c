@@ -20,6 +20,18 @@ fido_log_module_register(tiny_tft_base);
 // プラットフォーム非依存コード
 #include "tiny_tft_define.h"
 
+//
+// モジュール利用の可否照会
+//
+bool tiny_tft_is_available(void)
+{
+#ifdef CONFIG_USE_TINY_TFT
+    return true;
+#else
+    return false;
+#endif
+}
+
 void tiny_tft_base_start_reset(void)
 {
     app_tiny_tft_set_rst(LOW);

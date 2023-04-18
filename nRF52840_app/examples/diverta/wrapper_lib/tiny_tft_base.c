@@ -25,6 +25,18 @@ NRF_LOG_MODULE_REGISTER();
 // for GPIO use
 #include "fido_board_define.h"
 
+//
+// モジュール利用の可否照会
+//
+bool tiny_tft_is_available(void)
+{
+#if defined(NO_TTFT_MODULE)
+    return false;
+#else
+    return true;
+#endif
+}
+
 void tiny_tft_base_start_reset(void)
 {
     app_tiny_tft_set_rst(LOW);

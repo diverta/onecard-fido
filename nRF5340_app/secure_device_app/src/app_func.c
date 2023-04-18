@@ -73,6 +73,9 @@ static void crypto_random_pre_generated(void)
     // RTCCを初期化
     rtcc_init();
 
+    // TFTディスプレイを初期化
+    tiny_tft_init_display();
+
     // バージョンをデバッグ出力
     LOG_INF("Secure device application (%s) version %s (%d)", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR, CONFIG_APP_FW_BUILD);
 
