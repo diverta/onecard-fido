@@ -130,8 +130,9 @@ static void idling_timer_start(void)
     }
 
     // BLE接続アイドルタイマーを開始
-    //   タイムアウト＝３分
-    app_timer_start_for_idling(180000, APEVT_IDLING_DETECTED);
+    //   タイムアウト＝３分（ペアリングモード時＝60秒）
+    uint32_t timeout = app_ble_pairing_mode() ? 60000 : 180000;
+    app_timer_start_for_idling(timeout, APEVT_IDLING_DETECTED);
     timer_started = true;
 }
 
