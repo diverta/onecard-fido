@@ -113,7 +113,7 @@ bool fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, ui
         // 接続の切断検知時点で、
         // peer_id に対応するペアリング情報を削除
         m_peer_id_to_unpair = fido_get_uint16_from_bytes(request_buffer);
-        LOG_DBG("Unpairing will process for peer_id=0x%04x", m_peer_id_to_unpair);
+        LOG_INF("Unpairing will process for peer_id=0x%04x", m_peer_id_to_unpair);
 
         // レスポンスは無し
         *response_size = 0;
@@ -126,7 +126,11 @@ bool fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, ui
 
 void fido_ble_unpairing_cancel_request(void)
 {
-    // TODO: 仮の実装です。
+    // ペアリング情報削除の実行を回避
+    LOG_INF("Unpairing process for peer_id=0x%04x canceled.", m_peer_id_to_unpair);
+
+    // peer_idを初期化
+    m_peer_id_to_unpair = 0xffff;
 }
 
 void fido_ble_unpairing_on_disconnect(void)
