@@ -60,7 +60,6 @@ static void set_passkey_for_pairing(void)
 //
 // work queue for advertise
 static struct k_work advertise_work;
-static struct k_work stop_advertise_work;
 
 // advertising data
 static struct bt_data ad[3];
@@ -125,25 +124,6 @@ bool app_ble_start_advertising(void)
     return k_work_submission(&advertise_work, "Advertising");
 }
 
-//
-// BLEアドバタイズ停止
-//
-static void advertise_stop(struct k_work *work)
-{
-    // アドバタイジングを停止
-    (void)work;
-    int rc = bt_le_adv_stop();
-    LOG_INF("Advertising stopped (rc=%d)", rc);
-
-    // BLEアドバタイズ停止イベントを業務処理スレッドに引き渡す
-    app_event_notify(APEVT_BLE_ADVERTISE_STOPPED);
-}
-
-bool app_ble_stop_advertising(void)
-{
-    return k_work_submission(&stop_advertise_work, "Stop advertise");
-}
-
 static void connected(struct bt_conn *conn, uint8_t err)
 {
     (void)conn;
@@ -168,7 +148,6 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
-#if defined(CONFIG_BT_SMP)
 static void identity_resolved(struct bt_conn *conn, const bt_addr_le_t *rpa, const bt_addr_le_t *identity)
 {
     char addr_identity[BT_ADDR_LE_STR_LEN];
@@ -199,7 +178,6 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
         LOG_WRN("Security failed: %s level %u err %d", addr, level, err);
     }
 }
-#endif
 
 // 接続時コールバックの設定
 BT_CONN_CB_DEFINE(conn_callbacks) = {
@@ -243,7 +221,6 @@ void app_bluetooth_start(void)
 
     // アドバタイズ処理を work queue に入れる
     k_work_init(&advertise_work, advertise);
-    k_work_init(&stop_advertise_work, advertise_stop);
 
     // Enable Bluetooth.
     //   同時に、内部でNVSの初期化(nvs_init)が行われます。

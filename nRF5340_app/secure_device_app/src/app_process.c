@@ -25,30 +25,28 @@ LOG_MODULE_REGISTER(app_process);
 //
 // ペアリングモード変更処理
 //
+static void initialize_pairing_mode(void)
+{
+    // ペアリングモード初期設定
+    app_ble_pairing_mode_initialize();
+
+    // BLEアドバタイズ開始を指示
+    app_ble_start_advertising();
+
+    // LED点灯パターン設定
+    if (app_ble_pairing_mode()) {
+        // ペアリングモード時は黄色LEDを連続点灯させる
+        app_status_indicator_pairing_mode();
+    } else {
+        // アイドル時のLED点滅パターンを設定
+        app_status_indicator_idle();
+    }
+}
+
 static void change_to_pairing_mode(void)
 {
     // ペアリングモード遷移-->アドバタイズ再開
     if (app_ble_pairing_mode_set(true)) {
-        app_ble_start_advertising();
-
-        // 所定秒数経過後に、アドバタイズを
-        // 停止させるためのタイマーを開始
-        uint32_t advertise_ms = CONFIG_BT_LIM_ADV_TIMEOUT * 1000;
-        app_timer_start_for_ble_advertise(advertise_ms, APEVT_BLE_ADVERTISE_STOPPED);
-    }
-}
-
-static void change_to_non_pairing_mode(void)
-{
-    // ペアリングモード遷移時に開始させたタイマーを停止
-    app_timer_stop_for_ble_advertise();
-    
-    // 非ペアリングモード遷移前に、
-    // アイドル時のLED点滅パターンを設定
-    app_status_indicator_idle();
-
-    // 非ペアリングモード遷移-->アドバタイズ再開
-    if (app_ble_pairing_mode_set(false)) {
         app_ble_start_advertising();
     }
 }
@@ -130,8 +128,9 @@ static void idling_timer_start(void)
     }
 
     // BLE接続アイドルタイマーを開始
-    //   タイムアウト＝３分
-    app_timer_start_for_idling(180000, APEVT_IDLING_DETECTED);
+    //   タイムアウト＝３分（ペアリングモード時＝90秒）
+    uint32_t timeout = app_ble_pairing_mode() ? (CONFIG_BT_LIM_ADV_TIMEOUT * 1000) : 180000;
+    app_timer_start_for_idling(timeout, APEVT_IDLING_DETECTED);
     timer_started = true;
 }
 
@@ -178,16 +177,6 @@ static void ble_advertise_started(void)
     data_channel_initialized();
 }
 
-static void ble_advertise_stopped(void)
-{
-    // アドバタイズが停止時の処理
-    if (app_ble_pairing_mode()) {
-        // ペアリングモード時は、
-        // 非ペアリングモード遷移-->アドバタイズ再開
-        change_to_non_pairing_mode();
-    }
-}
-
 static void ble_connected(void)
 {
     // BLE接続アイドルタイマーを停止
@@ -200,11 +189,8 @@ static void ble_disconnected(void)
     idling_timer_start();
 
     // BLE切断時の処理
-    if (app_ble_pairing_mode()) {
-        // ペアリングモード時は、
-        // 非ペアリングモード遷移-->アドバタイズ再開
-        change_to_non_pairing_mode();
-    }
+    // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
+    initialize_pairing_mode();
 }
 
 static void usb_configured(void)
@@ -252,13 +238,14 @@ static void led_blink_begin(void)
     if (app_status_indicator_is_usb_available()) {
         // USBチャネル初期化完了
         data_channel_initialized();
-    } else {
-        // USBが使用可能でない場合は、BLEアドバタイズを開始
-        app_ble_start_advertising();
-    }
+        // アイドル時のLED点滅パターンを設定
+        app_status_indicator_idle();
 
-    // アイドル時のLED点滅パターンを設定
-    app_status_indicator_idle();
+    } else {
+        // USBが使用可能でない場合、
+        // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
+        initialize_pairing_mode();
+    }
 
     // LED点滅管理用のタイマーを始動
     //   100msごとにAPEVT_LED_BLINKが通知される
@@ -296,9 +283,6 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();
-            break;
-        case APEVT_BLE_ADVERTISE_STOPPED:
-            ble_advertise_stopped();
             break;
         case APEVT_BLE_CONNECTED:
             ble_connected();

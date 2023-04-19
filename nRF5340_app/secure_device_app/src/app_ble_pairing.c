@@ -15,12 +15,44 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
 
+#define LOG_BONDED_PEER_ADDRESS false
+
+// ペアリング済みの数を保持
+static uint8_t m_bonded_count = 0;
+
+static void count_bonded(const struct bt_bond_info *info, void *data)
+{
+    (void)data;
+    m_bonded_count++;
+
+#if LOG_BONDED_PEER_ADDRESS
+    uint8_t adr[BT_ADDR_SIZE];
+    for (int i = 0; i < BT_ADDR_SIZE; i++) {
+        adr[BT_ADDR_SIZE - i - 1] = info->addr.a.val[i];
+    }
+    LOG_HEXDUMP_DBG(adr, BT_ADDR_SIZE, "Bonded peer address");
+#else
+    (void)info;
+#endif
+}
+
+uint8_t app_ble_pairing_get_peer_count(void)
+{
+    m_bonded_count = 0;
+    bt_foreach_bond(BT_ID_DEFAULT, count_bonded, NULL);
+
+#if LOG_BONDED_PEER_ADDRESS
+    LOG_DBG("Bonded peer count=%u", m_bonded_count);
+#endif
+
+    return m_bonded_count;
+}
+
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
 
 static void pairing_confirm(struct bt_conn *conn)
 {
-#if defined(CONFIG_BT_SMP)
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     int rc = bt_conn_auth_cancel(conn);
@@ -29,7 +61,6 @@ static void pairing_confirm(struct bt_conn *conn)
     } else {
         LOG_DBG("Pairing refused");
     }
-#endif
 }
 
 static void pairing_failed(struct bt_conn *conn, enum bt_security_err reason)
@@ -106,7 +137,6 @@ struct bt_conn_auth_info_cb info_cb_for_pair = {
 
 bool register_callbacks(void)
 {
-#if defined(CONFIG_BT_SMP)
     // コールバック設定を解除
     int rc = bt_conn_auth_cb_register(NULL);
 
@@ -136,7 +166,6 @@ bool register_callbacks(void)
             return false;
         }
     }
-#endif
 
     return true;
 }
@@ -154,6 +183,27 @@ bool app_ble_pairing_mode_set(bool b)
 bool app_ble_pairing_mode(void)
 {
     return m_pairing_mode;
+}
+
+void app_ble_pairing_mode_initialize(void)
+{
+    // ペアリング情報の登録件数を照会
+    bool run_as_pairing_mode = false;
+    uint8_t peer_count = app_ble_pairing_get_peer_count();
+    if (peer_count == 0) {
+        // ペアリング情報が存在しない場合は、優先してペアリングモードとする
+        LOG_INF("Already bonded peer is not exist.");
+        run_as_pairing_mode = true;
+
+    } else {
+        // ペアリング情報が１件以上存在すれば、非ペアリングモードとする
+        LOG_INF("Already bonded peer is exist (count=%d).", peer_count);
+    }
+
+    // ペアリングモードを設定
+    if (app_ble_pairing_mode_set(run_as_pairing_mode) == false) {
+        LOG_ERR("Initial pairing mode set failed");
+    }
 }
 
 //
