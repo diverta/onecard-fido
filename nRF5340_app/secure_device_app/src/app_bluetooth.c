@@ -66,6 +66,9 @@ static struct bt_data ad[3];
 static struct bt_data ad_nobredr = BT_DATA_BYTES(BT_DATA_FLAGS, BT_LE_AD_NO_BREDR);
 static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITED | BT_LE_AD_NO_BREDR));
 
+// Service data field for FIDO BLE service (0xfffd)
+static struct bt_data ad_svcdata = BT_DATA_BYTES(BT_DATA_SVC_DATA16, 0xfd, 0xff, 0x80);
+
 //
 // BLEアドバタイズ開始
 //
@@ -83,9 +86,17 @@ static void advertise(struct k_work *work)
     // BLE FIDOサービスUUIDを設定
     app_ble_fido_ad_uuid_set(&ad[1]);
 
-    // BLE SMPサービスUUIDを追加設定
+    // BLE SMPサービスUUIDを追加設定（非ペアリングモード時）
     size_t ad_len = 2;
-    if (app_ble_smp_ad_uuid_set(&ad[2])) {
+    if (app_ble_pairing_mode() == false) {
+        if (app_ble_smp_ad_uuid_set(&ad[ad_len])) {
+            ad_len++;
+        }
+    }
+
+    // サービスデータフィールドを追加設定（ペアリングモード時のみ）
+    if (app_ble_pairing_mode()) {
+        ad[ad_len] = ad_svcdata;
         ad_len++;
     }
 
