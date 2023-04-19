@@ -83,12 +83,14 @@ static void advertise(struct k_work *work)
     // BLE FIDOサービスUUIDを設定
     app_ble_fido_ad_uuid_set(&ad[1]);
 
-    // BLE SMPサービスUUIDを追加設定
+    // BLE SMPサービスUUIDを追加設定（非ペアリングモード時）
     size_t ad_len = 2;
-    if (app_ble_smp_ad_uuid_set(&ad[2])) {
-        ad_len++;
+    if (app_ble_pairing_mode() == false) {
+        if (app_ble_smp_ad_uuid_set(&ad[ad_len])) {
+            ad_len++;
+        }
     }
-
+    
     // アドバタイジングを開始する
     bt_le_adv_stop();
     int rc = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ad_len, NULL, 0);
