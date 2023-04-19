@@ -19,6 +19,7 @@ extern "C" {
 bool        app_ble_start_advertising(void);
 bool        app_ble_stop_advertising(void);
 void        app_bluetooth_start(void);
+void       *app_bluetooth_secure_connected_addr(void);
 
 #ifdef __cplusplus
 }
