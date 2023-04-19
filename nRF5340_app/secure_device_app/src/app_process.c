@@ -185,8 +185,12 @@ static void ble_connected(void)
 
 static void ble_disconnected(void)
 {
-    // BLE接続アイドルタイマーを開始
-    idling_timer_start();
+    if (app_ble_pairing_mode() == false) {
+        // 非ペアリングモード時は、
+        // BLE接続アイドルタイマーを停止-->再開
+        idling_timer_start();
+        return;
+    }
 
     // BLE切断時の処理
     // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
