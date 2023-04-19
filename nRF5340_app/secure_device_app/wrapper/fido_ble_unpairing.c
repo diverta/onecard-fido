@@ -10,6 +10,7 @@
 #include <zephyr/bluetooth/conn.h>
 
 #include "app_ble_pairing.h"
+#include "app_board.h"
 #include "app_bluetooth.h"
 
 // プラットフォーム非依存モジュール
@@ -25,7 +26,8 @@ LOG_MODULE_REGISTER(fido_ble_unpairing);
 static uint8_t connected_addr[BT_ADDR_SIZE];
 
 // ペアリング解除対象の peer_id を保持
-static uint16_t m_peer_id_to_unpair;
+#define PEER_ID_NOT_EXIST 0xffff
+static uint16_t m_peer_id_to_unpair = PEER_ID_NOT_EXIST;
 
 static void convert_to_be_address(uint8_t adr[], uint8_t val[])
 {
@@ -72,14 +74,14 @@ static void match_bonded(const struct bt_bond_info *info, void *data)
 static bool get_bonded_peer_id(void)
 {
     // peer_idを初期化
-    m_peer_id_to_unpair = 0xffff;
+    m_peer_id_to_unpair = PEER_ID_NOT_EXIST;
     m_bonded_count = 0;
 
     // ペアリング済みデバイスのBluetoothアドレスを走査
     bt_foreach_bond(BT_ID_DEFAULT, match_bonded, NULL);
 
     // 接続中デバイスが、ペアリング済みデバイスでない場合
-    if (m_peer_id_to_unpair == 0xffff) {
+    if (m_peer_id_to_unpair == PEER_ID_NOT_EXIST) {
         return false;
     }
 
@@ -130,17 +132,27 @@ void fido_ble_unpairing_cancel_request(void)
     LOG_INF("Unpairing process for peer_id=0x%04x canceled.", m_peer_id_to_unpair);
 
     // peer_idを初期化
-    m_peer_id_to_unpair = 0xffff;
+    m_peer_id_to_unpair = PEER_ID_NOT_EXIST;
 }
 
 void fido_ble_unpairing_on_disconnect(void)
 {
-    // TODO: 仮の実装です。
+    if (m_peer_id_to_unpair != PEER_ID_NOT_EXIST) {
+        // ペアリング解除対象の peer_id をクリア
+        uint16_t peer_id_to_unpair = m_peer_id_to_unpair;
+        m_peer_id_to_unpair = PEER_ID_NOT_EXIST;
+
+        // TODO: 仮の実装です。
+
+        // ペアリング解除要求が成功時は、スリープ状態に遷移
+        printk("Unpairing process for peer_id=0x%04x done \n", peer_id_to_unpair);
+        app_board_prepare_for_deep_sleep();
+    }
 }
 
 void fido_ble_unpairing_done(bool success, uint16_t peer_id)
 {
-    // TODO: 仮の実装です。
+    // nRF5340アプリケーションでは実装不要
 }
 
 //
