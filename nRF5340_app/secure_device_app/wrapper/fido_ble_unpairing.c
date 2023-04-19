@@ -103,8 +103,21 @@ bool fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, ui
             return false;
         }
 
-        // TODO: 仮の実装です。
-        return false;
+        // peer_id をレスポンス領域に設定
+        fido_set_uint16_bytes(response_buffer, m_peer_id_to_unpair);
+        *response_size = 2;
+        return true;
+
+    } else if (request_size == 2) {
+        // データにpeer_idが指定されている場合
+        // 接続の切断検知時点で、
+        // peer_id に対応するペアリング情報を削除
+        m_peer_id_to_unpair = fido_get_uint16_from_bytes(request_buffer);
+        LOG_DBG("Unpairing will process for peer_id=0x%04x", m_peer_id_to_unpair);
+
+        // レスポンスは無し
+        *response_size = 0;
+        return true;
 
     } else {
         return false;
