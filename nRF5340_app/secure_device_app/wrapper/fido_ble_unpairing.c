@@ -24,6 +24,9 @@ LOG_MODULE_REGISTER(fido_ble_unpairing);
 // 接続中のアドレスを保持
 static uint8_t connected_addr[BT_ADDR_SIZE];
 
+// ペアリング解除対象の peer_id を保持
+static uint16_t m_peer_id_to_unpair;
+
 static void convert_to_be_address(uint8_t adr[], uint8_t val[])
 {
     for (int i = 0; i < BT_ADDR_SIZE; i++) {
@@ -47,12 +50,56 @@ static bool get_connected_peer_address(void)
     return true;
 }
 
+// 作業領域
+static uint8_t work_buf[BT_ADDR_SIZE];
+static uint8_t m_bonded_count = 0;
+
+static void match_bonded(const struct bt_bond_info *info, void *data)
+{
+    // ペアリング済みデバイスのBluetoothアドレスを取得し、
+    // 接続中のアドレスと等しいかチェック
+    (void)data;
+    convert_to_be_address(work_buf, (uint8_t *)info->addr.a.val);
+    if (memcmp(work_buf, connected_addr, BT_ADDR_SIZE) == 0) {
+        // 等しければ peer_id を設定
+        m_peer_id_to_unpair = m_bonded_count;
+    }
+
+    // デバイス数をカウントアップ
+    m_bonded_count++;
+}
+
+static bool get_bonded_peer_id(void)
+{
+    // peer_idを初期化
+    m_peer_id_to_unpair = 0xffff;
+    m_bonded_count = 0;
+
+    // ペアリング済みデバイスのBluetoothアドレスを走査
+    bt_foreach_bond(BT_ID_DEFAULT, match_bonded, NULL);
+
+    // 接続中デバイスが、ペアリング済みデバイスでない場合
+    if (m_peer_id_to_unpair == 0xffff) {
+        return false;
+    }
+
+#if LOG_CONNECTED_PEER_ADDRESS
+    LOG_DBG("Unpairing device found (peer_id=0x%04x)", m_peer_id_to_unpair);
+#endif
+    return true;
+}
+
 bool fido_ble_unpairing_request(uint8_t *request_buffer, size_t request_size, uint8_t *response_buffer, size_t *response_size)
 {
     if (request_size == 0) {
         // データが無い場合（peer_id 取得要求の場合）
         // 現在接続中デバイスのBluetoothアドレスを取得
         if (get_connected_peer_address() == false) {
+            return false;
+        }
+
+        // ペアリング済みデバイスを走査し、peer_idを取得
+        if (get_bonded_peer_id() == false) {
             return false;
         }
 
