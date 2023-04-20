@@ -239,6 +239,7 @@ void app_bluetooth_start(void)
     app_ble_smp_register_group();
 
     // ペアリングモードを設定
+    app_ble_pairing_register_callbacks();
     if (app_ble_pairing_mode_set(false) == false) {
         LOG_ERR("Pairing mode set failed");
         return;
