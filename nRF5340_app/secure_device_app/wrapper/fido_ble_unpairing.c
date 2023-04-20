@@ -9,7 +9,7 @@
 
 #include "app_ble_define.h"
 #include "app_ble_unpairing.h"
-#include "app_board.h"
+#include "app_event.h"
 
 // プラットフォーム非依存モジュール
 #include "fido_common.h"
@@ -75,7 +75,7 @@ void fido_ble_unpairing_on_disconnect(void)
 
         // ペアリング解除要求が成功時は、スリープ状態に遷移
         printk("Unpairing process for peer_id=0x%04x done \n", peer_id_to_unpair);
-        app_board_prepare_for_deep_sleep();
+        app_event_notify(APEVT_IDLING_DETECTED);
     }
 }
 
