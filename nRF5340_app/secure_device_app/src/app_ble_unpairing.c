@@ -98,8 +98,13 @@ bool app_ble_unpairing_get_peer_id(uint16_t *peer_id_to_unpair)
 
 bool app_ble_unpairing_delete_peer_id(uint16_t peer_id_to_unpair)
 {
-    // TODO: 仮の実装です。
+    // 接続の切断検知時点で、peer_id に対応するペアリング情報を削除
     (void)peer_id_to_unpair;
+    int rc = bt_unpair(BT_ID_DEFAULT, &connected_addr_le);
+    if (rc != 0) {
+        LOG_ERR("bt_unpair returns %d", rc);
+        return false;
+    }
     return true;
 }
 
