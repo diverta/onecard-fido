@@ -11,7 +11,6 @@
 #import "ToolBLEHelper.h"
 #import "ToolBLEHelperDefine.h"
 #import "ToolCommonFunc.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface AppBLECommand () <ToolBLEHelperDelegate>

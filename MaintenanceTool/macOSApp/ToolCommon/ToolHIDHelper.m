@@ -6,7 +6,7 @@
 //
 #import <IOKit/hid/IOHIDManager.h>
 
-#import "ToolCommonMessage.h"
+#import "AppCommonMessage.h"
 #import "ToolHIDHelper.h"
 #import "ToolLogFile.h"
 

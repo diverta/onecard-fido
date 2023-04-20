@@ -4,8 +4,8 @@
 //
 //  Created by Makoto Morita on 2022/06/08.
 //
+#import "AppCommonMessage.h"
 #import "FIDODefines.h"
-#import "ToolCommonMessage.h"
 #import "ToolCommonFunc.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"

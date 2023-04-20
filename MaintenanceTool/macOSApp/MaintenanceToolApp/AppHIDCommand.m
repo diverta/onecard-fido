@@ -7,7 +7,6 @@
 #import "AppCommonMessage.h"
 #import "AppHIDCommand.h"
 #import "FIDODefines.h"
-#import "ToolCommonMessage.h"
 #import "ToolHIDHelper.h"
 
 @interface AppHIDCommand () <ToolHIDHelperDelegate>
