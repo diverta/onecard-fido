@@ -11,12 +11,28 @@
 #define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
 #define MSG_INVALID_OUT_OF_RANGE    @"入力値の範囲が不正です。"
 #define MSG_INVALID_PATTERN         @"入力値の形式が不正です。"
+#define MSG_INVALID_FIELD           @"入力値が不正です。"
+#define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
 #define MSG_SUCCESS                 @"成功"
 #define MSG_FAILURE                 @"失敗"
 #define MSG_NONE                    @""
+
+#pragma mark - USB HID関連
+#define MSG_USB_DETECT_FAILED                   @"USBデバイス検知の開始に失敗しました。"
+#define MSG_USB_DETECT_STARTED                  @"USBデバイス検知を開始しました。"
+#define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
+#define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
+#define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
+#define MSG_HID_CMD_INIT_WRONG_NONCE            @"認証器から不正な応答が検出されました。"
+#define MSG_PROMPT_USB_PORT_SET                 @"FIDO認証器をUSBポートに装着してから実行してください。"
+
+#pragma mark - BLE関連
+#define MSG_U2F_DEVICE_SCAN_START               @"FIDO認証器のスキャンを開始します。"
+#define MSG_U2F_DEVICE_SCAN_STOPPED             @"FIDO認証器のスキャンを停止しました。"
+#define MSG_U2F_DEVICE_ESTABLISH_CONN_TIMEOUT   @"FIDO認証器の接続処理がタイムアウトしました。"
 
 #pragma mark - ホーム画面
 #define MSG_APP_NAME                @"FIDO認証器管理ツール"
