@@ -9,6 +9,7 @@
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
 
+#include "app_ble_define.h"
 #include "app_ble_pairing.h"
 #include "app_board.h"
 #include "app_bluetooth.h"
@@ -26,7 +27,6 @@ LOG_MODULE_REGISTER(fido_ble_unpairing);
 static uint8_t connected_addr[BT_ADDR_SIZE];
 
 // ペアリング解除対象の peer_id を保持
-#define PEER_ID_NOT_EXIST 0xffff
 static uint16_t m_peer_id_to_unpair = PEER_ID_NOT_EXIST;
 
 static void convert_to_be_address(uint8_t adr[], uint8_t val[])
