@@ -96,15 +96,30 @@ bool app_ble_unpairing_get_peer_id(uint16_t *peer_id_to_unpair)
     return true;
 }
 
+//
+// for zephyr/subsys/bluetooth/host/keys.h
+//
+struct bt_keys *bt_keys_find_addr(uint8_t id, const bt_addr_le_t *addr);
+void            bt_keys_clear(struct bt_keys *keys);
+
+// for zephyr/subsys/bluetooth/host/gatt_internal.h
+int bt_gatt_clear(uint8_t id, const bt_addr_le_t *addr);
+
 bool app_ble_unpairing_delete_peer_id(uint16_t peer_id_to_unpair)
 {
     // 接続の切断検知時点で、peer_id に対応するペアリング情報を削除
     (void)peer_id_to_unpair;
-    int rc = bt_unpair(BT_ID_DEFAULT, &connected_addr_le);
-    if (rc != 0) {
-        LOG_ERR("bt_unpair returns %d", rc);
+    struct bt_keys *keys = bt_keys_find_addr(BT_ID_DEFAULT, &connected_addr_le);
+    if (keys == NULL) {
+        LOG_ERR("bt_keys_find_addr fail (BT keys undefined)");
         return false;
     }
+
+    // ペアリング鍵情報を削除
+    bt_keys_clear(keys);
+
+    // 接続情報を削除
+    bt_gatt_clear(BT_ID_DEFAULT, &connected_addr_le);
     return true;
 }
 
