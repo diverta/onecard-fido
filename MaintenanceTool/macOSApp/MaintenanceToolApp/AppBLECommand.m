@@ -132,8 +132,13 @@
         [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
         [self setConnectedPeripheral:false];
         [self setScannedPeripheralName:peripheralName];
+        // タイムアウトを設定（ペアリング時はタイムアウトを延長）
+        NSTimeInterval timeoutSec = U2FSubscrCharTimeoutSec;
+        if ([self command] == COMMAND_PAIRING) {
+            timeoutSec = U2FSubscrCharTimeoutSecOnPair;
+        }
         // 接続完了タイマーを開始
-        [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:U2FSubscrCharTimeoutSec];
+        [ToolCommonFunc startTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil withTimeoutSec:timeoutSec];
     }
 
     - (bool)deviceIsInPairingMode:(NSData *)serviceDataField {
