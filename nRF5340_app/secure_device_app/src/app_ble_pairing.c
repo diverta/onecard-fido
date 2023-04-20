@@ -205,22 +205,3 @@ void app_ble_pairing_mode_initialize(void)
         LOG_ERR("Initial pairing mode set failed");
     }
 }
-
-//
-// ペアリング情報削除処理
-//
-bool app_ble_pairing_erase_bond_data(void (*response_func)(bool))
-{
-    // ボンディングされている全てのペアリング鍵を削除
-    int rc = bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY);
-    if (rc != 0) {
-        LOG_ERR("bt_unpair returns %d", rc);
-        return false;
-    }
-
-    // ペアリング情報削除後に実行される処理
-    if (response_func != NULL) {
-        (*response_func)(true);
-    }
-    return true;
-}

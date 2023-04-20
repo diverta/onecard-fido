@@ -11,7 +11,6 @@
 #include <zephyr/bluetooth/gatt.h>
 
 #include "app_ble_define.h"
-#include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
 
@@ -101,5 +100,24 @@ bool app_ble_unpairing_delete_peer_id(uint16_t peer_id_to_unpair)
 {
     // TODO: 仮の実装です。
     (void)peer_id_to_unpair;
+    return true;
+}
+
+//
+// ペアリング情報削除処理
+//
+bool app_ble_unpairing_delete_all_peers(void (*response_func)(bool))
+{
+    // ボンディングされている全てのペアリング鍵を削除
+    int rc = bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY);
+    if (rc != 0) {
+        LOG_ERR("bt_unpair returns %d", rc);
+        return false;
+    }
+
+    // ペアリング情報削除後に実行される処理
+    if (response_func != NULL) {
+        (*response_func)(true);
+    }
     return true;
 }

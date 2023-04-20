@@ -8,7 +8,6 @@
 #include <zephyr/kernel.h>
 
 #include "app_ble_define.h"
-#include "app_ble_pairing.h"
 #include "app_ble_unpairing.h"
 #include "app_board.h"
 
@@ -90,7 +89,7 @@ void fido_ble_unpairing_done(bool success, uint16_t peer_id)
 //
 bool fido_ble_unpairing_erase_bond_data(void (*_response_func)(bool))
 {
-    return app_ble_pairing_erase_bond_data(_response_func);
+    return app_ble_unpairing_delete_all_peers(_response_func);
 }
 
 bool fido_ble_unpairing_erase_bond_data_completed(void const *evt)

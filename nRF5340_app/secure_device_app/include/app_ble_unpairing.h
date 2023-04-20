@@ -19,6 +19,7 @@ extern "C" {
 //
 bool        app_ble_unpairing_get_peer_id(uint16_t *peer_id_to_unpair);
 bool        app_ble_unpairing_delete_peer_id(uint16_t peer_id_to_unpair);
+bool        app_ble_unpairing_delete_all_peers(void (*response_func)(bool));
 
 #ifdef __cplusplus
 }
