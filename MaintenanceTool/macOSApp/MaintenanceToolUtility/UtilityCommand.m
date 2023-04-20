@@ -10,7 +10,6 @@
 #import "RTCCSettingWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonFunc.h"
-#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolVersionWindow.h"
 #import "UtilityCommand.h"
