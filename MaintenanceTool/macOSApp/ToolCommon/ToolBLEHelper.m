@@ -146,13 +146,23 @@
         if ([self characteristicForNotify]) {
             [self cancelResponseTimeoutMonitor:[self characteristicForNotify]];
         }
-        // 切断が正常完了した場合は、接続参照を解除
+        // 接続参照を解除
+        [self setDiscoveredPeripheral:nil];
+        // 切断が正常完了した場合
         if ([error code] == 0) {
             [[ToolLogFile defaultLogger] debug:@"BLE connection has terminated successfully."];
-            [self setDiscoveredPeripheral:nil];
+            [[self delegate] helperDidDisconnectWithError:nil peripheral:nil];
         }
-        // 切断完了を通知
-        [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
+        // ペリフェラル側からの一方的な切断による接続タイムアウトの場合＝切断済み
+        else if ([[error domain] isEqualTo:CBErrorDomain] && [error code] == 6) {
+            [[ToolLogFile defaultLogger] error:@"BLE connection has terminated unexpectedly."];
+            [[self delegate] helperDidDisconnectWithError:error peripheral:nil];
+        }
+        // その他の場合は不明なエラーと扱い、内容詳細をログ出力
+        else {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
+            [[self delegate] helperDidDisconnectWithError:error peripheral:nil];
+        }
     }
 
 #pragma mark - Discover services
