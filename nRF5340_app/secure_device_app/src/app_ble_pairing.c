@@ -111,7 +111,20 @@ static void auth_pairing_failed(struct bt_conn *conn, enum bt_security_err reaso
     }
 }
 
+static enum bt_security_err pairing_accept(struct bt_conn *conn, const struct bt_conn_pairing_feat *const feat)
+{
+    (void)conn;
+    (void)feat;
+    if (m_pairing_mode) {
+        return BT_SECURITY_ERR_SUCCESS;
+    } else {
+        printk("Pairing is not supported in non-pairing mode \n");
+        return BT_SECURITY_ERR_PAIR_NOT_SUPPORTED;
+    }
+}
+
 static const struct bt_conn_auth_cb cb_for_pair = {
+    .pairing_accept = pairing_accept,
     .pairing_confirm = pairing_confirm,
     .passkey_display = auth_passkey_display,
     .passkey_entry = NULL,
