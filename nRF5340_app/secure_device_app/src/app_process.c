@@ -16,6 +16,7 @@
 #include "app_status_indicator.h"
 #include "app_settings.h"
 #include "app_timer.h"
+#include "fido_ble_unpairing.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -185,8 +186,16 @@ static void ble_connected(void)
 
 static void ble_disconnected(void)
 {
-    // BLE接続アイドルタイマーを開始
-    idling_timer_start();
+    if (app_ble_pairing_mode() == false) {
+        // 非ペアリングモード時は、
+        // BLE接続アイドルタイマーを停止-->再開
+        idling_timer_start();
+
+        // ペアリング解除要求時は、
+        // 接続の切断検知時点でペアリング情報を削除
+        fido_ble_unpairing_on_disconnect();
+        return;
+    }
 
     // BLE切断時の処理
     // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
