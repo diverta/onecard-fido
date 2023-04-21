@@ -248,6 +248,11 @@
         [self setLastCommandMessage:message];
         // ポップアップ表示させるためのリザルトを保持
         [self setLastCommandSuccess:false];
+        // 接続前のエラーである場合は、上位クラスに完了通知を行う
+        if (reason == BLE_ERR_DEVICE_CONNECT_FAILED || reason == BLE_ERR_BLUETOOTH_OFF || reason == BLE_ERR_DEVICE_SCAN_TIMEOUT) {
+            [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
+            return;
+        }
         // デバイス接続を切断
         [[self toolBLEHelper] helperWillDisconnect];
     }
