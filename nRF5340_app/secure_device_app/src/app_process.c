@@ -7,6 +7,7 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 
+#include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
@@ -32,7 +33,7 @@ static void initialize_pairing_mode(void)
     app_ble_pairing_mode_initialize();
 
     // BLEアドバタイズ開始を指示
-    app_ble_start_advertising();
+    app_ble_advertise_start();
 
     // LED点灯パターン設定
     if (app_ble_pairing_mode()) {
@@ -48,7 +49,7 @@ static void change_to_pairing_mode(void)
 {
     // ペアリングモード遷移-->アドバタイズ再開
     if (app_ble_pairing_mode_set(true)) {
-        app_ble_start_advertising();
+        app_ble_advertise_start();
     }
 }
 

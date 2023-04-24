@@ -11,6 +11,7 @@
 #include <zephyr/settings/settings.h>
 
 // for BLE pairing
+#include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
 #include "app_event.h"
 #include "app_ble_fido.h"
@@ -166,7 +167,7 @@ void app_bluetooth_start(void)
     }
 
     // アドバタイズ処理を work queue に入れる
-    k_work_init(&advertise_work, advertise);
+    app_ble_advertise_init();
 
     // Enable Bluetooth.
     //   同時に、内部でNVSの初期化(nvs_init)が行われます。
