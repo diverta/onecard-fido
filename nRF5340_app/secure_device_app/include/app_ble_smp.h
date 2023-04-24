@@ -16,7 +16,6 @@ extern "C" {
 //
 // 関数群
 //
-bool        app_ble_smp_ad_uuid_set(void *data);
 void        app_ble_smp_register_group(void);
 void        app_ble_smp_bt_register(void);
 
