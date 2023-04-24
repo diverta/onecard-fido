@@ -4,7 +4,7 @@
  *
  * Created on 2021/04/02, 15:04
  */
-#include "app_bluetooth.h"
+#include "app_ble_init.h"
 #include "app_board.h"
 #include "app_crypto.h"
 #include "app_crypto_define.h"
@@ -52,7 +52,7 @@ void app_main_app_crypto_init_done(void)
     //   Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
-    app_bluetooth_start();
+    app_ble_init();
 }
 
 //

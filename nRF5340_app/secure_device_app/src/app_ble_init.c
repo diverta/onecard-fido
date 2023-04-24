@@ -1,5 +1,5 @@
 /* 
- * File:   app_bluetooth.c
+ * File:   app_ble_init.c
  * Author: makmorit
  *
  * Created on 2021/04/06, 14:50
@@ -12,11 +12,42 @@
 #include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
 #include "app_event.h"
-#include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(app_bluetooth);
+LOG_MODULE_REGISTER(app_ble_init);
+
+#ifdef CONFIG_MCUMGR_SMP_BT
+//
+// for Bluetooth smp service
+//
+#include <zephyr/mgmt/mcumgr/smp_bt.h>
+#include "os_mgmt/os_mgmt.h"
+#include "img_mgmt/img_mgmt.h"
+
+static void app_ble_smp_register_group(void)
+{
+    // BLE SMPサービスの設定
+    os_mgmt_register_group();
+    img_mgmt_register_group();
+}
+
+static void app_ble_smp_bt_register(void)
+{
+    // Initialize the Bluetooth mcumgr transport.
+    smp_bt_register();
+}
+
+#else
+
+static void app_ble_smp_register_group(void)
+{
+}
+
+static void app_ble_smp_bt_register(void)
+{
+}
+#endif
 
 //
 // パスキー関連
@@ -72,7 +103,7 @@ static void bt_ready(int err)
     app_event_notify(APEVT_BLE_AVAILABLE);
 }
 
-void app_bluetooth_start(void)
+void app_ble_init(void)
 {
     // BLE SMPサービスの設定
     app_ble_smp_register_group();

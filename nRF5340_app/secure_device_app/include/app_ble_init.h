@@ -1,5 +1,5 @@
 /* 
- * File:   app_bluetooth.h
+ * File:   app_ble_init.h
  * Author: makmorit
  *
  * Created on 2021/04/06, 14:50
@@ -14,7 +14,7 @@ extern "C" {
 //
 // 関数群
 //
-void        app_bluetooth_start(void);
+void        app_ble_init(void);
 
 #ifdef __cplusplus
 }

@@ -9,7 +9,6 @@
 
 #include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
-#include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
 #include "app_func.h"
