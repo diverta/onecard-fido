@@ -82,7 +82,9 @@ static void button_pressed_short(void)
 {
     // ボタン押下-->３秒以内にボタンを離した時の処理
     // 各種業務処理を実行
-    app_main_button_pressed_short();
+    if (app_main_button_pressed_short() == false) {
+        // TODO: BLEペリフェラルモードにおけるボタン短押し時の処理
+    }
 }
 
 static void button_pressed(APP_EVENT_T event)

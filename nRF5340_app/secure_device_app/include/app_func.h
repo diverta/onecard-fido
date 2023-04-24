@@ -31,7 +31,7 @@ void        app_main_ble_request_received(void);
 void        app_main_ble_response_sent(void);
 void        app_main_app_settings_saved(void);
 void        app_main_app_settings_deleted(void);
-void        app_main_button_pressed_short(void);
+bool        app_main_button_pressed_short(void);
 void        app_main_button_1_pressed(void);
 
 #ifdef __cplusplus
