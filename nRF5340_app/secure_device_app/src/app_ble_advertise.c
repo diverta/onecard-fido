@@ -103,6 +103,13 @@ void app_ble_advertise_start(void)
 }
 
 //
+// BLEアドバタイズ停止
+//
+void app_ble_advertise_stop(void)
+{
+}
+
+//
 // BLEアドバタイズ関連の初期処理
 //
 void app_ble_advertise_init(void)

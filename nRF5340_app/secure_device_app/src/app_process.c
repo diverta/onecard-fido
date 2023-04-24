@@ -205,6 +205,9 @@ static void ble_disconnected(void)
 
 static void ble_pairing_failed(void)
 {
+    // アドバタイズの停止を指示
+    app_ble_advertise_stop();
+
     // ペアリングモード表示用LEDを点滅させ、
     // 再度ペアリングが必要であることを通知
     //

@@ -16,6 +16,7 @@ extern "C" {
 //
 void        app_ble_advertise_init(void);
 void        app_ble_advertise_start(void);
+void        app_ble_advertise_stop(void);
 
 #ifdef __cplusplus
 }
