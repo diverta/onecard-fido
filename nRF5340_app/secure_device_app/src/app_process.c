@@ -207,6 +207,12 @@ static void ble_disconnected(void)
         return;
     }
 
+    if (app_ble_advertise_is_stopped()) {
+        // 接続障害時にアドバタイズが停止された場合は
+        // 以降の処理を行わない
+        return;
+    }
+
     // BLE切断時の処理
     // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
     initialize_pairing_mode();
@@ -214,7 +220,14 @@ static void ble_disconnected(void)
 
 static void ble_connection_failed(void)
 {
-    // TODO: 仮の実装です。
+    // アドバタイズの停止を指示
+    app_ble_advertise_stop();
+
+    // ペアリングモード表示用LEDを高速点滅させ、
+    // 再度ペアリングが必要であることを通知
+    //
+    // 黄色LEDを、秒間５回点滅させる
+    fido_status_indicator_pairing_fail(true);
 }
 
 static void ble_pairing_failed(void)
