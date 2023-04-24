@@ -7,6 +7,8 @@
 #ifndef APP_BLE_ADVERTISE_H
 #define APP_BLE_ADVERTISE_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,6 +16,8 @@ extern "C" {
 //
 // 関数群
 //
+bool        app_ble_advertise_is_available(void);
+bool        app_ble_advertise_is_stopped(void);
 void        app_ble_advertise_init(void);
 void        app_ble_advertise_start(void);
 void        app_ble_advertise_stop(void);

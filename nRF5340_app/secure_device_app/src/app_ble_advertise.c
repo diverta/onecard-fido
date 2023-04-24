@@ -17,6 +17,22 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_advertise);
 
+// BLEアドバタイズが利用可能かどうかを保持
+static bool advertise_is_available = false;
+
+// BLEアドバタイズが停止されたかどうかを保持
+static bool advertise_is_stopped = false;
+
+bool app_ble_advertise_is_available(void)
+{
+    return advertise_is_available;
+}
+
+bool app_ble_advertise_is_stopped(void)
+{
+    return advertise_is_stopped;
+}
+
 //
 // アドバタイズ関連
 //
@@ -80,6 +96,8 @@ static void advertise(struct k_work *work)
 
     // BLEアドバタイズ開始イベントを業務処理スレッドに引き渡す
     app_event_notify(APEVT_BLE_ADVERTISE_STARTED);
+    advertise_is_available = true;
+    advertise_is_stopped = false;
 }
 
 static bool k_work_submission(struct k_work *p_work, const char *p_name)
@@ -112,6 +130,7 @@ static void advertise_stop(struct k_work *work)
     (void)work;
     int rc = bt_le_adv_stop();
     LOG_INF("Advertising stopped (rc=%d)", rc);
+    advertise_is_stopped = true;
 }
 
 void app_ble_advertise_stop(void)
