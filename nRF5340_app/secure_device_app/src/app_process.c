@@ -212,6 +212,11 @@ static void ble_disconnected(void)
     initialize_pairing_mode();
 }
 
+static void ble_connection_failed(void)
+{
+    // TODO: 仮の実装です。
+}
+
 static void ble_pairing_failed(void)
 {
     // アドバタイズの停止を指示
@@ -320,6 +325,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_DISCONNECTED:
             ble_disconnected();
+            break;
+        case APEVT_BLE_CONNECTION_FAILED:
+            ble_connection_failed();
             break;
         case APEVT_BLE_PAIRING_FAILED:
             ble_pairing_failed();

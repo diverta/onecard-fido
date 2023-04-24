@@ -120,6 +120,11 @@ static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_
             secure_connected_addr = (bt_addr_le_t *)bt_conn_get_dst(conn);
         }
 
+    } else if (err == BT_SECURITY_ERR_PIN_OR_KEY_MISSING) {
+        // ペアリング情報の消失を検知（このデバイスにペアリング情報が存在しない）
+        LOG_ERR("Pairing information is not exist in this device.");
+        app_event_notify(APEVT_BLE_CONNECTION_FAILED);
+
     } else {
         LOG_WRN("Security failed: %s level %u err %d", addr, level, err);
     }
