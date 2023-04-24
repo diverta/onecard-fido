@@ -15,7 +15,6 @@ extern "C" {
 // 関数群
 //
 void        app_bluetooth_start(void);
-void       *app_bluetooth_secure_connected_addr(void);
 
 #ifdef __cplusplus
 }
