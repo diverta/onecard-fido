@@ -16,7 +16,7 @@
 #include "app_status_indicator.h"
 #include "app_settings.h"
 #include "app_timer.h"
-#include "fido_ble_unpairing.h"
+#include "fido_platform.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -202,6 +202,15 @@ static void ble_disconnected(void)
     initialize_pairing_mode();
 }
 
+static void ble_pairing_failed(void)
+{
+    // ペアリングモード表示用LEDを点滅させ、
+    // 再度ペアリングが必要であることを通知
+    //
+    // 黄色LEDを、秒間２回点滅させる
+    fido_status_indicator_pairing_fail(false);
+}
+
 static void usb_configured(void)
 {
     if (app_main_is_data_channel_initialized()) {
@@ -298,6 +307,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_DISCONNECTED:
             ble_disconnected();
+            break;
+        case APEVT_BLE_PAIRING_FAILED:
+            ble_pairing_failed();
             break;
         case APEVT_USB_CONFIGURED:
             usb_configured();
