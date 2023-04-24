@@ -45,7 +45,11 @@ void fido_status_indicator_pairing_mode(void)
 
 void fido_status_indicator_pairing_fail(bool short_interval)
 {
-    app_status_indicator_pairing_fail();
+    if (short_interval) {
+        app_status_indicator_connection_fail();
+    } else {
+        app_status_indicator_pairing_fail();
+    }
 }
 
 void fido_status_indicator_abort(void)

@@ -21,6 +21,7 @@ void app_status_indicator_prompt_reset(void);
 void app_status_indicator_prompt_tup(void);
 void app_status_indicator_pairing_mode(void);
 void app_status_indicator_pairing_fail(void);
+void app_status_indicator_connection_fail(void);
 void app_status_indicator_abort(void);
 void app_status_indicator_ble_scanning(void);
 void app_status_indicator_blink(void);
