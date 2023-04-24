@@ -22,6 +22,7 @@ LOG_MODULE_REGISTER(app_ble_advertise);
 //
 // work queue for advertise
 static struct k_work advertise_work;
+static struct k_work stop_advertise_work;
 
 // advertising data
 static struct bt_data ad[3];
@@ -105,8 +106,17 @@ void app_ble_advertise_start(void)
 //
 // BLEアドバタイズ停止
 //
+static void advertise_stop(struct k_work *work)
+{
+    // アドバタイジングを停止
+    (void)work;
+    int rc = bt_le_adv_stop();
+    LOG_INF("Advertising stopped (rc=%d)", rc);
+}
+
 void app_ble_advertise_stop(void)
 {
+    k_work_submission(&stop_advertise_work, "Stopping advertise");
 }
 
 //
@@ -116,4 +126,5 @@ void app_ble_advertise_init(void)
 {
     // アドバタイズ処理を work queue に入れる
     k_work_init(&advertise_work, advertise);
+    k_work_init(&stop_advertise_work, advertise_stop);
 }
