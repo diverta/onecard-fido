@@ -6,15 +6,12 @@
  */
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/bluetooth.h>
-#include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/gatt.h>
-#include <zephyr/settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
 #include "app_event.h"
-#include "app_ble_fido.h"
 #include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG

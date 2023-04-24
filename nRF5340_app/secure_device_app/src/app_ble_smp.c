@@ -30,12 +30,6 @@ void app_ble_smp_bt_register(void)
 
 #else
 
-bool app_ble_smp_ad_uuid_set(void *data)
-{
-    (void)data;
-    return false;
-}
-
 void app_ble_smp_register_group(void)
 {
 }

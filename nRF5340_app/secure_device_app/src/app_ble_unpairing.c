@@ -7,13 +7,10 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/bluetooth.h>
-#include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/gatt.h>
 
 #include "app_ble_define.h"
 #include "app_ble_connection.h"
-#include "app_bluetooth.h"
-#include "app_board.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>

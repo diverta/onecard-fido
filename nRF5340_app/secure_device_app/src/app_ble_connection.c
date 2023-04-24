@@ -8,7 +8,6 @@
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/gatt.h>
-#include <zephyr/settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_advertise.h"
