@@ -16,7 +16,7 @@ extern "C" {
 //
 // 関数群
 //
-bool        app_flash_general_status_flag(bool *p_exist);
+bool        app_flash_general_status_flag(void);
 bool        app_flash_general_status_flag_get(void);
 void        app_flash_general_status_flag_set(void);
 void        app_flash_general_status_flag_clear(void);

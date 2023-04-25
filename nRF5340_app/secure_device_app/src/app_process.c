@@ -294,8 +294,7 @@ static void led_blink_begin(void)
 
     } else {
         // USBが使用可能でない場合、汎用ステータスの設定を参照
-        bool exist;
-        bool flag = app_flash_general_status_flag(&exist);
+        bool flag = app_flash_general_status_flag();
         // 次回起動時の判定のため、先に汎用ステータスを設定しておく
         app_flash_general_status_flag_set();
         // 汎用ステータスが設定されていない場合、スリープ状態に遷移

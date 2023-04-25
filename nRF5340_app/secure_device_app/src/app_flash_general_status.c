@@ -75,9 +75,10 @@ static bool write_general_status(void)
 //
 // 公開用関数
 //
-bool app_flash_general_status_flag(bool *p_exist)
+bool app_flash_general_status_flag(void)
 {
-    if (read_general_status(p_exist)) {
+    bool exist;
+    if (read_general_status(&exist) && exist) {
         return app_flash_general_status_flag_get();
 
     } else {
@@ -113,22 +114,21 @@ void app_flash_general_status_flag_reset(void)
 //
 void app_flash_general_status_test(void)
 {
-    bool exist;
     bool mode;
 
     app_flash_general_status_flag_reset();
-    mode = app_flash_general_status_flag(&exist);
-    printk("app_flash_general_status_flag_reset done (mode=%d, exist=%d) \n", mode, exist);
+    mode = app_flash_general_status_flag();
+    printk("app_flash_general_status_flag_reset done (mode=%d) \n", mode);
 
     app_flash_general_status_flag_clear();
-    mode = app_flash_general_status_flag(&exist);
-    printk("app_flash_general_status_flag_clear done (mode=%d, exist=%d) \n", mode, exist);
+    mode = app_flash_general_status_flag();
+    printk("app_flash_general_status_flag_clear done (mode=%d) \n", mode);
 
     app_flash_general_status_flag_set();
-    mode = app_flash_general_status_flag(&exist);
-    printk("app_flash_general_status_flag_set done (mode=%d, exist=%d) \n", mode, exist);
+    mode = app_flash_general_status_flag();
+    printk("app_flash_general_status_flag_set done (mode=%d) \n", mode);
 
     app_flash_general_status_flag_clear();
-    mode = app_flash_general_status_flag(&exist);
-    printk("app_flash_general_status_flag_clear done (mode=%d, exist=%d) \n", mode, exist);
+    mode = app_flash_general_status_flag();
+    printk("app_flash_general_status_flag_clear done (mode=%d) \n", mode);
 }
