@@ -34,12 +34,17 @@
         if (self) {
             [self setDelegate:delegate];
             [self setManager:[[CBCentralManager alloc] initWithDelegate:self queue:nil]];
-            [self setDiscoveredPeripheral:nil];
+            [self clearDiscoveredPeripheral];
         }
         return self;
     }
 
     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
+    }
+
+    - (void)clearDiscoveredPeripheral {
+        // BLEペリフェラルの参照をクリア（参照はスキャン成功時に設定される）
+        [self setDiscoveredPeripheral:nil];
     }
 
 #pragma mark - Entry for process
@@ -67,7 +72,7 @@
         // スキャン設定
         NSDictionary *scanningOptions = @{CBCentralManagerScanOptionAllowDuplicatesKey : @NO};
         // BLEペリフェラルをスキャン
-        [self setDiscoveredPeripheral:nil];
+        [self clearDiscoveredPeripheral];
         [[self manager] scanForPeripheralsWithServices:nil options:scanningOptions];
         [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_START];
         // スキャンタイムアウト監視を開始
@@ -149,7 +154,7 @@
         // 切断が正常完了した場合は、接続参照を解除
         if ([error code] == 0) {
             [[ToolLogFile defaultLogger] debug:@"BLE connection has terminated successfully."];
-            [self setDiscoveredPeripheral:nil];
+            [self clearDiscoveredPeripheral];
         }
         // 切断完了を通知
         [[self delegate] helperDidDisconnectWithError:error peripheral:peripheral];
