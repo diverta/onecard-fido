@@ -11,6 +11,9 @@
 
 #include "app_event.h"
 
+// 業務処理関連
+#include "fido_platform.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
@@ -119,8 +122,13 @@ static enum bt_security_err pairing_accept(struct bt_conn *conn, const struct bt
     (void)conn;
     (void)feat;
     if (m_pairing_mode) {
+        // ペアリング処理中のボタン押下を抑止
+        fido_status_set_to_busy();
+        // ペアリング処理を続行
         return BT_SECURITY_ERR_SUCCESS;
+
     } else {
+        // 非ペアリングモードの場合はペアリング要求を拒絶
         printk("Pairing is not supported in non-pairing mode \n");
         return BT_SECURITY_ERR_PAIR_NOT_SUPPORTED;
     }

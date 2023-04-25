@@ -91,13 +91,19 @@ static void button_pressed_short(void)
     // ボタン押下-->３秒以内にボタンを離した時の処理
     // 各種業務処理を実行
     if (app_main_button_pressed_short() == false) {
-        if (app_ble_advertise_is_available() && app_ble_advertise_is_stopped()) {
-            // BLEペリフェラルモードで、かつ
-            // ペアリング障害時にアドバタイズが停止された場合は
-            // ボタン短押しでペアリングモードに遷移-->アドバタイズ再開
-            change_to_pairing_mode();
-            // 黄色LEDを連続点灯させる
-            app_status_indicator_pairing_mode();
+        if (app_ble_advertise_is_available()) {
+            // BLEペリフェラルモードの場合
+            if (is_pairing_process) {
+                // ペアリング処理中はボタン押下を無視
+                return;
+            }
+            if (app_ble_advertise_is_stopped()) {
+                // ペアリング障害時にアドバタイズが停止された場合は
+                // ボタン短押しでペアリングモードに遷移-->アドバタイズ再開
+                change_to_pairing_mode();
+                // 黄色LEDを連続点灯させる
+                app_status_indicator_pairing_mode();
+            }
         }
     }
 }
