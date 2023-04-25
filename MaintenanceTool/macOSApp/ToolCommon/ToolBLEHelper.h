@@ -14,6 +14,7 @@
 @interface ToolBLEHelper : NSObject
 
     - (id)initWithDelegate:(id<ToolBLEHelperDelegate>)delegate;
+    - (void)clearDiscoveredPeripheral;
     - (void)helperWillConnectWithUUID:(NSString *)uuidString;
     - (void)helperWillDisconnect;
     - (void)helperWillDisconnectForce:(id)peripheralRef;
