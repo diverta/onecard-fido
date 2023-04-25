@@ -7,8 +7,8 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 
+#include "app_ble_advertise.h"
 #include "app_ble_pairing.h"
-#include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
 #include "app_func.h"
@@ -16,7 +16,7 @@
 #include "app_status_indicator.h"
 #include "app_settings.h"
 #include "app_timer.h"
-#include "fido_ble_unpairing.h"
+#include "fido_platform.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -32,7 +32,7 @@ static void initialize_pairing_mode(void)
     app_ble_pairing_mode_initialize();
 
     // BLEアドバタイズ開始を指示
-    app_ble_start_advertising();
+    app_ble_advertise_start();
 
     // LED点灯パターン設定
     if (app_ble_pairing_mode()) {
@@ -48,7 +48,7 @@ static void change_to_pairing_mode(void)
 {
     // ペアリングモード遷移-->アドバタイズ再開
     if (app_ble_pairing_mode_set(true)) {
-        app_ble_start_advertising();
+        app_ble_advertise_start();
     }
 }
 
@@ -81,7 +81,16 @@ static void button_pressed_short(void)
 {
     // ボタン押下-->３秒以内にボタンを離した時の処理
     // 各種業務処理を実行
-    app_main_button_pressed_short();
+    if (app_main_button_pressed_short() == false) {
+        if (app_ble_advertise_is_available() && app_ble_advertise_is_stopped()) {
+            // BLEペリフェラルモードで、かつ
+            // ペアリング障害時にアドバタイズが停止された場合は
+            // ボタン短押しでペアリングモードに遷移-->アドバタイズ再開
+            change_to_pairing_mode();
+            // 黄色LEDを連続点灯させる
+            app_status_indicator_pairing_mode();
+        }
+    }
 }
 
 static void button_pressed(APP_EVENT_T event)
@@ -197,9 +206,39 @@ static void ble_disconnected(void)
         return;
     }
 
+    if (app_ble_advertise_is_stopped()) {
+        // 接続障害時にアドバタイズが停止された場合は
+        // 以降の処理を行わない
+        return;
+    }
+
     // BLE切断時の処理
     // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
     initialize_pairing_mode();
+}
+
+static void ble_connection_failed(void)
+{
+    // アドバタイズの停止を指示
+    app_ble_advertise_stop();
+
+    // ペアリングモード表示用LEDを高速点滅させ、
+    // 再度ペアリングが必要であることを通知
+    //
+    // 黄色LEDを、秒間５回点滅させる
+    fido_status_indicator_pairing_fail(true);
+}
+
+static void ble_pairing_failed(void)
+{
+    // アドバタイズの停止を指示
+    app_ble_advertise_stop();
+
+    // ペアリングモード表示用LEDを点滅させ、
+    // 再度ペアリングが必要であることを通知
+    //
+    // 黄色LEDを、秒間２回点滅させる
+    fido_status_indicator_pairing_fail(false);
 }
 
 static void usb_configured(void)
@@ -298,6 +337,12 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_DISCONNECTED:
             ble_disconnected();
+            break;
+        case APEVT_BLE_CONNECTION_FAILED:
+            ble_connection_failed();
+            break;
+        case APEVT_BLE_PAIRING_FAILED:
+            ble_pairing_failed();
             break;
         case APEVT_USB_CONFIGURED:
             usb_configured();

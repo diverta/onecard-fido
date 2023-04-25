@@ -154,6 +154,13 @@ void app_status_indicator_pairing_fail(void)
     led_blink_reset(true);
 }
 
+void app_status_indicator_connection_fail(void)
+{
+    // 黄色LEDを、秒間５回点滅させる
+    led_blink_parameter_set(LED_COLOR_YELLOW, LED_BLINK_SHORT_INTERVAL_CNT, LED_BLINK_SHORT_INTERVAL_CNT);
+    led_blink_reset(true);
+}
+
 void app_status_indicator_abort(void)
 {
     // 全色LEDを点灯

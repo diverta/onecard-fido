@@ -9,6 +9,8 @@
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
 
+#include "app_event.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
@@ -109,6 +111,7 @@ static void auth_pairing_failed(struct bt_conn *conn, enum bt_security_err reaso
             LOG_ERR("Pairing failed (reason=%d)", reason);
         }
     }
+    app_event_notify(APEVT_BLE_PAIRING_FAILED);
 }
 
 static enum bt_security_err pairing_accept(struct bt_conn *conn, const struct bt_conn_pairing_feat *const feat)

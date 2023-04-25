@@ -175,10 +175,10 @@ void app_main_app_settings_deleted(void)
 //
 // ボタン押下時の処理
 //
-void app_main_button_pressed_short(void)
+bool app_main_button_pressed_short(void)
 {
     // FIDO固有の処理を実行
-    fido_command_mainsw_event_handler();
+    return fido_command_mainsw_event_handler();
 }
 
 void app_main_button_1_pressed(void)

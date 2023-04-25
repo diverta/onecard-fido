@@ -15,14 +15,6 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_fido);
 
-static struct bt_data ad_uuid_fido = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
-
-void app_ble_fido_ad_uuid_set(void *data)
-{
-    struct bt_data *p_bt_data = (struct bt_data *)data;
-    *p_bt_data = ad_uuid_fido;
-}
-
 // 受信時に使用した接続を保持
 struct bt_conn *m_conn_on_receive = NULL;
 

@@ -7,12 +7,10 @@
 #include <zephyr/types.h>
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/bluetooth.h>
-#include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/gatt.h>
 
 #include "app_ble_define.h"
-#include "app_bluetooth.h"
-#include "app_board.h"
+#include "app_ble_connection.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -37,7 +35,7 @@ static void convert_to_be_address(uint8_t adr[], uint8_t val[])
 static bool get_connected_peer_address(void)
 {
     // 現在接続中のデバイスのBluetoothアドレスを取得
-    bt_addr_le_t *addr = (bt_addr_le_t *)app_bluetooth_secure_connected_addr();
+    bt_addr_le_t *addr = (bt_addr_le_t *)app_ble_connection_address_get();
     if (addr == NULL) {
         return false;
     }
