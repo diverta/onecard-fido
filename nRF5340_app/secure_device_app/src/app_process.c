@@ -24,6 +24,14 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_process);
 
+// ペアリング処理中かどうかを保持
+static bool is_pairing_process = false;
+
+void app_process_set_pairing_process_flag(bool b)
+{
+    is_pairing_process = b;
+}
+
 //
 // ペアリングモード変更処理
 //
