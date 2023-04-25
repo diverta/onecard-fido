@@ -11,6 +11,7 @@
 #include "app_ble_pairing.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_flash_general_status.h"
 #include "app_func.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
@@ -288,9 +289,21 @@ static void led_blink_begin(void)
         data_channel_initialized();
         // アイドル時のLED点滅パターンを設定
         app_status_indicator_idle();
+        // 汎用ステータスを削除
+        app_flash_general_status_flag_reset();
 
     } else {
-        // USBが使用可能でない場合、
+        // USBが使用可能でない場合、汎用ステータスの設定を参照
+        bool exist;
+        bool flag = app_flash_general_status_flag(&exist);
+        // 次回起動時の判定のため、先に汎用ステータスを設定しておく
+        app_flash_general_status_flag_set();
+        // 汎用ステータスが設定されていない場合、スリープ状態に遷移
+        if (flag == false) {
+            app_event_notify(APEVT_IDLING_DETECTED);
+            return;
+        }
+
         // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
         initialize_pairing_mode();
     }
