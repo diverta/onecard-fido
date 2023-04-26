@@ -103,6 +103,9 @@ static void button_pressed_short(void)
                 change_to_pairing_mode();
                 // 黄色LEDを連続点灯させる
                 app_status_indicator_pairing_mode();
+            } else {
+                // ボタン短押しでスリープ状態に遷移
+                app_event_notify(APEVT_IDLING_DETECTED);
             }
         }
     }
