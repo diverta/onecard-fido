@@ -390,7 +390,7 @@ typedef enum : NSInteger {
         // 転送比率を計算
         size_t imageBytesTotal = [[self imageToUpload] length];
         int percentage = (int)imageBytesSent * 100 / (int)imageBytesTotal;
-        [[ToolLogFile defaultLogger] debugWithFormat:@"DFU image sent %d bytes (%d%%)", imageBytesSent, percentage];
+        // [[ToolLogFile defaultLogger] debugWithFormat:@"DFU image sent %d bytes (%d%%)", imageBytesSent, percentage];
         // 転送状況を画面表示
         NSString *progressMessage = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
         [self notifyProgress:progressMessage progressValue:percentage];
