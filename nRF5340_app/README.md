@@ -1,10 +1,10 @@
 # nRF5340アプリケーション
 
-最終更新日：2023/2/13
+最終更新日：2023/4/26
 
 ## 概要
 
-[MDBT53 Dongle](../FIDO2Device/MDBT53_Dongle/README.md)（現在開発中）上で稼働するアプリケーションです。<br>
+nRF5340基板上で稼働するアプリケーションです。<br>
 [nRF Connect SDK v2.2.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/)を使用し、開発しています。
 
 ## 搭載機能
@@ -22,15 +22,13 @@ nRF5340アプリケーションをUSBポートに接続しない状態で使用�
 [注1] FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/ <br>
 [注2] U2Fではユーザー登録＝Register、ログイン＝Authenticate、WebAuthnではユーザー登録＝MakeCredential、ログイン＝GetAssertionと、実行されるコマンドが異なります。<br>
 
-### PIVカードエミュレーション機能
+### スマートカードエミュレーション機能
 
-PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
-詳細につきましては、別ドキュメント（[PIVカードエミュレーション対応](../CCID/PIV/README.md)）をご参照願います。
+PIV／OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、下記ドキュメントをご参照願います。
 
-### OpenPGPカードエミュレーション機能
-
-OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
-詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
+- [PIVカードエミュレーション対応](../CCID/PIV/README.md)
+- [OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)
 
 ### 管理機能
 [nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
