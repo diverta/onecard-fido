@@ -12,12 +12,8 @@
     <Company>Diverta Inc.</Company>
     <Product>MaintenanceTool</Product>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <FileVersion>$(Version).117</FileVersion>
+    <FileVersion>$(Version).118</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\appkg.PCA10059_03.0.3.9.zip" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\ToolAppCommon\AppDefine.cs" Link="ToolAppCommon\AppDefine.cs" />
