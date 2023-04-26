@@ -262,10 +262,6 @@
         if (error) {
             // 接続完了タイマーを停止（接続処理完了前にこのイベントが発生することがあるため）
             [ToolCommonFunc stopTimerWithTarget:self forSelector:@selector(establishConnectionTimedOut) withObject:nil];
-            // エラーをログ出力した後、接続を切断
-            [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
-            [[self toolBLEHelper] helperWillDisconnectForce:peripheralRef];
-            return;
         }
         // 上位クラスに完了通知を行う
         [[self delegate] didCompleteCommand:[self command] success:[self lastCommandSuccess] errorMessage:[self lastCommandMessage]];
