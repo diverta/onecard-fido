@@ -11,6 +11,7 @@
 #include "app_ble_pairing.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_flash_general_status.h"
 #include "app_func.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
@@ -22,6 +23,14 @@
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_process);
+
+// ペアリング処理中かどうかを保持
+static bool is_pairing_process = false;
+
+void app_process_set_pairing_process_flag(bool b)
+{
+    is_pairing_process = b;
+}
 
 //
 // ペアリングモード変更処理
@@ -82,13 +91,22 @@ static void button_pressed_short(void)
     // ボタン押下-->３秒以内にボタンを離した時の処理
     // 各種業務処理を実行
     if (app_main_button_pressed_short() == false) {
-        if (app_ble_advertise_is_available() && app_ble_advertise_is_stopped()) {
-            // BLEペリフェラルモードで、かつ
-            // ペアリング障害時にアドバタイズが停止された場合は
-            // ボタン短押しでペアリングモードに遷移-->アドバタイズ再開
-            change_to_pairing_mode();
-            // 黄色LEDを連続点灯させる
-            app_status_indicator_pairing_mode();
+        if (app_ble_advertise_is_available()) {
+            // BLEペリフェラルモードの場合
+            if (is_pairing_process) {
+                // ペアリング処理中はボタン押下を無視
+                return;
+            }
+            if (app_ble_advertise_is_stopped()) {
+                // ペアリング障害時にアドバタイズが停止された場合は
+                // ボタン短押しでペアリングモードに遷移-->アドバタイズ再開
+                change_to_pairing_mode();
+                // 黄色LEDを連続点灯させる
+                app_status_indicator_pairing_mode();
+            } else {
+                // ボタン短押しでスリープ状態に遷移
+                app_event_notify(APEVT_IDLING_DETECTED);
+            }
         }
     }
 }
@@ -288,9 +306,20 @@ static void led_blink_begin(void)
         data_channel_initialized();
         // アイドル時のLED点滅パターンを設定
         app_status_indicator_idle();
+        // 汎用ステータスを削除
+        app_flash_general_status_flag_reset();
 
     } else {
-        // USBが使用可能でない場合、
+        // USBが使用可能でない場合、汎用ステータスの設定を参照
+        bool flag = app_flash_general_status_flag();
+        // 次回起動時の判定のため、先に汎用ステータスを設定しておく
+        app_flash_general_status_flag_set();
+        // 汎用ステータスが設定されていない場合、スリープ状態に遷移
+        if (flag == false) {
+            app_event_notify(APEVT_IDLING_DETECTED);
+            return;
+        }
+
         // ペアリングモード初期設定-->BLEアドバタイズ開始-->LED点灯パターン設定
         initialize_pairing_mode();
     }

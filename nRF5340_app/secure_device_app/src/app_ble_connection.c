@@ -14,6 +14,9 @@
 #include "app_ble_pairing.h"
 #include "app_event.h"
 
+// 業務処理関連
+#include "fido_platform.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app_ble_connection);
@@ -47,6 +50,9 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 {
     (void)conn;
     LOG_INF("Disconnected (reason 0x%02x)", reason);
+
+    // ペアリング処理中のボタン押下抑止を解除
+    fido_status_set_to_idle();
 
     // BLE切断イベントを業務処理スレッドに引き渡す
     app_event_notify(APEVT_BLE_DISCONNECTED);
