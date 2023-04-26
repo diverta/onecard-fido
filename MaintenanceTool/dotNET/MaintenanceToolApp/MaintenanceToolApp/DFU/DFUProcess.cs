@@ -74,7 +74,7 @@ namespace MaintenanceToolApp.DFU
         public const int DFU_UPD_TARGET_APP_VERSION = 400;
 
         // イメージ反映所要時間（秒）
-        public const int DFU_WAITING_SEC_ESTIMATED = 25;
+        public const int DFU_WAITING_SEC_ESTIMATED = 33;
 
         // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
         public const bool IMAGE_UPDATE_TEST_MODE = false;
