@@ -517,6 +517,10 @@ typedef enum : NSInteger {
         } else if ([self bleDfuStatus] == BLEDFU_ST_CANCELED) {
             // 転送キャンセルとして画面に制御を戻す
             [self notifyCancelToProcessingWindow];
+        } else {
+            // エラーとして画面に制御を戻す
+            [self setDisconnectByError:false];
+            [self notifyErrorToProcessingWindow];
         }
     }
 
