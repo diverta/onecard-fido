@@ -12,7 +12,7 @@
 // 処理タイムアウト（転送／反映チェック処理）
 #define TIMEOUT_SEC_DFU_PROCESS         150.0
 // イメージ反映所要時間（秒）
-#define DFU_WAITING_SEC_ESTIMATED       25
+#define DFU_WAITING_SEC_ESTIMATED       33
 // イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
 #define IMAGE_UPDATE_TEST_MODE          false
 
