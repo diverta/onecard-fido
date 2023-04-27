@@ -1,10 +1,10 @@
 # nRF5340アプリケーション
 
-最終更新日：2023/2/13
+最終更新日：2023/4/26
 
 ## 概要
 
-[MDBT53 Dongle](../FIDO2Device/MDBT53_Dongle/README.md)（現在開発中）上で稼働するアプリケーションです。<br>
+nRF5340基板上で稼働するアプリケーションです。<br>
 [nRF Connect SDK v2.2.0](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/2.2.0/nrf/)を使用し、開発しています。
 
 ## 搭載機能
@@ -22,15 +22,13 @@ nRF5340アプリケーションをUSBポートに接続しない状態で使用�
 [注1] FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/ <br>
 [注2] U2Fではユーザー登録＝Register、ログイン＝Authenticate、WebAuthnではユーザー登録＝MakeCredential、ログイン＝GetAssertionと、実行されるコマンドが異なります。<br>
 
-### PIVカードエミュレーション機能
+### スマートカードエミュレーション機能
 
-PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
-詳細につきましては、別ドキュメント（[PIVカードエミュレーション対応](../CCID/PIV/README.md)）をご参照願います。
+PIV／OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、下記ドキュメントをご参照願います。
 
-### OpenPGPカードエミュレーション機能
-
-OpenPGPカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
-詳細につきましては、別ドキュメント（[OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)）をご参照願います。
+- [PIVカードエミュレーション対応](../CCID/PIV/README.md)
+- [OpenPGPカードエミュレーション対応](../CCID/OpenPGP/README.md)
 
 ### 管理機能
 [nRF52840アプリケーション](../nRF52840_app)と等価の管理機能を提供します。<br>
@@ -42,9 +40,7 @@ FIDO機能で使用する秘密鍵／証明書（Attestation）の導入や、PI
 
 ### ファームウェア更新機能
 nRF5340アプリケーションでは、BLE経由のファームウェア更新機能（DFU）を用意しています。<br>
-最終更新日現在、管理ツール（エンドユーザー向け／ベンダー向け）により実行可能となっております。
-- Windows版（再構築中）<br>
-- [macOS版](../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)
+最終更新日現在、管理ツール（エンドユーザー向け／ベンダー向け）により実行可能とする方向で、開発しています。
 
 なお、USB経由のDFUもサポート出来るようですが、対応に伴い[Zephyrプラットフォームのカスタマイズ](../nRF5340_app/CUSTOMIZE.md)が必要となってしまうため、本プロジェクトでは採用は見送っております。
 

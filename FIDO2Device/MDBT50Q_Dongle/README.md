@@ -13,7 +13,7 @@
 - USB給電／ボタン電池の２電源方式
 - リアルタイムクロック・カレンダーを搭載し、電池装着時は時刻同期が可能
 - 署名検証機能付きUSBブートローダーを採用し、不正ファームウェアの書込みを抑止
-- CCIDインターフェースを装備し、PIV/OpenPGP/OATHカードエミュレーションが可能
+- CCIDインターフェースを装備し、PIV/OpenPGPカードエミュレーション、OATH機能実行が可能
 
 ### [MDBT50Q Dongleの概要](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/README.md)
 
@@ -21,7 +21,7 @@
 
 ### [MDBT50Q Dongle回路図](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_2/FIDO2AUTH_0022.pdf)
 
-nRF52840 Dongleをベースとし、電池電源の増設と、LED／セキュアICの増設、若干の配線変更を行っております。
+nRF52840 Dongleをベースとし、電池電源の増設と、LED／RTCC（リアルタイムクロック・カレンダー）の増設、若干の配線変更を行っております。
 
 ### [nRF52840アプリケーション](../../nRF52840_app/README.md)
 
