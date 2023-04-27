@@ -6,10 +6,6 @@ Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェク�
 
 ## プログラム
 
-- <b>[nRF5340アプリケーション](nRF5340_app)（現在開発中）</b><br>
-FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
-Nordic社のSoC「nRF5340」で動作し、[MDBT53 Dongle](FIDO2Device/MDBT53_Dongle)（現在開発中）に書き込んで使用します。
-
 - <b>[nRF52840アプリケーション](nRF52840_app)</b><br>
 FIDO2認証機能、PIV／OpenPGPカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
@@ -22,12 +18,6 @@ PC環境から、[FIDO認証器](FIDO2Device)の動作に必要な各種設定�
 上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
 
 ## ハードウェア
-
-- <b>[MDBT53 Dongle](FIDO2Device/MDBT53_Dongle/README.md)（現在開発中）</b><br>
-Nordic社のSoC「nRF5340」を使用したFIDO2認証器です。<br>
-日本国内の技適取得済みであるnRF5340搭載モジュール「MDBT53」を使用し、nRF5340 DKを簡略化した仕様で製作しています。<br>
-近年PCで採用が増大している小型USBコネクター<b>「USB Type-C プラグ」</b>を装備します。<br>
-PCのUSBポート装着時はUSB HID／CCIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
 - <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
 Nordic社のSoC「nRF52840」を使用したFIDO2認証器です。<br>
